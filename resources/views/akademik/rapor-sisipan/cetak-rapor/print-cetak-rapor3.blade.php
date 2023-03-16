@@ -101,11 +101,6 @@
                         <span style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
                             {{ 'NPSN : ' . $auth_data->sekolah_data->npsn_sekolah }}
                         </span>
-                        {{-- <h3>PRESENSI KELAS <br>
-                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }} <br> --}}
-                        {{-- TAHUN AJARAN {{$semester_aktif->tahun_ajaran}}
-                            </h3> --}}
-
                     </td>
                 </tr>
             </table>
@@ -123,12 +118,6 @@
                         <h2 align="center"
                             style="margin-top: 3px; font-family:'Times New Roman', Times, serif; font-size:30px">
                             PENCAPAIAN KOMPETENSI PESERTA DIDIK<br>
-                            {{-- {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
-                            TENGAH SEMESTER GASAL<br>
-                           
-                        </h2>
-                        {{-- <hr> --}}
-
                     </td>
                 <tr>
 
@@ -168,7 +157,7 @@
                     <td style="border-style : hidden;width: 25%;"> :
                         @php
                             $nama = $list_nilai->first();
-                            // dd($nama->rapor_sisipan->semester->tahun_ajaran);
+                            
                             echo $nama->rapor_sisipan->semester->tahun_ajaran ?? '';
                         @endphp
                     </td>
@@ -178,12 +167,11 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #C2D69B">
                     <tr>
-                        {{-- <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td> --}}
+
                         <td colspan="2" rowspan="2" style="text-align: center;font-weight: bold;">MATA
                             PELAJARAN<br></td>
                         <td colspan="4" style="text-align: center;font-weight: bold;">NILAI TUGAS</td>
                         <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
-                        {{-- <td rowspan="2" style="text-align: center;font-weight: bold;">RATA2 <br> SMT</td> --}}
                         <td rowspan="2" style="text-align: center;font-weight: bold;">UTS</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR <br> SISIPAN</td>
 
@@ -211,7 +199,6 @@
                     @php
                         $no = 1;
                         $angka = 0;
-                        // $letters = range('A', 'Z');
                         $abc = ['a.', 'b.', 'c.', 'd.'];
                     @endphp
 
@@ -244,42 +231,54 @@
                                                 {{ $m->mata_pelajaran->nm_mata_pelajaran }}
                                             </td>
                                             @foreach ($list_komponen as $komponen)
-                                                @if ($komponen->type != 'uts')
+                                                @if ($komponen->type != 'uas')
                                                     <td style="text-align: center;">
-                                                        @if (isset(
-                                                            $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
+                                                        @if (isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                                $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
                                                             {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                                         @endif
                                                     </td>
                                                 @endif
                                             @endforeach
 
-                                            {{-- <td style="text-align: center;">
-                                                @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) && isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
-                                                    {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) / 2) }}
-                                                @endif
-                                            </td> --}}
-                                            @foreach ($list_komponen as $komponen)
-                                                @if ($komponen->type == 'uts')
-                                                    <td style="text-align: center;">
-                                                        {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
-                                                    </td>
-                                                @endif
-                                            @endforeach
                                             <td style="text-align: center;">
-                                                @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '1']) &&
-                                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
-                                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
-                                                    {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9'] * 2) / 5) }}
-                                                    {{-- {{ round($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9'] * 2) }} --}}
-                                                @endif
+
+                                                @php
+                                                    $nilaiTugasLenght = 0;
+                                                    $jumlahNilaiTugas = 0;
+                                                    $nilaiFormatifLenght = 0;
+                                                    $jumlahNilaFormatif = 0;
+                                                    for ($i = 1; $i <= 4; $i++) {
+                                                        if ($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i] != '0') {
+                                                            $jumlahNilaiTugas += $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i];
+                                                            $nilaiTugasLenght++;
+                                                        }
+                                                    }
+                                                    if ($jumlahNilaiTugas == '0' && $nilaiTugasLenght == '0') {
+                                                        $nilaiTugas = 0;
+                                                    } else {
+                                                        $nilaiTugas = round($jumlahNilaiTugas / $nilaiTugasLenght);
+                                                    }
+                                                    for ($i = 5; $i <= 8; $i++) {
+                                                        if ($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i] != '0') {
+                                                            $jumlahNilaFormatif += $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i];
+                                                            $nilaiFormatifLenght++;
+                                                        }
+                                                    }
+                                                    if ($jumlahNilaFormatif == '0' && $nilaiFormatifLenght == '0') {
+                                                        $nilaiFormatif = 0;
+                                                    } else {
+                                                        $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
+                                                    }
+                                                    $nilaiSTS = $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'sts'] * 2;
+                                                    $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
+                                                @endphp
+
+                                                {{ $totalNilai != '0' ? $totalNilai : '' }}
+
                                             </td>
                                         </tr>
                                     @endif
-                                    @php
-                                        
-                                    @endphp
                                 @endforeach
                             @endforeach
                         @endif
@@ -287,80 +286,55 @@
 
                     {{-- end sub  --}}
 
-                    {{-- {{ $sub->nm_sub_rapor_sisipan }} --}}
                     @foreach ($raporSisipanA as $m)
-                        {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'A') --}}
-                        {{-- @foreach ($sub as $s)
-                            {{ $s->jenis_mata_pelajaran->kode_jenis_mata_pelajaran }}
-                        @endforeach --}}
-                        {{-- {{ $sub->jenis_mata_pelajaran }} --}}
-
-                        {{-- @if ($sub->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'A')
-                        <tr>
-                            <td style="text-align: center;">{{ $no++ }}</td>
-                            <td> {{ $sub->nm_sub_rapor_sisipan }}</td>
-                            <td></td>
-                        </tr>
-                        @foreach ($sub->sub_rapor_sisipan_mp as $submp)
-                        <tr>
-                            <td style="text-align: center;">{{ $no++ }}</td>
-                            <td>
-                           
-
-                                {{ $s->mata_pelajaran->nm_mata_pelajaran }}</td>
-
-
-
-                        </tr>
-
-
-
-                        @endforeach
-                        @endif --}}
                         <tr>
                             <td style="text-align: center;">{{ $no++ }}</td>
                             <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                            {{-- <td style="text-align: center;">
-                                    {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td> --}}
                             @foreach ($list_komponen as $komponen)
-                                @if ($komponen->type != 'uts')
+                                @if ($komponen->type != 'uas')
                                     <td style="text-align: center;">
-                                        @if (isset(
-                                            $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
+                                        @if (isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
                                             {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif
                             @endforeach
 
-                            {{-- <td style="text-align: center;"> --}}
-                            {{-- @if (round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi1'] ?? (0 + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi2'] ?? 0)) / 2) != 0) --}}
-                            {{-- @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) && isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
-                                {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) / 2) }}
-                            @endif --}}
-                            {{-- </td> --}}
-                            @foreach ($list_komponen as $komponen)
-                                @if ($komponen->type == 'uts')
-                                    <td style="text-align: center;">
-                                        {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
-                                    </td>
-                                @endif
-                            @endforeach
                             <td style="text-align: center;">
-
-                                @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
-                                    {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9'] * 2) / 5) }}
-                                    {{-- {{ round($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9'] * 2) }} --}}
-                                    {{-- {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']) / 3) }} --}}
-                                @endif
-                                {{-- {{ if((round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi1'] ?? 0 + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi2']  + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'uts'] ) / 3) > 0) {
-                                      round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi1'] ?? 0 + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi2']  + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'uts'] ) / 3) : ''}}} --}}
+                                @php
+                                    $nilaiTugasLenght = 0;
+                                    $jumlahNilaiTugas = 0;
+                                    $nilaiFormatifLenght = 0;
+                                    $jumlahNilaFormatif = 0;
+                                    for ($i = 1; $i <= 4; $i++) {
+                                        if ($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i] != '0') {
+                                            $jumlahNilaiTugas += $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i];
+                                            $nilaiTugasLenght++;
+                                        }
+                                    }
+                                    if ($jumlahNilaiTugas == '0' && $nilaiTugasLenght == '0') {
+                                        $nilaiTugas = 0;
+                                    } else {
+                                        $nilaiTugas = round($jumlahNilaiTugas / $nilaiTugasLenght);
+                                    }
+                                    for ($i = 5; $i <= 8; $i++) {
+                                        if ($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i] != '0') {
+                                            $jumlahNilaFormatif += $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i];
+                                            $nilaiFormatifLenght++;
+                                        }
+                                    }
+                                    if ($jumlahNilaFormatif == '0' && $nilaiFormatifLenght == '0') {
+                                        $nilaiFormatif = 0;
+                                    } else {
+                                        $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
+                                    }
+                                    $nilaiSTS = $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'sts'] * 2;
+                                    $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
+                                @endphp
+                                {{ $totalNilai != '0' ? $totalNilai : '' }}
                             </td>
-
                         </tr>
-                        {{-- @endif --}}
                     @endforeach
                     <tr>
                         <td colspan="13" style="background-color: #A6A6A6 ;  font-weight: bold;">
@@ -372,45 +346,52 @@
                         $no = 1;
                     @endphp
                     @foreach ($raporSisipanB as $m)
-                        {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'B') --}}
                         <tr>
                             <td style="text-align: center;">{{ $no++ }}</td>
                             <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                            {{-- <td style="text-align: center;">
-                                    {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td> --}}
                             @foreach ($list_komponen as $komponen)
-                                @if ($komponen->type != 'uts')
+                                @if ($komponen->type != 'uas')
                                     <td style="text-align: center;">
-                                        @if (isset(
-                                            $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
+                                        @if (isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
                                             {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif
                             @endforeach
-
-                            {{-- <td style="text-align: center;">
-                                @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) && isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
-                                    {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) / 2) }}
-                                @endif
-                            </td> --}}
-                            @foreach ($list_komponen as $komponen)
-                                @if ($komponen->type == 'uts')
-                                    <td style="text-align: center;">
-                                        {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
-                                    </td>
-                                @endif
-                            @endforeach
                             <td style="text-align: center;">
-                                @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
-                                    {{-- {{ round($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9'] * 2) }} --}}
-                                    {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9'] * 2) / 5) }}
-                                    {{-- {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']) / 3) }} --}}
-                                @endif
-                            </td>
-                            {{-- @endif --}}
+                                @php
+                                    $nilaiTugasLenght = 0;
+                                    $jumlahNilaiTugas = 0;
+                                    $nilaiFormatifLenght = 0;
+                                    $jumlahNilaFormatif = 0;
+                                    for ($i = 1; $i <= 4; $i++) {
+                                        if ($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i] != '0') {
+                                            $jumlahNilaiTugas += $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i];
+                                            $nilaiTugasLenght++;
+                                        }
+                                    }
+                                    if ($jumlahNilaiTugas == '0' && $nilaiTugasLenght == '0') {
+                                        $nilaiTugas = 0;
+                                    } else {
+                                        $nilaiTugas = round($jumlahNilaiTugas / $nilaiTugasLenght);
+                                    }
+                                    for ($i = 5; $i <= 8; $i++) {
+                                        if ($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i] != '0') {
+                                            $jumlahNilaFormatif += $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i];
+                                            $nilaiFormatifLenght++;
+                                        }
+                                    }
+                                    if ($jumlahNilaFormatif == '0' && $nilaiFormatifLenght == '0') {
+                                        $nilaiFormatif = 0;
+                                    } else {
+                                        $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
+                                    }
+                                    $nilaiSTS = $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'sts'] * 2;
+                                    $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
+                                @endphp
+
+                                {{ $totalNilai != '0' ? $totalNilai : '' }}</td>
                     @endforeach
                     <tr>
                         <td colspan="13" style="background-color: #A6A6A6;  font-weight: bold;">
@@ -422,43 +403,54 @@
                         $no = 1;
                     @endphp
                     @foreach ($raporSisipanC as $m)
-                        {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'C') --}}
                         <tr>
                             <td style="text-align: center;">{{ $no++ }}</td>
                             <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
                             @foreach ($list_komponen as $komponen)
-                                @if ($komponen->type != 'uts')
+                                @if ($komponen->type != 'uas')
                                     <td style="text-align: center;">
-                                        @if (isset(
-                                            $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
+                                        @if (isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
                                             {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif
                             @endforeach
-
-                            {{-- <td style="text-align: center;">
-                                @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) && isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
-                                    {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) / 2) }}
-                                @endif
-                            </td> --}}
-                            @foreach ($list_komponen as $komponen)
-                                @if ($komponen->type == 'uts')
-                                    <td style="text-align: center;">
-                                        {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
-                                    </td>
-                                @endif
-                            @endforeach
                             <td style="text-align: center;">
-                                @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
-                                    {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9'] * 2) / 5) }}
-                                    {{-- {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']) / 3) }} --}}
-                                @endif
+                                @php
+                                    $nilaiTugasLenght = 0;
+                                    $jumlahNilaiTugas = 0;
+                                    $nilaiFormatifLenght = 0;
+                                    $jumlahNilaFormatif = 0;
+                                    for ($i = 1; $i <= 4; $i++) {
+                                        if ($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i] != '0') {
+                                            $jumlahNilaiTugas += $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i];
+                                            $nilaiTugasLenght++;
+                                        }
+                                    }
+                                    if ($jumlahNilaiTugas == '0' && $nilaiTugasLenght == '0') {
+                                        $nilaiTugas = 0;
+                                    } else {
+                                        $nilaiTugas = round($jumlahNilaiTugas / $nilaiTugasLenght);
+                                    }
+                                    for ($i = 5; $i <= 8; $i++) {
+                                        if ($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i] != '0') {
+                                            $jumlahNilaFormatif += $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . $i];
+                                            $nilaiFormatifLenght++;
+                                        }
+                                    }
+                                    if ($jumlahNilaFormatif == '0' && $nilaiFormatifLenght == '0') {
+                                        $nilaiFormatif = 0;
+                                    } else {
+                                        $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
+                                    }
+                                    $nilaiSTS = $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'sts'] * 2;
+                                    $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
+                                @endphp
+
+                                {{ $totalNilai != '0' ? $totalNilai : '' }}
                             </td>
                         </tr>
-                        {{-- @endif --}}
                     @endforeach
                     </tr>
 
@@ -511,8 +503,6 @@
 
                         Wali Kelas
                         <br><br><br><br><br><br><br>
-                        {{-- <p style="width: 250px;
-                        border-bottom: 1px solid   black;"> --}}
                         <u><b>
                                 {{ $wali_kelas->guru->pengguna->gelar_depan }}
                                 {{ $wali_kelas->guru->pengguna->nm_pengguna }}
@@ -528,8 +518,6 @@
                             src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="160px" height="160px"
                             class="ttd">
                         <br><br><br><br><br>
-                        {{-- <p style="width: 250px;
-                        border-bottom: 1px solid   black;"> --}}
                         <u><b>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</b></u>
                     </td>

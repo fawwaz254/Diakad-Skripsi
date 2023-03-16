@@ -420,21 +420,63 @@ class CetakRaporController extends Controller
                     foreach ($nilaiRapor as $a) {
                         if (isset($nilaiRapor['id_komponen_nilai']) && isset($nilaiRapor['id_siswa']) && isset($nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'])) {
                             $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran']] = $nilaiRapor['nilai'];
-                            $nilai_tugas = $list_komponen->firstWhere('urutan', 1);
-                            $nilai_sumatif1 = $list_komponen->firstWhere('urutan', 5);
-                            $nilai_sumatif2 = $list_komponen->firstWhere('urutan', 6);
-                            $sts = $list_komponen->where('type', 'uts')->where('urutan', 9)->first();
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas->id_komponen_nilai) {
+                            // $nilai_tugas = $list_komponen->firstWhere('urutan', 1);
+                            // $nilai_sumatif1 = $list_komponen->firstWhere('urutan', 5);
+                            // $nilai_sumatif2 = $list_komponen->firstWhere('urutan', 6);
+                            // $sts = $list_komponen->where('type', 'uts')->where('urutan', 9)->first();
+
+                            // if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas->id_komponen_nilai) {
+                            //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '1'] =  $nilaiRapor['nilai'];
+                            // }
+                            // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
+                            //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5'] =  $nilaiRapor['nilai'];
+                            // }
+                            // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
+                            //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '6'] =  $nilaiRapor['nilai'];
+                            // }
+                            // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
+                            //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '9'] =  $nilaiRapor['nilai'];
+                            // }
+
+
+                            $nilai_tugas1 = $list_komponen->firstWhere('urutan', '=', '1');
+                            $nilai_tugas2 = $list_komponen->firstWhere('urutan', '=', '2');
+                            $nilai_tugas3 = $list_komponen->firstWhere('urutan', '=', '3');
+                            $nilai_tugas4 = $list_komponen->firstWhere('urutan', '=', '4');
+                            $nilai_sumatif1 = $list_komponen->firstWhere('urutan', '=', '5');
+                            $nilai_sumatif2 = $list_komponen->firstWhere('urutan', '=', '6');
+                            $nilai_sumatif3 = $list_komponen->firstWhere('urutan', '=', '7');
+                            $nilai_sumatif4 = $list_komponen->firstWhere('urutan', '=', '8');
+                            $sts = $list_komponen->firstWhere('urutan', '=', '9');
+
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas1->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '1'] =  $nilaiRapor['nilai'];
                             }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas2->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '2'] =  $nilaiRapor['nilai'];
+                            }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas3->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '3'] =  $nilaiRapor['nilai'];
+                            }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas4->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '4'] =  $nilaiRapor['nilai'];
+                            }
+
                             if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5'] =  $nilaiRapor['nilai'];
+                                // dd($nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5']);
                             }
                             if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '6'] =  $nilaiRapor['nilai'];
                             }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif3->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '7'] =  $nilaiRapor['nilai'];
+                            }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif4->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '8'] =  $nilaiRapor['nilai'];
+                            }
                             if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '9'] =  $nilaiRapor['nilai'];
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . 'sts'] =  $nilaiRapor['nilai'];
                             }
                         }
                     }
