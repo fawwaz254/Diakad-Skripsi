@@ -149,7 +149,7 @@ class BukuAlatController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-sarpras-buku-alat/buku-alat',
+                    'path' => 'data-buku/buku-alat',
                     'message' => 'Save Buku/Alat Successfully'
                 ];
             } elseif ($mode == 'edit') {
