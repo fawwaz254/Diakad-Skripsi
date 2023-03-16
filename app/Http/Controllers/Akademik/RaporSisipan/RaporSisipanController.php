@@ -108,7 +108,7 @@ class RaporSisipanController extends Controller
             }
         }
 
-        $nilaiRaporSisipans = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->with('siswa');
+        $nilaiRaporSisipans = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->get();
 
         return Datatables::of($list_data)
             ->addColumn('mata_pelajaran', function ($item) {
@@ -122,9 +122,11 @@ class RaporSisipanController extends Controller
                         $query->where('id_kelas', '=', $item->kelas->id_kelas);
                     })->count();
                 } else {
-                    $nilaiSiswaKosong = $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
-                        $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                    })->count();
+                    $nilaiSiswaKosong = $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')
+                        // ->whereHas('siswa', function ($query) use ($item) {
+                        //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                        // })
+                        ->count();
                 }
 
                 $data = array(

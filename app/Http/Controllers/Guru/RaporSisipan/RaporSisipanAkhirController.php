@@ -109,7 +109,7 @@ class RaporSisipanAkhirController extends Controller
             $komponen2 = KomponenNilaiRaporSisipan::where('type', 'uas')->first()->id_komponen_nilai;
         }
 
-        $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->with('siswa');
+        $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->get();
 
 
         return Datatables::of($list_data)
@@ -128,12 +128,14 @@ class RaporSisipanAkhirController extends Controller
                         'setting'           => $setting->value,
                     );
                 } else {
-                    $nilaiRaporSisipan =  $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
-                        $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                    })->get();
+                    // $nilaiRaporSisipan =  $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')
+                    // ->whereHas('siswa', function ($query) use ($item) {
+                    //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                    // })
+                    // ->get();
 
-                    $nilaiUTSSiswa = $nilaiRaporSisipan->where('id_komponen_nilai', $komponen1)->count();
-                    $nilaiUASSiswa = $nilaiRaporSisipan->where('id_komponen_nilai', $komponen2)->count();
+                    $nilaiUTSSiswa = $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->where('id_komponen_nilai', $komponen1)->count();
+                    $nilaiUASSiswa = $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->where('id_komponen_nilai', $komponen2)->count();
 
                     $data = array(
                         'jumlah_siswa' => $allSiswa,

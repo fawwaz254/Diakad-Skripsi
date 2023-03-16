@@ -124,7 +124,9 @@
             {
                 data: 'semester',
                 name: 'semester',
-                className: 'align-center'
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
             },
             // {
             //     data: 'action',
