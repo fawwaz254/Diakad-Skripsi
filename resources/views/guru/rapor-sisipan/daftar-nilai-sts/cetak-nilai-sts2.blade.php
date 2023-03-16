@@ -209,7 +209,7 @@
                                 $nilaiSTS = $nilai_komponen[$siswa->id_siswa . 'sts'] * 2;
                                 $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
                             @endphp
-                            {{ $totalNilai }}
+                            {{ $totalNilai != '0' ? $totalNilai : '' }}
                             {{-- {{ round(($nilai_komponen[$siswa->id_siswa . '1'] + $nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6'] + $nilai_komponen[$siswa->id_siswa . '9'] * 2) / 5) }} --}}
 
                         </td>
