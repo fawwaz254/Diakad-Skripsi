@@ -30,51 +30,17 @@ use Validator;
 class RaporSisipanController extends Controller
 {
 
-    public function viewSemesterNilaiSTS(Request $request)
+    public function viewDaftarNilaiSTS(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
-        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        return view('guru/rapor-sisipan/daftar-nilai-sts/view-semester-nilai-sts', compact('auth_data', 'data_semester', 'semester_aktif'));
+        return view('guru/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'semester_aktif', 'data_semester'));
     }
 
-    public function actionSemesterNilaiSTS(Request $request)
-    {
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $validator = Validator::make($request->all(), [
-            'thn_akademik_semester' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
-        } else {
-            return [
-                'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'rapor-sisipan/daftar-nilai-sts/' . $input->thn_akademik_semester
-            ];
-        }
-    }
-    public function viewDaftarNilaiSTS(Request $request, $thn_akademik_semester)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-
-        return view('guru/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'thn_akademik_semester', 'semester_aktif'));
-    }
-
-    public function addDaftarNilaiSTS(Request $request, $thn_akademik_semester)
+    public function addDaftarNilaiSTS(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -83,7 +49,7 @@ class RaporSisipanController extends Controller
         $data['list_kelas'] = Kelas::all();
         $data['list_jurusan'] = Jurusan::all();
 
-        return view('guru/rapor-sisipan/daftar-nilai-sts/add-daftar-nilai-sts', compact('auth_data', 'thn_akademik_semester'), $data);
+        return view('guru/rapor-sisipan/daftar-nilai-sts/add-daftar-nilai-sts', compact('auth_data'), $data);
     }
 
     public function actionDaftarNilaiSTS(Request $request, $mode, $id = null)
@@ -100,11 +66,6 @@ class RaporSisipanController extends Controller
                 if ($raporSisipan) {
                     $raporSisipan->delete();
                 }
-
-                // foreach ($nilaiRaporSisipan as $id) {
-                //     $nilai = NilaiRaporSisipan::where('id_nilai_rapor_sisipan', $id->id_nilai_rapor_sisipan)->first();
-                //     $nilai->delete();
-                // }
 
                 DB::Commit();
                 return [
@@ -270,15 +231,28 @@ class RaporSisipanController extends Controller
         return Excel::download(new RekapRaporSisipanSTS($data), 'Rekap Rapor Sisipan STS (' . $rapor_sisipan->kelas->nm_kelas . ' - ' . $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
     }
 
-    public function datatablesDaftarNilaiSTS(Request $request, $thn_akademik_semester)
+    public function datatablesDaftarNilaiSTS(Request $request)
     {
         set_time_limit(9800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)
-            ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
-                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
-            })->orderBy('created_at', 'desc');
+        $status = $input->status;
+
+        if (empty($input->tahun_ajaran)) {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $thn_akademik_semester = $semester_aktif->thn_akademik_semester;
+        } else {
+            $thn_akademik_semester = $input->tahun_ajaran;
+        }
+
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+            $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+        })->orderBy('created_at', 'desc');
+
+        if ($status == '0') {
+            $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+        }
+
         // $jurusan = Jurusan::all();
         $siswa = Siswa::with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {
@@ -294,22 +268,23 @@ class RaporSisipanController extends Controller
             }
         }
         // $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
+        $allnilaiSiswaKosong = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->get();
+        // dd($allnilaiSiswaKosong->where('id_rapor_sisipan', 'Hz7M716705600326392b92106bff')->get());
 
         return Datatables::of($list_data)
-            ->addColumn('mata_pelajaran', function ($item) {
-                return $item->mata_pelajaran->nm_mata_pelajaran;
-            })
-            ->addColumn('jumlah', function ($item) use ($siswa, $komponen, $setting) {
+            ->addColumn('jumlah', function ($item) use ($siswa, $allnilaiSiswaKosong, $setting) {
                 //semua siswa
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
                 if ($setting->value == '3') {
-                    $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponen)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
+                    $nilaiSiswaKosong = $allnilaiSiswaKosong->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
                         $query->where('id_kelas', '=', $item->kelas->id_kelas);
                     })->count();
                 } else { }
-                $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponen)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
-                    $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                })->count();
+                $nilaiSiswaKosong = $allnilaiSiswaKosong->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')
+                    // ->whereHas('siswa', function ($query) use ($item) {
+                    //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                    // })
+                    ->count();
 
                 $data = array(
                     'jumlah_siswa' => $allSiswa,
@@ -320,9 +295,10 @@ class RaporSisipanController extends Controller
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran;
             })
-            ->addColumn('action', function ($item) {
+            ->addColumn('action', function ($item) use ($status) {
                 $data = array(
-                    'id'     => $item->id_rapor_sisipan
+                    'id'     => $item->id_rapor_sisipan,
+                    'status' => $status,
                 );
                 return $data;
             })
@@ -374,22 +350,29 @@ class RaporSisipanController extends Controller
     }
 
 
-    public function imporExcelSTS(Request $request, $thn_akademik_semester)
+    public function imporExcelSTS(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('guru/rapor-sisipan/daftar-nilai-sts/view-upload-nilai-sts', compact('auth_data', 'thn_akademik_semester'));
+        return view('guru/rapor-sisipan/daftar-nilai-sts/view-upload-nilai-sts', compact('auth_data'));
     }
 
 
     public function uploadRaporSisipanSTS(Request $request)
     {
         if ($request->hasFile('file-excel')) {
-            Excel::import(new UploadRaporSisipanSTS, $request->file('file-excel'));
+            try {
+                Excel::import(new UploadRaporSisipanSTS, $request->file('file-excel'));
+            } catch (\Exception $e) {
+                return [
+                    'status'     => 200, // FAILED
+                    'message'     => "Gagal, Cek kembali apakah ada data nilai yang melebihi batas"
+                ];
+            }
             return [
                 'status'     => 200, // FAILED
                 'message'     => "Upload Sukses"
-            ];;
+            ];
         } else {
             return [
                 'status'     => 300, // FAILED
@@ -479,20 +462,42 @@ class RaporSisipanController extends Controller
                         $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
 
                         $nilai_tugas1 = $list_data->firstWhere('urutan', '=', '1');
+                        $nilai_tugas2 = $list_data->firstWhere('urutan', '=', '2');
+                        $nilai_tugas3 = $list_data->firstWhere('urutan', '=', '3');
+                        $nilai_tugas4 = $list_data->firstWhere('urutan', '=', '4');
                         $nilai_sumatif1 = $list_data->firstWhere('urutan', '=', '5');
                         $nilai_sumatif2 = $list_data->firstWhere('urutan', '=', '6');
+                        $nilai_sumatif3 = $list_data->firstWhere('urutan', '=', '7');
+                        $nilai_sumatif4 = $list_data->firstWhere('urutan', '=', '8');
                         $sts = $list_data->firstWhere('urutan', '=', '9');
+
                         if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas1->id_komponen_nilai) {
                             $nilai_komponen[$nilaiRapor['id_siswa'] . '1'] =  $nilaiRapor['nilai'];
                         }
+                        if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas2->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '2'] =  $nilaiRapor['nilai'];
+                        }
+                        if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas3->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '3'] =  $nilaiRapor['nilai'];
+                        }
+                        if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas4->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '4'] =  $nilaiRapor['nilai'];
+                        }
+
                         if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
                             $nilai_komponen[$nilaiRapor['id_siswa'] . '5'] =  $nilaiRapor['nilai'];
                         }
                         if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
                             $nilai_komponen[$nilaiRapor['id_siswa'] . '6'] =  $nilaiRapor['nilai'];
                         }
+                        if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif3->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '7'] =  $nilaiRapor['nilai'];
+                        }
+                        if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif4->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '8'] =  $nilaiRapor['nilai'];
+                        }
                         if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                            $nilai_komponen[$nilaiRapor['id_siswa'] . '9'] =  $nilaiRapor['nilai'];
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
                         }
                     }
                 }

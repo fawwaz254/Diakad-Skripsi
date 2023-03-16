@@ -35,47 +35,50 @@ use Validator;
 class CetakRaporController extends Controller
 {
 
-    public function viewSemesterCetakRapor(Request $request)
+    // public function viewSemesterCetakRapor(Request $request)
+    // {
+    //     $input = (object) $request->input();
+    //     $auth_data = $input->auth_data;
+
+    //     $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
+    //     $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+    //     return view('akademik/rapor-sisipan/cetak-rapor/view-semester-cetak-rapor', compact('auth_data', 'data_semester', 'semester_aktif'));
+    // }
+
+    // public function actionSemesterCetakRapor(Request $request)
+    // {
+    //     # code...
+    //     $input = (object) $request->input();
+    //     $auth_data = $input->auth_data;
+
+    //     $validator = Validator::make($request->all(), [
+    //         'thn_akademik_semester' => 'required'
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return [
+    //             'status' => 300, // FAILED
+    //             'message' => $validator->errors()->first()
+    //         ];
+    //     } else {
+    //         return [
+    //             'status' => 204, // SUCCESS AND LOAD CONTENT
+    //             'path' => 'rapor-sisipan/cetak-rapor/' . $input->thn_akademik_semester
+    //         ];
+    //     }
+    // }
+
+
+    public function viewCetakRapor(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
-        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-
-        return view('akademik/rapor-sisipan/cetak-rapor/view-semester-cetak-rapor', compact('auth_data', 'data_semester', 'semester_aktif'));
-    }
-
-    public function actionSemesterCetakRapor(Request $request)
-    {
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $validator = Validator::make($request->all(), [
-            'thn_akademik_semester' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
-        } else {
-            return [
-                'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'rapor-sisipan/cetak-rapor/' . $input->thn_akademik_semester
-            ];
-        }
-    }
+        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
 
 
-    public function viewCetakRapor(Request $request, $thn_akademik_semester)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        return view('akademik/rapor-sisipan/cetak-rapor/view-cetak-rapor', compact('auth_data', 'thn_akademik_semester'));
+        return view('akademik/rapor-sisipan/cetak-rapor/view-cetak-rapor', compact('auth_data', 'semester_aktif', 'data_semester'));
     }
 
     public function viewCetakRaporWaliKelas(Request $request)
@@ -90,14 +93,23 @@ class CetakRaporController extends Controller
         return view('guru/wali-kelas/cetak-rapor/view-cetak-rapor', compact('wali_kelas', 'data_wali_kelas', 'semester_aktif'));
     }
 
-    public function datatablesCetakRapor(Request $request, $thn_akademik_semester)
+    public function datatablesCetakRapor(Request $request)
     {
         set_time_limit(1800);
-        // ini_set('max_execution_time', 300);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        if (empty($input->tahun_ajaran)) {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $thn_akademik_semester = $semester_aktif->thn_akademik_semester;
+        } else {
+            $thn_akademik_semester = $input->tahun_ajaran;
+        }
+
         $list_data = Kelas::with('jurusan')->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
-        $list_rapor_sisipan = RaporSisipan::all();
+        $list_rapor_sisipan = RaporSisipan::whereHas('semester', function ($query) use ($thn_akademik_semester) {
+            $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+        })->get();
         // $kurikulum = Kurikulum::where('is_aktif',1)->orderBy('tahun_kurikulum', 'DESC')->get();
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->get();
         $semester = Semester::where('thn_akademik_semester', $thn_akademik_semester)->first();
@@ -114,11 +126,12 @@ class CetakRaporController extends Controller
                 // $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count();
                 return  $semester->tahun_ajaran;
             })
-            ->addColumn('action', function ($item)  use ($list_rapor_sisipan) {
+            ->addColumn('action', function ($item)  use ($list_rapor_sisipan, $thn_akademik_semester) {
                 // $k = $kurikulum->firstWhere('id_jurusan', $item->id_jurusan );
                 $data = array(
-                    'id_kelas'     => $item->id_kelas,
-                    'jumlah'        => $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count()
+                    'id_kelas'                  => $item->id_kelas,
+                    'jumlah'                    => $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count(),
+                    'thn_akademik_semester'     => $thn_akademik_semester
                 );
                 return $data;
             })
@@ -126,21 +139,12 @@ class CetakRaporController extends Controller
     }
 
 
-    public function viewSetting(Request $request, $thn_akademik_semester)
+    public function viewSetting(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // $rapor_sisipan = RaporSisipan::get()->unique('id_mata_pelajaran');
-        // dd($rapor_sisipan);
-
-        // foreach($rapor_sisipan as $r){
-        //     $m =  $mapel->firstWhere('id_mata_pelajaran', $r->id_mata_pelajaran);
-        // dd($m->nm_mata_pelajaran);
-        // }
-        // dd($mapel);
-
-        return view('akademik/rapor-sisipan/cetak-rapor/view-setting-cetak-rapor', compact('auth_data', 'thn_akademik_semester'));
+        return view('akademik/rapor-sisipan/cetak-rapor/view-setting-cetak-rapor', compact('auth_data'));
     }
 
     public function viewDeskripsi(Request $request)
@@ -150,13 +154,13 @@ class CetakRaporController extends Controller
         return view('akademik/rapor-sisipan/cetak-rapor/view-deskripsi-cetak-rapor', compact('auth_data'));
     }
 
-    public function addSetting(Request $request, $thn_akademik_semester, $mata_pelajaran)
+    public function addSetting(Request $request, $mata_pelajaran)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $mapel = MataPelajaran::where('id_mata_pelajaran', $mata_pelajaran)->with('urutan_rapor_sisipan')->first();
 
-        return view('akademik/rapor-sisipan/cetak-rapor/add-setting-cetak-rapor', compact('auth_data', 'mapel', 'thn_akademik_semester'));
+        return view('akademik/rapor-sisipan/cetak-rapor/add-setting-cetak-rapor', compact('auth_data', 'mapel'));
     }
 
     public function  editDeskripsi(Request $request, $id)
@@ -223,7 +227,7 @@ class CetakRaporController extends Controller
         }
     }
 
-    public function postSetting(Request $request, $mata_pelajaran, $thn_akademik_semester)
+    public function postSetting(Request $request, $mata_pelajaran)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -247,17 +251,17 @@ class CetakRaporController extends Controller
 
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'rapor-sisipan/cetak-rapor/viewSetting/' . $thn_akademik_semester,
+            'path' => 'rapor-sisipan/cetak-rapor/viewSetting/',
             'message' => 'Save Successfully'
         ];
     }
 
-    public function datatablesViewSetting(Request $request, $thn_akademik_semester)
+    public function datatablesViewSetting(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $mapel = MataPelajaran::with('urutan_rapor_sisipan')->get()->sortBy('urutan_rapor_sisipan.urutan');
+        $mapel = MataPelajaran::with('urutan_rapor_sisipan', 'jurusan')->get()->sortBy('urutan_rapor_sisipan.urutan');
 
         return Datatables::of($mapel)
             ->addColumn('urutan', function ($item) {
@@ -317,6 +321,9 @@ class CetakRaporController extends Controller
         //untuk sub
         $k = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.sub_rapor_sisipan_mp')
             ->has('mata_pelajaran.sub_rapor_sisipan_mp')
+            ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+            })
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
 
         $raporSisipanA = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
@@ -413,21 +420,63 @@ class CetakRaporController extends Controller
                     foreach ($nilaiRapor as $a) {
                         if (isset($nilaiRapor['id_komponen_nilai']) && isset($nilaiRapor['id_siswa']) && isset($nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'])) {
                             $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran']] = $nilaiRapor['nilai'];
-                            $nilai_tugas = $list_komponen->firstWhere('urutan', 1);
-                            $nilai_sumatif1 = $list_komponen->firstWhere('urutan', 5);
-                            $nilai_sumatif2 = $list_komponen->firstWhere('urutan', 6);
-                            $sts = $list_komponen->where('type', 'uts')->where('urutan', 9)->first();
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas->id_komponen_nilai) {
+                            // $nilai_tugas = $list_komponen->firstWhere('urutan', 1);
+                            // $nilai_sumatif1 = $list_komponen->firstWhere('urutan', 5);
+                            // $nilai_sumatif2 = $list_komponen->firstWhere('urutan', 6);
+                            // $sts = $list_komponen->where('type', 'uts')->where('urutan', 9)->first();
+
+                            // if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas->id_komponen_nilai) {
+                            //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '1'] =  $nilaiRapor['nilai'];
+                            // }
+                            // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
+                            //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5'] =  $nilaiRapor['nilai'];
+                            // }
+                            // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
+                            //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '6'] =  $nilaiRapor['nilai'];
+                            // }
+                            // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
+                            //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '9'] =  $nilaiRapor['nilai'];
+                            // }
+
+
+                            $nilai_tugas1 = $list_komponen->firstWhere('urutan', '=', '1');
+                            $nilai_tugas2 = $list_komponen->firstWhere('urutan', '=', '2');
+                            $nilai_tugas3 = $list_komponen->firstWhere('urutan', '=', '3');
+                            $nilai_tugas4 = $list_komponen->firstWhere('urutan', '=', '4');
+                            $nilai_sumatif1 = $list_komponen->firstWhere('urutan', '=', '5');
+                            $nilai_sumatif2 = $list_komponen->firstWhere('urutan', '=', '6');
+                            $nilai_sumatif3 = $list_komponen->firstWhere('urutan', '=', '7');
+                            $nilai_sumatif4 = $list_komponen->firstWhere('urutan', '=', '8');
+                            $sts = $list_komponen->firstWhere('urutan', '=', '9');
+
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas1->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '1'] =  $nilaiRapor['nilai'];
                             }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas2->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '2'] =  $nilaiRapor['nilai'];
+                            }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas3->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '3'] =  $nilaiRapor['nilai'];
+                            }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas4->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '4'] =  $nilaiRapor['nilai'];
+                            }
+
                             if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5'] =  $nilaiRapor['nilai'];
+                                // dd($nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5']);
                             }
                             if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '6'] =  $nilaiRapor['nilai'];
                             }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif3->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '7'] =  $nilaiRapor['nilai'];
+                            }
+                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif4->id_komponen_nilai) {
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '8'] =  $nilaiRapor['nilai'];
+                            }
                             if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '9'] =  $nilaiRapor['nilai'];
+                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . 'sts'] =  $nilaiRapor['nilai'];
                             }
                         }
                     }

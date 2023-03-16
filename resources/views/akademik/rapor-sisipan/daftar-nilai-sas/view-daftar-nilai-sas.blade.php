@@ -1,18 +1,37 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>
-            <a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas') }}"><i
-                    class="material-icons">keyboard_backspace</i><span>Kembali</span></a>
-            {{-- <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
+    <div class="block-header" style=" display: flex;
+    justify-content: space-between;">
+        <div>
+            <h2>
+                {{-- <a class="btn bg-blue waves-effect target-link"
+                    href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas') }}"><i
+                        class="material-icons">keyboard_backspace</i><span>Kembali</span></a> --}}
+                {{-- <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas/importExcel/' . $thn_akademik_semester) }}"><i
                     class="material-icons">cloud_upload</i><span> Import Excel</span></a> --}}
 
 
-            {{-- <a class="btn bg-blue waves-effect target-link"
+                {{-- <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
                     class="material-icons">add</i><span>Tambah Nilai</span></a> --}}
-        </h2>
+            </h2>
+        </div>
+        <div class="dropdown" style="display: inline;">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                @foreach ($data_semester as $data)
+                    <li> <a onclick="changeThn(this)" data-id=" {{ $data->thn_akademik_semester }} ">
+                            {{ $data->tahun_ajaran }}
+                            @if ($semester_aktif->thn_akademik_semester == $data->thn_akademik_semester)
+                                (Aktif)
+                            @endif
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+        <input type="hidden" id="tahun" value="">
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -47,13 +66,11 @@
 </div>
 
 <script type="text/javascript">
-    var thn_akademik_semester = {!! json_encode($thn_akademik_semester) !!};
     var modul_url = 'rapor-sisipan';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/datatables/' +
-        thn_akademik_semester;
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/datatables';
     // alert(datatable_url);
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
-    var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sas/nilai/' + thn_akademik_semester;
+    // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sas/nilai';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     // var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/excel';
@@ -65,7 +82,10 @@
         responsive: true,
         ajax: {
             url: datatable_url,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                d.tahun_ajaran = $('#tahun').val();
+            }
         },
         columns: [{
                 data: null,
@@ -104,7 +124,9 @@
             {
                 data: 'semester',
                 name: 'semester',
-                className: 'align-center'
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
             },
             // {
             //     data: 'action',
@@ -166,4 +188,20 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = start + i + 1;
+        });
+    }).draw();
+
+    function changeThn(value) {
+        var item = $(value);
+        $('#tahun').val(item.attr('data-id'));
+        primary_table.draw();
+    }
 </script>
