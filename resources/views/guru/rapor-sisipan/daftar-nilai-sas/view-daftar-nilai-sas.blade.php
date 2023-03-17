@@ -94,12 +94,14 @@
             {
                 data: 'mata_pelajaran.nm_mata_pelajaran',
                 name: 'mata_pelajaran.nm_mata_pelajaran',
-                className: 'align-center'
+                className: 'align-center',
+                orderable: false,
             },
             {
                 data: 'kelas.nm_kelas',
                 name: 'kelas.nm_kelas',
-                className: 'align-center'
+                className: 'align-center',
+                orderable: false,
             },
             {
                 data: 'jumlah',
@@ -180,7 +182,8 @@
             {
                 data: 'pengguna.nm_pengguna',
                 name: 'pengguna.nm_pengguna',
-                className: 'align-center'
+                className: 'align-center',
+                orderable: false,
             },
         ]
     });

@@ -271,7 +271,7 @@
                                                         $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
                                                     }
                                                     $nilaiSTS = $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'sts'] * 2;
-                                                    $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
+                                                    $totalNilai = round(($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5);
                                                 @endphp
 
                                                 {{ $totalNilai != '0' ? $totalNilai : '' }}
@@ -330,7 +330,7 @@
                                         $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
                                     }
                                     $nilaiSTS = $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'sts'] * 2;
-                                    $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
+                                    $totalNilai = round(($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5);
                                 @endphp
                                 {{ $totalNilai != '0' ? $totalNilai : '' }}
                             </td>
@@ -388,7 +388,7 @@
                                         $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
                                     }
                                     $nilaiSTS = $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'sts'] * 2;
-                                    $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
+                                    $totalNilai = round(($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5);
                                 @endphp
 
                                 {{ $totalNilai != '0' ? $totalNilai : '' }}</td>
@@ -445,7 +445,7 @@
                                         $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
                                     }
                                     $nilaiSTS = $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'sts'] * 2;
-                                    $totalNilai = ($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5;
+                                    $totalNilai = round(($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5);
                                 @endphp
 
                                 {{ $totalNilai != '0' ? $totalNilai : '' }}
