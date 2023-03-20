@@ -7,25 +7,26 @@
             <button type="button" onclick="viewSiswa()" class="btn btn-default">
                 Data Histori Absensi Siswa
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
                 Data Histori Absensi Siswa Pondok
             </button>
-            <button type="button" onclick="viewSiswaSholat()" class="btn btn-default">
-                Data Histori Sholat
+
+            <button type="button" class="btn btn-primary">
+                Data Histori Absensi Siswa Sholat
             </button>
         @endif
         <div class="card" style="margin-top: 10px">
             <div class="header">
                 <h2>
-                    DATA SISWA
+                    DATA SISWA SHOLAT
                 </h2>
             </div>
             <div class="body">
                 <form id="form-validation" method="POST"
-                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa-pondok') }}">
+                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa-sholat') }}">
                     {{ csrf_field() }}
                     <div class="row clearfix">
-                        <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 Kelas
                             </h2>
@@ -45,7 +46,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4 col-sm-12 col-xs-12">
+                        {{-- <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 Status
                             </h2>
@@ -62,9 +63,9 @@
                                 <option @if ($status == 'Belum Absent') selected @endif value="Belum Absent">Belum
                                     Absent</option>
                             </select>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 Tanggal
                             </h2>
@@ -84,7 +85,7 @@
 </div>
 </div>
 <br>
-<div class="row">
+{{-- <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="body">
@@ -115,20 +116,20 @@
             </div>
         </div>
     </div>
-</div>
-<br>
+</div> --}}
+{{-- <br>
 <a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel/' . $id_kelas . '/' . $date) }}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
 
 <a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-week/' . $id_kelas . '/' . $date) }}"
     target="_blank" class="btn bg-purple waves-effect">
-    <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
+    <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a> --}}
 
 {{-- <a href="{{url(Request::segment(1).'/absensi/histori-absensi-siswa/export-laravel-mount/'.$id_kelas.'/'.$date)}}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a> --}}
-<br>
+{{-- <br> --}}
 <input type="hidden" value="{{ $id_kelas }}" name="id_kelas">
 <div class="row clearfix" style="margin-top: 10px">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -145,13 +146,15 @@
                                 <th style="text-align: center;">#</th>
                                 <th style="text-align: center;">Kelas</th>
                                 <th style="text-align: center;">NIS</th>
-                                <th style="text-align: center;">Nama</th>
+                                <th>Nama</th>
 
-                                <th>Check In</th>
-                                <th>Check Out</th>
-                                <th>Status</th>
+                                <th>Subuh</th>
+                                <th>Dzuhur</th>
+                                <th>Maghrib</th>
+                                <th>Isya</th>
+                                {{-- <th>Status</th> --}}
                                 {{-- @if (Request::segment(1) == 'humas') --}}
-                                <th style="text-align: center;">Action</th>
+                                {{-- <th style="text-align: center;">Action</th> --}}
                                 {{-- @endif --}}
                             </tr>
                         </thead>
@@ -165,20 +168,21 @@
                                     @else
                                     <tr>
                                 @endif
-                                @if ($r['shift'])
-                                    @if ($r['status'] == $status || $status == '0')
-                                        <td style="text-align: center;">{{ $no++ }}</td>
-                                        <td style="text-align: center;">{{ $r['kelas'] }}</td>
-                                        <td style="text-align: center;">{{ $r['nis'] }}</td>
-                                        <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
+                                {{-- @if ($r['shift']) --}}
+                                {{-- @if ($r['status'] == $status || $status == '0') --}}
+                                <td style="text-align: center;">{{ $no++ }}</td>
+                                <td style="text-align: center;">{{ $r['kelas'] }}</td>
+                                <td style="text-align: center;">{{ $r['nis'] }}</td>
+                                <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
 
-                                        <td>{{ $r['check_in'] }}</td>
-                                        <td>{{ $r['check_out'] }}</td>
-                                        <td
+                                <td>{{ $r['subuh'] }}</td>
+                                <td>{{ $r['dzuhur'] }}</td>
+                                <td>{{ $r['maghrib'] }}</td>
+                                <td>{{ $r['isya'] }}</td>
+                                {{-- <td
                                             @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
                                             {{ $r['status'] }}</td>
 
-                                        {{-- @if (Request::segment(1) == 'humas') --}}
                                         <td style="text-align: center;display:flex;justify-content:center">
                                             @if ($r['id_presensi_pengguna'] == '')
                                                 <button type="button" class="btn bg-teal waves-effect"
@@ -195,13 +199,12 @@
                                                     class="btn bg-red waves-effect delete-record">
                                                     <i class="material-icons">delete</i>
                                                 </button>
-                                            @endif
-                                        </td>
-                                        {{-- @endif --}}
-                                        </tr>
-                                    @endif
-                                @else
-                                @endif
+                                            @endif --}}
+                                {{-- </td> --}}
+                                </tr>
+                                {{-- @endif --}}
+                                {{-- @else --}}
+                                {{-- @endif --}}
                             @endforeach
                         </tbody>
                     </table>
@@ -223,58 +226,57 @@
         window.location = '/humas#absensi/histori-absensi-siswa'
     }
 
-    function addAbsensi(id_pengguna) {
-        window.location =
-            `${role}#absensi/histori-absensi-siswa/${id_pengguna}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/add`
+    // function addAbsensi(id_pengguna) {
+    //     window.location =
+    //         `${role}#absensi/histori-absensi-siswa/${id_pengguna}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/add`
+    // }
+
+    // function editAbsensi(currUser) {
+    //     window.location =
+    //         `${role}#absensi/histori-absensi-siswa/${currUser}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/edit`
+    // }
+
+    function viewSiswaPondok() {
+        window.location = '/humas#absensi/histori-absensi-siswa-pondok'
     }
 
-    function viewSiswaSholat() {
-        window.location = '/humas#absensi/histori-absensi-siswa-sholat'
 
-    }
+    // $(".delete-record").click(function() {
+    //     var token = $("meta[name='csrf-token']").attr("content");
+    //     var id = $(this).data("id");
 
-    function editAbsensi(currUser) {
-        window.location =
-            `${role}#absensi/histori-absensi-siswa/${currUser}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/edit`
-    }
+    //     swal({
+    //             title: "Are you sure?",
+    //             showCancelButton: true
+    //         },
+    //         function(isConfirm) {
+    //             if (isConfirm) {
+    //                 $('.delete-record').attr("disabled", true);
+    //                 //swall
+    //                 $.ajax({
+    //                     url: `${role}/absensi/histori-absensi-siswa/${id}/delete`,
+    //                     type: "post",
 
+    //                     data: {
+    //                         _token: token,
+    //                     },
 
-    $(".delete-record").click(function() {
-        var token = $("meta[name='csrf-token']").attr("content");
-        var id = $(this).data("id");
-
-        swal({
-                title: "Are you sure?",
-                showCancelButton: true
-            },
-            function(isConfirm) {
-                if (isConfirm) {
-                    $('.delete-record').attr("disabled", true);
-                    //swall
-                    $.ajax({
-                        url: `${role}/absensi/histori-absensi-siswa/${id}/delete`,
-                        type: "post",
-
-                        data: {
-                            _token: token,
-                        },
-
-                        success: function() {
-                            swal({
-                                title: "Delete Success",
-                                text: "data berhasil dihapus",
-                                icon: "success",
-                            });
-                            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
-                                $('input[name=id_kelas]').val() + '/' +
-                                $('input[name=date]').val() + '/0');
-                        },
-                    });
-                }
-                return;
-            }
-        );
-    });
+    //                     success: function() {
+    //                         swal({
+    //                             title: "Delete Success",
+    //                             text: "data berhasil dihapus",
+    //                             icon: "success",
+    //                         });
+    //                         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
+    //                             $('input[name=id_kelas]').val() + '/' +
+    //                             $('input[name=date]').val() + '/0');
+    //                     },
+    //                 });
+    //             }
+    //             return;
+    //         }
+    //     );
+    // });
 </script>
 {{-- {{-- <script type="text/javascript">
     $(document).ready(function() {

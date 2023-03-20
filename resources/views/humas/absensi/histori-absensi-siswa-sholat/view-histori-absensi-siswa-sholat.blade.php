@@ -37,18 +37,15 @@
                 <button type="button" onclick="viewGuru()" class="btn btn-default">
                     Data Histori Absensi Guru dan Pegawai
                 </button>
-                <button type="button" class="btn btn-primary">
+                <button type="button" onclick="viewSiswa()" class="btn btn-default">
                     Data Histori Absensi Siswa
                 </button>
-                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
-                    <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
-                        Data Histori Absensi Siswa Pondok
-                    </button>
-
-                    <button type="button" onclick="viewSiswaSholat()" class="btn btn-default">
-                        Data Histori Sholat
-                    </button>
-                @endif
+                <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
+                    Data Histori Absensi Siswa Pondok
+                </button>
+                <button type="button" class="btn btn-primary">
+                    Data Histori Sholat
+                </button>
             @endif
 
             <div class="card" style="margin-top: 10px">
@@ -59,10 +56,10 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa-sholat') }}">
                         {{ csrf_field() }}
                         <div class="row clearfix">
-                            <div class="col-md-4 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Kelas
                                 </h2>
@@ -73,13 +70,11 @@
                                         <option value="2">-- Madrasah Aliyah (MA) --</option>
                                     @endif
                                     @foreach ($kelas as $k)
-                                        <option value="{{ $k->id_kelas }}"
-                                            @if ($wali_kelas->id_kelas ?? null == $k->id_kelas) SELECTED @endif>{{ $k->nm_kelas }}
-                                        </option>
+                                        <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4 col-sm-12 col-xs-12">
+                            {{-- <div class="col-md-4 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Status
                                 </h2>
@@ -92,9 +87,9 @@
                                     <option value="Alpha">Alpha</option>
                                     <option value="Belum Absent">Belum Absent</option>
                                 </select>
-                            </div>
+                            </div> --}}
 
-                            <div class="col-md-4 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Tanggal
                                 </h2>
@@ -163,13 +158,12 @@
         window.location = '/humas#absensi/histori-absensi'
     }
 
-    function viewSiswaPondok() {
-        window.location = '/humas#absensi/histori-absensi-siswa-pondok'
+    function viewSiswa() {
+        window.location = '/humas#absensi/histori-absensi-siswa'
     }
 
-    function viewSiswaSholat() {
-        window.location = '/humas#absensi/histori-absensi-siswa-sholat'
-
+    function viewSiswaPondok() {
+        window.location = '/humas#absensi/histori-absensi-siswa-pondok'
     }
 </script>
 {{-- <script type="text/javascript">
