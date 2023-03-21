@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 
 use App\Exports\HistoriAbsensiDay;
 use App\Exports\HistoriAbsensiMount;
-// use Illuminate\Http\Request;
-// use App\Http\Controllers\Controller;
 use App\Models\Jalur;
 use App\Models\Jurusan;
 use App\Models\Kelas;

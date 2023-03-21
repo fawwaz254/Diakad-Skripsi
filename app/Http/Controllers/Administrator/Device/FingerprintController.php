@@ -360,14 +360,56 @@ class FingerprintController extends BaseController
                 foreach ($data_fp as $data) {
                     // $data_username_pengguna[] = $data['username'];
                     if ($serial_number == 'BWXP222860373' || $serial_number == 'BWXP222860377' || $serial_number == 'BWXP222860378') {
-                        if ($fp_attendences->where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Pondok')->first()) { } else {
+
+                        $dates =  Carbon::parse($date_filter);
+
+                        $firstSubuh = Carbon::create($dates->year, $dates->month, $dates->day, 3, 55, 0);
+                        $endSubuh = Carbon::create($dates->year, $dates->month, $dates->day, 4, 35, 0);
+
+                        $firstDzuhur = Carbon::create($dates->year, $dates->month, $dates->day, 11, 55, 0);
+                        $endDzuhur = Carbon::create($dates->year, $dates->month, $dates->day, 12, 35, 0);
+
+                        $firstMaghrib = Carbon::create($dates->year, $dates->month, $dates->day, 17, 40, 0);
+                        $endMaghrib = Carbon::create($dates->year, $dates->month, $dates->day, 18, 20, 0);
+
+                        $firstIsya = Carbon::create($dates->year, $dates->month, $dates->day, 19, 10, 0);
+                        $endIsya = Carbon::create($dates->year, $dates->month, $dates->day, 19, 50, 0);
+
+                        $fpDate =  Carbon::parse($data['tanggal']);
+                        if ($fpDate->between($firstSubuh, $endSubuh) || $fpDate->between($firstDzuhur, $endDzuhur) || $fpDate->between($firstMaghrib, $endMaghrib) || $fpDate->between($firstIsya, $endIsya)) {
+                            if ($fp_attendences->where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Sholat')->first()) { } else {
+                                $list_data[] = [
+                                    'id_fp_device' =>  $device->id_fp_device,
+                                    'username' => $data['username'],
+                                    'status' => $data['status'],
+                                    'tanggal' => $data['tanggal'],
+                                    'fp_date' => $data['tanggal'],
+                                    'unit' => 'Sholat',
+                                    'created_at' => $now,
+                                ];
+                            }
+                        } else {
+                            if ($fp_attendences->where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Pondok')->first()) { } else {
+                                $list_data[] = [
+                                    'id_fp_device' =>  $device->id_fp_device,
+                                    'username' => $data['username'],
+                                    'status' => $data['status'],
+                                    'tanggal' => $data['tanggal'],
+                                    'fp_date' => $data['tanggal'],
+                                    'unit' => 'Pondok',
+                                    'created_at' => $now,
+                                ];
+                            }
+                        }
+                    } elseif ($serial_number == 'BWXP221661050' || $serial_number == 'BWXP221660109' || $serial_number == 'BWXP221660991' || $serial_number == 'BWXP221660110' || $serial_number == 'BWXP221660113') {
+                        if ($fp_attendences->where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Sholat')->first()) { } else {
                             $list_data[] = [
                                 'id_fp_device' =>  $device->id_fp_device,
                                 'username' => $data['username'],
                                 'status' => $data['status'],
                                 'tanggal' => $data['tanggal'],
                                 'fp_date' => $data['tanggal'],
-                                'unit' => 'Pondok',
+                                'unit' => 'Sholat',
                                 'created_at' => $now,
                             ];
                         }

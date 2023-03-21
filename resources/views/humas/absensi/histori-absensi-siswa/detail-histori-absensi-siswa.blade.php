@@ -11,6 +11,10 @@
                 <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
                     Data Histori Absensi Siswa Pondok
                 </button>
+
+                <button type="button" onclick="viewSiswaSholat()" class="btn btn-default">
+                    Data Histori Sholat
+                </button>
             @endif
         @endif
         <div class="card" style="margin-top: 10px">
@@ -239,6 +243,11 @@
     function editAbsensi(currUser) {
         window.location =
             `/{{ Request::segment(1) }}#absensi/histori-absensi-siswa/${currUser}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/edit`
+    }
+
+    function viewSiswaSholat() {
+        window.location = '/humas#absensi/histori-absensi-siswa-sholat'
+
     }
 
 
