@@ -1,19 +1,14 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#setting-kelas/kelas') }}"><i
-                    class="material-icons">backspace</i><span>Kembali View Kelas</span></a></h2>
-    </div>
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link "
                 href="{{ url(Request::segment(1) . '#setting-kelas/wali-kelas') }}"><i
-                    class="material-icons">backspace</i><span>Kembali Pilih Kelas</span></a></h2>
-    </div>
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
+                    class="material-icons">backspace</i><span>Kembali</span></a>
+            <a class="btn bg-green waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#setting-kelas/wali-kelas/add/' . $data_kelas->id_kelas) }}"><i
-                    class="material-icons">note_add</i><span>Tambah Wali Kelas</span></a></h2>
+                    class="material-icons">note_add</i><span>Tambah Wali Kelas</span></a>
+        </h2>
     </div>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
