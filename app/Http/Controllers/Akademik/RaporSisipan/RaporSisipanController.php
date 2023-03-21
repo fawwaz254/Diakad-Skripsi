@@ -88,7 +88,7 @@ class RaporSisipanController extends Controller
             $thn_akademik_semester = $input->tahun_ajaran;
         }
 
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')
             ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
@@ -111,9 +111,6 @@ class RaporSisipanController extends Controller
         $nilaiRaporSisipans = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->get();
 
         return Datatables::of($list_data)
-            ->addColumn('mata_pelajaran', function ($item) {
-                return $item->mata_pelajaran->nm_mata_pelajaran;
-            })
             ->addColumn('jumlah', function ($item) use ($komponen, $siswa, $setting, $nilaiRaporSisipans) {
                 //semua siswa
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();

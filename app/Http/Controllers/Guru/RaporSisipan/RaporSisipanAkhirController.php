@@ -88,7 +88,7 @@ class RaporSisipanAkhirController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
             $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
         })->orderBy('created_at', 'desc');
 

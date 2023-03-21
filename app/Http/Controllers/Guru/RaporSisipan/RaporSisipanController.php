@@ -20,6 +20,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Siswa;
 use App\Imports\UploadRaporSisipanSTS;
 use App\Jobs\CreateRaporSisipan;
+use App\Models\JenisMataPelajaran;
 use App\Models\Jurusan;
 use App\Models\Setting;
 use Auth;
@@ -45,9 +46,10 @@ class RaporSisipanController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data['list_mapel'] = MataPelajaran::all();
+        // $data['list_mapel'] = MataPelajaran::with('jenis_mata_pelajaran')->get();
         $data['list_kelas'] = Kelas::all();
         $data['list_jurusan'] = Jurusan::all();
+        $data['jenis_mapel'] = JenisMataPelajaran::all();
 
         return view('guru/rapor-sisipan/daftar-nilai-sts/add-daftar-nilai-sts', compact('auth_data'), $data);
     }
@@ -245,7 +247,7 @@ class RaporSisipanController extends Controller
             $thn_akademik_semester = $input->tahun_ajaran;
         }
 
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
             $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
         })->orderBy('created_at', 'desc');
 
@@ -381,15 +383,27 @@ class RaporSisipanController extends Controller
         }
     }
 
-    public function getDataFromJurusan(Request $request)
+    public function getMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->get();
+
+        // $auth_data = $input->auth_data;
+        // $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');
         $data['kelas'] = Kelas::where('id_jurusan', $input->jurusan)->get();
+
+        if (!empty($input->jurusan) && !empty($input->jenis_mata_pelajaran)) {
+            $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');
+        } elseif (!empty($input->jurusan) && empty($input->jenis_mata_pelajaran)) {
+            $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->get()->sortBy('kd_mata_pelajaran');
+        } elseif (empty($input->jurusan) && !empty($input->jenis_mata_pelajaran)) {
+            $data['mapel'] = MataPelajaran::where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');
+        } else {
+            $data['mapel'] = null;
+        }
 
         return $data;
     }
+
 
     public function pdfDaftarNilaiSTS(Request $request, $id_rapor_sisipan)
     {

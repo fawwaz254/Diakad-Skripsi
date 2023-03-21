@@ -72,7 +72,7 @@ class RaporSisipanAkhirController extends Controller
         }
 
 
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
             $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
         })->orderBy('created_at', 'desc');
         $siswa = Siswa::with('pengguna.status_pengguna')
@@ -90,9 +90,6 @@ class RaporSisipanAkhirController extends Controller
 
         $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->get();
         return Datatables::of($list_data)
-            ->addColumn('mata_pelajaran', function ($item) {
-                return $item->mata_pelajaran->nm_mata_pelajaran;
-            })
             ->addColumn('jumlah', function ($item) use ($komponen1, $komponen2, $siswa, $setting, $nilaiRaporSisipans) {
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
                 if ($setting->value == '3') {

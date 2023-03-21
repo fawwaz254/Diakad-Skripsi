@@ -18,7 +18,7 @@
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sts/action-daftar-nilai-sts/add/0') }}">
                         {{ csrf_field() }}
                         <div class="row clearfix">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label>Jurusan</label>
                                 <select class="form-control show-tick" name="id_jurusan" onchange="changeJurusan(this)"
                                     required>
@@ -29,7 +29,22 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4">
+
+                            <div class="col-md-3">
+                                <label>Jenis Mata Pelajaran</label>
+                                <select class="form-control show-tick" name="id_jenis_mata_pelajaran"
+                                    onchange="changeJurusan(this)" required>
+                                    <option selected disabled>-- Pilih Semua --</option>
+                                    @foreach ($jenis_mapel as $jenis)
+                                        <option value="{{ $jenis->id_jenis_mata_pelajaran }}">
+                                            {{ $jenis->nm_jenis_mata_pelajaran }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+                            <div class="col-md-3">
                                 <label>Mata Pelajaran</label>
                                 <select class="form-control show-tick" name="id_mata_pelajaran" required>
                                     {{-- <option selected disabled>-- Pilih Mata Pelajaran --</option> --}}
@@ -40,7 +55,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label>Kelas</label>
                                 <select class="form-control show-tick" name="id_kelas" required>
                                     {{-- <option selected disabled>-- Pilih Kelas --</option> --}}
@@ -73,18 +88,19 @@
 <script>
     function changeJurusan(el) {
         $.ajax({
-            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/jurusan') }}',
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getMataPelajaran') }}',
             type: 'POST',
             data: {
-                jurusan: $('select[name=id_jurusan]').val()
+                jurusan: $('select[name=id_jurusan]').val(),
+                jenis_mata_pelajaran: $('select[name=id_jenis_mata_pelajaran]').val(),
             },
             success: function(result) {
-                // alert(result);
                 $('select[name=id_mata_pelajaran]').html('');
                 var html = '<option value="">-- Pilih Mata Pelajaran --</option>';
                 $.each(result['mapel'], function(key, item) {
                     html += '<option value="' + item.id_mata_pelajaran + '">' + item
-                        .nm_mata_pelajaran + ' (' + item.kd_mata_pelajaran + ')</option>'
+                        .nm_mata_pelajaran + ' (' + item.kd_mata_pelajaran +
+                        ')</option>'
                 });
                 $('select[name=id_mata_pelajaran]').html(html);
 

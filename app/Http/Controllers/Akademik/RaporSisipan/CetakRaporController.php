@@ -261,7 +261,7 @@ class CetakRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $mapel = MataPelajaran::with('urutan_rapor_sisipan', 'jurusan')->get()->sortBy('urutan_rapor_sisipan.urutan');
+        $mapel = MataPelajaran::with('urutan_rapor_sisipan', 'jurusan', 'jenis_mata_pelajaran')->get()->sortBy('urutan_rapor_sisipan.urutan');
 
         return Datatables::of($mapel)
             ->addColumn('urutan', function ($item) {
