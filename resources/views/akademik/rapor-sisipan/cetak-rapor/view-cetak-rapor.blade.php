@@ -43,9 +43,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>NIS</th>
+                                    <th>Kelas</th>
+                                    <th>Jurusan</th>
                                     <th>Nama</th>
-                                    <th>Action</th>
                                     <th>Semester</th>
                                     <th>Jumlah Mapel yang sudah terisi</th>
                                     {{-- <th>Semester</th> --}}
