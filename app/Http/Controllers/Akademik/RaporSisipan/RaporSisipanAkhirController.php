@@ -232,6 +232,7 @@ class RaporSisipanAkhirController extends Controller
             }
             return view('guru/rapor-sisipan/daftar-nilai-sas/cetak-nilai-sas', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'nilai_komponen', 'rapor_sisipan'));
         } elseif ($setting == '3') {
+            $list_kd_aktif = [];
             foreach ($list_data as $key => $data) {
                 $data1 = $list_nilai->where('id_komponen_nilai', $data->id_komponen_nilai)->where('nilai', '!=', 0)->first();
                 if (!empty($data1)) {
