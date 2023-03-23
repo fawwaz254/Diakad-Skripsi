@@ -278,9 +278,7 @@ class RaporSisipanController extends Controller
                 //semua siswa
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
                 if ($setting->value == '3') {
-                    $nilaiSiswaKosong = $allnilaiSiswaKosong->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
-                        $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                    })->count();
+                    $nilaiSiswaKosong = $allnilaiSiswaKosong->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->count();
                 } else { }
                 $nilaiSiswaKosong = $allnilaiSiswaKosong->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')
                     // ->whereHas('siswa', function ($query) use ($item) {
