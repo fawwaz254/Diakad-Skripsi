@@ -8,15 +8,17 @@
             {{-- <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/addSub') }}"><i
                     class="material-icons">add</i><span>Tambah Sub</span></a> --}}
-            {{-- <a class="btn bg-blue waves-effect target-link" href=""><i class="material-icons">add</i><span>Tambah
-                    Sub</span></a> --}}
+            <a class="btn bg-green waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/' . Request::segment(4) . '/' . 'add') }}"><i
+                    class="material-icons">add</i><span>Tambah
+                    Deskrispi</span></a>
         </h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header bg-cyan">
-                    <h2>Cetak Rapor</h2>
+                    <h2>Deskripsi Mata Pelajaran</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">

@@ -193,7 +193,24 @@ class CetakRaporController extends Controller
             ];
         } else {
 
-            if ($mode == 'add') { } elseif ($mode == 'edit') {
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $rapor_sisipan_deskripsi = new RaporSisipanDeskripsi;
+                $rapor_sisipan_deskripsi->id_rapor_sisipan_deskripsi = $id;
+                $rapor_sisipan_deskripsi->nm_mata_pelajaran = $input->nm_mata_pelajaran;
+                $rapor_sisipan_deskripsi->tingkat = $input->tingkat;
+                $rapor_sisipan_deskripsi->kd_deskripsi = $input->kd_deskripsi;
+                $rapor_sisipan_deskripsi->deskripsi1 = $input->deskripsi1;
+                $rapor_sisipan_deskripsi->deskripsi2 = $input->deskripsi2;
+                $rapor_sisipan_deskripsi->updated_at = $now;
+                $rapor_sisipan_deskripsi->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'rapor-sisipan/cetak-rapor/viewDeskripsi',
+                    'message' => 'Add Deskripsi Successfully'
+                ];
+            } elseif ($mode == 'edit') {
 
                 $rapor_sisipan_deskripsi = RaporSisipanDeskripsi::find($id);
                 $rapor_sisipan_deskripsi->nm_mata_pelajaran = $input->nm_mata_pelajaran;
@@ -202,7 +219,6 @@ class CetakRaporController extends Controller
                 $rapor_sisipan_deskripsi->deskripsi1 = $input->deskripsi1;
                 $rapor_sisipan_deskripsi->deskripsi2 = $input->deskripsi2;
                 $rapor_sisipan_deskripsi->updated_at = $now;
-                // $rapor_sisipan_deskripsi->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor_sisipan_deskripsi->save();
 
                 return [
@@ -231,8 +247,6 @@ class CetakRaporController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        // dd($mata_pelajaran);
-
 
         if ($urutan_rapor_sisipan = UrutanRaporSisipan::find($mata_pelajaran)) {
             $urutan_rapor_sisipan->urutan               = $input->urutan;
@@ -261,7 +275,7 @@ class CetakRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $mapel = MataPelajaran::with('urutan_rapor_sisipan', 'jurusan')->get()->sortBy('urutan_rapor_sisipan.urutan');
+        $mapel = MataPelajaran::with('urutan_rapor_sisipan', 'jurusan', 'jenis_mata_pelajaran')->get()->sortBy('urutan_rapor_sisipan.urutan');
 
         return Datatables::of($mapel)
             ->addColumn('urutan', function ($item) {
@@ -484,6 +498,8 @@ class CetakRaporController extends Controller
             }
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor3', compact('auth_data', 'kelas', 'list_siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'sub', 'list_nilai', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'nilai_komponen'));
+        } elseif ($setting == '3') {
+            echo 'maintane';
         } else { }
     }
 
@@ -500,8 +516,6 @@ class CetakRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna')->get();
-
-
 
         return Datatables::of($list_siswa)
             // ->editColumn('deskripsi1', function ($item) {
@@ -651,5 +665,13 @@ class CetakRaporController extends Controller
 
             //     return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor3', compact('auth_data', 'kelas', 'list_siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'sub', 'list_nilai', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'nilai_komponen'));
         } else { }
+    }
+
+    public function addDeskripsi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $mata_pelajaran = MataPelajaran::select('nm_mata_pelajaran')->groupBy('nm_mata_pelajaran')->get();
+        return view('akademik/rapor-sisipan/cetak-rapor/add-deskripsi-rapor-sisipan', compact('auth_data', 'mata_pelajaran'));
     }
 }

@@ -44,6 +44,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
+                                    <th>Jenis Mata Pelajaran</th>
                                     <th>Kelas</th>
                                     <th>Nilai Siswa Terisi</th>
                                     {{-- <th>Nilai SAS Terisi Lengkap</th> --}}
@@ -94,6 +95,12 @@
             {
                 data: 'mata_pelajaran.nm_mata_pelajaran',
                 name: 'mata_pelajaran.nm_mata_pelajaran',
+                className: 'align-center',
+                orderable: false,
+            },
+            {
+                data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+                name: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
                 className: 'align-center',
                 orderable: false,
             },
