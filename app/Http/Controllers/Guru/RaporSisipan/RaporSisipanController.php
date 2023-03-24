@@ -86,10 +86,8 @@ class RaporSisipanController extends Controller
         }
 
         if ($mode == 'add') {
-            $cekDuplicate = RaporSisipan::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)
-                ->whereHas('semester', function ($query) use ($semester_aktif) {
-                    $query->where('thn_akademik_semester', '=', $semester_aktif->thn_akademik_semester);
-                })->first();
+            $cekDuplicate = RaporSisipan::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $semester_aktif->id_semester)
+                ->first();
             $validator = Validator::make($request->all(), [
                 'id_mata_pelajaran' => 'required',
                 'id_kelas'              => 'required'
@@ -291,7 +289,7 @@ class RaporSisipanController extends Controller
                 return $data;
             })
             ->editColumn('semester', function ($item) {
-                return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semeter;
+                return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
             })
             ->addColumn('action', function ($item) use ($status) {
                 $data = array(
