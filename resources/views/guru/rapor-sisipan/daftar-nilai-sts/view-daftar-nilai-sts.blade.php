@@ -15,14 +15,14 @@
                 <label for="data_semua_pengguna">Data Semua Pengguna</label>
             </h2>
         </div>
-        <div class="dropdown" style="display: inline;">
+        <div class="dropdown" style="display: inline; margin-right:50px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 @foreach ($data_semester as $data)
-                    <li> <a onclick="changeThn(this)" data-id=" {{ $data->thn_akademik_semester }} ">
-                            {{ $data->tahun_ajaran }}
-                            @if ($semester_aktif->thn_akademik_semester == $data->thn_akademik_semester)
+                    <li> <a onclick="changeThn(this)" data-id=" {{ $data->id_semester }} ">
+                            {{ $data->tahun_ajaran . ' ' . $data->nm_semester }}
+                            @if ($semester_aktif->id_semester == $data->id_semester)
                                 (Aktif)
                             @endif
                         </a>
@@ -33,7 +33,7 @@
     </div>
 
     <input type="hidden" id="status" value="0">
-    <input type="hidden" id="tahun" value="">
+    <input type="hidden" id="id_semester" value="">
 </div>
 
 <div class="row clearfix">
@@ -50,6 +50,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Mata Pelajaran</th>
+                                <th>Jenis Mata Pelajaran</th>
                                 <th>Kelas</th>
                                 {{-- <th>Jurusan</th> --}}
                                 <th>Nilai Siswa Terisi</th>
@@ -86,7 +87,7 @@
             type: 'GET',
             data: function(d) {
                 d.status = $('#status').val();
-                d.tahun_ajaran = $('#tahun').val();
+                d.id_semester = $('#id_semester').val();
             }
         },
         columns: [{
@@ -98,6 +99,12 @@
             {
                 data: 'mata_pelajaran.nm_mata_pelajaran',
                 name: 'mata_pelajaran.nm_mata_pelajaran',
+                className: 'align-center',
+                orderable: false,
+            },
+            {
+                data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+                name: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
                 className: 'align-center',
                 orderable: false,
             },
@@ -210,7 +217,7 @@
 
     function changeThn(value) {
         var item = $(value);
-        $('#tahun').val(item.attr('data-id'));
+        $('#id_semester').val(item.attr('data-id'));
         primary_table.draw();
     }
 

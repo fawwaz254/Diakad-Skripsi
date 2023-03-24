@@ -27,8 +27,10 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
+                                    <th>Jenis Mapel</th>
                                     <th>Jurusan</th>
                                     <th>Kode Mata Pelajaran</th>
+
                                     <th>Urutan</th>
                                     <th>Action</th>
                                 </tr>
@@ -67,6 +69,11 @@
             {
                 data: 'nm_mata_pelajaran',
                 name: 'nm_mata_pelajaran',
+                className: 'align-center'
+            },
+            {
+                data: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+                name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
                 className: 'align-center'
             },
             {
