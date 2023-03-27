@@ -251,7 +251,7 @@ class RaporSisipanController extends Controller
             $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
         }
 
-        // $jurusan = Jurusan::all();
+
         $siswa = Siswa::with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {
                 $query->where('aktif_status_pengguna', '=', '1');
@@ -269,7 +269,7 @@ class RaporSisipanController extends Controller
         $allnilaiSiswaKosong = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
             $query->where('id_semester', $id_semester);
         })->get();
-        // dd($allnilaiSiswaKosong->where('id_rapor_sisipan', 'Hz7M716705600326392b92106bff')->get());
+
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($siswa, $allnilaiSiswaKosong, $setting) {
@@ -278,11 +278,7 @@ class RaporSisipanController extends Controller
                 if ($setting->value == '3') {
                     $nilaiSiswaKosong = $allnilaiSiswaKosong->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->count();
                 } else { }
-                $nilaiSiswaKosong = $allnilaiSiswaKosong->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')
-                    // ->whereHas('siswa', function ($query) use ($item) {
-                    //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                    // })
-                    ->count();
+                $nilaiSiswaKosong = $allnilaiSiswaKosong->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->count();
 
                 $data = array(
                     'jumlah_siswa' => $allSiswa,
