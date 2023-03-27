@@ -247,9 +247,6 @@ class RaporSisipanController extends Controller
 
         $list_data = RaporSisipan::where('id_semester', $id_semester)->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')->orderBy('created_at', 'desc');
 
-        if ($status == '0') {
-            $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
-        }
 
 
         $siswa = Siswa::with('pengguna.status_pengguna')
@@ -265,10 +262,18 @@ class RaporSisipanController extends Controller
                 $komponen = $komponen->id_komponen_nilai;
             }
         }
-        // $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
-        $allnilaiSiswaKosong = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
-            $query->where('id_semester', $id_semester);
-        })->get();
+
+        if ($status == '0') {
+            $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+            $id_pengguna = $auth_data->pengguna->id_pengguna;
+            $allnilaiSiswaKosong = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->whereHas('rapor_sisipan', function ($query) use ($id_semester, $id_pengguna) {
+                $query->where('id_semester', $id_semester)->where('id_pengguna', $id_pengguna);
+            })->get();
+        } else {
+            $allnilaiSiswaKosong = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
+                $query->where('id_semester', $id_semester);
+            })->get();
+        }
 
 
         return Datatables::of($list_data)
