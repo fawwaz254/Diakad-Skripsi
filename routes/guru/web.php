@@ -632,8 +632,6 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('rapor-sisipan')->group(function () {
             Route::prefix('daftar-nilai-sts')->group(function () {
 
-                // Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
-                // Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
                 Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
                 Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
                 Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
@@ -650,8 +648,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
             });
             Route::prefix('daftar-nilai-sas')->group(function () {
-                // Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
-                // Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
 
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
                 Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
