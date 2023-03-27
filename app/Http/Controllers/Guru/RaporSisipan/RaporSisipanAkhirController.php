@@ -27,40 +27,6 @@ use Validator;
 
 class RaporSisipanAkhirController extends Controller
 {
-    // public function viewSemesterNilaiSAS(Request $request)
-    // {
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
-    //     $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-
-    //     return view('guru/rapor-sisipan/daftar-nilai-sas/view-semester-nilai-sas', compact('auth_data', 'data_semester', 'semester_aktif'));
-    // }
-
-    // public function actionSemesterNilaiSAS(Request $request)
-    // {
-    //     # code...
-    //     $input = (object) $request->input();
-    //     // $auth_data = $input->auth_data;
-
-    //     $validator = Validator::make($request->all(), [
-    //         'thn_akademik_semester' => 'required'
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return [
-    //             'status' => 300, // FAILED
-    //             'message' => $validator->errors()->first()
-    //         ];
-    //     } else {
-    //         return [
-    //             'status' => 204, // SUCCESS AND LOAD CONTENT
-    //             'path' => 'rapor-sisipan/daftar-nilai-sas/' . $input->thn_akademik_semester
-    //         ];
-    //     }
-    // }
-
 
     public function viewDaftarNilaiSAS(Request $request)
     {
@@ -90,10 +56,6 @@ class RaporSisipanAkhirController extends Controller
         $auth_data = $input->auth_data;
         $list_data = RaporSisipan::where('id_semester', $id_semester)->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')->orderBy('created_at', 'desc');
 
-        if ($status == '0') {
-            $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
-        }
-
         $siswa = Siswa::with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {
                 $query->where('aktif_status_pengguna', '=', '1');
@@ -107,10 +69,18 @@ class RaporSisipanAkhirController extends Controller
             $komponen2 = KomponenNilaiRaporSisipan::where('type', 'uas')->first()->id_komponen_nilai;
         }
 
-        $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
-            $query->where('id_semester', $id_semester);
-        })->get();
+        if ($status == '0') {
+            $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+            $id_pengguna = $auth_data->pengguna->id_pengguna;
 
+            $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('rapor_sisipan', function ($query) use ($id_semester, $id_pengguna) {
+                $query->where('id_semester', $id_semester)->where('id_pengguna', $id_pengguna);
+            })->get();
+        } else {
+            $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('rapor_sisipan', function ($query) use ($id_semester, $id_pengguna) {
+                $query->where('id_semester', $id_semester);
+            })->get();
+        }
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($komponen1, $komponen2, $siswa, $setting, $nilaiRaporSisipans) {
