@@ -107,7 +107,9 @@ class RaporSisipanAkhirController extends Controller
             $komponen2 = KomponenNilaiRaporSisipan::where('type', 'uas')->first()->id_komponen_nilai;
         }
 
-        $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->get();
+        $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
+            $query->where('id_semester', $id_semester);
+        })->get();
 
 
         return Datatables::of($list_data)
@@ -204,11 +206,11 @@ class RaporSisipanAkhirController extends Controller
             })
             ->orderBy('nis_siswa')->get();
 
-        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
-            ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
-                $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
-            })->whereHas('komponen_nilai', function ($query) {
+        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
+            ->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1);
+            })->whereHas('rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
+                $query->where('id_rapor_sisipan', $id_rapor_sisipan);
             })->get();
 
         $nilai_siswa = [];
@@ -304,10 +306,11 @@ class RaporSisipanAkhirController extends Controller
             ->orderBy('nis_siswa')
             ->get();
 
-        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
-            ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
-                $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
+        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
+            ->whereHas('rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
+                $query->where('id_rapor_sisipan', $id_rapor_sisipan);
             })->get();
+
         if ($setting == '0') {
             $nilai_siswa = [];
             if ($list_siswa) {
