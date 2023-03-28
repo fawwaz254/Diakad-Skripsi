@@ -36,10 +36,7 @@
     var modul_url = 'rapor-sisipan';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'komponen-nilai/datatables';
     var edit_url = role_url + '#' + modul_url + '/' + 'komponen-nilai/edit';
-    // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
-    // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
-    // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
-    // var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
+
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,

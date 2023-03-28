@@ -174,18 +174,15 @@ class RaporSisipanController extends Controller
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
 
         $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
-        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
             $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
-        })
-            ->orderBy('nis_siswa')->get();
+        })->orderBy('nis_siswa')->get();
 
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
             ->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1)->where('type', '!=', 'uas');
-            })->whereHas('rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-                $query->where('id_rapor_sisipan', $id_rapor_sisipan);
             })->get();
 
         $nilai_siswa = [];
@@ -249,10 +246,9 @@ class RaporSisipanController extends Controller
 
 
 
-        $siswa = Siswa::with('pengguna.status_pengguna')
-            ->whereHas('pengguna.status_pengguna', function ($query) {
-                $query->where('aktif_status_pengguna', '=', '1');
-            })->get();
+        $siswa = Siswa::whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->get();
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first();
         if ($setting->value == '3') {
             $komponen = KomponenNilaiRaporSisipan::where('urutan', '1')->first()->id_komponen_nilai;
@@ -325,8 +321,6 @@ class RaporSisipanController extends Controller
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
             ->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1)->where('type', '!=', 'uas');
-            })->whereHas('rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-                $query->where('id_rapor_sisipan', $id_rapor_sisipan);
             })->get();
 
         $nilai_siswa = [];
@@ -411,7 +405,7 @@ class RaporSisipanController extends Controller
 
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas', 'semester', 'pengguna')->first();
         $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
-        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
             $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
@@ -421,8 +415,6 @@ class RaporSisipanController extends Controller
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
             ->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1)->where('type', '!=', 'uas');
-            })->whereHas('rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-                $query->where('id_rapor_sisipan', $id_rapor_sisipan);
             })->get();
 
 

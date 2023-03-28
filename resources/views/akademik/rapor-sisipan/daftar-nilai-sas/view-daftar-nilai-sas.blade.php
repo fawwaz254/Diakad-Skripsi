@@ -1,21 +1,6 @@
 <div class="container-fluid">
     <div class="block-header" style=" display: flex;
     justify-content: space-between;">
-        <div>
-            <h2>
-                {{-- <a class="btn bg-blue waves-effect target-link"
-                    href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas') }}"><i
-                        class="material-icons">keyboard_backspace</i><span>Kembali</span></a> --}}
-                {{-- <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas/importExcel/' . $thn_akademik_semester) }}"><i
-                    class="material-icons">cloud_upload</i><span> Import Excel</span></a> --}}
-
-
-                {{-- <a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
-                    class="material-icons">add</i><span>Tambah Nilai</span></a> --}}
-            </h2>
-        </div>
         <div class="dropdown" style="display: inline; margin-right:50px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
@@ -52,8 +37,6 @@
                                     <th>Kelas</th>
                                     <th>Nilai Siswa Terisi</th>
                                     <th>Semester</th>
-                                    {{-- <th>Nilai</th>
-                                    <th>Template Excel</th> --}}
                                     <th>Action</th>
                                     <th>Pembuat</th>
                                 </tr>
@@ -69,12 +52,6 @@
 <script type="text/javascript">
     var modul_url = 'rapor-sisipan';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/datatables';
-    // alert(datatable_url);
-    // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
-    // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sas/nilai';
-    // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
-    // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
-    // var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/excel';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/pdf';
 
     var primary_table = $('#primary_table').DataTable({
@@ -137,32 +114,6 @@
                 searchable: false,
                 orderable: false,
             },
-            // {
-            //     data: 'action',
-            //     name: 'action',
-            //     searchable: false,
-            //     orderable: false,
-            //     className: 'align-center',
-            //     render: function(data) {
-            //         return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-            //             nilai_url + '/' + data.id + '">' +
-            //             '    <i class="material-icons">visibility</i>' +
-            //             '</a> ';
-            //     }
-            // },
-            // {
-            //     data: 'action',
-            //     name: 'action',
-            //     searchable: false,
-            //     orderable: false,
-            //     className: 'align-center',
-            //     render: function(data) {
-            //         return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-            //             excel_url + '/' + data.id + '" target="_blank">' +
-            //             '    <i class="material-icons">backup</i>' +
-            //             '</a> ';
-            //     }
-            // },
             {
                 data: 'action',
                 name: 'action',
@@ -170,10 +121,6 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    // return  '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                    // print_url + '/' + data.id + '"  target="_blank">' +
-                    //     '    <i class="material-icons">picture_in_picture</i>' +
-                    //     '</a> '+
                     return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                         pdf_url + '/' + data.id + '"  target="_blank">' +
                         '    <i class="material-icons">picture_as_pdf</i>' +
