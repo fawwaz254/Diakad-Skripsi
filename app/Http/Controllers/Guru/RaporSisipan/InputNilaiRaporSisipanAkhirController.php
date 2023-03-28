@@ -38,8 +38,6 @@ class InputNilaiRaporSisipanAkhirController extends Controller
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
             ->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1);
-            })->whereHas('rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-                $query->where('id_rapor_sisipan', $id_rapor_sisipan);
             })->get();
 
         $nilai_siswa = [];
@@ -91,27 +89,20 @@ class InputNilaiRaporSisipanAkhirController extends Controller
             $auth_data = $input->auth_data;
 
             $rapor_sisipan = RaporSisipan::find($id_rapor_sisipan);
-            // $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->get();
-            $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')
+            $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)
                 ->whereHas('pengguna.status_pengguna', function ($query) {
                     $query->where('aktif_status_pengguna', '=', '1');
                 })
                 ->orderBy('nis_siswa')
                 ->get();
 
-            $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
-                ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
-                    $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
-                })->whereHas('komponen_nilai', function ($query) {
+            $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
+                ->whereHas('komponen_nilai', function ($query) {
                     $query->where('status', 1);;
-                })->whereHas('rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-                    $query->where('id_rapor_sisipan', $id_rapor_sisipan);
                 })->get();
 
 
-            $nilaiRaporSisipans = NilaiRaporSisipan::whereHas('rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-                $query->where('id_rapor_sisipan', $id_rapor_sisipan);
-            })->get();
+            $nilaiRaporSisipans = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->get();
 
             if ($list_siswa) {
                 $nilai = $list_nilai->toArray();

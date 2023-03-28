@@ -35,41 +35,6 @@ use Validator;
 class CetakRaporController extends Controller
 {
 
-    // public function viewSemesterCetakRapor(Request $request)
-    // {
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
-    //     $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-
-    //     return view('akademik/rapor-sisipan/cetak-rapor/view-semester-cetak-rapor', compact('auth_data', 'data_semester', 'semester_aktif'));
-    // }
-
-    // public function actionSemesterCetakRapor(Request $request)
-    // {
-    //     # code...
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $validator = Validator::make($request->all(), [
-    //         'thn_akademik_semester' => 'required'
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return [
-    //             'status' => 300, // FAILED
-    //             'message' => $validator->errors()->first()
-    //         ];
-    //     } else {
-    //         return [
-    //             'status' => 204, // SUCCESS AND LOAD CONTENT
-    //             'path' => 'rapor-sisipan/cetak-rapor/' . $input->thn_akademik_semester
-    //         ];
-    //     }
-    // }
-
-
     public function viewCetakRapor(Request $request)
     {
         $input = (object) $request->input();
@@ -384,7 +349,7 @@ class CetakRaporController extends Controller
         // $rapor_sisipan = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran', 'kelas', 'semester','pengguna')->get();
 
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
-        $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
 
