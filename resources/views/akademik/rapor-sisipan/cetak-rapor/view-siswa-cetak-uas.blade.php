@@ -32,12 +32,12 @@
 </div>
 
 <script type="text/javascript">
-    var thn_akademik_semester = {!! json_encode($thn_akademik_semester) !!};
+    var id_semester = {!! json_encode($id_semester) !!};
     var id_kelas = {!! json_encode($id_kelas) !!};
     var modul_url = 'rapor-sisipan';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables/view-siswa-uas/' +
-        thn_akademik_semester + '/' + id_kelas;
-    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/printAkhir/' + thn_akademik_semester;
+        id_semester + '/' + id_kelas;
+    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/printAkhir/' + id_semester;
 
 
     var primary_table = $('#primary_table').DataTable({
