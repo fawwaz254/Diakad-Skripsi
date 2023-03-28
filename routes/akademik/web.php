@@ -346,8 +346,6 @@ Route::middleware(['token_staff'])->group(function () {
         // Modul Rapor Sisipan
         Route::prefix('rapor-sisipan')->group(function () {
             Route::prefix('daftar-nilai-sts')->group(function () {
-                // Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
-                // Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
                 Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
                 Route::get('/datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
                 Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
@@ -355,8 +353,6 @@ Route::middleware(['token_staff'])->group(function () {
             });
 
             Route::prefix('daftar-nilai-sas')->group(function () {
-                // Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
-                // Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
                 Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
                 Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
@@ -372,8 +368,6 @@ Route::middleware(['token_staff'])->group(function () {
             });
 
             Route::prefix('cetak-rapor')->group(function () {
-                // Route::get('/', [CetakRaporController::class, 'viewSemesterCetakRapor']);
-                // Route::post('post-cetak-rapor', [CetakRaporController::class, 'actionSemesterCetakRapor']);
                 Route::get('/', [CetakRaporController::class, 'viewCetakRapor']);
                 Route::get('datatables/', [CetakRaporController::class, 'datatablesCetakRapor']);
                 Route::get('print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);

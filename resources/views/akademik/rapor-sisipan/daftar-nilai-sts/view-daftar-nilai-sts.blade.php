@@ -1,13 +1,6 @@
 <div class="container-fluid">
     <div class="block-header" style=" display: flex;
     justify-content: space-between;">
-        <div>
-            <h2>
-                {{-- <a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts') }}"><i
-                    class="material-icons">keyboard_backspace</i><span>Kembali</span></a> --}}
-            </h2>
-        </div>
         <div class="dropdown" style="display: inline; margin-right:50px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
@@ -44,7 +37,6 @@
                                     <th>Kelas</th>
                                     <th>Nilai Siswa Terisi</th>
                                     <th>Semester</th>
-                                    {{-- <th>Nilai</th> --}}
                                     <th>Action</th>
                                     <th>Pembuat</th>
                                 </tr>
@@ -60,9 +52,6 @@
 <script type="text/javascript">
     var modul_url = 'rapor-sisipan';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables';
-    // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
-    // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
-    // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
 
