@@ -14,14 +14,14 @@
                 @endif
             </h2>
         </div>
-        <div class="dropdown" style="display: inline;">
+        <div class="dropdown" style="display: inline; margin-right:50px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
                 @foreach ($data_semester as $data)
-                    <li> <a onclick="changeThn(this)" data-id=" {{ $data->thn_akademik_semester }} ">
-                            {{ $data->tahun_ajaran }}
-                            @if ($semester_aktif->thn_akademik_semester == $data->thn_akademik_semester)
+                    <li> <a onclick="changeThn(this)" data-id=" {{ $data->id_semester }} ">
+                            {{ $data->tahun_ajaran . ' ' . $data->nm_semester }}
+                            @if ($semester_aktif->id_semester == $data->id_semester)
                                 (Aktif)
                             @endif
                         </a>
@@ -29,7 +29,7 @@
                 @endforeach
             </ul>
         </div>
-        <input type="hidden" id="tahun" value="">
+        <input type="hidden" id="id_semester" value="">
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -66,13 +66,8 @@
 <script type="text/javascript">
     var modul_url = 'rapor-sisipan';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables';
-    // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
-    // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
-    // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
-    // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print';
     var uas_url = role_url + '#' + modul_url + '/' + 'cetak-rapor/view-siswa-uas';
-    // var pdf_url2 = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print2/' + thn_akademik_semester;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -82,7 +77,7 @@
             url: datatable_url,
             type: 'GET',
             data: function(d) {
-                d.tahun_ajaran = $('#tahun').val();
+                d.id_semester = $('#id_semester').val();
             }
         },
         columns: [{
@@ -137,7 +132,7 @@
                 render: function(data) {
                     if (data.jumlah != '0') {
                         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            pdf_url + '/' + data.thn_akademik_semester + '/' + data.id_kelas +
+                            pdf_url + '/' + data.id_semester + '/' + data.id_kelas +
                             '"  target="_blank">' +
                             '    <i class="material-icons">picture_as_pdf</i>' +
                             '</a> ';
@@ -158,7 +153,7 @@
                 render: function(data) {
                     if (data.jumlah != '0') {
                         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            uas_url + '/' + data.thn_akademik_semester + '/' + data.id_kelas + '" >' +
+                            uas_url + '/' + data.id_semester + '/' + data.id_kelas + '" >' +
                             '    <i class="material-icons">group</i>' +
                             '</a> ';
                     } else {
@@ -189,7 +184,7 @@
 
     function changeThn(value) {
         var item = $(value);
-        $('#tahun').val(item.attr('data-id'));
+        $('#id_semester').val(item.attr('data-id'));
         primary_table.draw();
     }
 </script>
