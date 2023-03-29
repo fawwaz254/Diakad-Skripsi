@@ -33,7 +33,7 @@ class RaporSisipanSTSController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        if (empty($id_semester) || $id_semester == '0') {
+        if ($id_semester == '0') {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $id_semester = $semester_aktif->id_semester;
         }

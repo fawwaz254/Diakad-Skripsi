@@ -134,9 +134,8 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('nilai-sts')->group(function () {
                 Route::get('/', [RaporSisipanSTSController::class, 'viewRaporSisipanSTS']);
+                Route::post('datatables', [RaporSisipanSTSController::class, 'datatablesRaporSisipan']);
                 Route::get('/cetak/{id_semester}', [RaporSisipanSTSController::class, 'cetakRaporSisipanSTS']);
-                // Route::get('detail/{id}', [DokumenController::class, 'viewDetailDokumen']);
-                // Route::post('datatables', [DokumenController::class, 'datatablesDokumen']);
             });
         });
     });
