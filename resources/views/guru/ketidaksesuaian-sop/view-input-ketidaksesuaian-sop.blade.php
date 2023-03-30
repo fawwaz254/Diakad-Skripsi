@@ -71,9 +71,9 @@
     var modul_url = 'ketidaksesuaian-sop';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-ketidaksesuaian-sop/datatables';
     var edit_url = role_url + '#' + modul_url + '/' + 'input-pelanggaran/edit';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-input-pelanggaran/delete';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-ketidaksesuaian-sop/action/delete';
     var preview_file_url = role_url + '#' + modul_url + '/' + 'input-ketidaksesuaian-sop/preview-file';
-    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-mgmp/download-file';
+    var download_file_url = role_url + '/' + modul_url + '/' + 'input-ketidaksesuaian-sop/download-file';
 
 
     var primary_table = $('#primary_table').DataTable({
@@ -130,18 +130,16 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    if (data.is_sudah_tindakan == 1) {
-                        return '<a>Sudah Ada Tindakan</a>';
-                    } else {
-                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                            edit_url + '/' + data.id + '">' +
-                            '    <i class="material-icons">edit</i>' +
-                            '</a>' +
-                            '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                            delete_url + '\', this)" data-id="' + data.id + '">' +
-                            '    <i class="material-icons">delete_forever</i>' +
-                            '</button>';
-                    }
+
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        edit_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">edit</i>' +
+                        '</a>' +
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                        delete_url + '\', this)" data-id="' + data.id + '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
+
                 }
             }
         ]

@@ -204,24 +204,18 @@ class InputKetidaksesuaianSOPController extends Controller
                 //     'message' => 'Update Pelanggaran Siswa Successfully'
                 // ];
             } elseif ($mode == 'delete') {
-                // if ($tindakanPelanggaran = TindakanPelanggaran::where('id_pelanggaran_siswa', $id)->first()) {
-                //     return [
-                //         'status' => 300, // SUCCESS AND LOAD TABLE
-                //         'message' => 'Failed To Delete Pelanggaran Siswa'
-                //     ];
-                // } else {
-                //     // make object to find id
-                //     $pelanggaranSiswa               = PelanggaranSiswa::find($id);
-                //     $pelanggaranSiswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                //     $pelanggaranSiswa->save();
 
-                //     $pelanggaranSiswa->delete();
+                // make object to find id
+                $pelanggaranSiswa               = KetidaksesuaianSOP::find($id);
+                $pelanggaranSiswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->save();
 
-                //     return [
-                //         'status' => 203, // SUCCESS AND LOAD TABLE
-                //         'message' => 'Delete Pelanggaran Siswa Successfully'
-                //     ];
-                // }
+                $pelanggaranSiswa->delete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Ketidaksesuaian SOP Successfully'
+                ];
             }
         }
     }
@@ -237,5 +231,14 @@ class InputKetidaksesuaianSOPController extends Controller
         $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
 
         return view('guru/ketidaksesuaian-sop/preview-file-ketidaksesuaian-sop', compact('auth_data', 'laporan_kerja_harian', 'link', 'ext'));
+    }
+    public function downloadFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        // $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
+        $laporan_kerja_harian = KetidaksesuaianSOP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+
+        return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
     }
 }
