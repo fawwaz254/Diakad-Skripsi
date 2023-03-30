@@ -409,6 +409,8 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::post('action/{mode}/{id}', [InputKetidaksesuaianSOPController::class, 'actionInputKetidaksesuaianSOP']);
                 Route::post('getUnitKerja', [InputKetidaksesuaianSOPController::class, 'ajaxGetPengguna']);
+                Route::get('preview-file/{id}', [InputKetidaksesuaianSOPController::class, 'previewFile']);
+                Route::get('download-file/{id}', [InputKetidaksesuaianSOPController::class, 'downloadFile']);
             });
 
             Route::prefix('ketidaksesuaian-sop-pribadi')->group(function () {

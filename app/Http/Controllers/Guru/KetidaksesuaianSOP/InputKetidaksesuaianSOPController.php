@@ -102,9 +102,20 @@ class InputKetidaksesuaianSOPController extends Controller
                 return strftime("%d %B %Y", strtotime($item->tgl_pelanggaran));
             })
             ->addColumn('action', function ($item) {
+                if ($item->path_file) {
+                    $file =  Storage::disk('spaces')->url($item->path_file);
+                    $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
+
+                    $note = 'image';
+                } else {
+                    $file = null;
+                    $note = null;
+                }
+
                 $data = array(
-                    'id' => $item->id_pelanggaran_siswa,
-                    'is_sudah_tindakan' => $item->is_sudah_tindakan
+                    'id'        => $item->id_ketidaksesuaian_sop,
+                    'file'      => $file,
+                    'note'      => $item->mapel,
                 );
                 return $data;
             })
@@ -213,5 +224,18 @@ class InputKetidaksesuaianSOPController extends Controller
                 // }
             }
         }
+    }
+
+    public function previewFile($id, Request $request)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $laporan_kerja_harian = KetidaksesuaianSOP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+
+        return view('guru/ketidaksesuaian-sop/preview-file-ketidaksesuaian-sop', compact('auth_data', 'laporan_kerja_harian', 'link', 'ext'));
     }
 }
