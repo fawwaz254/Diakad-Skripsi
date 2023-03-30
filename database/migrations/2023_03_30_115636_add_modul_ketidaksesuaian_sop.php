@@ -7,8 +7,7 @@ use Illuminate\Support\Carbon;
 use App\Models\Modul;
 use App\Models\Role;
 
-
-class CreateMenuRaporSisipanRoleWaliMurid extends Migration
+class AddModulKetidaksesuaianSop extends Migration
 {
     /**
      * Run the migrations.
@@ -19,22 +18,29 @@ class CreateMenuRaporSisipanRoleWaliMurid extends Migration
     {
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $role_id = Role::where('nm_role', 'Wali Murid')->first()->id_role;
+        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
         $modul = Modul::create([
             "id_role"       => $role_id,
-            "nm_modul"      => "Rapor Sisipan",
-            "route"         => "rapor-sisipan",
-            "urutan"        => 5,
+            "nm_modul"      => "Ketidaksesuaian SOP",
+            "route"         => "ketidaksesuaian-sop",
+            "urutan"        => 6,
             "akses"         => 1,
             "created_at"    => $now
         ]);
 
         $modul->menus()->createMany([
             [
-                "nm_menu"      => "Nilai STS",
-                "page"         => "nilai-sts",
+                "nm_menu"      => "Input Ketidaksesuaian SOP",
+                "page"         => "input-ketidaksesuaian-sop",
                 "urutan"       => 1,
+                "akses"        => 1,
+                "created_at"   => $now
+            ],
+            [
+                "nm_menu"      => "Ketidaksesuaian SOP Pribadi",
+                "page"         => "ketidaksesuaian-sop-pribadi",
+                "urutan"       => 2,
                 "akses"        => 1,
                 "created_at"   => $now
             ]
@@ -47,5 +53,7 @@ class CreateMenuRaporSisipanRoleWaliMurid extends Migration
      * @return void
      */
     public function down()
-    { }
+    {
+        //
+    }
 }
