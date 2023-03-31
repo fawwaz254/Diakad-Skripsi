@@ -405,7 +405,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [InputKetidaksesuaianSOPController::class, 'viewInputKetidaksesuaianSOP']);
                 Route::get('datatables', [InputKetidaksesuaianSOPController::class, 'datatablesInputKetidaksesuaianSOP']);
                 Route::get('add', [InputKetidaksesuaianSOPController::class, 'addInputKetidaksesuaianSOP']);
-                // Route::get('input-ketidaksesuaian-sop/edit/{id}', [GuruPiketInputPelanggaranController::class, 'editInputPelanggaran']);
+                Route::get('edit/{id}', [InputKetidaksesuaianSOPController::class, 'editInputKetidaksesuaianSOP']);
 
                 Route::post('action/{mode}/{id}', [InputKetidaksesuaianSOPController::class, 'actionInputKetidaksesuaianSOP']);
                 Route::post('getUnitKerja', [InputKetidaksesuaianSOPController::class, 'ajaxGetPengguna']);

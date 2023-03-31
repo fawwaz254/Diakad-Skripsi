@@ -70,7 +70,7 @@
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'ketidaksesuaian-sop';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-ketidaksesuaian-sop/datatables';
-    var edit_url = role_url + '#' + modul_url + '/' + 'input-pelanggaran/edit';
+    var edit_url = role_url + '#' + modul_url + '/' + 'input-ketidaksesuaian-sop/edit';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-ketidaksesuaian-sop/action/delete';
     var preview_file_url = role_url + '#' + modul_url + '/' + 'input-ketidaksesuaian-sop/preview-file';
     var download_file_url = role_url + '/' + modul_url + '/' + 'input-ketidaksesuaian-sop/download-file';
@@ -130,7 +130,6 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
                         edit_url + '/' + data.id + '">' +
                         '    <i class="material-icons">edit</i>' +

@@ -38,39 +38,17 @@ class InputKetidaksesuaianSOPController extends Controller
         return view('guru/ketidaksesuaian-sop/add-input-ketidaksesuaian-sop', compact('auth_data'));
     }
 
-    // public function editInputPelanggaran($id, Request $request) {
-    //     # code...
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
+    public function editInputKetidaksesuaianSOP($id, Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-    //     // get id_guru
-    //     $guru = Guru::select('id_guru')
-    //         ->where('id_pengguna','=',$auth_data->pengguna->id_pengguna)
-    //         ->first();
 
-    //     $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $ketidaksesuaian_sop = KetidaksesuaianSOP::where('id_ketidaksesuaian_sop', $id)->with('pengguna')->first();
 
-    //     // ambil data all kelas
-    //     $data_kelas = LibKelas::fetchDataKelas($auth_data);
-
-    //     $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
-
-    //     // ambil data all kategori
-    //     $data_kategori = KategoriPelanggaran::with('subkategori_pelanggaran')->where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
-
-    //     $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, $id);
-
-    //     $data_siswa = LibSiswa::fetchDataSiswa($auth_data, null, $data_pelanggaran_siswa->id_siswa);
-
-    //     // ambil data siswa sekelas
-    //     $data_siswa_sekelas = LibSiswa::fetchDataSiswa($auth_data, isset($data_siswa->id_kelas) ? $data_siswa->id_kelas : null);
-
-    //     // convert format date
-    //     $tgl_pelanggaran = strftime( "%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));
-
-    //     return view('guru/guru-piket/input-pelanggaran/edit-input-pelanggaran',compact('auth_data', 'data_kelas', 'data_semester','data_siswa','data_kategori','data_pelanggaran_siswa','tgl_pelanggaran', 'data_siswa_sekelas'));
-
-    // }
+        return view('guru/ketidaksesuaian-sop/edit-input-ketidaksesuaian-sop', compact('auth_data',  'ketidaksesuaian_sop'));
+    }
 
     public function ajaxGetPengguna(Request $request)
     {
@@ -79,13 +57,16 @@ class InputKetidaksesuaianSOPController extends Controller
         // $auth_data = $input->auth_data;
 
         if ($input->unitKerja == 'guru') {
-            $pengguna = Pengguna::where('status_join_table', 2)->get();
+            $pengguna = Pengguna::where('status_join_table', 2)->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
         } elseif ($input->unitKerja == 'tendik') {
-            $pengguna = Pengguna::where('status_join_table', 1)->get();
+            $pengguna = Pengguna::where('status_join_table', 1)->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
         } else {
             $pengguna = Pengguna::get();
         }
-        // $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $input->kelas);
 
         return $pengguna;
     }
@@ -122,7 +103,6 @@ class InputKetidaksesuaianSOPController extends Controller
             ->make(true);
     }
 
-    // // Action POST
     public function actionInputKetidaksesuaianSOP(Request $request, $mode, $id = null)
     {
 
@@ -183,26 +163,41 @@ class InputKetidaksesuaianSOPController extends Controller
                     'message' => 'Save Data Ketidaksesuaian SOP Successfully'
                 ];
             } elseif ($mode == 'edit') {
-                // $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
-                // // make object to find id
-                // $pelanggaranSiswa                               = PelanggaranSiswa::find($id);
-                // $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
-                // $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
-                // $pelanggaranSiswa->id_semester                  = $input->id_semester;
-                // $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
-                // $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
-                // // convert format date
-                // $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
-                // $pelanggaranSiswa->updated_by                   = $input->auth_data->pengguna->id_pengguna;
-                // $pelanggaranSiswa->updated_at                   = $now;
-                // $pelanggaranSiswa->save();
+                $data                               = KetidaksesuaianSOP::find($id);
+                $data->catatan_pelanggaran          = $input->catatan;
+                $data->tgl_pelanggaran              = date_format(date_create($input->tgl), "Y-m-d H:i:s");
+                $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
 
-                // return [
-                //     'status' => 202, // SUCCESS AND LOAD CONTENT
-                //     'path' => $load_url . '/input-pelanggaran',
-                //     'message' => 'Update Pelanggaran Siswa Successfully'
-                // ];
+                if ($request->hasFile('file')) {
+
+                    $validator = Validator::make($request->all(), [
+                        'file' => 'mimes:jpeg,jpg,png,pdf|required|max:5120'
+                    ]);
+
+                    if ($validator->fails()) {
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+                    } else {
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ketidaksesuaiansop/' . $id, request()->file, 'public');
+                        $data->path_file = $file;
+
+                        $upload = $request->file('file');
+                        $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+                        $data->nm_file = $filename;
+                    }
+                }
+
+                $data->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'ketidaksesuaian-sop/input-ketidaksesuaian-sop',
+                    'message' => 'Save Data Ketidaksesuaian SOP Successfully'
+                ];
             } elseif ($mode == 'delete') {
 
                 // make object to find id
@@ -235,7 +230,6 @@ class InputKetidaksesuaianSOPController extends Controller
     public function downloadFile(Request $request, $id = null)
     {
         $input = (object) $request->input();
-        // $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
         $laporan_kerja_harian = KetidaksesuaianSOP::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
 
