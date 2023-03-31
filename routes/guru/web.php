@@ -421,6 +421,15 @@ Route::middleware(['token_staff'])->group(function () {
             });
         });
 
+        Route::prefix('laporan-ketidaksesuaian-sop')->group(function () {
+            Route::prefix('data-ketidaksesuaian-sop')->group(function () {
+                Route::get('/', [KetidaksesuaianSOPController::class, 'viewLaporanKetidaksesuaianSOP']);
+                Route::get('datatables', [KetidaksesuaianSOPController::class, 'datataablesLaporanKetidaksesuaianSOP']);
+                // Route::get('input-ketidaksesuaian-sop/edit/{id}', [GuruPiketInputPelanggaranController::class, 'editInputPelanggaran']);
+
+            });
+        });
+
 
 
 

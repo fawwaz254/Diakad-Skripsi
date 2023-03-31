@@ -18,7 +18,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Guru</th>
+                                    <th>Nama </th>
                                     <th>Catatan Pelanggaran</th>
                                     <th>Tanggal Pelanggaran</th>
                                     <th>File</th>

@@ -26,7 +26,7 @@ class InputKetidaksesuaianSOPController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('guru/ketidaksesuaian-sop/view-input-ketidaksesuaian-sop', compact('auth_data'));
+        return view('guru/ketidaksesuaian-sop/input-ketidaksesuaian-sop/view-input-ketidaksesuaian-sop', compact('auth_data'));
     }
 
     public function addInputKetidaksesuaianSOP(Request $request)
@@ -35,7 +35,7 @@ class InputKetidaksesuaianSOPController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('guru/ketidaksesuaian-sop/add-input-ketidaksesuaian-sop', compact('auth_data'));
+        return view('guru/ketidaksesuaian-sop/input-ketidaksesuaian-sop/add-input-ketidaksesuaian-sop', compact('auth_data'));
     }
 
     public function editInputKetidaksesuaianSOP($id, Request $request)
@@ -47,7 +47,7 @@ class InputKetidaksesuaianSOPController extends Controller
 
         $ketidaksesuaian_sop = KetidaksesuaianSOP::where('id_ketidaksesuaian_sop', $id)->with('pengguna')->first();
 
-        return view('guru/ketidaksesuaian-sop/edit-input-ketidaksesuaian-sop', compact('auth_data',  'ketidaksesuaian_sop'));
+        return view('guru/ketidaksesuaian-sop/input-ketidaksesuaian-sop/edit-input-ketidaksesuaian-sop', compact('auth_data',  'ketidaksesuaian_sop'));
     }
 
     public function ajaxGetPengguna(Request $request)
@@ -225,7 +225,7 @@ class InputKetidaksesuaianSOPController extends Controller
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
         $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
 
-        return view('guru/ketidaksesuaian-sop/preview-file-ketidaksesuaian-sop', compact('auth_data', 'laporan_kerja_harian', 'link', 'ext'));
+        return view('guru/ketidaksesuaian-sop/input-ketidaksesuaian-sop/preview-file-ketidaksesuaian-sop', compact('auth_data', 'laporan_kerja_harian', 'link', 'ext'));
     }
     public function downloadFile(Request $request, $id = null)
     {

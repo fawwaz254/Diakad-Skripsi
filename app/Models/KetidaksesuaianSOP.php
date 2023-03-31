@@ -34,4 +34,9 @@ class KetidaksesuaianSOP extends Model
     {
         return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
     }
+
+    public function pengguna_input()
+    {
+        return $this->belongsTo('App\Models\Pengguna', 'id_pengguna_input', 'id_pengguna',);
+    }
 }
