@@ -67,7 +67,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-ketidaksesuaian-sop/datatables';
     // var edit_url = role_url + '#' + modul_url + '/' + 'input-ketidaksesuaian-sop/edit';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-ketidaksesuaian-sop/action/delete';
-    var preview_file_url = role_url + '#' + 'ketidaksesuaian-sop/input-ketidaksesuaian-sop/preview-file';
+    var preview_file_url = role_url + '#' + modul_url + '/data-ketidaksesuaian-sop/preview-file';
     var download_file_url = role_url + '/' + 'ketidaksesuaian-sop/input-ketidaksesuaian-sop/download-file';
 
 
