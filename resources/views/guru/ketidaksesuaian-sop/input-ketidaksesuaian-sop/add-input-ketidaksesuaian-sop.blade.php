@@ -18,7 +18,7 @@
                         {{ csrf_field() }}
 
                         <div class="row clearfix">
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <label>Unit Kerja</label>
                                 <select class="form-control show-tick" name="unitKerja" onchange="changeUnitKerja(this)"
                                     required="">
@@ -26,11 +26,16 @@
                                     <option value="guru">Guru</option>
                                     <option value="tendik">Tendik</option>
                                 </select>
-                            </div>
-                            <div class="col-md-6">
+                            </div> --}}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <label>Nama Pengguna</label>
-                                <select class="form-control show-tick" name="id_pengguna" required="">
+                                <select class="form-control show-tick" name="id_pengguna" required=""
+                                    id="select_page" class="operator">
                                     <option value="">-- Pilih Pengguna --</option>
+                                    @foreach ($pengguna as $p)
+                                        <option value="{{ $p->id_pengguna }}"> {{ $p->nm_pengguna }}</option>
+                                    @endforeach
+
                                 </select>
                             </div>
                         </div>
@@ -57,6 +62,7 @@
 
                         <h2 class="card-inside-title">
                             File Pendukung ( png , jpg , jpeg | max 5 mb )
+                            <small style="color: red">Jika Ada</small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -85,6 +91,9 @@
 </div>
 
 @include('scriptjs')
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <script>
     $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
@@ -96,24 +105,26 @@
         });
     });
 
-    function changeUnitKerja(el) {
-        $.ajax({
-            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/input-ketidaksesuaian-sop/getUnitKerja') }}',
-            type: 'POST',
-            data: {
-                unitKerja: $('select[name=unitKerja]').val()
-            },
-            success: function(result) {
-                $('select[name=id_pengguna]').html('');
-                var html = '<option value="">-- Pilih Pengguna --</option>';
-                $.each(result, function(key, item) {
-                    html += '<option value="' + item.id_pengguna + '">' + item.nm_pengguna +
-                        '  </option>'
-                });
-                $('select[name=id_pengguna]').html(html);
-            }
-        });
-    }
+    $("select").select2();
+
+    // function changeUnitKerja(el) {
+    //     $.ajax({
+    //         url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/input-ketidaksesuaian-sop/getUnitKerja') }}',
+    //         type: 'POST',
+    //         data: {
+    //             unitKerja: $('select[name=unitKerja]').val()
+    //         },
+    //         success: function(result) {
+    //             $('select[name=id_pengguna]').html('');
+    //             var html = '<option value="">-- Pilih Pengguna --</option>';
+    //             $.each(result, function(key, item) {
+    //                 html += '<option value="' + item.id_pengguna + '">' + item.nm_pengguna +
+    //                     '  </option>'
+    //             });
+    //             $('select[name=id_pengguna]').html(html);
+    //         }
+    //     });
+    // }
 
     $('#form-upload').validate({
         highlight: function(input) {
