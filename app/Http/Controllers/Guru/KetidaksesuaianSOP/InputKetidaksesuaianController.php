@@ -17,8 +17,7 @@ use DB;
 use Session;
 use Validator;
 
-
-class InputKetidaksesuaianSOPController extends Controller
+class InputKetidaksesuaianController extends Controller
 {
     public function viewInputKetidaksesuaianSOP(Request $request)
     {
