@@ -72,4 +72,17 @@ class KetidaksesuaianSOPController extends Controller
             })
             ->make(true);
     }
+
+    public function previewFile($id, Request $request)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $laporan_kerja_harian = KetidaksesuaianSOP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+
+        return view('guru/ketidaksesuaian-sop/laporan-ketidaksesuaian-sop/preview-file-ketidaksesuaian-sop', compact('auth_data', 'laporan_kerja_harian', 'link', 'ext'));
+    }
 }

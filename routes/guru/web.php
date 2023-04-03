@@ -424,6 +424,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('data-ketidaksesuaian-sop')->group(function () {
                 Route::get('/', [KetidaksesuaianSOPController::class, 'viewLaporanKetidaksesuaianSOP']);
                 Route::get('datatables', [KetidaksesuaianSOPController::class, 'datataablesLaporanKetidaksesuaianSOP']);
+                Route::get('preview-file/{id}', [KetidaksesuaianSOPController::class, 'previewFile']);
                 // Route::get('input-ketidaksesuaian-sop/edit/{id}', [GuruPiketInputPelanggaranController::class, 'editInputPelanggaran']);
 
             });
