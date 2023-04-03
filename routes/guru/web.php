@@ -407,7 +407,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('edit/{id}', [InputKetidaksesuaianController::class, 'editInputKetidaksesuaianSOP']);
 
                 Route::post('action/{mode}/{id}', [InputKetidaksesuaianController::class, 'actionInputKetidaksesuaianSOP']);
-                Route::post('getUnitKerja', [InputKetidaksesuaianController::class, 'ajaxGetPengguna']);
+                // Route::post('getUnitKerja', [InputKetidaksesuaianController::class, 'ajaxGetPengguna']);
                 Route::get('preview-file/{id}', [InputKetidaksesuaianController::class, 'previewFile']);
                 Route::get('download-file/{id}', [InputKetidaksesuaianController::class, 'downloadFile']);
             });

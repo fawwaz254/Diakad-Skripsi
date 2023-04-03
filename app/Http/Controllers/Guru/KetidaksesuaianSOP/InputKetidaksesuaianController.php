@@ -33,8 +33,10 @@ class InputKetidaksesuaianController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
-        return view('guru/ketidaksesuaian-sop/input-ketidaksesuaian-sop/add-input-ketidaksesuaian-sop', compact('auth_data'));
+        $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->whereHas('status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->get();
+        return view('guru/ketidaksesuaian-sop/input-ketidaksesuaian-sop/add-input-ketidaksesuaian-sop', compact('auth_data', 'pengguna'));
     }
 
     public function editInputKetidaksesuaianSOP($id, Request $request)
@@ -49,26 +51,26 @@ class InputKetidaksesuaianController extends Controller
         return view('guru/ketidaksesuaian-sop/input-ketidaksesuaian-sop/edit-input-ketidaksesuaian-sop', compact('auth_data',  'ketidaksesuaian_sop'));
     }
 
-    public function ajaxGetPengguna(Request $request)
-    {
-        # code...
-        $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
+    // public function ajaxGetPengguna(Request $request)
+    // {
+    //     # code...
+    //     $input = (object) $request->input();
+    //     // $auth_data = $input->auth_data;
 
-        if ($input->unitKerja == 'guru') {
-            $pengguna = Pengguna::where('status_join_table', 2)->whereHas('status_pengguna', function ($query) {
-                $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
-        } elseif ($input->unitKerja == 'tendik') {
-            $pengguna = Pengguna::where('status_join_table', 1)->whereHas('status_pengguna', function ($query) {
-                $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
-        } else {
-            $pengguna = Pengguna::get();
-        }
+    //     if ($input->unitKerja == 'guru') {
+    //         $pengguna = Pengguna::where('status_join_table', 2)->whereHas('status_pengguna', function ($query) {
+    //             $query->where('nm_status_pengguna', '=', 'AKTIF');
+    //         })->get();
+    //     } elseif ($input->unitKerja == 'tendik') {
+    //         $pengguna = Pengguna::where('status_join_table', 1)->whereHas('status_pengguna', function ($query) {
+    //             $query->where('nm_status_pengguna', '=', 'AKTIF');
+    //         })->get();
+    //     } else {
+    //         $pengguna = Pengguna::get();
+    //     }
 
-        return $pengguna;
-    }
+    //     return $pengguna;
+    // }
 
     public function datatablesInputKetidaksesuaianSOP(Request $request)
     {
