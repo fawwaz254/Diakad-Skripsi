@@ -65,6 +65,9 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Guru\KetidaksesuaianSOP\InputKetidaksesuaianSOP;
+use App\Http\Controllers\Guru\KetidaksesuaianSOP\inputKetidaksesuaianSOPController;
+use App\Http\Controllers\Guru\KetidaksesuaianSOP\KetidaksesuaianSOPController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
@@ -396,6 +399,39 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('siswa-bykelas', [GuruPiketInputPelanggaranController::class, 'ajaxGetSiswaByKelas']);
             Route::post('siswa-pelanggaran', [\App\Http\Controllers\Kesiswaan\PenangananSiswa\InputPelanggaranController::class, 'ajaxGetPelanggaranSiswa']);
         });
+
+        Route::prefix('ketidaksesuaian-sop')->group(function () {
+            Route::prefix('input-ketidaksesuaian-sop')->group(function () {
+                Route::get('/', [InputKetidaksesuaianSOPController::class, 'viewInputKetidaksesuaianSOP']);
+                Route::get('datatables', [InputKetidaksesuaianSOPController::class, 'datatablesInputKetidaksesuaianSOP']);
+                Route::get('add', [InputKetidaksesuaianSOPController::class, 'addInputKetidaksesuaianSOP']);
+                Route::get('edit/{id}', [InputKetidaksesuaianSOPController::class, 'editInputKetidaksesuaianSOP']);
+
+                Route::post('action/{mode}/{id}', [InputKetidaksesuaianSOPController::class, 'actionInputKetidaksesuaianSOP']);
+                Route::post('getUnitKerja', [InputKetidaksesuaianSOPController::class, 'ajaxGetPengguna']);
+                Route::get('preview-file/{id}', [InputKetidaksesuaianSOPController::class, 'previewFile']);
+                Route::get('download-file/{id}', [InputKetidaksesuaianSOPController::class, 'downloadFile']);
+            });
+
+            Route::prefix('ketidaksesuaian-sop-pribadi')->group(function () {
+                Route::get('/', [KetidaksesuaianSOPController::class, 'viewKetidaksesuaianSOP']);
+                Route::get('datatables', [KetidaksesuaianSOPController::class, 'datatablesKetidaksesuaianSOP']);
+                // Route::get('input-ketidaksesuaian-sop/edit/{id}', [GuruPiketInputPelanggaranController::class, 'editInputPelanggaran']);
+
+            });
+        });
+
+        Route::prefix('laporan-ketidaksesuaian-sop')->group(function () {
+            Route::prefix('data-ketidaksesuaian-sop')->group(function () {
+                Route::get('/', [KetidaksesuaianSOPController::class, 'viewLaporanKetidaksesuaianSOP']);
+                Route::get('datatables', [KetidaksesuaianSOPController::class, 'datataablesLaporanKetidaksesuaianSOP']);
+                // Route::get('input-ketidaksesuaian-sop/edit/{id}', [GuruPiketInputPelanggaranController::class, 'editInputPelanggaran']);
+
+            });
+        });
+
+
+
 
         Route::prefix('reward-siswa')->group(function () {
             Route::get('input-reward-siswa', [InputRewardSiswaController::class, 'viewInputRewardSiswa']);

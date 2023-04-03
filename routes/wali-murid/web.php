@@ -17,6 +17,7 @@ use App\Http\Controllers\WaliMurid\Kesiswaan\PrestasiController;
 use App\Http\Controllers\WaliMurid\Keuangan\RiwayatBayarController;
 use App\Http\Controllers\WaliMurid\Keuangan\TagihanController;
 use App\Http\Controllers\WaliMurid\Pelanggaran\RiwayatPelanggaranController;
+use App\Http\Controllers\WaliMurid\RaporSisipan\RaporSisipanSTSController;
 use App\Http\Controllers\WaliMurid\WelcomeController;
 
 Route::middleware(['token_staff'])->group(function () {
@@ -119,13 +120,22 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('riwayat-pelanggaran/datatables-non-kbm', [RiwayatPelanggaranController::class, 'datatablesPelanggaranNonKBM']);
             Route::get('riwayat-pelanggaran/datatables-kbm', [RiwayatPelanggaranController::class, 'datatablesPelanggaranKBM']);
         });
+
         Route::prefix('kesekretariatan')->group(function () {
 
             Route::prefix('dokumen')->group(function () {
                 Route::get('/', [DokumenController::class, 'viewDokumen']);
                 Route::get('detail/{id}', [DokumenController::class, 'viewDetailDokumen']);
-
                 Route::post('datatables', [DokumenController::class, 'datatablesDokumen']);
+            });
+        });
+
+        Route::prefix('rapor-sisipan')->group(function () {
+
+            Route::prefix('nilai-sts')->group(function () {
+                Route::get('/', [RaporSisipanSTSController::class, 'viewRaporSisipanSTS']);
+                Route::post('datatables', [RaporSisipanSTSController::class, 'datatablesRaporSisipan']);
+                Route::get('/cetak/{id_semester}', [RaporSisipanSTSController::class, 'cetakRaporSisipanSTS']);
             });
         });
     });

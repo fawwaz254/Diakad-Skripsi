@@ -160,6 +160,19 @@
                 @if ($role_aktif == 2 && $guru->unit_kerja->nm_unit_kerja == 'Pimpinan')
                     <li id="modul-item-manajemen-tanda-tangan" class="modul-item">
                         <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                            <span>Laporan Ketidaksesuaian SOP</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li class="menu-item" id="menu-item-data-sub-kategori">
+                                <a href="{{ url(Request::segment(1) . '#laporan-ketidaksesuaian-sop/data-ketidaksesuaian-sop') }}"
+                                    class="target-link waves-effect waves-block">
+                                    Data Ketidaksesuaian SOP
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li id="modul-item-manajemen-tanda-tangan" class="modul-item">
+                        <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
                             <span>Manajemen Tanda Tangan</span>
                         </a>
                         <ul class="ml-menu">
