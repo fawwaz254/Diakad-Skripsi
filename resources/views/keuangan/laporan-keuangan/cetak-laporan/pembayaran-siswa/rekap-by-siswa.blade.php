@@ -173,24 +173,24 @@
                             </tr>
                         @endif
                     @endforeach
-                    @endif
-                    @foreach ($data_laporan['summary'] as $summ)
-                    @if(strtoupper($summ['nm_biaya']) != "LAIN-LAIN")
-                    <tr>
-                        <th style="text-align: left;">{{ strtoupper($summ['nm_biaya']) }}</th>
-                        <td>{{ $summ['frekuensi'] . ' x' }}</td>
-                        <th style="text-align: right;">{{ 'Rp ' . number_format($summ['total_pembayaran']) }}</th>
-                    </tr>
+                @endif
+                @foreach ($data_laporan['summary'] as $summ)
+                    @if (strtoupper($summ['nm_biaya']) != 'LAIN-LAIN')
+                        <tr>
+                            <th style="text-align: left;">{{ strtoupper($summ['nm_biaya']) }}</th>
+                            <td>{{ $summ['frekuensi'] . ' x' }}</td>
+                            <th style="text-align: right;">{{ 'Rp ' . number_format($summ['total_pembayaran']) }}</th>
+                        </tr>
                     @endif
                 @endforeach
-            <tr>
-                @if (!$auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma')
-            <tr>
-                <th colspan="2">TOTAL POTONGAN</th>
-                <th style="text-align: right;">
-                    {{ 'Rp ' . number_format(collect($data_laporan['summary'])->sum('total_potongan_biaya')) }}
-                </th>
-            </tr>
+                <tr>
+                    @if (!$auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma')
+                <tr>
+                    <th colspan="2">TOTAL POTONGAN</th>
+                    <th style="text-align: right;">
+                        {{ 'Rp ' . number_format(collect($data_laporan['summary'])->sum('total_potongan_biaya')) }}
+                    </th>
+                </tr>
         @endif
         <tr>
             <th colspan="2">TOTAL PEMBAYARAN</th>
@@ -238,6 +238,10 @@
     </div>
 </body>
 <script>
+    var start_date = '{{ strtoupper(indonesiaDate($start_date)) }}';
+    var end_date = '{{ strtoupper(indonesiaDate($end_date)) }}';
+
+    document.title = 'Rekap per Siswa' + ' - ' + start_date + ' - ' + end_date;
     window.print();
 </script>
 
