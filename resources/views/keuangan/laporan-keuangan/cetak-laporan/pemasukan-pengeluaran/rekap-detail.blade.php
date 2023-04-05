@@ -142,7 +142,7 @@
                     {{ indonesiaDate(\Carbon\Carbon::parse($end_date)->format('Y-m-d')) }}
                     {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }} --}}
                     <br>Keuangan<br><br><br><br>
-                    <b><u>{{ $auth_data->pengguna->nm_pengguna }}, SE  </u></b>
+                    <b><u>{{ $auth_data->pengguna->nm_pengguna }}, SE </u></b>
                 </p>
             </div>
         </div>
@@ -152,6 +152,10 @@
 
 </body>
 <script>
+    var start_date = '{{ strtoupper(indonesiaDate($start_date)) }}';
+    var end_date = '{{ strtoupper(indonesiaDate($end_date)) }}';
+
+    document.title = 'Rekap Detail (Sesuai biaya internal)' + ' - ' + start_date + ' - ' + end_date;
     window.print();
 </script>
 
