@@ -50,7 +50,7 @@
         <table border="1" cellspacing="0" cellpadding="5" style="width: 100%;" class="text-left">
             <tr>
                 <td colspan="2" style="text-align: center;"><b>TANDA BUKTI PEMBAYARAN
-                        @if ($pembayaran->tagihan_biaya->keterangan == '-')
+                        @if ($pembayaran->tagihan_biaya->keterangan == '-' || $pembayaran->tagihan_biaya->keterangan == null)
                             SPP
                         @else
                             {{ $pembayaran->tagihan_biaya->keterangan }}
@@ -75,7 +75,8 @@
                             <th>Untuk Pembayaran</th>
                             <td>:</td>
                             <td>
-                                @if ($pembayaran->tagihan_biaya->keterangan == '-')
+
+                                @if ($pembayaran->tagihan_biaya->keterangan == '-' || $pembayaran->tagihan_biaya->keterangan == null)
                                     SPP
                                 @else
                                     {{ $pembayaran->tagihan_biaya->keterangan }}
