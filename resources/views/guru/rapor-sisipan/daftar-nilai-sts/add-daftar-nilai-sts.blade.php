@@ -18,7 +18,7 @@
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sts/action-daftar-nilai-sts/add/0') }}">
                         {{ csrf_field() }}
                         <div class="row clearfix">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label>Jurusan</label>
                                 <select class="form-control show-tick" name="id_jurusan" onchange="changeJurusan(this)"
                                     required>
@@ -30,7 +30,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label>Jenis Mata Pelajaran</label>
                                 <select class="form-control show-tick" name="id_jenis_mata_pelajaran"
                                     onchange="changeJurusan(this)" required>
@@ -44,7 +44,7 @@
                             </div>
 
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label>Mata Pelajaran</label>
                                 <select class="form-control show-tick" name="id_mata_pelajaran" required>
                                     {{-- <option selected disabled>-- Pilih Mata Pelajaran --</option> --}}
@@ -55,7 +55,10 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-3">
+                        </div>
+                        <div class="row clearfix">
+
+                            <div class="col-md-6">
                                 <label>Kelas</label>
                                 <select class="form-control show-tick" name="id_kelas" required>
                                     {{-- <option selected disabled>-- Pilih Kelas --</option> --}}
@@ -66,6 +69,27 @@
                                 </select>
                             </div>
 
+                            <div class="col-md-6">
+                                <label>Semester</label>
+                                <select class="form-control show-tick" name="id_semester" required="">
+                                    @foreach ($data_semester as $data)
+                                        <option value="{{ $data->id_semester }}"
+                                            @if ($semester_aktif->id_semester == $data->id_semester) selected @endif>
+                                            {{ $data->tahun_ajaran }}
+                                            {{ $data->nm_semester }}
+                                            @if ($data->is_aktif_semester == 1)
+                                                (Aktif)
+                                            @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                                {{-- <option selected disabled>-- Pilih Kelas --</option> --}}
+                                {{-- @foreach ($list_kelas as $r)
+                                    <option value="{{ $r->id_kelas }}">{{ $r->nm_kelas }}
+                                    </option>
+                                @endforeach --}}
+                                </select>
+                            </div>
 
                         </div>
                         <div class="row clearfix">
