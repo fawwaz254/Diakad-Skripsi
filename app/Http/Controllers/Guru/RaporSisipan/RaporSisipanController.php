@@ -50,6 +50,8 @@ class RaporSisipanController extends Controller
         $data['list_kelas'] = Kelas::all();
         $data['list_jurusan'] = Jurusan::all();
         $data['jenis_mapel'] = JenisMataPelajaran::all();
+        $data['semester_aktif'] = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $data['data_semester'] = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
         return view('guru/rapor-sisipan/daftar-nilai-sts/add-daftar-nilai-sts', compact('auth_data'), $data);
     }
@@ -59,7 +61,7 @@ class RaporSisipanController extends Controller
         set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        // $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         if ($mode == 'delete') {
             DB::beginTransaction();
             try {
@@ -86,7 +88,7 @@ class RaporSisipanController extends Controller
         }
 
         if ($mode == 'add') {
-            $cekDuplicate = RaporSisipan::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $semester_aktif->id_semester)
+            $cekDuplicate = RaporSisipan::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $input->id_semester)
                 ->first();
             $validator = Validator::make($request->all(), [
                 'id_mata_pelajaran' => 'required',
@@ -116,7 +118,7 @@ class RaporSisipanController extends Controller
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $rapor_sisipan                      = new RaporSisipan;
                     $rapor_sisipan->id_rapor_sisipan    = $id;
-                    $rapor_sisipan->id_semester         = $semester_aktif->id_semester;
+                    $rapor_sisipan->id_semester         = $input->id_semester;
                     $rapor_sisipan->id_mata_pelajaran   = $input->id_mata_pelajaran;
                     $rapor_sisipan->id_kelas            = $input->id_kelas;
                     $rapor_sisipan->id_pengguna         = $input->auth_data->pengguna->id_pengguna;
