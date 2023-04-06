@@ -58,7 +58,7 @@ class RekapAbsenController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'presensi/rekap-absen/view-kbm/'.$input->id_jadwal_kelas_mp
+                'path' => 'presensi/rekap-absen/view-kbm/' . $input->id_jadwal_kelas_mp
             ];
         }
     }
@@ -66,6 +66,7 @@ class RekapAbsenController extends BaseController
     public function viewKBMRekapAbsen(Request $request, $id_jadwal_kelas_mp)
     {
         # code...
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
