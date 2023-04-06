@@ -76,7 +76,8 @@ class RekapAbsenController extends BaseController
 
         $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, null, 'all');
 
-        $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
+        $data_presensi = PresensiMp::where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
+
 
         return view('guru/presensi/rekap-absen/view-kbm-rekap-absen', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi', 'id_jadwal_kelas_mp'));
     }
