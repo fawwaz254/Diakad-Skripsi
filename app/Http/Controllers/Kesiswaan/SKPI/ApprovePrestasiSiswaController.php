@@ -134,6 +134,7 @@ class ApprovePrestasiSiswaController extends BaseController
         else $list_data = $list_data->where('status', 0)->get();
 
         return Datatables::of($list_data)
+
             ->addColumn('keterangan', function ($item) {
                 if ($item->status == 0) {
                     $status = 'Belum Diapprove';
@@ -263,7 +264,10 @@ class ApprovePrestasiSiswaController extends BaseController
         return Datatables::of($list_data)
             ->addColumn('semester', function ($item) {
                 return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
-            })->addColumn('jenis_prestasi', function ($item) {
+            })->editColumn('nm_tingkat_prestasi_siswa', function ($item) {
+                return ucwords(strtolower($item->nm_tingkat_prestasi_siswa));
+            })
+            ->addColumn('jenis_prestasi', function ($item) {
                 if ($item->jenis_prestasi_siswa == 1) {
                     return "Sains";
                 } elseif ($item->jenis_prestasi_siswa == 2) {
