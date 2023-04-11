@@ -3,7 +3,7 @@
         <h2>
 
             <a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/' . $thn_akademik_semester) }}"><i
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a>
             {{-- <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/addSub') }}"><i
@@ -27,10 +27,11 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
+                                    <th>Jenis Mapel</th>
+                                    <th>Jurusan</th>
                                     <th>Kode Mata Pelajaran</th>
+
                                     <th>Urutan</th>
-                                    {{-- <th>Jumlah Mapel yang sudah terisi</th> --}}
-                                    {{-- <th>Semester</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -43,15 +44,13 @@
 </div>
 
 <script type="text/javascript">
-    var thn_akademik_semester = {!! json_encode($thn_akademik_semester) !!};
     var modul_url = 'rapor-sisipan';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatablesViewSetting/' +
-        thn_akademik_semester;
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatablesViewSetting';
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
-    var add = base_url + '/' + role_url + '#' + modul_url + '/' + 'cetak-rapor/addSetting/' + thn_akademik_semester;
+    var add = base_url + '/' + role_url + '#' + modul_url + '/' + 'cetak-rapor/addSetting';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -70,6 +69,16 @@
             {
                 data: 'nm_mata_pelajaran',
                 name: 'nm_mata_pelajaran',
+                className: 'align-center'
+            },
+            {
+                data: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+                name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+                className: 'align-center'
+            },
+            {
+                data: 'jurusan.nm_jurusan',
+                name: 'jurusan.nm_jurusan',
                 className: 'align-center'
             },
             {

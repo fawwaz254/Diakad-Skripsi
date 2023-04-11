@@ -197,6 +197,11 @@
     </div>
 </body>
 <script>
+    var start_date = '{{ strtoupper(indonesiaDate($start_date)) }}';
+    var end_date = '{{ strtoupper(indonesiaDate($end_date)) }}';
+
+
+    document.title = 'Rekap per Kategori, Kas Keluar' + ' - ' + start_date + ' - ' + end_date;
     window.print();
 </script>
 

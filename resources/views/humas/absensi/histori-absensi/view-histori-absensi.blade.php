@@ -51,6 +51,9 @@
                 <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
                     Data Histori Absensi Siswa Pondok
                 </button>
+                <button type="button" onclick="viewSiswaSholat()" class="btn btn-default">
+                    Data Histori Sholat
+                </button>
             @endif
             <div class="card" style="margin-top: 10px">
                 <div class="header">
@@ -286,6 +289,11 @@
 
     function viewSiswaPondok() {
         window.location = '/humas#absensi/histori-absensi-siswa-pondok'
+    }
+
+    function viewSiswaSholat() {
+        window.location = '/humas#absensi/histori-absensi-siswa-sholat'
+
     }
 
     function filterAction() {

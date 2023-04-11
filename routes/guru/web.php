@@ -65,6 +65,8 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Guru\KetidaksesuaianSOP\InputKetidaksesuaianController;
+use App\Http\Controllers\Guru\KetidaksesuaianSOP\KetidaksesuaianSOPController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
@@ -397,6 +399,40 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('siswa-pelanggaran', [\App\Http\Controllers\Kesiswaan\PenangananSiswa\InputPelanggaranController::class, 'ajaxGetPelanggaranSiswa']);
         });
 
+        Route::prefix('ketidaksesuaian-sop')->group(function () {
+            Route::prefix('input-ketidaksesuaian-sop')->group(function () {
+                Route::get('/', [InputKetidaksesuaianController::class, 'viewInputKetidaksesuaianSOP']);
+                Route::get('datatables', [InputKetidaksesuaianController::class, 'datatablesInputKetidaksesuaianSOP']);
+                Route::get('add', [InputKetidaksesuaianController::class, 'addInputKetidaksesuaianSOP']);
+                Route::get('edit/{id}', [InputKetidaksesuaianController::class, 'editInputKetidaksesuaianSOP']);
+
+                Route::post('action/{mode}/{id}', [InputKetidaksesuaianController::class, 'actionInputKetidaksesuaianSOP']);
+                // Route::post('getUnitKerja', [InputKetidaksesuaianController::class, 'ajaxGetPengguna']);
+                Route::get('preview-file/{id}', [InputKetidaksesuaianController::class, 'previewFile']);
+                Route::get('download-file/{id}', [InputKetidaksesuaianController::class, 'downloadFile']);
+            });
+
+            Route::prefix('ketidaksesuaian-sop-pribadi')->group(function () {
+                Route::get('/', [KetidaksesuaianSOPController::class, 'viewKetidaksesuaianSOP']);
+                Route::get('datatables', [KetidaksesuaianSOPController::class, 'datatablesKetidaksesuaianSOP']);
+                // Route::get('input-ketidaksesuaian-sop/edit/{id}', [GuruPiketInputPelanggaranController::class, 'editInputPelanggaran']);
+
+            });
+        });
+
+        Route::prefix('laporan-ketidaksesuaian-sop')->group(function () {
+            Route::prefix('data-ketidaksesuaian-sop')->group(function () {
+                Route::get('/', [KetidaksesuaianSOPController::class, 'viewLaporanKetidaksesuaianSOP']);
+                Route::get('datatables', [KetidaksesuaianSOPController::class, 'datataablesLaporanKetidaksesuaianSOP']);
+                Route::get('preview-file/{id}', [KetidaksesuaianSOPController::class, 'previewFile']);
+                // Route::get('input-ketidaksesuaian-sop/edit/{id}', [GuruPiketInputPelanggaranController::class, 'editInputPelanggaran']);
+
+            });
+        });
+
+
+
+
         Route::prefix('reward-siswa')->group(function () {
             Route::get('input-reward-siswa', [InputRewardSiswaController::class, 'viewInputRewardSiswa']);
             Route::post('post-input-reward-siswa', [InputRewardSiswaController::class, 'actionViewInputRewardSiswa']);
@@ -632,36 +668,31 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('rapor-sisipan')->group(function () {
             Route::prefix('daftar-nilai-sts')->group(function () {
 
-                Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
-                Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
-                Route::get('add/{thn_akademik_semester}', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
-                Route::get('/{thn_akademik_semester}', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
-                Route::get('datatables/{thn_akademik_semester}', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
+                Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
+                Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
+                Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
 
                 Route::post('action-daftar-nilai-sts/{mode}/{id}', [RaporSisipanController::class, 'actionDaftarNilaiSTS']);
                 Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
-                Route::get('importExcel/{thn_akademik_semester}', [RaporSisipanController::class, 'imporExcelSTS']);
+                Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
                 Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
                 Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
                 Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
-                Route::get('nilai/{thn_akademik_semester}/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
-                Route::post('jurusan', [RaporSisipanController::class, 'getDataFromJurusan']);
-
+                Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+                Route::post('getMataPelajaran', [RaporSisipanController::class, 'getMataPelajaran']);
                 // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
-                Route::post('action-input-nilai-rapor-sisipan/{mode}/{thn_akademik_semester}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
             });
             Route::prefix('daftar-nilai-sas')->group(function () {
-                Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
-                Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
 
-                Route::get('/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
-                Route::get('datatables/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
-                Route::get('importExcel/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'imporExcelSTS']);
+                Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
+                Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
+                Route::get('importExcel', [RaporSisipanAkhirController::class, 'imporExcelSTS']);
                 Route::post('importExcel', [RaporSisipanAkhirController::class, 'uploadRaporSisipanSAS']);
                 Route::get('/excel/{id}', [RaporSisipanAkhirController::class, 'excelDaftarNilaiSAS']);
                 Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
-                Route::get('nilai/{thn_akademik_semester}/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
-                Route::post('action-input-nilai-rapor-sisipan/{mode}/{thn_akademik_semester}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
+                Route::get('nilai/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
             });
 
             Route::prefix('rapor-tengah-semester')->group(function () {

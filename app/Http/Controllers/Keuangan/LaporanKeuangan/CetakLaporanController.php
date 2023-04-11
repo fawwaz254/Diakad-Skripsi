@@ -200,7 +200,6 @@ class CetakLaporanController extends BaseController
         // fetch laporan keuangan
         if ($jenis == 'siswa') {
             $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerSiswa($auth_data, $start_date, $end_date);
-            // dd($data_laporan);
             return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/rekap-by-siswa', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
         } elseif ($jenis == 'siswa-online') {
             $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerSiswaOnline($auth_data, $start_date, $end_date);

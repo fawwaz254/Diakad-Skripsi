@@ -137,7 +137,7 @@
                         <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
                         <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
                         @foreach ($list_data as $nilai)
-                            @if (in_array($nilai->urutan, [1, 2]))
+                            @if (in_array($nilai->urutan, [1, 2, 3, 4, 5, 6, 7, 8, 9]))
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
@@ -146,40 +146,72 @@
                                 </td>
                             @endif
                         @endforeach
-                        <td></td>
-                        <td></td>
-                        @foreach ($list_data as $nilai)
+                        {{-- <td></td>
+                        <td></td> --}}
+                        {{-- @foreach ($list_data as $nilai)
                             @if (in_array($nilai->urutan, [5, 6]))
-                                <td style="text-align: center;">
-                                    {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
-                                    {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
-                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] : null }}
-                                    {{-- @endif --}}
-                                </td>
-                            @endif
-                        @endforeach
-                        <td></td>
-                        <td></td>
+                                <td style="text-align: center;"> --}}
+                        {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                        {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
+                        {{-- {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] : null }} --}}
+                        {{-- @endif --}}
+                        {{-- </td>
+                @endif
+                @endforeach
+                <td></td>
+                <td></td> --}}
                         {{-- <td style="text-align: center;"> --}}
                         {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'])) --}}
                         {{-- {{ round(($nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6']) / 2) }} --}}
                         {{-- @endif --}}
                         {{-- </td> --}}
-                        @foreach ($list_data as $nilai)
-                            @if ($nilai->urutan == 9)
-                                <td style="text-align: center;">
-                                    {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
-                                    {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
-                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] : null }}
-                                    {{-- @endif --}}
-                                </td>
-                            @endif
-                        @endforeach
+                        {{-- @foreach ($list_data as $nilai) --}}
+                        {{-- @if ($nilai->urutan == 9) --}}
+                        {{-- <td style="text-align: center;"> --}}
+                        {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                        {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
+                        {{-- {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] : null }} --}}
+                        {{-- @endif --}}
+                        {{-- </td> --}}
+                        {{-- @endif --}}
+                        {{-- @endforeach --}}
 
                         <td style="text-align: center;">
                             {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) && isset($nilai_komponen[$siswa->id_siswa . 'sts'])) --}}
-                            {{ round(($nilai_komponen[$siswa->id_siswa . '1'] + $nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6'] + $nilai_komponen[$siswa->id_siswa . '9'] * 2) / 5) }}
-                            {{-- @endif --}}
+
+                            @php
+                                $nilaiTugasLenght = 0;
+                                $jumlahNilaiTugas = 0;
+                                $nilaiFormatifLenght = 0;
+                                $jumlahNilaFormatif = 0;
+                                for ($i = 1; $i <= 4; $i++) {
+                                    if ($nilai_komponen[$siswa->id_siswa . $i] != '0') {
+                                        $jumlahNilaiTugas += $nilai_komponen[$siswa->id_siswa . $i];
+                                        $nilaiTugasLenght++;
+                                    }
+                                }
+                                if ($jumlahNilaiTugas == '0' && $nilaiTugasLenght == '0') {
+                                    $nilaiTugas = 0;
+                                } else {
+                                    $nilaiTugas = round($jumlahNilaiTugas / $nilaiTugasLenght);
+                                }
+                                for ($i = 5; $i <= 8; $i++) {
+                                    if ($nilai_komponen[$siswa->id_siswa . $i] != '0') {
+                                        $jumlahNilaFormatif += $nilai_komponen[$siswa->id_siswa . $i];
+                                        $nilaiFormatifLenght++;
+                                    }
+                                }
+                                if ($jumlahNilaFormatif == '0' && $nilaiFormatifLenght == '0') {
+                                    $nilaiFormatif = 0;
+                                } else {
+                                    $nilaiFormatif = round($jumlahNilaFormatif / $nilaiFormatifLenght) * 2;
+                                }
+                                $nilaiSTS = $nilai_komponen[$siswa->id_siswa . 'sts'] * 2;
+                                $totalNilai = round(($nilaiTugas + $nilaiFormatif + $nilaiSTS) / 5);
+                            @endphp
+                            {{ $totalNilai != '0' ? $totalNilai : '' }}
+                            {{-- {{ round(($nilai_komponen[$siswa->id_siswa . '1'] + $nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6'] + $nilai_komponen[$siswa->id_siswa . '9'] * 2) / 5) }} --}}
+
                         </td>
                     </tr>
                 @endforeach

@@ -372,13 +372,21 @@
         $('.fixedHeader-floating').css('left', 0 - parseInt(scrollAmt) + 'px');
     });
 
+
+
     $(function() {
+
+        var start_date = "{{ \Carbon\Carbon::parse($waktu)->addMonth(2)->format('Y-m-d') }}";
+        var end_date = "{{ \Carbon\Carbon::parse($waktu)->subMonth(2)->format('Y-m-d') }}";
+
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
             //lang : 'id',
             clearButton: true,
             weekStart: 1,
-            time: false
+            time: false,
+            minDate: end_date,
+            maxDate: start_date,
         });
     });
 

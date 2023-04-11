@@ -202,20 +202,29 @@
                                 @foreach ($k as $m)
                                     @if ($m->mata_pelajaran->id_mata_pelajaran == $submp->id_mata_pelajaran)
                                         <tr>
-                                            <td></td>
-                                            <td>
+                                            <td rowspan="2"></td>
+                                            <td rowspan="2">
                                                 {{ $abc[$angka++] . '. ' . $m->mata_pelajaran->nm_mata_pelajaran }}
                                             </td>
-                                            <td style="text-align: center;">
+                                            <td rowspan="2" style="text-align: center;">
                                                 @php
                                                     $nama = $list_nilai
                                                         ->where('siswa.id_siswa', $siswa->id_siswa)
                                                         ->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)
                                                         ->first();
-                                                    echo $nama->nilai ?? 'Belum Diset';
+                                                    echo $nama->nilai ?? '';
                                                 @endphp
                                             </td>
-                                            <td>Deskripsi</td>
+                                            <td colspan="1">
+                                                @php
+                                                    $deskripsi = $list_deskripsi->where('nm_mata_pelajaran', $m->mata_pelajaran->nm_mata_pelajaran)->first();
+                                                    echo $deskripsi->deskripsi1 ?? '';
+                                                @endphp
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>{{ $deskripsi->deskripsi2 ?? '' }}</td>
                                         </tr>
                                     @endif
                                     @php
@@ -227,9 +236,12 @@
 
                     @foreach ($raporSisipanA as $m)
                         <tr>
-                            <td style="text-align: center;">{{ $no++ }}</td>
-                            <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                            <td style="text-align: center;">
+                            <td rowspan="2"
+                                style="text-align:
+                                                center;">
+                                {{ $no++ }}</td>
+                            <td rowspan="2">{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                            <td rowspan="2" style="text-align: center;">
                                 @php
                                     $nama = $list_nilai
                                         ->where('siswa.id_siswa', $siswa->id_siswa)
@@ -238,7 +250,15 @@
                                     echo $nama->nilai ?? 'Belum Diset';
                                 @endphp
                             </td>
-                            <td></td>
+                            <td colspan="1">
+                                @php
+                                    $deskripsi = $list_deskripsi->where('nm_mata_pelajaran', $m->mata_pelajaran->nm_mata_pelajaran)->first();
+                                    echo $deskripsi->deskripsi1 ?? '';
+                                @endphp
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{ $deskripsi->deskripsi2 ?? '' }}</td>
                         </tr>
                     @endforeach
                     <tr>
@@ -254,7 +274,8 @@
                         <td colspan="3">
                             {{ ' B. ' . $raporSisipanB[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
                         </td>
-                        <td style="text-align: center;font-weight: bold;">Ananda {{ $siswa->pengguna->nm_pengguna }}
+                        <td style="text-align: center;font-weight: bold;">Ananda
+                            {{ $siswa->pengguna->nm_pengguna }}
                         </td>
                     </tr>
                     @php
@@ -262,9 +283,9 @@
                     @endphp
                     @foreach ($raporSisipanB as $m)
                         <tr>
-                            <td style="text-align: center;">{{ $no++ }}</td>
-                            <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                            <td style="text-align: center;">
+                            <td rowspan="2" style="text-align: center;">{{ $no++ }}</td>
+                            <td rowspan="2">{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                            <td rowspan="2" style="text-align: center;">
                                 @php
                                     $nama = $list_nilai
                                         ->where('siswa.id_siswa', $siswa->id_siswa)
@@ -273,7 +294,13 @@
                                     echo $nama->nilai ?? 'Belum Diset';
                                 @endphp
                             </td>
-                            <td></td>
+                            <td colspan="1"> @php
+                                $deskripsi = $list_deskripsi->where('nm_mata_pelajaran', $m->mata_pelajaran->nm_mata_pelajaran)->first();
+                                echo $deskripsi->deskripsi1 ?? '';
+                            @endphp</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $deskripsi->deskripsi2 ?? '' }}</td>
                         </tr>
                     @endforeach
                     <tr>
@@ -289,7 +316,8 @@
                         <td colspan="3">
                             {{ ' C. ' . $raporSisipanC[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
                         </td>
-                        <td style="text-align: center;font-weight: bold;">Ananda {{ $siswa->pengguna->nm_pengguna }}
+                        <td style="text-align: center;font-weight: bold;">Ananda
+                            {{ $siswa->pengguna->nm_pengguna }}
                         </td>
                     </tr>
                     @php
@@ -297,18 +325,24 @@
                     @endphp
                     @foreach ($raporSisipanC as $m)
                         <tr>
-                            <td style="text-align: center;">{{ $no++ }}</td>
-                            <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                            <td style="text-align: center;">
+                            <td rowspan="2" style="text-align: center;">{{ $no++ }}</td>
+                            <td rowspan="2">{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                            <td rowspan="2" style="text-align: center;">
                                 @php
                                     $nama = $list_nilai
                                         ->where('siswa.id_siswa', $siswa->id_siswa)
                                         ->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)
                                         ->first();
-                                    echo $nama->nilai ?? 'Belum Diset';
+                                    echo $nama->nilai ?? '';
                                 @endphp
                             </td>
-                            <td></td>
+                            <td colspan="1"> @php
+                                $deskripsi = $list_deskripsi->where('nm_mata_pelajaran', $m->mata_pelajaran->nm_mata_pelajaran)->first();
+                                echo $deskripsi->deskripsi1 ?? '';
+                            @endphp</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $deskripsi->deskripsi2 ?? '' }}</td>
                         </tr>
                     @endforeach
                     <tr>
@@ -324,7 +358,8 @@
 
                             {{ ' D. ' . $raporSisipanD[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
                         </td>
-                        <td style="text-align: center;font-weight: bold;">Ananda {{ $siswa->pengguna->nm_pengguna }}
+                        <td style="text-align: center;font-weight: bold;">Ananda
+                            {{ $siswa->pengguna->nm_pengguna }}
                         </td>
                     </tr>
                     @php
@@ -332,9 +367,9 @@
                     @endphp
                     @foreach ($raporSisipanD as $m)
                         <tr>
-                            <td style="text-align: center;">{{ $no++ }}</td>
-                            <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                            <td style="text-align: center;">
+                            <td rowspan="2" style="text-align: center;">{{ $no++ }}</td>
+                            <td rowspan="2">{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                            <td rowspan="2" style="text-align: center;">
                                 @php
                                     $nama = $list_nilai
                                         ->where('siswa.id_siswa', $siswa->id_siswa)
@@ -343,7 +378,13 @@
                                     echo $nama->nilai ?? 'Belum Diset';
                                 @endphp
                             </td>
-                            <td></td>
+                            <td colspan="1">@php
+                                $deskripsi = $list_deskripsi->where('nm_mata_pelajaran', $m->mata_pelajaran->nm_mata_pelajaran)->first();
+                                echo $deskripsi->deskripsi1 ?? '';
+                            @endphp</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $deskripsi->deskripsi2 ?? '' }}</td>
                         </tr>
                     @endforeach
                 @endif
