@@ -283,7 +283,7 @@ class ApprovePrestasiSiswaController extends BaseController
             $from = 'prestasi';
 
             $prestasi = PrestasiSiswa::findOrFail($id);
-            $prestasi->status = 99;
+            $prestasi->status = 10;
             $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
             $prestasi->approved_at = $now;
 
