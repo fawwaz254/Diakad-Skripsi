@@ -162,6 +162,18 @@
                                             <select class="form-control show-tick" name="waktu_pengerjaan"
                                                 required="">
                                                 @if ($item)
+                                                    <option @if ($item->waktu_pengerjaan == 20160) selected @endif
+                                                        value="20160">2
+                                                        Minggu</option>
+                                                    <option @if ($item->waktu_pengerjaan == 10080) selected @endif
+                                                        value="10080">1
+                                                        Minggu</option>
+                                                    <option @if ($item->waktu_pengerjaan == 120) selected @endif
+                                                        value="120">2
+                                                        Jam</option>
+                                                    <option @if ($item->waktu_pengerjaan == 90) selected @endif
+                                                        value="90">1
+                                                        Jam Setengah</option>
                                                     <option @if ($item->waktu_pengerjaan == 60) selected @endif
                                                         value="60">1
                                                         Jam</option>
@@ -185,6 +197,10 @@
                                                 @else
                                                     <option disabled value="">-- Pilih Durasi Pengerjaan --
                                                     </option>
+                                                    <option value="20160">2 Minggu</option>
+                                                    <option value="10080">1 Minggu</option>
+                                                    <option value="120">2 Jam</option>
+                                                    <option value="90">1 Jam Setengah</option>
                                                     <option value="60" selected>1 Jam</option>
                                                     <option value="50">50 Menit</option>
                                                     <option value="40">40 Menit</option>
