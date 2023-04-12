@@ -27,7 +27,7 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
                         <input type="hidden" name="id_c_siswa"
-                            value="{{ !empty($alumni) ? $alumni->id_c_siswa : $siswa->id_c_siswa }}">
+                            value="{{ !empty($alumni) ? $alumni->id_c_siswa : '' }}">
                         <div class="col-md-8">
                             <h2 class="card-inside-title"> Nama Siswa </h2>
                             <input type="text" class="form-control" name="nama_siswa" aria-required="true"
