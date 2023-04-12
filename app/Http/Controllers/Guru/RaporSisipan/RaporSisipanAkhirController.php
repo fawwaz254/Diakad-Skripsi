@@ -44,7 +44,7 @@ class RaporSisipanAkhirController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $status = $input->status;
-
+        
         if (empty($input->id_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $id_semester = $semester_aktif->id_semester;
@@ -52,8 +52,8 @@ class RaporSisipanAkhirController extends Controller
             $id_semester = $input->id_semester;
         }
 
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        // $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
         $list_data = RaporSisipan::where('id_semester', $id_semester)->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')->orderBy('created_at', 'desc');
 
         $siswa = Siswa::whereHas('pengguna.status_pengguna', function ($query) {
@@ -76,7 +76,7 @@ class RaporSisipanAkhirController extends Controller
                 $query->where('id_semester', $id_semester)->where('id_pengguna', $id_pengguna);
             })->get();
         } else {
-            $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('rapor_sisipan', function ($query) use ($id_semester, $id_pengguna) {
+            $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
                 $query->where('id_semester', $id_semester);
             })->get();
         }
