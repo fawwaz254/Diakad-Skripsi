@@ -50,7 +50,7 @@ class PaketSoalController extends Controller
         } else {
             $item = null;
         }
-        return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas','kategori','wali_kelas'));
+        return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas', 'kategori', 'wali_kelas'));
     }
 
     public function indexTest(Request $request, $id = 0)
@@ -64,12 +64,13 @@ class PaketSoalController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-       
-        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+
+        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal')->orderBy('paket_soal.created_at', 'desc')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return $q->whereNotNull('content');
-        }])->when($input->status == 0, function($q){
-            $q->where('status',0);
-        });
+        }])
+            ->when($input->status == 0, function ($q) {
+                $q->where('status', 0);
+            });
 
         return Datatables::of($list_data)
             ->addColumn('total_question', function ($item) {
@@ -82,10 +83,10 @@ class PaketSoalController extends Controller
                 }
                 return $value;
             })
-            ->addColumn('action', function ($item) use ($input ) {
+            ->addColumn('action', function ($item) use ($input) {
                 $data = array(
                     'id' => $item->id_paket_soal,
-                    'status' => $input->status 
+                    'status' => $input->status
                 );
                 return $data;
             })
@@ -98,9 +99,9 @@ class PaketSoalController extends Controller
         $list_question_selected = $question_package_details->pluck('id_soal');
         $paket_soal = PaketSoal::find($question_package_id);
         if ($tipe == 1) {
-            $list_data = Soal::where('id_kategori_soal',$paket_soal->id_kategori_soal)->with('pengguna','kategori_soal')->whereNotIn('id_soal', $list_question_selected);
+            $list_data = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal')->whereNotIn('id_soal', $list_question_selected);
         } else {
-            $list_data = Soal::where('id_kategori_soal',$paket_soal->id_kategori_soal)->with('pengguna','kategori_soal')->whereIn('id_soal', $list_question_selected);
+            $list_data = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal')->whereIn('id_soal', $list_question_selected);
         }
 
         return Datatables::of($list_data)
@@ -113,7 +114,7 @@ class PaketSoalController extends Controller
             ->addColumn('tipe_soal', function ($item) {
                 if ($item->id_tipe_soal == 1) {
                     return "Pilihan Ganda";
-                }else if($item->id_tipe_soal == 2){
+                } else if ($item->id_tipe_soal == 2) {
                     return "Essay";
                 }
                 return "File";
@@ -177,8 +178,8 @@ class PaketSoalController extends Controller
     public function actionDelete(Request $request)
     {
         $input = (object) $request->input();
-        $cek = Test::where('id_paket_soal',$input->question_package_id)->first();
-        if( $cek){
+        $cek = Test::where('id_paket_soal', $input->question_package_id)->first();
+        if ($cek) {
             return [
                 'status' => 300, // FAILED
                 'message' => 'Gagal dihapus, Paket Soal sudah digunakan'
