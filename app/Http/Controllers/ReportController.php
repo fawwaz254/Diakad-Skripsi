@@ -590,9 +590,12 @@ class ReportController extends BaseController
 
         $total_semua = $semua_siswa * 3;
         $total_awal = $biodata_siswa + $pelanggaran_siswa + $kegiatan_siswa + $kegiatan_siswa_approve + $home_visit + $wali_murid;
-
-        $param['progres'] = $total_awal / $total_semua * 100;
-
+        if($total_semua == 0 || $total_awal == 0) {
+            $param['progres'] = 0;
+        } else {
+            $param['progres'] = $total_awal / $total_semua * 100;
+        }
+        
         return response()->json($param);
     }
 }

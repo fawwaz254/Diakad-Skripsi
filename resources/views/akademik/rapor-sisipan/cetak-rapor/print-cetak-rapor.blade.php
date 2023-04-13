@@ -161,11 +161,11 @@
                 </thead>
                 <br>
                 <tbody class="body">
-                    @if (isset($raporSisipanA))
+                    @if (isset($raporSisipanA[0]))
                         <tr>
                             {{-- <td style="text-align: center;">A</td> --}}
                             <td colspan="2">
-                                @if (isset($raporSisipanA))
+                                @if (isset($raporSisipanA[0]))
                                     {{ ' A. ' . $raporSisipanA[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran }}
                                 @endif
                             </td>

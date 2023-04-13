@@ -100,7 +100,7 @@
                 data: 'action',
                 name: 'action',
                 render: function(data) {
-                    // alert(data.nm_kelas);
+                    // alert(data.nm_kelas); 
                     let html = '';
                     data.nm_kelas.forEach(element => {
                         html += '- ' +
