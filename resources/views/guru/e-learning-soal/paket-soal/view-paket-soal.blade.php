@@ -2,20 +2,21 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-            <a type="button" class="btn btn-success" style=" margin-right: 10px" href="{{url('guru#e-learning-soal/paket-soal/manage')}}">
+            <a type="button" class="btn btn-success" style=" margin-right: 10px"
+                href="{{ url('guru#e-learning-soal/paket-soal/manage') }}">
                 <i class="material-icons">add_box</i>
                 <span>Tambah Paket Soal</span>
             </a>
-            <input type="checkbox" id="data_alumni" class="checkbox" >
-            <label for="data_alumni"> Tampilkan Semua Paket Soal</label>
-            <input type="hidden" id="status" value="0"> 
+            <input type="checkbox" id="data_alumni" class="checkbox">
+            <label for="data_alumni"> Paket Soal Yang Sudah Dikerjakan</label>
+            <input type="hidden" id="status" value="0">
             <br><br>
             <div class="card">
                 <div class="header">
                     <h2>
                         List Paket Soal
                     </h2>
-                    
+
                     {{-- <ul class="header-dropdown m-r--5">
                         <li class="dropdown">
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -45,7 +46,7 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            
+
                             <tbody>
                             </tbody>
                         </table>
@@ -57,111 +58,147 @@
     <!-- #END# Basic Examples -->
 </div>
 <script>
-
-$('.checkbox').on('change', function(){ // on change of state
-   if(this.checked) // if changed state is "CHECKED"
-    {
-        $('#status').val(1);
-        primary_table.draw();
-    }
-    else{
-        $('#status').val(0);
-        primary_table.draw();
-    }
+    $('.checkbox').on('change', function() { // on change of state
+        if (this.checked) // if changed state is "CHECKED"
+        {
+            $('#status').val(1);
+            primary_table.draw();
+        } else {
+            $('#status').val(0);
+            primary_table.draw();
+        }
     });
 
-     var modul_url       = '{{Request::segment(2)}}';
-     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/table';
-     var detail_url     =  role_url + '#' + modul_url + '/' + 'paket-soal';
-     var delete_url     = role_url + '/' + modul_url + '/' + 'paket-soal/delete';
+    var modul_url = '{{ Request::segment(2) }}';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/table';
+    var detail_url = role_url + '#' + modul_url + '/' + 'paket-soal';
+    var delete_url = role_url + '/' + modul_url + '/' + 'paket-soal/delete';
 
-  
-        var primary_table = $('#primary_table').DataTable({
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            // serverSide: true,
-            ajax: {
-                url: datatable_url,
-                type: 'POST',
-                data:function(d){
+
+    var primary_table = $('#primary_table').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        // serverSide: true,
+        ajax: {
+            url: datatable_url,
+            type: 'POST',
+            data: function(d) {
                 d.status = $('#status').val()
             }
+        },
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
             },
-            columns: [
-                { data: null, searchable: false, orderable: false },
-                { data: 'text', name: 'text'},
-                { data: 'kelas.nm_kelas' },
-                { data: 'kategori_soal.nm_kategori_soal' },
-                { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
-                // { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
-                { data: 'nilai'},{ data: 'waktu_mulai'},{ data: 'waktu_selesai'},{ data: 'waktu_pengerjaan'},
-                { data: 'action', name: 'action', searchable: false, orderable: false,
-                    render: function(data) {
+            {
+                data: 'text',
+                name: 'text'
+            },
+            {
+                data: 'kelas.nm_kelas'
+            },
+            {
+                data: 'kategori_soal.nm_kategori_soal'
+            },
+            {
+                data: 'total_question',
+                name: 'total_question',
+                searchable: false,
+                orderable: false
+            },
+            // { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
+            {
+                data: 'nilai'
+            }, {
+                data: 'waktu_mulai'
+            }, {
+                data: 'waktu_selesai'
+            }, {
+                data: 'waktu_pengerjaan'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
 
-                        if(data.status == 0){
-                            return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +
-                            '    <i class="material-icons">library_add</i>'+
-                            '</a>'+
-                            '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/manage/' + data.id +'">'+
-                            '    <i class="material-icons">mode_edit</i>'+
-                            '</a>'+
-                            '<a type="button" class="btn btn-orange btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/test/' + data.id +'">'+
-                            '    T'+
-                            '</a>'+
-                            '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="'+data.id+'" onclick="actionDelete(this)">'+
-                            '    <i class="material-icons">delete</i>'+
+                    if (data.status == 0) {
+                        return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/detail/' + data.id + '">' +
+                            '    <i class="material-icons">library_add</i>' +
+                            '</a>' +
+                            '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/manage/' + data.id + '">' +
+                            '    <i class="material-icons">mode_edit</i>' +
+                            '</a>' +
+                            '<a type="button" class="btn btn-orange btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/test/' + data.id + '">' +
+                            '    T' +
+                            '</a>' +
+                            '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
+                            data.id + '" onclick="actionDelete(this)">' +
+                            '    <i class="material-icons">delete</i>' +
                             '</button>';
-                        }else{
-                            return '<a type="button" class="btn btn-orange btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/test/' + data.id +'">'+
-                            '    T'+
+                    } else {
+                        return '<a type="button" class="btn btn-orange btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/test/' + data.id + '">' +
+                            '    T' +
                             '</a>';
 
-                        }
-                   
                     }
+
                 }
-            ],
-            order: [[2, 'asc'], [1, 'asc']]
+            }
+        ],
+        order: [
+            [2, 'asc'],
+            [1, 'asc']
+        ]
+    });
+
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = i + 1;
         });
+    }).draw();
 
-        primary_table.on( 'draw', function () {
-            primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                var start = this.page.info().page * this.page.info().length;
-                cell.innerHTML = i + 1;
-            } );
-        } ).draw();
- 
 
-    function actionDelete(element){
+    function actionDelete(element) {
         var item = $(element);
         item.prop('disabled', true);
         var url = delete_url;
         vex.dialog.confirm({
             message: 'Are you sure to delete this item?',
-            callback: function (value) {
-                if(value){
+            callback: function(value) {
+                if (value) {
                     $.ajax({
                         type: "POST",
                         url: url,
-                        data:{
+                        data: {
                             question_package_id: item.attr('data-id')
                         },
-                        success: function (data) {
+                        success: function(data) {
                             vex.dialog.alert(data.message);
-                        setTimeout(() => {
-                            // $('.primary_table').DataTable().ajax.reload(null, false);
-                            // primary_table.ajax.reload(null, false);
-                            primary_table.ajax.reload(null, false);
-                            //    location.reload();
-                        }, 2000);
-                        
+                            setTimeout(() => {
+                                // $('.primary_table').DataTable().ajax.reload(null, false);
+                                // primary_table.ajax.reload(null, false);
+                                primary_table.ajax.reload(null, false);
+                                //    location.reload();
+                            }, 2000);
+
                         },
-                        error: function (xhr, status, error) {
+                        error: function(xhr, status, error) {
                             console.log(xhr.responseText);
                         }
                     });
-                }else{
+                } else {
                     item.prop('disabled', false);
                 }
             }
