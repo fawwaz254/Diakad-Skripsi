@@ -117,10 +117,10 @@
                                         <span class="input-group-addon">kelas :</span>
                                     </div>
                                 </div>
-                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <select class="form-control show-tick" name="kelas" required=""
+                                            <select class="form-control show-tick" name="kelas[]" required=""
                                                 required="">
                                                 @if ($item)
                                                     @foreach ($kelas as $k)
@@ -142,12 +142,24 @@
                                                             <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
                                                             </option>
                                                         @endforeach
+
                                                     @endif
                                                 @endif
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <div id="tambah">
+                                        <button class="btn btn-success btn-block" type="button"><i
+                                                class="material-icons">add</i> Tambah</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div id="place">
+
                             </div>
 
                             <div class="row clearfix">
@@ -261,3 +273,38 @@
     </div>
 </div>
 @include('scriptjs')
+
+<script>
+    $('#tambah').click(function() {
+
+        $('#place').append(`
+        <div class="row clearfix">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">kelas :</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select class="form-control show-tick" name="kelas[]" required=""
+                                                required="">
+                                                        <option disabled selected value="">-- Pilih kelas --
+                                                        </option>
+                                                        @foreach ($kelas as $k)
+                                                            <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
+                                                            </option>
+                                                        @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <button class="btn btn-danger btn-block delete_file" type="button"><i class="material-icons">delete</i> Hapus</button>
+                                </div>
+                            </div>`);
+    });
+    $("#place").on("click", ".delete_file", function() {
+        $(this).parent().parent().remove();
+    })
+</script>
