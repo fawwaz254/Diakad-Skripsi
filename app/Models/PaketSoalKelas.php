@@ -26,4 +26,8 @@ class PaketSoalKelas extends Model
     ];
 
     protected $guarded = [];
+    public function kelas()
+    {
+        return $this->belongsTo('App\Models\Kelas', 'id_kelas');
+    }
 }

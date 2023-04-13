@@ -35,7 +35,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
-                                    <th>Kelas</th>
+                                    <th>List_Kelas</th>
                                     <th>Mapel</th>
                                     <th>Total Soal</th>
                                     {{-- <th>Total Answer</th> --}}
@@ -97,7 +97,18 @@
                 name: 'text'
             },
             {
-                data: 'kelas.nm_kelas'
+                data: 'action',
+                name: 'action',
+                render: function(data) {
+                    // alert(data.nm_kelas);
+                    let html = '';
+                    data.nm_kelas.forEach(element => {
+                        html += '- ' +
+                            element + ` <br>`;
+                    });
+                    return html;
+
+                }
             },
             {
                 data: 'kategori_soal.nm_kategori_soal'
