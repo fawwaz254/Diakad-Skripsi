@@ -13,15 +13,15 @@
                 <span>Tambah Jawaban Essay</span>
             </a>
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
-            href="{{ url('guru#e-learning-soal/soal/new/submit') }}">
-            <i class="material-icons">add_box</i>
-            <span>Tambah Jawaban File</span>
-        </a>
+                href="{{ url('guru#e-learning-soal/soal/new/submit') }}">
+                <i class="material-icons">add_box</i>
+                <span>Tambah Jawaban File</span>
+            </a>
             <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
-            href="{{ url('guru#e-learning-soal/soal/kategori') }}">
-            <i class="material-icons">settings</i>
-            <span>kategori Mata Pelajaran</span>
-        </a>
+                href="{{ url('guru#e-learning-soal/soal/kategori') }}">
+                <i class="material-icons">settings</i>
+                <span>kategori Mata Pelajaran</span>
+            </a>
             <div class="card">
                 <div class="header">
                     <h2>
@@ -109,9 +109,9 @@
                         detail_url + '/edit/' + data.id + '">' +
                         '    <i class="material-icons">mode_edit</i>' +
                         '</a>' +
-                        '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        '<a type="button" class="btn  btn-circle waves-effect waves-circle waves-float" href="' +
                         detail_url + '/test/' + data.id + '">' +
-                        '    <i class="material-icons">reorder</i>' +
+                        '    T' +
                         '</a>' +
                         '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
                         data.id + '" onclick="actionDelete(this)">' +
