@@ -41,11 +41,15 @@
                                 @else
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                                     <select class="form-control show-tick" name="kategori">
+                                       
                                         <option  selected disabled>-- Pilih Mata Pelajaran --</option>
+                                        @if (!is_null($kategori))
                                         @foreach ($kategori as $r)
                                         <option value="{{ $r->id_kategori_soal }}">{{ $r->nm_kategori_soal }}</option>
                                             </option>
                                         @endforeach
+                                            
+                                        @endif
                                     </select>
                                 </div>
                            
