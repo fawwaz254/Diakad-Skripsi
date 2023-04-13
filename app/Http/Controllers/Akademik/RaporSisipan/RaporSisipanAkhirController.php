@@ -50,8 +50,8 @@ class RaporSisipanAkhirController extends Controller
             $komponen1 = KomponenNilaiRaporSisipan::where('urutan', '1')->first()->id_komponen_nilai;
             $komponen2 = null;
         } else {
-            $komponen1 = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
-            $komponen2 = KomponenNilaiRaporSisipan::where('type', 'uas')->first()->id_komponen_nilai;
+            $komponen1 = KomponenNilaiRaporSisipan::where('type', 'uts')->value('id_komponen_nilai');
+            $komponen2 = KomponenNilaiRaporSisipan::where('type', 'uas')->value('id_komponen_nilai');
         }
 
         $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
