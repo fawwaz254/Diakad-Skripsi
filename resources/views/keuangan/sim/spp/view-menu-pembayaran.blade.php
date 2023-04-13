@@ -376,8 +376,8 @@
 
     $(function() {
 
-        var start_date = "{{ \Carbon\Carbon::parse($waktu)->addMonth(2)->format('Y-m-d') }}";
-        var end_date = "{{ \Carbon\Carbon::parse($waktu)->subMonth(2)->format('Y-m-d') }}";
+        // var start_date = "{{ \Carbon\Carbon::parse($waktu)->addMonth(2)->format('Y-m-d') }}";
+        // var end_date = "{{ \Carbon\Carbon::parse($waktu)->subMonth(2)->format('Y-m-d') }}";
 
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
@@ -385,8 +385,8 @@
             clearButton: true,
             weekStart: 1,
             time: false,
-            minDate: end_date,
-            maxDate: start_date,
+            minDate: '2023/01/01',
+            maxDate: '2023/06/30',
         });
     });
 
