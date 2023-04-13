@@ -126,6 +126,14 @@ class FormLainnyaController extends Controller
             // $start_2 = Carbon::createFromTimeString($start_monkes);
             // $end_2 = Carbon::createFromTimeString('23:59');
 
+        if (!isset($input->jawaban_pertanyaan)) {
+            return [
+                'status' => 200, // SUCCESS AND LOAD CONTENT
+                'path' => 'kegiatan-harian/form-lainnya/form/' . $id_form . '/isi',
+                'message' => 'Pastikan Anda mengisi jawaban yang ada.'
+            ];
+        }
+
             if ($mode == 'add') {
                 $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 

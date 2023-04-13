@@ -27,7 +27,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="persentase_komponen_mp" required="" aria-required="true" aria-invalid="true">
+                                <input type="number" class="form-control" name="persentase_komponen_mp" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -35,7 +35,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="urutan_komponen_mp" required="" aria-required="true" aria-invalid="true">
+                                <input type="number" class="form-control" name="urutan_komponen_mp" required="" aria-required="true" aria-invalid="true">
                                 <input type="hidden" class="form-control" name="id_kelas_mp" required="" aria-required="true" aria-invalid="true" value="{{$data_kelas->id_kelas_mp}}">
                             </div>
                         </div>
