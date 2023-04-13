@@ -23,10 +23,10 @@ class HasilTestController extends Controller
 
     public function commonList(Request $request)
     {
-        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return $q->whereNotNull('content');
-        }]);
-        // dd($list_data);
+        }])->orderBy('paket_soal.created_at', 'desc');
+
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
                 $total = Siswa::where('id_kelas', $item->id_kelas)->count();
