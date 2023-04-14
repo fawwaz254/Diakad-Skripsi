@@ -21,37 +21,37 @@
                             {{ csrf_field() }}
                             <input type="hidden" name="id_paket_soal"
                                 @if ($item) value="{{ $item->id_paket_soal }}" @endif>
+
                             <div class="row clearfix">
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <div class="input-group">
-                                        <span class="input-group-addon">Mapel :</span>
+                                        <span class="input-group-addon">Mata Pelajaran :</span>
                                     </div>
                                 </div>
-                                @if ($item)
-                                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                        <select class="form-control show-tick" name="kategori">
-                                            <option disabled>-- Pilih Mata Pelajaran --</option>
-                                            @foreach ($kategori as $r)
-                                                <option value="{{ $r->id_kategori_soal }}"
-                                                    @if ($r->id_kategori_soal == $item->id_kategori_soal) selected @else disabled @endif>
-                                                    {{ $r->nm_kategori_soal }}</option>
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select class="form-control show-tick" name="kategori" required="">
+                                                @if ($item)
+                                                    <option disabled>-- Pilih Mata Pelajaran --</option>
+                                                    @foreach ($kategori as $r)
+                                                        <option value="{{ $r->id_kategori_soal }}"
+                                                            @if ($r->id_kategori_soal == $item->id_kategori_soal) selected @else disabled @endif>
+                                                            {{ $r->nm_kategori_soal }}
+                                                        </option>
+                                                    @endforeach
+                                                @else
+                                                    <option selected disabled>-- Pilih Mata Pelajaran --</option>
+                                                    @foreach ($kategori as $r)
+                                                        <option value="{{ $r->id_kategori_soal }}">
+                                                            {{ $r->nm_kategori_soal }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
                                     </div>
-                                @else
-                                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                        <select class="form-control show-tick" name="kategori">
-                                            <option selected disabled>-- Pilih Mata Pelajaran --</option>
-                                            @foreach ($kategori as $r)
-                                                <option value="{{ $r->id_kategori_soal }}">{{ $r->nm_kategori_soal }}
-                                                </option>
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                @endif
+                                </div>
                             </div>
 
                             <div class="row clearfix">
