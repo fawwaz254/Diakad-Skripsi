@@ -53,6 +53,23 @@
                         </div>
                     </a>
                 </div>
+
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="{{ route('report.guru') }}">
+                        <div class="card">
+                            <div class="body bg-blue" style="text-align: -webkit-center;">
+                                <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"
+                                    height="64">
+                                <h5>
+                                    Report Guru
+                                </h5>
+                                <small>Repor Guru
+                                    {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
 
             @include('rilis-note')

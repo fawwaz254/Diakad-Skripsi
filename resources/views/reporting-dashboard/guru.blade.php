@@ -28,7 +28,7 @@
                                             alt="Logo Sekolah" style="height:90px;" />
                                         <br>
                                         <h3 style="font-family: 'Nunito', sans-serif;">Data Penggunaan Diakad Untuk Setiap
-                                            Wali Kelas {{ $semester_aktif->tahun_ajaran }}
+                                            Guru {{ $semester_aktif->tahun_ajaran }}
                                             {{ $semester_aktif->nm_semester }}</h3>
                                         <h4 style="font-family: 'Nunito', sans-serif;">Per Tanggal :
                                             {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</h4>
@@ -44,7 +44,7 @@
                                                 <tr>
                                                     <th style="text-align:center;width: 5%;">No</th>
                                                     <th style="width:15%;">Nama</th>
-                                                    <th style="width:15%;">Data</th>
+                                                    <th style="width:15%;">Menu</th>
                                                     <th style="text-align:center;width: 25%;">Jumlah Data</th>
                                                     <th style="text-align:center;">Progress</th>
                                                 </tr>
@@ -56,7 +56,7 @@
                                                 @foreach ($sortedData as $key => $r)
                                                     <tr>
                                                         <td style="text-align:center;">{{ $loop->iteration }}</td>
-                                                        <td>{{ $r['nama'] }} <br> {{ $r['kelas'] }}</td>
+                                                        <td>{{ $r['nama'] }}</td>
                                                         <td>
                                                             @foreach ($r['data'] as $data)
                                                                 {{ $data }} <br>
