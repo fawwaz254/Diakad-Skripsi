@@ -20,6 +20,7 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
         Route::get('/report-wali-kelas', [ReportController::class, 'viewReportWaliKelas'])->name('report.walikelas');
+        Route::get('/report-guru', [ReportController::class, 'viewReportGuru'])->name('report.guru');
 
         Route::prefix('device')->group(function () {
             Route::prefix('fingerprint')->group(function () {
