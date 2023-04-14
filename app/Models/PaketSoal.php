@@ -13,10 +13,10 @@ class PaketSoal extends Model
 
     protected $primaryKey = 'id_paket_soal';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_kelas',
         'text',
@@ -30,16 +30,23 @@ class PaketSoal extends Model
     ];
 
     protected $guarded = [];
-    public function kelas(){
+    public function kelas()
+    {
         return $this->belongsTo('App\Models\Kelas', 'id_kelas');
     }
 
-    public function detail_paket_soal(){
+    public function detail_paket_soal()
+    {
         return $this->hasMany('App\Models\DetailPaketSoal', 'id_paket_soal');
     }
 
-    public function kategori_soal(){
+    public function kategori_soal()
+    {
         return $this->belongsTo('App\Models\KategoriSoal', 'id_kategori_soal');
     }
-  
+
+    public function paket_soal_kelas()
+    {
+        return $this->hasMany('App\Models\PaketSoalKelas', 'id_paket_soal');
+    }
 }

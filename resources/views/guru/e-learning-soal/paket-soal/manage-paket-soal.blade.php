@@ -117,14 +117,14 @@
                                         <span class="input-group-addon">kelas :</span>
                                     </div>
                                 </div>
-                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
-                                            <select class="form-control show-tick" name="kelas" required=""
+                                            <select class="form-control show-tick" name="kelas[]" required=""
                                                 required="">
                                                 @if ($item)
                                                     @foreach ($kelas as $k)
-                                                        <option @if ($item->id_kelas == $k->id_kelas) selected @endif
+                                                        <option @if ($item->paket_soal_kelas[0]->id_kelas == $k->id_kelas) selected @endif
                                                             value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                                     @endforeach
                                                 @else
@@ -142,12 +142,58 @@
                                                             <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
                                                             </option>
                                                         @endforeach
+
                                                     @endif
                                                 @endif
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <div id="tambah">
+                                        <button class="btn btn-success btn-block" type="button"><i
+                                                class="material-icons">add</i> Tambah</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div id="place">
+                                @if ($item)
+                                    @foreach ($item->paket_soal_kelas as $i => $paket_soal)
+                                        @if ($i < 1)
+                                            @continue
+                                        @endif
+                                        <div class="row clearfix">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">kelas :</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <div class="form-group form-float">
+                                                    <div class="form-line">
+                                                        <select class="form-control show-tick" name="kelas[]"
+                                                            required="" required="">
+
+                                                            @foreach ($kelas as $k)
+                                                                <option
+                                                                    @if ($paket_soal->id_kelas == $k->id_kelas) selected @endif
+                                                                    value="{{ $k->id_kelas }}">
+                                                                    {{ $k->nm_kelas }}
+                                                                </option>
+                                                            @endforeach
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                <button class="btn btn-danger btn-block delete_file" type="button"><i
+                                                        class="material-icons">delete</i> Hapus</button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
 
                             <div class="row clearfix">
@@ -162,35 +208,35 @@
                                             <select class="form-control show-tick" name="waktu_pengerjaan"
                                                 required="">
                                                 @if ($item)
-                                                    <option @if ($item->waktu_pengerjaan == 20160) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '20160') selected @endif
                                                         value="20160">2
                                                         Minggu</option>
-                                                    <option @if ($item->waktu_pengerjaan == 10080) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '10080') selected @endif
                                                         value="10080">1
                                                         Minggu</option>
-                                                    <option @if ($item->waktu_pengerjaan == 120) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '120') selected @endif
                                                         value="120">2
                                                         Jam</option>
-                                                    <option @if ($item->waktu_pengerjaan == 90) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '90') selected @endif
                                                         value="90">1
                                                         Jam Setengah</option>
-                                                    <option @if ($item->waktu_pengerjaan == 60) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '60') selected @endif
                                                         value="60">1
                                                         Jam</option>
-                                                    <option @if ($item->waktu_pengerjaan == 50) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '50') selected @endif
                                                         value="50">50
                                                         Menit</option>
-                                                    <option @if ($item->waktu_pengerjaan == 40) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '40') selected @endif
                                                         value="40">40
                                                         Menit</option>
-                                                    <option @if ($item->waktu_pengerjaan == 30) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '30') selected @endif
                                                         value="30">30
                                                         Menit</option>
-                                                    <option @if ($item->waktu_pengerjaan == 20) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '20') selected @endif
                                                         value="20">
                                                         20
                                                         Menit</option>
-                                                    <option @if ($item->waktu_pengerjaan == 10) selected @endif
+                                                    <option @if ($item->waktu_pengerjaan == '10') selected @endif
                                                         value="10">
                                                         10
                                                         Menit</option>
@@ -227,7 +273,7 @@
                                         {{-- <label class="form-label">Title</label> --}}
                                         <input type="datetime-local" class="form-control" name="waktu_mulai"
                                             required="" aria-required="true" aria-invalid="true"
-                                            @if ($item) value="{{ $item->waktu_mulai }}" @else value="{{ Carbon\Carbon::now()->format('Y-m-d H:i:s') }}" @endif>
+                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_mulai)->format('Y-m-d H:i:s') }}" @else value="{{ Carbon\Carbon::now()->format('Y-m-d H:i:s') }}" @endif>
 
                                     </div>
                                 </div>
@@ -238,12 +284,13 @@
                                     <span class="input-group-addon">Waktu Selesai :</span>
                                 </div>
                             </div>
+
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <input type="datetime-local" class="form-control" name="waktu_selesai"
                                             required="" aria-required="true" aria-invalid="true"
-                                            @if ($item) value="{{ $item->waktu_selesai }}" @else value="{{ Carbon\Carbon::now()->yesterday()->addDays(7)->format('Y-m-d H:i:s') }}" @endif>
+                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_selesai)->format('Y-m-d H:i:s') }}" @else value="{{ Carbon\Carbon::now()->yesterday()->addDays(7)->format('Y-m-d H:i:s') }}" @endif>
 
                                     </div>
                                 </div>
@@ -261,3 +308,38 @@
     </div>
 </div>
 @include('scriptjs')
+
+<script>
+    $('#tambah').click(function() {
+
+        $('#place').append(`
+                            <div class="row clearfix">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">kelas :</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select class="form-control show-tick" name="kelas[]" required=""
+                                                required="">
+                                                        <option disabled selected value="">-- Pilih kelas --
+                                                        </option>
+                                                        @foreach ($kelas as $k)
+                                                            <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
+                                                            </option>
+                                                        @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <button class="btn btn-danger btn-block delete_file" type="button"><i class="material-icons">delete</i> Hapus</button>
+                                </div>
+                            </div>`);
+    });
+    $("#place").on("click", ".delete_file", function() {
+        $(this).parent().parent().remove();
+    })
+</script>

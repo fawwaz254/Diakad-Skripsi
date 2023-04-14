@@ -9,6 +9,7 @@ use App\Models\KategoriSoal;
 use App\Models\Kelas;
 
 use App\Models\PaketSoal;
+use App\Models\PaketSoalKelas;
 use App\Models\Soal;
 use App\Models\Test;
 use App\Models\WaliKelas;
@@ -43,13 +44,14 @@ class PaketSoalController extends Controller
         $kelas = Kelas::get();
         $kategori = KategoriSoal::all();
         $wali_kelas = get_keterangan_wali_kelas($input->auth_data->pengguna->id_pengguna);
-        // $events = Event::get();
-        // $events = null;
+
         if (!empty($id)) {
-            $item = PaketSoal::find($id);
+            $item = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas')->first();
         } else {
             $item = null;
         }
+
+
         return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas', 'kategori', 'wali_kelas'));
     }
 
@@ -65,7 +67,7 @@ class PaketSoalController extends Controller
     {
         $input = (object) $request->input();
 
-        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal')->orderBy('paket_soal.created_at', 'desc')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+        $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna)->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas')->orderBy('paket_soal.created_at', 'desc')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return $q->whereNotNull('content');
         }])
             ->when($input->status == 0, function ($q) {
@@ -82,11 +84,18 @@ class PaketSoalController extends Controller
                     $value += $data->soal->pilihan_soal->count();
                 }
                 return $value;
+            })->editColumn('waktu_pengerjaan', function ($item) {
+                return $item->waktu_pengerjaan . ' Menit';
             })
             ->addColumn('action', function ($item) use ($input) {
+                $nm_kelas = [];
+                foreach ($item->paket_soal_kelas as $key => $kelas) {
+                    $nm_kelas[$key] = $kelas->kelas->nm_kelas;
+                }
                 $data = array(
                     'id' => $item->id_paket_soal,
-                    'status' => $input->status
+                    'status' => $input->status,
+                    'nm_kelas' => $nm_kelas,
                 );
                 return $data;
             })
@@ -135,15 +144,32 @@ class PaketSoalController extends Controller
 
         $input = (object) $request->input();
 
+
         if ($paket_soal = PaketSoal::find($input->id_paket_soal)) {
+
+            $paket_soal_kelass = PaketSoalKelas::where('id_paket_soal', $input->id_paket_soal)->get();
+            foreach ($paket_soal_kelass as $paket_soal_kelas) {
+                $paket_soal_kelas->delete();
+            }
+
             $paket_soal->text = $input->title;
             $paket_soal->id_kategori_soal = $input->kategori;
-            $paket_soal->id_kelas = $input->kelas;
+            // $paket_soal->id_kelas = $input->kelas;
             $paket_soal->nilai = $input->nilai;
             $paket_soal->waktu_mulai = $input->waktu_mulai;
             $paket_soal->waktu_selesai = $input->waktu_selesai;
             $paket_soal->waktu_pengerjaan = $input->waktu_pengerjaan;
             $paket_soal->save();
+
+            foreach ($input->kelas as $id_kelas) {
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $question_package_class = new PaketSoalKelas;
+                $question_package_class->id_paket_soal_kelas    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $question_package_class->id_paket_soal          = $input->id_paket_soal;
+                $question_package_class->id_kelas               = $id_kelas;
+                $question_package_class->created_by             = $input->auth_data->pengguna->id_pengguna;
+                $question_package_class->save();
+            }
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -153,17 +179,29 @@ class PaketSoalController extends Controller
         } else {
 
             $now = Carbon::now(env('APP_TIMEZONE', ''));
+
             $question_package = new PaketSoal;
-            $question_package->id_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $question_package->text = $input->title;
-            $question_package->id_kategori_soal = $input->kategori;
-            $question_package->id_kelas = $input->kelas;
-            $question_package->nilai = $input->nilai;
-            $question_package->waktu_mulai = $input->waktu_mulai;
-            $question_package->waktu_selesai = $input->waktu_selesai;
-            $question_package->waktu_pengerjaan = $input->waktu_pengerjaan;
-            $question_package->status = 0;
+            $question_package->id_paket_soal        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $question_package->text                 = $input->title;
+            $question_package->id_kategori_soal     = $input->kategori;
+            $question_package->nilai                = $input->nilai;
+            $question_package->waktu_mulai          = $input->waktu_mulai;
+            $question_package->waktu_selesai        = $input->waktu_selesai;
+            $question_package->waktu_pengerjaan     = $input->waktu_pengerjaan;
+            $question_package->status               = 0;
+            $question_package->created_by           = $input->auth_data->pengguna->id_pengguna;
             $question_package->save();
+
+            foreach ($input->kelas as $id_kelas) {
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $question_package_class = new PaketSoalKelas;
+                $question_package_class->id_paket_soal_kelas    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $question_package_class->id_paket_soal          = $question_package->id_paket_soal;
+                $question_package_class->id_kelas               = $id_kelas;
+                $question_package_class->created_by             = $input->auth_data->pengguna->id_pengguna;
+                $question_package_class->save();
+            }
+
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
