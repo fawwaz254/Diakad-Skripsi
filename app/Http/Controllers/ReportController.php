@@ -549,10 +549,9 @@ class ReportController extends BaseController
             $data[$key]['kelas'] = $w->kelas->nm_kelas;
             $data[$key]['data'][1] = 'Biodata Siswa';
             $data[$key]['data'][2] = 'Pelanggaran Siswa';
-            $data[$key]['data'][3] = 'SKPI Siswa';
-            $data[$key]['data'][4] = 'Approve SKPI';
-            $data[$key]['data'][5] = 'Home Visit';
-            $data[$key]['data'][6] = 'Wali Murid';
+            $data[$key]['data'][3] = 'Approve SKPI';
+            $data[$key]['data'][4] = 'Home Visit';
+            $data[$key]['data'][5] = 'Wali Murid';
             $data[$key]['jumlahData'] = '';
             $data[$key]['progress'] = '';
             $data[$key]['catatan'] = '';
@@ -563,9 +562,7 @@ class ReportController extends BaseController
             $data[$key]['status'][2] = $temp['status'][2];
             $data[$key]['status'][3] = $temp['status'][3];
             $data[$key]['status'][4] = $temp['status'][4];
-            $data[$key]['status'][5] = $temp['status'][6];
-            $data[$key]['status'][6] = $temp['status'][6];
-
+            $data[$key]['status'][5] = $temp['status'][5];
             // $data[$key]['catatan'] = $temp['catatan'];
             $data[$key]['progres'] = $temp['progres'];
         }
@@ -597,23 +594,25 @@ class ReportController extends BaseController
         $param['status'][1] = $biodata_siswa . ' / ' . $semua_siswa . ' Data';
         // Pelanggaran Siswa
         $param['status'][2] = $pelanggaran_siswa . ' Data';
-        // SKPI Siswa
-        $param['status'][3] = $kegiatan_siswa + $prestasi_siswa . ' Data';
         // Approve SKPI
-        $param['status'][4] = $kegiatan_siswa_approve + $prestasi_siswa_approve . ' Data';
+        $param['status'][3] = ($kegiatan_siswa_approve + $prestasi_siswa_approve) . '/' . ($kegiatan_siswa + $prestasi_siswa) . ' Data';
         // Home Visit
-        $param['status'][5] = $home_visit . ' / ' . $semua_siswa . ' Data';
+        $param['status'][4] = $home_visit . ' / ' . $semua_siswa . ' Data';
         // Wali murid
-        $param['status'][6] = $wali_murid . ' / ' . $semua_siswa . ' Data';
+        $param['status'][5] = $wali_murid . ' / ' . $semua_siswa . ' Data';
 
+        $data[1] = ($biodata_siswa / $semua_siswa) * 20;
+        $data[2] = ((($pelanggaran_siswa / 5) * 20) > 20) ? 20 : ($pelanggaran_siswa / 5) * 20;
+        $data[3] = (($kegiatan_siswa + $prestasi_siswa) == 0) ? 0 : (($kegiatan_siswa_approve + $prestasi_siswa_approve) / ($kegiatan_siswa + $prestasi_siswa)) * 20;
+        $data[4] = ($home_visit / $semua_siswa) * 20;
+        $data[5] = ($wali_murid / $semua_siswa) * 20;
 
-        $total_semua = $semua_siswa * 3;
-        $total_awal = $biodata_siswa + $pelanggaran_siswa + $kegiatan_siswa + $kegiatan_siswa_approve + $home_visit + $wali_murid;
-        if ($total_semua == 0 || $total_awal == 0) {
-            $param['progres'] = 0;
-        } else {
-            $param['progres'] = (($total_awal / $total_semua * 100) > 100) ? '100' : ($total_awal / $total_semua * 100);
+        $total = 0;
+        for ($i = 1; $i <= 5; $i++) {
+            $total  += $data[$i];
         }
+
+        $param['progres'] = $total;
 
         return response()->json($param);
     }
