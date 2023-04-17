@@ -649,8 +649,8 @@ class ReportController extends BaseController
             $data[$key]['id_pengguna'] = $g->id_pengguna;
             $data[$key]['nama'] = $g->pengguna->nm_pengguna;
             $data[$key]['data'][1] = 'Biodata';
-            $data[$key]['data'][2] = 'Kesetariatan';
-            $data[$key]['data'][3] = 'Rapor Sisipan,';
+            $data[$key]['data'][2] = 'Kesekretariatan';
+            $data[$key]['data'][3] = 'Rapor Sisipan';
             $data[$key]['data'][4] = 'E-Learning Materi';
             $data[$key]['data'][5] = 'E-Learning Soal';
             $data[$key]['data'][6] = 'Presensi';
