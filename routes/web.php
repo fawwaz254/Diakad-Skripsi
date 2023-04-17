@@ -24,31 +24,33 @@ use UniSharp\LaravelFilemanager\Controllers\UploadController;
 // DO NOT CHANGE
 Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
-Route::prefix('laravel-filemanager')->group(function () {
-    Route::get('/', [LfmController::class, 'show'])->name('unisharp.lfm.show');
-    // display integration error messages
-    Route::get('/errors', [LfmController::class, 'getErrors'])->name('unisharp.lfm.getErrors');
-    // upload
-    Route::any('/upload', [UploadController::class, 'upload'])->name('unisharp.lfm.upload');
-    // list images & files
-    Route::get('/jsonitems', [ItemsController::class, 'getItems'])->name('unisharp.lfm.getItems');
-    Route::get('/move', [ItemsController::class, 'move'])->name('unisharp.lfm.move');
-    Route::get('/domove', [ItemsController::class, 'domove'])->name('unisharp.lfm.domov');
-    // folders
-    Route::get('/newfolder', [FolderController::class, 'getAddfolder'])->name('unisharp.lfm.getAddfolder');
-    // list folders
-    Route::get('/folders', [FolderController::class, 'getFolders'])->name('unisharp.lfm.getFolders');
-    // crop
-    Route::get('/crop', [CropController::class, 'getCrop'])->name('unisharp.lfm.getCrop');
-    // rename
-    Route::get('/rename', [RenameController::class, 'getRename'])->name('unisharp.lfm.getRename');
-    // scale/resize
-    Route::get('/resize', [ResizeController::class, 'getResize'])->name('unisharp.lfm.getResize');
-    // download
-    Route::get('/download', [DownloadController::class, 'getDownload'])->name('unisharp.lfm.getDownload');
-    // delete
-    Route::get('/delete', [DeleteController::class, 'getDelete'])->name('unisharp.lfm.getDelete');
-    Route::get('/demo', [DemoController::class, 'index']);
+Route::middleware(['token_staff'])->group(function () {
+    Route::prefix('laravel-filemanager')->group(function () {
+        Route::get('/', [LfmController::class, 'show'])->name('unisharp.lfm.show');
+        // display integration error messages
+        Route::get('/errors', [LfmController::class, 'getErrors'])->name('unisharp.lfm.getErrors');
+        // upload
+        Route::any('/upload', [UploadController::class, 'upload'])->name('unisharp.lfm.upload');
+        // list images & files
+        Route::get('/jsonitems', [ItemsController::class, 'getItems'])->name('unisharp.lfm.getItems');
+        Route::get('/move', [ItemsController::class, 'move'])->name('unisharp.lfm.move');
+        Route::get('/domove', [ItemsController::class, 'domove'])->name('unisharp.lfm.domov');
+        // folders
+        Route::get('/newfolder', [FolderController::class, 'getAddfolder'])->name('unisharp.lfm.getAddfolder');
+        // list folders
+        Route::get('/folders', [FolderController::class, 'getFolders'])->name('unisharp.lfm.getFolders');
+        // crop
+        Route::get('/crop', [CropController::class, 'getCrop'])->name('unisharp.lfm.getCrop');
+        // rename
+        Route::get('/rename', [RenameController::class, 'getRename'])->name('unisharp.lfm.getRename');
+        // scale/resize
+        Route::get('/resize', [ResizeController::class, 'getResize'])->name('unisharp.lfm.getResize');
+        // download
+        Route::get('/download', [DownloadController::class, 'getDownload'])->name('unisharp.lfm.getDownload');
+        // delete
+        Route::get('/delete', [DeleteController::class, 'getDelete'])->name('unisharp.lfm.getDelete');
+        Route::get('/demo', [DemoController::class, 'index']);
+    });
 });
 
 // START USING FOR FINGERPRINT
