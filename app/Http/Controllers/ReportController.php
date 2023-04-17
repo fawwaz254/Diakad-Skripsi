@@ -659,7 +659,7 @@ class ReportController extends BaseController
             $data[$key]['data'][9] = 'Sarana Prasarana';
             $data[$key]['data'][10] = 'Laporan';
 
-            $temp = $this->checkDataGuru($g->id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians);
+            $temp = $this->checkDataGuru($g, $g->id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians);
             $temp = $temp->original;
             $data[$key]['status'][1] = $temp['status'][1];
             $data[$key]['status'][2] = $temp['status'][2];
@@ -678,11 +678,21 @@ class ReportController extends BaseController
         return view('reporting-dashboard.guru', compact('data', 'semester_aktif', 'sekolah'));
     }
 
-    public function checkDataGuru($id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians)
+    public function checkDataGuru($guru, $id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians)
     {
 
-        $kegiatan_guru = $kegiatan_gurus->where('created_by', $id_pengguna)->count();
-        $prestasi_guru = $prestasi_gurus->where('created_by', $id_pengguna)->count();
+        $nilai_biodata = 0;
+        $nilai_biodata += ($guru->nik_ptk) ? 1 : 0;
+        $nilai_biodata += ($guru->tgl_lahir) ? 1 : 0;
+        $nilai_biodata += ($guru->nm_ibu_kandung) ? 1 : 0;
+        $nilai_biodata += ($guru->alamat_jalan) ? 1 : 0;
+        $nilai_biodata += ($guru->npwp_ptk) ? 1 : 0;
+        $nilai_biodata += ($guru->nomor_hp) ? 1 : 0;
+        $nilai_biodata += ($guru->email) ? 1 : 0;
+        $nilai_biodata += ($guru->nomor_sk_penugasan) ? 1 : 0;
+        $nilai_biodata += ($kegiatan_gurus->where('created_by', $id_pengguna)->count() != 0) ? 1 : 0;
+        $nilai_biodata += ($prestasi_gurus->where('created_by', $id_pengguna)->count() != 0) ? 1 : 0;
+
         $arsip_dokumen = $arsip_dokumens->where('created_by', $id_pengguna)->count();
         $rapor_sisipan = $rapor_sisipans->where('created_by', $id_pengguna)->count();
         $materi_ajar =  $materi_ajars->where('created_by', $id_pengguna)->count();
@@ -694,7 +704,7 @@ class ReportController extends BaseController
         $komplain_sarpas = $komplain_sarpass->where('created_by', $id_pengguna)->count();
         $laporan_kerja_harian = $laporan_kerja_harians->where('created_by', $id_pengguna)->count();
 
-        $param['status'][1] =  $kegiatan_guru + $prestasi_guru;
+        $param['status'][1] =  $nilai_biodata;
         $param['status'][2] =  $arsip_dokumen;
         $param['status'][3] =  $rapor_sisipan;
         $param['status'][4] =  $materi_ajar;
