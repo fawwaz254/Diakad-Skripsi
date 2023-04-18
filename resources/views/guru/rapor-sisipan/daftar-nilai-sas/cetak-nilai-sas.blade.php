@@ -106,7 +106,7 @@
                     <td colspan="2" style="text-align: center;font-weight: bold;">NOMOR</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">NAMA SISWA<br></td>
                     <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
-                    <td colspan="4" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
+                    <td colspan="6" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
                     {{-- <td colspan="1" style="text-align: center;font-weight: bold;">STS</td> --}}
@@ -125,6 +125,8 @@
                     <td style="text-align: center;font-weight: bold;">2</td>
                     <td style="text-align: center;font-weight: bold;">3</td>
                     <td style="text-align: center;font-weight: bold;">4</td>
+                    <td style="text-align: center;font-weight: bold;">5</td>
+                    <td style="text-align: center;font-weight: bold;">6</td>
                     {{-- <td style="text-align: center;font-weight: bold;">40%</td> --}}
                     {{-- <td style="text-align: center;font-weight: bold;">60%</td> --}}
                 </tr>
