@@ -20,6 +20,7 @@ use App\Models\NilaiRaporSisipan;
 use App\Models\Setting;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Siswa;
+use App\Jobs\CreateRaporSisipan;
 use Auth;
 use DB;
 use Session;
@@ -27,6 +28,50 @@ use Validator;
 
 class RaporSisipanAkhirController extends Controller
 {
+
+
+    public function generate(Request $request)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $komponen_nilais = KomponenNilaiRaporSisipan::whereIn('nm_nilai', ['NILAI SUMATIF 5', 'NILAI SUMATIF 6'])->get();
+        $id_kelass = RaporSisipan::groupBy('id_kelas')->pluck('id_kelas')->toArray();
+        $rapor_sisipans = RaporSisipan::get();
+        $siswas = Siswa::whereIn('id_kelas', $id_kelass)
+            ->whereHas('pengguna.status_pengguna', function ($query) {
+                $query->where('aktif_status_pengguna', '=', '1');
+            });
+        // dd($komponen_nilais);
+        // foreach ($komponen_nilais as $komponen_nilai) {
+        // $list_data = [];
+        foreach ($rapor_sisipans as $rapor_sisipan) {
+            $siswa = $siswas->where('id_kelas', $rapor_sisipan->id_kelas)->get();
+            foreach ($siswa as $s) {
+                foreach ($siswa as $s) {
+                    foreach ($komponen_nilais as $komponen) {
+                        // dd($komponen);
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
+                        $list_data[] = [
+                            'id_nilai_rapor_sisipan' =>  $id,
+                            'id_rapor_sisipan' => $rapor_sisipan->id_rapor_sisipan,
+                            'id_komponen_nilai' => $komponen->id_komponen_nilai,
+                            'id_siswa' => $s->id_siswa,
+                            'nilai' => 0,
+                            'created_by' => 'batch syahrul',
+                        ];
+                        // dd($list_data);
+                    }
+                }
+            }
+            // dd($list_data);
+            CreateRaporSisipan::dispatch($list_data);
+            unset($list_data);
+        }
+
+        echo " sukses";
+        // }
+    }
+
 
     public function viewDaftarNilaiSAS(Request $request)
     {
@@ -44,7 +89,7 @@ class RaporSisipanAkhirController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $status = $input->status;
-        
+
         if (empty($input->id_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $id_semester = $semester_aktif->id_semester;

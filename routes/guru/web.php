@@ -684,7 +684,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
             });
             Route::prefix('daftar-nilai-sas')->group(function () {
-
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
                 Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
                 Route::get('importExcel', [RaporSisipanAkhirController::class, 'imporExcelSTS']);
@@ -693,6 +692,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
+
+                Route::get('generate', [RaporSisipanAkhirController::class, 'generate']);
             });
 
             Route::prefix('rapor-tengah-semester')->group(function () {
