@@ -693,7 +693,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
 
-                Route::get('generate', [RaporSisipanAkhirController::class, 'generate']);
+                // Route::get('generate', [RaporSisipanAkhirController::class, 'generate']);
             });
 
             Route::prefix('rapor-tengah-semester')->group(function () {
