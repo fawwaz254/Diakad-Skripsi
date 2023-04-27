@@ -386,6 +386,7 @@ class DetailAbsensiController extends Controller
 
         foreach ($dates as $key => $value) {
 
+            $hasil[$key]['nm_pengguna'] = $nm_pengguna;
             $hasil[$key]['tanggal'] = $value->format('Y-m-d');
             $hasil[$key]['hari'] = $hariIndo[$value->dayOfWeek];
             $hasil[$key]['check_in'] = '-';
@@ -459,6 +460,7 @@ class DetailAbsensiController extends Controller
         }
 
         $products = $hasil;
+        // dd($products);
         return Excel::download(new DetailAbsensi($products), 'detail_absensi_' . $nm_pengguna . '.xlsx');
     }
 }
