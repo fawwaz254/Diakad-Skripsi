@@ -549,10 +549,9 @@ class ReportController extends BaseController
             $data[$key]['kelas'] = $w->kelas->nm_kelas;
             $data[$key]['data'][1] = 'Biodata Siswa';
             $data[$key]['data'][2] = 'Pelanggaran Siswa';
-            $data[$key]['data'][3] = 'SKPI Siswa';
-            $data[$key]['data'][4] = 'Approve SKPI';
-            $data[$key]['data'][5] = 'Home Visit';
-            $data[$key]['data'][6] = 'Wali Murid';
+            $data[$key]['data'][3] = 'Approve SKPI';
+            $data[$key]['data'][4] = 'Home Visit';
+            $data[$key]['data'][5] = 'Wali Murid';
             $data[$key]['jumlahData'] = '';
             $data[$key]['progress'] = '';
             $data[$key]['catatan'] = '';
@@ -563,9 +562,7 @@ class ReportController extends BaseController
             $data[$key]['status'][2] = $temp['status'][2];
             $data[$key]['status'][3] = $temp['status'][3];
             $data[$key]['status'][4] = $temp['status'][4];
-            $data[$key]['status'][5] = $temp['status'][6];
-            $data[$key]['status'][6] = $temp['status'][6];
-
+            $data[$key]['status'][5] = $temp['status'][5];
             // $data[$key]['catatan'] = $temp['catatan'];
             $data[$key]['progres'] = $temp['progres'];
         }
@@ -597,23 +594,25 @@ class ReportController extends BaseController
         $param['status'][1] = $biodata_siswa . ' / ' . $semua_siswa . ' Data';
         // Pelanggaran Siswa
         $param['status'][2] = $pelanggaran_siswa . ' Data';
-        // SKPI Siswa
-        $param['status'][3] = $kegiatan_siswa + $prestasi_siswa . ' Data';
         // Approve SKPI
-        $param['status'][4] = $kegiatan_siswa_approve + $prestasi_siswa_approve . ' Data';
+        $param['status'][3] = ($kegiatan_siswa_approve + $prestasi_siswa_approve) . '/' . ($kegiatan_siswa + $prestasi_siswa) . ' Data';
         // Home Visit
-        $param['status'][5] = $home_visit . ' / ' . $semua_siswa . ' Data';
+        $param['status'][4] = $home_visit . ' / ' . $semua_siswa . ' Data';
         // Wali murid
-        $param['status'][6] = $wali_murid . ' / ' . $semua_siswa . ' Data';
+        $param['status'][5] = $wali_murid . ' / ' . $semua_siswa . ' Data';
 
+        $data[1] = ($biodata_siswa / $semua_siswa) * 20;
+        $data[2] = ((($pelanggaran_siswa / 5) * 20) > 20) ? 20 : ($pelanggaran_siswa / 5) * 20;
+        $data[3] = (($kegiatan_siswa + $prestasi_siswa) == 0) ? 0 : (($kegiatan_siswa_approve + $prestasi_siswa_approve) / ($kegiatan_siswa + $prestasi_siswa)) * 20;
+        $data[4] = ($home_visit / $semua_siswa) * 20;
+        $data[5] = ($wali_murid / $semua_siswa) * 20;
 
-        $total_semua = $semua_siswa * 3;
-        $total_awal = $biodata_siswa + $pelanggaran_siswa + $kegiatan_siswa + $kegiatan_siswa_approve + $home_visit + $wali_murid;
-        if ($total_semua == 0 || $total_awal == 0) {
-            $param['progres'] = 0;
-        } else {
-            $param['progres'] = (($total_awal / $total_semua * 100) > 100) ? '100' : ($total_awal / $total_semua * 100);
+        $total = 0;
+        for ($i = 1; $i <= 5; $i++) {
+            $total  += $data[$i];
         }
+
+        $param['progres'] = $total;
 
         return response()->json($param);
     }
@@ -650,8 +649,8 @@ class ReportController extends BaseController
             $data[$key]['id_pengguna'] = $g->id_pengguna;
             $data[$key]['nama'] = $g->pengguna->nm_pengguna;
             $data[$key]['data'][1] = 'Biodata';
-            $data[$key]['data'][2] = 'Kesetariatan';
-            $data[$key]['data'][3] = 'Rapor Sisipan,';
+            $data[$key]['data'][2] = 'Kesekretariatan';
+            $data[$key]['data'][3] = 'Rapor Sisipan';
             $data[$key]['data'][4] = 'E-Learning Materi';
             $data[$key]['data'][5] = 'E-Learning Soal';
             $data[$key]['data'][6] = 'Presensi';
@@ -660,7 +659,7 @@ class ReportController extends BaseController
             $data[$key]['data'][9] = 'Sarana Prasarana';
             $data[$key]['data'][10] = 'Laporan';
 
-            $temp = $this->checkDataGuru($g->id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians);
+            $temp = $this->checkDataGuru($g, $g->id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians);
             $temp = $temp->original;
             $data[$key]['status'][1] = $temp['status'][1];
             $data[$key]['status'][2] = $temp['status'][2];
@@ -679,11 +678,21 @@ class ReportController extends BaseController
         return view('reporting-dashboard.guru', compact('data', 'semester_aktif', 'sekolah'));
     }
 
-    public function checkDataGuru($id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians)
+    public function checkDataGuru($guru, $id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians)
     {
 
-        $kegiatan_guru = $kegiatan_gurus->where('created_by', $id_pengguna)->count();
-        $prestasi_guru = $prestasi_gurus->where('created_by', $id_pengguna)->count();
+        $nilai_biodata = 0;
+        $nilai_biodata += ($guru->nik_ptk) ? 1 : 0;
+        $nilai_biodata += ($guru->tgl_lahir) ? 1 : 0;
+        $nilai_biodata += ($guru->nm_ibu_kandung) ? 1 : 0;
+        $nilai_biodata += ($guru->alamat_jalan) ? 1 : 0;
+        $nilai_biodata += ($guru->npwp_ptk) ? 1 : 0;
+        $nilai_biodata += ($guru->nomor_hp) ? 1 : 0;
+        $nilai_biodata += ($guru->email) ? 1 : 0;
+        $nilai_biodata += ($guru->nomor_sk_penugasan) ? 1 : 0;
+        $nilai_biodata += ($kegiatan_gurus->where('created_by', $id_pengguna)->count() != 0) ? 1 : 0;
+        $nilai_biodata += ($prestasi_gurus->where('created_by', $id_pengguna)->count() != 0) ? 1 : 0;
+
         $arsip_dokumen = $arsip_dokumens->where('created_by', $id_pengguna)->count();
         $rapor_sisipan = $rapor_sisipans->where('created_by', $id_pengguna)->count();
         $materi_ajar =  $materi_ajars->where('created_by', $id_pengguna)->count();
@@ -695,7 +704,7 @@ class ReportController extends BaseController
         $komplain_sarpas = $komplain_sarpass->where('created_by', $id_pengguna)->count();
         $laporan_kerja_harian = $laporan_kerja_harians->where('created_by', $id_pengguna)->count();
 
-        $param['status'][1] =  $kegiatan_guru + $prestasi_guru;
+        $param['status'][1] =  $nilai_biodata;
         $param['status'][2] =  $arsip_dokumen;
         $param['status'][3] =  $rapor_sisipan;
         $param['status'][4] =  $materi_ajar;

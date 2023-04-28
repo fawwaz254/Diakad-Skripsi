@@ -137,7 +137,7 @@
                         <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
                         <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
                         @foreach ($list_data as $nilai)
-                            @if (in_array($nilai->urutan, [1, 2]))
+                            @if (in_array($nilai->nm_nilai, ['NILAI FORMATIF 1', 'NILAI FORMATIF 2']))
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
@@ -149,7 +149,7 @@
                         <td></td>
                         <td></td>
                         @foreach ($list_data as $nilai)
-                            @if (in_array($nilai->urutan, [5, 6]))
+                            @if (in_array($nilai->nm_nilai, ['NILAI SUMATIF 1', 'NILAI SUMATIF 2']))
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
@@ -162,11 +162,11 @@
                         <td></td>
                         <td style="text-align: center;">
                             {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'])) --}}
-                            {{ round(($nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6']) / 2) }}
+                            {{ round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2']) / 2) }}
                             {{-- @endif --}}
                         </td>
                         @foreach ($list_data as $nilai)
-                            @if ($nilai->urutan == 9)
+                            @if ($nilai->nm_nilai == 'STS')
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
@@ -178,7 +178,7 @@
 
                         <td style="text-align: center;">
                             {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) && isset($nilai_komponen[$siswa->id_siswa . 'sts'])) --}}
-                            {{ round(($nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6'] + $nilai_komponen[$siswa->id_siswa . '9']) / 3) }}
+                            {{ round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'STS']) / 3) }}
                             {{-- @endif --}}
                         </td>
                     </tr>
