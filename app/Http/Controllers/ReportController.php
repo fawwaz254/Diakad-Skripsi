@@ -44,8 +44,17 @@ use Yajra\Datatables\Datatables;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\HomeVisit;
+use App\Models\KegiatanGuru;
 use App\Models\KegiatanSiswa;
+use App\Models\KomplainSarpras;
+use App\Models\LaporanKerjaHarian;
+use App\Models\LaporanKerjaHarianMGMP;
+use App\Models\MateriAjar;
+use App\Models\PaketSoal;
+use App\Models\PresensiMpPelanggaran;
+use App\Models\PrestasiGuru;
 use App\Models\PrestasiSiswa;
+use App\Models\RaporSisipan;
 use App\Models\Siswa;
 use Auth;
 use DB;
@@ -501,7 +510,6 @@ class ReportController extends BaseController
 
 
     // Repor Wali kelas
-
     public function viewReportWaliKelas(Request $request)
     {
 
@@ -510,12 +518,29 @@ class ReportController extends BaseController
             ->where('is_aktif', 1)->whereHas('kelas', function ($query) {
                 $query->orderBy('tingkat')->orderBy('nm_kelas');
             })
+            ->whereHas('guru.pengguna.status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })
             ->get();
 
         $sekolah = Sekolah::orderBy('id_sekolah')->first();
 
         $data = array();
 
+        $wali_kelass = WaliKelas::where('is_aktif', 1)->with('guru')->get();
+        $semua_siswas = Siswa::get();
+        $biodata_siswas = Siswa::whereHas('pengguna', function ($query) {
+            $query->whereNotNull('email_pengguna');
+        })->get();
+        $pelanggaran_siswas = PelanggaranSiswa::where('id_semester', $semester_aktif->id_semester)->get();
+        $kegiatan_siswas = KegiatanSiswa::where('id_semester', $semester_aktif->id_semester)->get();
+        $prestasi_siswas = PrestasiSiswa::where('id_semester', $semester_aktif->id_semester)->get();
+        $kegiatan_siswa_approves = KegiatanSiswa::where('id_semester', $semester_aktif->id_semester)->get();
+        $prestasi_siswa_approves = PrestasiSiswa::where('id_semester', $semester_aktif->id_semester)->get();
+        $home_visits = HomeVisit::where('id_semester', $semester_aktif->id_semester)->get();
+        $wali_murids = Siswa::whereHas('wali_murid', function ($query) {
+            $query->where('is_aktif', 1);
+        })->get();
 
         foreach ($wali_kelas as $key => $w) {
 
@@ -524,23 +549,20 @@ class ReportController extends BaseController
             $data[$key]['kelas'] = $w->kelas->nm_kelas;
             $data[$key]['data'][1] = 'Biodata Siswa';
             $data[$key]['data'][2] = 'Pelanggaran Siswa';
-            $data[$key]['data'][3] = 'SKPI Siswa';
-            $data[$key]['data'][4] = 'Approve SKPI';
-            $data[$key]['data'][5] = 'Home Visit';
-            $data[$key]['data'][6] = 'Wali Murid';
+            $data[$key]['data'][3] = 'Approve SKPI';
+            $data[$key]['data'][4] = 'Home Visit';
+            $data[$key]['data'][5] = 'Wali Murid';
             $data[$key]['jumlahData'] = '';
             $data[$key]['progress'] = '';
             $data[$key]['catatan'] = '';
 
-            $temp = $this->checkDataWaliKelas($w->id_kelas);
+            $temp = $this->checkDataWaliKelas($w->id_kelas,  $wali_kelass, $semua_siswas, $biodata_siswas, $pelanggaran_siswas, $kegiatan_siswas, $prestasi_siswas, $kegiatan_siswa_approves,  $prestasi_siswa_approves, $home_visits, $wali_murids);
             $temp = $temp->original;
             $data[$key]['status'][1] = $temp['status'][1];
             $data[$key]['status'][2] = $temp['status'][2];
             $data[$key]['status'][3] = $temp['status'][3];
             $data[$key]['status'][4] = $temp['status'][4];
-            $data[$key]['status'][5] = $temp['status'][6];
-            $data[$key]['status'][6] = $temp['status'][6];
-
+            $data[$key]['status'][5] = $temp['status'][5];
             // $data[$key]['catatan'] = $temp['catatan'];
             $data[$key]['progres'] = $temp['progres'];
         }
@@ -549,50 +571,156 @@ class ReportController extends BaseController
         return view('reporting-dashboard.wali-kelas', compact('data', 'semester_aktif', 'sekolah'));
     }
 
-    public function checkDataWaliKelas($id_kelas)
+    public function checkDataWaliKelas($id_kelas, $wali_kelass, $semua_siswas, $biodata_siswas, $pelanggaran_siswas, $kegiatan_siswas, $prestasi_siswas, $kegiatan_siswa_approves,  $prestasi_siswa_approves, $home_visits, $wali_murids)
     {
-        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
-        $wali_kelas = WaliKelas::where('id_kelas', $id_kelas)->where('is_aktif', 1)->with('guru')->first();
-        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
-        // $list_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('wali_murid')->with('wali_murid.pengguna', 'pengguna', 'kelas')->count();
-        $semua_siswa = Siswa::where('id_kelas', $id_kelas)->count();
-        //biodata_siswa
-        $biodata_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('pengguna', function ($query) {
-            $query->whereNotNull('email_pengguna');
-        })->count();
+
+        $wali_kelas = $wali_kelass->where('id_kelas', $id_kelas)->first();
+        $semua_siswa = $semua_siswas->where('id_kelas', $id_kelas)->count();
+
+        $biodata_siswa = $biodata_siswas->where('id_kelas', $id_kelas)->count();
         //pelanggaran siswa
-        $pelanggaran_siswa = PelanggaranSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->count();
+        $pelanggaran_siswa = $pelanggaran_siswas->where('id_kelas', $id_kelas)->count();
         //skpi
-        $kegiatan_siswa = KegiatanSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->count();
-        $prestasi_siswa = PrestasiSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->count();
+        $kegiatan_siswa = $kegiatan_siswas->where('id_kelas', $id_kelas)->count();
+        $prestasi_siswa =  $prestasi_siswas->where('id_kelas', $id_kelas)->count();
         //skpi approve
-        $kegiatan_siswa_approve = KegiatanSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->where('approved_by', $wali_kelas->guru->id_pengguna)->count();
-        $prestasi_siswa_approve = PrestasiSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->where('approved_by', $wali_kelas->guru->id_pengguna)->count();
+        $kegiatan_siswa_approve = $kegiatan_siswa_approves->where('id_kelas', $id_kelas)->where('approved_by', $wali_kelas->guru->id_pengguna)->count();
+        $prestasi_siswa_approve = $prestasi_siswa_approves->where('id_kelas', $id_kelas)->where('approved_by', $wali_kelas->guru->id_pengguna)->count();
         //home visit
-        $home_visit = HomeVisit::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->count();
-        $wali_murid = Siswa::where('id_kelas', $id_kelas)->whereHas('wali_murid', function ($query) {
-            $query->where('is_aktif', 1);
-        })->count();
+        $home_visit = $home_visits->where('id_kelas', $id_kelas)->count();
+        $wali_murid = $wali_murids->where('id_kelas', $id_kelas)->count();
 
         //Biodata Siswa
         $param['status'][1] = $biodata_siswa . ' / ' . $semua_siswa . ' Data';
         // Pelanggaran Siswa
         $param['status'][2] = $pelanggaran_siswa . ' Data';
-        // SKPI Siswa
-        $param['status'][3] = $kegiatan_siswa + $prestasi_siswa . ' Data';
         // Approve SKPI
-        $param['status'][4] = $kegiatan_siswa_approve + $prestasi_siswa_approve . ' Data';
+        $param['status'][3] = ($kegiatan_siswa_approve + $prestasi_siswa_approve) . '/' . ($kegiatan_siswa + $prestasi_siswa) . ' Data';
         // Home Visit
-        $param['status'][5] = $home_visit . ' / ' . $semua_siswa . ' Data';
+        $param['status'][4] = $home_visit . ' / ' . $semua_siswa . ' Data';
         // Wali murid
-        $param['status'][6] = $wali_murid . ' / ' . $semua_siswa . ' Data';
+        $param['status'][5] = $wali_murid . ' / ' . $semua_siswa . ' Data';
+
+        $data[1] = ($biodata_siswa / $semua_siswa) * 20;
+        $data[2] = ((($pelanggaran_siswa / 5) * 20) > 20) ? 20 : ($pelanggaran_siswa / 5) * 20;
+        $data[3] = (($kegiatan_siswa + $prestasi_siswa) == 0) ? 0 : (($kegiatan_siswa_approve + $prestasi_siswa_approve) / ($kegiatan_siswa + $prestasi_siswa)) * 20;
+        $data[4] = ($home_visit / $semua_siswa) * 20;
+        $data[5] = ($wali_murid / $semua_siswa) * 20;
+
+        $total = 0;
+        for ($i = 1; $i <= 5; $i++) {
+            $total  += $data[$i];
+        }
+
+        $param['progres'] = $total;
+
+        return response()->json($param);
+    }
+
+    public function viewReportGuru(Request $request)
+    {
+        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
+        $id_semester = $semester_aktif->id_semester;
+        $sekolah = Sekolah::orderBy('id_sekolah')->first();
+        $guru = Guru::with('pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->get();
 
 
-        $total_semua = $semua_siswa * 3;
-        $total_awal = $biodata_siswa + $pelanggaran_siswa + $kegiatan_siswa + $kegiatan_siswa_approve + $home_visit + $wali_murid;
+        $data = array();
 
-        $param['progres'] = $total_awal / $total_semua * 100;
+        $kegiatan_gurus = KegiatanGuru::get();
+        $prestasi_gurus = PrestasiGuru::get();
+        $arsip_dokumens = ArsipDokumen::get();
+        $rapor_sisipans = RaporSisipan::where('id_semester', $id_semester)->get();
+        $materi_ajars = MateriAjar::get();
+        $paket_soals = PaketSoal::get();
+        $presensi_mps = PresensiMp::whereHas('kelas_mp', function ($query) use ($id_semester) {
+            $query->where('id_semester', '=', $id_semester);
+        })->get();
+        $jurnal_harians = LaporanKerjaHarianMGMP::get();
+        $presensi_mp_siswa_pelanggarans = PresensiMpPelanggaran::get();
+        $pelanggaran_siswas = PelanggaranSiswa::get();
+        $komplain_sarpass = KomplainSarpras::get();
+        $laporan_kerja_harians = LaporanKerjaHarian::get();
 
+
+        foreach ($guru as $key => $g) {
+            $data[$key]['id_pengguna'] = $g->id_pengguna;
+            $data[$key]['nama'] = $g->pengguna->nm_pengguna;
+            $data[$key]['data'][1] = 'Biodata';
+            $data[$key]['data'][2] = 'Kesekretariatan';
+            $data[$key]['data'][3] = 'Rapor Sisipan';
+            $data[$key]['data'][4] = 'E-Learning Materi';
+            $data[$key]['data'][5] = 'E-Learning Soal';
+            $data[$key]['data'][6] = 'Presensi';
+            $data[$key]['data'][7] = 'Jurnal harian';
+            $data[$key]['data'][8] = 'Pelanggaran Siswa';
+            $data[$key]['data'][9] = 'Sarana Prasarana';
+            $data[$key]['data'][10] = 'Laporan';
+
+            $temp = $this->checkDataGuru($g, $g->id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians);
+            $temp = $temp->original;
+            $data[$key]['status'][1] = $temp['status'][1];
+            $data[$key]['status'][2] = $temp['status'][2];
+            $data[$key]['status'][3] = $temp['status'][3];
+            $data[$key]['status'][4] = $temp['status'][4];
+            $data[$key]['status'][5] = $temp['status'][5];
+            $data[$key]['status'][6] = $temp['status'][6];
+            $data[$key]['status'][7] = $temp['status'][7];
+            $data[$key]['status'][8] = $temp['status'][8];
+            $data[$key]['status'][9] = $temp['status'][9];
+            $data[$key]['status'][10] = $temp['status'][10];
+            $data[$key]['progres'] = $temp['progres'];
+        }
+
+
+        return view('reporting-dashboard.guru', compact('data', 'semester_aktif', 'sekolah'));
+    }
+
+    public function checkDataGuru($guru, $id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians)
+    {
+
+        $nilai_biodata = 0;
+        $nilai_biodata += ($guru->nik_ptk) ? 1 : 0;
+        $nilai_biodata += ($guru->tgl_lahir) ? 1 : 0;
+        $nilai_biodata += ($guru->nm_ibu_kandung) ? 1 : 0;
+        $nilai_biodata += ($guru->alamat_jalan) ? 1 : 0;
+        $nilai_biodata += ($guru->npwp_ptk) ? 1 : 0;
+        $nilai_biodata += ($guru->nomor_hp) ? 1 : 0;
+        $nilai_biodata += ($guru->email) ? 1 : 0;
+        $nilai_biodata += ($guru->nomor_sk_penugasan) ? 1 : 0;
+        $nilai_biodata += ($kegiatan_gurus->where('created_by', $id_pengguna)->count() != 0) ? 1 : 0;
+        $nilai_biodata += ($prestasi_gurus->where('created_by', $id_pengguna)->count() != 0) ? 1 : 0;
+
+        $arsip_dokumen = $arsip_dokumens->where('created_by', $id_pengguna)->count();
+        $rapor_sisipan = $rapor_sisipans->where('created_by', $id_pengguna)->count();
+        $materi_ajar =  $materi_ajars->where('created_by', $id_pengguna)->count();
+        $paket_soal = $paket_soals->where('created_by', $id_pengguna)->count();
+        $presensi_mp =  $presensi_mps->where('created_by', $id_pengguna)->count();
+        $jurnal_harian = $jurnal_harians->where('created_by', $id_pengguna)->count();
+        $presensi_mp_siswa_pelanggaran =  $presensi_mp_siswa_pelanggarans->where('created_by', $id_pengguna)->count();
+        $pelanggaran_siswa =  $pelanggaran_siswas->where('created_by', $id_pengguna)->count();
+        $komplain_sarpas = $komplain_sarpass->where('created_by', $id_pengguna)->count();
+        $laporan_kerja_harian = $laporan_kerja_harians->where('created_by', $id_pengguna)->count();
+
+        $param['status'][1] =  $nilai_biodata;
+        $param['status'][2] =  $arsip_dokumen;
+        $param['status'][3] =  $rapor_sisipan;
+        $param['status'][4] =  $materi_ajar;
+        $param['status'][5] =  $paket_soal;
+        $param['status'][6] =  $presensi_mp;
+        $param['status'][7] =  $jurnal_harian;
+        $param['status'][8] =  $presensi_mp_siswa_pelanggaran + $pelanggaran_siswa;
+        $param['status'][9] =  $komplain_sarpas;
+        $param['status'][10] =  $laporan_kerja_harian;
+
+        $total = 0;
+        for ($i = 1; $i <= 10; $i++) {
+            $total  += ($param['status'][$i] > 10) ? 10 : $param['status'][$i];
+        }
+
+        $param['progres'] =  $total;
         return response()->json($param);
     }
 }

@@ -84,7 +84,7 @@
                 <td colspan="10" style="border-style : hidden">
 
                     <h2 align="center" style="margin-top: 3px">
-                        DAFTAR NILAI RAPOR SISIPAN<br>
+                        DAFTAR NILAI RAPOR <br>
                         {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
                         TAHUN AJARAN {{ $rapor_sisipan->semester->tahun_ajaran }}
 
@@ -106,13 +106,13 @@
                     <td colspan="2" style="text-align: center;font-weight: bold;">NOMOR</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">NAMA SISWA<br></td>
                     <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
-                    <td colspan="4" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
+                    <td colspan="6" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
-                    <td colspan="1" style="text-align: center;font-weight: bold;">STS</td>
+                    {{-- <td colspan="1" style="text-align: center;font-weight: bold;">STS</td> --}}
                     <td rowspan="2" style="text-align: center;font-weight: bold;">SAS</td>
-                    <td colspan="1" style="text-align: center;font-weight: bold;">SAS</td>
-                    <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR</td>
+                    {{-- <td colspan="1" style="text-align: center;font-weight: bold;">SAS</td> --}}
+                    {{-- <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR</td> --}}
                 </tr>
                 <tr>
                     <td style="text-align: center;font-weight: bold;">URT</td>
@@ -125,8 +125,10 @@
                     <td style="text-align: center;font-weight: bold;">2</td>
                     <td style="text-align: center;font-weight: bold;">3</td>
                     <td style="text-align: center;font-weight: bold;">4</td>
-                    <td style="text-align: center;font-weight: bold;">40%</td>
-                    <td style="text-align: center;font-weight: bold;">60%</td>
+                    <td style="text-align: center;font-weight: bold;">5</td>
+                    <td style="text-align: center;font-weight: bold;">6</td>
+                    {{-- <td style="text-align: center;font-weight: bold;">40%</td> --}}
+                    {{-- <td style="text-align: center;font-weight: bold;">60%</td> --}}
                 </tr>
             </thead>
             <tbody class="body">
@@ -158,22 +160,28 @@
                             {{ round($test3) }}
                         </td>
                         <td style="text-align: center;">{{ round($nilai_komponen[$siswa->id_siswa . 'sts']) }}</td>
-                        <td style="text-align: center;">{{ round(($nilai_komponen[$siswa->id_siswa . 'sts'] * 40) / 100) }}
-                        </td>
+                        {{-- <td style="text-align: center;">
+                            {{ round(($nilai_komponen[$siswa->id_siswa . 'sts'] * 40) / 100) }}
+                        </td> --}}
                         <td style="text-align: center;">{{ round($nilai_komponen[$siswa->id_siswa . 'sas']) }}</td>
-                        <td style="text-align: center;">{{ round(($nilai_komponen[$siswa->id_siswa . 'sas'] * 60) / 100) }}
+                        {{-- <td style="text-align: center;">
+                            {{ round(($nilai_komponen[$siswa->id_siswa . 'sas'] * 60) / 100) }}
                         </td>
-                        <td style="text-align: center;"> {{ round((($test3 * 2) + ($nilai_komponen[$siswa->id_siswa . 'sts'] * 40 / 100) + ($nilai_komponen[$siswa->id_siswa . 'sas'] * 60 / 100) )/ 3) }}</td>
+                        <td style="text-align: center;">
+                            {{ round(($test3 * 2 + ($nilai_komponen[$siswa->id_siswa . 'sts'] * 40) / 100 + ($nilai_komponen[$siswa->id_siswa . 'sas'] * 60) / 100) / 3) }}
+                        </td> --}}
                     </tr>
                 @endforeach
             </tbody>
 
         </table>
-        <table style="width: 38%; margin-left:5%; margin-top:20px">
+        {{-- <table style="width: 38%; margin-left:5%; margin-top:20px">
             <tr>
                 <td colspan="1" style="  border-left: 0px solid;
-                border-right: 0px solid;">
-                    <p align="center" >
+                border-right: 0px solid;"> --}}
+
+        {{-- 
+            <p align="center">
                         RAPOR =
                     </p>
                 </td>
@@ -183,22 +191,24 @@
                         {(2 x RT2 SMT)+(40%STS)+(60%SAS)}
                     </p>
                     <p align="center" style="margin-top: -8px">3</p>
-                </td>
+               --}}
+        {{-- </td>
             </tr>
-        </table>
+        </table> --}}
 
         <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+
             <tr>
                 <td style=" border-style : hidden; width:65%; vertical-align: text-top; padding:0">
-                    <p style="margin-left: 10%;">
+                    {{-- <p style="margin-left: 10%;">
                         SMT = Sumatif
                         <br>
                         STS = Sumatif Tengah Semester
                         <br>
-                        SAS =  Sumatif Akhir Semester
+                        SAS = Sumatif Akhir Semester
                         <br>
-                        SAT =  Sumatif Akhir Tahun
-                    </p>
+                        SAT = Sumatif Akhir Tahun
+                    </p> --}}
                 </td>
 
                 <td style="width:25%">Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}

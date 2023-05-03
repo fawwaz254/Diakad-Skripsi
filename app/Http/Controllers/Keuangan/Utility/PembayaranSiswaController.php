@@ -886,6 +886,9 @@ class PembayaranSiswaController extends BaseController
                     ->sum('besar_pembayaran');
 
                 $besar_pelunasan = $besar_biaya - $besar_pembayaran_lama;
+                if ($besar_pelunasan <= '0') {
+                    return false;
+                }
 
                 if ($input->auth_data->pengguna->status_join_table == 1) {
                     // get id_guru

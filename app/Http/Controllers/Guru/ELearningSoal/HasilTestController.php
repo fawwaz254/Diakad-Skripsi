@@ -23,14 +23,19 @@ class HasilTestController extends Controller
 
     public function commonList(Request $request)
     {
-        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+        $input = (object) $request->input();
+        $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna)->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return $q->whereNotNull('content');
-        }]);
-        // dd($list_data);
+        }])->orderBy('paket_soal.created_at', 'desc');
+
+
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
-                $total = Siswa::where('id_kelas', $item->id_kelas)->count();
-                // $statusTest = Test::where('id_paket_soal', $item->id_paket_soal)->where('id_pengguna', Auth::id())->first();
+                $id_kelas = [];
+                foreach ($item->paket_soal_kelas as $key => $kelas) {
+                    $id_kelas[$key] = $kelas->id_kelas;
+                }
+                $total = Siswa::whereIn('id_kelas', $id_kelas)->count();
                 return $total;
             })
             ->addColumn('total_mengerjakan', function ($item) {
@@ -39,8 +44,13 @@ class HasilTestController extends Controller
                 return $mengerjakan;
             })
             ->addColumn('action', function ($item) {
+                $nm_kelas = [];
+                foreach ($item->paket_soal_kelas as $key => $kelas) {
+                    $nm_kelas[$key] = $kelas->kelas->nm_kelas;
+                }
                 $data = array(
-                    'id' => $item->id_paket_soal
+                    'id' => $item->id_paket_soal,
+                    'nm_kelas' => $nm_kelas,
                 );
                 return $data;
             })

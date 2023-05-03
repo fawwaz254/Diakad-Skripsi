@@ -210,7 +210,11 @@
                     <h1 align="center" style="font-family: Arial Black; color:blue;">
                         {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}
                     </h1>
-                    <h3 align="center" style=" margin-top:-10px"><b>TERAKREDITASI : A ( UNGGUL )</b>
+                    <h3 align="center" style=" margin-top:-10px"><b>TERAKREDITASI : A
+                            @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smpypm2')
+                                ( UNGGUL )
+                            @endif
+                        </b>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
                             <br>NSS : 204050214055 NDS : 2005020203 NPSN : {{ $auth_data->sekolah_data->npsn_sekolah }}
                         @endif
@@ -414,7 +418,11 @@
                         <br><i>Accreditation Status</i>
                         {{-- @endif --}}
                     </td>
-                    <td> A (Unggul)</td>
+                    <td> A
+                        @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smpypm2')
+                            (Unggul)
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td style="width: 5%;">2.A{{ $no++ }}</td>
@@ -621,7 +629,7 @@
                         <tr>
                             <td>3.{{ $urutan }}{{ $loop->iteration }}</td>
                             <td>{{ $r->nm_prestasi_siswa }}</td>
-                            <td>{{ $r->nm_tingkat_prestasi_siswa }}</td>
+                            <td>{{ ucwords(strtolower($r->nm_tingkat_prestasi_siswa)) }}</td>
                             {{-- <td>
                         @if ($r->jenis_prestasi_siswa == 1)
                         Sains

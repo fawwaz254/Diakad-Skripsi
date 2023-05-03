@@ -107,9 +107,8 @@ class HistoriAbsensiSiswaSholatController extends Controller
         }
         $hasil = [];
         // $allShiftPengguna = ShiftPengguna::where('id_shift_master', 'Siswa')->where('date', $date)->with('shift_master')->get();
-        $allPresensiPengguna = FPAttendance::where('tanggal', $date)->where('unit', 'Sholat');
+        $allPresensiPengguna = FPAttendance::where('tanggal', $date)->where('unit', 'Sholat')->get();
         // $shiftMaster = ShiftMaster::where('code', 'Pondok')->first();
-
         $dates =  Carbon::parse($date);
 
         $firstSubuh = Carbon::create($dates->year, $dates->month, $dates->day, 3, 55, 0);
@@ -136,7 +135,11 @@ class HistoriAbsensiSiswaSholatController extends Controller
             $hasil[$key]['isya'] = '-';
 
             $hasil[$key]['id_presensi_pengguna'] = "";
-            $attendances =  $allPresensiPengguna->where('username', '=', $value->username)->get();
+            $attendances =  $allPresensiPengguna->where('username', $value->username);
+            // if ($value->username == '4266') {
+            //     // dd($value->username);
+            //     dd($attendances);
+            // }
 
             foreach ($attendances as $attendance) {
                 $fpDate =  Carbon::parse($attendance->fp_date);

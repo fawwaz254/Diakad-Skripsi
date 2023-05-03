@@ -31,19 +31,21 @@ class ListUjianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
-        $siswa = Siswa::with('kelas')->where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
 
-        $list_data = PaketSoal::where('id_kelas', $siswa->kelas->id_kelas)
-        ->with(
+        $siswa = Siswa::with('kelas')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+        $id_kelas =  $siswa->kelas->id_kelas;
+        $list_data = PaketSoal::with(
             'kelas',
             'detail_paket_soal',
             'detail_paket_soal.soal',
-            'kategori_soal'
-        )->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+            'kategori_soal',
+        )->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
+            $query->where('id_kelas', '=', $id_kelas);
+        })->orderBy('paket_soal.created_at', 'desc')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return
                 $q->whereNotNull('content');
         }]);
+
         return Datatables::of($list_data)
             ->addColumn('total_question', function ($item) {
                 return $item->detail_paket_soal->count();
@@ -205,11 +207,11 @@ class ListUjianController extends Controller
             $test_answer->id_pilihan_soal = $input->question_option;
             $test_answer->status_koreksi = 1;
             $test_answer->nilai = $nilai;
-        }elseif($input->id_tipe_soal == 2){
+        } elseif ($input->id_tipe_soal == 2) {
             $test_answer->status_koreksi = 0;
             $test_answer->jawaban_essay = $input->jawaban_essay;
             $test_answer->nilai = 0;
-        }else {
+        } else {
             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
             $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/jawaban_test', request()->file, 'public');
             $test_answer->status_koreksi = 0;
