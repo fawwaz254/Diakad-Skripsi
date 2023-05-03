@@ -357,9 +357,9 @@ class DetailAbsensiController extends Controller
 
     public function cetakDetailAbsensi(Request $request, $id_pengguna, $start_date, $end_date)
     {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $list_unit_kerja = UnitKerja::all();
+        // $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
+        // $list_unit_kerja = UnitKerja::all();
         $nm_pengguna = Pengguna::where('id_pengguna', $id_pengguna)->pluck('nm_pengguna')->first();
 
         if (empty($start_date) || empty($end_date)) {
@@ -395,6 +395,7 @@ class DetailAbsensiController extends Controller
             $hasil[$key]['shift'] = '';
             $hasil[$key]['start'] = '';
             $hasil[$key]['end'] = '';
+            $hasil[$key]['nm_pengguna'] = $nm_pengguna;
 
             $cek_libur = ManajemenHariLibur::where('date', $value->format('Y-m-d'))->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $id_pengguna)->where('date', $value->format('Y-m-d'))->first();
@@ -402,7 +403,6 @@ class DetailAbsensiController extends Controller
             $attendance = $presences->where('date', $value->format('Y-m-d'))->first();
 
             if ($shiftPengguna && $shiftMaster) {
-                $hasil[$key]['nm_pengguna'] = $nm_pengguna;
                 $hasil[$key]['shift'] = $shiftMaster['code'];
                 $hasil[$key]['start'] = minimalisTime($shiftMaster['start_time']);
                 $hasil[$key]['end'] = minimalisTime($shiftMaster['end_time']);
