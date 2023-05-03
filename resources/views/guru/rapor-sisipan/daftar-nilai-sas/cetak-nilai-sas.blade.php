@@ -84,7 +84,7 @@
                 <td colspan="10" style="border-style : hidden">
 
                     <h2 align="center" style="margin-top: 3px">
-                        DAFTAR NILAI RAPOR <br>
+                        DAFTAR NILAI<br>
                         {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
                         TAHUN AJARAN {{ $rapor_sisipan->semester->tahun_ajaran }}
 
