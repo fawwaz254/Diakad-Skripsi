@@ -383,7 +383,6 @@ class DetailAbsensiController extends Controller
             6 => 'Sabtu',
         ];
 
-
         foreach ($dates as $key => $value) {
 
             $hasil[$key]['nm_pengguna'] = $nm_pengguna;
@@ -395,7 +394,6 @@ class DetailAbsensiController extends Controller
             $hasil[$key]['shift'] = '';
             $hasil[$key]['start'] = '';
             $hasil[$key]['end'] = '';
-            $hasil[$key]['nm_pengguna'] = $nm_pengguna;
 
             $cek_libur = ManajemenHariLibur::where('date', $value->format('Y-m-d'))->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $id_pengguna)->where('date', $value->format('Y-m-d'))->first();
@@ -460,7 +458,6 @@ class DetailAbsensiController extends Controller
         }
 
         $products = $hasil;
-        // dd($products);
         return Excel::download(new DetailAbsensi($products), 'detail_absensi_' . $nm_pengguna . '.xlsx');
     }
 }
