@@ -14,10 +14,10 @@
                 @foreach ($item1 as $item2)
                     @if (isset($item2['date']))
                         <td> {{ $item2['date'] }} </td>
+                        <td>Status</td>
                     @endif
                 @endforeach
             @break
-
         @endforeach
     </tr>
 </thead>
@@ -28,6 +28,15 @@
             <td>{{ $produk['nm_pengguna'] }}</td>
             <td>{{ isset($produk['unit_kerja']) ? $produk['unit_kerja'] : $produk['kelas'] }}</td>
             @foreach ($produk as $item2)
+                @if (isset($item2['check_in']))
+                    <td>{{ substr($item2['check_in'], 0, 5) }}
+                        @if (isset($item2['check_out']) && $item2['check_out'] != ' ')
+                            - {{ substr($item2['check_out'], 0, 5) }}
+                        @endif
+                    </td>
+                @endif
+
+
                 @if (isset($item2['status']))
                     @if ($item2['status'] == 'sakit' || $item2['status'] == 'izin')
                         <td style="background-color: #fffc5e">{{ $item2['status'] }}</td>
@@ -51,7 +60,7 @@
                         <td>{{ $item2['status'] }}</td>
                     @endif
                 @endif
-                @endforeach
+            @endforeach
         </tr>
     @endforeach
 </tbody>
