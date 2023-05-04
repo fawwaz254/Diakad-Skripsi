@@ -17,7 +17,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Libraries\Pendidikan\LibMagangSiswa;
 use App\Libraries\Pendidikan\LibSiswa;
-
+use App\Models\Semester;
 use Auth;
 use Excel;
 use DB;
@@ -36,8 +36,8 @@ class PengajuanMagangController extends BaseController
 
     $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
     $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
-
-    return view('humas/magang-siswa/pengajuan-magang/view-pengajuan-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang'));
+    $semester_aktif =  Semester::where('is_aktif_semester', '1')->first();
+    return view('humas/magang-siswa/pengajuan-magang/view-pengajuan-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang', 'semester_aktif'));
   }
 
   public function importExcel(Request $request)
@@ -169,10 +169,11 @@ class PengajuanMagangController extends BaseController
       ->join('semester', 'semester.id_semester', '=', 'periode_magang.id_semester')
       ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
         $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
+      })->when($input->id_rekanan_magang != 0, function ($q) {
+        $q->where('pengambilan_magang.id_rekanan_magang', $input->id_rekanan_magang);
       })
-      ->where('pengambilan_magang.id_rekanan_magang', $input->id_rekanan_magang)
-      ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-      ->get();
+      // ->where('pengambilan_magang.id_rekanan_magang', $input->id_rekanan_magang)
+      ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
     return Datatables::of($data)
       ->addColumn('semester', function ($item) {
