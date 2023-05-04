@@ -158,9 +158,9 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('absensi')->group(function () {
             Route::prefix('histori-absensi')->group(function () {
-                Route::get('export-laravel-mount/{date}/{unit_kerja}', [HistoriAbsensiController::class, 'export_excel_mount']);
                 Route::get('export-laravel/{date}/{unit_kerja}', [HistoriAbsensiController::class, 'export_excel_day']);
                 Route::get('export-laravel-week/{date}/{unit_kerja}', [HistoriAbsensiController::class, 'export_excel_week']);
+                Route::get('export-laravel-mount/{date}/{unit_kerja}', [HistoriAbsensiController::class, 'export_excel_mount']);
                 // Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', [HistoriAbsensiController::class, 'export_excel']);
                 Route::get('/', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
                 Route::get('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'createHistoriAbsensi']);
