@@ -43,6 +43,7 @@ use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
+use App\Http\Controllers\Humas\MagangSiswa\PembimbingMagangController;
 use App\Http\Controllers\Humas\ShiftPengguna\ShiftSiswaController;
 
 Route::middleware(['token_staff'])->group(function () {
@@ -157,9 +158,9 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('absensi')->group(function () {
             Route::prefix('histori-absensi')->group(function () {
-                Route::get('export-laravel-mount/{date}/{unit_kerja}', [HistoriAbsensiController::class, 'export_excel_mount']);
                 Route::get('export-laravel/{date}/{unit_kerja}', [HistoriAbsensiController::class, 'export_excel_day']);
                 Route::get('export-laravel-week/{date}/{unit_kerja}', [HistoriAbsensiController::class, 'export_excel_week']);
+                Route::get('export-laravel-mount/{date}/{unit_kerja}', [HistoriAbsensiController::class, 'export_excel_mount']);
                 // Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', [HistoriAbsensiController::class, 'export_excel']);
                 Route::get('/', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
                 Route::get('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'createHistoriAbsensi']);
@@ -449,6 +450,9 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('input-nilai-magang/datatables/{id_periode_magang}', [InputNilaiMagangController::class, 'datatablesKomponenNilaiMagang']);
 
             Route::post('action-input-nilai-magang/{mode}/{id}', [InputNilaiMagangController::class, 'actionInputNilaiMagang']);
+
+
+            Route::get('pembimbing-magang', [PembimbingMagangController::class, 'viewPembimbingMagang']);
         });
 
         /** === MODUL MAGANG ALUMNI === **/
