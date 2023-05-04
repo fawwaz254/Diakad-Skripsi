@@ -43,6 +43,7 @@ use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
+use App\Http\Controllers\Humas\MagangSiswa\PembimbingMagangController;
 use App\Http\Controllers\Humas\ShiftPengguna\ShiftSiswaController;
 
 Route::middleware(['token_staff'])->group(function () {
@@ -449,6 +450,9 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('input-nilai-magang/datatables/{id_periode_magang}', [InputNilaiMagangController::class, 'datatablesKomponenNilaiMagang']);
 
             Route::post('action-input-nilai-magang/{mode}/{id}', [InputNilaiMagangController::class, 'actionInputNilaiMagang']);
+
+
+            Route::get('pembimbing-magang', [PembimbingMagangController::class, 'viewPembimbingMagang']);
         });
 
         /** === MODUL MAGANG ALUMNI === **/
