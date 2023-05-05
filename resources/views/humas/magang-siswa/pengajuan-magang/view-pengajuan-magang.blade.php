@@ -110,9 +110,14 @@
     function pengajuanSiswaMagang() {
 
         var periode_magang = $('#id_periode_magang').val();
+        var rekanan_magang = $('#id_rekanan_magang').val();
 
         if (periode_magang == 0) {
             alert('silahkan pilih periode terlebih dahulu');
+            return false;
+        }
+        if (rekanan_magang == 0) {
+            alert('silahkan pilih rekanan terlebih dahulu');
             return false;
         }
 
