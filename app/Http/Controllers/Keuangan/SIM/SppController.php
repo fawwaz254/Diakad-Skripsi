@@ -804,14 +804,6 @@ class SppController extends BaseController
             $semesterMulai = $semester_mulai->id_semester;
             $semesterSelesai = $semester_selesai->id_semester;
             $total_pembayaran = [];
-            // foreach ($data_bulan_tagihan as  $data_bulan) {
-            //     $total_pembayaran[$data_bulan->id_bulan] =
-            //         $data_pembayaran = PembayaranBiaya::whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($query) use ($semesterMulai, $semesterSelesai) {
-            //             $query->whereIn('id_semester', [$semesterMulai, $semesterSelesai]);
-            //         })->whereHas('tagihan_biaya', function ($query) use ($id_kelas) {
-            //             $query->where('id_kelas', $id_kelas);
-            //         })->whereMonth('tgl_pembayaran', '=', $data_bulan->kode_bulan)->count();
-            // }
 
             $total_pembayaran = collect($data_bulan_tagihan)->mapWithKeys(function ($data_bulan) use ($semesterMulai, $semesterSelesai, $id_kelas) {
                 $data_pembayaran = PembayaranBiaya::whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($query) use ($semesterMulai, $semesterSelesai) {
@@ -868,6 +860,7 @@ class SppController extends BaseController
 
             $data_ket_tagihan = $data_tagihan_non_bulanan->unique('title_biaya')->sortByDesc('title_biaya')->values()->all();
         } else {
+            $total_pembayaran = array();
             $data_siswa = array();
             $data_tagihan = array();
             $data_bulan_tagihan = array();
