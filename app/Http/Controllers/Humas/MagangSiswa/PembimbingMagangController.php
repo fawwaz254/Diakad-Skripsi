@@ -5,35 +5,42 @@ namespace App\Http\Controllers\Humas\MagangSiswa;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use DB;
+use App\Imports\DataImportExcel;
+use Illuminate\Routing\Controller as BaseController;
+
+use App\Models\PengambilanMagang;
+use App\Models\PeriodeMagang as PeriodeMagang;
+use App\Models\StatusPengguna as StatusPengguna;
+use App\Models\Siswa as Siswa;
+use App\Models\Pengguna as Pengguna;
+
+use Carbon\Carbon;
+use Yajra\Datatables\Datatables;
+
+use App\Libraries\Pendidikan\LibMagangSiswa;
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Models\RekananMagang;
+use App\Models\Semester;
 use Auth;
 use Excel;
+use DB;
 use Session;
 use Validator;
-use Carbon\Carbon;
-use App\Imports\DataImportExcel;
-use Yajra\Datatables\Datatables;
-use App\Libraries\Pendidikan\LibMagangSiswa;
-use App\Models\RekananMagang as RekananMagang;
-use Illuminate\Routing\Controller as BaseController;
-use App\Models\PengambilanMagang as PengajuanSiswaMagang;
+
 
 class PembimbingMagangController extends Controller
 {
-    // public function viewPembimbingMagang(Request $request)
-    // {
+    public function viewPembimbingMagang(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-    //     # code...
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     // $data = 
-
-    //     // $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
-    //     // $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
-
-    //     // return view('humas/magang-siswa/pengajuan-magang/view-pengajuan-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang'));
-    // }
+        $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
+        $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
+        $semester_aktif =  Semester::where('is_aktif_semester', '1')->first();
+        return view('humas/magang-siswa/pembimbing-magang/view-pembimbing-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang', 'semester_aktif'));
+    }
 
     // public function importExcel(Request $request)
     // {
@@ -147,64 +154,58 @@ class PembimbingMagangController extends Controller
     //     }
     // }
 
-    // public function datatablesPengajuanMagang(Request $request)
-    // {
+    public function datatablesPembimbingMagang(Request $request)
+    {
 
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
+        $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
 
-    //     $id_periode_magang = $input->id_periode_magang;
+        $id_periode_magang = $input->id_periode_magang;
 
-    //     $data = PengajuanSiswaMagang::select('nm_periode_magang', 'nm_rekanan_magang', 'nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'semester.tahun_ajaran', 'semester.nm_semester', 'pengambilan_magang.status_apv_pengambilan_magang', 'status_magang', 'siswa.id_siswa', 'id_pengambilan_magang')
-    //         ->join('siswa', 'siswa.id_siswa', '=', 'pengambilan_magang.id_siswa')
-    //         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-    //         ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-    //         ->join('rekanan_magang', 'rekanan_magang.id_rekanan_magang', '=', 'pengambilan_magang.id_rekanan_magang')
-    //         ->join('periode_magang', 'periode_magang.id_periode_magang', '=', 'pengambilan_magang.id_periode_magang')
-    //         ->join('semester', 'semester.id_semester', '=', 'periode_magang.id_semester')
-    //         ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
-    //             $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
-    //         })
-    //         ->where('pengambilan_magang.id_rekanan_magang', $input->id_rekanan_magang)
-    //         ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-    //         ->get();
+        $data_pengambilan_magang = PengambilanMagang::where('id_periode_magang', $id_periode_magang)->get()->toArray();
+        $id_pengambilan_magang =  collect($data_pengambilan_magang)->unique('id_rekanan_magang')->pluck('id_pengambilan_magang');
 
-    //     return Datatables::of($data)
-    //         ->addColumn('semester', function ($item) {
-    //             return $item->tahun_ajaran . " " . $item->nm_semester;
-    //         })
-    //         ->addColumn('status_apv_pengambilan_magang', function ($item) {
-    //             if ($item->status_apv_pengambilan_magang == 0) {
-    //                 return "Belum di Approve";
-    //             } elseif ($item->status_apv_pengambilan_magang == 1) {
-    //                 return "Sudah di Approve";
-    //             } elseif ($item->status_apv_pengambilan_magang == 2) {
-    //                 return "Waiting Approval";
-    //             } elseif ($item->status_apv_pengambilan_magang == 3) {
-    //                 return "Tidak di Approve";
-    //             }
-    //         })
-    //         ->addColumn('status_magang', function ($item) {
-    //             if ($item->status_magang == 0) {
-    //                 return "";
-    //             } elseif ($item->status_magang == 1) {
-    //                 return "Sudah Selesai Magang";
-    //             } else {
-    //                 return "Pemagang Dibatalkan";
-    //             }
-    //         })
+        $data = PengambilanMagang::whereIn('id_pengambilan_magang', $id_pengambilan_magang)->with('periodeMagang.semester', 'rekanan');
 
-    //         ->addColumn('action', function ($item) {
-    //             $data = array(
-    //                 'id' => $item->id_pengambilan_magang,
-    //                 'status_apv_pengambilan_magang' => $item->status_apv_pengambilan_magang,
-    //                 'id_siswa' => $item->id_siswa
-    //             );
+        return Datatables::of($data)
+            ->addColumn('semester', function ($item) {
+                return $item->periodeMagang->semester->tahun_ajaran . " " . $item->periodeMagang->semester->nm_semester;
+            })
+            ->addColumn('periode', function ($item) {
+                return $item->periodeMagang->nm_periode_magang;
+            })
+            // ->addColumn('status_apv_pengambilan_magang', function ($item) {
+            //     if ($item->status_apv_pengambilan_magang == 0) {
+            //         return "Belum di Approve";
+            //     } elseif ($item->status_apv_pengambilan_magang == 1) {
+            //         return "Sudah di Approve";
+            //     } elseif ($item->status_apv_pengambilan_magang == 2) {
+            //         return "Waiting Approval";
+            //     } elseif ($item->status_apv_pengambilan_magang == 3) {
+            //         return "Tidak di Approve";
+            //     }
+            // })
+            // ->addColumn('status_magang', function ($item) {
+            //     if ($item->status_magang == 0) {
+            //         return "";
+            //     } elseif ($item->status_magang == 1) {
+            //         return "Sudah Selesai Magang";
+            //     } else {
+            //         return "Pemagang Dibatalkan";
+            //     }
+            // })
 
-    //             return $data;
-    //         })
-    //         ->make(true);
-    // }
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_pengambilan_magang
+                    // 'status_apv_pengambilan_magang' => $item->status_apv_pengambilan_magang,
+                    // 'id_siswa' => $item->id_siswa
+                );
+
+                return $data;
+            })
+            ->make(true);
+    }
 
     // public function addPengajuanMagang(Request $request, $id_rekanan_magang, $id_periode_magang)
     // {

@@ -16,10 +16,10 @@ class PeriodeMagang extends Model
 
     protected $primaryKey = 'id_periode_magang';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_magang',
         'id_semester',
@@ -36,9 +36,8 @@ class PeriodeMagang extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester');
+    }
 }
