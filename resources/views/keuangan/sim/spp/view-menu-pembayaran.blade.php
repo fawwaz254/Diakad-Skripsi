@@ -282,6 +282,18 @@
                                     @endforeach
                                     </tr>
                                 @endforeach
+                                <tr>
+                                    <td colspan="3" align="center"><b>Total</b></td>
+                                    @foreach ($data_bulan_tagihan as $bulan)
+                                        <th class="tdbg-{{ $bulan->id_bulan }}" style=" text-align: center;">
+                                            {{ $total_pembayaran[$bulan->id_bulan] . ' X' }}
+                                        </th>
+                                    @endforeach
+                                    {{-- @foreach ($data_ket_tagihan as $ket)
+                                        <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->keterangan }}
+                                        </td>
+                                    @endforeach --}}
+                                </tr>
                             </tbody>
                         </table>
                     </div>
