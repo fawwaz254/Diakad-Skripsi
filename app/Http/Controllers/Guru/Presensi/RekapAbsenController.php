@@ -66,7 +66,6 @@ class RekapAbsenController extends BaseController
     public function viewKBMRekapAbsen(Request $request, $id_jadwal_kelas_mp)
     {
         # code...
-        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
