@@ -979,7 +979,7 @@ class PembayaranSiswaController extends BaseController
                     'status' => 203, // SUCCESS AND LOAD CONTENT
                     'message' => 'Save Pelunasan Successfully',
                     'data' => [
-                        'id' => $id,
+                        'id' => $pembayaranBiaya->id_pembayaran_biaya,
                         'date' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'd/m'),
                         'month' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'n'),
                     ],
