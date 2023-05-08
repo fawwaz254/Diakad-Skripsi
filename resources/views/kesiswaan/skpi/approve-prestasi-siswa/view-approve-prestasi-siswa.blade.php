@@ -116,13 +116,12 @@
 
             }
         },
-        columns: [
-            {
+        columns: [{
                 data: null,
                 searchable: false,
                 orderable: false
             },
-             {
+            {
                 data: 'nis_siswa',
                 name: 'nis_siswa'
             },
@@ -162,7 +161,7 @@
                 render: function(data) {
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
                         detail_url + '/' + data.id + '/' + $('#param').val() + '">' +
-                        '    <i class="material-icons">edit</i>' +
+                        '    <i class="material-icons">remove_red_eye</i>' +
                         '</a> ' +
                         '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
                         print_url + '/' + data.id + '">' +

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\App;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
-
+use App\Models\InformasiTambahan;
 use Auth;
 use DB;
 use Session;
@@ -225,15 +225,38 @@ class ApprovePrestasiSiswaController extends BaseController
             ->get();
 
         $kegiatan = KegiatanSiswa::where('kegiatan_siswa.id_siswa', $id)
-            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
+            // ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
             ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
             ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
             ->where('kegiatan_siswa.status', 1)
             ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-            ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            // ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->get();
 
-        return view('guru/wali-kelas/approve-prestasi-siswa/print-skpi', compact('auth_data', 'siswa', 'prestasi', 'kegiatan'));
+        $informasi_tambahan_ekstrakurikuler = InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('jenis_informasi_tambahan', '=', 'ekstrakurikuler')
+            ->get();
+
+        $informasi_produk_lomba = InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('jenis_informasi_tambahan', '=', 'produk_lomba')
+            ->get();
+
+        $informasi_tambahan =  InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->get();
+
+        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan'));
     }
 
     public function actionApprovePrestasiSiswa(Request $request, $data, $id)
