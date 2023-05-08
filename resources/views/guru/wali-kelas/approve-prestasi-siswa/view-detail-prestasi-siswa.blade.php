@@ -162,7 +162,12 @@
                             '<button class="btn btn-danger" onclick="rejectAction(\'' +
                             reject_prestasi + '\', this)" data-id="' + data.id + '">' +
                             'Reject' +
-                            '</button>';;
+                            '</button>';
+                    } else if (data.status == 1) {
+                        return '<button class="btn btn-danger" onclick="rejectAction(\'' +
+                            reject_prestasi + '\', this)" data-id="' + data.id + '">' +
+                            'Reject' +
+                            '</button>';
                     } else {
                         return '-';
                     }
@@ -284,6 +289,11 @@
                             'Aprrove' +
                             '</button>' +
                             '<button class="btn btn-danger" onclick="rejectAction(\'' +
+                            reject_kegiatan + '\', this)" data-id="' + data.id + '">' +
+                            'Reject' +
+                            '</button>';
+                    } else if (data.status == 1) {
+                        return '<button class="btn btn-danger" onclick="rejectAction(\'' +
                             reject_kegiatan + '\', this)" data-id="' + data.id + '">' +
                             'Reject' +
                             '</button>';
