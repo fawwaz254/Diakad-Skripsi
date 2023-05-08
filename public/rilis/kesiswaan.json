@@ -2,8 +2,17 @@
   	"role"  :"kesiswaan", 
   	"update": [
   	    {
-  	    	"tanggal-update" : "2021-08-09",
+  	    	"tanggal-update" : "2023-02-13",
   	    	"list-update" : [
+				{
+					"modul" : "Modul SKPI",
+					"list-fitur" : [
+						{
+							"fitur"     : "Menu Approve SKPI Siswa",
+							"deskripsi" : "Di menu ini anda dapat menerima dan menolak prestasi, kegiatan dan informasi tambahan yang di tambahkan oleh siswa/i"
+						}
+					]
+				},
   	    		{
   	    			"modul" : "Modul Ekstrakurikuler",
   	    			"list-fitur" : [
