@@ -388,6 +388,9 @@
         }, function(result) {
             if (result) {
                 $.ajax({
+                    data: {
+                        keterangan: result
+                    },
                     type: "POST",
                     url: reject_url + '/' + item.attr('data-id'),
                     success: function(response) {
