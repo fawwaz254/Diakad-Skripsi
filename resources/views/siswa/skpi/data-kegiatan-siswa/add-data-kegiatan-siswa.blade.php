@@ -18,7 +18,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_kegiatan_siswa" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" maxlength="128" name="nm_kegiatan_siswa" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
 

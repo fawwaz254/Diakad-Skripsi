@@ -31,7 +31,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="persentase_komponen_ekskul" required="" aria-required="true" aria-invalid="true" value="{{ !empty($komponen_ekskul) ? $komponen_ekskul->persentase_komponen_ekskul : null }}">
+                                <input type="number" class="form-control" name="persentase_komponen_ekskul" required="" aria-required="true" aria-invalid="true" value="{{ !empty($komponen_ekskul) ? $komponen_ekskul->persentase_komponen_ekskul : null }}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
