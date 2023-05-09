@@ -375,15 +375,16 @@
         $('button').attr('disabled', 'disabled');
 
         swal({
-            title: "Are you sure?",
-            text: "For Reject this",
-            type: "warning",
+            title: "Apakah Anda yakin?",
+            text: "Pastikan untuk mengisi alasan untuk ditolak",
+            type: "input",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, reject it!",
-            cancelButtonText: "No, cancel!",
+            confirmButtonText: "Ya, lanjutkan!",
+            cancelButtonText: "Batal",
             closeOnConfirm: true,
-            closeOnCancel: true
+            closeOnCancel: true,
+            inputPlaceholder: "Alasan ditolak ..."
         }, function(result) {
             if (result) {
                 $.ajax({
