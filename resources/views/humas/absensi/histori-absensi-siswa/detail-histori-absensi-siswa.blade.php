@@ -128,6 +128,13 @@
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
 
+    
+@if ($id_kelas!==0) 
+    <a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-mount/' . $id_kelas . '/' . $date) }}"
+        target="_blank" class="btn bg-purple waves-effect">
+        <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
+@endif
+
 <a href="{{ url(Request::segment(1) . '#absensi/histori-absensi-siswa/batch-edit-status/' . $id_kelas . '/' . $date) }}"
     class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Batch Edit Status</a>
