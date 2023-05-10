@@ -454,6 +454,8 @@ Route::middleware(['token_staff'])->group(function () {
             //Pembimbing Magang
             Route::get('pembimbing-magang', [PembimbingMagangController::class, 'viewPembimbingMagang']);
             Route::get('pembimbing-magang/datatables', [PembimbingMagangController::class, 'datatablesPembimbingMagang']);
+            Route::get('pembimbing-magang/add/{id_pengambil_magang}', [PembimbingMagangController::class, 'addPembimbingMagang']);
+            Route::post('action-input-pembimbing-magang/{mode}/{id}', [PembimbingMagangController::class, 'actionInputPembimbingMagang']);
         });
 
         /** === MODUL MAGANG ALUMNI === **/
