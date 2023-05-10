@@ -203,8 +203,6 @@ class InsertUpdateSiswaController extends BaseController
 		$auth_data = $input->auth_data;
 		$now = Carbon::now(env('APP_TIMEZONE', ''));
 
-		dd($input);
-
 		if ($mode == "insert") {
 			$validator = Validator::make($request->all(), [
 				'nis_siswa' => 'required',
