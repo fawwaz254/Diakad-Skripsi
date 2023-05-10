@@ -22,14 +22,16 @@
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="insert-siswa">
-                            <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-insert-update-siswa/insert/0')}}">
-                                    {{csrf_field()}}
+                            <form id="form-validation" method="POST"
+                                action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-insert-update-siswa/insert/0') }}">
+                                {{ csrf_field() }}
                                 <h2 class="card-inside-title">
                                     NIS Siswa
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nis_siswa" required="" aria-required="true" aria-invalid="true">
+                                        <input type="text" class="form-control" name="nis_siswa" required=""
+                                            aria-required="true" aria-invalid="true">
                                     </div>
                                 </div>
                                 <h2 class="card-inside-title">
@@ -37,7 +39,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" required="" name="nisn_siswa" aria-required="true" aria-invalid="true">
+                                        <input type="text" class="form-control" required="" name="nisn_siswa"
+                                            aria-required="true" aria-invalid="true">
                                     </div>
                                 </div>
                                 <h2 class="card-inside-title">
@@ -45,7 +48,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nm_pengguna" required="" aria-required="true" aria-invalid="true">
+                                        <input type="text" class="form-control" name="nm_pengguna" required=""
+                                            aria-required="true" aria-invalid="true">
                                     </div>
                                 </div>
                                 <h2 class="card-inside-title">
@@ -53,7 +57,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" required="" name="jenis_kelamin" id="jenis_kelamin">
+                                        <select class="form-control show-tick" required="" name="jenis_kelamin"
+                                            id="jenis_kelamin">
                                             <option value="1">Laki-Laki</option>
                                             <option value="2">Perempuan</option>
                                         </select>
@@ -64,24 +69,31 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" required="" name="id_status_pengguna" id="status_siswa">
-                                              <option value="">-- Pilih Status Siswa --</option>
-                                                @foreach($status_pengguna as $status_siswa)
-                                                    <option value="{{$status_siswa->id_status_pengguna}}">{{$status_siswa->nm_status_pengguna}}</option>
-                                                @endforeach
+                                        <select class="form-control show-tick" required="" name="id_status_pengguna"
+                                            id="status_siswa">
+                                            <option value="">-- Pilih Status Siswa --</option>
+                                            @foreach ($status_pengguna as $status_siswa)
+                                                <option value="{{ $status_siswa->id_status_pengguna }}">
+                                                    {{ $status_siswa->nm_status_pengguna }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
+                                </div>
+
+                                <div id="place">
+
                                 </div>
                                 <h2 class="card-inside-title">
                                     Kelas
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" required="" name="id_kelas" id="id_kelas">
-                                              <option value="">-- Pilih Kelas --</option>
-                                                @foreach($kelas as $kelas)
-                                                    <option value="{{$kelas->id_kelas}}">{{$kelas->nm_kelas}}</option>
-                                                @endforeach
+                                        <select class="form-control show-tick" required="" name="id_kelas"
+                                            id="id_kelas">
+                                            <option value="">-- Pilih Kelas --</option>
+                                            @foreach ($kelas as $kelas)
+                                                <option value="{{ $kelas->id_kelas }}">{{ $kelas->nm_kelas }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -90,11 +102,13 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" required="" name="thn_masuk_siswa" id="thn_masuk">
-                                              <option value="">-- Pilih Tahun Masuk --</option>
-                                                @foreach($thn_masuk_siswa as $tahun)
-                                                    <option value="{{$tahun->thn_masuk_siswa}}">{{$tahun->thn_masuk_siswa}}</option>
-                                                @endforeach
+                                        <select class="form-control show-tick" required="" name="thn_masuk_siswa"
+                                            id="thn_masuk">
+                                            <option value="">-- Pilih Tahun Masuk --</option>
+                                            @foreach ($thn_masuk_siswa as $tahun)
+                                                <option value="{{ $tahun->thn_masuk_siswa }}">
+                                                    {{ $tahun->thn_masuk_siswa }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -103,11 +117,13 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" required="" name="id_semester" id="id_semester">
-                                              <option value="">-- Pilih Semester --</option>
-                                                @foreach($semester as $semester)
-                                                    <option value="{{$semester->id_semester}}">{{$semester->nm_semester}} {{$semester->tahun_ajaran}}</option>
-                                                @endforeach
+                                        <select class="form-control show-tick" required="" name="id_semester"
+                                            id="id_semester">
+                                            <option value="">-- Pilih Semester --</option>
+                                            @foreach ($semester as $semester)
+                                                <option value="{{ $semester->id_semester }}">
+                                                    {{ $semester->nm_semester }} {{ $semester->tahun_ajaran }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -116,30 +132,35 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" required="" name="id_jalur" id="jalur">
+                                        <select class="form-control show-tick" required="" name="id_jalur"
+                                            id="jalur">
                                             <option value="">-- Pilih Jalur --</option>
-                                            @foreach($jalur as $jalur)
-                                                <option value="{{$jalur->id_jalur}}">{{$jalur->nm_jalur}}</option>
+                                            @foreach ($jalur as $jalur)
+                                                <option value="{{ $jalur->id_jalur }}">{{ $jalur->nm_jalur }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                        <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                                class="material-icons">save</i><span>Save</span></button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="update-siswa">
-                            <form id="form-validation1" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-view-update-siswa')}}">
-                            {{csrf_field()}}
+                            <form id="form-validation1" method="POST"
+                                action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-update-siswa') }}">
+                                {{ csrf_field() }}
                                 <h2 class="card-inside-title">
                                     NIS/NISN atau Nama Siswa
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nis_nama_siswa" aria-invalid="true">
+                                        <input type="text" class="form-control" name="nis_nama_siswa"
+                                            aria-invalid="true">
                                     </div>
                                 </div>
                                 <div class="row clearfix">
@@ -148,19 +169,21 @@
                                 </div>
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <button class="btn btn-block bg-red waves-effect" type="submit" name="cari"><i class="material-icons">save</i><span>Save</span></button>
+                                        <button class="btn btn-block bg-red waves-effect" type="submit"
+                                            name="cari"><i
+                                                class="material-icons">save</i><span>Save</span></button>
                                     </div>
                                 </div>
                             </form>
-                        </div>         
-                    </div>   
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @include('scriptjs')
-<script>    
+<script>
     var primary_table = null;
     $('#form-validation1').validate({
         rules: {
@@ -171,13 +194,13 @@
                 required: true
             }
         },
-        highlight: function (input) {
+        highlight: function(input) {
             $(input).parents('.form-line').addClass('error');
         },
-        unhighlight: function (input) {
+        unhighlight: function(input) {
             $(input).parents('.form-line').removeClass('error');
         },
-        errorPlacement: function (error, element) {
+        errorPlacement: function(error, element) {
             $(element).parents('.form-group').append(error);
         },
         submitHandler: function(form) {
@@ -187,20 +210,20 @@
                 type: form.method,
                 data: $(form).serialize(),
                 success: function(response) {
-                    if(response.status == 200){
+                    if (response.status == 200) {
                         vex.dialog.alert(response.message);
-                    }else if(response.status == 201){
+                    } else if (response.status == 201) {
                         vex.dialog.alert(response.message);
                         window.location.href = response.link;
-                    }else if(response.status == 202){
+                    } else if (response.status == 202) {
                         vex.dialog.alert(response.message);
                         loadURI(response.path);
-                    }else if(response.status == 203){
+                    } else if (response.status == 203) {
                         vex.dialog.alert(response.message);
                         primary_table.ajax.reload(null, false);
-                    }else if(response.status == 204){
+                    } else if (response.status == 204) {
                         loadURI(response.path);
-                    }else if(response.status == 300){
+                    } else if (response.status == 300) {
                         vex.dialog.alert(response.message);
                     }
                 },
@@ -209,5 +232,62 @@
                 }
             });
         }
+    });
+
+
+
+    $('#status_siswa').change(function() {
+        var x = $(this).val();
+        $.ajax({
+            url: "{{ Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/changeStatusMasuk' }}",
+            data: {
+                id_status_pengguna: x,
+            },
+            dataType: 'JSON',
+            complete: function(data) {
+                var html;
+                if (data.responseText == 'MUTASI_MASUK') {
+                    $('#place').append(`
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h2 class="card-inside-title">
+                                Nama Sekolah Asal Mutasi
+                            </h2>
+                    <input type="text" class="form-control" name="nm_sekolah_asal_mutasi" required="" aria-required="true" aria-invalid="true">   
+                    </div>
+
+                    <div class="col-md-5">
+                        <h2 class="card-inside-title">
+                            Link Google Drive
+                        </h2>
+                    <input type="text" class="form-control" name="link_google_drive" required="" aria-required="true" aria-invalid="true">
+                    </div>
+
+                    <div class="col-md-2">
+                     <button type="button" id="button_hapus" style="margin-top: 27px;" class="btn bg-red waves-effect">
+                        <i class="material-icons">delete</i>
+                        <span>Hapus</span>
+                     </button>
+                    </div>
+
+                    <div class="col-md-12">                      
+                        <div class="alert alert-warning">
+                            <strong>Catatan !</strong> Untuk link sertifikat pastikan anda mengupload di google drive dengan settingan publik, untuk tutorial menguplod dengan settingan publik bisa dilihat <span style="text-decoration:underline;cursor:pointer" id="disini">disini</span>.
+                        </div>
+
+                        <div id="video" style="display:none;">
+                        <iframe width="870" height="393" src="https://www.youtube.com/embed/ccXgIuT0Hjc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+  
+                        </div>
+                    </div>
+                    `);
+                }
+            }
+        })
+    });
+
+    $("#place").on("click", "#button_hapus", function() {
+        $(this).parent().parent().remove();
     });
 </script>
