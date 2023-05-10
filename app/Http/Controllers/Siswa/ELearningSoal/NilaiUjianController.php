@@ -35,7 +35,7 @@ class NilaiUjianController extends Controller
                     'nilai_pilihan_essay_submit' => $nilai_pilihan_essay_submit,
                     'nilai' => $nilai,
                     'status_koreksi' => 1,
-                    'validasi_pilihan_essay_submit' =>  $validasi_pilihan_essay_submit ? true : false ,
+                    'validasi_pilihan_essay_submit' =>  $validasi_pilihan_essay_submit ? true : false,
                     'id_test' => $item->id_test
                 );
                 return $data;
@@ -44,10 +44,10 @@ class NilaiUjianController extends Controller
     }
     public function indexPenilaian(Request $request, $id_test = null)
     {
-        
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $questions = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereIn('nomer',[2,3])->with('soal')->get();
+        $questions = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('soal')->get();
+
         return view('siswa/e-learning-soal/nilai-ujian/view-penilaian-ujian', compact('questions'));
     }
 }
