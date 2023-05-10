@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Humas\Absensi;
 
 use App\Exports\HistoriAbsensiDay;
 use App\Exports\HistoriAbsensiMount;
-// use App\Jobs\ExportPresensi;
-// use App\Jobs\ExportPresensiDay;
 use App\Models\ManajemenHariLibur;
 use App\Models\Pengguna;
 use App\Models\PresensiPengguna;
@@ -25,7 +23,6 @@ class HistoriAbsensiController extends BaseController
     public function export_excel_week(Request $request, $date = null, $unit_kerja = null)
     {
         set_time_limit(9800);
-        // $unit_kerja = $unit_kerja;
         if ($unit_kerja == "0") {
             $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
                 ->with('status_pengguna', 'guru.unit_kerja')
@@ -57,21 +54,17 @@ class HistoriAbsensiController extends BaseController
 
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
-            // $hasil[$key1]['status_join_table'] = $value->status_join_table;
             $hasil[$key1]['nm_pengguna'] = $value->gelar_depan . ' ' . $value->nm_pengguna . ' ' . $value->gelar_belakang;
             $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
 
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
-                $hasil[$key1][$key2]['status'] = '';
+                $hasil[$key1][$key2]['status'] = ' ';
+                $hasil[$key1][$key2]['check_in'] = ' ';
+                $hasil[$key1][$key2]['check_out'] = ' ';
                 $shiftPengguna = $allShiftPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $attendance =  $allPresensiPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
-                // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                // if( $shiftPengguna){
-                //     $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
-                // }
 
                 if ($attendance) {
 
@@ -82,6 +75,9 @@ class HistoriAbsensiController extends BaseController
                     if ($attendance->check_in) {
                         $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
                         $hasil[$key1][$key2]['status'] = "Masuk";
+                    }
+                    if ($attendance->check_out) {
+                        $hasil[$key1][$key2]['check_out'] = $attendance->check_out;
                     }
 
                     if (isset($shiftMaster['start_time'])) {
@@ -131,13 +127,11 @@ class HistoriAbsensiController extends BaseController
         }
 
         $products = $hasil;
-        // return $products;
         return Excel::download(new HistoriAbsensiMount($products), 'download_mingguan.xlsx');
     }
     public function export_excel_mount(Request $request, $date = null, $unit_kerja = null)
     {
         set_time_limit(9800);
-        // $unit_kerja = $unit_kerja;
         if ($unit_kerja == "0") {
             $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
                 ->with('status_pengguna', 'guru.unit_kerja')
@@ -156,37 +150,29 @@ class HistoriAbsensiController extends BaseController
                 ->get();
         }
 
-
         $year = Carbon::parse($date)->format('Y');
         $mount = Carbon::parse($date)->format('M');
-
-
         $start_date = new Carbon('first day of' . $mount . $year);
         $end_date =  new Carbon('last day of' . $mount . $year);
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->whereIn('id_pengguna', $list_pengguna)->get();
-        // dd( $allPresensiPengguna);
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
 
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
-            // $hasil[$key1]['status_join_table'] = $value->status_join_table;
             $hasil[$key1]['nm_pengguna'] = $value->gelar_depan . ' ' . $value->nm_pengguna . ' ' . $value->gelar_belakang;
             $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
 
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
                 $hasil[$key1][$key2]['status'] = '';
+                $hasil[$key1][$key2]['check_in'] = '';
+                $hasil[$key1][$key2]['check_out'] = '';
                 $shiftPengguna = $allShiftPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $attendance =  $allPresensiPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
-                // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                // if( $shiftPengguna){
-                //     $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
-                // }
 
                 if ($attendance) {
 
@@ -199,6 +185,9 @@ class HistoriAbsensiController extends BaseController
                         $hasil[$key1][$key2]['status'] = "Masuk";
                     }
 
+                    if ($attendance->check_out) {
+                        $hasil[$key1][$key2]['check_out'] = $attendance->check_out;
+                    }
 
                     if (isset($shiftMaster['start_time'])) {
                         if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
@@ -247,16 +236,11 @@ class HistoriAbsensiController extends BaseController
         }
 
         $products = $hasil;
-        // return $products;
         return Excel::download(new HistoriAbsensiMount($products), 'download_bulanan.xlsx');
-
-        //    ExportPresensi::dispatch($unit_kerja,$date);
-
     }
 
     public function export_excel_day(Request $request, $date = null, $unit_kerja = null)
     {
-        // $unit_kerja = $this->unit_kerja;
         if ($unit_kerja == null || $unit_kerja == "0") {
             $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
                 ->with('status_pengguna', 'guru.unit_kerja')
@@ -363,9 +347,7 @@ class HistoriAbsensiController extends BaseController
             }
             $hasil[$key]['date'] = $date;
         }
-        // return $hasil;
         $products = $hasil;
-        //   $this->products = $hasil;
         return Excel::download(new HistoriAbsensiDay($products), 'download_harian.xlsx');
     }
 
@@ -373,7 +355,6 @@ class HistoriAbsensiController extends BaseController
     public function viewHistoriAbsensi(Request $request, $date = null, $unit_kerja = null, $status = null)
     {
         set_time_limit(1800);
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -531,7 +512,6 @@ class HistoriAbsensiController extends BaseController
     {
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $prefix = Sekolah::first()->prefix;
-        // $uuid = $prefix . strtotime($now) . uniqid();
         $input = $request->input();
         $status = $input['status'];
         $notes = $input['notes'];
@@ -550,11 +530,6 @@ class HistoriAbsensiController extends BaseController
         $input = $request->input();
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
         $presences->update(['status' => $input['status'], 'notes' => $input['notes'], 'check_in' => $input['check_in'], 'check_out' => $input['check_out']]);
-        // return [
-        //     'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
-        //     'path' => 'absensi/histori-absensi/',
-        //     'message' => 'Data Absensi Berhasil Di Update'
-        // ];
         return redirect("/humas#absensi/histori-absensi/" . $date . "/0" . "/0");
     }
 

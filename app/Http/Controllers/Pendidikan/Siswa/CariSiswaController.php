@@ -251,8 +251,9 @@ class CariSiswaController extends BaseController
 
 
     $aktivitas = LibSiswa::aktivitasAdmisi($auth_data, $nis_siswa);
-
-    return view('pendidikan/siswa/cari-siswa/view-detail-siswa-cari-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'jenis_kelamin', 'kota_lahir', 'alamat_jalan_siswa', 'alamat_dusun_siswa', 'alamat_kelurahan_siswa', 'alamat_rt_siswa', 'alamat_rw_siswa', 'alamat_kecamatan_siswa', 'alamat_kodepos_siswa', 'alamat_jalan_ortu', 'alamat_dusun_ortu', 'alamat_kelurahan_ortu', 'alamat_rt_ortu', 'alamat_rw_ortu', 'alamat_kecamatan_ortu', 'alamat_kodepos_ortu', 'alamat_kota_ortu', 'alamat_provinsi_ortu', 'aktivitas', 'grup_semester_kelas', 'email_pengguna'));
+    $wali_murid=WaliMurid::where('nomor_hp_wali_murid',$siswa->nomor_hp_ortu)->first();
+    // dd($wali_murid);
+    return view('pendidikan/siswa/cari-siswa/view-detail-siswa-cari-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'jenis_kelamin', 'kota_lahir', 'alamat_jalan_siswa', 'alamat_dusun_siswa', 'alamat_kelurahan_siswa', 'alamat_rt_siswa', 'alamat_rw_siswa', 'alamat_kecamatan_siswa', 'alamat_kodepos_siswa', 'alamat_jalan_ortu', 'alamat_dusun_ortu', 'alamat_kelurahan_ortu', 'alamat_rt_ortu', 'alamat_rw_ortu', 'alamat_kecamatan_ortu', 'alamat_kodepos_ortu', 'alamat_kota_ortu', 'alamat_provinsi_ortu', 'aktivitas', 'grup_semester_kelas', 'email_pengguna','wali_murid'));
   }
 
   public function resetPasswordSiswa(Request $request)

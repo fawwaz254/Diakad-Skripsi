@@ -16,7 +16,7 @@ class PengambilanMagang extends Model
 
     protected $primaryKey = 'id_pengambilan_magang';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
 
@@ -47,9 +47,12 @@ class PengambilanMagang extends Model
         return $this->belongsTo(RekananMagang::class, 'id_rekanan_magang');
     }
 
-    public function kelas(){
+    public function kelas()
+    {
         return $this->belongsTo(Kelas::class, 'id_kelas');
     }
-
-
+    public function periodeMagang()
+    {
+        return $this->belongsTo(PeriodeMagang::class, 'id_periode_magang');
+    }
 }

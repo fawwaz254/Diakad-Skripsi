@@ -357,9 +357,9 @@ class DetailAbsensiController extends Controller
 
     public function cetakDetailAbsensi(Request $request, $id_pengguna, $start_date, $end_date)
     {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $list_unit_kerja = UnitKerja::all();
+        // $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
+        // $list_unit_kerja = UnitKerja::all();
         $nm_pengguna = Pengguna::where('id_pengguna', $id_pengguna)->pluck('nm_pengguna')->first();
 
         if (empty($start_date) || empty($end_date)) {
@@ -383,7 +383,6 @@ class DetailAbsensiController extends Controller
             6 => 'Sabtu',
         ];
 
-
         foreach ($dates as $key => $value) {
 
             $hasil[$key]['nm_pengguna'] = $nm_pengguna;
@@ -402,7 +401,6 @@ class DetailAbsensiController extends Controller
             $attendance = $presences->where('date', $value->format('Y-m-d'))->first();
 
             if ($shiftPengguna && $shiftMaster) {
-                $hasil[$key]['nm_pengguna'] = $nm_pengguna;
                 $hasil[$key]['shift'] = $shiftMaster['code'];
                 $hasil[$key]['start'] = minimalisTime($shiftMaster['start_time']);
                 $hasil[$key]['end'] = minimalisTime($shiftMaster['end_time']);
@@ -460,7 +458,6 @@ class DetailAbsensiController extends Controller
         }
 
         $products = $hasil;
-        // dd($products);
         return Excel::download(new DetailAbsensi($products), 'detail_absensi_' . $nm_pengguna . '.xlsx');
     }
 }

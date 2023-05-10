@@ -6,6 +6,10 @@
                     href="{{ url(Request::segment(1) . '/wali-kelas/approve-prestasi-siswa/print/skpi/' . Request::segment(4)) }}"
                     target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
             @else
+                <a class="btn bg-blue waves-effect target-link"
+                    href="{{ url(Request::segment(1) . '#skpi/approve-prestasi-siswa') }}"><i
+                        class="material-icons">backspace</i><span>Kembali</span></a>
+
                 <a class="btn bg-blue waves-effect"
                     href="{{ url(Request::segment(1) . '/skpi/approve-prestasi-siswa/print/skpi/' . Request::segment(4)) }}"
                     target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
@@ -219,6 +223,12 @@
                             'Reject' +
                             '</button>';
                         return html;
+                    } else if (data.status == 1) {
+                        html += ' <button class="btn btn-danger" onclick="rejectAction(\'' +
+                            reject_prestasi + '\', this)" data-id="' + data.id + '">' +
+                            'Reject' +
+                            '</button>';
+                        return html;
                     } else {
                         return html;
                     }
@@ -320,6 +330,12 @@
                             'Reject' +
                             '</button>';
                         return html;
+                    } else if (data.status == 1) {
+                        html += ' <button class="btn btn-danger" onclick="rejectAction(\'' +
+                            reject_kegiatan + '\', this)" data-id="' + data.id + '">' +
+                            'Reject' +
+                            '</button>';
+                        return html;
                     } else {
                         return html;
                     }
@@ -401,6 +417,12 @@
                             approve_informasi_tambahan + '\', this)" data-id="' + data.id + '">' +
                             'Aprrove' +
                             '</button>';
+                        html += ' <button class="btn btn-danger" onclick="rejectAction(\'' +
+                            reject_informasi_tambahan + '\', this)" data-id="' + data.id + '">' +
+                            'Reject' +
+                            '</button>';
+                        return html;
+                    } else if (data.status == 1) {
                         html += ' <button class="btn btn-danger" onclick="rejectAction(\'' +
                             reject_informasi_tambahan + '\', this)" data-id="' + data.id + '">' +
                             'Reject' +
