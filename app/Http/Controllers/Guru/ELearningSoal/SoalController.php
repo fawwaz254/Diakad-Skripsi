@@ -26,11 +26,11 @@ class SoalController extends Controller
     {
         $kategori = KategoriSoal::all();
         if ($tipe_soal == "pilihan-ganda") {
-            return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda',compact('kategori'));
+            return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda', compact('kategori'));
         } elseif ($tipe_soal == "essay") {
-            return view('guru/e-learning-soal/soal/add-soal-essay',compact('kategori'));
-        }elseif ($tipe_soal == "submit") {
-            return view('guru/e-learning-soal/soal/add-soal-submit',compact('kategori'));
+            return view('guru/e-learning-soal/soal/add-soal-essay', compact('kategori'));
+        } elseif ($tipe_soal == "submit") {
+            return view('guru/e-learning-soal/soal/add-soal-submit', compact('kategori'));
         }
         return view('404');
     }
@@ -66,15 +66,17 @@ class SoalController extends Controller
 
     public function uploadImageCkeditor(Request $request)
     {
-       if($request->hasFile('upload')) 
-       {$originName = $request->file('upload')->getClientOriginalName();
-        $fileName = pathinfo($originName, PATHINFO_FILENAME);
-        $extension = $request->file('upload')->getClientOriginalExtension();
-        $fileName = $fileName.'_'.time().'.'.$extension;$request->file('upload')->move(public_path('pages'), $fileName);
-        $CKEditorFuncNum = $request->input('CKEditorFuncNum');
-        $url = asset('pages/'.$fileName);
-        $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url')</script>";
-        echo $response;}
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+            $request->file('upload')->move(public_path('pages'), $fileName);
+            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
+            $url = asset('pages/' . $fileName);
+            $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url')</script>";
+            echo $response;
+        }
     }
 
     public function commonListKategori(Request $request)
@@ -107,9 +109,9 @@ class SoalController extends Controller
         if ($item = Soal::find($id_soal)) {
             if ($item->id_tipe_soal == 1) {
                 $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
-                return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda', compact('item', 'question_options','kategori'));
+                return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda', compact('item', 'question_options', 'kategori'));
             } else {
-                return view('guru/e-learning-soal/soal/edit-soal-essay', compact('item','kategori'));
+                return view('guru/e-learning-soal/soal/edit-soal-essay', compact('item', 'kategori'));
             }
         }
 
@@ -144,8 +146,6 @@ class SoalController extends Controller
     public function actionSave(Request $request)
     {
         $input = (object) $request->input();
-
-
 
         if ($input->id_tipe_soal == 1) {
             $validator = Validator::make($request->all(), [
@@ -198,39 +198,42 @@ class SoalController extends Controller
             ];
         } else {
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-            $question = new Soal;
-            $question->id_kategori_soal = $input->kategori;
-            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-            $question->id_tipe_soal = $input->id_tipe_soal;
-            $question->content = $input->soal;
-            $question->text = $input->text;
-            $question->save();
 
-            // $true_answer_id = 0;
-            if ($input->id_tipe_soal == 1) {
-                foreach ($input->jawaban as $no_answer => $answer) {
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
-                    $question_option = new PilihanSoal;
-                    $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question_option->number_option = $no_answer;
-                    $question_option->id_soal = $question->id_soal;
-                    $question_option->content = $answer;
-                    $question_option->text = $answer;
-                    if ($input->jawaban_benar == $no_answer) {
-                        $question_option->correct = 1;
-                    } else {
-                        $question_option->correct = 0;
-                    }
-                    $question_option->save();
-
-                    if ($input->jawaban_benar == $no_answer) {
-                        $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
-                    }
-                }
-                $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+            for ($i = 1; $i <= count($input->soal); $i++) {
+                $question = new Soal;
+                $question->id_kategori_soal = $input->kategori;
+                $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                $question->id_tipe_soal = $input->id_tipe_soal;
+                $question->content = $input->soal[$i];
+                $question->text = strip_tags($input->soal[$i]);
                 $question->save();
+
+                if ($input->id_tipe_soal == 1) {
+                    foreach ($input->jawaban[$i] as $no_answer => $answer) {
+                        $now = Carbon::now(env('APP_TIMEZONE', ''));
+                        $question_option = new PilihanSoal;
+                        $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question_option->number_option = $no_answer;
+                        $question_option->id_soal = $question->id_soal;
+                        $question_option->content = $answer;
+                        $question_option->text = $answer;
+                        if ($input->jawaban_benar[$i] == $no_answer) {
+                            $question_option->correct = 1;
+                        } else {
+                            $question_option->correct = 0;
+                        }
+                        $question_option->save();
+
+                        if ($input->jawaban_benar[$i] == $no_answer) {
+                            $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                        }
+                    }
+                    $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+                    $question->save();
+                }
             }
+
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -249,18 +252,17 @@ class SoalController extends Controller
         if ($question->id_tipe_soal == 1) {
             $question_options = PilihanSoal::where('id_soal', $question->id_soal)->orderBy('number_option')->get();
             return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda', compact('question', 'question_options'));
-        }else if($question->id_tipe_soal == 2){
+        } else if ($question->id_tipe_soal == 2) {
             return view('guru/e-learning-soal/soal/test-soal-essay', compact('question'));
-        }else{
+        } else {
             return view('guru/e-learning-soal/soal/test-soal-submit', compact('question'));
         }
-       
     }
 
 
     public function commonList(Request $request)
     {
-        $list_data = Soal::with('pengguna','kategori_soal')->orderBy('created_at', 'DESC')->get();
+        $list_data = Soal::with('pengguna', 'kategori_soal')->orderBy('created_at', 'DESC')->get();
 
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
@@ -272,7 +274,7 @@ class SoalController extends Controller
             ->addColumn('tipe_soal', function ($item) {
                 if ($item->id_tipe_soal == 1) {
                     return "Pilihan Ganda";
-                }else if($item->id_tipe_soal == 2){
+                } else if ($item->id_tipe_soal == 2) {
                     return "Essay";
                 }
                 return "File";
