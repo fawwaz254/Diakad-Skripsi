@@ -47,12 +47,13 @@ class PengambilanMagang extends Model
         return $this->belongsTo(RekananMagang::class, 'id_rekanan_magang');
     }
 
+    public function pembimbingMagang()
+    {
+        return $this->hasMany(PembimbingMagang::class, 'id_rekanan_magang', 'id_rekanan_magang');
+    }
+
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas');
-    }
-    public function periodeMagang()
-    {
-        return $this->belongsTo(PeriodeMagang::class, 'id_periode_magang');
     }
 }

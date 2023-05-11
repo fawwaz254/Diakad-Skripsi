@@ -42,47 +42,47 @@ use Validator;
 
 class InsertUpdateSiswaController extends BaseController
 {
-	public function viewInsertUpdateSiswa(Request $request){
-        # code...
+	public function viewInsertUpdateSiswa(Request $request)
+	{
+		# code...
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
-		$status_pengguna = StatusPengguna::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-		->where('status_join_table','=',3)
-		->get();
-		$kelas = Kelas::join('jurusan','jurusan.id_jurusan','=','kelas.id_jurusan')->where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->orderBy('kelas.tingkat','asc')->get();
+		$status_pengguna = StatusPengguna::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+			->where('status_join_table', '=', 3)
+			->get();
+		$kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('kelas.tingkat', 'asc')->get();
 		$thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
-		$semester = Semester::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'asc')->get();
-		$jalur = Jalur::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->get();
+		$semester = Semester::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'asc')->get();
+		$jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
 
-		$sekolah = Sekolah::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->first();
-		return view('pendidikan/siswa/insert-update-siswa/view-insert-update-siswa',compact('auth_data','status_pengguna','kelas','thn_masuk_siswa','semester','jalur','sekolah'));
-
+		$sekolah = Sekolah::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->first();
+		return view('pendidikan/siswa/insert-update-siswa/view-insert-update-siswa', compact('auth_data', 'status_pengguna', 'kelas', 'thn_masuk_siswa', 'semester', 'jalur', 'sekolah'));
 	}
-	public function actionViewUpdateSiswa(Request $request){
+	public function actionViewUpdateSiswa(Request $request)
+	{
 		# code...
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
 		$validator = Validator::make($request->all(), [
-			'nis_nama_siswa' =>'required'
+			'nis_nama_siswa' => 'required'
 		]);
 
-		if($validator->fails()) {
+		if ($validator->fails()) {
 			return [
 				'status' => 300, // FAILED
 				'message' => $validator->errors()->first()
 			];
-		}
-		else {
+		} else {
 			if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $input->nis_nama_siswa)) {
 				return [
 					'status' => 204, // SUCCESS AND LOAD CONTENT
-					'path' => 'siswa/insert-update-siswa/view-detail/'.$input->nis_nama_siswa
+					'path' => 'siswa/insert-update-siswa/view-detail/' . $input->nis_nama_siswa
 				];
 			} elseif ($siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $input->nis_nama_siswa)) {
 				return [
 					'status' => 204, // SUCCESS AND LOAD CONTENT
-					'path' => 'siswa/insert-update-siswa/view-cari-siswa/'.$input->nis_nama_siswa
+					'path' => 'siswa/insert-update-siswa/view-cari-siswa/' . $input->nis_nama_siswa
 				];
 			} else {
 				return [
@@ -92,14 +92,13 @@ class InsertUpdateSiswaController extends BaseController
 			}
 		}
 	}
-	public function viewDetailUpdateSiswa(Request $request, $nis_nama_siswa){
-        # code...
+	public function viewDetailUpdateSiswa(Request $request, $nis_nama_siswa)
+	{
+		# code...
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
-		if($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)){
-
-		}else{
+		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) { } else {
 			return [
 				'status' => 300, // FAILED
 				'message' => 'NIS tidak ditemukan'
@@ -118,19 +117,20 @@ class InsertUpdateSiswaController extends BaseController
 		$kota = Kota::get();
 		$kotaTinggal = Kota::get();
 		$provinsi = Provinsi::get();
-		
-		$kotaLahir = Kota::where('id_kota','=',$siswa->id_kota_lahir)->first();
 
-		return view('pendidikan/siswa/insert-update-siswa/view-update-siswa',compact('auth_data','nis_nama_siswa','siswa','agama','kebutuhanKhusus','jenisTinggal','jenisTransportasi','jenisPip','jenisPendidikan','jenisPenghasilan','jenisPekerjaan','tingkatPrestasi','kotaLahir','kota','provinsi','kotaTinggal'));
+		$kotaLahir = Kota::where('id_kota', '=', $siswa->id_kota_lahir)->first();
+
+		return view('pendidikan/siswa/insert-update-siswa/view-update-siswa', compact('auth_data', 'nis_nama_siswa', 'siswa', 'agama', 'kebutuhanKhusus', 'jenisTinggal', 'jenisTransportasi', 'jenisPip', 'jenisPendidikan', 'jenisPenghasilan', 'jenisPekerjaan', 'tingkatPrestasi', 'kotaLahir', 'kota', 'provinsi', 'kotaTinggal'));
 	}
 
-	public function viewPrintSiswa(Request $request, $nis_nama_siswa){
+	public function viewPrintSiswa(Request $request, $nis_nama_siswa)
+	{
 
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
 		$siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
-		$beasiswa = CalonSiswaBeasiswa::where('id_c_siswa',$siswa->id_c_siswa)->get();
+		$beasiswa = CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
 
 		$semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -138,24 +138,21 @@ class InsertUpdateSiswaController extends BaseController
 		$data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
 		$data_beasiswa[0]['urutan_3'] = ': ';
 
-		if($beasiswa){
+		if ($beasiswa) {
 			foreach ($beasiswa as $key => $value) {
-			if($key==0){
-				$data_beasiswa[$key]['urutan_1'] = '61.';
-				$data_beasiswa[$key]['urutan_2'] = 'Menerima Beasiswa';
-				$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa.' Tahun '.$value->tahun_mulai_beasiswa_c_siswa.' - '.$value->tahun_selesai_beasiswa_c_siswa;
+				if ($key == 0) {
+					$data_beasiswa[$key]['urutan_1'] = '61.';
+					$data_beasiswa[$key]['urutan_2'] = 'Menerima Beasiswa';
+					$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa . ' Tahun ' . $value->tahun_mulai_beasiswa_c_siswa . ' - ' . $value->tahun_selesai_beasiswa_c_siswa;
+				} else {
+					$data_beasiswa[$key]['urutan_1'] = '';
+					$data_beasiswa[$key]['urutan_2'] = '';
+					$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa . ' Tahun ' . $value->tahun_mulai_beasiswa_c_siswa . ' - ' . $value->tahun_selesai_beasiswa_c_siswa;
+				}
 			}
-			else{
-				$data_beasiswa[$key]['urutan_1'] = '';
-				$data_beasiswa[$key]['urutan_2'] = '';
-				$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa.' Tahun '.$value->tahun_mulai_beasiswa_c_siswa.' - '.$value->tahun_selesai_beasiswa_c_siswa;
-			}
-			}
-
 		}
 
-		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa',compact('auth_data','siswa','data_beasiswa','semester_aktif'));
-
+		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa', compact('auth_data', 'siswa', 'data_beasiswa', 'semester_aktif'));
 	}
 
 	public function viewCariUpdateSiswa(Request $request, $nis_nama_siswa)
@@ -165,48 +162,50 @@ class InsertUpdateSiswaController extends BaseController
 
 		$siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
 
-		return view('pendidikan/siswa/insert-update-siswa/view-cari-siswa',compact('auth_data','nis_nama_siswa'));
+		return view('pendidikan/siswa/insert-update-siswa/view-cari-siswa', compact('auth_data', 'nis_nama_siswa'));
 	}
 
-	public function datatablesCariSiswa(Request $request, $nis_nama_siswa){
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+	public function datatablesCariSiswa(Request $request, $nis_nama_siswa)
+	{
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
 
-        $siswa = Siswa::select('siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna','kelas.nm_kelas','status_pengguna.nm_status_pengguna','jalur.nm_jalur')
-          ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-          ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-          ->join('status_pengguna','pengguna.id_status_pengguna','=','status_pengguna.id_status_pengguna')
-          ->join('jalur_siswa', function ($join) {
-                            $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
-                                 ->where('jalur_siswa.is_jalur_aktif', '=', 1);
-                        })
-          ->join('jalur','jalur_siswa.id_jalur','=','jalur.id_jalur')
-          ->where(function ($query) use ($nis_nama_siswa) {
-                    $query->where('siswa.nis_siswa', 'like', '%'.$nis_nama_siswa.'%')
-                    ->orWhere('pengguna.nm_pengguna', 'like', '%'.$nis_nama_siswa.'%')
-                    ->orWhere('siswa.nisn_siswa', 'like', '%'.$nis_nama_siswa.'%');
-             })
-          ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-          ->get();
-        return Datatables::of($siswa)
-                ->addColumn('action', function($item) use($nis_nama_siswa) {
-                    $data = array(
-                        'id' => $item->nis_siswa,
-                        'id_asli' => $nis_nama_siswa
-                    );
-                    return $data;
-                })
-                ->make(true);
-    }
+		$siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur')
+			->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+			->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+			->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
+			->join('jalur_siswa', function ($join) {
+				$join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
+					->where('jalur_siswa.is_jalur_aktif', '=', 1);
+			})
+			->join('jalur', 'jalur_siswa.id_jalur', '=', 'jalur.id_jalur')
+			->where(function ($query) use ($nis_nama_siswa) {
+				$query->where('siswa.nis_siswa', 'like', '%' . $nis_nama_siswa . '%')
+					->orWhere('pengguna.nm_pengguna', 'like', '%' . $nis_nama_siswa . '%')
+					->orWhere('siswa.nisn_siswa', 'like', '%' . $nis_nama_siswa . '%');
+			})
+			->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+			->get();
+		return Datatables::of($siswa)
+			->addColumn('action', function ($item) use ($nis_nama_siswa) {
+				$data = array(
+					'id' => $item->nis_siswa,
+					'id_asli' => $nis_nama_siswa
+				);
+				return $data;
+			})
+			->make(true);
+	}
 
-	public function actionInsertUpdateSiswa(Request $request, $mode, $id = null){
+	public function actionInsertUpdateSiswa(Request $request, $mode, $id = null)
+	{
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 		$now = Carbon::now(env('APP_TIMEZONE', ''));
 
-		if($mode == "insert"){
+		if ($mode == "insert") {
 			$validator = Validator::make($request->all(), [
-				'nis_siswa' =>'required',
+				'nis_siswa' => 'required',
 				'nm_pengguna' => 'required',
 				'jenis_kelamin' => 'required',
 				'id_status_pengguna' => 'required',
@@ -216,135 +215,147 @@ class InsertUpdateSiswaController extends BaseController
 				'id_jalur' => 'required'
 
 			]);
-			if($validator->fails()) {
-					return [
-		            'status' => 300, // FAILED
-		            'message' => $validator->errors()->first()
-		        ];
-	    	}
-	    	//jika validasi benar
-	    	else{
+			if ($validator->fails()) {
+				return [
+					'status' => 300, // FAILED
+					'message' => $validator->errors()->first()
+				];
+			}
+			//jika validasi benar
+			else {
 
-	    		if(!empty($input->nisn_siswa)){
-	    			$siswa = Siswa::where('nis_siswa','=',$input->nis_siswa)->orWhere('nisn_siswa','=',$input->nisn_siswa)->first();
-	    		}
+				if (!empty($input->nisn_siswa)) {
+					$siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->orWhere('nisn_siswa', '=', $input->nisn_siswa)->first();
+				} else {
+					$siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->first();
+				}
 
-	    		else{
-	    			$siswa = Siswa::where('nis_siswa','=',$input->nis_siswa)->first();
-	    		}
-	    		
-		    	$id_penerimaan 		= Penerimaan::where('jenis_penerimaan','=','2')->where('tahun_penerimaan','=',$input->thn_masuk_siswa)->first();
+				$id_penerimaan 		= Penerimaan::where('jenis_penerimaan', '=', '2')->where('tahun_penerimaan', '=', $input->thn_masuk_siswa)->first();
 
-		    	//jika tidak ada siswa 
-		    	if($siswa == null){
-		    		DB::beginTransaction();
-		    		$id_siswa 			= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-		    		$id_pengguna 		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-		    		$id_c_siswa 		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-		    		$id_admisi 			= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-		    		$id_jalur_siswa 	= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+				//jika tidak ada siswa 
+				if ($siswa == null) {
+					DB::beginTransaction();
+					$id_siswa 			= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+					$id_pengguna 		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+					$id_c_siswa 		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+					$id_admisi 			= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+					$id_jalur_siswa 	= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-		    		try{
-		    			DB::table('calon_siswa_baru')->insert(
-		    				[
-		    					'id_c_siswa' 	=> $id_c_siswa, 
-		    					'id_penerimaan' => $id_penerimaan->id_penerimaan,
-		    					'nm_c_siswa' 	=> $input->nm_pengguna,
-		    					'jenis_kelamin' => $input->jenis_kelamin,
-		    					'nisn_siswa' 	=> $input->nisn_siswa,
-		    					'nis_siswa' 	=> $input->nis_siswa,
-		    					'created_at'	=> $now,
-		    					'created_by' 	=> $input->auth_data->pengguna->id_pengguna
-		    				]
-		    			);
-		    			DB::table('calon_siswa_fisik')->insert(
-		    				[
+					try {
+						DB::table('calon_siswa_baru')->insert(
+							[
+								'id_c_siswa' 	=> $id_c_siswa,
+								'id_penerimaan' => $id_penerimaan->id_penerimaan,
+								'nm_c_siswa' 	=> $input->nm_pengguna,
+								'jenis_kelamin' => $input->jenis_kelamin,
+								'nisn_siswa' 	=> $input->nisn_siswa,
+								'nis_siswa' 	=> $input->nis_siswa,
+								'created_at'	=> $now,
+								'created_by' 	=> $input->auth_data->pengguna->id_pengguna
+							]
+						);
+						DB::table('calon_siswa_fisik')->insert(
+							[
 								'id_c_siswa' 	=> $id_c_siswa,
 								'created_at'	=> $now,
-		    					'created_by' 	=> $input->auth_data->pengguna->id_pengguna						    
-		    				]
-		    			);
+								'created_by' 	=> $input->auth_data->pengguna->id_pengguna
+							]
+						);
 
-		    			DB::table('calon_siswa_ortu')->insert(
-		    				[
+						DB::table('calon_siswa_ortu')->insert(
+							[
 								'id_c_siswa' 	=> $id_c_siswa,
 								'created_at'	=> $now,
-		    					'created_by' 	=> $input->auth_data->pengguna->id_pengguna					    	
-		    				]
-		    			);
+								'created_by' 	=> $input->auth_data->pengguna->id_pengguna
+							]
+						);
 
-		    			DB::table('calon_siswa_sekolah')->insert(
-		    				[
-								'id_c_siswa' 	=> $id_c_siswa,
-								'created_at'	=> $now,
-		    					'created_by' 	=> $input->auth_data->pengguna->id_pengguna
-		    				]
-		    			);
-		    			DB::table('pengguna')->insert(
-		    				[
-		    					'id_pengguna' 			=> $id_pengguna,
-		    					'id_status_pengguna' 	=> $input->id_status_pengguna,
-		    					'id_sekolah' 			=> $input->auth_data->pengguna->id_sekolah,
-		    					'nm_pengguna'			=> $input->nm_pengguna,
-		    					'username' 				=> $input->nis_siswa,
-		    					'password'				=> Hash::make($input->nis_siswa),
-		    					'must_change_password' 	=> 1,
+
+						if (!empty($input->nm_sekolah_asal_mutasi) && !empty($input->link_google_drive)) {
+							DB::table('calon_siswa_sekolah')->insert(
+								[
+									'id_c_siswa' 		=> $id_c_siswa,
+									'nm_sekolah_mutasi' => $input->nm_sekolah_asal_mutasi,
+									'link_google_drive' => $input->link_google_drive,
+									'created_at'		=> $now,
+									'created_by' 		=> $input->auth_data->pengguna->id_pengguna
+								]
+							);
+						} else {
+							DB::table('calon_siswa_sekolah')->insert(
+								[
+									'id_c_siswa' 	=> $id_c_siswa,
+									'created_at'	=> $now,
+									'created_by' 	=> $input->auth_data->pengguna->id_pengguna
+								]
+							);
+						}
+
+						DB::table('pengguna')->insert(
+							[
+								'id_pengguna' 			=> $id_pengguna,
+								'id_status_pengguna' 	=> $input->id_status_pengguna,
+								'id_sekolah' 			=> $input->auth_data->pengguna->id_sekolah,
+								'nm_pengguna'			=> $input->nm_pengguna,
+								'username' 				=> $input->nis_siswa,
+								'password'				=> Hash::make($input->nis_siswa),
+								'must_change_password' 	=> 1,
 								'status_join_table' 	=> 3,
 								'created_at'			=> $now,
-		    					'created_by' 			=> $input->auth_data->pengguna->id_pengguna
-		    				]
-		    			);
+								'created_by' 			=> $input->auth_data->pengguna->id_pengguna
+							]
+						);
 
-		    			DB::table('siswa')->insert(
-		    				[	
-		    					'id_siswa' 	 			=> $id_siswa,
-		    					'id_pengguna' 			=> $id_pengguna,
-		    					'id_c_siswa' 			=> $id_c_siswa,
-		    					'id_kelompok_biaya'		=> 0,
-		    					'id_kelas' 	 			=> $input->id_kelas,
-		    					'nis_siswa'	 			=> $input->nis_siswa,
-		    					'nisn_siswa'			=> $input->nisn_siswa,
+						DB::table('siswa')->insert(
+							[
+								'id_siswa' 	 			=> $id_siswa,
+								'id_pengguna' 			=> $id_pengguna,
+								'id_c_siswa' 			=> $id_c_siswa,
+								'id_kelompok_biaya'		=> 0,
+								'id_kelas' 	 			=> $input->id_kelas,
+								'nis_siswa'	 			=> $input->nis_siswa,
+								'nisn_siswa'			=> $input->nisn_siswa,
 								'thn_masuk_siswa'		=> $input->thn_masuk_siswa,
 								'created_at'			=> $now,
-		    					'created_by' 			=> $input->auth_data->pengguna->id_pengguna
-		    				]
-		    			);
+								'created_by' 			=> $input->auth_data->pengguna->id_pengguna
+							]
+						);
 
-		    			DB::table('admisi')->insert(
-		    				[
-		    					'id_admisi' 			=> $id_admisi,
-		    					'id_siswa' 	 			=> $id_siswa,
-		    					'id_semester' 			=> $input->id_semester,
-		    					'id_status_pengguna' 	=> $input->id_status_pengguna,
+						DB::table('admisi')->insert(
+							[
+								'id_admisi' 			=> $id_admisi,
+								'id_siswa' 	 			=> $id_siswa,
+								'id_semester' 			=> $input->id_semester,
+								'id_status_pengguna' 	=> $input->id_status_pengguna,
 								'id_jalur' 				=> $input->id_jalur,
 								'created_at'			=> $now,
-		    					'created_by' 			=> $input->auth_data->pengguna->id_pengguna					    	
-		    				]
-		    			);
+								'created_by' 			=> $input->auth_data->pengguna->id_pengguna
+							]
+						);
 
-		    			DB::table('jalur_siswa')->insert(
-		    				[
-		    					'id_jalur_siswa' 		=> $id_jalur_siswa,
-		    					'id_siswa' 	 			=> $id_siswa,
-		    					'id_semester' 			=> $input->id_semester,
-		    					'id_jalur' 				=> $input->id_jalur,
-		    					'id_admisi' 			=> $id_admisi,
+						DB::table('jalur_siswa')->insert(
+							[
+								'id_jalur_siswa' 		=> $id_jalur_siswa,
+								'id_siswa' 	 			=> $id_siswa,
+								'id_semester' 			=> $input->id_semester,
+								'id_jalur' 				=> $input->id_jalur,
+								'id_admisi' 			=> $id_admisi,
 								'is_jalur_aktif' 		=> 1,
 								'created_at'			=> $now,
-		    					'created_by' 			=> $input->auth_data->pengguna->id_pengguna					    	
-		    				]
-		    			);
+								'created_by' 			=> $input->auth_data->pengguna->id_pengguna
+							]
+						);
 
-		    			DB::table('role_pengguna')->insert(
-		    				[	
-		    					'id_pengguna' 				=> $id_pengguna,
-		    					'id_role' 					=> 3,
-		    					'keterangan_role_pengguna' 	=> "Input Pendidikan",
+						DB::table('role_pengguna')->insert(
+							[
+								'id_pengguna' 				=> $id_pengguna,
+								'id_role' 					=> 3,
+								'keterangan_role_pengguna' 	=> "Input Pendidikan",
 								'is_aktif'					=> 1,
 								'created_at'			=> $now,
-		    					'created_by' 				=> $input->auth_data->pengguna->id_pengguna
-		    				]
-		    			);
+								'created_by' 				=> $input->auth_data->pengguna->id_pengguna
+							]
+						);
 
 						LibGlobal::insertUpdateUserInCenter([
 							[
@@ -353,55 +364,47 @@ class InsertUpdateSiswaController extends BaseController
 								"username" => $input->nis_siswa
 							]
 						]);
-		    			DB::commit();
-		    			return [
-			                    'status' => 202, // SUCCESS AND LOAD PAGE
-								'message' => 'Insert Data Siswa Berhasil!',
-								'path' => 'siswa/cari-siswa/view-detail-siswa/'.$input->nis_siswa.'/'.$input->nis_siswa
-			            ];
-		    		}
-		    		catch (\Exception $e) {
-	                    DB::rollback();
-	                    // something went wrong
-	                    return [
-	                                'status' 	=> 200, // GAGAL
-	                                'message'	=> 'Insert Data Siswa Gagal'
-	                            ];
-	                } 
+						DB::commit();
+						return [
+							'status' => 202, // SUCCESS AND LOAD PAGE
+							'message' => 'Insert Data Siswa Berhasil!',
+							'path' => 'siswa/cari-siswa/view-detail-siswa/' . $input->nis_siswa . '/' . $input->nis_siswa
+						];
+					} catch (\Exception $e) {
+						DB::rollback();
+						// something went wrong
+						return [
+							'status' 	=> 200, // GAGAL
+							'message'	=> 'Insert Data Siswa Gagal'
+						];
+					}
+				} else {
 
-		    	}
-
-		    	else{
-
-		    		return [
-                        'status' 	=> 200, // GAGAL
-                        'message'	=> 'Mohon maaf siswa dengan NIS / NISN ini ditemukan didalam sistem'
-                    ];
-
-		    	}	
-	    	}
-		}
-		elseif($mode == "update"){
-	    	$validator = Validator::make($request->all(), [
-
-			]);
-			if($validator->fails()) {
 					return [
-		            'status' => 300, // FAILED
-		            'message' => $validator->errors()->first()
-		        ];
-	    	}
-	    	//jika validasi benar
-	    	else{
-	    		$siswa = Siswa::where('nis_siswa','=',$input->nis_siswa)->orWhere('nisn_siswa','=',$input->nisn_siswa)->first();
-	    		$calonSiswa = CalonSiswaBaru::where('id_c_siswa','=',$input->id_c_siswa)->first();
-		    	$id_c_siswa_prestasi 		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-		    	$id_c_siswa_beasiswa		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+						'status' 	=> 200, // GAGAL
+						'message'	=> 'Mohon maaf siswa dengan NIS / NISN ini ditemukan didalam sistem'
+					];
+				}
+			}
+		} elseif ($mode == "update") {
+			$validator = Validator::make($request->all(), []);
+			if ($validator->fails()) {
+				return [
+					'status' => 300, // FAILED
+					'message' => $validator->errors()->first()
+				];
+			}
+			//jika validasi benar
+			else {
+				$siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->orWhere('nisn_siswa', '=', $input->nisn_siswa)->first();
+				$calonSiswa = CalonSiswaBaru::where('id_c_siswa', '=', $input->id_c_siswa)->first();
+				$id_c_siswa_prestasi 		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+				$id_c_siswa_beasiswa		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-	    		if($siswa != null || $calonSiswa != null){
-	    			DB::beginTransaction();
-	    			try{
-	    				DB::table('pengguna')->where('id_pengguna', $input->id_pengguna)->update([
+				if ($siswa != null || $calonSiswa != null) {
+					DB::beginTransaction();
+					try {
+						DB::table('pengguna')->where('id_pengguna', $input->id_pengguna)->update([
 							'nm_pengguna' 			=> $input->nm_pengguna,
 							'username' 				=> $input->nis_siswa,
 							'password' 				=> Hash::make($input->nis_siswa),
@@ -414,7 +417,7 @@ class InsertUpdateSiswaController extends BaseController
 							'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
 						]);
 
-	    				DB::table('calon_siswa_baru')->where('id_c_siswa', $input->id_c_siswa)->update([
+						DB::table('calon_siswa_baru')->where('id_c_siswa', $input->id_c_siswa)->update([
 							'id_penerimaan' 		=> $calonSiswa->id_penerimaan,
 							'kode_voucher' 			=> $calonSiswa->kode_voucher,
 							'password' 				=> $calonSiswa->password,
@@ -462,7 +465,7 @@ class InsertUpdateSiswaController extends BaseController
 							'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
 						]);
 
-	    				DB::table('calon_siswa_ortu')->where('id_c_siswa', $input->id_c_siswa)->update([
+						DB::table('calon_siswa_ortu')->where('id_c_siswa', $input->id_c_siswa)->update([
 							'nm_ayah'					=> $input->nm_ayah,
 							'status_ayah'				=> $input->status_ayah,
 							'nik_ayah'					=> $input->nik_ayah,
@@ -512,14 +515,14 @@ class InsertUpdateSiswaController extends BaseController
 							'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 						]);
 
-	    				DB::table('calon_siswa_fisik')->where('id_c_siswa', $input->id_c_siswa)->update([
+						DB::table('calon_siswa_fisik')->where('id_c_siswa', $input->id_c_siswa)->update([
 							'tinggi_badan'				=> $input->tinggi_badan,
 							'berat_badan'				=> $input->berat_badan,
 							'updated_at' 				=> $now,
 							'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 						]);
 
-	    				DB::table('calon_siswa_prestasi')->where('id_c_siswa', $input->id_c_siswa)->update([	
+						DB::table('calon_siswa_prestasi')->where('id_c_siswa', $input->id_c_siswa)->update([
 							'updated_at' 				=> $now,
 							'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 						]);
@@ -531,28 +534,34 @@ class InsertUpdateSiswaController extends BaseController
 								"username" => $input->nis_siswa
 							]
 						]);
-	    				DB::commit();
-		    			return [
+						DB::commit();
+						return [
 							'status' => 200, // SUCCESS AND LOAD TABLE
 							'message' => 'Update Data Siswa Berhasil!'
-			            ];
-	    			}
-	    			catch (\Exception $e) {
+						];
+					} catch (\Exception $e) {
 						DB::rollback();
-						
-	                    return [
+
+						return [
 							'status' 	=> 200, // GAGAL
-							'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
-	                    ];
-	    			}
-	    		}
-	    		else{
-	    			return [
-			                'status' => 200, // SUCCESS AND LOAD TABLE
-			               	'message' => 'Siswa Tidak Ditemukan'
-			        ];
-	    		}
-	    	}
+							'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+						];
+					}
+				} else {
+					return [
+						'status' => 200, // SUCCESS AND LOAD TABLE
+						'message' => 'Siswa Tidak Ditemukan'
+					];
+				}
+			}
 		}
+	}
+
+	public function changeStatusSiswa(Request $request)
+	{
+		$input = (object) $request->input();
+		$status_pengguna = StatusPengguna::find($input->id_status_pengguna)->nm_status_pengguna;
+
+		return $status_pengguna;
 	}
 }

@@ -24,7 +24,8 @@ use UniSharp\LaravelFilemanager\Controllers\UploadController;
 // DO NOT CHANGE
 Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
-Route::middleware(['token_staff'])->group(function () {
+
+Route::middleware(['auth'])->group(function () {
     Route::prefix('laravel-filemanager')->group(function () {
         Route::get('/', [LfmController::class, 'show'])->name('unisharp.lfm.show');
         // display integration error messages

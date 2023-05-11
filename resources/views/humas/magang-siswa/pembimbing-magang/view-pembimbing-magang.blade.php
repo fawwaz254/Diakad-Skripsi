@@ -59,7 +59,9 @@
                                 <tr>
                                     <th>No. </th>
                                     <th>Rekanan Magang</th>
+                                    <th>Username</th>
                                     <th>Pembimbing Magang</th>
+                                    <th>Aksi</th>
                                     <th>Periode Magang</th>
                                     <th>Semester</th>
                                     {{-- <th>NIS</th> --}}
@@ -125,6 +127,8 @@
 
     var modul_url = 'magang-siswa';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembimbing-magang/datatables';
+    var add_url = role_url + '#' + modul_url + '/' + 'pembimbing-magang/add';
+
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -148,20 +152,41 @@
                 name: 'rekanan.nm_rekanan_magang'
             },
             {
+                data: 'username_pembimbing_magang.username',
+                name: 'username_pembimbing_magang.username'
+            },
+            {
+                data: 'username_pembimbing_magang.pembimbing_magang',
+                name: 'username_pembimbing_magang.pembimbing_magang'
+            },
+            {
                 data: 'action',
                 name: 'action',
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-
                     var html = '';
+                    if (data.pembimbingMagang) {
+                        html +=
+                            '<button class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="pengajuanAction(\'' +
+                            data.id + '\', \`tidak-diapprove`\)">' +
+                            '    <i class="material-icons">edit</i>' +
+                            '</button> ' +
+                            '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="pengajuanAction(\'' +
+                            data.id + '\', \`tidak-diapprove`\)">' +
+                            '    <i class="material-icons">delete</i>' +
+                            '</button> ';
+                    } else {
+                        html +=
+                            '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            add_url + '/' + data.id + '">' +
+                            '    <i class="material-icons">add</i>' +
+                            '</a> ';
+
+                    }
 
                     // if (data.status_apv_pengambilan_magang == 2) {
-                    html +=
-                        '<button class="btn btn-success btn-circle waves-effect waves-circle waves-float" onclick="pengajuanAction(\'' +
-                        data.id + '\', \`tidak-diapprove`\)">' +
-                        '    <i class="material-icons">add_box</i>' +
-                        '</button> ';
+
                     // }
 
                     // if (data.status_apv_pengambilan_magang == 1) {
