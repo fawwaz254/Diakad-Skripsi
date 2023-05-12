@@ -95,6 +95,14 @@
                                                         value="5">
                                                         5 Point per
                                                         Soal</option>
+                                                    <option @if ($item->nilai == 2.5) selected @endif
+                                                        value="2.5">
+                                                        2.5 Point per
+                                                        Soal</option>
+                                                    <option @if ($item->nilai == 2) selected @endif
+                                                        value="2">
+                                                        2 Point per
+                                                        Soal</option>
                                                     <option @if ($item->nilai == 0) selected @endif
                                                         value="0">
                                                         Tidak Mengunakan Pilihan Ganda</option>
@@ -103,6 +111,8 @@
                                                     <option value="20">20 Point per Soal</option>
                                                     <option value="10">10 Point per Soal</option>
                                                     <option value="5">5 Point per Soal</option>
+                                                    <option value="2.5">2,5 Point per Soal</option>
+                                                    <option value="2">2 Point per Soal</option>
                                                     <option value="0">Tidak Mengunakan Pilihan Ganda</option>
                                                 @endif
 
@@ -219,7 +229,10 @@
                                                         Jam</option>
                                                     <option @if ($item->waktu_pengerjaan == '90') selected @endif
                                                         value="90">1
-                                                        Jam Setengah</option>
+                                                        Jam + 30 Menit</option>
+                                                    <option @if ($item->waktu_pengerjaan == '75') selected @endif
+                                                        value="75">1
+                                                        Jam + 15 Menit</option>
                                                     <option @if ($item->waktu_pengerjaan == '60') selected @endif
                                                         value="60">1
                                                         Jam</option>
@@ -246,7 +259,8 @@
                                                     <option value="20160">2 Minggu</option>
                                                     <option value="10080">1 Minggu</option>
                                                     <option value="120">2 Jam</option>
-                                                    <option value="90">1 Jam Setengah</option>
+                                                    <option value="90">1 Jam + 30 Menit</option>
+                                                    <option value="75">1 Jam + 15 Menit</option>
                                                     <option value="60" selected>1 Jam</option>
                                                     <option value="50">50 Menit</option>
                                                     <option value="40">40 Menit</option>
@@ -346,7 +360,6 @@
     $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'dddd DD MMMM YYYY - HH:mm',
-            // format: 'DD MMMM YYYY',
             lang: 'id',
             // clearButton: true,
             weekStart: 1,
