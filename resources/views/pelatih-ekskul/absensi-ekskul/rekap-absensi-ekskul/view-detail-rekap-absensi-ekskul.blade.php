@@ -11,6 +11,9 @@
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect " href="{{url(Request::segment(1).'/'. $auth_data->modul_url .'/'. $auth_data->menu_url. '/print/'.$id_semester.'/'.$id_ekskul)}}" target="_blank"><i class="material-icons">print</i><span>Cetak</span></a></h2>
     </div>
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect" onclick="show()" ><i class="material-icons">remove_red_eye</i><span>Tampilkan Detail Pertemuan Ekskul</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -88,11 +91,55 @@
                         </table>
                     </div>
                 </div>
+                <div id="field2" style="display:none;">
+                    <div class="header">
+                        <h2>
+                            DETAIL PERTEMUAN EKSKUL {{$data_ekskul->nm_ekskul}}
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" style="overflow-x:auto;" id="primary_table">
+                                <thead>
+                                    <th>No</th>
+                                    <th>Pertemuan Ke</th>
+                                    <th>Tanggal Entry</th>
+                                    <th>Materi Ekskul</th>
+                                    <th>Waktu Mulai</th>
+                                    <th>Waktu Selesai</th>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $number=1;
+                                    @endphp
+                                    @foreach($data_presensi as $presensi_ekskul)
+                                        <tr>
+                                            <td>{{$number++}}</td>
+                                            <td>{{$presensi_ekskul->pertemuan_ke}}</td>
+                                            <td>{{$presensi_ekskul->convertDateFormat('tgl_entry', 'd/m/y')}}</td>
+                                            <td>{{$presensi_ekskul->materi_ekskul}}</td>
+                                            <td>{{$presensi_ekskul->waktu_mulai}}</td>
+                                            <td>{{$presensi_ekskul->waktu_selesai}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script>
+    function show() {
+        var x = document.getElementById("field2");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
     function deleteAbsensiAction(delete_url, element){
         var item = $(element);
         $('button').attr('disabled', 'disabled');
