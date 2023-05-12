@@ -176,6 +176,8 @@
                                      <th>Status</th>
                                      <th>Jalur Masuk</th>
                                      <th>Sekolah Asal</th>
+                                     <th>Mutasi Masuk</th>
+                                     <th>Mutasi Keluar</th>
                                      <th>Alamat</th>
                                      {{-- <th>Telp. Siswa</th>
                                      <th>Telp. Orang Tua</th> --}}
@@ -270,7 +272,12 @@
                  searchable: false
              },
              {
-                 data: 'sekolah_asal',
+                 data: 'nm_sekolah_asal',
+                 name: 'nm_sekolah_asal',
+                 searchable: false
+             },
+             {
+                 data: 'mutasi_masuk',
                  searchable: false,
                  orderable: false,
                  render: function(data) {
@@ -287,6 +294,11 @@
                      }
 
                  }
+             },
+             {
+                 data: 'mutasi_keluar',
+                 name: 'mutasi_keluar',
+                 searchable: false
              },
              {
                  data: 'alamat',
