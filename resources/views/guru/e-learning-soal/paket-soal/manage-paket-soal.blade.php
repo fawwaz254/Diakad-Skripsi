@@ -273,7 +273,7 @@
                                         {{-- <label class="form-label">Title</label> --}}
                                         <input type="datetime-local" class="form-control" name="waktu_mulai"
                                             required="" aria-required="true" aria-invalid="true"
-                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_mulai)->format('Y-m-d H:i:s') }}" @else value="{{ Carbon\Carbon::now()->format('Y-m-d H:i:s') }}" @endif>
+                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_mulai)->format('Y-m-d H:i') }}" @else value="{{ Carbon\Carbon::now()->format('Y-m-d H:i') }}" @endif>
 
                                     </div>
                                 </div>
@@ -290,7 +290,7 @@
                                     <div class="form-line">
                                         <input type="datetime-local" class="form-control" name="waktu_selesai"
                                             required="" aria-required="true" aria-invalid="true"
-                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_selesai)->format('Y-m-d H:i:s') }}" @else value="{{ Carbon\Carbon::now()->yesterday()->addDays(7)->format('Y-m-d H:i:s') }}" @endif>
+                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_selesai)->format('Y-m-d H:i') }}" @else value="{{ Carbon\Carbon::now()->yesterday()->addDays(7)->format('Y-m-d H:i') }}" @endif>
 
                                     </div>
                                 </div>
@@ -342,4 +342,15 @@
     $("#place").on("click", ".delete_file", function() {
         $(this).parent().parent().remove();
     })
+
+    $(function() {
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'dddd DD MMMM YYYY - HH:mm',
+            // format: 'DD MMMM YYYY',
+            lang: 'id',
+            // clearButton: true,
+            weekStart: 1,
+            time: true
+        });
+    });
 </script>
