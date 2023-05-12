@@ -199,17 +199,16 @@ class SoalController extends Controller
         } else {
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            for ($i = 1; $i <= count($input->soal); $i++) {
-                $question = new Soal;
-                $question->id_kategori_soal = $input->kategori;
-                $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                $question->id_tipe_soal = $input->id_tipe_soal;
-                $question->content = $input->soal[$i];
-                $question->text = strip_tags($input->soal[$i]);
-                $question->save();
-
-                if ($input->id_tipe_soal == 1) {
+            if ($input->id_tipe_soal == 1) {
+                for ($i = 1; $i <= count($input->soal); $i++) {
+                    $question = new Soal;
+                    $question->id_kategori_soal = $input->kategori;
+                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_tipe_soal = $input->id_tipe_soal;
+                    $question->content = $input->soal[$i];
+                    $question->text = strip_tags($input->soal[$i]);
+                    $question->save();
                     foreach ($input->jawaban[$i] as $no_answer => $answer) {
                         $now = Carbon::now(env('APP_TIMEZONE', ''));
                         $question_option = new PilihanSoal;
@@ -232,6 +231,26 @@ class SoalController extends Controller
                     $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
                     $question->save();
                 }
+            } else if ($input->id_tipe_soal == 2) {
+                $question = new Soal;
+                $question->id_kategori_soal = $input->kategori;
+                $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                $question->id_tipe_soal = $input->id_tipe_soal;
+                $question->content = $input->soal;
+                $question->text = strip_tags($input->soal);
+                $question->jawaban = $input->jawaban;
+                $question->save();
+            } else {
+                $question = new Soal;
+                $question->id_kategori_soal = $input->kategori;
+                $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                $question->id_tipe_soal = $input->id_tipe_soal;
+                $question->content = $input->soal;
+                $question->text = strip_tags($input->soal);
+                // $question->jawaban = $input->jawaban;
+                $question->save();
             }
 
 

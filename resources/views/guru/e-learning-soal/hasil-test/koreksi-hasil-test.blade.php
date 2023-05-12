@@ -38,6 +38,9 @@
                                 @endif
                             @endif
                             <br>
+                            <p>Kunci Jawaban</p>
+                            <pre
+                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!! $question->soal->jawaban ? $question->soal->jawaban : '-' !!}</pre>
                             <p>Nilai</p>
                             <div class="row clearfix">
                                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
