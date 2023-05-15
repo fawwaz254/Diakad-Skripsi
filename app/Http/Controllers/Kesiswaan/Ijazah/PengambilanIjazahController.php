@@ -13,6 +13,7 @@ use Yajra\Datatables\Datatables;
 use App\Libraries\Kesiswaan\LibIjazah;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\Ijazah;
+use App\Models\PengajuanWisuda;
 use App\Models\Siswa;
 use Auth;
 use DB;
@@ -78,6 +79,26 @@ class PengambilanIjazahController extends BaseController
             })
             ->make(true);
     }
+    public function datatablesPengambilanIjazahSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $ijazah = PengajuanWisuda::pluck('id_siswa')->toArray();
+        // dd($ijazah);
+        $list_data=Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->whereIn('id_siswa',$ijazah);
+        // dd($list_data);
+        return Datatables::of($list_data)
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'nis_siswa' => $item->nis_siswa
+                );
+                return $data;
+            })
+            ->addColumn('nm_siswa', function ($item) {
+                return $item->nis_siswa . '-' . $item->nm_pengguna;
+            })
+            ->make(true);
+    }
 
     public function printPengambilanIjazah(Request $request, $id)
     {
@@ -132,11 +153,11 @@ class PengambilanIjazahController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
-                $data_nis_siswa = preg_split("/\r\n|\n|\r/", $input->id_siswa);
+                // $data_nis_siswa = preg_split("/\r\n|\n|\r/", $input->id_siswa);
 
                 $list_siswa = Siswa::get();
                 $list_ijazah = Ijazah::get();
-                foreach ($data_nis_siswa as $nis_siswa) {
+                foreach ($input->nis_siswa as $nis_siswa) {
                     $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
                     $id_siswa = $list_siswa->where('nis_siswa', $nis_siswa)->first()->id_siswa;
                     if ($list_ijazah->where('id_siswa', $id_siswa)->first()) { } else {
