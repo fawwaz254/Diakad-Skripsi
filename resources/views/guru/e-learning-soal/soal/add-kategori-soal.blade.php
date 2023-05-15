@@ -12,7 +12,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="header bg-pink">
                     <h2>
-                        Tambah Kategori Mata Pelajaran
+                        Tambah Kategori
                     </h2>
                 </div>
                 <div class="body">
@@ -21,8 +21,8 @@
                         {{ csrf_field() }}
 
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title"> Nama Mata Pelajaran </h2>
-                            <input type="text" class="form-control" name="nm_mata_pelajar" required=""
+                            <h2 class="card-inside-title"> Nama Kategori (Mata Pelajaran + Tingkat + Jurusan) </h2>
+                            <input type="text" class="form-control" name="nm_kategori_soal" required=""
                                 aria-required="true" aria-invalid="true">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">

@@ -40,26 +40,69 @@
                         </li>
                     </ul> --}}
                 </div>
+
                 <div class="body">
+
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#belum" data-toggle="tab">
+                                <i class="material-icons">person</i>Pribadi
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#sudah" data-toggle="tab">
+                                <i class="material-icons">people</i> Semua Guru
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="belum">
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable display"
+                                    id="primary_table">
+                                    <thead>
+                                        <tr>
+
+                                            <th>No</th>
+                                            <th>Tipe Soal</th>
+                                            <th>Mata Pelajaran</th>
+                                            <th>Pertanyaan</th>
+                                            <th>Action</th>
+                                            <th>Tanggal Pembuatan</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="sudah">
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable display"
+                                    id="secondary_table" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tipe Soal</th>
+                                            <th>Mata Pelajaran</th>
+                                            <th>Pertanyaan</th>
+                                            <th>Action</th>
+                                            <th>Pembuat</th>
+                                            <th>Tanggal Pembuatan</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
 
 
                     {{-- <button type="button" class="btn btn-success" style="margin-bottom: 15px"><i class="material-icons"></i> Tambah Soal</button> --}}
-                    <div class="table-responsive">
-                        <table id="primary_table" class="table table-bordered table-striped table-hover dataTable">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tipe Soal</th>
-                                    <th>Mata Pelajaran</th>
-                                    <th>Pembuat</th>
-                                    <th>Pertanyaan</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -78,7 +121,10 @@
         serverSide: true,
         ajax: {
             url: datatable_url,
-            type: 'POST'
+            type: 'POST',
+            data: function(params) {
+                params.status = 0;
+            },
         },
         columns: [{
                 data: null,
@@ -90,9 +136,6 @@
             },
             {
                 data: 'kategori_soal.nm_kategori_soal'
-            },
-            {
-                data: 'pengguna.nm_pengguna'
             },
             {
                 data: 'text',
@@ -118,7 +161,10 @@
                         '    <i class="material-icons">delete</i>' +
                         '</button>';
                 }
-            }
+            },
+            {
+                data: 'time'
+            },
         ]
     });
 
@@ -131,6 +177,66 @@
             cell.innerHTML = i + 1;
         });
     }).draw();
+
+    var secondary_table = $('#secondary_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: datatable_url,
+            type: 'POST',
+            data: function(params) {
+                params.status = 1;
+            },
+        },
+        columns: [{
+                data: 'index_table',
+                defaultContent: '',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'tipe_soal'
+            },
+            {
+                data: 'kategori_soal.nm_kategori_soal'
+            },
+            {
+                data: 'text',
+                name: 'text',
+                orderable: false
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<center><a type="button" class="btn  btn-circle waves-effect waves-circle waves-float" href="' +
+                        detail_url + '/test/' + data.id + '">' +
+                        '    T' +
+                        '</a></center>';
+                }
+            },
+            {
+                data: 'pengguna.nm_pengguna'
+            },
+            {
+                data: 'time'
+            }
+        ]
+    });
+
+    secondary_table.on('draw', function() {
+        secondary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+
+
 
     function actionDelete(element) {
         var item = $(element);

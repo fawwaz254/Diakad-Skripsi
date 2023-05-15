@@ -4,14 +4,14 @@
             <i class="material-icons">keyboard_backspace</i>
             <span>Kembali</span>
         </a>
-        <a type="button" id="add" class="btn bg-green waves-effect">
+        <button type="button" id="add" class="btn bg-green waves-effect">
             <i class="material-icons">add_box</i>
             <span>Tambah Jumlah Soal</span>
-        </a>
-        <a type="button" id="remove" class="btn bg-red waves-effect">
+        </button>
+        <button type="button" id="remove" class="btn bg-red waves-effect">
             <i class="material-icons">indeterminate_check_box</i>
             <span>Hapus Jumlah Soal</span>
-        </a>
+        </button>
         <input type="text" name="jumlah" style="padding:7px; background-color:white;border: 1px solid black;"
             value="Jumlah Soal = 1" disabled>
         <span style="background-color: white;padding:7px;border: 1px solid black;">
@@ -145,10 +145,11 @@
     });
 
     $('#add').click(function() {
-        jumlah++;
-        var value = 'Jumlah Soal = ' + jumlah;
-        $("input[name='jumlah']").val(value);
-        $('#place').append(`
+        if (jumlah != 10) {
+            jumlah++;
+            var value = 'Jumlah Soal = ' + jumlah;
+            $("input[name='jumlah']").val(value);
+            $('#place').append(`
         <div class="row clearfix" style="margin-top: 10px" id="${jumlah }">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -188,18 +189,19 @@
         </div>
         </div>
         `);
+        }
     });
 
     $('#remove').click(function() {
-        var element = document.getElementById(jumlah);
         if (jumlah != 1) {
+            var element = document.getElementById(jumlah);
             jumlah--;
             var value = 'Jumlah Soal = ' + jumlah;
             $("input[name='jumlah']").val(value);
             while (element.firstChild) {
                 element.removeChild(element.firstChild);
             }
+            element.remove();
         }
-
     });
 </script>
