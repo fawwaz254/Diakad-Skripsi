@@ -108,7 +108,7 @@ class LibDataSarpras
                         ->where('ruangan.is_aktif','=',1)
                         ->where('jenis_ruangan.tipe_ruangan','=',$tipe_ruangan)
                         ->where('gedung.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-                        ->orderBy('ruangan.nm_ruangan', 'asc')->get();
+                        ->orderBy('jenis_ruangan.nm_jenis_ruangan', 'asc')->get();
             }
             // get all ruangan tanpa filter tipe ruangan
             else {
@@ -118,7 +118,7 @@ class LibDataSarpras
                         ->join('pemilik_sarpras','pemilik_sarpras.id_pemilik_sarpras','=','ruangan.id_pemilik_sarpras')
                         ->LeftJoin('kelas', 'kelas.id_kelas','ruangan.id_kelas')
                         ->where('gedung.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-                        ->orderBy('ruangan.nm_ruangan', 'asc')->get();
+                        ->orderBy('jenis_ruangan.nm_jenis_ruangan', 'asc')->get();
             }
         }
         // get mode edit
