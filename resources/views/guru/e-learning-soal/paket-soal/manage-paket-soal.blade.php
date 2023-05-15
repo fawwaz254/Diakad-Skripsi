@@ -95,6 +95,14 @@
                                                         value="5">
                                                         5 Point per
                                                         Soal</option>
+                                                    <option @if ($item->nilai == 2.5) selected @endif
+                                                        value="2.5">
+                                                        2.5 Point per
+                                                        Soal</option>
+                                                    <option @if ($item->nilai == 2) selected @endif
+                                                        value="2">
+                                                        2 Point per
+                                                        Soal</option>
                                                     <option @if ($item->nilai == 0) selected @endif
                                                         value="0">
                                                         Tidak Mengunakan Pilihan Ganda</option>
@@ -103,6 +111,8 @@
                                                     <option value="20">20 Point per Soal</option>
                                                     <option value="10">10 Point per Soal</option>
                                                     <option value="5">5 Point per Soal</option>
+                                                    <option value="2.5">2,5 Point per Soal</option>
+                                                    <option value="2">2 Point per Soal</option>
                                                     <option value="0">Tidak Mengunakan Pilihan Ganda</option>
                                                 @endif
 
@@ -219,7 +229,10 @@
                                                         Jam</option>
                                                     <option @if ($item->waktu_pengerjaan == '90') selected @endif
                                                         value="90">1
-                                                        Jam Setengah</option>
+                                                        Jam + 30 Menit</option>
+                                                    <option @if ($item->waktu_pengerjaan == '75') selected @endif
+                                                        value="75">1
+                                                        Jam + 15 Menit</option>
                                                     <option @if ($item->waktu_pengerjaan == '60') selected @endif
                                                         value="60">1
                                                         Jam</option>
@@ -246,7 +259,8 @@
                                                     <option value="20160">2 Minggu</option>
                                                     <option value="10080">1 Minggu</option>
                                                     <option value="120">2 Jam</option>
-                                                    <option value="90">1 Jam Setengah</option>
+                                                    <option value="90">1 Jam + 30 Menit</option>
+                                                    <option value="75">1 Jam + 15 Menit</option>
                                                     <option value="60" selected>1 Jam</option>
                                                     <option value="50">50 Menit</option>
                                                     <option value="40">40 Menit</option>
@@ -273,7 +287,7 @@
                                         {{-- <label class="form-label">Title</label> --}}
                                         <input type="datetime-local" class="form-control" name="waktu_mulai"
                                             required="" aria-required="true" aria-invalid="true"
-                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_mulai)->format('Y-m-d H:i:s') }}" @else value="{{ Carbon\Carbon::now()->format('Y-m-d H:i:s') }}" @endif>
+                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_mulai)->format('Y-m-d H:i') }}" @else value="{{ Carbon\Carbon::now()->format('Y-m-d H:i') }}" @endif>
 
                                     </div>
                                 </div>
@@ -290,7 +304,7 @@
                                     <div class="form-line">
                                         <input type="datetime-local" class="form-control" name="waktu_selesai"
                                             required="" aria-required="true" aria-invalid="true"
-                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_selesai)->format('Y-m-d H:i:s') }}" @else value="{{ Carbon\Carbon::now()->yesterday()->addDays(7)->format('Y-m-d H:i:s') }}" @endif>
+                                            @if ($item) value="{{ Carbon\Carbon::parse($item->waktu_selesai)->format('Y-m-d H:i') }}" @else value="{{ Carbon\Carbon::now()->yesterday()->addDays(7)->format('Y-m-d H:i') }}" @endif>
 
                                     </div>
                                 </div>
@@ -342,4 +356,14 @@
     $("#place").on("click", ".delete_file", function() {
         $(this).parent().parent().remove();
     })
+
+    $(function() {
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'dddd DD MMMM YYYY - HH:mm',
+            lang: 'id',
+            // clearButton: true,
+            weekStart: 1,
+            time: true
+        });
+    });
 </script>
