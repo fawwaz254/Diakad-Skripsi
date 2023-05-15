@@ -281,9 +281,16 @@ class SoalController extends Controller
 
     public function commonList(Request $request)
     {
-        $list_data = Soal::with('pengguna', 'kategori_soal')->orderBy('created_at', 'DESC')->get();
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $list_data = Soal::with('pengguna', 'kategori_soal')->orderBy('created_at', 'DESC')->when($input->status == 0, function ($q) use ($auth_data) {
+            $q->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+        });
 
         return Datatables::of($list_data)
+            ->addColumn('time', function ($item) {
+                return $item->created_at->diffForHumans();
+            })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_soal
