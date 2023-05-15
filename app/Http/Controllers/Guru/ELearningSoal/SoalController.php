@@ -82,12 +82,27 @@ class SoalController extends Controller
 
     public function commonListKategori(Request $request)
     {
-        $list_data = KategoriSoal::orderBy('created_at', 'DESC')->get();
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+        $list_data = KategoriSoal::orderBy('created_at', 'DESC')->with('soal', 'paket_soal', 'pengguna');
+
 
         return Datatables::of($list_data)
-            ->addColumn('action', function ($item) {
+            ->addColumn('use', function ($item) {
+                return $item->soal;
+            })
+            ->addColumn('action', function ($item) use ($id_pengguna) {
+
+                if ($item->id_pengguna == $id_pengguna) {
+                    $is_pengguna = true;
+                } else {
+                    $is_pengguna = false;
+                }
+
                 $data = array(
-                    'id' => $item->id_kategori_soal
+                    'id' => $item->id_kategori_soal,
+                    'is_pengguna' => $is_pengguna,
                 );
                 return $data;
             })->make(true);
@@ -96,11 +111,22 @@ class SoalController extends Controller
     public function actionDeleteKategori(Request $request)
     {
         $input = (object) $request->input();
-        $kategori_soal = KategoriSoal::find($input->id_kategori_soal);
-        $kategori_soal->delete();
-        return [
-            'message' => 'Berhasil Menghapus Kategori'
-        ];
+
+        $validasi1 = PaketSoal::where('id_kategori_soal', $input->id_kategori_soal)->first();
+        $validasi2 = Soal::where('id_kategori_soal', $input->id_kategori_soal)->first();
+        if ($validasi1 || $validasi2) {
+            return [
+                'message' => 'Kategori Sudah Digunakan'
+            ];
+        } else {
+            $kategori_soal = KategoriSoal::find($input->id_kategori_soal);
+            $kategori_soal->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+            $kategori_soal->save();
+            $kategori_soal->delete();
+            return [
+                'message' => 'Berhasil Menghapus Kategori'
+            ];
+        }
     }
 
 
