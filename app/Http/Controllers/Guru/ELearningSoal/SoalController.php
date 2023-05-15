@@ -43,7 +43,7 @@ class SoalController extends Controller
     {
         $input = (object) $request->input();
         $validator = Validator::make($request->all(), [
-            'nm_mata_pelajar' => 'required',
+            'nm_kategori_soal' => 'required|unique:kategori_soal',
         ]);
 
         if ($validator->fails()) {
@@ -52,10 +52,11 @@ class SoalController extends Controller
                 'message' => $validator->errors()->first()
             ];
         }
+
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $kategori_soal = new KategoriSoal();
         $kategori_soal->id_kategori_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-        $kategori_soal->nm_kategori_soal = $input->nm_mata_pelajar;
+        $kategori_soal->nm_kategori_soal = $input->nm_kategori_soal;
         $kategori_soal->id_pengguna = $input->auth_data->pengguna->id_pengguna;
         $kategori_soal->save();
         return [
