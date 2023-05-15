@@ -471,6 +471,7 @@ Route::middleware(['token_staff'])->group(function () {
             // MENU Data Pengambilan Ijazah
             Route::get('pengambilan-ijazah', [PengambilanIjazahController::class, 'viewPengambilanIjazah']);
             Route::get('pengambilan-ijazah/datatables', [PengambilanIjazahController::class, 'datatablesPengambilanIjazah']);
+            Route::get('pengambilan-ijazah/datatables-siswa', [PengambilanIjazahController::class, 'datatablesPengambilanIjazahSiswa']);
             Route::get('pengambilan-ijazah/add', [PengambilanIjazahController::class, 'addPengambilanIjazah']);
             Route::get('pengambilan-ijazah/edit/{id}', [PengambilanIjazahController::class, 'editPengambilanIjazah']);
             Route::get('pengambilan-ijazah/print/{id}', [PengambilanIjazahController::class, 'printPengambilanIjazah']);
