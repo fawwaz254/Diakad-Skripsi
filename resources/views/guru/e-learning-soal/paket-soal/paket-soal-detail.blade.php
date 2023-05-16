@@ -15,6 +15,7 @@
                     </h2>
                 </div>
                 <div class="body">
+
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
                         <li role="presentation" class="active"><a href="#not" data-toggle="tab" class="col-pink">List
@@ -27,10 +28,12 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="not">
                             <b>List Soal belum dipilih</b>
+                            <button style="margin-left: 10px" id="addAll">Tambah Semua Soal</button>
                             <div class="table-responsive">
                                 <table id="primary_table"
                                     class="table table-bordered table-striped table-hover dataTable"
                                     style="width: 100%;">
+
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -191,8 +194,6 @@
     }).draw();
 
     function actionAdd(element) {
-        // var testt= item.attr('data-id');
-        // alert(testt);
         var item = $(element);
         item.prop('disabled', true);
         var url = add_url;
@@ -237,4 +238,30 @@
             });
         }
     }
+
+    $('#addAll').click(function() {
+
+        var button = $(this);
+        button.prop('disabled', true);
+        // item.prop('disabled', true);
+        var url = add_url;
+        if (button.is(":disabled")) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    id_paket_soal: '{{ $question_package->id_paket_soal }}',
+                    id_soal: '0'
+                },
+                success: function(result) {
+                    vex.dialog.alert(result.message);
+                    primary_table.ajax.reload(null, false);
+                    secondary_table.ajax.reload(null, false);
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+    });
 </script>

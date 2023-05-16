@@ -33,8 +33,7 @@ class PaketSoalController extends Controller
 
             return view('guru/e-learning-soal/paket-soal/paket-soal-detail', compact('question_package'));
         } else {
-
-            // return abort();
+            return view('guru/e-learning-soal/paket-soal/view-paket-soal');
         }
     }
 
@@ -251,23 +250,40 @@ class PaketSoalController extends Controller
         // }
 
         $input = (object) $request->input();
-        if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) {
-            // return response()->json([
-            //     'status' => 500,
-            //     'message' => 'Error'
-            // ]);
-        } else {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-            $question_package_detail = new DetailPaketSoal;
-            $question_package_detail->id_detail_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $question_package_detail->id_paket_soal = $input->id_paket_soal;
-            $question_package_detail->id_soal = $input->id_soal;
-            $question_package_detail->save();
+        if ($input->id_soal != '0') {
+            if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) { } else {
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $question_package_detail = new DetailPaketSoal;
+                $question_package_detail->id_detail_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $question_package_detail->id_paket_soal = $input->id_paket_soal;
+                $question_package_detail->id_soal = $input->id_soal;
+                $question_package_detail->save();
 
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    // 'path' => 'e-learning-soal/paket-soal',
+                    'message' => 'Berhasil Menambah paket Soal'
+                ];
+            }
+        } else {
+
+            $paket_soal = PaketSoal::where('id_paket_soal', $input->id_paket_soal)->first();
+            $soals = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->get();
+
+            foreach ($soals as $soal) {
+                if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $soal->id_soal])->first()) { } else {
+                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $question_package_detail = new DetailPaketSoal;
+                    $question_package_detail->id_detail_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question_package_detail->id_paket_soal = $input->id_paket_soal;
+                    $question_package_detail->id_soal = $soal->id_soal;
+                    $question_package_detail->save();
+                }
+            }
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'e-learning-soal/paket-soal',
-                'message' => 'Berhasil Menambah paket Soal'
+                // 'path' => 'e-learning-soal/paket-soal',
+                'message' => 'Berhasil Menambah Semua Soal'
             ];
         }
     }
