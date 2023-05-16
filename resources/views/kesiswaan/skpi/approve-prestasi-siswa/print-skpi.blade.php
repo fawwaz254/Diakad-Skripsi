@@ -871,6 +871,14 @@
                             <br>
                             <br>
                             <br>
+                        @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                            <img style="position: absolute; top: 5%; margin-left:-20px; margin-top:-10px"
+                                src="{{ asset('media/ttd/smpypm2.png') }}" alt="TTD" width="160px"
+                                height="160px" class="ttd">
+                            <br>
+                            <br>
+                            <br>
+                            <br>
                         @else
                             <br>
                             <br>
