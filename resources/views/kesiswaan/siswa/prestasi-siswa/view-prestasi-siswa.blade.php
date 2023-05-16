@@ -4,12 +4,13 @@
             <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#data-kesiswaan/prestasi-siswa/add') }}"><i
                     class="material-icons">note_add</i><span>Tambah Prestasi Siswa</span></a>
+
+            <input type="checkbox" id="data_alumni" class="checkbox">
+            <label for="data_alumni"> Tampilkan Data Alumni</label>
+
+            <input type="hidden" id="alumni" value="0">
         </h2>
     </div>
-    <input type="checkbox" id="data_alumni" class="checkbox">
-    <label for="data_alumni"> Tampilkan Data Alumni</label>
-
-    <input type="hidden" id="alumni" value="0">
 
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
