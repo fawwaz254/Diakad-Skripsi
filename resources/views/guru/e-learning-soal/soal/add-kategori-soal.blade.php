@@ -12,7 +12,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="header bg-pink">
                     <h2>
-                        Tambah Kategori Mata Pelajaran
+                        Tambah Kategori
                     </h2>
                 </div>
                 <div class="body">
@@ -21,8 +21,8 @@
                         {{ csrf_field() }}
 
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title"> Nama Mata Pelajaran </h2>
-                            <input type="text" class="form-control" name="nm_mata_pelajar" required=""
+                            <h2 class="card-inside-title"> Nama Kategori (Mata Pelajaran + Tingkat + Jurusan) </h2>
+                            <input type="text" class="form-control" name="nm_kategori_soal" required=""
                                 aria-required="true" aria-invalid="true">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
@@ -52,7 +52,9 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
-                                    <th>Aksi</th>
+                                    <th>Status</th>
+                                    <th>Pembuat</th>
+                                    <th style="text-align:center">Aksi</th>
                                 </tr>
                             </thead>
                         </table>
@@ -89,7 +91,22 @@
             {
                 data: 'nm_kategori_soal',
                 name: 'nm_kategori_soal',
-
+            },
+            {
+                data: 'use',
+                render: function(data) {
+                    if (data) {
+                        return '<p style="color:green">Sudah Digunakan</p>'
+                    } else {
+                        return '<p style="color:red">Belum Digunakan</p>'
+                    }
+                }
+            },
+            {
+                data: 'pengguna.nm_pengguna',
+                // searchable: false,
+                // orderable: false
+                name: 'pengguna.nm_pengguna',
             },
             {
                 data: 'action',
@@ -97,10 +114,15 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" data-id="' +
-                        data.id + '" onclick="actionDelete(this)">' +
-                        '    <i class="material-icons">delete</i>' +
-                        '</button>';
+                    if (data.is_pengguna) {
+                        return '<center><button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" data-id="' +
+                            data.id + '" onclick="actionDelete(this)">' +
+                            '    <i class="material-icons">delete</i>' +
+                            '</button></center>';
+                    } else {
+                        return '';
+                    }
+
                 }
             }
         ]

@@ -13,7 +13,7 @@ use App\Models\PeriodeMagang as PeriodeMagang;
 use App\Models\StatusPengguna as StatusPengguna;
 use App\Models\Siswa as Siswa;
 use App\Models\Pengguna as Pengguna;
-
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
@@ -41,6 +41,26 @@ class PembimbingMagangController extends Controller
         $semester_aktif =  Semester::where('is_aktif_semester', '1')->first();
         return view('humas/magang-siswa/pembimbing-magang/view-pembimbing-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang', 'semester_aktif'));
     }
+
+    public function addPembimbingMagang(Request $request, $id)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_pengambil_magang = PengambilanMagang::with('periode.semester', 'rekanan')->find($id);
+
+        do {
+            $randomNumber = mt_rand(10000000, 99999999);
+            $randomString = strval($randomNumber);
+            $pengguna = Pengguna::where('username', $randomString)->first();
+        } while ($pengguna);
+
+        return view('humas/magang-siswa/pembimbing-magang/add-pembimbing-magang', compact('auth_data', 'data_pengambil_magang', 'randomString'));
+    }
+
+
+
 
     // public function importExcel(Request $request)
     // {
@@ -165,7 +185,7 @@ class PembimbingMagangController extends Controller
         $data_pengambilan_magang = PengambilanMagang::where('id_periode_magang', $id_periode_magang)->get()->toArray();
         $id_pengambilan_magang =  collect($data_pengambilan_magang)->unique('id_rekanan_magang')->pluck('id_pengambilan_magang');
 
-        $data = PengambilanMagang::whereIn('id_pengambilan_magang', $id_pengambilan_magang)->with('periodeMagang.semester', 'rekanan');
+        $data = PengambilanMagang::whereIn('id_pengambilan_magang', $id_pengambilan_magang)->with('periode.semester', 'rekanan', 'pembimbingMagang.pengguna');
 
         return Datatables::of($data)
             ->addColumn('semester', function ($item) {
@@ -174,6 +194,20 @@ class PembimbingMagangController extends Controller
             ->addColumn('periode', function ($item) {
                 return $item->periodeMagang->nm_periode_magang;
             })
+            ->addColumn('username_pembimbing_magang', function ($item) use ($id_periode_magang) {
+                $data =  $item->pembimbingMagang->where('id_periode_magang', $id_periode_magang)->first();
+                $username = $data ? $data->pengguna->username : '';
+                $nama_pengguna = $data ? $data->pengguna->nm_pengguna : '';
+                return [
+                    'username' => $username,
+                    'pembimbing_magang' => $nama_pengguna
+                ];
+            })
+            // ->addColumn('pembimbing_magang', function ($item) use ($id_periode_magang) {
+            //     $data =  $item->pembimbingMagang->where('id_periode_magang', $id_periode_magang)->first();
+            //     return $data ? $data->pengguna->nm_pengguna : '';
+            // })
+
             // ->addColumn('status_apv_pengambilan_magang', function ($item) {
             //     if ($item->status_apv_pengambilan_magang == 0) {
             //         return "Belum di Approve";
@@ -195,11 +229,12 @@ class PembimbingMagangController extends Controller
             //     }
             // })
 
-            ->addColumn('action', function ($item) {
+            ->addColumn('action', function ($item) use ($id_periode_magang) {
+                $data =  $item->pembimbingMagang->where('id_periode_magang', $id_periode_magang)->first();
+
                 $data = array(
-                    'id' => $item->id_pengambilan_magang
-                    // 'status_apv_pengambilan_magang' => $item->status_apv_pengambilan_magang,
-                    // 'id_siswa' => $item->id_siswa
+                    'id' => $item->id_pengambilan_magang,
+                    'pembimbingMagang' => $data,
                 );
 
                 return $data;
@@ -269,6 +304,13 @@ class PembimbingMagangController extends Controller
     //         })
     //         ->make(true);
     // }
+
+
+    public function actionInputPembimbingMagang(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+    }
 
     // public function actionPengajuanMagang(Request $request)
     // {

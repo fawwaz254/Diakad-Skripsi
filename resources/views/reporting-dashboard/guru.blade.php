@@ -133,3 +133,7 @@
     </div>
     <!-- Modal Catatan -->
 @endsection
+
+<script>
+    window.print();
+</script>

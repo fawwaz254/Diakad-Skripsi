@@ -245,12 +245,13 @@ class LibSiswa
     }
     public static function fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna)
     {
-        $siswa = Siswa::select('pengguna.path_foto_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'jurusan.nm_jurusan', 'status_pengguna.nm_status_pengguna', 'calon_siswa_baru.asal_sekolah', 'calon_siswa_baru.alamat_jalan', 'calon_siswa_baru.alamat_dusun', 'calon_siswa_baru.alamat_kelurahan', 'calon_siswa_baru.alamat_rt', 'calon_siswa_baru.alamat_rw', 'calon_siswa_baru.alamat_kecamatan', 'calon_siswa_baru.alamat_kodepos', 'calon_siswa_baru.kode_voucher', 'jalur.nm_jalur', 'calon_siswa_baru.nomor_hp', 'calon_siswa_ortu.nomor_hp_ortu', 'provinsi.nm_provinsi', 'kota.nm_kota', 'pengguna.id_pengguna')
+        $siswa = Siswa::select('pengguna.path_foto_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'jurusan.nm_jurusan', 'status_pengguna.nm_status_pengguna', 'calon_siswa_baru.asal_sekolah', 'calon_siswa_baru.alamat_jalan', 'calon_siswa_baru.alamat_dusun', 'calon_siswa_baru.alamat_kelurahan', 'calon_siswa_baru.alamat_rt', 'calon_siswa_baru.alamat_rw', 'calon_siswa_baru.alamat_kecamatan', 'calon_siswa_baru.alamat_kodepos', 'calon_siswa_baru.kode_voucher', 'jalur.nm_jalur', 'calon_siswa_baru.nomor_hp', 'calon_siswa_ortu.nomor_hp_ortu', 'calon_siswa_sekolah.nm_sekolah_mutasi', 'calon_siswa_sekolah.link_google_drive', 'calon_siswa_sekolah.nm_sekolah_asal', 'provinsi.nm_provinsi', 'kota.nm_kota', 'pengguna.id_pengguna')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->leftJoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
             ->leftJoin('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
             ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
             ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+            ->join('calon_siswa_sekolah', 'siswa.id_c_siswa', '=', 'calon_siswa_sekolah.id_c_siswa')
             ->join('jalur_siswa', function ($join) {
                 $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
                     ->where('jalur_siswa.is_jalur_aktif', '=', 1);

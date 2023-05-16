@@ -40,7 +40,8 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('tracer-alumni')->group(function () {
             Route::get('/', [TracerAlumniSiswaController::class, 'viewTracerAlumni']);
-            Route::get('datatables', [TracerAlumniSiswaController::class, 'datatablesTracerAlumni']);
+            //because this controller also used in role alumni
+            Route::get('datatables', [TracerAlumniSiswaController::class, 'datatablesTracerAlumni'])->name('tracerAlumni.datatables');
             Route::get('add', [TracerAlumniSiswaController::class, 'addTracerAlumni']);
             Route::get('edit/{id}', [TracerAlumniSiswaController::class, 'editTracerAlumni']);
             //action arahkan ke humas
