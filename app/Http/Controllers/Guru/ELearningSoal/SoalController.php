@@ -259,15 +259,17 @@ class SoalController extends Controller
                     $question->save();
                 }
             } else if ($input->id_tipe_soal == 2) {
-                $question = new Soal;
-                $question->id_kategori_soal = $input->kategori;
-                $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                $question->id_tipe_soal = $input->id_tipe_soal;
-                $question->content = $input->soal;
-                $question->text = strip_tags($input->soal);
-                $question->jawaban = $input->jawaban;
-                $question->save();
+                for ($i = 1; $i <= count($input->soal); $i++) {
+                    $question = new Soal;
+                    $question->id_kategori_soal = $input->kategori;
+                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_tipe_soal = $input->id_tipe_soal;
+                    $question->content = $input->soal[$i];
+                    $question->text = strip_tags($input->soal[$i]);
+                    $question->jawaban = $input->jawaban[$i];
+                    $question->save();
+                }
             } else {
                 $question = new Soal;
                 $question->id_kategori_soal = $input->kategori;
