@@ -101,11 +101,8 @@ class SetJadwalKelasController extends Controller
             ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
             ->whereNull('pengampu_mp.pjmp_uts')
             ->whereNull('pengampu_mp.pjmp_uas')
-            // ->where('kelas_mp.id_kelas_mp', '=', 'D4Ka21611379707600bb3fb69ca0')
+            // ->where('kelas_mp.id_kelas_mp', '=', 'Fh2L4167264532763b28ad02fda7')
             ->get();
-
-        // dd($kelas_mp);
-
 
         $data_kelas_mp = [];
         $jadwal = $jadwal_kelas_mp->toArray();
@@ -293,7 +290,7 @@ class SetJadwalKelasController extends Controller
             if ($cek_jadwal['guru'] == 0) {
                 return [
                     'status_code' => 300, // FAILED
-                    'message' => 'Guru yang bersangkutan sudah mengambil waktu ini di kelas lain '
+                    'message' => 'Guru yang bersangkutan sudah mengambil waktu ini di kelas ' . $cek_jadwal['alasan']
                 ];
             } elseif ($cek_jadwal['ruangan'] == 0) {
                 return [
