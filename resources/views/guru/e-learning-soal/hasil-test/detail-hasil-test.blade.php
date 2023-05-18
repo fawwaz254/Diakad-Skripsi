@@ -53,7 +53,7 @@
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
-        // serverSide: true,
+        serverSide: true,
         ajax: {
             url: datatable_url,
             type: 'POST'
