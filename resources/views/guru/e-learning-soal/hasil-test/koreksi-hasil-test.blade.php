@@ -23,7 +23,8 @@
                             <p>Soal no. {{ $nomor++ }}</p>
                             <input type="hidden" name="id_jawaban_test[]" value="{{ $question->id_jawaban_test }}">
                             <pre
-                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!! $question->soal->content !!}</pre>
+                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
+                                word-wrap: break-word; ">{!! $question->soal->content !!}</pre>
                             <p>Jawaban</p>
                             @if ($question->id_tipe_soal == 2)
                                 <textarea id="q1" class="form-control" name="soal" data-sample-short disabled rows="4">{!! $question->jawaban_essay !!}</textarea>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Test extends Model
 {
     use SoftDeletes;
@@ -12,10 +13,10 @@ class Test extends Model
 
     protected $primaryKey = 'id_test';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_pengguna',
         'id_paket_soal',
@@ -41,11 +42,11 @@ class Test extends Model
 
     public function detail_paket_soal()
     {
-        return $this->hasMany(DetailPaketSoal::class, 'id_paket_soal','id_paket_soal');
+        return $this->hasMany(DetailPaketSoal::class, 'id_paket_soal', 'id_paket_soal');
     }
 
-    // public function jawaban_test()
-    // {
-    //     return $this->hasMany(JawabanTest::class, 'id_jawaban_test');
-    // }
+    public function jawaban_test()
+    {
+        return $this->hasMany(JawabanTest::class, 'id_test');
+    }
 }

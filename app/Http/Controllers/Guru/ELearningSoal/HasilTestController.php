@@ -119,64 +119,43 @@ class HasilTestController extends Controller
         ];
     }
 
-    public function detailList(Request $request, $question_package_id = 0)
+    public function detailList($question_package_id = 0)
     {
-        // $id_paket_soal = 'D4Ka216526782936281de9586433';
-        // $tipe = 1;
+        $test = Test::where('test.id_paket_soal', $question_package_id)->with('pengguna', 'paket_soal', 'detail_paket_soal', 'jawaban_test');
 
-        $test = Test::where('id_paket_soal', $question_package_id)->with('pengguna', 'paket_soal', 'detail_paket_soal')->get();
-
-        // $jawaban_test = JawabanTest('id_test', $test->id_test)
-
-        // $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id)->get();
-        // $list_question_selected = $question_package_details->pluck('id_soal');
-        // if($tipe == 1){
-        //     $list_data = Soal::with('pengguna')->whereNotIn('id_soal', $list_question_selected);
-        // }else{
-        //     $list_data = Soal::with('pengguna')->whereIn('id_soal', $list_question_selected);
-        // }
-        // ,$new_val)->make(true);
         return Datatables::of($test)
             ->editColumn('detail_paket_soal', function ($item) {
                 return $item->detail_paket_soal->count();
-                // $counter = 0 ;
-                // foreach($item->detail_paket_soal as $k ){
-                //     $counter++;
-                // }
-
-                // return  $counter;
+            })->addColumn('pilihan_ganda', function ($item) {
+                return $item->jawaban_test->where('id_tipe_soal', 1)->count() . ' (Benar : ' .  $item->jawaban_test->where('id_tipe_soal', 1)->where('nilai', '!=', '0')->count() . ' x ' . $item->paket_soal->nilai  . ')';
             })
-            ->addColumn('total_nilai', function ($item) use ($question_package_id) {
+            ->addColumn('essay', function ($item) {
+                return $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->count();
+            })
+            ->addColumn('total_nilai', function ($item) {
+                //pilihan ganda
+                $nilai_pilihan_ganda = $item->jawaban_test->where('id_tipe_soal', 1)->pluck('nilai')->sum();
+                $nilai_paket_soal_pilihan_ganda = $item->paket_soal->nilai;
 
-                // Jika jawaban ada soal essay
-                if ($jawaban_test = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('status_koreksi', 0)->first()) {
-                    $nilai_pilihan_ganda = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal', 1)->pluck('nilai')->sum();
-                    $nilai = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->pluck('nilai')->sum();
-                    $data = array(
-                        'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
-                        'nilai' => $nilai,
-                        'id_test' => $jawaban_test->id_test,
-                        'status_koreksi' => 0,
-                        'id_pengguna' => $item->id_pengguna,
-                        'id_paket_soal' => $question_package_id
-                    );
-                } else {
-                    $nilai = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->pluck('nilai')->sum();
-                    $nilai_pilihan_ganda = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal', 1)->pluck('nilai')->sum();
-                    $nilai_pilihan_essay_submit = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
-                    $data = array(
-                        'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
-                        'nilai_pilihan_essay_submit' => $nilai_pilihan_essay_submit,
-                        'nilai' => $nilai,
-                        'status_koreksi' => 1,
-                    );
-                }
+                //essay
+                $nilai_pilihan_essay_submit = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
+                $jawaban_test = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', 0)->first();
+
+                //total
+                $nilai = $item->jawaban_test->pluck('nilai')->sum();
+
+                $data = array(
+                    'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
+                    'nilai' => $nilai,
+                    'id_test' => $jawaban_test ? $jawaban_test->id_test : '',
+                    'status_koreksi' =>  $jawaban_test ? '0' : '1',
+                    'id_pengguna' => $item->id_pengguna,
+                    'id_paket_soal' => $item->id_paket_soal,
+                    'nilai_paket_soal_pilihan_ganda' => $nilai_paket_soal_pilihan_ganda,
+                    'nilai_pilihan_essay_submit' => $nilai_pilihan_essay_submit,
+                    // 'total_nilai_pilihan_ganda_benar' => $total_nilai_pilihan_ganda_benar,
+                );
                 return $data;
-                // $total = 0;
-                // foreach ($data as $da) {
-                //     $total = $total + $da->nilai;
-                // }
-
             })
             ->addColumn('action', function ($item) {
                 $data = array(
