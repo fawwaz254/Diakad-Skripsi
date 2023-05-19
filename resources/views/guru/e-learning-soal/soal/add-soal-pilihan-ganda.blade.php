@@ -62,7 +62,12 @@
                     </h2>
                 </div>
                 <div class="body">
-
+                    <h2 class="card-inside-title">Paste Soal dan Jawaban dari file World</h2>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <textarea id="1" class="form-control " onpaste="pasteFunction(this)" required=""rows="1"></textarea>
+                        </div>
+                    </div>
                     <h2 class="card-inside-title">Soal</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -146,6 +151,7 @@
 
     $('#add').click(function() {
         if (jumlah != 10) {
+
             jumlah++;
             var value = 'Jumlah Soal = ' + jumlah;
             $("input[name='jumlah']").val(value);
@@ -159,6 +165,12 @@
                     </h2>
                 </div>
                 <div class="body">
+                    <h2 class="card-inside-title">Paste Soal dan Jawaban dari file World</h2>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <textarea id="${jumlah}" onpaste="pasteFunction(this)" class="form-control " required=""rows="1"></textarea>
+                        </div>
+                    </div>
                     <h2 class="card-inside-title">Soal</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -189,6 +201,7 @@
         </div>
         </div>
         `);
+
         }
     });
 
@@ -204,4 +217,149 @@
             element.remove();
         }
     });
+
+
+
+    function pasteFunction(el) {
+        // alert(el.id);
+        // console.log($(el.id));
+        // console.log(event);
+        // var clipboardData = event.clipboardData || window.clipboardData;
+        // var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
+        // var lines = pastedText.split("\n");
+        // console.log(lines);
+
+
+
+        var i = el.id;
+        // id_paste_soal_jawaban = 'p' + i;
+        // var inputElementPaste = document.getElementById(id_paste_soal_jawaban);
+        // if (inputElementPaste === null) {
+
+        // } else {
+        // inputElementPaste.addEventListener("paste", function(event) {
+        var clipboardData = event.clipboardData || window.clipboardData;
+        var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
+        var lines = pastedText.split("\n");
+
+        for (var j = 0; j < 5; j++) {
+            id_paste_jawaban = 'a' + i + j;
+            var inputElementJawaban = document.getElementById(id_paste_jawaban);
+            if (inputElementJawaban === null) {} else {
+                inputElementJawaban.value = lines[j + 1].slice(3);
+            }
+
+        }
+        var id_paste_soal = 'q' + i;
+        var inputElementSoal = document.getElementById(id_paste_soal);
+        if (inputElementSoal === null) {} else {
+            inputElementSoal.value = lines[0].slice(3);
+            // console.log(lines);
+        }
+
+    }
+    // );
+    // }
+
+    //   document.getElementById("demo").innerHTML = "You pasted text!";
+    // }
+
+
+    // var myScript = function() {
+    // Logika dan kode script yang ingin Anda muat ulang
+    // console.log("Script awal");
+
+
+    // i = 1;
+    // id_paste_soal_jawaban = 'p1' + i;
+    // var inputElementPaste = document.getElementById('p1');
+    // inputElementPaste.addEventListener("paste", function(event) {
+    //     var clipboardData = event.clipboardData || window.clipboardData;
+    //     var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
+    //     var lines = pastedText.split("\n");
+    //     console.log(lines);
+    //     // console.log(this);
+    // });
+
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     var inputElementPaste = document.getElementById('p2');
+    //     inputElementPaste.addEventListener("paste", function(event) {
+    //         var clipboardData = event.clipboardData || window.clipboardData;
+    //         var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
+    //         var lines = pastedText.split("\n");
+    //         console.log(lines);
+    //         alert('tesst');
+    //     });
+    //     // console.log(this);
+    // });
+
+
+    // };
+
+
+
+
+
+
+
+
+
+
+    // i = 2;
+    // id_paste_soal_jawaban = 'p' + i;
+    // var inputElementPaste = document.getElementById(id_paste_soal_jawaban);
+    // if (inputElementPaste === null) {
+
+    // } else {
+    // inputElementPaste.addEventListener("paste", function(event) {
+    //     var clipboardData = event.clipboardData || window.clipboardData;
+    //     var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
+    //     var lines = pastedText.split("\n");
+
+    //     for (var j = 0; j < 5; j++) {
+    //         id_paste_jawaban = 'a' + i + j;
+    //         var inputElementJawaban = document.getElementById(id_paste_jawaban);
+    //         if (inputElementJawaban === null) {} else {
+    //             inputElementJawaban.value = lines[j + 1].slice(3);
+    //         }
+
+    //     }
+    //     var id_paste_soal = 'q' + i;
+    //     var inputElementSoal = document.getElementById(id_paste_soal);
+    //     if (inputElementSoal === null) {} else {
+    //         inputElementSoal.value = lines[0].slice(3);
+    //         console.log(lines);
+    //     }
+
+    // });
+    // }
+
+    // i = 2;
+    // id_paste_soal_jawaban = 'p' + i;
+    // var inputElementPaste = document.getElementById(id_paste_soal_jawaban);
+    // if (inputElementPaste === null) {
+
+    // } else {
+    //     inputElementPaste.addEventListener("paste", function(event) {
+    //         var clipboardData = event.clipboardData || window.clipboardData;
+    //         var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
+    //         var lines = pastedText.split("\n");
+
+    //         for (var j = 0; j < 5; j++) {
+    //             id_paste_jawaban = 'a' + i + j;
+    //             var inputElementJawaban = document.getElementById(id_paste_jawaban);
+    //             if (inputElementJawaban === null) {} else {
+    //                 inputElementJawaban.value = lines[j + 1].slice(3);
+    //             }
+
+    //         }
+    //         var id_paste_soal = 'q' + i;
+    //         var inputElementSoal = document.getElementById(id_paste_soal);
+    //         if (inputElementSoal === null) {} else {
+    //             inputElementSoal.value = lines[0].slice(3);
+    //             console.log(lines);
+    //         }
+
+    //     });
+    // }
 </script>
