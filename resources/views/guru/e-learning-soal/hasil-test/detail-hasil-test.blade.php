@@ -11,13 +11,6 @@
                     <h2>
                         List Hasil Test
                     </h2>
-                    {{-- @foreach ($question_package as $peng)
-                    <p>{{ $peng}}</p>
-                    @endforeach --}}
-                    {{-- @foreach ($question_package as $pengguna)
-                    {{ $pengguna->pengguna->nm_pengguna }}
-                    @endforeach --}}
-
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -26,11 +19,11 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Siswa</th>
-                                    {{-- <th>Jam Pengerjaan</th> --}}
-                                    <th>Nilai Soal Pilihan Ganda</th>
                                     <th>Jumlah Soal</th>
-                                    <th>Total Nilai Pilihan Ganda</th>
-                                    <th>Total Nilai Jawaban Essay / Jawaban File</th>
+                                    <th>Pilihan Ganda Terisi</th>
+                                    <th>Essay Terisi</th>
+                                    <th>Nilai Pilihan Ganda</th>
+                                    <th>Nilai Jawaban Essay / Jawaban File</th>
                                     <th>Total Nilai</th>
                                 </tr>
                             </thead>
@@ -68,10 +61,19 @@
                 name: 'pengguna.nm_pengguna'
             },
             {
-                data: 'paket_soal.nilai',
+                data: 'detail_paket_soal',
+                searchable: false,
+                orderable: false
             },
             {
-                data: 'detail_paket_soal',
+                data: 'pilihan_ganda',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'essay',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'total_nilai',
@@ -82,7 +84,7 @@
             {
                 data: 'total_nilai',
                 render: function(data) {
-                    if (!data.status_koreksi) {
+                    if (data.status_koreksi == "0") {
                         return `<a href="${koreksi_hasil_test_url}/${data.id_paket_soal}/${data.id_test}/${data.id_pengguna}">Koreksi Jawaban</a>`
                     } else {
                         return data.nilai_pilihan_essay_submit
@@ -95,6 +97,8 @@
                     return data.nilai
                 }
             }
+
+
             // { data: 'waktu_mulai_pengerjaan' },
             // { data: 'jawaban_test' },
             // { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
@@ -108,10 +112,10 @@
             //     }
             // }
         ],
-        order: [
-            [2, 'asc'],
-            [1, 'asc']
-        ]
+        // order: [
+        //     [2, 'asc'],
+        //     [1, 'asc']
+        // ]
     });
 
     primary_table.on('draw', function() {
