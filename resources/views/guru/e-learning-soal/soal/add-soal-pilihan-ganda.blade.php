@@ -137,7 +137,7 @@
                 CKEDITOR.instances[id].destroy();
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
-                    CKEDITOR.instances[id].destroy();
+                    CKEDITOR.instances[idjawaban].destroy();
                 }
             }
 
