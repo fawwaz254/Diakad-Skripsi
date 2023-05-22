@@ -37,7 +37,7 @@
                     <br>
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <label>Mata Pelajaran</label>
+                            <label>Mata Pelajarann</label>
                             <select class="form-control show-tick" name="kategori">
                                 <option selected disabled>-- Pilih Mata Pelajaran --</option>
                                 @foreach ($kategori as $r)
