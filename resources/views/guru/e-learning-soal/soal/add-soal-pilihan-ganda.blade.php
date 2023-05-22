@@ -241,20 +241,30 @@
         var clipboardData = event.clipboardData || window.clipboardData;
         var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
         var lines = pastedText.split("\n");
-
+        // console.log(lines);
         for (var j = 0; j < 5; j++) {
             id_paste_jawaban = 'a' + i + j;
             var inputElementJawaban = document.getElementById(id_paste_jawaban);
             if (inputElementJawaban === null) {} else {
-                inputElementJawaban.value = lines[j + 1].slice(3);
+                $data = lines[j + 1].split("\t");
+                if ($data.length == '2') {
+                    inputElementJawaban.value = $data[1];
+                } else {
+                    inputElementJawaban.value = $data[0];
+                }
+
             }
 
         }
         var id_paste_soal = 'q' + i;
         var inputElementSoal = document.getElementById(id_paste_soal);
         if (inputElementSoal === null) {} else {
-            inputElementSoal.value = lines[0].slice(3);
-            // console.log(lines);
+            $dataSoal = lines[0].split("\t");
+            if ($dataSoal.length == '2') {
+                inputElementSoal.value = $dataSoal[1];
+            } else {
+                inputElementSoal.value = $dataSoal[0];
+            }
         }
 
     }
