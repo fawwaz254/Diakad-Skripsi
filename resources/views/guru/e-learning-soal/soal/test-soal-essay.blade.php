@@ -20,7 +20,7 @@
                         <h2 class="card-inside-title">Soal</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                @if (strpos($question->content, '.mp3'))
+                                @if (strpos($question->content, '.mp3') || strpos($question->content, '.MP3'))
                                     <audio controls autoplay>
                                         <source src="{{ $question->text }}" type="audio/ogg">
                                     </audio>
