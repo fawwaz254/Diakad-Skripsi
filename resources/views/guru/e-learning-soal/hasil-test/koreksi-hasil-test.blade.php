@@ -22,7 +22,7 @@
                             <hr style="height:1px;border:none;color:#333;background-color:#333;">
                             <p>Soal no. {{ $nomor++ }}</p>
                             <input type="hidden" name="id_jawaban_test[]" value="{{ $question->id_jawaban_test }}">
-                            @if (strpos($question->soal->content, '.mp3'))
+                            @if (strpos($question->soal->content, '.mp3') || strpos($question->soal->content, '.MP3'))
                                 <audio controls autoplay>
                                     <source src="{{ $question->soal->text }}" type="audio/ogg">
                                 </audio>
