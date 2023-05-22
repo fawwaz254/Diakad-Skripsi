@@ -9,9 +9,15 @@
                 </div>
                 <div class="body">
                     <p><b>Nomor Soal {{ $no }}</b></p>
-                    <pre
-                        style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
+                    @if (strpos($question->soal->content, '.mp3'))
+                        <audio controls autoplay>
+                            <source src="{{ $question->soal->text }}" type="audio/ogg">
+                        </audio>
+                    @else
+                        <pre
+                            style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
                     word-wrap: break-word;">{!! $test->soal->content !!}</pre>
+                    @endif
                     {{-- <div class="row clearfix"> --}}
                     <div class="row clearfix">
                         <form id="question-form" class="form-validation" method="POST" enctype="multipart/form-data"

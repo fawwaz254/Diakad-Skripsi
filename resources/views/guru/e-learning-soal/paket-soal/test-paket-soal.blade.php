@@ -27,9 +27,15 @@
 
 
                         <p>Soal no. {{ $nomor++ }}</p>
-                        <pre
-                            style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
+                        @if (strpos($question->content, '.mp3'))
+                            <audio controls autoplay>
+                                <source src="{{ $question->text }}" type="audio/ogg">
+                            </audio>
+                        @else
+                            <pre
+                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
                             word-wrap: break-word;">{!! $question->content !!}</pre>
+                        @endif
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 @if ($question->id_tipe_soal == 1)
