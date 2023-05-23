@@ -168,7 +168,7 @@
                     <h2 class="card-inside-title">Paste Soal dan Jawaban dari file World</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="${jumlah}" onpaste="pasteFunction(this)" class="form-control " required=""rows="1"></textarea>
+                            <textarea id="${jumlah}" onpaste="pasteFunction(this)" class="form-control " rows="1"></textarea>
                         </div>
                     </div>
                     <h2 class="card-inside-title">Soal</h2>

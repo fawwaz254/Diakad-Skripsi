@@ -9,7 +9,7 @@
                 </div>
                 <div class="body">
                     <p><b>Nomor Soal {{ $no }}</b></p>
-                    @if (strpos($question->soal->content, '.mp3') || strpos($question->soal->content, '.MP3'))
+                    @if (strpos($test->soal->content, '.mp3') || strpos($test->soal->content, '.MP3'))
                         <audio controls autoplay>
                             <source src="{{ $question->soal->text }}" type="audio/ogg">
                         </audio>
