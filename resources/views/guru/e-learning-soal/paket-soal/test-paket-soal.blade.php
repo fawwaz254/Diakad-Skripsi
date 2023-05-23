@@ -24,11 +24,18 @@
                             $question_options = $question->pilihan_soal;
                         @endphp
                         <hr>
-                        
-                     
-                            <p>Soal no. {{ $nomor++ }}</p>
-                        <pre
-                            style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!! $question->content !!}</pre>
+
+
+                        <p>Soal no. {{ $nomor++ }}</p>
+                        @if (strpos($question->content, '.mp3') || strpos($question->content, '.MP3'))
+                            <audio controls autoplay>
+                                <source src="{{ $question->text }}" type="audio/ogg">
+                            </audio>
+                        @else
+                            <pre
+                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
+                            word-wrap: break-word;">{!! $question->content !!}</pre>
+                        @endif
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 @if ($question->id_tipe_soal == 1)
@@ -43,11 +50,12 @@
                                         @endforeach
                                     </div>
                                 @elseif($question->id_tipe_soal == 2)
-                                <textarea  class="form-control"  data-sample-short></textarea>
+                                    <textarea class="form-control" data-sample-short></textarea>
                                 @else
-                                <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
-                                <input type="file" class="form-control" name="file[]" required=""
-                                    aria-required="true" aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx">
+                                    <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
+                                    <input type="file" class="form-control" name="file[]" required=""
+                                        aria-required="true" aria-invalid="true"
+                                        accept=".pdf, .doc, .docx, .ppt, .xlsx">
                                 @endif
                             </div>
                         </div>

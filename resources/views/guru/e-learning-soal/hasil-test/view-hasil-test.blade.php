@@ -39,6 +39,8 @@
     var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/table';
     var detail_url = role_url + '#' + modul_url + '/' + 'hasil-test';
+    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/print/skpi';
+
 
 
 
@@ -98,7 +100,11 @@
                     return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
                         detail_url + '/detail/' + data.id + '">' +
                         '    <i class="material-icons">remove_red_eye</i>' +
-                        '</a>'
+                        '</a>' +
+                        '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                        print_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">print</i>' +
+                        '</a>';
                 }
             }
         ],

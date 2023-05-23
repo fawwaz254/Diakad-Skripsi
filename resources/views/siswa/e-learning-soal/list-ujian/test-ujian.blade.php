@@ -9,69 +9,79 @@
                 </div>
                 <div class="body">
                     <p><b>Nomor Soal {{ $no }}</b></p>
-                    <pre style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!!$test->soal->content!!}</pre>
+                    @if (strpos($test->soal->content, '.mp3') || strpos($test->soal->content, '.MP3'))
+                        <audio controls autoplay>
+                            <source src="{{ $question->soal->text }}" type="audio/ogg">
+                        </audio>
+                    @else
+                        <pre
+                            style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
+                    word-wrap: break-word;">{!! $test->soal->content !!}</pre>
+                    @endif
                     {{-- <div class="row clearfix"> --}}
-                        <div class="row clearfix">
-                            <form id="question-form" class="form-validation" method="POST" enctype="multipart/form-data"
-                                action="{{ url('siswa/e-learning-soal/list-ujian/test/answer') }}">
-                                <input type="hidden" name="question" value="{{ $test->soal->id_soal }}">
-                                <input type="hidden" name="test" value="{{ $test->id_test }}">
-                                <input type="hidden" name="no" value="{{ $no }}">
-                                <input type="hidden" name="id_tipe_soal" value="{{ $test->soal->id_tipe_soal }}">
-                                <input type="hidden" name="paket_soal" value="{{ $paket_soal->id_paket_soal }}">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    {{ csrf_field() }}
-                                    @if ($test->soal->id_tipe_soal == 1)
-                                        <div class="demo-radio-button">
-                                            @foreach ($question_options as $no_option => $question_option)
-                                                <input type="hidden" name="{{ $test->soal_id_tipe_soal }}">
-                                                @if (empty($test->id_pilihan_soal))
+                    <div class="row clearfix">
+                        <form id="question-form" class="form-validation" method="POST" enctype="multipart/form-data"
+                            action="{{ url('siswa/e-learning-soal/list-ujian/test/answer') }}">
+                            <input type="hidden" name="question" value="{{ $test->soal->id_soal }}">
+                            <input type="hidden" name="test" value="{{ $test->id_test }}">
+                            <input type="hidden" name="no" value="{{ $no }}">
+                            <input type="hidden" name="id_tipe_soal" value="{{ $test->soal->id_tipe_soal }}">
+                            <input type="hidden" name="paket_soal" value="{{ $paket_soal->id_paket_soal }}">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                {{ csrf_field() }}
+                                @if ($test->soal->id_tipe_soal == 1)
+                                    <div class="demo-radio-button">
+                                        @foreach ($question_options as $no_option => $question_option)
+                                            <input type="hidden" name="{{ $test->soal_id_tipe_soal }}">
+                                            @if (empty($test->id_pilihan_soal))
+                                                <input name="question_option" type="radio"
+                                                    id="radio_{{ $no_option }}"
+                                                    value="{{ $question_option->id_pilihan_soal }}" required>
+                                                <label for="radio_{{ $no_option }}">
+                                                    <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                </label>
+                                            @else
+                                                @if ($test->id_pilihan_soal == $question_option->id_pilihan_soal)
+                                                    <input name="question_option" type="radio" checked=""
+                                                        id="radio_{{ $no_option }}"
+                                                        value="{{ $question_option->id_pilihan_soal }}">
+                                                    <label for="radio_{{ $no_option }}">
+                                                        <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
+                                                    </label>
+                                                @else
                                                     <input name="question_option" type="radio"
                                                         id="radio_{{ $no_option }}"
-                                                        value="{{ $question_option->id_pilihan_soal }}" required>
+                                                        value="{{ $question_option->id_pilihan_soal }}">
                                                     <label for="radio_{{ $no_option }}">
                                                         <pre class="is-answer">{!! $question_option->content !!}</pre>
                                                     </label>
-                                                @else
-                                                    @if ($test->id_pilihan_soal == $question_option->id_pilihan_soal)
-                                                        <input name="question_option" type="radio" checked=""
-                                                            id="radio_{{ $no_option }}"
-                                                            value="{{ $question_option->id_pilihan_soal }}">
-                                                        <label for="radio_{{ $no_option }}">
-                                                            <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
-                                                        </label>
-                                                    @else
-                                                        <input name="question_option" type="radio"
-                                                            id="radio_{{ $no_option }}"
-                                                            value="{{ $question_option->id_pilihan_soal }}">
-                                                        <label for="radio_{{ $no_option }}">
-                                                            <pre class="is-answer">{!! $question_option->content !!}</pre>
-                                                        </label>
-                                                    @endif
                                                 @endif
-                                                <br>
-                                            @endforeach
-                                        </div>
-                                    @elseif($test->soal->id_tipe_soal == 2)
+                                            @endif
+                                            <br>
+                                        @endforeach
+                                    </div>
+                                @elseif($test->soal->id_tipe_soal == 2)
                                     <h2 class="card-inside-title">Jawaban</h2>
-                                        <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short @if(!empty($test->jawaban_essay ))  style="background-color: #CFE795;"@endif>{{ !empty($test) ? $test->jawaban_essay : '' }}</textarea>
-                                        <input type="hidden" name="id_tipe_soal"
-                                            value="{{ $test->soal->id_tipe_soal }}">
-                                    @else
+                                    <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short
+                                        @if (!empty($test->jawaban_essay)) style="background-color: #CFE795;" @endif>{{ !empty($test) ? $test->jawaban_essay : '' }}</textarea>
+                                    <input type="hidden" name="id_tipe_soal" value="{{ $test->soal->id_tipe_soal }}">
+                                @else
                                     <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
-                                    <input type="file" class="form-control" name="file" required="" @if(!empty($test->link_file ))  style="background-color: #CFE795;"@endif
-                                        aria-required="true" aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx">
-                                    @endif
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <button class="btn btn-block bg-green waves-effect" type="submit">Simpan
-                                        jawaban</button>
-                                </div>
-                                {{-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <input type="file" class="form-control" name="file" required=""
+                                        @if (!empty($test->link_file)) style="background-color: #CFE795;" @endif
+                                        aria-required="true" aria-invalid="true"
+                                        accept=".pdf, .doc, .docx, .ppt, .xlsx">
+                                @endif
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-green waves-effect" type="submit">Simpan
+                                    jawaban</button>
+                            </div>
+                            {{-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <button class="btn btn-block bg-pink waves-effect" type="button"
                                         onclick="deleteAnswerAction()">Hapus jawaban</button>
                                 </div> --}}
-                            </form>
+                        </form>
                         {{-- </div> --}}
 
                         {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -171,19 +181,19 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             @foreach ($jawabanTest->sortBy('nomer')->all() as $index => $soal)
                                 @if ($index + 1 == $no)
-                                <a type="button"
-                                href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
-                                class="btn bg-red btn-circle waves-effect waves-circle waves-float" style="pointer-events: none">
-                                {{ $index + 1 }}
-                            </a>
+                                    <a type="button"
+                                        href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
+                                        class="btn bg-red btn-circle waves-effect waves-circle waves-float"
+                                        style="pointer-events: none">
+                                        {{ $index + 1 }}
+                                    </a>
                                 @elseif($soal->id_pilihan_soal != null || $soal->jawaban_essay != null || $soal->link_file != null)
                                     <a type="button"
-                                    href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
-                                    class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
-                                    {{ $index + 1 }}
-                                </a>
-                                
-                                    @else
+                                        href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
+                                        class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
+                                        {{ $index + 1 }}
+                                    </a>
+                                @else
                                     <a type="button"
                                         href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
                                         class="btn bg-success btn-circle waves-effect waves-circle waves-float">

@@ -224,70 +224,98 @@ class SoalController extends Controller
                 'message' => 'Berhasil Mengubah Soal'
             ];
         } else {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            DB::beginTransaction();
+            try {
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                if ($input->id_tipe_soal == 1) {
+                    for ($i = 1; $i <= count($input->soal); $i++) {
+                        //validasi ketika ada data yg sama
+                        if ($validasi = Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                            $question = new Soal;
+                            $question->id_kategori_soal = $input->kategori;
+                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_tipe_soal = $input->id_tipe_soal;
+                            $question->content = $input->soal[$i];
+                            $question->text = strip_tags($input->soal[$i]);
+                            $question->save();
+                            if (empty(strip_tags($input->soal[$i]))) {
+                                DB::rollback();
+                                return [
+                                    'status' => 300,
+                                    'message' => 'Eror Ada Kolom yg kosong tau save sekali lagi'
+                                ];
+                            }
+                            foreach ($input->jawaban[$i] as $no_answer => $answer) {
+                                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                                $question_option = new PilihanSoal;
+                                $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $question_option->number_option = $no_answer;
+                                $question_option->id_soal = $question->id_soal;
+                                $question_option->content = $answer;
+                                $question_option->text = $answer;
+                                if (empty(strip_tags($answer))) {
+                                    DB::rollback();
+                                    return [
+                                        'status' => 300,
+                                        'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi'
+                                    ];
+                                }
+                                if ($input->jawaban_benar[$i] == $no_answer) {
+                                    $question_option->correct = 1;
+                                } else {
+                                    $question_option->correct = 0;
+                                }
+                                $question_option->save();
 
-            if ($input->id_tipe_soal == 1) {
-                for ($i = 1; $i <= count($input->soal); $i++) {
-                    $question = new Soal;
-                    $question->id_kategori_soal = $input->kategori;
-                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                    $question->id_tipe_soal = $input->id_tipe_soal;
-                    $question->content = $input->soal[$i];
-                    $question->text = strip_tags($input->soal[$i]);
-                    $question->save();
-                    foreach ($input->jawaban[$i] as $no_answer => $answer) {
-                        $now = Carbon::now(env('APP_TIMEZONE', ''));
-                        $question_option = new PilihanSoal;
-                        $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $question_option->number_option = $no_answer;
-                        $question_option->id_soal = $question->id_soal;
-                        $question_option->content = $answer;
-                        $question_option->text = $answer;
-                        if ($input->jawaban_benar[$i] == $no_answer) {
-                            $question_option->correct = 1;
-                        } else {
-                            $question_option->correct = 0;
-                        }
-                        $question_option->save();
-
-                        if ($input->jawaban_benar[$i] == $no_answer) {
-                            $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                                if ($input->jawaban_benar[$i] == $no_answer) {
+                                    $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                                }
+                            }
+                            $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+                            $question->save();
                         }
                     }
-                    $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
-                    $question->save();
-                }
-            } else if ($input->id_tipe_soal == 2) {
-                for ($i = 1; $i <= count($input->soal); $i++) {
+                } else if ($input->id_tipe_soal == 2) {
+                    for ($i = 1; $i <= count($input->soal); $i++) {
+                        if ($validasi2 = Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                            $question = new Soal;
+                            $question->id_kategori_soal = $input->kategori;
+                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_tipe_soal = $input->id_tipe_soal;
+                            $question->content = $input->soal[$i];
+                            $question->text = strip_tags($input->soal[$i]);
+                            $question->jawaban = $input->jawaban[$i];
+                            $question->save();
+                        }
+                    }
+                } else {
                     $question = new Soal;
                     $question->id_kategori_soal = $input->kategori;
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
-                    $question->content = $input->soal[$i];
-                    $question->text = strip_tags($input->soal[$i]);
-                    $question->jawaban = $input->jawaban[$i];
+                    $question->content = $input->soal;
+                    $question->text = strip_tags($input->soal);
+                    // $question->jawaban = $input->jawaban;
                     $question->save();
                 }
-            } else {
-                $question = new Soal;
-                $question->id_kategori_soal = $input->kategori;
-                $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                $question->id_tipe_soal = $input->id_tipe_soal;
-                $question->content = $input->soal;
-                $question->text = strip_tags($input->soal);
-                // $question->jawaban = $input->jawaban;
-                $question->save();
+                DB::commit();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'e-learning-soal/soal',
+                    'message' => 'Berhasil Menambah Soal'
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+                // something went wrong
+                return [
+                    'status' => 300,
+                    'message' => $e->getMessage()
+                ];
             }
-
-
-            return [
-                'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'e-learning-soal/soal',
-                'message' => 'Berhasil Menambah Soal'
-            ];
         }
     }
 

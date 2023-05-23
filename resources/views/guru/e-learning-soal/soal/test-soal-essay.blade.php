@@ -20,7 +20,16 @@
                         <h2 class="card-inside-title">Soal</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <pre>{!! $question->content !!}</pre>
+                                @if (strpos($question->content, '.mp3') || strpos($question->content, '.MP3'))
+                                    <audio controls autoplay>
+                                        <source src="{{ $question->text }}" type="audio/ogg">
+                                    </audio>
+                                @else
+                                    <pre
+                                        style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
+                            word-wrap: break-word;">{!! $question->content !!}</pre>
+                                @endif
+
                             </div>
                         </div>
                         <h2 class="card-inside-title">Kunci Jawaban</h2>
