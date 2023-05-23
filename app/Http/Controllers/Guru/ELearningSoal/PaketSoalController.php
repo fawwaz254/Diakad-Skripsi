@@ -30,7 +30,6 @@ class PaketSoalController extends Controller
     public function indexDetail(Request $request, $id_paket_soal = 0)
     {
         if ($question_package = PaketSoal::find($id_paket_soal)) {
-
             return view('guru/e-learning-soal/paket-soal/paket-soal-detail', compact('question_package'));
         } else {
             return view('guru/e-learning-soal/paket-soal/view-paket-soal');
@@ -49,8 +48,6 @@ class PaketSoalController extends Controller
         } else {
             $item = null;
         }
-
-
         return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas', 'kategori', 'wali_kelas'));
     }
 
@@ -103,13 +100,15 @@ class PaketSoalController extends Controller
 
     public function detailList(Request $request, $question_package_id = 0, $tipe)
     {
-        $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id)->get();
+        $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id);
         $list_question_selected = $question_package_details->pluck('id_soal');
         $paket_soal = PaketSoal::find($question_package_id);
         if ($tipe == 1) {
             $list_data = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal')->whereNotIn('id_soal', $list_question_selected);
+        } else if ($tipe == 0) {
+            $list_data = Soal::where('id_kategori_soal', '!=', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal')->whereNotIn('id_soal', $list_question_selected);
         } else {
-            $list_data = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal')->whereIn('id_soal', $list_question_selected);
+            $list_data = Soal::with('pengguna', 'kategori_soal')->whereIn('id_soal', $list_question_selected);
         }
 
         return Datatables::of($list_data)
@@ -248,6 +247,7 @@ class PaketSoalController extends Controller
         // if($validator->fails()) {
         //     return back()->with('toast', $validator->errors()->first());
         // }
+
 
         $input = (object) $request->input();
         if ($input->id_soal != '0') {
