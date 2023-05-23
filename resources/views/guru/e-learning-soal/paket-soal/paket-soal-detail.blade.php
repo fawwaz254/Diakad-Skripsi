@@ -18,22 +18,45 @@
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                        <li role="presentation" class="active"><a href="#not" data-toggle="tab" class="col-pink">List
-                                Belum Dipilih</a></li>
-                        <li role="presentation"><a href="#selected" data-toggle="tab" class="col-green">List Sudah
+                        <li role="presentation" class="active"><a href="#not" data-toggle="tab"
+                                class="col-pink">Kategori Ini</a></li>
+                        <li role="presentation"><a href="#order" data-toggle="tab" class="col-pink">Kategori Lain</a>
+                        </li>
+                        <li role="presentation"><a href="#selected" data-toggle="tab" class="col-green">List Soal Sudah
                                 Dipilih</a></li>
                     </ul>
 
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="not">
-                            <b>List Soal belum dipilih</b>
+                            <b>Kategori Ini</b>
                             <button style="margin-left: 10px" id="addAll">Tambah Semua Soal</button>
                             <div class="table-responsive">
                                 <table id="primary_table"
                                     class="table table-bordered table-striped table-hover dataTable"
                                     style="width: 100%;">
 
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tipe Soal</th>
+                                            <th>Mapel</th>
+                                            <th>Pembuat</th>
+                                            <th>Soal</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="order">
+                            <b>Katerogi Lain</b>
+                            <div class="table-responsive">
+                                <table id="primary_table2"
+                                    class="table table-bordered table-striped table-hover dataTable"
+                                    style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -82,6 +105,8 @@
     var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/table/' + test + '/1';
     var datatable2_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/table/' + test + '/2';
+    var datatableorder_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/table/' + test +
+        '/0';
     var add_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/add';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/delete';
 
@@ -193,6 +218,58 @@
         });
     }).draw();
 
+
+    var primary_table2 = $('#primary_table2').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: datatableorder_url,
+            type: 'POST'
+        },
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'tipe_soal'
+            },
+            {
+                data: 'kategori_soal.nm_kategori_soal'
+            },
+            {
+                data: 'pengguna.nm_pengguna'
+            },
+            {
+                data: 'text',
+                name: 'text',
+                orderable: false
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<button type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-id="' +
+                        data.id + '" onclick="actionAdd(this)">' +
+                        '    <i class="material-icons">library_add</i>' +
+                        '</button>';
+                }
+            }
+        ]
+    });
+
+    primary_table2.on('draw', function() {
+        primary_table2.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+
     function actionAdd(element) {
         var item = $(element);
         item.prop('disabled', true);
@@ -207,6 +284,7 @@
                 },
                 success: function(result) {
                     primary_table.ajax.reload(null, false);
+                    primary_table2.ajax.reload(null, false);
                     secondary_table.ajax.reload(null, false);
                 },
                 error: function(xhr, status, error) {
@@ -230,6 +308,7 @@
                 },
                 success: function(result) {
                     primary_table.ajax.reload(null, false);
+                    primary_table2.ajax.reload(null, false);
                     secondary_table.ajax.reload(null, false);
                 },
                 error: function(xhr, status, error) {
@@ -256,6 +335,7 @@
                 success: function(result) {
                     vex.dialog.alert(result.message);
                     primary_table.ajax.reload(null, false);
+                    primary_table2.ajax.reload(null, false);
                     secondary_table.ajax.reload(null, false);
                 },
                 error: function(xhr, status, error) {
