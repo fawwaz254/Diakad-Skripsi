@@ -215,7 +215,9 @@
                                 ( UNGGUL )
                             @endif
                         </b>
-                        @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
+                        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                            <br>NSS : 202050215092 NDS : E.03152002 NPSN : {{ $auth_data->sekolah_data->npsn_sekolah }}
+                        @elseif ($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
                             <br>NSS : 204050214055 NDS : 2005020203 NPSN : {{ $auth_data->sekolah_data->npsn_sekolah }}
                         @endif
                     </h3>
@@ -261,6 +263,8 @@
             <h5 class="text-center">Nomor :
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                     466/C-3/WH2/VI/2022
+                @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                    421.3/649/E/404.3.1.15.4.4/V/2023
                 @endif
             </h5>
 
@@ -431,7 +435,11 @@
                         <br><i>Accreditation Number</i>
                         {{-- @endif --}}
                     </td>
-                    <td> 599/BAN-SM/SK/2019</td>
+                    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                        <td> 1346/BAN-SM/SK/2021</td>
+                    @else
+                        <td> 599/BAN-SM/SK/2019</td>
+                    @endif
                 </tr>
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
                     <tr>
