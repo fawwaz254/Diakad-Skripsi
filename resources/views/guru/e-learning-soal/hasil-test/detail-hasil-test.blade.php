@@ -19,6 +19,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Siswa</th>
+                                    <th>Kelas</th>
                                     <th>Jumlah Soal</th>
                                     <th>Pilihan Ganda Terisi</th>
                                     <th>Essay Terisi</th>
@@ -59,6 +60,10 @@
             {
                 data: 'pengguna.nm_pengguna',
                 name: 'pengguna.nm_pengguna'
+            },
+            {
+                data: 'pengguna.siswa.kelas.nm_kelas',
+                name: 'pengguna.siswa.kelas.nm_kelas'
             },
             {
                 data: 'detail_paket_soal',
