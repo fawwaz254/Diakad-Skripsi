@@ -1,12 +1,17 @@
 <div class="container-fluid">
     <div class="block-header">
         @if (empty($alumni))
-        <h2><a class="btn bg-blue waves-effect target-link"
-            href="{{url(Request::segment(1).'#alumni/tracer-alumni/add')}}">
-                <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
-                @else
-            <h2><a class="btn bg-grey  waves-effect target-link"
-                     style="pointer-events: none">
+            @if (Request::segment(1) == 'siswa')
+                <h2><a class="btn bg-blue waves-effect target-link"
+                        href="{{ url(Request::segment(1) . '#tracer-alumni/add') }}">
+                        <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
+            @else
+                <h2><a class="btn bg-blue waves-effect target-link"
+                        href="{{ url(Request::segment(1) . '#alumni/tracer-alumni/add') }}">
+                        <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
+            @endif
+        @else
+            <h2><a class="btn bg-grey  waves-effect target-link" style="pointer-events: none">
                     <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
         @endif
     </div>
@@ -40,49 +45,78 @@
     </div>
 </div>
 <script>
-    var modul_url       = '{{Request::segment(2)}}';
-    var menu_url       = '{{Request::segment(3)}}';
+    var role = '{{ Request::segment(1) }}'
+    var modul_url = '{{ Request::segment(2) }}';
+    var menu_url = '{{ Request::segment(3) }}';
 
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/tracer-alumni/edit';
-    var detail_url      = role_url + '#' + modul_url + '/kategori-pertanyaan/detail';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/action/delete';
-// alert(datatable_url);
+    // var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/datatables';
+    if (role == 'siswa') {
+        var edit_url = role_url + '#' + modul_url + '/edit';
+        var delete_url = base_url + '/' + role_url + '/' + modul_url + '/action/delete';
+    } else {
+        var edit_url = role_url + '#' + modul_url + '/tracer-alumni/edit';
+        var delete_url = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/action/delete';
+    }
+
+
+    var detail_url = role_url + '#' + modul_url + '/kategori-pertanyaan/detail';
+
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
         ajax: {
-            url: datatable_url,
+            url: '{{ route('tracerAlumni.datatables') }}',
             type: 'GET'
         },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'nm_c_siswa' },
-            { data: 'nm_kelas' },
-            { data: 'tahun_lulus' },
-            { data: 'nm_sekolah' },
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'nm_c_siswa'
+            },
+            {
+                data: 'nm_kelas'
+            },
+            {
+                data: 'tahun_lulus'
+            },
+            {
+                data: 'nm_sekolah'
+            },
             // { data: 'status_verifikasi', name: 'status_verifikasi', searchable: false, orderable: false,
             //     render:function(data){
             //         return `<span class="badge bg-`+data.color+`">`+data.status+`</span>`
             //     }
             // },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return'<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+'<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        edit_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">edit</i>' +
+                        '</a> ' +
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                        delete_url + '\', this)" data-id="' + data.id + '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
                 }
             }
         ]
     });
 
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
+        });
+    }).draw();
 </script>

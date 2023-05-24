@@ -454,11 +454,19 @@ class TracerAlumniController extends BaseController
 
             $alumni->delete();
 
-            return [
-                'status'    => 202, // SUCCESS AND LOAD TABLE
-                'path'      => $request->segment(1) . '#alumni/tracer-alumni',
-                'message'   => 'Delete Alumni Successfully'
-            ];
+            if ($request->segment(1) == 'siswa') {
+                return [
+                    'status'    => 202, // SUCCESS AND LOAD TABLE
+                    'path'      => 'tracer-alumni',
+                    'message'   => 'Delete Alumni Successfully'
+                ];
+            } else {
+                return [
+                    'status'    => 202, // SUCCESS AND LOAD TABLE
+                    'path'      => $request->segment(1) . '#alumni/tracer-alumni',
+                    'message'   => 'Delete Alumni Successfully'
+                ];
+            }
         }
     }
 

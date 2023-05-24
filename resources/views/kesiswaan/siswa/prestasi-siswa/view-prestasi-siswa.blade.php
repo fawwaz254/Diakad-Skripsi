@@ -4,8 +4,14 @@
             <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#data-kesiswaan/prestasi-siswa/add') }}"><i
                     class="material-icons">note_add</i><span>Tambah Prestasi Siswa</span></a>
+
+            <input type="checkbox" id="data_alumni" class="checkbox">
+            <label for="data_alumni"> Tampilkan Data Alumni</label>
+
+            <input type="hidden" id="alumni" value="0">
         </h2>
     </div>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -49,6 +55,17 @@
 </div>
 @include('scriptjs')
 <script>
+    $('.checkbox').on('change', function() { // on change of state
+        if (this.checked) // if changed state is "CHECKED"
+        {
+            $('#alumni').val(1);
+            primary_table.draw();
+
+        } else {
+            $('#alumni').val(0);
+            primary_table.draw();
+        }
+    });
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var deeznut = 1;
     var modul_url = 'data-kesiswaan';
@@ -65,7 +82,10 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
-            type: 'GET'
+            type: 'GET',
+            data:function(d){
+                d.alumni = $('#alumni').val()
+            }
         },
         columns: [{
                 data: 'DT_RowIndex',

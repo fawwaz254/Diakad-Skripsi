@@ -22,8 +22,15 @@
                             <hr style="height:1px;border:none;color:#333;background-color:#333;">
                             <p>Soal no. {{ $nomor++ }}</p>
                             <input type="hidden" name="id_jawaban_test[]" value="{{ $question->id_jawaban_test }}">
-                            <pre
-                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!! $question->soal->content !!}</pre>
+                            @if (strpos($question->soal->content, '.mp3') || strpos($question->soal->content, '.MP3'))
+                                <audio controls autoplay>
+                                    <source src="{{ $question->soal->text }}" type="audio/ogg">
+                                </audio>
+                            @else
+                                <pre
+                                    style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
+                                word-wrap: break-word; ">{!! $question->soal->content !!}</pre>
+                            @endif
                             <p>Jawaban</p>
                             @if ($question->id_tipe_soal == 2)
                                 <textarea id="q1" class="form-control" name="soal" data-sample-short disabled rows="4">{!! $question->jawaban_essay !!}</textarea>
@@ -38,6 +45,9 @@
                                 @endif
                             @endif
                             <br>
+                            <p>Kunci Jawaban</p>
+                            <pre
+                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!! $question->soal->jawaban ? $question->soal->jawaban : '-' !!}</pre>
                             <p>Nilai</p>
                             <div class="row clearfix">
                                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">

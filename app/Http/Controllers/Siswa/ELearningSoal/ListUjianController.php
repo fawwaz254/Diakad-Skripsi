@@ -179,7 +179,11 @@ class ListUjianController extends Controller
 
             $idtest = Test::where('id_paket_soal', $soal->id_paket_soal)->first();
             $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $idtest->id_test)->first();
-            return redirect('siswa/e-learning-soal/list-ujian/test/' . $soaltest->id_test . '/1');
+            if ($soaltest) {
+                return redirect('siswa/e-learning-soal/list-ujian/test/' . $soaltest->id_test . '/1');
+            } else {
+                return view('siswa/e-learning-soal/list-ujian/view-list-ujian');
+            }
         }
     }
 

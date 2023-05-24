@@ -132,9 +132,12 @@ class DataSiswaController extends BaseController
                 ->addColumn('thn_masuk_siswa', function ($item) {
                     return $item->thn_masuk_siswa;
                 })
-                ->addColumn('sekolah_asal', function ($item) {
+                ->addColumn('mutasi_keluar', function ($item) {
+                    return '';
+                })
+                ->addColumn('mutasi_masuk', function ($item) {
                     return [
-                        'nm_sekolah' => $item->nm_sekolah_asal ? $item->nm_sekolah_asal : $item->nm_sekolah_mutasi,
+                        'nm_sekolah' => $item->nm_sekolah_mutasi,
                         'link_google_drive' => $item->link_google_drive,
                     ];
                 })
