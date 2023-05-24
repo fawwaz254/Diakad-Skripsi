@@ -97,7 +97,7 @@ Route::middleware(['token_staff'])->group(function () {
                 //untuk bagian test
                 // Route::get('test', [TestController::class, 'index']);
                 Route::get('cek/{id_paket_soal}', [ListUjianController::class, 'indexTest']);
-                Route::get('test/{id_soal}/{no}', [ListUjianController::class, 'indexTest2']);
+                Route::get('test/{id_paket_soal}/{no}', [ListUjianController::class, 'indexTest2']);
                 Route::post('test/answer', [ListUjianController::class, 'actionSaveAnswer']);
                 // Route::get('test/result', [TestController::class, 'indexReview']);
             });
