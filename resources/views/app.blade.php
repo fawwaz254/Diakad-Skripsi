@@ -128,7 +128,7 @@
 <!-- <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script data-pace-options='{ "document": false, "startOnPageLoad": false }'
-src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 
 <!-- Bootstrap Core Js -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.js') }}"></script>
@@ -197,7 +197,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"
-integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
+    integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js">
 </script>
@@ -250,6 +250,17 @@ integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="ano
     //     newElement.textContent = "message: " + event.data;
     //     eventList.appendChild(newElement);
     // }
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CN6LK18128"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-CN6LK18128');
 </script>
 @yield('js')
 
