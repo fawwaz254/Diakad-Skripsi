@@ -133,7 +133,7 @@ class DataSiswaController extends BaseController
 			$wali_murid 				= WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
 
 			if ($wali_murid) {
-				$wali_murid->nm_wali_murid = strtoupper($input->nm_ayah);
+				$wali_murid->nm_wali_murid = strtoupper($input->nm_wali);
 				$wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
 				$wali_murid->updated_at = $now;
 				$wali_murid->updated_by = $input->auth_data->pengguna->id_pengguna;
