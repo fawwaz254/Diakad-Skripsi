@@ -613,6 +613,12 @@ class SettingWaliMuridController extends BaseController
 
                                     $siswa->id_wali_murid = $id_wali_murid;
                                     $siswa->save();
+
+                                    $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
+                                    $calon_siswa_ortu->nomor_telp_ortu = $item->telp_wali_murid;
+                                    $calon_siswa_ortu->nomor_hp_ortu = $item->telp_wali_murid;
+                                    $calon_siswa_ortu->nm_wali = $item->nama_wali_murid;
+                                    $calon_siswa_ortu->save();
                                 }
                             }
                         }
