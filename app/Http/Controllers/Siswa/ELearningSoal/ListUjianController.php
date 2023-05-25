@@ -262,8 +262,11 @@ class ListUjianController extends Controller
         } else {
             $input = (object) $request->input();
             $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($id_paket_soal)['id_test'])->first();
-            $test->status = 1;
-            $test->save();
+            if ($test) {
+                $test->status = 1;
+                $test->save();
+            }
+
             return redirect('siswa/e-learning-soal/list-ujian');
         }
     }
