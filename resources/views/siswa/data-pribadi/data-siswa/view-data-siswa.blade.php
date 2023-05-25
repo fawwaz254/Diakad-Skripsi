@@ -483,7 +483,7 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            <input type="text" class="form-control" name="anak_ke" aria-required="true"
+                                            <input type="number" class="form-control" name="anak_ke" aria-required="true"
                                                 aria-invalid="true" value="{{ $siswa->anak_ke }}" required>
                                         </div>
                                     </div>
