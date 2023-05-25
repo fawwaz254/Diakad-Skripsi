@@ -49,12 +49,6 @@ class AuthGlobalController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $siswa = Siswa::where('nis_siswa', '=', $nis_siswa)->first();
         $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid ?? null)->first();
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman'){
-            $pengguna1 = Pengguna::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
-            $pengguna1->email_pengguna = $input->email_pengguna;
-            $pengguna1->save();
-        }
-        else{
             if ($wali_murid != null) { } else {
                 // if siswa doesnt have wali murid
                 $now1 = Carbon::now(env('APP_TIMEZONE', ''));
@@ -99,10 +93,7 @@ class AuthGlobalController extends BaseController
                 $pengguna1 = Pengguna::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
                 $pengguna1->email_pengguna = $input->email_pengguna;
                 $pengguna1->save();
-            }
-        }
-
-
+            };
         return [
             'status' => 201,
             'link' =>  url('/'),
