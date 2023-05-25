@@ -23,6 +23,34 @@
                         <div class="demo-color-box bg-success">
                             WAJIB DIISI
                         </div>
+                        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    EMAIL SISWA <span class="is-required">*</span><br>
+                                    <small>digunakan untuk reset password jika lupa, harus email aktif</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="email" class="form-control" name="email_pengguna" aria-required="true"
+                                    aria-invalid="true" value="{{ $siswa->pengguna->email_pengguna ?? null }}">
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        {{ csrf_field() }}
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
+                            </div>
+                        </div>
+                        @else
+                            
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
@@ -77,6 +105,7 @@
                                         class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
+                        @endif
                     </form>
                 </div>
             </div>
