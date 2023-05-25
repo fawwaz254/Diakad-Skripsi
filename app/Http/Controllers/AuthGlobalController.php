@@ -49,50 +49,57 @@ class AuthGlobalController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $siswa = Siswa::where('nis_siswa', '=', $nis_siswa)->first();
         $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid ?? null)->first();
-        if ($wali_murid != null) { } else {
-            // if siswa doesnt have wali murid
-            $now1 = Carbon::now(env('APP_TIMEZONE', ''));
-            $wali_murid = new WaliMurid;
-            $wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
-            $wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $wali_murid->nm_wali_murid = $input->nm_ortu;
-            $wali_murid->is_aktif = 1;
-            $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
-            $wali_murid->updated_at = $now;
-            $wali_murid->save();
-
-            $pengguna = new Pengguna;
-            $pengguna->id_pengguna = $wali_murid->id_pengguna;
-            $pengguna->nm_pengguna = $input->nm_ortu;
-            $pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
-            $pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
-            $pengguna->username = $input->nomor_hp_ortu;
-            $pengguna->password = Hash::make($input->nomor_hp_ortu);
-            $pengguna->status_join_table = 4;
-            $pengguna->save();
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-
-            $role_wali_murid = new RolePengguna;
-            // $role_wali_murid->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $role_wali_murid->id_role = 4;
-            $role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
-            $role_wali_murid->keterangan_role_pengguna = "Input Wali Murid";
-            $role_wali_murid->is_aktif = 1;
-            $role_wali_murid->save();
-
-            $siswa1 = Siswa::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
-            $siswa1->id_wali_murid = $wali_murid->id_wali_murid;
-            $siswa1->save();
-
-            $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa1->id_c_siswa)->first();
-            $calon_siswa_ortu->nomor_telp_ortu = $input->nomor_hp_ortu;
-            $calon_siswa_ortu->nomor_hp_ortu = $input->nomor_hp_ortu;
-            $calon_siswa_ortu->nm_wali = $input->nm_ortu;
-            $calon_siswa_ortu->save();
-
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman'){
             $pengguna1 = Pengguna::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
             $pengguna1->email_pengguna = $input->email_pengguna;
             $pengguna1->save();
+        }
+        else{
+            if ($wali_murid != null) { } else {
+                // if siswa doesnt have wali murid
+                $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+                $wali_murid = new WaliMurid;
+                $wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+                $wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $wali_murid->nm_wali_murid = $input->nm_ortu;
+                $wali_murid->is_aktif = 1;
+                $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
+                $wali_murid->updated_at = $now;
+                $wali_murid->save();
+    
+                $pengguna = new Pengguna;
+                $pengguna->id_pengguna = $wali_murid->id_pengguna;
+                $pengguna->nm_pengguna = $input->nm_ortu;
+                $pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
+                $pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
+                $pengguna->username = $input->nomor_hp_ortu;
+                $pengguna->password = Hash::make($input->nomor_hp_ortu);
+                $pengguna->status_join_table = 4;
+                $pengguna->save();
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+    
+                $role_wali_murid = new RolePengguna;
+                // $role_wali_murid->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $role_wali_murid->id_role = 4;
+                $role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
+                $role_wali_murid->keterangan_role_pengguna = "Input Wali Murid";
+                $role_wali_murid->is_aktif = 1;
+                $role_wali_murid->save();
+    
+                $siswa1 = Siswa::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
+                $siswa1->id_wali_murid = $wali_murid->id_wali_murid;
+                $siswa1->save();
+    
+                $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa1->id_c_siswa)->first();
+                $calon_siswa_ortu->nomor_telp_ortu = $input->nomor_hp_ortu;
+                $calon_siswa_ortu->nomor_hp_ortu = $input->nomor_hp_ortu;
+                $calon_siswa_ortu->nm_wali = $input->nm_ortu;
+                $calon_siswa_ortu->save();
+    
+                $pengguna1 = Pengguna::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
+                $pengguna1->email_pengguna = $input->email_pengguna;
+                $pengguna1->save();
+            }
         }
 
 
