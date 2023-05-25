@@ -121,7 +121,7 @@ class HasilTestController extends Controller
 
     public function detailList($question_package_id = 0)
     {
-        $test = Test::where('test.id_paket_soal', $question_package_id)->with('pengguna', 'paket_soal', 'detail_paket_soal', 'jawaban_test');
+        $test = Test::where('test.id_paket_soal', $question_package_id)->with('pengguna.siswa.kelas', 'paket_soal', 'detail_paket_soal', 'jawaban_test');
 
         return Datatables::of($test)
             ->editColumn('detail_paket_soal', function ($item) {
