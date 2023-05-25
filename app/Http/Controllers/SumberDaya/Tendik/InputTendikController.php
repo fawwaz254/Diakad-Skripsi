@@ -36,20 +36,22 @@ use DB;
 use Session;
 use Validator;
 
-class InputTendikController extends BaseController{
+class InputTendikController extends BaseController
+{
 
-    public function viewInputTendik(Request $request){
+    public function viewInputTendik(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $status = StatusPengguna::where('status_join_table',1)->get();
+        $status = StatusPengguna::where('status_join_table', 1)->get();
 
-    	return view('sumber-daya/tendik/input-tendik/view-input-tendik',compact('auth_data','status'));
-
+        return view('sumber-daya/tendik/input-tendik/view-input-tendik', compact('auth_data', 'status'));
     }
 
-    public function addInputTendik(Request $request){
+    public function addInputTendik(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -64,8 +66,8 @@ class InputTendikController extends BaseController{
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $kota = Kota::where('kota.is_aktif','=',1)->get();
-        $provinsi = Provinsi::where('provinsi.is_aktif','=',1)->get();
+        $kota = Kota::where('kota.is_aktif', '=', 1)->get();
+        $provinsi = Provinsi::where('provinsi.is_aktif', '=', 1)->get();
         $agama = Agama::get();
         $pegawai = JenisKepegawaian::get();
         $pekerjaan = JenisPekerjaan::get();
@@ -74,15 +76,15 @@ class InputTendikController extends BaseController{
         $gaji = JenisSumberGaji::get();
         $lab = JenisKeahlianLab::get();
 
-        $id_staff = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_staff = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         /*return view('sumber-daya/tendik/input-tendik/add-input-tendik',compact('auth_data','data_status_aktif_tendik','data_jabatan_pegawai','data_unit_kerja','id_staff'));*/
 
-        return view('sumber-daya/tendik/input-tendik/add-input-tendik',compact('auth_data','data_status_aktif_tendik','data_unit_kerja','id_staff','kota','provinsi','agama','pegawai','pekerjaan','ptk','pengangkat','gaji','lab'));
-
+        return view('sumber-daya/tendik/input-tendik/add-input-tendik', compact('auth_data', 'data_status_aktif_tendik', 'data_unit_kerja', 'id_staff', 'kota', 'provinsi', 'agama', 'pegawai', 'pekerjaan', 'ptk', 'pengangkat', 'gaji', 'lab'));
     }
 
-    public function editInputTendik($id, Request $request){
+    public function editInputTendik($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -96,8 +98,8 @@ class InputTendikController extends BaseController{
 
         $tendik = LibTendik::fetchDataAllTendik($auth_data, $id);
         // dd($tendik);
-        $kota = Kota::where('kota.is_aktif','=',1)->get();
-        $provinsi = Provinsi::where('provinsi.is_aktif','=',1)->get();
+        $kota = Kota::where('kota.is_aktif', '=', 1)->get();
+        $provinsi = Provinsi::where('provinsi.is_aktif', '=', 1)->get();
         $agama = Agama::get();
         $pegawai = JenisKepegawaian::get();
         $pekerjaan = JenisPekerjaan::get();
@@ -108,57 +110,55 @@ class InputTendikController extends BaseController{
 
         /*return view('sumber-daya/tendik/input-tendik/edit-input-tendik',compact('auth_data','data_status_aktif_tendik','data_jabatan_pegawai','data_unit_kerja','data_tendik'));*/
 
-        return view('sumber-daya/tendik/input-tendik/edit-input-tendik',compact('auth_data','data_status_aktif_tendik','data_unit_kerja','tendik','kota','provinsi','agama','pegawai','pekerjaan','ptk','pengangkat','gaji','lab'));
-
+        return view('sumber-daya/tendik/input-tendik/edit-input-tendik', compact('auth_data', 'data_status_aktif_tendik', 'data_unit_kerja', 'tendik', 'kota', 'provinsi', 'agama', 'pegawai', 'pekerjaan', 'ptk', 'pengangkat', 'gaji', 'lab'));
     }
 
-    public function datatablesInputTendik(Request $request){
+    public function datatablesInputTendik(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
-        $list_data = $tendik = Staff::select('staff.id_staff', 'staff.id_pengguna','staff.tgl_keluar','staff.alasan_keluar', 'pengguna.id_status_pengguna', 'staff.jenis_jabatan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'staff.nip_staff', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna')
-                    ->join('pengguna','pengguna.id_pengguna','=','staff.id_pengguna')
-                    ->join('status_pengguna','status_pengguna.id_status_pengguna','=','pengguna.id_status_pengguna')
-                    ->join('unit_kerja','unit_kerja.id_unit_kerja','=','staff.id_unit_kerja')
-                    ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-                    ->orderBy('pengguna.nm_pengguna', 'asc');
 
-        if($input->id_status_pengguna){
-            $list_data = $list_data->where('pengguna.id_status_pengguna',$input->id_status_pengguna);
+        $list_data = Staff::select('staff.id_staff', 'staff.id_pengguna', 'staff.tgl_keluar', 'staff.alasan_keluar', 'pengguna.id_status_pengguna', 'staff.jenis_jabatan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'staff.nip_staff', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna')
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+            ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+            ->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'staff.id_unit_kerja')
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->orderBy('pengguna.nm_pengguna', 'asc');
+
+        if ($input->id_status_pengguna) {
+            $list_data = $list_data->where('pengguna.id_status_pengguna', $input->id_status_pengguna);
         }
 
         return Datatables::of($list_data)
-                ->addColumn('nm_pengguna', function($item){
-                    if( ! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                        return $item->gelar_depan." ".$item->nm_pengguna.", ".$item->gelar_belakang;
-                    }
-                    elseif( ! empty($item->gelar_depan)) {
-                        return $item->gelar_depan." ".$item->nm_pengguna;   
-                    }
-                    elseif( ! empty($item->gelar_belakang)) {
-                        return $item->nm_pengguna.", ".$item->gelar_belakang;   
-                    }
-                    else {
-                        return $item->nm_pengguna; 
-                    }
-                })->editColumn('nm_status_pengguna', function($item) {
-                    if(isset($item->alasan_keluar)){
-                        return $item->nm_status_pengguna . '<br>' . 'Tanggal Keluar '. '( ' . $item->tgl_keluar . ' )' . '<br>' . ' Alasan Keluar ( ' . $item->alasan_keluar . ' )';
-                    }else{
-                        return $item->nm_status_pengguna;
-                    }
-                })->rawColumns(['nm_status_pengguna'])
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_staff
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_pengguna', function ($item) {
+                if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                    return $item->gelar_depan . " " . $item->nm_pengguna . ", " . $item->gelar_belakang;
+                } elseif (!empty($item->gelar_depan)) {
+                    return $item->gelar_depan . " " . $item->nm_pengguna;
+                } elseif (!empty($item->gelar_belakang)) {
+                    return $item->nm_pengguna . ", " . $item->gelar_belakang;
+                } else {
+                    return $item->nm_pengguna;
+                }
+            })->editColumn('nm_status_pengguna', function ($item) {
+                if (isset($item->alasan_keluar)) {
+                    return $item->nm_status_pengguna . '<br>' . 'Tanggal Keluar ' . '( ' . $item->tgl_keluar . ' )' . '<br>' . ' Alasan Keluar ( ' . $item->alasan_keluar . ' )';
+                } else {
+                    return $item->nm_status_pengguna;
+                }
+            })->rawColumns(['nm_status_pengguna'])
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_staff
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionInputTendik(Request $request, $mode, $id = null) {
+    public function actionInputTendik(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -171,20 +171,19 @@ class InputTendikController extends BaseController{
             'id_status_pengguna'    => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             // ACTION ADD
-            if($mode == 'add') {
+            if ($mode == 'add') {
                 $pengguna                           = new Pengguna;
-                $pengguna->id_pengguna              = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $pengguna->id_pengguna              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $pengguna->id_status_pengguna       = $input->id_status_pengguna;
                 $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
                 $pengguna->nm_pengguna              = $input->nm_pengguna;
@@ -200,7 +199,7 @@ class InputTendikController extends BaseController{
                 $pengguna->gelar_belakang           = $input->gelar_belakang;
                 $pengguna->save();
 
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $staff                           = new Staff;
                 $staff->id_staff                 = $id;
@@ -211,7 +210,7 @@ class InputTendikController extends BaseController{
                 $staff->nik_ptk                  = $input->nik_ptk;
                 $staff->jenis_kelamin            = $input->jenis_kelamin;
                 $staff->id_kota_lahir            = $input->id_kota_lahir;
-                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir),"Y-m-d");
+                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
                 $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
                 $staff->alamat_jalan             = $input->alamat_jalan;
                 $staff->alamat_rt                = $input->alamat_rt;
@@ -241,14 +240,14 @@ class InputTendikController extends BaseController{
                 $staff->nuptk                    = $input->nuptk;
                 $staff->id_jenis_ptk             = $input->id_jenis_ptk;
                 $staff->nomor_sk_pengangkatan    = $input->nomor_sk_pengangkatan;
-                $staff->tgl_sk_pengangkatan       = date_format(date_create($input->tgl_sk_pengangkatan),"Y-m-d");;
+                $staff->tgl_sk_pengangkatan       = date_format(date_create($input->tgl_sk_pengangkatan), "Y-m-d");;
                 $staff->id_jenis_lembaga_pengangkat  = $input->id_jenis_lembaga_pengangkat;
                 $staff->nomor_sk_cpns            = $input->nomor_sk_cpns;
-                $staff->tgl_mulai_pns            = date_format(date_create($input->tgl_mulai_pns),"Y-m-d");;
+                $staff->tgl_mulai_pns            = date_format(date_create($input->tgl_mulai_pns), "Y-m-d");;
                 $staff->golongan_ptk             = $input->golongan_ptk;
                 $staff->id_jenis_sumber_gaji     = $input->id_jenis_sumber_gaji;
                 $staff->nomor_kartu_pegawai      = $input->nomor_kartu_pegawai;
-                $staff->nomor_kartu_pasangan     = $input->nomor_kartu_pasangan;    
+                $staff->nomor_kartu_pasangan     = $input->nomor_kartu_pasangan;
 
                 //section kompetensi khusus
                 $staff->is_lisensi_kepsek        = $input->is_lisensi_kepsek;
@@ -264,7 +263,7 @@ class InputTendikController extends BaseController{
 
                 //section penugasan
                 $staff->is_sekolah_induk         = $input->is_sekolah_induk;
-                $staff->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan),"Y-m-d");;
+                $staff->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $staff->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
                 $staff->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $staff->created_at               = $now;
@@ -290,11 +289,10 @@ class InputTendikController extends BaseController{
                     'path' => 'tendik/input-tendik',
                     'message' => 'Save Tendik Successfully'
                 ];
-            }
-            elseif($mode == 'edit') {
+            } elseif ($mode == 'edit') {
                 // get id_pengguna
                 $staff = Staff::select('id_pengguna')
-                    ->where('id_staff','=',$id)
+                    ->where('id_staff', '=', $id)
                     ->first();
 
                 $id_pengguna = $staff->id_pengguna;
@@ -309,7 +307,7 @@ class InputTendikController extends BaseController{
                 $pengguna->gelar_belakang           = $input->gelar_belakang;
 
                 // apabila ada pergantian nip staff
-                if($pengguna->username != $input->nip_staff){
+                if ($pengguna->username != $input->nip_staff) {
                     $pengguna->username                 = $input->nip_staff;
                     $pengguna->password                 = Hash::make($input->nip_staff);
                     $pengguna->must_change_password     = 1;
@@ -328,7 +326,7 @@ class InputTendikController extends BaseController{
                 $staff->nik_ptk                  = $input->nik_ptk;
                 $staff->jenis_kelamin            = $input->jenis_kelamin;
                 $staff->id_kota_lahir            = $input->id_kota_lahir;
-                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir),"Y-m-d");
+                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
                 $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
                 $staff->alamat_jalan             = $input->alamat_jalan;
                 $staff->alamat_rt                = $input->alamat_rt;
@@ -358,14 +356,14 @@ class InputTendikController extends BaseController{
                 $staff->nuptk                    = $input->nuptk;
                 $staff->id_jenis_ptk             = $input->id_jenis_ptk;
                 $staff->nomor_sk_pengangkatan    = $input->nomor_sk_pengangkatan;
-                $staff->tgl_sk_pengangkatan       = date_format(date_create($input->tgl_sk_pengangkatan),"Y-m-d");;
+                $staff->tgl_sk_pengangkatan       = date_format(date_create($input->tgl_sk_pengangkatan), "Y-m-d");;
                 $staff->id_jenis_lembaga_pengangkat  = $input->id_jenis_lembaga_pengangkat;
                 $staff->nomor_sk_cpns            = $input->nomor_sk_cpns;
-                $staff->tgl_mulai_pns            = date_format(date_create($input->tgl_mulai_pns),"Y-m-d");;
+                $staff->tgl_mulai_pns            = date_format(date_create($input->tgl_mulai_pns), "Y-m-d");;
                 $staff->golongan_ptk             = $input->golongan_ptk;
                 $staff->id_jenis_sumber_gaji     = $input->id_jenis_sumber_gaji;
                 $staff->nomor_kartu_pegawai      = $input->nomor_kartu_pegawai;
-                $staff->nomor_kartu_pasangan     = $input->nomor_kartu_pasangan;    
+                $staff->nomor_kartu_pasangan     = $input->nomor_kartu_pasangan;
 
                 //section kompetensi khusus
                 $staff->is_lisensi_kepsek        = $input->is_lisensi_kepsek;
@@ -384,7 +382,7 @@ class InputTendikController extends BaseController{
 
                 //section penugasan
                 $staff->is_sekolah_induk         = $input->is_sekolah_induk;
-                $staff->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan),"Y-m-d");;
+                $staff->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $staff->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
                 $staff->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $staff->updated_at               = $now;
@@ -402,36 +400,33 @@ class InputTendikController extends BaseController{
                     'path' => 'tendik/input-tendik',
                     'message' => 'Update Tendik Successfully'
                 ];
-            }
-            elseif($mode == 'delete') {
-                    // make object to find id
-                    $staff               = Staff::find($id);
+            } elseif ($mode == 'delete') {
+                // make object to find id
+                $staff               = Staff::find($id);
 
-                    if($guruPiket = GuruPiket::where('id_pengguna',$staff->id_pengguna)->first()) {
-                        return [
-                            'status' => 300, // SUCCESS AND LOAD TABLE
-                            'message' => 'Tendik Sudah Di Plot Guru Piket'
-                        ]; 
-                    }
-                    else {
-                        $pengguna               = Pengguna::find($staff->id_pengguna);
-                        $pengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                        $pengguna->save();
-
-                        $pengguna->delete();
-
-                        $staff->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                        $staff->save();
-
-                        $staff->delete();
-                    }
-
+                if ($guruPiket = GuruPiket::where('id_pengguna', $staff->id_pengguna)->first()) {
                     return [
-                        'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Tendik Successfully'
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Tendik Sudah Di Plot Guru Piket'
                     ];
+                } else {
+                    $pengguna               = Pengguna::find($staff->id_pengguna);
+                    $pengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $pengguna->save();
+
+                    $pengguna->delete();
+
+                    $staff->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $staff->save();
+
+                    $staff->delete();
+                }
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Tendik Successfully'
+                ];
             }
         }
     }
-
 }
