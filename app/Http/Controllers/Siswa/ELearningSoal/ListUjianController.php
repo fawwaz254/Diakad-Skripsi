@@ -243,7 +243,13 @@ class ListUjianController extends Controller
     public function indexTest2(Request $request, $id_paket_soal = 0, $no = 0)
     {
         $all_session = session($id_paket_soal);
-        $detailPaketSoal = $all_session['bank_soal'][$no];
+
+        if (isset($all_session['bank_soal'][$no])) {
+            $detailPaketSoal = $all_session['bank_soal'][$no];
+        } else {
+            return redirect('siswa/e-learning-soal/list-ujian');
+        }
+
         $allDetailPaketSoal = $all_session['bank_soal'];
         $jawabanTest = session()->has($id_paket_soal . '_jawaban' . $no) ? session($id_paket_soal . '_jawaban' . $no) : null;
         $sisaWaktu =  Carbon::now('Asia/Jakarta')->diffInSeconds($all_session['end_time']);
@@ -255,9 +261,12 @@ class ListUjianController extends Controller
             return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
         } else {
             $input = (object) $request->input();
-            $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($input->paket_soal)['id_test'])->first();
-            $test->status = 1;
-            $test->save();
+            $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($id_paket_soal)['id_test'])->first();
+            if ($test) {
+                $test->status = 1;
+                $test->save();
+            }
+
             return redirect('siswa/e-learning-soal/list-ujian');
         }
     }
