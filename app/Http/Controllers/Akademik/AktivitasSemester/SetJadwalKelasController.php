@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\JenisMataPelajaran;
 use App\Models\Jurusan;
 use App\Models\PresensiMp;
 use App\Models\Semester;
@@ -124,9 +125,9 @@ class SetJadwalKelasController extends Controller
             }
         }
 
-        $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
-        $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->get();
-        // $mapel      = MataPelajaran::all();
+        $list_guru      = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
+        $allruangan     = Ruangan::orderBy('nm_ruangan', 'asc')->get();
+        // $mapel       = MataPelajaran::all();
 
         //get kurikulum aktif di sekolah tersebut
         // $data_kurikulum = Kurikulum::with('jurusan', 'mapel', 'mapel.mata_pelajaran')
@@ -136,10 +137,12 @@ class SetJadwalKelasController extends Controller
         //     })
         //     ->get();
 
-        $data_jurusan = Jurusan::with('mapel')->get();
+        $id_jurusan = $kelas->id_jurusan;
+        $data_jenis_mata_pelajaran = JenisMataPelajaran::with('mapel')->whereHas('mapel', function ($query) use ($id_jurusan) {
+            $query->where('id_jurusan', '=', $id_jurusan);
+        })->get();
 
-        // $ruangan    = Ruangan::find( $id_kelas);
-        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru',  'jam', 'allruangan', 'data_jurusan'));
+        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru',  'jam', 'allruangan', 'data_jenis_mata_pelajaran'));
     }
 
 
