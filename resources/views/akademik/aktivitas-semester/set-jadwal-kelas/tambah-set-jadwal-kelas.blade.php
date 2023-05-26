@@ -241,13 +241,12 @@
                         <label for="test">Mapel :</label>
                         <select class="form-control show-tick" name="mapel">
                             <option value="" disabled selected>Pilih Mapel</option>
-                            @foreach ($data_kurikulum as $kurikulum)
-                                <optgroup label="{{ $kurikulum->nm_kurikulum }}" style="color: red">
-                                    @foreach ($kurikulum->mapel as $mapel)
-                                        <option value="{{ $mapel->mata_pelajaran->id_mata_pelajaran }}"
-                                            style="color: black">
-                                            {{ $mapel->mata_pelajaran->nm_mata_pelajaran }}
-                                            ({{ $mapel->mata_pelajaran->kd_mata_pelajaran }})
+                            @foreach ($data_jurusan as $jurusan)
+                                <optgroup label="{{ $jurusan->nm_jurusan }}" style="color: red">
+                                    @foreach ($jurusan->mapel as $mapel)
+                                        <option value="{{ $mapel->id_mata_pelajaran }}" style="color: black">
+                                            {{ $mapel->nm_mata_pelajaran }}
+                                            ({{ $mapel->kd_mata_pelajaran }})
                                         </option>
                                     @endforeach
                                 </optgroup>

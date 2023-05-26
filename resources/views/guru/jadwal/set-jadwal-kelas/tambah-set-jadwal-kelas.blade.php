@@ -88,7 +88,6 @@
                                             <table align="center" class="table table-bordered" border="0"
                                                 cellspacing="0" cellpadding="0">
                                                 <tr>
-
                                                     <td width="85px"
                                                         style="padding:  0 10px 0 10px ; background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}; font-weight: bold;text-align:left;vertical-align: middle">
                                                         <span style="float:right;">
@@ -97,15 +96,19 @@
                                                                     style="padding: 0 4px 0 4px " ata-toggle="modal"
                                                                     data-id='test'  id="person">
                                                                     <i class="material-icons">person</i></button> --}}
-                                                                <button type="button"class="btn bg-blue waves-effect passingID2" data-toggle="modal"
-                                                                data-id-jadwal-kelas-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_kelas_mp'] }}'
-                                                                {{-- data-id-jadwal-hari = '{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_hari'] }} '  --}}
-                                                                data-id-jadwal-jam='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam']  }}' 
-                                                                data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'  
-                                                                data-id-guru='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_guru'] }}' data-hari=" {{ $hari->id_jadwal_hari }}" data-id-pengampu-mp = '{{  $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_pengampu_mp']  }}' id="edit"
-                                                                    style="padding: 0 4px 0 4px ">
+                                                                <button
+                                                                    type="button"class="btn bg-blue waves-effect passingID2"
+                                                                    data-toggle="modal"
+                                                                    data-id-jadwal-kelas-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_kelas_mp'] }}'
+                                                                    {{-- data-id-jadwal-hari = '{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_hari'] }} '  --}}
+                                                                    data-id-jadwal-jam='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam'] }}'
+                                                                    data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'
+                                                                    data-id-guru='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_guru'] }}'
+                                                                    data-hari=" {{ $hari->id_jadwal_hari }}"
+                                                                    data-id-pengampu-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_pengampu_mp'] }}'
+                                                                    id="edit" style="padding: 0 4px 0 4px ">
                                                                     <i class="material-icons">edit</i></button>
-                                                                    {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam']  }}
+                                                                {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam']  }}
                                                                     {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }} --}}
                                                         </span>
                                                     @else
@@ -187,7 +190,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            
+
 
             <div class="modal-body">
                 <div class="row">
@@ -228,10 +231,15 @@
                         <label for="test">Mapel :</label>
                         <select class="form-control show-tick" name="mapel">
                             <option value="" disabled selected>Pilih Mapel</option>
-                            @foreach ($mapel as $m)
-                                <option value="{{ $m->id_mata_pelajaran }}">{{ $m->nm_mata_pelajaran }}
-                                    ({{ $m->kd_mata_pelajaran }})
-                                </option>
+                            @foreach ($data_jurusan as $jurusan)
+                                <optgroup label="{{ $jurusan->nm_jurusan }}" style="color: red">
+                                    @foreach ($jurusan->mapel as $mapel)
+                                        <option value="{{ $mapel->id_mata_pelajaran }}" style="color: black">
+                                            {{ $mapel->nm_mata_pelajaran }}
+                                            ({{ $mapel->kd_mata_pelajaran }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
                             @endforeach
                         </select>
                     </div>
@@ -254,14 +262,15 @@
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Ruangan :</label>
                         <select class="form-control show-tick" name="ruangan">
-                            @if($ruangan = $allruangan->where('id_kelas',$kelas->id_kelas)->first())
-                            <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
-                            </option>
+                            @if ($ruangan = $allruangan->where('id_kelas', $kelas->id_kelas)->first())
+                                <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
+                                </option>
                             @else
-                            <option  disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras</option>
-                            @foreach($allruangan as $ruangan)
-                            <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }}  </option>
-                            @endforeach
+                                <option disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
+                                </option>
+                                @foreach ($allruangan as $ruangan)
+                                    <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }} </option>
+                                @endforeach
                             @endif
                         </select>
                     </div>
@@ -294,7 +303,7 @@
             {{-- <input type="hidden" name="id_semester" value="{{ $semester->id_semester }}">
             <input type="hidden" name="id_kelas" value="{{ $kelas->id_kelas }}">
             <input type="hidden" name="id_hari" id="hari" value=""> --}}
-           
+
 
             <div class="modal-body">
                 <div class="row">
@@ -317,7 +326,7 @@
 
                     <div class="form-group col-md-4">
                         <label for="Club">Jam Selesai :</label>
-                        <select class="form-control show-tick" name="jamSelesaiEdit"  id="jamSelesaiEdit">
+                        <select class="form-control show-tick" name="jamSelesaiEdit" id="jamSelesaiEdit">
                             <option value="" disabled selected>Pilih Jam
                             </option>
                             @foreach ($jadwal_jam as $j)
@@ -333,7 +342,7 @@
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Guru :</label>
-                        <select class="form-control show-tick" name="guruEdit"  id="guruEdit">
+                        <select class="form-control show-tick" name="guruEdit" id="guruEdit">
                             <option value="" disabled selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
@@ -348,14 +357,15 @@
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Ruangan :</label>
                         <select class="form-control show-tick" name="ruanganEdit">
-                            @if($ruangan = $allruangan->where('id_kelas',$kelas->id_kelas)->first())
-                            <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
-                            </option>
+                            @if ($ruangan = $allruangan->where('id_kelas', $kelas->id_kelas)->first())
+                                <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
+                                </option>
                             @else
-                            <option  disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras</option>
-                            @foreach($allruangan as $ruangan)
-                            <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }}  </option>
-                            @endforeach
+                                <option disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
+                                </option>
+                                @foreach ($allruangan as $ruangan)
+                                    <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }} </option>
+                                @endforeach
                             @endif
                         </select>
                     </div>
@@ -393,7 +403,7 @@
 
             <div class="modal-body">
 
-               <div class="row">
+                <div class="row">
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Penanggung jawab Mata Ajar : <span
                                 style="color: red">(Opsional)</span>
@@ -405,7 +415,7 @@
                                 <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
                                 </option>
                             @endforeach
-                            
+
                         </select>
                     </div>
                 </div>
@@ -414,13 +424,13 @@
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Tim PJMA 1 : <span style="color: red">(Opsional)</span></label>
                         <select class="form-control show-tick" name="pjma1">
-                            <option value=""  selected>Pilih Guru
+                            <option value="" selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
                                 </option>
                             @endforeach
-                            
+
                         </select>
                     </div>
                 </div>
@@ -429,13 +439,13 @@
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Tim PJMA 2 : <span style="color: red">(Opsional)</span></label>
                         <select class="form-control show-tick" name="pjma2">
-                            <option value=""  selected>Pilih Guru
+                            <option value="" selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
                                 </option>
                             @endforeach
-                            
+
                         </select>
                     </div>
                 </div>
@@ -484,12 +494,12 @@
 
         $('#myModal2').modal('show');
 
-        var id_jadwal_kelas_mp =  $(this).attr('data-id-jadwal-kelas-mp');
+        var id_jadwal_kelas_mp = $(this).attr('data-id-jadwal-kelas-mp');
         // alert(id_jadwal_kelas_mp)
         $("#id_jadwal_kelas_mp").val(id_jadwal_kelas_mp);
 
 
-        var  id_pengampu_mp = $(this).attr('data-id-pengampu-mp');
+        var id_pengampu_mp = $(this).attr('data-id-pengampu-mp');
         $("#id_pengampu_mp").val(id_pengampu_mp);
     });
 
@@ -523,7 +533,7 @@
                 jamSelesai: $('select[name=jamSelesai]').val(),
                 mapel: $('select[name=mapel]').val(),
                 guru: $('select[name=guru]').val(),
-                ruangan:  $('select[name=ruangan]').val(),
+                ruangan: $('select[name=ruangan]').val(),
                 // penangungJawab: $('select[name=penangungJawab]').val(),
                 // pjma1: $('select[name=pjma1]').val(),
                 // pjma2: $('select[name=pjma2]').val(),
@@ -563,13 +573,14 @@
         $('button').attr('disabled', 'disabled');
         // var pengguna = [];
         // $id_jadwal_kelas_mp= $('input[name=id_jadwal_kelas_mp]').val();
-// alert($('input[name=id_jadwal_kelas_mp]').val())
+        // alert($('input[name=id_jadwal_kelas_mp]').val())
         // $("input:checkbox[name=id_pengguna]:checked").each(function(){
         //     pengguna.push($(this).val());
         // });
         $.ajax({
             url: base_url +
-                '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/edit/'+ $('input[name=id_jadwal_kelas_mp]').val(),
+                '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/edit/' + $(
+                    'input[name=id_jadwal_kelas_mp]').val(),
             type: 'POST',
             data: {
 
@@ -577,11 +588,11 @@
                 jamSelesai: $('select[name=jamSelesaiEdit]').val(),
                 // mapel: $('select[name=mapelEdit]').val(),
                 guru: $('select[name=guruEdit]').val(),
-                ruangan:  $('select[name=ruanganEdit]').val(),
+                ruangan: $('select[name=ruanganEdit]').val(),
                 // penangungJawab: $('select[name=penangungJawab]').val(),
                 // pjma1: $('select[name=pjma1]').val(),
                 // pjma2: $('select[name=pjma2]').val(),
-                id_pengampu_mp : $('input[name=id_pengampu_mp]').val(),
+                id_pengampu_mp: $('input[name=id_pengampu_mp]').val(),
                 id_semester: $('input[name=id_semester]').val(),
                 id_kelas: $('input[name=id_kelas]').val(),
                 id_hari: $('input[name=id_hari]').val()
