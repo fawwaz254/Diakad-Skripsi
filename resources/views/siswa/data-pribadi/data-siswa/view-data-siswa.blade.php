@@ -29,7 +29,7 @@
                         
                         
                         
-                        <div id="exTab2" class="container">	
+                        <div id="exTab2" class="">	
                             <ul class="nav nav-tabs">
                                 <li class="active">
                                     <a  href="#1" data-toggle="tab">DATA PRIBADI</a>
