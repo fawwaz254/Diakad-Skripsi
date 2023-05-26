@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\Jurusan;
 use App\Models\PresensiMp;
 use App\Models\Semester;
 
@@ -125,18 +126,20 @@ class SetJadwalKelasController extends Controller
 
         $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
         $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->get();
-        $mapel      = MataPelajaran::all();
+        // $mapel      = MataPelajaran::all();
 
         //get kurikulum aktif di sekolah tersebut
-        $data_kurikulum = Kurikulum::with('jurusan', 'mapel', 'mapel.mata_pelajaran')
-            ->where('is_aktif', '=', 1)
-            ->whereHas('jurusan', function ($q) use ($auth_data) {
-                $q->where('id_sekolah', $auth_data->pengguna->id_sekolah);
-            })
-            ->get();
+        // $data_kurikulum = Kurikulum::with('jurusan', 'mapel', 'mapel.mata_pelajaran')
+        //     ->where('is_aktif', '=', 1)
+        //     ->whereHas('jurusan', function ($q) use ($auth_data) {
+        //         $q->where('id_sekolah', $auth_data->pengguna->id_sekolah);
+        //     })
+        //     ->get();
+
+        $data_jurusan = Jurusan::with('mapel')->get();
 
         // $ruangan    = Ruangan::find( $id_kelas);
-        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'allruangan', 'data_kurikulum'));
+        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru',  'jam', 'allruangan', 'data_jurusan'));
     }
 
 

@@ -129,10 +129,11 @@ class SetJadwalKelasGuruController extends Controller
         $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
         $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->get();
-        $mapel      = MataPelajaran::all();
+        // $mapel      = MataPelajaran::all();
+        $data_jurusan = Jurusan::with('mapel')->get();
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
         // $ruangan    = Ruangan::where('id_kelas', $id_kelas)->first();
-        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam'));
+        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'data_jurusan', 'jam'));
     }
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
