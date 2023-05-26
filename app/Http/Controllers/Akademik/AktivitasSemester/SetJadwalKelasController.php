@@ -142,7 +142,20 @@ class SetJadwalKelasController extends Controller
             $query->where('id_jurusan', '=', $id_jurusan);
         })->get();
 
-        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru',  'jam', 'allruangan', 'data_jenis_mata_pelajaran'));
+        if (empty($data_jenis_mata_pelajaran)) {
+            $data_jenis_mata_pelajaran = JenisMataPelajaran::with('mapel')->get();
+        }
+
+
+        $list_jurusan = Jurusan::all();
+        $list_jenis_mata_pelajaran = JenisMataPelajaran::all();
+
+        if (MataPelajaran::where('id_jurusan', $id_jurusan)->first()) { } else {
+            $id_jurusan = null;
+        }
+
+
+        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru',  'jam', 'allruangan', 'data_jenis_mata_pelajaran', 'list_jenis_mata_pelajaran', 'list_jurusan', 'id_jurusan'));
     }
 
 
@@ -422,5 +435,20 @@ class SetJadwalKelasController extends Controller
                 'message' => 'Save Successfully'
             ];
         }
+    }
+
+    public function getMataPelajaran(Request $request)
+    {
+        $input = (object) $request->input();
+        if (!empty($input->jurusan) && !empty($input->jenis_mata_pelajaran)) {
+            $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');
+        } elseif (!empty($input->jurusan) && empty($input->jenis_mata_pelajaran)) {
+            $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->get()->sortBy('kd_mata_pelajaran');
+        } elseif (empty($input->jurusan) && !empty($input->jenis_mata_pelajaran)) {
+            $data['mapel'] = MataPelajaran::where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');
+        } else {
+            $data['mapel'] = null;
+        }
+        return $data;
     }
 }
