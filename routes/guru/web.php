@@ -273,6 +273,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('set-jadwal-kelas', [SetJadwalKelasGuruController::class, 'actionSetJadwalKelas']);
             Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}', [SetJadwalKelasGuruController::class, 'viewTambahJadwalKelas']);
             Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasGuruController::class, 'actionTambahJadwalKelas']);
+            Route::post('getMataPelajaran', [SetJadwalKelasGuruController::class, 'getMataPelajaran']);
         });
 
         // Route::prefix('aktivitas-semester')->group(function () {
