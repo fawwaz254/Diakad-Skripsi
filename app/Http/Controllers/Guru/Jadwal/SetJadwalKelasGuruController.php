@@ -321,12 +321,12 @@ class SetJadwalKelasGuruController extends Controller
     public function getMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
-        if (!empty($input->jurusan) && !empty($input->jenis_mata_pelajaran)) {
-            $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');
-        } elseif (!empty($input->jurusan) && empty($input->jenis_mata_pelajaran)) {
+        if (!empty($input->jurusan) && !empty($input->jenismapel)) {
+            $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->where('id_jenis_mata_pelajaran', $input->jenismapel)->get()->sortBy('kd_mata_pelajaran');
+        } elseif (!empty($input->jurusan) && empty($input->jenismapel)) {
             $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->get()->sortBy('kd_mata_pelajaran');
-        } elseif (empty($input->jurusan) && !empty($input->jenis_mata_pelajaran)) {
-            $data['mapel'] = MataPelajaran::where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');
+        } elseif (empty($input->jurusan) && !empty($input->jenismapel)) {
+            $data['mapel'] = MataPelajaran::where('id_jenis_mata_pelajaran', $input->jenismapel)->get()->sortBy('kd_mata_pelajaran');
         } else {
             $data['mapel'] = null;
         }
