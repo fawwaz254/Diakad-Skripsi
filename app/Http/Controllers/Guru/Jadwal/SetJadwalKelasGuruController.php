@@ -22,6 +22,7 @@ use DB;
 use Session;
 use Validator;
 use App\Libraries\Akademik\LibAkademik;
+use App\Models\Jurusan;
 
 class SetJadwalKelasGuruController extends Controller
 {
