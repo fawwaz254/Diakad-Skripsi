@@ -228,12 +228,43 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-4">
+                        <label for="test">Jurusan : <span style="color: red">(Otomatis jika ada)</span></label>
+                        <select class="form-control show-tick" onchange="changeJurusan(this)" name="jurusan">
+                            <option value="" selected>Semua</option>
+                            @foreach ($list_jurusan as $jurusan)
+                                <option @if ($jurusan->id_jurusan == $id_jurusan) selected @endif
+                                    value="{{ $jurusan->id_jurusan }}">
+                                    {{ $jurusan->nm_jurusan }}
+                                    {{-- ({{ $mapel->kd_mata_pelajaran }}) --}}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="test">Jenis Mapel : <span style="color: red">(Opsional)</span></label>
+                        <select class="form-control show-tick" onchange="changeJurusan(this)" name="jenismapel">
+                            <option value="" selected>Semua</option>
+                            @foreach ($list_jenis_mata_pelajaran as $jenis_mata_pelajaran)
+                                <option value="{{ $jenis_mata_pelajaran->id_jenis_mata_pelajaran }}">
+                                    {{ $jenis_mata_pelajaran->nm_jenis_mata_pelajaran }}
+                                    ({{ $jenis_mata_pelajaran->kode_jenis_mata_pelajaran }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
                         <label for="test">Mapel :</label>
                         <select class="form-control show-tick" name="mapel">
                             <option value="" disabled selected>Pilih Mapel</option>
-                            @foreach ($data_jurusan as $jurusan)
-                                <optgroup label="{{ $jurusan->nm_jurusan }}" style="color: red">
-                                    @foreach ($jurusan->mapel as $mapel)
+                            @foreach ($data_jenis_mata_pelajaran as $jenis_mata_pelajaran)
+                                <optgroup label="{{ $jenis_mata_pelajaran->nm_jenis_mata_pelajaran }}"
+                                    style="color: red">
+                                    @foreach ($jenis_mata_pelajaran->mapel as $mapel)
                                         <option value="{{ $mapel->id_mata_pelajaran }}" style="color: black">
                                             {{ $mapel->nm_mata_pelajaran }}
                                             ({{ $mapel->kd_mata_pelajaran }})
@@ -675,4 +706,26 @@
             }
         );
     });
+
+    function changeJurusan(el) {
+
+        $.ajax({
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/getMataPelajaran') }}',
+            type: 'POST',
+            data: {
+                jurusan: $('select[name=jurusan]').val(),
+                jenis_mata_pelajaran: $('select[name=jenis_mapel]').val(),
+            },
+            success: function(result) {
+                $('select[name=mapel]').html('');
+                var html = '<option value="" disabled>-- Pilih Mata Pelajaran --</option>';
+                $.each(result['mapel'], function(key, item) {
+                    html += '<option value="' + item.id_mata_pelajaran + '">' + item
+                        .nm_mata_pelajaran + ' (' + item.kd_mata_pelajaran +
+                        ')</option>'
+                });
+                $('select[name=mapel]').html(html);
+            }
+        });
+    }
 </script>
