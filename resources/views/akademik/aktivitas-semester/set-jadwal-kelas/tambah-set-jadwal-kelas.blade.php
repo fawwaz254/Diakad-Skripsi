@@ -716,17 +716,17 @@
 
 
     function changeJurusan(el) {
-
+        $('select[name=mapel]').empty();
         $.ajax({
             url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/getMataPelajaran') }}',
             type: 'POST',
             data: {
                 jurusan: $('select[name=jurusan]').val(),
-                jenis_mata_pelajaran: $('select[name=jenis_mapel]').val(),
+                jenismapel: $('select[name=jenismapel]').val(),
             },
             success: function(result) {
                 $('select[name=mapel]').html('');
-                var html = '<option value="" disabled>-- Pilih Mata Pelajaran --</option>';
+                var html = '<option value="" >-- Pilih Mata Pelajaran --</option>';
                 $.each(result['mapel'], function(key, item) {
                     html += '<option value="' + item.id_mata_pelajaran + '">' + item
                         .nm_mata_pelajaran + ' (' + item.kd_mata_pelajaran +
