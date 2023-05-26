@@ -241,6 +241,13 @@ class SettingWaliMuridController extends BaseController
                     $pengguna_wali_murid->username = $input->nomor_hp_ortu;
                     $pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
                     $pengguna_wali_murid->save();
+                        
+                    $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
+                    $calon_siswa_ortu->nomor_telp_ortu = $input->nomor_hp_ortu;
+                    $calon_siswa_ortu->nomor_hp_ortu = $input->nomor_hp_ortu;
+                    $calon_siswa_ortu->nm_wali = $input->nm_ortu;
+                    $calon_siswa_ortu->save();
+
                     return [
                         'status' => 200,
                         'message' => 'Update Data Wali Murid Berhasil'
@@ -503,6 +510,12 @@ class SettingWaliMuridController extends BaseController
                                             $pengguna->gelar_depan           = $item->gelar_depan;
                                             $pengguna->gelar_belakang        = $item->gelar_belakang;
                                             $pengguna->save();
+
+                                            $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
+                                            $calon_siswa_ortu->nomor_telp_ortu = $item->telp_wali_murid;
+                                            $calon_siswa_ortu->nomor_hp_ortu = $item->telp_wali_murid;
+                                            $calon_siswa_ortu->nm_wali = $item->nama_wali_murid;
+                                            $calon_siswa_ortu->save();
                                         }
                                     } else {
                                         $id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -544,6 +557,12 @@ class SettingWaliMuridController extends BaseController
 
                                         $siswa->id_wali_murid = $id_wali_murid;
                                         $siswa->save();
+
+                                        $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
+                                        $calon_siswa_ortu->nomor_telp_ortu = $item->telp_wali_murid;
+                                        $calon_siswa_ortu->nomor_hp_ortu = $item->telp_wali_murid;
+                                        $calon_siswa_ortu->nm_wali = $item->nama_wali_murid;
+                                        $calon_siswa_ortu->save();
                                     }
                                 }
                             } else {
