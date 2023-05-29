@@ -28,6 +28,7 @@
                                                 {{ $kelas->nm_kelas }}
                                             </option>
                                         @endforeach
+                                        <option value="all" {{ $id_kelas == 'all' ? 'selected' : '' }} >Semua Kelas</option>
                                     </select>
                                 </div>
                             </div>
