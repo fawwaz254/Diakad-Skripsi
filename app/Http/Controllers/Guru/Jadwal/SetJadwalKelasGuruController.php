@@ -22,6 +22,7 @@ use DB;
 use Session;
 use Validator;
 use App\Libraries\Akademik\LibAkademik;
+use App\Models\JenisMataPelajaran;
 use App\Models\Jurusan;
 
 class SetJadwalKelasGuruController extends Controller
@@ -101,9 +102,6 @@ class SetJadwalKelasGuruController extends Controller
             // ->where('kelas_mp.id_kelas_mp', '=', 'D4Ka21611379707600bb3fb69ca0')
             ->get();
 
-        // dd($kelas_mp);
-
-
         $data_kelas_mp = [];
         $jadwal = $jadwal_kelas_mp->toArray();
         // dd($jadwal);
@@ -131,10 +129,28 @@ class SetJadwalKelasGuruController extends Controller
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
         $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->get();
         // $mapel      = MataPelajaran::all();
-        $data_jurusan = Jurusan::with('mapel')->get();
+        // $data_jurusan = Jurusan::with('mapel')->get();
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
         // $ruangan    = Ruangan::where('id_kelas', $id_kelas)->first();
-        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'data_jurusan', 'jam'));
+
+        $id_jurusan = $kelas->id_jurusan;
+        $data_jenis_mata_pelajaran = JenisMataPelajaran::with('mapel')->whereHas('mapel', function ($query) use ($id_jurusan) {
+            $query->where('id_jurusan', '=', $id_jurusan);
+        })->get();
+
+        if (empty($data_jenis_mata_pelajaran)) {
+            $data_jenis_mata_pelajaran = JenisMataPelajaran::with('mapel')->get();
+        }
+
+
+        $list_jurusan = Jurusan::all();
+        $list_jenis_mata_pelajaran = JenisMataPelajaran::all();
+
+        if (MataPelajaran::where('id_jurusan', $id_jurusan)->first()) { } else {
+            $id_jurusan = null;
+        }
+
+        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'data_jenis_mata_pelajaran', 'jam', 'id_jurusan', 'list_jurusan', 'list_jenis_mata_pelajaran'));
     }
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
@@ -301,5 +317,19 @@ class SetJadwalKelasGuruController extends Controller
                 'message' => 'Save Successfully'
             ];
         }
+    }
+    public function getMataPelajaran(Request $request)
+    {
+        $input = (object) $request->input();
+        if (!empty($input->jurusan) && !empty($input->jenismapel)) {
+            $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->where('id_jenis_mata_pelajaran', $input->jenismapel)->get()->sortBy('kd_mata_pelajaran');
+        } elseif (!empty($input->jurusan) && empty($input->jenismapel)) {
+            $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->get()->sortBy('kd_mata_pelajaran');
+        } elseif (empty($input->jurusan) && !empty($input->jenismapel)) {
+            $data['mapel'] = MataPelajaran::where('id_jenis_mata_pelajaran', $input->jenismapel)->get()->sortBy('kd_mata_pelajaran');
+        } else {
+            $data['mapel'] = null;
+        }
+        return $data;
     }
 }

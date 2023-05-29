@@ -16,10 +16,10 @@ class JenisMataPelajaran extends Model
 
     protected $primaryKey = 'id_jenis_mata_pelajaran';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'kode_jenis_mata_pelajaran',
         'nm_jenis_mata_pelajaran',
@@ -31,9 +31,8 @@ class JenisMataPelajaran extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function mapel()
+    {
+        return $this->hasMany(MataPelajaran::class, 'id_jenis_mata_pelajaran');
+    }
 }
