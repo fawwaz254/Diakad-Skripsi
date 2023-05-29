@@ -73,26 +73,25 @@ class HistoriAbsensiSiswaSholatController extends Controller
                     $query->where('nm_status_pengguna', '=', 'AKTIF');
                 })->whereHas('siswa.kelas', function ($query) {
                     $query->whereIn('tingkat',  [7, 8, 9]);
-                })->whereHas('siswa.calon_siswa', function ($query) {
-                    $query->where('jenis_kelamin', '=', '1');
-                })->get()->sortBy('siswa.kelas.nm_kelas');
+                })
+                ->whereHas('siswa.calon_siswa')
+                ->get()->sortBy('siswa.kelas.nm_kelas');
         } elseif ($id_kelas == "2") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
                     $query->where('nm_status_pengguna', '=', 'AKTIF');
                 })->whereHas('siswa.kelas', function ($query) {
                     $query->whereIn('tingkat',  [10, 11, 12]);
-                })->whereHas('siswa.calon_siswa', function ($query) {
-                    $query->where('jenis_kelamin', '=', '1');
-                })->get()->sortBy('siswa.kelas.nm_kelas');
+                })
+                ->whereHas('siswa.calon_siswa')
+                ->get()->sortBy('siswa.kelas.nm_kelas');
         } elseif ($id_kelas == "0") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
                     $query->where('nm_status_pengguna', '=', 'AKTIF');
                 })
-                ->whereHas('siswa.calon_siswa', function ($query) {
-                    $query->where('jenis_kelamin', '=', '1');
-                })->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');
+                ->whereHas('siswa.calon_siswa')
+                ->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas', 'siswa.calon_siswa')
                 ->whereHas('status_pengguna', function ($query) {
@@ -101,9 +100,8 @@ class HistoriAbsensiSiswaSholatController extends Controller
                 ->whereHas('siswa', function ($query) use ($id_kelas) {
                     $query->where('id_kelas', '=', $id_kelas);
                 })
-                ->whereHas('siswa.calon_siswa', function ($query) {
-                    $query->where('jenis_kelamin', '=', '1');
-                })->orderBy('nm_pengguna', 'asc')->get();
+                ->whereHas('siswa.calon_siswa')
+                ->orderBy('nm_pengguna', 'asc')->get();
         }
         $hasil = [];
         // $allShiftPengguna = ShiftPengguna::where('id_shift_master', 'Siswa')->where('date', $date)->with('shift_master')->get();
