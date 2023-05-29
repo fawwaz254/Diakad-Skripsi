@@ -254,6 +254,7 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::get('get-kelas/{id_jurusan}', [HistoriAbsensiSiswaController::class,'getKelas']);
                 Route::post('/', [HistoriAbsensiSiswaSholatController::class, 'actionDetailHistoriAbsensiSiswa']);
                 Route::get('/detail/{kelas}/{date}', [HistoriAbsensiSiswaSholatController::class, 'viewDetailHistoriAbsensiSiswa']);
+                Route::get('export-day/{date}/{id_kelas}', [HistoriAbsensiSiswaSholatController::class, 'exportday']);
                 // Route::get('/details/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class,'viewDetailsHistoriAbsensiSiswa']);
                 // Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class, 'export_excel_mount']);
                 // Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class, 'export_excel_week']);
