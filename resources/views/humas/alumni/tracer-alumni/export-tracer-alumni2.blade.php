@@ -28,6 +28,7 @@
                                                 {{ $kelas->nm_kelas }}
                                             </option>
                                         @endforeach
+                                        <option value="all" {{ $id_kelas == 'all' ? 'selected' : '' }} >Semua Kelas</option>
                                     </select>
                                 </div>
                             </div>
@@ -105,6 +106,10 @@ var tahun_lulus = '{{ $tahun_lulus }}';
     // var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/action/delete';
 // alert(datatable_url);
     var primary_table = $('#primary_table').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
         processing: true,
         serverSide: true,
         responsive: true,
