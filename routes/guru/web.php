@@ -547,6 +547,7 @@ Route::middleware(['token_staff'])->group(function () {
             // MENU Rekap Keuangan Kelas
             Route::get('rekap-keuangan-kelas', [RekapKeuanganKelasController::class, 'viewRekapKeuanganKelas']);
             Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [RekapKeuanganKelasController::class, 'printRekapKeuanganKelas']);
+            Route::post('rekap-keuangan-kelas/get-data-tungakan-tahun-lalu', [RekapKeuanganKelasController::class, 'getDataTungakanTahunLalu']);
 
             // MENU Rekap Pelanggaran Kelas
             Route::get('rekap-pelanggaran-kelas', [RekapPelanggaranKelasController::class, 'viewRekapPelanggaranKelas']);
