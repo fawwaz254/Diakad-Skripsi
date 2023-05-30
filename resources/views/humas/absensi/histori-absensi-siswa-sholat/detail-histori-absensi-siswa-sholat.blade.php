@@ -136,8 +136,12 @@
         <div class="card">
             <div class="header">
                 <h2>Histori Absensi </h2>
+                <br>
+                <a href="humas/absensi/histori-absensi-siswa-sholat/export-day/{{ $date }}/{{ $id_kelas }}" target="_blank"
+                    class="btn bg-purple waves-effect">
+                    <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
+                <br>
             </div>
-
             <div class="body">
                 <div class="table-responsive ">
                     <table class="table table-bordered" width="600px">
