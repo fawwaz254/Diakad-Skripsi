@@ -181,10 +181,25 @@
                                     @endif
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $siswa->nis_siswa }}</td>
+                                    @php
+                                        $tagihan_bulan_lalu = $data_tagihan_siswa_semester_lalu->where('id_siswa', $siswa->id_siswa)->count();
+                                    @endphp
                                     @if ($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
-                                        <td>{{ $siswa->pengguna->nm_pengguna }}</td>
+                                        <td>{{ $siswa->pengguna->nm_pengguna }}
+                                            @if ($tagihan_bulan_lalu != 0)
+                                                <br>
+                                                <button class="passingID" data="{{ $siswa->id_siswa }}">Tagihan Tahun
+                                                    Lalu ({{ $tagihan_bulan_lalu }})</button>
+                                            @endif
+                                        </td>
                                     @else
-                                        <td>{{ $siswa->pengguna->nm_pengguna }}<br>(Mutasi/Keluar)</td>
+                                        <td>{{ $siswa->pengguna->nm_pengguna }}<br>(Mutasi/Keluar)
+                                            @if ($tagihan_bulan_lalu != 0)
+                                                <br>
+                                                <button class="passingID" data="{{ $siswa->id_siswa }}">Tagihan Tahun
+                                                    Lalu ({{ $tagihan_bulan_lalu }})</button>
+                                            @endif
+                                        </td>
                                     @endif
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @php
@@ -303,8 +318,69 @@
     </div>
 </div>
 
+
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+                <h4 class="modal-title" style="text-align: center">List Tagihan Tahun Lalu</h4>
+            </div>
+            <div id="place">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
 @include('scriptjs')
 <script>
+    $(".passingID").click(function() {
+        $('button').attr('disabled', 'disabled');
+        $.ajax({
+            type: "POST",
+            url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-data-tungakan-tahun-lalu`,
+            data: {
+                id_siswa: $(this).attr('data'),
+                tahun_akademik_semester: '{{ $tahun_akademik_semester }}',
+            },
+            success: function(response) {
+                $('#place').html('');
+                var html = '<table  class="table">';
+                html += '<tr>';
+                html += '<th>No</th>';
+                html += '<th>Kelas</th>';
+                html += '<th>Bulan</th>';
+                html += '<th>Tagihan</th>';
+                html += '</tr>';
+                $.each(response, function(key, item) {
+                    html += '<tr>';
+                    html += '<td>' + (key + 1) + '</td>';
+                    html += '<td>' + item.kelas.nm_kelas + '</td>';
+                    html += '<td>' + item.detail_biaya.bulan.nm_bulan + '</td>';
+                    html += '<td>' + item.besar_biaya + '</td>';
+                    html += '<tr>';
+                    html += '</tr>';
+                    console.log(item);
+                });
+                html += '</table>';
+                $('#place').html(html);
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+                $('#myModal').modal('show');
+            }
+        });
+
+    });
+
     var modul_url = 'utility';
     var lunas_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
     var detail_tagihan_siswa_url = base_url + '/' + role_url + '#' + modul_url + '/' +
@@ -387,7 +463,6 @@
 
 
     $(function() {
-
         // var start_date = "{{ \Carbon\Carbon::parse($waktu)->addMonth(2)->format('Y-m-d') }}";
         // var end_date = "{{ \Carbon\Carbon::parse($waktu)->subMonth(2)->format('Y-m-d') }}";
 

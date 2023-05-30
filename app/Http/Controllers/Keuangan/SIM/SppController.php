@@ -848,12 +848,19 @@ class SppController extends BaseController
 
             // $data_tagihan = $all_data_tagihan->where('id_jenis_detail_biaya', 4)->values();
 
-            // $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')
-            //     ->whereIn('id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
-            //     ->orderBy('nis_siswa')->get();
 
             $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
                 ->orderBy('nis_siswa')->get();
+
+            //semester lain
+            $list_id_semester_lalu = Semester::where('thn_akademik_semester', '<', $tahun_akademik_semester)->pluck('id_semester')->toArray();
+            $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('detail_biaya.bulan', 'kelas')->where('is_tagih', '1')->whereIn('id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa'))
+                ->whereHas('detail_biaya', function ($query) {
+                    $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
+                })
+                ->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($list_id_semester_lalu) {
+                    $query->whereIn('id_semester',  $list_id_semester_lalu);
+                })->get();
 
             //untuk ambil data pts
             // $data_tagihan_non_bulanan = $all_data_tagihan->where('id_jenis_detail_biaya', '<>', 4)->values();
@@ -867,9 +874,10 @@ class SppController extends BaseController
 
             $data_tagihan_non_bulanan = array();
             $data_ket_tagihan = array();
+            $data_tagihan_siswa_semester_lalu = array();
         }
 
-        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'total_pembayaran'));
+        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'total_pembayaran', 'data_tagihan_siswa_semester_lalu'));
     }
 
     public function viewMenuPemasukan(Request $request, $tahun_akademik_semester = null, $id_bulan = null)
@@ -1927,5 +1935,20 @@ class SppController extends BaseController
 
         $terbilang = LibDataKeuangan::getTerbilang($pembayaran->besar_pembayaran);
         return view('keuangan/sim/spp/print-pembayaran-spp', compact('auth_data', 'pembayaran', 'terbilang'));
+    }
+
+    public function getDataTungakanTahunLalu(Request $request)
+    {
+        $input = (object) $request->input();
+        $list_id_semester_lalu = Semester::where('thn_akademik_semester', '<', $input->tahun_akademik_semester)->pluck('id_semester')->toArray();
+        $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('detail_biaya.bulan', 'kelas')->where('is_tagih', '1')->where('id_siswa', $input->id_siswa)
+            ->whereHas('detail_biaya', function ($query) {
+                $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
+            })
+            ->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($list_id_semester_lalu) {
+                $query->whereIn('id_semester',  $list_id_semester_lalu);
+            })->get();
+
+        return $data_tagihan_siswa_semester_lalu;
     }
 }
