@@ -109,6 +109,14 @@ class RekapKeuanganKelasController extends BaseController
                 ->get();
 
             $data_ket_tagihan = $data_tagihan_non_bulanan->unique('title_biaya')->values()->all();
+            $list_id_semester_lalu = Semester::where('thn_akademik_semester', '<', $tahun_akademik_semester)->pluck('id_semester')->toArray();
+            $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('detail_biaya.bulan', 'kelas')->where('is_tagih', '1')->whereIn('id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa'))
+                ->whereHas('detail_biaya', function ($query) {
+                    $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
+                })
+                ->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($list_id_semester_lalu) {
+                    $query->whereIn('id_semester',  $list_id_semester_lalu);
+                })->get();
         } else {
             $data_siswa = array();
             $data_tagihan = array();
@@ -116,9 +124,10 @@ class RekapKeuanganKelasController extends BaseController
 
             $data_tagihan_non_bulanan = array();
             $data_ket_tagihan = array();
+            $data_tagihan_siswa_semester_lalu = array();
         }
 
-        return view('guru/wali-kelas/rekap-keuangan-kelas/view-rekap-keuangan-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'data_tagihan_non_bulanan', 'data_ket_tagihan'));
+        return view('guru/wali-kelas/rekap-keuangan-kelas/view-rekap-keuangan-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'data_tagihan_siswa_semester_lalu'));
     }
 
     public function printRekapKeuanganKelas(Request $request, $tahun_akademik_semester, $id_kelas)
@@ -222,5 +231,19 @@ class RekapKeuanganKelasController extends BaseController
         }
 
         return view('keuangan/utility/pembayaran-by-kelas/print-pembayaran-by-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'data_tagihan_non_bulanan', 'data_ket_tagihan'));
+    }
+
+    public function getDataTungakanTahunLalu(Request $request)
+    {
+        $input = (object) $request->input();
+        $list_id_semester_lalu = Semester::where('thn_akademik_semester', '<', $input->tahun_akademik_semester)->pluck('id_semester')->toArray();
+        $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('detail_biaya.bulan', 'kelas')->where('is_tagih', '1')->where('id_siswa', $input->id_siswa)
+            ->whereHas('detail_biaya', function ($query) {
+                $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
+            })
+            ->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($list_id_semester_lalu) {
+                $query->whereIn('id_semester',  $list_id_semester_lalu);
+            })->get();
+        return $data_tagihan_siswa_semester_lalu;
     }
 }
