@@ -251,17 +251,23 @@
     //     eventList.appendChild(newElement);
     // }
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-CN6LK18128"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
 
-    gtag('config', 'G-CN6LK18128');
-</script>
+@if (isset(request()->auth_data->google_analytic_id))
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ request()->auth_data->google_analytic_id }}">
+    </script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', '{{ request()->auth_data->google_analytic_id }}');
+    </script>
+@endif
+
 @yield('js')
 
 </html>
