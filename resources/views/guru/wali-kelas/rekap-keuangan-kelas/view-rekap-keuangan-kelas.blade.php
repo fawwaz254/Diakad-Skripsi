@@ -50,6 +50,18 @@
     .tdbg-12 {
         background: #a0c1b8;
     }
+
+    #primary_table {
+        top: 0px;
+        width: 100% !important;
+        display: block;
+        overflow-x: auto;
+    }
+
+    .nama {
+        width: 100% !important;
+
+    }
 </style>
 <div class="container-fluid">
     <div class="row clearfix">
@@ -62,7 +74,6 @@
                         </h2>
                     </div>
                     <div class="body">
-
                         <a href="/guru/wali-kelas/rekap-keuangan-kelas/print/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
                             target="_blank" class="btn btn-success">Print Pembayaran Siswa</a>
 
@@ -92,18 +103,14 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable" id="primary_table">
+                            <table class="table is-fixed table-bordered table-striped table-hover dataTable"
+                                id="primary_table">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2">NIS</th>
-                                        <th rowspan="2">Nama</th>
-                                        <th class="text-center" colspan="{{ count($data_bulan_tagihan) }}">SPP</th>
-                                        @if (count($data_ket_tagihan) > 0)
-                                            <th class="text-center" colspan="{{ count($data_ket_tagihan) }}">
-                                                {{ $data_ket_tagihan[0]->nm_biaya }}</th>
-                                        @endif
-                                    </tr>
-                                    <tr>
+                                        <th>NO</th>
+                                        <th>NIS</th>
+                                        <th>Nama</th>
+
                                         @foreach ($data_bulan_tagihan as $bulan)
                                             @if (!empty($bulan->id_bulan))
                                                 <th class="tdbg-{{ $bulan->id_bulan }}">{{ $bulan->nm_bulan }}
@@ -113,7 +120,8 @@
                                             @endif
                                         @endforeach
                                         @foreach ($data_ket_tagihan as $ket)
-                                            <td class="tdbg-0" rowspan="2">{!! $ket->title_biaya !!}</td>
+                                            <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->title_biaya }}
+                                            </td>
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -127,11 +135,29 @@
                                             @else
                                             <tr style="background-color: #ffc109;">
                                         @endif
+                                        <td>{{ $no++ }}</td>
                                         <td>{{ $siswa->nis_siswa }}</td>
+                                        @php
+                                            $tagihan_bulan_lalu = $data_tagihan_siswa_semester_lalu->where('id_siswa', $siswa->id_siswa)->count();
+                                        @endphp
                                         @if ($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
-                                            <td>{{ $siswa->pengguna->nm_pengguna }}</td>
+                                            <td class="nama">{{ $siswa->pengguna->nm_pengguna }}
+                                                @if ($tagihan_bulan_lalu != 0)
+                                                    <br>
+                                                    <button class="passingID" data="{{ $siswa->id_siswa }}">Tagihan
+                                                        Tahun
+                                                        Lalu ({{ $tagihan_bulan_lalu }})</button>
+                                                @endif
+                                            </td>
                                         @else
-                                            <td>{{ $siswa->pengguna->nm_pengguna }}<br>(Mutasi/Keluar)</td>
+                                            <td class="nama">{{ $siswa->pengguna->nm_pengguna }}<br>(Mutasi/Keluar)
+                                                @if ($tagihan_bulan_lalu != 0)
+                                                    <br>
+                                                    <button class="passingID" data="{{ $siswa->id_siswa }}">Tagihan
+                                                        Tahun
+                                                        Lalu ({{ $tagihan_bulan_lalu }})</button>
+                                                @endif
+                                            </td>
                                         @endif
                                         @foreach ($data_bulan_tagihan as $bulan)
                                             @php
@@ -242,8 +268,62 @@
     </div>
 </div>
 
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+                <h4 class="modal-title" style="text-align: center">List Tagihan Tahun Lalu</h4>
+            </div>
+            <div id="place">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @include('scriptjs')
 <script>
+    $(".passingID").click(function() {
+        $('button').attr('disabled', 'disabled');
+        $.ajax({
+            type: "POST",
+            url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-data-tungakan-tahun-lalu`,
+            data: {
+                id_siswa: $(this).attr('data'),
+                tahun_akademik_semester: '{{ $tahun_akademik_semester }}',
+            },
+            success: function(response) {
+                $('#place').html('');
+                var html = '<table  class="table">';
+                html += '<tr>';
+                html += '<th>No</th>';
+                html += '<th>Kelas</th>';
+                html += '<th>Bulan</th>';
+                html += '<th>Tagihan</th>';
+                html += '</tr>';
+                $.each(response, function(key, item) {
+                    html += '<tr>';
+                    html += '<td>' + (key + 1) + '</td>';
+                    html += '<td>' + item.kelas.nm_kelas + '</td>';
+                    html += '<td>' + item.detail_biaya.bulan.nm_bulan + '</td>';
+                    html += '<td>' + item.besar_biaya + '</td>';
+                    html += '<tr>';
+                    html += '</tr>';
+                    console.log(item);
+                });
+                html += '</table>';
+                $('#place').html(html);
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+                $('#myModal').modal('show');
+            }
+        });
+
+    });
     var modul_url = 'wali-kelas';
     var lunas_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
     var detail_tagihan_siswa_url = base_url + '/' + role_url + '#' + modul_url + '/' +
@@ -260,12 +340,21 @@
             time: false
         });
     });
+    $('.block').scroll(function() {
+        var scrollAmt = $(this).scrollLeft();
+        $('.fixedHeader-floating').css('left', 0 - parseInt(scrollAmt) + 'px');
+    });
 
     var primary_table = $('#primary_table').DataTable({
         ordering: false,
         scrollX: true,
         fixedColumns: {
-            leftColumns: 2
+            leftColumns: 3
+        },
+        fixedHeader: {
+            header: true,
+            footer: false,
+            headerOffset: 65,
         },
         scrollCollapse: true,
         paging: false
