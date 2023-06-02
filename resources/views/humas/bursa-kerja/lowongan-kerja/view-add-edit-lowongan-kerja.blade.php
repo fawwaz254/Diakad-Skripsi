@@ -18,14 +18,14 @@
                         enctype="multipart/form-data">
                         {{ csrf_field() }}
                         @if (!empty($item))
-                            <input type="hidden" name="id_lowongan_kerja" value="{{ $item->id_lowongan_kerja }}">
+                            <input type="hidden" name="id_lowongan_kerja[]" value="{{ $item->id_lowongan_kerja }}">
                         @endif
                         <h2 class="card-inside-title">
                             Judul Lowongan Kerja
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="judul_lowongan_kerja" required=""
+                                <input type="text" class="form-control" name="judul_lowongan_kerja[]" required=""
                                     aria-required="true" aria-invalid="true"
                                     value="{{ !empty($item) ? $item->judul_lowongan_kerja : '' }}">
                             </div>
@@ -36,7 +36,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="file" class="form-control" name="file" aria-required="true"
+                                <input type="file" class="form-control" name="file[]" aria-required="true"
                                     aria-invalid="true">
                             </div>
                         </div>
@@ -70,9 +70,13 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea id="editor1" class="editor1" name="deskripsi_lowongan_kerja" required="">
+                                <textarea id="editor1" class="editor1" name="deskripsi_lowongan_kerja[]" required="">
                           {{ !empty($item) ? $item->deskripsi_lowongan_kerja : '' }}
                         </textarea>
+
+                        <div id="dynamic-input" class="">
+                            
+                        </div>
 
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -82,6 +86,9 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <button class="btn btn-block bg-red waves-effect" type="submit"><i
                                                 class="material-icons">save</i><span>Save</span></button>
+                                    </div><div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <button class="btn btn-block bg-blue waves-effect" id="add"><i
+                                                class="material-icons">add</i><span>Tambah</span></button>
                                     </div>
                                 </div>
                     </form>
@@ -105,6 +112,126 @@
         $('#editor1').val(editorText);
     }
 </script>
+
+<script>
+    $(document).ready(function() {
+
+        let counter = 1;
+        $('#add').click(function(e) {
+            e.preventDefault();
+            counter++;
+            let html = `<div class="dynamic-input-${counter}">
+                            <hr>
+                            <h2 class="card-inside-title">
+                                Judul Lowongan Kerja
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" name="judul_lowongan_kerja[]" required=""
+                                        aria-required="true" aria-invalid="true"
+                                        value="">
+                                </div>
+                            </div>
+    
+                            <h2 class="card-inside-title">
+                                Poster Lowongan Kerja
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="file" class="form-control" name="file[]" aria-required="true"
+                                        aria-invalid="true">
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">
+                                Deskripsi Lowongan Kerja
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <textarea id="editor${counter}" class="editor${counter}" name="deskripsi_lowongan_kerja[]" required="">
+                            </textarea>
+                        </div>`;
+
+            $('#dynamic-input').append(html);
+            var $ckfield = CKEDITOR.replace(`editor${counter}`);
+            $ckfield.on('change', function() {
+                $ckfield.updateElement();         
+            });
+
+            // // custom code to key binding ckeditor
+            // timer = setInterval(updateDiv, 100);
+
+            // function updateDiv() {
+            //     var editorText = CKEDITOR.instances.editor${counter}.getData();
+            //     $(`editor${counter}`).val(editorText);
+            // }
+        })
+
+        $('#remove').click(function(e) {
+            e.preventDefault();
+            $(`.dynamic-input-${counter}`).remove();
+            counter--;
+        });
+    });
+</script>
+
+{{-- <script>
+    $(document).ready(function() {
+
+        let counter = 1;
+        $('#add').click(function(e) {
+            e.preventDefault();
+            counter++;
+            let html = `<div class="dynamic-input-${counter}">
+                            <hr>
+                            <h2 class="card-inside-title">
+                                Judul Lowongan Kerja
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" name="judul_lowongan_kerja[]" required=""
+                                        aria-required="true" aria-invalid="true"
+                                        value="">
+                                </div>
+                            </div>
+    
+                            <h2 class="card-inside-title">
+                                Poster Lowongan Kerja
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="file" class="form-control" name="file[]" aria-required="true"
+                                        aria-invalid="true">
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">
+                                Deskripsi Lowongan Kerja
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <textarea id="editor${counter}" class="editor${counter}" name="deskripsi_lowongan_kerja[]" required="">
+                            </textarea>
+                        </div>`;
+
+            $('#dynamic-input').append(html);
+            CKEDITOR.replace(`editor${counter}`);
+
+            // custom code to key binding ckeditor
+            // timer = setInterval(updateDiv, 100);
+
+            function updateDiv() {
+                var editorText = CKEDITOR.instances.editor1.getData();
+                $(`editor${counter}`).val(editorText);
+            }
+        })
+
+        $('#remove').click(function(e) {
+            e.preventDefault();
+            $(`.dynamic-input-${counter}`).remove();
+            counter--;
+        });
+    });
+</script> --}}
+
 
 <script type="text/javascript">
     $('#form-upload').submit(function(e) {

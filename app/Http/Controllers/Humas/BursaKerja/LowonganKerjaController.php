@@ -84,22 +84,27 @@ class LowonganKerjaController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
-
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
-                $lowongan_kerja                             = new LowonganKerja;
-                $lowongan_kerja->id_lowongan_kerja          = $id;
-                $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja;
-                $lowongan_kerja->deskripsi_lowongan_kerja   = $input->deskripsi_lowongan_kerja;
-
-                if (!empty(request()->file)) {
-                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->file, 'public');
-                    $lowongan_kerja->poster_lowongan_kerja   = $file;
+                // dd($input);
+                foreach($request->input('judul_lowongan_kerja') as $key => $value){
+                    
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+    
+                    $lowongan_kerja                             = new LowonganKerja;
+                    $lowongan_kerja->id_lowongan_kerja          = $id;
+                    $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja[$key];
+                    $lowongan_kerja->deskripsi_lowongan_kerja   = $input->deskripsi_lowongan_kerja[$key];
+    
+                    if (!empty(request()->file)) {
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        // $image = request()->file[$key];
+                        // $image->storeAs('public/photos', $image->hashName());
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->file[$key], 'public');
+                        $lowongan_kerja->poster_lowongan_kerja   = $file;
+                    }
+    
+                    $lowongan_kerja->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                    $lowongan_kerja->save();
                 }
-
-                $lowongan_kerja->created_by                 = $input->auth_data->pengguna->id_pengguna;
-                $lowongan_kerja->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
