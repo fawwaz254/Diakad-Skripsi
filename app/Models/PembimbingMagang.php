@@ -31,4 +31,14 @@ class PembimbingMagang extends Model
     {
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
+
+    public function periode()
+    {
+        return $this->belongsTo(PeriodeMagang::class, 'id_periode_magang');
+    }
+
+    public function rekanan()
+    {
+        return $this->belongsTo(RekananMagang::class, 'id_rekanan_magang');
+    }
 }
