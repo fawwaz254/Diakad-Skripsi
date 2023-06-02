@@ -14,6 +14,7 @@ use App\Models\Guru;
 use App\Models\GuruPiket;
 use App\Models\JurnalPimpinan;
 use App\Models\PembinaEkskulSet;
+use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\WaliKelas;
 use App\Models\WaliMurid;
@@ -38,6 +39,7 @@ class TokenStaffMiddleware
             } else {
                 $pengguna = Auth::user();
                 $sekolah_data = $pengguna->sekolah;
+                $google_id = Setting::where('key_setting', 'is_google_analytic')->first()->value;
 
                 $roles_pengguna = $pengguna->role_pengguna;
                 $role_aktif = $roles_pengguna->where('is_aktif', 1)->first()->role;
@@ -47,7 +49,7 @@ class TokenStaffMiddleware
                 $id_pengguna = $pengguna->id_pengguna;
                 if ($role_aktif->id_role == 2) {
                     $guru = Guru::where('id_pengguna', $id_pengguna)->first();
-                    $jurpin = Modul::where('id_role',2)->where('nm_modul','Jurnal Pimpinan')->pluck('id_modul')->first();
+                    $jurpin = Modul::where('id_role', 2)->where('nm_modul', 'Jurnal Pimpinan')->pluck('id_modul')->first();
                     if ($guru) {
                         if ($this->isGuruPiket($id_pengguna)) {
                             $tambahan_modul[] = 35;
@@ -80,7 +82,7 @@ class TokenStaffMiddleware
 
                 // IF Wali Murid
                 $nm_anak_murid = null;
-                if($role_aktif->id_role == 4){
+                if ($role_aktif->id_role == 4) {
                     if ($wali_murid = WaliMurid::where('id_pengguna', $pengguna->id_pengguna)->first()) {
                         if ($siswa = Siswa::with('pengguna')->where('id_wali_murid', $wali_murid->id_wali_murid)->where('is_aktif_wali_murid', 1)->first()) {
                             $nm_anak_murid = $siswa->pengguna->nm_pengguna;
@@ -93,7 +95,8 @@ class TokenStaffMiddleware
                     'sekolah_data' => $sekolah_data,
                     'role_aktif' => $role_aktif,
                     'moduls' => $moduls,
-                    'nm_anak_murid' => $nm_anak_murid
+                    'nm_anak_murid' => $nm_anak_murid,
+                    'google_analytic_id' => $google_id
                 );
 
                 Session::put('auth_data', $auth_data);
@@ -102,7 +105,7 @@ class TokenStaffMiddleware
             if (request()->segment(1) != $auth_data->role_aktif->path) {
                 return redirect($auth_data->role_aktif->path);
             }
-            
+
             $request->request->add(['auth_data' => $auth_data]);
             return $next($request);
         } else {
@@ -112,7 +115,7 @@ class TokenStaffMiddleware
 
     private function isGuru($id)
     {
-       return Guru::where('id_pengguna', $id)->exists();   
+        return Guru::where('id_pengguna', $id)->exists();
     }
 
     private function isGuruPiket($id)

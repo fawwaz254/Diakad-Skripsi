@@ -155,6 +155,8 @@ class Pengguna extends Authenticatable
                 return 'Wali Murid';
             case 5:
                 return 'Pelatih Ekskul';
+            case 6:
+                return 'pembimbing-magang';
             default:
                 return '';
         }
@@ -173,6 +175,8 @@ class Pengguna extends Authenticatable
                 return 'wali-murid';
             case 5:
                 return 'pelatih-ekskul';
+            case 6:
+                return 'pembimbing-magang';
             default:
                 return '';
         }
