@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
-
 use Auth;
 use DB;
 use Session;
@@ -137,6 +136,7 @@ class InputPresensiMagangController extends Controller
 
     public function actionInputAbsensiMagang(Request $request, $mode, $id_presensi_magang)
     {
+
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $validator = Validator::make($request->all(), [
@@ -151,7 +151,6 @@ class InputPresensiMagangController extends Controller
         } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-
             // ACTION ADD
             if ($mode == 'add') {
                 DB::beginTransaction();
@@ -210,7 +209,7 @@ class InputPresensiMagangController extends Controller
 
                     ];
                 }
-            } elseif ($mode = 'edit') {
+            } elseif ($mode == 'edit') {
                 DB::beginTransaction();
                 try {
                     $tanggal = Carbon::parse($input->tanggal);
@@ -224,7 +223,7 @@ class InputPresensiMagangController extends Controller
                     $array_combine = array();
                     foreach ($input->id_siswa as $key => $id_siswa) {
                         $array_combine[] = (object) array(
-                            'id_siswa'    => $input->id_siswa[$key],
+                            'id_siswa'      => $input->id_siswa[$key],
                             'kehadiran'      => $input->kehadiran[$key]
                         );
                     }
@@ -248,14 +247,46 @@ class InputPresensiMagangController extends Controller
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
-
                     return [
                         'status' => 300, // GAGAL
                         'message' =>  $e->getMessage()
 
                     ];
                 }
-            } elseif ($mode = 'delete') { } else { }
+            } elseif ($mode == 'delete') {
+                DB::beginTransaction();
+                try {
+                    $pembimbing_magang = PembimbingMagang::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+                    $PresensiMagangSiswa = PresensiMagangSiswa::where('id_presensi_magang', $id_presensi_magang)->get();
+                    foreach ($PresensiMagangSiswa as $siswa) {
+                        $siswa->deleted_by =  $auth_data->pengguna->id_pengguna;
+                        $siswa->save();
+                        $siswa->delete();
+                    }
+
+                    if ($presensi = PresensiMagang::where('id_presensi_magang', $id_presensi_magang)->first()) {
+                        $presensi->deleted_by = $auth_data->pengguna->id_pengguna;
+                        $presensi->save();
+                        $presensi->delete();
+                    }
+
+                    DB::commit();
+                    // all good
+                    return [
+                        'status' => 200, // SUCCESS AND LOAD CONTENT
+                        'path' => 'presensi-magang/input-presensi-magang',
+                        'message' => 'Delete Absensi Magang Successfully'
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+                    return [
+                        'status' => 300, // GAGAL
+                        'message' =>  $e->getMessage()
+
+                    ];
+                }
+            } else { }
         }
     }
     public function viewDetailInputPresensiMagang(Request $request, $id_presensi_magang)

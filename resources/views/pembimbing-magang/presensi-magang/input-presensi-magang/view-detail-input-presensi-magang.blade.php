@@ -117,9 +117,9 @@
                     success: function(response) {
                         if (response.status == 200) {
                             vex.dialog.alert(response.message);
-                            loadContent(
-                                '{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}'
-                            );
+                            setTimeout(() => {
+                                loadURI(response.path);
+                            }, 2000);
                         } else if (response.status == 300) {
                             vex.dialog.alert(response.message);
                         }
