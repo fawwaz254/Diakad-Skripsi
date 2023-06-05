@@ -66,19 +66,21 @@ class InputPresensiMagangController extends Controller
             ->make(true);
     }
 
-
-
-    public function viewAddInputPresensiMagang(Request $request)
+    public function viewAddEditInputPresensiMagang(Request $request, $id_presensi_magang)
     {
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $detail_magang = PembimbingMagang::with('rekanan', 'periode')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+        if ($id_presensi_magang != '0') {
+            $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->find($id_presensi_magang);
+        } else {
+            $presensi_magang = null;
+        }
 
+        $detail_magang = PembimbingMagang::with('rekanan', 'periode')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         return view(
-            'pembimbing-magang/presensi-magang/input-presensi-magang/add-input-presensi-magang',
-            compact('auth_data', 'detail_magang')
+            'pembimbing-magang/presensi-magang/input-presensi-magang/add-edit-input-presensi-magang',
+            compact('auth_data', 'detail_magang', 'presensi_magang')
         );
     }
 
@@ -87,8 +89,13 @@ class InputPresensiMagangController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $pembimbing_magang = PembimbingMagang::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+        if ($input->id_presensi_magang != '0') {
+            $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->find($input->id_presensi_magang);
+        } else {
+            $presensi_magang = null;
+        }
 
+        $pembimbing_magang = PembimbingMagang::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $list_data = PengambilanMagang::with('siswa', 'siswa.pengguna', 'siswa.pengguna.status_pengguna')
             ->where('id_periode_magang', $pembimbing_magang->id_periode_magang)->where('id_rekanan_magang', $pembimbing_magang->id_rekanan_magang);
 
@@ -104,7 +111,11 @@ class InputPresensiMagangController extends Controller
                 );
                 return $data;
             })
-            ->addColumn('keterangan', function ($item) {
+            ->addColumn('keterangan', function ($item) use ($presensi_magang) {
+                $kehadiran = null;
+                if ($presensi_magang && $selected_presensi_ekskul_peserta = $presensi_magang->presensiMagangSiswa->firstWhere('id_siswa', $item->siswa->id_siswa)) {
+                    $kehadiran = $selected_presensi_ekskul_peserta->kehadiran;
+                }
                 $options = array(
                     array('id' => 1, 'text' => 'Hadir'),
                     array('id' => 2, 'text' => 'Sakit'),
@@ -113,7 +124,7 @@ class InputPresensiMagangController extends Controller
                 );
                 $data = array(
                     'options' => $options,
-                    // 'kehadiran' => $kehadiran,
+                    'kehadiran' => $kehadiran,
                     'status_pengguna' => array(
                         'status' => $item->siswa->pengguna->status_pengguna->aktif_status_pengguna,
                         'nm_status' => $item->siswa->pengguna->status_pengguna->nm_status_pengguna
@@ -124,7 +135,7 @@ class InputPresensiMagangController extends Controller
             ->make(true);
     }
 
-    public function actionInputAbsensiMagang(Request $request, $mode)
+    public function actionInputAbsensiMagang(Request $request, $mode, $id_presensi_magang)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -199,7 +210,67 @@ class InputPresensiMagangController extends Controller
 
                     ];
                 }
-            }
+            } elseif ($mode = 'edit') {
+                DB::beginTransaction();
+                try {
+                    $tanggal = Carbon::parse($input->tanggal);
+                    $pembimbing_magang = PembimbingMagang::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+                    if ($presensi = PresensiMagang::find($id_presensi_magang)) {
+                        $presensi->tanggal = $tanggal;
+                        $presensi->keterangan = $input->keterangan;
+                        $presensi->save();
+                    }
+
+                    $array_combine = array();
+                    foreach ($input->id_siswa as $key => $id_siswa) {
+                        $array_combine[] = (object) array(
+                            'id_siswa'    => $input->id_siswa[$key],
+                            'kehadiran'      => $input->kehadiran[$key]
+                        );
+                    }
+
+                    // presensi_ekskul_peserta
+                    foreach ($array_combine as $item) {
+                        if ($presensi_siswa = PresensiMagangSiswa::where('id_presensi_magang', '=', $id_presensi_magang)->where('id_siswa', '=', $item->id_siswa)->first()) {
+                            $presensi_siswa->kehadiran              = $item->kehadiran;
+                            $presensi_siswa->updated_by             = $auth_data->pengguna->id_pengguna;
+                            $presensi_siswa->save();
+                        }
+                    }
+
+                    DB::commit();
+                    // all good
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'presensi-magang/input-presensi-magang',
+                        'message' => 'Update Absensi Magang Successfully'
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+
+                    return [
+                        'status' => 300, // GAGAL
+                        'message' =>  $e->getMessage()
+
+                    ];
+                }
+            } elseif ($mode = 'delete') { } else { }
         }
+    }
+    public function viewDetailInputPresensiMagang(Request $request, $id_presensi_magang)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $pembimbing_magang = PembimbingMagang::with('rekanan', 'periode')->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->find($id_presensi_magang);
+
+        $data_siswa = PengambilanMagang::with('siswa', 'siswa.pengguna', 'siswa.pengguna.status_pengguna')->where('id_periode_magang', $pembimbing_magang->id_periode_magang)->where('id_rekanan_magang', $pembimbing_magang->id_rekanan_magang)->get();
+
+        return view(
+            'pembimbing-magang/presensi-magang/input-presensi-magang/view-detail-input-presensi-magang',
+            compact('auth_data', 'presensi_magang', 'data_siswa', 'pembimbing_magang')
+        );
     }
 }
