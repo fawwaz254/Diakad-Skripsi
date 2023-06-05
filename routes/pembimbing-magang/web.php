@@ -23,8 +23,8 @@ Route::middleware(['token_staff'])->group(function () {
 			// MENU Rekap Absensi Ekskul
 			Route::get('rekap-presensi-magang', [RekapPresensiMagangController::class, 'viewRekapAbsensiMagang']);
 			// Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'viewDetailRekapAbsensiEkskul']);
-			// Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'printRekapAbsensiEkskul']);
-			// Route::get('rekap-absensi-ekskul/print-detail/{id_semester}/{id_ekskul}/{id_siswa}', [RekapAbsensiEkskulControllerFromGuru::class, 'printRekapAbsensiKehadiranEkskul']);
+			Route::get('rekap-presensi-magang/print', [RekapPresensiMagangController::class, 'printAllRekapPresensiMagang']);
+			Route::get('rekap-presensi-magang/print/{id_siswa}', [RekapPresensiMagangController::class, 'printRekapPresensiMagang']);
 		});
 	});
 });
