@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class PresensiMagang extends Model
 {
@@ -37,5 +38,12 @@ class PresensiMagang extends Model
     public function presensiMagangSiswa()
     {
         return $this->hasMany(PresensiMagangSiswa::class, 'id_presensi_magang');
+    }
+    public function convertDateFormat($label, $format)
+    {
+        $date = Carbon::parse($this->$label)->locale('id');
+        $date->settings(['formatFunction' => 'translatedFormat']);
+        return $date->format($format);
+        // return date_format(date_create($this->$label), $format);
     }
 }

@@ -124,7 +124,7 @@ class InputPresensiMagangController extends Controller
             ->make(true);
     }
 
-    public function actionInputAbsensiEkskul(Request $request, $mode)
+    public function actionInputAbsensiMagang(Request $request, $mode)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;

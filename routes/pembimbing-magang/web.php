@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PembimbingMagang\AbsensiMagang\InputAbsensiMagangController;
+use App\Http\Controllers\PembimbingMagang\PresensiMagang\RekapPresensiMagangController;
 use App\Http\Controllers\PembimbingMagang\PresensiMagang\InputPresensiMagangController;
 use App\Http\Controllers\PembimbingMagang\WelcomeController;
 
@@ -17,11 +17,11 @@ Route::middleware(['token_staff'])->group(function () {
 
 			Route::post('input-presensi-magang/datatables', [InputPresensiMagangController::class, 'datatablesInputPresensiMagang']);
 			Route::post('input-presensi-magang/datatables-detail', [InputPresensiMagangController::class, 'datatablesSiswaInputPresensiMagang']);
-			Route::post('input-presensi-magang/action/{mode}', [InputPresensiMagangController::class, 'actionInputAbsensiEkskul']);
+			Route::post('input-presensi-magang/action/{mode}', [InputPresensiMagangController::class, 'actionInputAbsensiMagang']);
 			// Route::post('input-absensi-ekskul/action/{mode}/{id}', [InputAbsensiEkskulController::class, 'actionInputAbsensiEkskul']);
 
 			// MENU Rekap Absensi Ekskul
-			// Route::get('rekap-absensi-ekskul', [RekapAbsensiEkskulController::class, 'viewRekapAbsensiEkskul']);
+			Route::get('rekap-presensi-magang', [RekapPresensiMagangController::class, 'viewRekapAbsensiMagang']);
 			// Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'viewDetailRekapAbsensiEkskul']);
 			// Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'printRekapAbsensiEkskul']);
 			// Route::get('rekap-absensi-ekskul/print-detail/{id_semester}/{id_ekskul}/{id_siswa}', [RekapAbsensiEkskulControllerFromGuru::class, 'printRekapAbsensiKehadiranEkskul']);
