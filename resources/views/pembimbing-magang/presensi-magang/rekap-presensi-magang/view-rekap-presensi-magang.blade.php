@@ -67,7 +67,7 @@
                                         @foreach ($presensi_magang as $presensi)
                                             @if ($presensi_magang_siswa = $presensi->presensiMagangSiswa->firstWhere('id_siswa', $siswa->id_siswa))
                                                 @if ($presensi_magang_siswa->kehadiran == 1)
-                                                    <td class="is-center bg-light-green"></td>
+                                                    <td class="is-center bg-light-green">H</td>
                                                 @elseif($presensi_magang_siswa->kehadiran == 2)
                                                     <td class="is-center bg-amber">S</td>
                                                 @elseif($presensi_magang_siswa->kehadiran == 3)
