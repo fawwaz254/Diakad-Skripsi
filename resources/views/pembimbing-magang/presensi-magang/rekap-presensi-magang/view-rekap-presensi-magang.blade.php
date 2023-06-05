@@ -67,7 +67,7 @@
                                         @foreach ($presensi_magang as $presensi)
                                             @if ($presensi_magang_siswa = $presensi->presensiMagangSiswa->firstWhere('id_siswa', $siswa->id_siswa))
                                                 @if ($presensi_magang_siswa->kehadiran == 1)
-                                                    <td class="is-center bg-light-green">H</td>
+                                                    <td class="is-center bg-light-green"></td>
                                                 @elseif($presensi_magang_siswa->kehadiran == 2)
                                                     <td class="is-center bg-amber">S</td>
                                                 @elseif($presensi_magang_siswa->kehadiran == 3)
@@ -83,7 +83,7 @@
                                         @endforeach
                                         <td class="is-center">
                                             <a class=" btn btn-success btn-circle waves-effect waves-circle waves-float justify-content-center align-items-center"
-                                                href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/print-detail/' . $pembimbing_magang->id_presensi_magang . '/' . $siswa->id_siswa) }}"
+                                                href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/print/' . $pembimbing_magang->id_presensi_magang . '/' . $siswa->id_siswa) }}"
                                                 target="_blank">
                                                 <i class="material-icons">picture_as_pdf</i>
                                             </a>
