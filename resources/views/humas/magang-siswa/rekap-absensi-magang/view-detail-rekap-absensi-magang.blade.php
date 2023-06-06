@@ -192,14 +192,6 @@
                                                 <td class="is-center">
                                                     {{ $presensi_magang_siswa->where('id_siswa', $pengambilan_magang->id_siswa)->where('kehadiran', '0')->count() }}
                                                 </td>
-
-                                                {{-- @foreach ($presensi_magang as $presensi)
-                                @if ($presensi_magang_siswa = $presensi->presensiMagangSiswa->firstWhere('id_siswa', $siswa->id_siswa))
-                                   
-                                @else
-                                    <td></td>
-                                @endif
-                            @endforeach --}}
                                                 <td class="is-center">
                                                     <a class=" btn btn-success btn-circle waves-effect waves-circle waves-float justify-content-center align-items-center"
                                                         href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/print/' . $pengambilan_magang->id_siswa) }}"
@@ -209,37 +201,8 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        {{-- <tr> --}}
-                                        {{-- <th colspan="3">Persentase Absen</th> --}}
-                                        {{-- @foreach ($presensi_magang as $presensi)
-                            <td class="is-center">
-                                {{ ($presensi->presensiMagangSiswa->where('kehadiran', '1')->count() / $presensi->presensiMagangSiswa->count()) * 100 }}%
-                            </td>
-                        @endforeach --}}
-                                        {{-- </tr> --}}
                                     </tbody>
                                 </table>
-
-
-
-
-                                {{-- <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table">
-                <thead>
-                    <tr>
-                        <th>No. </th>
-                        <th>NIS</th>
-                        <th>Nama</th>
-                        <th>Kelas</th>
-                        <th>Rekanan</th>
-                        <th>Tanggal</th>
-
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
-        </div> --}}
-
                             </div>
                         </div>
                     </div>
@@ -249,30 +212,6 @@
     </div>
 </div>
 
-{{-- <form id="form-validation" method="post"
-    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/pengajuan-magang/action-pengajuan-magang') }}">
-    {{ csrf_field() }}
-
-    <!-- Modal Pengajuan -->
-    <div class="modal fade" id="modalMaster" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="defaultModalLabel">Pengajuan Magang</h4>
-                </div>
-                <input type="hidden" name="id_pengambilan_magang" id="id_pengambilan_magang">
-                <div class="modal-body" id="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
-                    <button type="submit" class="btn btn-link waves-effect">SAVE CHANGES</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal Pengajuan -->
-</form> --}}
 
 @include('scriptjs')
 
@@ -301,175 +240,3 @@
         });
     });
 </script>
-
-
-{{-- <script type="text/javascript">
-    function pengajuanSiswaMagang() {
-
-        var periode_magang = $('#id_periode_magang').val();
-        var rekanan_magang = $('#id_rekanan_magang').val();
-
-        if (periode_magang == 0) {
-            alert('silahkan pilih periode terlebih dahulu');
-            return false;
-        }
-        if (rekanan_magang == 0) {
-            alert('silahkan pilih rekanan terlebih dahulu');
-            return false;
-        }
-
-        loadURI('magang-siswa/pengajuan-magang/add/' + $('#id_rekanan_magang').val() + "/" + periode_magang);
-    }
-
-    function filterData() {
-        primary_table.draw();
-    }
-
-    var modul_url = 'magang-siswa';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengajuan-magang/datatables';
-
-    var primary_table = $('#primary_table').DataTable({
-        processing: true,
-        serverSide: true,
-        responsive: true,
-        ajax: {
-            url: datatable_url,
-            type: 'GET',
-            data: function(d) {
-                d.id_rekanan_magang = $('select[name=id_rekanan_magang]').val(),
-                    d.id_periode_magang = $('select[name=id_periode_magang]').val()
-            }
-        },
-        columns: [{
-                data: null,
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'nm_rekanan_magang',
-                name: 'nm_rekanan_magang'
-            },
-            {
-                data: 'nm_periode_magang',
-                name: 'nm_periode_magang'
-            },
-            {
-                data: 'semester',
-                name: 'semester'
-            },
-            {
-                data: 'nis_siswa',
-                name: 'nis_siswa'
-            },
-            {
-                data: 'nm_pengguna',
-                name: 'nm_pengguna'
-            },
-            {
-                data: 'nm_kelas',
-                name: 'nm_kelas'
-            },
-            {
-                data: 'status_apv_pengambilan_magang',
-                name: 'status_apv_pengambilan_magang'
-            },
-            {
-                data: 'status_magang',
-                name: 'status_magang'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-
-                    var html = '';
-
-                    if (data.status_apv_pengambilan_magang == 2) {
-                        html +=
-                            '<button class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="pengajuanAction(\'' +
-                            data.id + '\', \`tidak-diapprove`\)">' +
-                            '    <i class="material-icons">input</i>' +
-                            '</button> ';
-                    }
-
-                    if (data.status_apv_pengambilan_magang == 1) {
-
-                        html +=
-                            '<button class="btn btn-success btn-circle waves-effect waves-circle waves-float" onclick="pengajuanAction(\'' +
-                            data.id + '\', \`pengubahan-status-magang`\)">' +
-                            '    <i class="material-icons">input</i>' +
-                            '</button> ';
-
-                    }
-
-                    html +=
-                        ' <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="pengajuanAction(\'' +
-                        data.id + '\', \`hapus-data`\)">' +
-                        '    <i class="material-icons">delete</i>' +
-                        '</button> ';
-                    return html;
-                }
-            }
-        ]
-    });
-
-    primary_table.on('draw', function() {
-        primary_table.column(0, {
-            search: 'applied',
-            order: 'applied'
-        }).nodes().each(function(cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = start + i + 1;
-        });
-    }).draw();
-
-    function pengajuanAction(id_pengambilan_magang, mode) {
-        $('#id_pengambilan_magang').val(id_pengambilan_magang);
-        if (mode == 'pengajuan') {
-            $('#modal-body').html(`
-                <input  type="hidden" value="pengajuan" name="mode">
-                <select class="form-control show-tick" name="status_apv_pengambilan_magang" required>
-                  <option value="2">Waiting Approval</option>
-                  <option value="1">Approve</option>
-                </select>
-            `)
-        } else if (mode == 'tidak-diapprove') {
-            $('#modal-body').html(`
-                <input  type="hidden" value="tidak-diapprove" name="mode">
-                <select class="form-control show-tick" name="status_apv_pengambilan_magang" required>
-                  <option value="3">Tidak Di Approve</option>
-                </select>
-
-                <br>
-
-                <label>Keterangan</label>
-                <div class="form-group">
-                    <div class="form-line">
-                        <textarea rows="4" class="form-control no-resize" name="keterangan"></textarea>
-                    </div>
-                </div>
-
-            `)
-        } else if (mode == 'pengubahan-status-magang') {
-            $('#modal-body').html(`
-
-                <input  type="hidden" value="pengubahan-status-magang" name="mode">
-
-                <select class="form-control show-tick" name="status_magang" required>
-                  <option value="1">Selesai</option>
-                  <option value="10">Batal</option>
-                </select>
-
-            `);
-        } else if (mode == 'hapus-data') {
-            $('#modal-body').html(`
-                <input  type="hidden" value="hapus-data" name="mode">
-                <p>Apakah anda yakin ingin menghapus data ini ?</p>
-            `);
-        }
-
-        $('#modalMaster').modal('show');
-    }
-</script> --}}
