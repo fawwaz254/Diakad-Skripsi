@@ -2,7 +2,7 @@
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
                 href="
-				{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/add') }}
+				{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/manage/0') }}
 				"><i
                     class="material-icons">note_add</i><span>Tambah Absensi Magang</span></a></h2>
     </div>
@@ -41,7 +41,7 @@
 <script>
     var modul_url = 'presensi-magang';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/input-presensi-magang/datatables';
-    let detail_url = role_url + '#' + modul_url + '/detail';
+    let detail_url = role_url + '#' + modul_url + '/input-presensi-magang/detail';
 
     let primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -83,8 +83,8 @@
                 orderable: false,
                 render: function(data) {
                     return '<a class="target-link btn btn-danger btn-circle waves-effect waves-circle waves-float" href="' +
-                        data.id + '">' +
-                        '    <i class="material-icons">edit</i>' +
+                        detail_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">remove_red_eye</i>' +
                         '</a> ';
                 }
             }
