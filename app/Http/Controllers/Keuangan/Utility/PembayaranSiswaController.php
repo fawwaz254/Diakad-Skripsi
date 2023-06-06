@@ -979,7 +979,7 @@ class PembayaranSiswaController extends BaseController
                     'status' => 203, // SUCCESS AND LOAD CONTENT
                     'message' => 'Save Pelunasan Successfully',
                     'data' => [
-                        'id' => $pembayaranBiaya->id_pembayaran_biaya,
+                        'id' => $id,
                         'date' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'd/m'),
                         'month' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'n'),
                     ],
@@ -1098,16 +1098,16 @@ class PembayaranSiswaController extends BaseController
                 }
             } elseif ($mode == 'delete') {
                 // make object to find id
-                $pembayaranBiaya = PembayaranBiaya::find($id);
+                // $pembayaranBiaya = PembayaranBiaya::find($id);
 
-                $tagihanBiaya = TagihanBiaya::find($pembayaranBiaya->id_tagihan_biaya);
+                $tagihanBiaya = TagihanBiaya::find($id);
                 $tagihanBiaya->besar_pembayaran = 0;
                 $tagihanBiaya->is_tagih = 1;
                 $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $tagihanBiaya->updated_at = $now;
                 $tagihanBiaya->save();
-
-                $pembayaranBiaya->forceDelete();
+                $pembayaranBiaya = PembayaranBiaya::where('id_tagihan_biaya', $tagihanBiaya->id_tagihan_biaya)->forceDelete();
+                // $pembayaranBiaya->forceDelete();
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
