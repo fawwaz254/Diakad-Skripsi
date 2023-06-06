@@ -13,7 +13,7 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/action/add') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/action') }}/{{ $presensi_magang ? 'edit' : 'add' }}/{{ $presensi_magang ? $presensi_magang->id_presensi_magang : '0' }}">
                         {{ csrf_field() }}
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable display nowrap"
@@ -31,11 +31,10 @@
                         <br>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Keterangan</label>
-                                        <textarea class="form-control" name="keterangan" rows="2" cols="100"></textarea>
+                                        <textarea class="form-control" name="keterangan" rows="2" cols="100">{{ $presensi_magang ? $presensi_magang->keterangan : '' }}</textarea>
                                     </div>
                                 </div>
                                 <br>
@@ -44,7 +43,7 @@
                                         <label>Tanggal Presensi</label>
                                         <input type="text" class="datetimepicker form-control" name="tanggal"
                                             aria-required="true" aria-invalid="true"
-                                            value="{{ \Carbon\Carbon::today()->format('Y-m-d ') }}">
+                                            value="{{ $presensi_magang ? \Carbon\Carbon::parse($presensi_magang->tanggal)->format('Y-m-d ') : \Carbon\Carbon::today()->format('Y-m-d ') }} ">
                                     </div>
                                 </div>
                             </div>
@@ -63,16 +62,18 @@
 @include('scriptjs')
 <script>
     var modul_url = 'presensi-magang';
-
     let datatable_url = base_url + '/' + role_url + '/' + modul_url + '/input-presensi-magang/datatables-detail/';
-
+    var id_presensi_magang = "{{ $presensi_magang ? $presensi_magang->id_presensi_magang : '0' }}";
 
     let primary_table = $('#primary_table').DataTable({
         processing: true,
         pageLength: 100,
         ajax: {
             url: datatable_url,
-            type: 'POST'
+            type: 'POST',
+            data: {
+                id_presensi_magang: id_presensi_magang
+            },
         },
         columns: [{
                 data: null,
@@ -103,9 +104,13 @@
                     if (data.status_pengguna.status == 1) {
                         let html = '';
                         $.each(data.options, function(index, item) {
-                            html += '<option value="' + item.id + '">' + item.text +
-                                '</option>';
-
+                            if (data.kehadiran == item.id) {
+                                html += '<option value="' + item.id + '"selected>' + item.text +
+                                    '</option>';
+                            } else {
+                                html += '<option value="' + item.id + '">' + item.text +
+                                    '</option>';
+                            }
                         })
                         return '<select class="form-control show-tick" style="width:85px;" name="kehadiran[]">' +
                             html +

@@ -7,19 +7,11 @@
 </style>
 <div class="container-fluid">
     <div class="block-header">
-        {{-- <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#' . $auth_data->modul_url . '/' . $auth_data->menu_url) }}"><i
-                    class="material-icons">backspace</i><span>Kembali</span></a></h2> --}}
+        <h2><a class="btn bg-blue waves-effect "
+                href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/print') }}"
+                target="_blank"><i class="material-icons">print</i><span>Cetak</span></a></h2>
     </div>
-    <div class="block-header">
-        {{-- <h2><a class="btn bg-blue waves-effect "
-                href="{{ url(Request::segment(1) . '/' . $auth_data->modul_url . '/' . $auth_data->menu_url . '/print/' . $id_semester . '/' . $id_ekskul) }}"
-                target="_blank"><i class="material-icons">print</i><span>Cetak</span></a></h2> --}}
-    </div>
-    {{-- <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect" onclick="show()"><i
-                    class="material-icons">remove_red_eye</i><span>Tampilkan Detail Pertemuan Ekskul</span></a></h2>
-    </div> --}}
+
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -35,7 +27,8 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             style="overflow-x:auto;" id="primary_table">
                             <thead>
                                 <tr>
@@ -61,13 +54,11 @@
                                     <tr>
                                         <td>{{ $no++ }}</td>
                                         <td>{{ $siswa->siswa->nis_siswa }}</td>
-                                        {{-- <td>{{ $siswa->siswa->nisn_siswa }}</td> --}}
                                         <td>{{ $siswa->siswa->pengguna->nm_pengguna }}</td>
-                                        {{-- <td>{{ $siswa->kelas->nm_kelas }}</td> --}}
                                         @foreach ($presensi_magang as $presensi)
                                             @if ($presensi_magang_siswa = $presensi->presensiMagangSiswa->firstWhere('id_siswa', $siswa->id_siswa))
                                                 @if ($presensi_magang_siswa->kehadiran == 1)
-                                                    <td class="is-center bg-light-green"></td>
+                                                    <td class="is-center bg-light-green"> &#10004;</td>
                                                 @elseif($presensi_magang_siswa->kehadiran == 2)
                                                     <td class="is-center bg-amber">S</td>
                                                 @elseif($presensi_magang_siswa->kehadiran == 3)
@@ -83,7 +74,7 @@
                                         @endforeach
                                         <td class="is-center">
                                             <a class=" btn btn-success btn-circle waves-effect waves-circle waves-float justify-content-center align-items-center"
-                                                href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/print/' . $pembimbing_magang->id_presensi_magang . '/' . $siswa->id_siswa) }}"
+                                                href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/print/' . $siswa->id_siswa) }}"
                                                 target="_blank">
                                                 <i class="material-icons">picture_as_pdf</i>
                                             </a>
