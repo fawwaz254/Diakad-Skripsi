@@ -279,12 +279,16 @@
                                                             style="color: #4caf50;">Print
                                                             {{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b></a>
                                                     @if ($tagihan->is_request == 0)
-                                                        <br>
-                                                        <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
-                                                            onclick="deleteActionKhusus(this)"
-                                                            data-id="{{ $tagihan->id_tagihan_biaya }}">
-                                                            Batal
-                                                        </a>
+                                                        @if (
+                                                            $tagihan->is_request == 0 &&
+                                                                \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->tgl_pelunasan)
+                                                            <br>
+                                                            <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
+                                                                onclick="deleteActionKhusus(this)"
+                                                                data-id="{{ $tagihan->id_tagihan_biaya }}">
+                                                                Batal
+                                                            </a>
+                                                        @endif
                                                     @endif
                                                     @if ($tagihan->is_request == 1)
                                                         <br> <b>Online</b>
