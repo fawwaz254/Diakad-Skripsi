@@ -50,7 +50,6 @@
     .tdbg-12 {
         background: #a0c1b8;
     }
-
 </style>
 <div class="container-fluid">
     <div class="row clearfix">
@@ -130,11 +129,12 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-group">
-                                    <input type="radio" name="action" id="lunas" class="filled-in with-gap" checked=""
-                                        value="1">
+                                    <input type="radio" name="action" id="lunas" class="filled-in with-gap"
+                                        checked="" value="1">
                                     <label for="lunas">Langsung Lunas</label>
 
-                                    <input type="radio" name="action" id="cicilan" class="filled-in with-gap" value="2">
+                                    <input type="radio" name="action" id="cicilan" class="filled-in with-gap"
+                                        value="2">
                                     <label for="cicilan" class="m-l-20">Cicilan</label>
                                 </div>
                             </div>
@@ -214,7 +214,7 @@
                                                                 class="btn btn-danger btn-circle waves-effect waves-circle waves-float"
                                                                 style="width: 25px; height: 25px;"
                                                                 onclick="deleteActionKhusus(this)"
-                                                                data-id="{{ $tagihan->id_pembayaran_biaya }}">
+                                                                data-id="{{ $tagihan->id_tagihan_biaya }}">
                                                                 <i class="material-icons"
                                                                     style="left: -7px; top: -7px;">close</i>
                                                             </button>
