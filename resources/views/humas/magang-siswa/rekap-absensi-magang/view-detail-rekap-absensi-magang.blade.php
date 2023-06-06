@@ -138,9 +138,9 @@
                                     id="primary_table">
                                     <thead>
                                         <tr>
-                                            <th>No. </th>
-                                            <th>Kelas</th>
-                                            <th>NIS</th>
+                                            <th style="text-align: center;">No. </th>
+                                            <th style="text-align: center;">Kelas</th>
+                                            <th style="text-align: center;">NIS</th>
                                             <th>Nama</th>
                                             <th>Rekanan</th>
                                             <th style="text-align: center;">@php
@@ -161,9 +161,11 @@
                                         @endphp
                                         @foreach ($list_pengambilan_magang as $pengambilan_magang)
                                             <tr>
-                                                <td>{{ $no++ }}</td>
-                                                <th>{{ $pengambilan_magang->kelas->nm_kelas }}</th>
-                                                <td>{{ $pengambilan_magang->siswa->nis_siswa }}</td>
+                                                <td style="text-align: center;">{{ $no++ }}</td>
+                                                <th style="text-align: center;">
+                                                    {{ $pengambilan_magang->kelas->nm_kelas }}</th>
+                                                <td style="text-align: center;">
+                                                    {{ $pengambilan_magang->siswa->nis_siswa }}</td>
                                                 <td>{{ $pengambilan_magang->siswa->pengguna->nm_pengguna }}</td>
                                                 <td>{{ $pengambilan_magang->rekanan->nm_rekanan_magang }}</td>
 

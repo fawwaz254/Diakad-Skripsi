@@ -462,6 +462,7 @@ Route::middleware(['token_staff'])->group(function () {
             //rekap absensi magang
             Route::get('rekap-absensi-magang', [RekapAbsensiMagangController::class, 'viewRekapAbsensiMagang']);
             Route::get('rekap-absensi-magang/detail/{id_rekanan}/{id_periode}/{date}', [RekapAbsensiMagangController::class, 'viewDetailRekapAbsensiMagang']);
+            Route::get('rekap-absensi-magang/print/{id_siswa}', [RekapAbsensiMagangController::class, 'printRekapPresensiMagang']);
         });
 
         /** === MODUL MAGANG ALUMNI === **/
