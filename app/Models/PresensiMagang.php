@@ -44,6 +44,5 @@ class PresensiMagang extends Model
         $date = Carbon::parse($this->$label)->locale('id');
         $date->settings(['formatFunction' => 'translatedFormat']);
         return $date->format($format);
-        // return date_format(date_create($this->$label), $format);
     }
 }
