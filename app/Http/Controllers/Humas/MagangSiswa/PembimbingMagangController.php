@@ -20,6 +20,8 @@ use Yajra\Datatables\Datatables;
 use App\Libraries\Pendidikan\LibMagangSiswa;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\PembimbingMagang;
+use App\Models\PresensiMagang;
+use App\Models\PresensiMagangSiswa;
 use App\Models\RekananMagang;
 use App\Models\RolePengguna;
 use App\Models\Semester;
@@ -62,120 +64,16 @@ class PembimbingMagangController extends Controller
         return view('humas/magang-siswa/pembimbing-magang/add-pembimbing-magang', compact('auth_data', 'data_pengambil_magang', 'randomString'));
     }
 
+    public function editPembimbingMagang(Request $request, $id)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
+        $pembimbing_magang = PembimbingMagang::with('periode.semester', 'rekanan')->find($id);
+        return view('humas/magang-siswa/pembimbing-magang/edit-pembimbing-magang', compact('auth_data', 'pembimbing_magang'));
+    }
 
-
-    // public function importExcel(Request $request)
-    // {
-
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
-    //     $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
-
-    //     return view('humas/magang-siswa/pengajuan-magang/import-excel', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang'));
-    // }
-
-    // public function importExcelAction(Request $request)
-    // {
-
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-    //     $now = Carbon::now(env('APP_TIMEZONE', ''));
-
-    //     $validator = Validator::make($request->all(), [
-    //         'id_rekanan_magang' => 'required',
-    //         'id_periode_magang' => 'required',
-    //         'file-excel' => 'required',
-    //     ]);
-
-    //     if ($validator->fails() && $mode != 'delete') {
-    //         return [
-    //             'status' => 300, // FAILED
-    //             'message' => $validator->errors()->first()
-    //         ];
-    //     } else {
-
-    //         if ($request->hasFile('file-excel')) {
-
-    //             $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
-    //             $data = $data[0]; // Sheet 1
-
-    //             if (count($data)) {
-
-    //                 DB::beginTransaction();
-
-    //                 try {
-
-    //                     foreach ($data as $key => $value) {
-    //                         $value = (object) $value;
-
-    //                         $siswa = Siswa::where('nis_siswa', $value->nis)->first();
-
-    //                         if ($siswa) {
-
-    //                             if ($value->status == 'Waiting Approval') {
-    //                                 $status = 0;
-    //                             } elseif ($value->status == 'Approve') {
-    //                                 $status = 1;
-    //                             } else {
-    //                                 return [
-    //                                     'status'    => 300, // FAILED
-    //                                     'message'   => "Mohon maaf status yang diizinkan hanya approve dan waiting approval"
-    //                                 ];
-    //                             }
-
-    //                             $data                        = new PengajuanSiswaMagang;
-    //                             $data->id_pengambilan_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-    //                             $data->id_siswa              = $siswa->id_siswa;
-    //                             $data->id_kelas              = $siswa->id_kelas;
-    //                             $data->id_periode_magang     = $input->id_periode_magang;
-    //                             $data->id_rekanan_magang     = $input->id_rekanan_magang;
-    //                             $data->status_apv_pengambilan_magang         = $status;
-    //                             $data->status_magang         = 0;
-    //                             $data->created_by            = $input->auth_data->pengguna->id_pengguna;
-    //                             $data->save();
-    //                         } else {
-
-    //                             return [
-    //                                 'status'    => 300, // FAILED
-    //                                 'message'   => "Mohon maaf siswa dengan nis " . $value->nis . " ini tidak ditemikan"
-    //                             ];
-    //                         }
-    //                     }
-
-    //                     DB::commit();
-
-    //                     return [
-    //                         'status' => 202, // SUCCESS AND LOAD CONTENT
-    //                         'path' => 'magang-siswa/pengajuan-magang',
-    //                         'message' => 'Import Magang Siswa Successfully'
-    //                     ];
-    //                 } catch (\Exception $e) {
-
-    //                     DB::rollback();
-
-    //                     return [
-    //                         'status'    => 203, // GAGAL
-    //                         'message'       => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
-    //                     ];
-    //                 }
-    //             } else {
-
-    //                 return [
-    //                     'status'    => 300, // FAILED
-    //                     'message'   => "File excel anda kosong"
-    //                 ];
-    //             }
-    //         } else {
-    //             return [
-    //                 'status'    => 300, // FAILED
-    //                 'message'   => "File Excel tidak ditemukan"
-    //             ];
-    //         }
-    //     }
-    // }
 
     public function datatablesPembimbingMagang(Request $request)
     {
@@ -206,108 +104,17 @@ class PembimbingMagangController extends Controller
                     'pembimbing_magang' => $nama_pengguna
                 ];
             })
-            // ->addColumn('pembimbing_magang', function ($item) use ($id_periode_magang) {
-            //     $data =  $item->pembimbingMagang->where('id_periode_magang', $id_periode_magang)->first();
-            //     return $data ? $data->pengguna->nm_pengguna : '';
-            // })
-
-            // ->addColumn('status_apv_pengambilan_magang', function ($item) {
-            //     if ($item->status_apv_pengambilan_magang == 0) {
-            //         return "Belum di Approve";
-            //     } elseif ($item->status_apv_pengambilan_magang == 1) {
-            //         return "Sudah di Approve";
-            //     } elseif ($item->status_apv_pengambilan_magang == 2) {
-            //         return "Waiting Approval";
-            //     } elseif ($item->status_apv_pengambilan_magang == 3) {
-            //         return "Tidak di Approve";
-            //     }
-            // })
-            // ->addColumn('status_magang', function ($item) {
-            //     if ($item->status_magang == 0) {
-            //         return "";
-            //     } elseif ($item->status_magang == 1) {
-            //         return "Sudah Selesai Magang";
-            //     } else {
-            //         return "Pemagang Dibatalkan";
-            //     }
-            // })
-
             ->addColumn('action', function ($item) use ($id_periode_magang) {
                 $data =  $item->pembimbingMagang->where('id_periode_magang', $id_periode_magang)->first();
-
                 $data = array(
                     'id' => $item->id_pengambilan_magang,
-                    'pembimbingMagang' => $data,
+                    'pembimbingMagang' => $data ? $data->id_pembimbing_magang : null,
                 );
 
                 return $data;
             })
             ->make(true);
     }
-
-    // public function addPengajuanMagang(Request $request, $id_rekanan_magang, $id_periode_magang)
-    // {
-
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data, $id_rekanan_magang);
-    //     $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data, $id_periode_magang);
-
-    //     return view('humas/magang-siswa/pengajuan-magang/add-pengajuan-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang'));
-    // }
-
-    // public function datatablesListSiswa(Request $request, $id_rekanan_magang, $id_periode_magang)
-    // {
-
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $data_siswa = Siswa::select('pengambilan_magang.id_pengambilan_magang', 'pengambilan_magang.id_rekanan_magang', 'pengambilan_magang.id_periode_magang', 'pengambilan_magang.status_apv_pengambilan_magang', 'pengambilan_magang.status_magang', 'siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas')
-    //         ->leftJoin('pengambilan_magang', function ($join) use ($id_rekanan_magang, $id_periode_magang) {
-    //             $join->on('pengambilan_magang.id_siswa', '=', 'siswa.id_siswa')
-    //                 ->where('pengambilan_magang.status_magang', '<>', 10)
-    //                 ->whereNull('pengambilan_magang.deleted_at')
-    //                 ->where('pengambilan_magang.id_rekanan_magang', '=', $id_rekanan_magang)
-    //                 ->where('pengambilan_magang.id_periode_magang', '=', $id_periode_magang);
-    //         })
-    //         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-    //         ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-    //         ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-    //         ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-    //         ->where('status_pengguna.aktif_status_pengguna', '=', 1)
-    //         ->orderBy('kelas.tingkat', 'asc')
-    //         ->orderBy('kelas.nm_kelas', 'asc')
-    //         ->orderBy('siswa.nis_siswa', 'asc');
-
-    //     return Datatables::of($data_siswa)
-    //         ->addColumn('status_apv_pengambilan_magang', function ($item) {
-    //             if ($item->status_apv_pengambilan_magang) {
-    //                 if ($item->status_apv_pengambilan_magang == 0) {
-    //                     return "Belum di Approve";
-    //                 } elseif ($item->status_apv_pengambilan_magang == 1) {
-    //                     return "Sudah di Approve";
-    //                 } elseif ($item->status_apv_pengambilan_magang == 2) {
-    //                     return "Waiting Approval";
-    //                 } elseif ($item->status_apv_pengambilan_magang == 3) {
-    //                     return "Tidak di Approve";
-    //                 }
-    //             } else {
-    //                 return '';
-    //             }
-    //         })
-    //         ->addColumn('action', function ($item) {
-    //             $data = array(
-    //                 'id' => $item->id_siswa,
-    //                 'id_pengambilan_magang' => $item->id_pengambilan_magang,
-    //                 'status_apv_pengambilan_magang' => $item->status_apv_pengambilan_magang
-    //             );
-
-    //             return $data;
-    //         })
-    //         ->make(true);
-    // }
-
 
     public function actionInputPembimbingMagang(Request $request, $mode, $id)
     {
@@ -326,7 +133,6 @@ class PembimbingMagangController extends Controller
                 'message' => $validator->errors()->first()
             ];
         }
-
 
         if ($mode == 'add') {
             $id_pengguna            = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -367,88 +173,46 @@ class PembimbingMagangController extends Controller
                 'path' => 'magang-siswa/pembimbing-magang',
                 'message' => 'Save Data Pembimbing Magang Successfully'
             ];
+        } elseif ($mode == 'edit') {
+            $pembimbing_magang = PembimbingMagang::find($id);
+            $pengguna = Pengguna::find($pembimbing_magang->id_pengguna);
+            $pengguna->nm_pengguna = $input->nm_pembimbing_magang;
+            $pengguna->save();
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'magang-siswa/pembimbing-magang',
+                'message' => 'Update Data Pembimbing Magang Successfully'
+            ];
+        } elseif ($mode == 'delete') {
+            $pembimbing_magang = PembimbingMagang::find($id);
+            $pengguna = Pengguna::find($pembimbing_magang->id_pengguna);
+            $role_pengguna = RolePengguna::where('id_pengguna', $pembimbing_magang->id_pengguna)->first();
+            $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->where('id_pembimbing_magang', $id)->get();
+            if ($presensi_magang) {
+                foreach ($presensi_magang as $presensi) {
+                    foreach ($presensi->presensiMagangSiswa as $presensiSiswa) {
+                        $presensiSiswa->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                        $presensiSiswa->save();
+                        $presensiSiswa->delete();
+                    }
+                    $presensi->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                    $presensi->save();
+                    $presensi->delete();
+                }
+            }
+            $role_pengguna->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $role_pengguna->save();
+            $role_pengguna->delete();
+            $pengguna->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $pengguna->save();
+            $pengguna->delete();
+            $pembimbing_magang->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+            $pembimbing_magang->save();
+            $pembimbing_magang->delete();
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Pembimbing Magang Successfully'
+            ];
         }
     }
-
-    // public function actionPengajuanMagang(Request $request)
-    // {
-
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $now = Carbon::now(env('APP_TIMEZONE', ''));
-
-    //     $id_pengambilan_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
-    //     if (!isset($input->id_pengambilan_magang)) {
-    //         $siswa  = Siswa::find($input->id_siswa);
-    //     }
-
-    //     if ($input->mode == 'pengajuan') {
-
-    //         $data                        = new PengajuanSiswaMagang;
-    //         $data->id_pengambilan_magang = $id_pengambilan_magang;
-    //         $data->id_siswa              = $input->id_siswa;
-    //         $data->id_kelas              = $siswa->id_kelas;
-    //         $data->id_periode_magang     = $input->id_periode_magang;
-    //         $data->id_rekanan_magang     = $input->id_rekanan_magang;
-    //         $data->status_apv_pengambilan_magang         = $input->status_apv_pengambilan_magang;
-    //         $data->status_magang         = 0;
-    //         $data->created_by            = $input->auth_data->pengguna->id_pengguna;
-    //         $data->save();
-
-    //         $message = 'Pengajuan Siswa Magang Successfully';
-    //     } elseif ($input->mode == 'pengubahan-status-magang') {
-    //         $data = PengajuanSiswaMagang::find($input->id_pengambilan_magang);
-    //         $data->status_magang = $input->status_magang;
-    //         $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
-    //         $data->save();
-
-    //         $message = 'Perngubahan Status Magang Successfully';
-    //     } elseif ($input->mode == 'tidak-diapprove') {
-
-    //         if (isset($input->id_pengambilan_magang)) {
-
-    //             $data = PengajuanSiswaMagang::find($input->id_pengambilan_magang);
-    //         } else {
-
-    //             $data = PengajuanSiswaMagang::where([
-    //                 'id_siswa' => $siswa->id_siswa,
-    //                 'id_rekanan_magang' => $input->id_rekanan_magang,
-    //                 'id_periode_magang' => $input->id_periode_magang
-    //             ])->first();
-    //         }
-
-    //         $data->status_apv_pengambilan_magang = $input->status_apv_pengambilan_magang;
-    //         $data->keterangan_approval = $input->keterangan;
-    //         $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
-    //         $data->save();
-
-    //         $message = 'Perngubahan Status Tidak Diapprove Successfully';
-    //     } elseif ($input->mode == 'hapus-data') {
-
-    //         if (isset($input->id_pengambilan_magang)) {
-
-    //             $data = PengajuanSiswaMagang::find($input->id_pengambilan_magang);
-    //         } else {
-
-    //             $data = PengajuanSiswaMagang::where([
-    //                 'id_siswa' => $siswa->id_siswa,
-    //                 'id_rekanan_magang' => $input->id_rekanan_magang,
-    //                 'id_periode_magang' => $input->id_periode_magang
-    //             ])->first();
-    //         }
-
-    //         $data->deleted_by            = $input->auth_data->pengguna->id_pengguna;
-    //         $data->save();
-    //         $data->delete();
-
-    //         $message = 'Penghapusan Data Successfully';
-    //     }
-
-    //     return [
-    //         'status' => 205, // SUCCESS AND LOAD TABLE
-    //         'message' => $message
-    //     ];
-    // }
 }
