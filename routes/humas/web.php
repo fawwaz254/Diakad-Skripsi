@@ -44,6 +44,7 @@ use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
 use App\Http\Controllers\Humas\MagangSiswa\PembimbingMagangController;
+use App\Http\Controllers\Humas\MagangSiswa\RekapAbsensiMagangController;
 use App\Http\Controllers\Humas\ShiftPengguna\ShiftSiswaController;
 
 Route::middleware(['token_staff'])->group(function () {
@@ -456,7 +457,13 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('pembimbing-magang', [PembimbingMagangController::class, 'viewPembimbingMagang']);
             Route::get('pembimbing-magang/datatables', [PembimbingMagangController::class, 'datatablesPembimbingMagang']);
             Route::get('pembimbing-magang/add/{id_pengambil_magang}', [PembimbingMagangController::class, 'addPembimbingMagang']);
+            Route::get('pembimbing-magang/edit/{id_pembimbing_magang}', [PembimbingMagangController::class, 'editPembimbingMagang']);
             Route::post('action-input-pembimbing-magang/{mode}/{id}', [PembimbingMagangController::class, 'actionInputPembimbingMagang']);
+
+            //rekap absensi magang
+            Route::get('rekap-absensi-magang', [RekapAbsensiMagangController::class, 'viewRekapAbsensiMagang']);
+            Route::get('rekap-absensi-magang/detail/{id_rekanan}/{id_periode}/{date}', [RekapAbsensiMagangController::class, 'viewDetailRekapAbsensiMagang']);
+            Route::get('rekap-absensi-magang/print/{id_siswa}', [RekapAbsensiMagangController::class, 'printRekapPresensiMagang']);
         });
 
         /** === MODUL MAGANG ALUMNI === **/
