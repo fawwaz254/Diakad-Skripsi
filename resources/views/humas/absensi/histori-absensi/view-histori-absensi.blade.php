@@ -206,7 +206,8 @@
 
                 <div class="body">
                     <div class="table-responsive ">
-                        <table class="table table-bordered" width="600px">
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
                             <thead style="background:#9C27B0;color:white">
                                 <tr>
                                     <th style="text-align: center;">#</th>
@@ -224,12 +225,12 @@
                                 @endphp
 
                                 @foreach ($hasil as $r)
-                                    @if ($no % 2 == 1)
-                                        <tr style="background: #DDA0DD">
-                                        @else
-                                        <tr>
-                                    @endif
                                     @if ($r['shift'])
+                                        @if ($no % 2 == 1)
+                                            <tr style="background: #DDA0DD">
+                                            @else
+                                            <tr>
+                                        @endif
                                         @if ($r['status'] == $status || $status == '0')
                                             <td style="text-align: center;">{{ $no++ }}</td>
                                             <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
@@ -259,8 +260,8 @@
 
                                             </td>
                                             </tr>
+                                        @else
                                         @endif
-                                    @else
                                     @endif
                                 @endforeach
 
@@ -275,6 +276,15 @@
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script> --}}
 <script type="text/javascript">
+    $(document).ready(function() {
+        var table = $('.dataTable').DataTable({
+            paging: false,
+            lengthMenu: [
+                [-1],
+                ["All"]
+            ]
+        });
+    });
     $("input").on("change", function() {
         this.setAttribute(
             "data-date",

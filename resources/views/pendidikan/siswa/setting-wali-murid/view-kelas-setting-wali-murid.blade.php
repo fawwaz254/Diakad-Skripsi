@@ -29,22 +29,36 @@
                         <form id="form-validation" method="POST"
                             action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-setting-wali-murid') }}">
                             {{ csrf_field() }}
-                            <h2 class="card-inside-title">
-                                Kelas
-                            </h2>
+
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <h2 class="card-inside-title">
+                                        Jurusan
+                                    </h2>
+                                    <select class="form-control show-tick" name="id_jurusan"
+                                        onchange="changeJurusan(this)">
+                                        <option value="0">-- Semua --</option>
+                                        @foreach ($data_jurusan as $data)
+                                            <option value="{{ $data->id_jurusan }}">{{ $data->nm_jurusan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <h2 class="card-inside-title">
+                                        Kelas
+                                    </h2>
                                     <select class="form-control show-tick" name="id_kelas">
+                                        <option value="0">-- Semua --</option>
                                         @foreach ($data_kelas as $data)
                                             <option value="{{ $data->id_kelas }}">{{ $data->nm_kelas }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                </div>
-                            </div>
+
                             <div class="row clearfix">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <button class="btn btn-block bg-red waves-effect" type="submit"><i
@@ -169,5 +183,25 @@
         $('input[name=nomor_hp_wali_murid]').val('');
         $('input[name=gelar_depan]').val('');
         $('input[name=gelar_belakang]').val('');
+    }
+
+    function changeJurusan(el) {
+        $('select[name=id_kelas]').html('');
+        $.ajax({
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getDataKelas') }}',
+            type: 'POST',
+            data: {
+                jurusan: $('select[name=id_jurusan]').val(),
+            },
+            success: function(kelas) {
+
+                $('select[name=id_kelas]').html('');
+                var html = '<option value="0">-- Semua --</option>';
+                $.each(kelas, function(key, item) {
+                    html += '<option value="' + item.id_kelas + '">' + item.nm_kelas + '</option>'
+                });
+                $('select[name=id_kelas]').html(html);
+            }
+        });
     }
 </script>
