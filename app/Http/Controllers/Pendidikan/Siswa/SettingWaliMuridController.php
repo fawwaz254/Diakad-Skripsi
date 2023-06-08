@@ -13,6 +13,7 @@ use Yajra\Datatables\Datatables;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Models\CalonSiswaOrtu;
+use App\Models\Jurusan;
 use App\Models\Kelas as Kelas;
 use App\Models\Siswa as Siswa;
 use App\Models\WaliMurid as WaliMurid;
@@ -40,13 +41,21 @@ class SettingWaliMuridController extends BaseController
 
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_jurusan = Jurusan::get();
 
         $act = null;
         if (!empty($request->segment(4))) {
             $act = $request->segment(4);
         }
 
-        return view('pendidikan/siswa/setting-wali-murid/view-kelas-setting-wali-murid', compact('auth_data', 'data_kelas', 'id_wali_murid', 'act'));
+        return view('pendidikan/siswa/setting-wali-murid/view-kelas-setting-wali-murid', compact('auth_data', 'data_jurusan', 'data_kelas', 'id_wali_murid', 'act'));
+    }
+
+    public function getDataKelas(Request $request)
+    {
+        $input = (object) $request->input();
+        $kelas = Kelas::where('id_jurusan', $input->jurusan)->get();
+        return $kelas;
     }
 
     public function viewErorData(Request $request)
@@ -147,16 +156,8 @@ class SettingWaliMuridController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // $siswa = Siswa::where('id_siswa', '=', $id)->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->first();
         $siswa =  Siswa::where('id_siswa', '=', $id)->with('pengguna', 'wali_murid')->first();
-
-        //sudah punya wali murid, edit
-        // if (!empty($siswa->wali_murid)) {
-        // $wali_murid = WaliMurid::where('id_wali_murid', '=', $siswa->id_wali_murid)->first();
         return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa'));
-        // } else {
-        //     return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa'));
-        // }
     }
 
     public function datatablesWaliMurid(Request $request, $id_kelas)
@@ -167,14 +168,23 @@ class SettingWaliMuridController extends BaseController
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
             ->leftjoin('pengguna AS pwm', 'pwm.id_pengguna', '=', 'wali_murid.id_pengguna')
-            ->where('id_kelas', '=', $id_kelas);
+            ->where('id_kelas', '=', $id_kelas)->orderBy('nis_siswa')
+            ->get();
         return Datatables::of($list_data)
             ->editColumn('nm_wali_murid', function ($item) {
                 return $item->gd . ' ' . $item->nm_wali_murid . ' ' . $item->gb;
             })
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->id_siswa
+                    'id' => $item->id_siswa,
+                    'wali_murid' => $item->wali_murid ? $item->wali_murid->id_wali_murid : null
+                );
+                return $data;
+            })
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'id_siswa' => $item->id_siswa,
+                    'wali_murid' => $item->wali_murid ? $item->wali_murid->id_wali_murid : null
                 );
                 return $data;
             })
@@ -241,15 +251,17 @@ class SettingWaliMuridController extends BaseController
                     $pengguna_wali_murid->username = $input->nomor_hp_ortu;
                     $pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
                     $pengguna_wali_murid->save();
-                        
+
                     $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
                     $calon_siswa_ortu->nomor_telp_ortu = $input->nomor_hp_ortu;
                     $calon_siswa_ortu->nomor_hp_ortu = $input->nomor_hp_ortu;
                     $calon_siswa_ortu->nm_wali = $input->nm_ortu;
                     $calon_siswa_ortu->save();
 
+
                     return [
-                        'status' => 200,
+                        'status' => 202,
+                        'path' => 'siswa/setting-wali-murid/view-kelas/' . $input->id_kelas,
                         'message' => 'Update Data Wali Murid Berhasil'
                     ];
                 } else {
@@ -294,8 +306,9 @@ class SettingWaliMuridController extends BaseController
                 }
 
                 return [
-                    'status' => 200,
-                    'message' => 'Create Data Wali Murid Berhasil'
+                    'status' => 202,
+                    'path' => 'siswa/setting-wali-murid/view-kelas/' . $input->id_kelas,
+                    'message' => 'Update Setting Wali Murid Successfully'
                 ];
             }
 
@@ -653,6 +666,48 @@ class SettingWaliMuridController extends BaseController
             return [
                 'status'     => 300, // FAILED
                 'message'     => "File Excel tidak ditemukan"
+            ];
+        }
+    }
+    public function resetWaliMuridCollect(Request $request)
+    {
+        $input = (object) $request->input();
+        if (empty($input->data_siswa)) {
+            return [
+                'status_code'   => 203,
+                'status_text'   => 'Failed',
+                'message' => 'Belum ada yang dipilih'
+            ];
+        }
+
+        DB::beginTransaction();
+        try {
+            foreach ($input->data_siswa as $id_siswa) {
+                $siswa =  Siswa::where('id_siswa', $id_siswa)->first();
+                $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
+                CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->update(['nomor_telp_ortu' => null], ['nomor_hp_ortu' => null]);
+                Pengguna::where('id_pengguna',  $wali_murid->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->delete();
+                RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->delete();
+                $siswa->id_wali_murid = null;
+                $siswa->save();
+                $wali_murid->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+                $wali_murid->save();
+                $wali_murid->delete();
+            }
+            DB::commit();
+            return [
+                'status_code'   => 203,
+                'status_text'   => 'Success',
+                'message' => 'Delete Wali Murid Kolektif Successfully'
+            ];
+        } catch (\Exception $e) {
+            DB::rollback();
+            return [
+                'status_code'   => 300,
+                'status_text'   => 'Failed',
+                'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
             ];
         }
     }
