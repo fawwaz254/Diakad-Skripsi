@@ -320,6 +320,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-wali-murid/view-kelas/{id_kelas}', [SettingWaliMuridController::class, 'viewKelasWaliMurid']);
             Route::get('setting-wali-murid/datatables/{id_kelas}', [SettingWaliMuridController::class, 'datatablesWaliMurid']);
             Route::get('setting-wali-murid/edit/{id}', [SettingWaliMuridController::class, 'editWaliMurid']);
+            Route::post('setting-wali-murid/getDataKelas', [SettingWaliMuridController::class, 'getDataKelas']);
+
 
             Route::get('setting-wali-murid/upload-setting-wali-murid/{id_kelas}', [SettingWaliMuridController::class, 'viewUploadSettingWaliMurid']);
             Route::get('setting-wali-murid/upload-setting-wali-murid/download/{id_kelas}', [SettingWaliMuridController::class, 'viewDownloadSettingWaliMurid']);

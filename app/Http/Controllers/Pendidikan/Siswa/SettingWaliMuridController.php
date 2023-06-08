@@ -13,6 +13,7 @@ use Yajra\Datatables\Datatables;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Models\CalonSiswaOrtu;
+use App\Models\Jurusan;
 use App\Models\Kelas as Kelas;
 use App\Models\Siswa as Siswa;
 use App\Models\WaliMurid as WaliMurid;
@@ -40,13 +41,21 @@ class SettingWaliMuridController extends BaseController
 
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_jurusan = Jurusan::get();
 
         $act = null;
         if (!empty($request->segment(4))) {
             $act = $request->segment(4);
         }
 
-        return view('pendidikan/siswa/setting-wali-murid/view-kelas-setting-wali-murid', compact('auth_data', 'data_kelas', 'id_wali_murid', 'act'));
+        return view('pendidikan/siswa/setting-wali-murid/view-kelas-setting-wali-murid', compact('auth_data', 'data_jurusan', 'data_kelas', 'id_wali_murid', 'act'));
+    }
+
+    public function getDataKelas(Request $request)
+    {
+        $input = (object) $request->input();
+        $kelas = Kelas::where('id_jurusan', $input->jurusan)->get();
+        return $kelas;
     }
 
     public function viewErorData(Request $request)
