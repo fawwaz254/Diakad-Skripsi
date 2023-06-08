@@ -119,7 +119,8 @@ class SettingWaliMuridController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_kelas' => 'required'
+            'id_kelas' => 'required',
+            'id_jurusan' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -130,24 +131,28 @@ class SettingWaliMuridController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'siswa/setting-wali-murid/view-kelas/' . $input->id_kelas
+                'path' => 'siswa/setting-wali-murid/view-kelas/'  . $input->id_jurusan . '/' . $input->id_kelas
             ];
         }
     }
-    public function viewKelasWaliMurid(Request $request, $id_kelas = null)
+    public function viewKelasWaliMurid(Request $request, $id_jurusan, $id_kelas)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
-            ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-            ->get();
+        $data_kelas = Kelas::when($id_jurusan != '0', function ($q) use ($id_jurusan) {
+            $q->where('id_jurusan', $id_jurusan);
+        })->get();
+        $data_jurusan = Jurusan::get();
 
+        if ($id_kelas != '0') {
+            $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
+        } else {
+            $kelas = null;
+        }
 
-        $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
-
-        return view('pendidikan/siswa/setting-wali-murid/view-setting-wali-murid', compact('auth_data', 'data_kelas', 'kelas', 'id_kelas'));
+        return view('pendidikan/siswa/setting-wali-murid/view-setting-wali-murid', compact('auth_data', 'data_kelas', 'kelas', 'id_kelas', 'id_jurusan', 'data_jurusan'));
     }
 
     public function editWaliMurid(Request $request, $id)
@@ -160,16 +165,23 @@ class SettingWaliMuridController extends BaseController
         return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa'));
     }
 
-    public function datatablesWaliMurid(Request $request, $id_kelas)
+    public function datatablesWaliMurid(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = Siswa::select()->addSelect('pwm.gelar_depan AS gd', 'pwm.gelar_belakang AS gb', 'pengguna.nm_pengguna AS nm_siswa')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
             ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
             ->leftjoin('pengguna AS pwm', 'pwm.id_pengguna', '=', 'wali_murid.id_pengguna')
-            ->where('id_kelas', '=', $id_kelas)->orderBy('nis_siswa')
-            ->get();
+            ->when($id_jurusan != 0, function ($q) use ($id_jurusan) {
+                $q->where('kelas.id_jurusan', $id_jurusan);
+            })
+            ->when($id_kelas != 0, function ($q) use ($id_kelas) {
+                $q->where('id_kelas', $id_kelas);
+            });
+
+
         return Datatables::of($list_data)
             ->editColumn('nm_wali_murid', function ($item) {
                 return $item->gd . ' ' . $item->nm_wali_murid . ' ' . $item->gb;
