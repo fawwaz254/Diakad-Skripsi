@@ -99,6 +99,9 @@
                 padding-left: 10px;
                 padding: 8px;
             }
+            .pagebreak { 
+                page-break-before: always; 
+            }
 
             tr:nth-child(even) {
                 background-color: #6e9c6e;
@@ -915,6 +918,7 @@
             {{-- @endif --}}
         </div>
         <div>
+        <div class="pagebreak"> </div>
     @endforeach
             <script>
                 window.print();
