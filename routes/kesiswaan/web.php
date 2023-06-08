@@ -317,8 +317,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-wali-murid/view-eror-data', [SettingWaliMuridController::class, 'viewErorData']);
             Route::get('setting-wali-murid/add', [SettingWaliMuridController::class, 'viewSettingWaliMurid']);
             Route::post('post-view-setting-wali-murid', [SettingWaliMuridController::class, 'actionViewSettingWaliMurid']);
-            Route::get('setting-wali-murid/view-kelas/{id_kelas}', [SettingWaliMuridController::class, 'viewKelasWaliMurid']);
-            Route::get('setting-wali-murid/datatables/{id_kelas}', [SettingWaliMuridController::class, 'datatablesWaliMurid']);
+            Route::get('setting-wali-murid/view-kelas/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'viewKelasWaliMurid']);
+            Route::get('setting-wali-murid/datatables/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'datatablesWaliMurid']);
             Route::get('setting-wali-murid/edit/{id}', [SettingWaliMuridController::class, 'editWaliMurid']);
             Route::post('setting-wali-murid/getDataKelas', [SettingWaliMuridController::class, 'getDataKelas']);
 

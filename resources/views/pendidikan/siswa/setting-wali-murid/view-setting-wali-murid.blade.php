@@ -14,25 +14,43 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>DATA WALI MURID KELAS {{ $kelas->nm_kelas }}</h2>
+                    <h2>DATA WALI MURID {{ $kelas ? 'KELAS ' . $kelas->nm_kelas : '' }}</h2>
                 </div>
                 <div class="body">
                     <form id="form-validation1" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-setting-wali-murid') }}">
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">
+                            Jurusan
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_jurusan" onchange="changeJurusan(this)">
+                                    <option value="0" @if ($id_jurusan == '0') selected="" @endif>--
+                                        Semua---</option>
+                                    @foreach ($data_jurusan as $data)
+                                        <option value="{{ $data->id_jurusan }}"
+                                            @if ($data->id_jurusan == $id_jurusan) selected="" @endif>{{ $data->nm_jurusan }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Kelas
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_kelas">
+                                    <option value="0" @if ($id_kelas == '0') selected="" @endif>-- Semua
+                                        --
+                                    </option>
                                     @foreach ($data_kelas as $data)
-                                        @if ($data->id_kelas == $id_kelas)
-                                            <option value="{{ $data->id_kelas }}" selected="">{{ $data->nm_kelas }}
-                                            </option>
-                                        @else
-                                            <option value="{{ $data->id_kelas }}">{{ $data->nm_kelas }}</option>
-                                        @endif
+                                        <option value="{{ $data->id_kelas }}"
+                                            @if ($data->id_kelas == $id_kelas) selected="" @endif>
+                                            {{ $data->nm_kelas }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -62,7 +80,7 @@
                                             style="margin-bottom: -10px;"></label>
                                     </th>
                                     <th>NIS</th>
-                                    <th>NISN</th>
+                                    <th>KELAS</th>
                                     <th>Nama Siswa</th>
                                     <th>Nama Wali Murid</th>
                                     <th>Telp Wali Murid</th>
@@ -86,10 +104,12 @@
 
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var id_kelas = '{{ $kelas->id_kelas }}';
+    var id_kelas = '{{ $id_kelas }}';
+    var id_jurusan = '{{ $id_jurusan }}';
 
     var modul_url = 'siswa';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'setting-wali-murid/datatables/' + id_kelas;
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'setting-wali-murid/datatables/' +
+        id_jurusan + '/' + id_kelas;
     var edit_url = role_url + '#' + modul_url + '/' + 'setting-wali-murid/edit';
     var delete_url = role_url + '/' + modul_url + '/' + 'action-setting-wali-murid/delete';
 
@@ -130,8 +150,8 @@
                 name: 'nis_siswa'
             },
             {
-                data: 'nisn_siswa',
-                name: 'nisn_siswa'
+                data: 'nm_kelas',
+                name: 'nm_kelas'
             },
             {
                 data: 'nm_siswa',
@@ -328,5 +348,24 @@
                 return;
             }
         );
+    }
+
+    function changeJurusan(el) {
+        $.ajax({
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getDataKelas') }}',
+            type: 'POST',
+            data: {
+                jurusan: $('select[name=id_jurusan]').val(),
+            },
+            success: function(kelas) {
+
+                $('select[name=id_kelas]').html('');
+                var html = '<option value="0">-- Semua --</option>';
+                $.each(kelas, function(key, item) {
+                    html += '<option value="' + item.id_kelas + '">' + item.nm_kelas + '</option>'
+                });
+                $('select[name=id_kelas]').html(html);
+            }
+        });
     }
 </script>
