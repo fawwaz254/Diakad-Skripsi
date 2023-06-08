@@ -169,6 +169,7 @@ class SettingWaliMuridController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
         $list_data = Siswa::select()->addSelect('pwm.gelar_depan AS gd', 'pwm.gelar_belakang AS gb', 'pengguna.nm_pengguna AS nm_siswa')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
@@ -178,7 +179,7 @@ class SettingWaliMuridController extends BaseController
                 $q->where('kelas.id_jurusan', $id_jurusan);
             })
             ->when($id_kelas != '0', function ($q) use ($id_kelas) {
-                $q->where('id_kelas', $id_kelas);
+                $q->where('siswa.id_kelas', $id_kelas);
             });
 
 
