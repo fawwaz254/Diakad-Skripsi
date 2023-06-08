@@ -174,10 +174,10 @@ class SettingWaliMuridController extends BaseController
             ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
             ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
             ->leftjoin('pengguna AS pwm', 'pwm.id_pengguna', '=', 'wali_murid.id_pengguna')
-            ->when($id_jurusan != 0, function ($q) use ($id_jurusan) {
+            ->when($id_jurusan != '0', function ($q) use ($id_jurusan) {
                 $q->where('kelas.id_jurusan', $id_jurusan);
             })
-            ->when($id_kelas != 0, function ($q) use ($id_kelas) {
+            ->when($id_kelas != '0', function ($q) use ($id_kelas) {
                 $q->where('id_kelas', $id_kelas);
             });
 
