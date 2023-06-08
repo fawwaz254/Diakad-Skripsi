@@ -167,7 +167,8 @@ class SettingWaliMuridController extends BaseController
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
             ->leftjoin('pengguna AS pwm', 'pwm.id_pengguna', '=', 'wali_murid.id_pengguna')
-            ->where('id_kelas', '=', $id_kelas);
+            ->where('id_kelas', '=', $id_kelas)->orderBy('nis_siswa')
+            ->get();
         return Datatables::of($list_data)
             ->editColumn('nm_wali_murid', function ($item) {
                 return $item->gd . ' ' . $item->nm_wali_murid . ' ' . $item->gb;
@@ -241,7 +242,7 @@ class SettingWaliMuridController extends BaseController
                     $pengguna_wali_murid->username = $input->nomor_hp_ortu;
                     $pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
                     $pengguna_wali_murid->save();
-                        
+
                     $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
                     $calon_siswa_ortu->nomor_telp_ortu = $input->nomor_hp_ortu;
                     $calon_siswa_ortu->nomor_hp_ortu = $input->nomor_hp_ortu;
