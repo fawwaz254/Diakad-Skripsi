@@ -351,6 +351,7 @@
     }
 
     function changeJurusan(el) {
+        $('select[name=id_kelas]').html('');
         $.ajax({
             url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getDataKelas') }}',
             type: 'POST',
