@@ -55,6 +55,12 @@
                             <thead>
                                 <tr>
                                     <th>No. </th>
+                                    <th style="text-align: center">
+                                        <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all"
+                                            class="filled-in">
+                                        <label for="checkbox_select_all_primary_table"
+                                            style="margin-bottom: -10px;"></label>
+                                    </th>
                                     <th>NIS</th>
                                     <th>NISN</th>
                                     <th>Nama Siswa</th>
@@ -64,6 +70,12 @@
                                 </tr>
                             </thead>
                         </table>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-blue waves-effect" onclick="deleteWaliMuridCollect()"><i
+                                    class="material-icons">update</i><span>Delete Walimurid Kolektif</span></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,6 +107,25 @@
                 orderable: false
             },
             {
+                data: 'checkbox',
+                name: 'checkbox',
+                class: 'text-center',
+                searchable: false,
+                orderable: false,
+                render: function(data, type, full, meta) {
+                    if (data.wali_murid) {
+                        return '<input id="checkbox-' + data.id_siswa +
+                            '" type="checkbox" name="id_siswa" class="filled-in" value="' + data
+                            .id_siswa +
+                            '">' +
+                            '<label for="checkbox-' + data.id_siswa + '"></label>';
+                    } else {
+                        return '';
+                    }
+
+                }
+            },
+            {
                 data: 'nis_siswa',
                 name: 'nis_siswa'
             },
@@ -120,18 +151,24 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        edit_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">edit</i>' +
-                        '</a>' +
-                        '<button class="btn  bg-red waves-effect btn-circle" id="btn-reset-password" style="margin-left:10px" onclick="hapusWaliMurid(\'' +
-                        delete_url + '\', this)" data-id="' +
-                        data.id + '">' +
-                        '<i class="material-icons">delete</i>' +
-                        '</button>';
+                    if (data.wali_murid) {
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            edit_url + '/' + data.id + '">' +
+                            '    <i class="material-icons">edit</i>' +
+                            '</a>' +
+                            '<button class="btn  bg-red waves-effect btn-circle" id="btn-reset-password" style="margin-left:10px" onclick="hapusWaliMurid(\'' +
+                            delete_url + '\', this)" data-id="' +
+                            data.id + '">' +
+                            '<i class="material-icons">delete</i>' +
+                            '</button>';
+                    } else {
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            edit_url + '/' + data.id + '">' +
+                            '    <i class="material-icons">edit</i>' +
+                            '</a>';
+                    }
                 }
             }
-
         ]
     });
 
@@ -144,6 +181,19 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+
+
+    $(document).ready(function() {
+        /* Select All Checkbox */
+        $('#checkbox_select_all_primary_table').change(function() {
+            var select_all_checked = this.checked;
+            var rows = primary_table.rows({
+                'search': 'applied'
+            }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+    });
 </script>
 <script>
     $('#form-validation1').validate({
@@ -225,6 +275,56 @@
                         },
                     });
                 }
+                return;
+            }
+        );
+    }
+
+    function deleteWaliMuridCollect() {
+        $('button').attr('disabled', 'disabled');
+        var id_siswa = [];
+        $("input:checkbox[name=id_siswa]:checked").each(function() {
+            id_siswa.push($(this).val());
+        });
+
+        swal({
+                title: 'Apakah Yakin Untuk Menghapus Kolektif?',
+                showCancelButton: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $('#btn-reset-password').attr("disabled", true);
+                    $.ajax({
+                        url: base_url +
+                            '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/reset-wali-murid-collect',
+                        type: 'POST',
+                        data: {
+                            data_siswa: id_siswa
+                        },
+                        success: function(response) {
+                            if (response.status_code == 200) {
+                                vex.dialog.alert(response.message);
+                            } else if (response.status_code == 201) {
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            } else if (response.status_code == 202) {
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            } else if (response.status_code == 203) {
+                                vex.dialog.alert(response.message);
+                                primary_table.ajax.reload(null, false);
+                            } else if (response.status_code == 204) {
+                                loadURI(response.path);
+                            } else if (response.status_code == 300) {
+                                vex.dialog.alert(response.message);
+                            }
+                        },
+                        complete: function() {
+                            $('button').removeAttr('disabled', 'disabled');
+                        }
+                    });
+                }
+                $('button').removeAttr('disabled', 'disabled');
                 return;
             }
         );
