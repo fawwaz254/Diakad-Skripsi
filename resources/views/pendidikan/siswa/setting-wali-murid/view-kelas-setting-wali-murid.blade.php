@@ -37,7 +37,7 @@
                                     </h2>
                                     <select class="form-control show-tick" name="id_jurusan"
                                         onchange="changeJurusan(this)">
-                                        <option value="0">Pilih Jurusan</option>
+                                        <option value="0">-- Semua --</option>
                                         @foreach ($data_jurusan as $data)
                                             <option value="{{ $data->id_jurusan }}">{{ $data->nm_jurusan }}</option>
                                         @endforeach
@@ -51,12 +51,10 @@
                                         Kelas
                                     </h2>
                                     <select class="form-control show-tick" name="id_kelas">
-                                        <option value="">Pilih Kelas</option>
+                                        <option value="0">-- Semua --</option>
                                         @foreach ($data_kelas as $data)
                                             <option value="{{ $data->id_kelas }}">{{ $data->nm_kelas }}</option>
                                         @endforeach
-                                    </select>
-
                                     </select>
                                 </div>
                             </div>
@@ -188,7 +186,6 @@
     }
 
     function changeJurusan(el) {
-        $('select[name=id_kelas]').html('');
         $.ajax({
             url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getDataKelas') }}',
             type: 'POST',
@@ -198,7 +195,7 @@
             success: function(kelas) {
 
                 $('select[name=id_kelas]').html('');
-                var html = '<option value="">-- Pilih Kelas --</option>';
+                var html = '<option value="0">-- Semua --</option>';
                 $.each(kelas, function(key, item) {
                     html += '<option value="' + item.id_kelas + '">' + item.nm_kelas + '</option>'
                 });
