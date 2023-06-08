@@ -11,6 +11,27 @@
                 style="margin-right: 10px">
                 Siswa yang menunggu approval
             </button>
+            <div class="dropdown" style="display: inline; margin-right:50px">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Print Per-kelas
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    {{-- @foreach ($data_semester as $data)
+                        <li> <a onclick="changeThn(this)" data-id=" {{ $data->id_semester }} ">
+                                {{ $data->tahun_ajaran . ' ' . $data->nm_semester }}
+                                @if ($semester_aktif->id_semester == $data->id_semester)
+                                    (Aktif)
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach --}}
+                    @foreach ($kelas as $data)
+                    <li> <a target="_blank" href="/kesiswaan/skpi/approve-prestasi-siswa/printkelas/skpi/{{$data->id_kelas}}">
+                        {{$data->nm_kelas}}
+                    </a>
+                </li>
+                    @endforeach
+                </ul>
+            </div>
 
             <input type="checkbox" id="data_alumni" class="checkbox">
             <label for="data_alumni"> Tampilkan Data Alumni</label>
@@ -181,4 +202,13 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+    
+
+
+    function changeKelas(value){
+    $.ajax({
+        url: base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/print/skpi/Fh2L416105258805ffeacb94b700',
+        type: 'GET',
+    });
+}
 </script>
