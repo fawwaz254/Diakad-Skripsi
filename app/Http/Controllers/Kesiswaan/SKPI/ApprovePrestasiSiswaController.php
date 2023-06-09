@@ -38,8 +38,9 @@ class ApprovePrestasiSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $kelas = Kelas::get();
 
-        return view('kesiswaan/skpi/approve-prestasi-siswa/view-approve-prestasi-siswa', compact('auth_data'));
+        return view('kesiswaan/skpi/approve-prestasi-siswa/view-approve-prestasi-siswa', compact('auth_data','kelas'));
     }
 
     public function viewDetailPrestasiSiswa(Request $request, $id, $param)
@@ -49,6 +50,61 @@ class ApprovePrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         return view('kesiswaan/skpi/approve-prestasi-siswa/view-detail-prestasi-siswa', compact('auth_data', 'param'));
+    }
+
+    public function printSkpikelas(Request $request, $id_kelas)
+    {
+
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data = Siswa::where('id_kelas',$id_kelas)->get();
+        // $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
+
+        $kprestasi = PrestasiSiswa::where('prestasi_siswa.id_kelas', $id_kelas)
+            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+            ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('prestasi_siswa.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->get();
+
+        $kkegiatan = KegiatanSiswa::where('kegiatan_siswa.id_kelas', $id_kelas)
+            // ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
+            ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('kegiatan_siswa.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            //  ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->get();
+
+        $kinformasi_tambahan_ekstrakurikuler = InformasiTambahan::where('informasi_tambahan.id_kelas', $id_kelas)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('jenis_informasi_tambahan', '=', 'ekstrakurikuler')
+            ->get();
+
+        $kinformasi_produk_lomba = InformasiTambahan::where('informasi_tambahan.id_kelas', $id_kelas)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('jenis_informasi_tambahan', '=', 'produk_lomba')
+            ->get();
+
+        $kinformasi_tambahan =  InformasiTambahan::where('informasi_tambahan.id_kelas', $id_kelas)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->get();
+
+        // dd($data);
+        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-kelas', compact('auth_data','data', 'kprestasi', 'kkegiatan', 'kinformasi_tambahan_ekstrakurikuler', 'kinformasi_produk_lomba', 'kinformasi_tambahan'));
     }
 
     public function printSkpi(Request $request, $id)
