@@ -396,6 +396,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('status-entri-nilai', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
             Route::get('monitoring-presensi-guru', [MonitoringPresensiGuruController::class, 'viewMonitoringPresensiGuru']);
             Route::get('monitoring-presensi-guru/{bulan}/{tahun}', [MonitoringPresensiGuruController::class, 'viewMonitoringPresensiGuru']);
+            Route::get('monitoring-presensi-guru/print/{bulan}/{tahun}', [MonitoringPresensiGuruController::class, 'printViewMonitoringPresensiGuru']);
             Route::get('monitoring-presensi-guru/{day}/{bulan}/{tahun}/{id_pengguna}', [MonitoringPresensiGuruController::class, 'viewDetailPresensiGuru']);
             Route::get('monitoring-presensi', [AbsensiHarianSiswaController::class, 'viewAbsensiHarianSiswa']);
             Route::get('monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
