@@ -264,7 +264,7 @@
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                     466/C-3/WH2/VI/2022
                 @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                    421.3/649/E/404.3.1.15.4.4/V/2023
+                    421.3/649/E/404.3.1.15.4.4/VI/2023
                 @endif
             </h5>
 
