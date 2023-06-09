@@ -187,6 +187,8 @@
 
     function changeJurusan(el) {
         $('select[name=id_kelas]').html('');
+        var html = '<option value="0">-- Semua --</option>';
+        $('select[name=id_kelas]').html(html);
         $.ajax({
             url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getDataKelas') }}',
             type: 'POST',
