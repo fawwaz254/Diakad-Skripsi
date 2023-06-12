@@ -98,6 +98,9 @@
                     </a>
                 </li>
                 @foreach (get_moduls() as $modul)
+                    @if (auth_data()->sekolah_data->nm_singkat_sekolah !== 'smpypm2' && $modul->nm_modul=="Ketidaksesuaian SOP")
+                        
+                    @else    
                     <li id="modul-item-{{ $modul->route }}" class="modul-item">
                         @if (!empty($modul->page))
                             <a class="target-link" href="{{ url(Request::segment(1) . '#' . $modul->page) }}"
@@ -128,6 +131,7 @@
                             </ul>
                         @endif
                     </li>
+                    @endif
                 @endforeach
 
                 <ul class="ml-menu">
