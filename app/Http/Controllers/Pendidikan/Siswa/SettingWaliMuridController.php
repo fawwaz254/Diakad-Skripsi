@@ -81,21 +81,28 @@ class SettingWaliMuridController extends BaseController
         echo "Berhasil";
     }
 
-    public function viewUploadSettingWaliMurid(Request $request, $id_kelas)
+    public function viewUploadSettingWaliMurid(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
-            ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-            ->get();
+        $data_kelas = Kelas::with('jurusan')->when($id_jurusan != '0', function ($q) use ($id_jurusan) {
+            $q->where('kelas.id_jurusan', $id_jurusan);
+        })->when($id_kelas != '0', function ($q) use ($id_kelas) {
+            $q->where('siswa.id_kelas', $id_kelas);
+        })->get();
 
-        $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
+        if ($id_kelas != '0') {
+            $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
+        } else {
+            $kelas = null;
+        }
+        // $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
 
-        return view('pendidikan/siswa/setting-wali-murid/upload-setting-wali-murid', compact('auth_data', 'data_kelas', 'kelas', 'id_kelas'));
+        return view('pendidikan/siswa/setting-wali-murid/upload-setting-wali-murid', compact('auth_data', 'data_kelas', 'kelas', 'id_jurusan', 'id_kelas'));
     }
 
-    public function viewDownloadSettingWaliMurid(Request $request, $id_kelas)
+    public function viewDownloadSettingWaliMurid(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -442,7 +449,7 @@ class SettingWaliMuridController extends BaseController
         }
     }
 
-    public function uploadFileExcel(Request $request, $id_kelas)
+    public function uploadFileExcel(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -468,7 +475,7 @@ class SettingWaliMuridController extends BaseController
                         $data->forget($key);
                     }
 
-                    if ($siswa = Siswa::where('nis_siswa', $item->nis)->where('id_kelas', $id_kelas)->first()) {
+                    if ($siswa = Siswa::where('nis_siswa', $item->nis)->first()) {
                         if (!empty($siswa->id_wali_murid)) {
                             if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->where('id_wali_murid', '<>', $siswa->id_wali_murid)->first()) {
                                 return [
@@ -659,7 +666,7 @@ class SettingWaliMuridController extends BaseController
                     DB::commit();
                     return [
                         'status' => 202,
-                        'path' => 'siswa/setting-wali-murid/view-kelas/' . $id_kelas,
+                        'path' => 'siswa/setting-wali-murid/view-kelas/' . $id_jurusan . '/' . $id_kelas,
                         'message' => 'Upload Setting Wali Murid Successfully'
                     ];
                 } catch (\Exception $e) {

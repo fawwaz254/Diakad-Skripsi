@@ -6,7 +6,7 @@
     </div>
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#siswa/setting-wali-murid/upload-setting-wali-murid/' . $id_kelas) }}"><i
+                href="{{ url(Request::segment(1) . '#siswa/setting-wali-murid/upload-setting-wali-murid/' . $id_jurusan . '/' . $id_kelas) }}"><i
                     class="material-icons">cloud_upload</i><span>Upload Wali Murid</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -352,6 +352,8 @@
 
     function changeJurusan(el) {
         $('select[name=id_kelas]').html('');
+        var html = '<option value="0">-- Semua --</option>';
+        $('select[name=id_kelas]').html(html);
         $.ajax({
             url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getDataKelas') }}',
             type: 'POST',

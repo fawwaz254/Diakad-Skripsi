@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#siswa/setting-wali-murid/view-kelas/' . $kelas->id_kelas) }}"><i
+                href="{{ url(Request::segment(1) . '#siswa/setting-wali-murid/view-kelas/' . $id_jurusan . '/' . $id_kelas) }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        UPLOAD SETTING WALI MURID KELAS {{ $kelas->nm_kelas }}
+                        UPLOAD SETTING WALI MURID KELAS {{ $kelas ? $kelas->nm_kelas : '' }}
                     </h2>
                 </div>
                 <div class="body">
@@ -54,7 +54,7 @@
                                 Upload File Excel
                             </h2>
                             <form id="form-upload"
-                                action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/upload/' . $kelas->id_kelas) }}"
+                                action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/upload/' . $id_jurusan . '/' . $id_kelas) }}"
                                 method="post" enctype="multipart/form-data">
                                 {{ csrf_field() }}
                                 Pilih File Excel
