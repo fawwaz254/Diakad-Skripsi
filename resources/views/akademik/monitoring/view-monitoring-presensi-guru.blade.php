@@ -15,7 +15,8 @@
                                     <label>Bulan</label>
                                     <select class="form-control show-tick" name="id_bulan">
                                         @foreach ($data_bulan as $data)
-                                            <option {{ $bulan->id_bulan == $data->id_bulan ? 'selected' : '' }} value="{{ $data->id_bulan }}">
+                                            <option {{ $bulan->id_bulan == $data->id_bulan ? 'selected' : '' }}
+                                                value="{{ $data->id_bulan }}">
                                                 {{ $data->nm_bulan }}
                                             </option>
                                         @endforeach
@@ -29,7 +30,8 @@
                                     <label>Tahun</label>
                                     <select class="form-control show-tick" name="tahun">
                                         @for ($i = 2015; $i <= 2025; $i++)
-                                            <option {{ $tahun == $i ? 'selected' : '' }} value="{{ $i }}">{{ $i }}</option>
+                                            <option {{ $tahun == $i ? 'selected' : '' }} value="{{ $i }}">
+                                                {{ $i }}</option>
                                         @endfor
                                     </select>
                                 </div>
@@ -52,7 +54,10 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        Rekap Presensi Mengajar Guru Pada Bulan {{ $bulan->nm_bulan }}
+                        Rekap Presensi Mengajar Guru Pada Bulan {{ $bulan->nm_bulan }} <a
+                            class="btn bg-blue waves-effect" style="margin-left: 10px" target="_blank"
+                            href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/print/' . $bulan->id_bulan . '/' . $tahun) }}"><i
+                                class="material-icons">print</i><span>Cetak</span></a>
                     </h2>
                 </div>
                 <div class="body">
@@ -81,7 +86,8 @@
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $guru->nm_pengguna }}</td>
                                         <td class="text-center">
-                                            {{ $data_presensi->where('id_pengguna', $guru->id_pengguna)->count() }}</td>
+                                            {{ $data_presensi->where('id_pengguna', $guru->id_pengguna)->count() }}
+                                        </td>
                                         @foreach ($dates as $date)
                                             @php
                                                 $all_presensi = $data_presensi
@@ -96,7 +102,7 @@
                                                                 class="target-link">{{ count($all_presensi) }}x</a></b>
                                                     </td>
                                                 @elseif($date->format('l') == 'Saturday' || $date->format('l') == 'Sunday')
-                                                    <td style="background: #07689f; text-align:center;">
+                                                    <td style="background: #ffffff; text-align:center;">
                                                         <b><a class="target-link">Libur</a></b>
                                                     </td>
                                                 @else
@@ -108,7 +114,7 @@
                                                         <b><a class="target-link">{{ count($all_presensi) }}x</a></b>
                                                     </td>
                                                 @elseif($date->format('l') == 'Sunday')
-                                                    <td style="background: #07689f; text-align:center;">
+                                                    <td style="background: #ffffff; text-align:center;">
                                                         <b><a class="target-link">Libur</a></b>
                                                     </td>
                                                 @else
@@ -129,7 +135,8 @@
 
 <script>
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('select[name=id_bulan]').val() + '/' + $(
+            'select[name=tahun]').val());
     }
 
     var primary_table = $('#primary_table').DataTable({
