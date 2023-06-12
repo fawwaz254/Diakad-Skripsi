@@ -38,7 +38,9 @@
                                 <label>Semester</label>
                                 <select class="form-control show-tick" name="id_semester" required="">
                                     @foreach ($data_semester as $data)
-                                        <option value="{{ $data->id_semester }}"
+                                        <option value="{{ $data->id_semester }}" @if ($data->is_aktif_semester == 1)
+                                            selected
+                                            @endif
                                             @if ($id_semester == $data->id_semester) selected @endif>
                                             {{ $data->tahun_ajaran }}
                                             {{ $data->nm_semester }}
