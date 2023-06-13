@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\PelatihEkskul\AbsensiEkskul;
 
+use App\Exports\ExportPresensiEkskul;
+use App\Imports\UploadPresensiEkskul;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
 
@@ -23,6 +26,7 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\Pendidikan\LibSiswa;
+use Maatwebsite\Excel\Facades\Excel;
 
 use Auth;
 use DB;
@@ -64,7 +68,7 @@ class InputAbsensiEkskulController extends BaseController
         $auth_data->menu_url = $this->menu_url;
 
         $data_ekskul = Ekskul::find($id_ekskul);
-        
+
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
 
         $presensi_ekskul = null;
@@ -85,25 +89,25 @@ class InputAbsensiEkskulController extends BaseController
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
-        
+
         $semester_aktif = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
-        
+
         $data_ekskul = Ekskul::find($id_ekskul);
-        
+
         $data_siswa = PengambilanEkskul::with('siswa', 'siswa.pengguna', 'siswa.pengguna.status_pengguna', 'kelas')->where('id_semester', $id_semester)->where('id_ekskul', $id_ekskul)->get();
 
         $bulan = Bulan::find($id_bulan);
-        
+
         $start_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
 
         $end_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta')->endOfMonth();
 
         $data_presensi = PresensiEkskul::with('presensi_ekskul_peserta')
-                                    ->where('id_ekskul', $id_ekskul)
-                                    ->where('id_semester', $id_semester)
-                                    ->whereBetween('tgl_entry', [$start_date, $end_date])
-                                    ->orderBy('pertemuan_ke', 'asc')
-                                    ->get();
+            ->where('id_ekskul', $id_ekskul)
+            ->where('id_semester', $id_semester)
+            ->whereBetween('tgl_entry', [$start_date, $end_date])
+            ->orderBy('pertemuan_ke', 'asc')
+            ->get();
         // dd($start_date);
 
         return view(
@@ -118,24 +122,24 @@ class InputAbsensiEkskulController extends BaseController
         $auth_data = $input->auth_data;
 
         $bulan = Bulan::get();
-                
+
         $list_data = PresensiEkskul::selectRaw('COUNT(*) as jml_record, YEAR(tgl_entry) tahun, MONTH(tgl_entry) bulan')
-                                    ->where('id_semester', $id_semester)
-                                    ->where('id_ekskul', $id_ekskul)
-                                    ->groupBy(DB::raw('YEAR(tgl_entry),  MONTH(tgl_entry)'));
-                                    
+            ->where('id_semester', $id_semester)
+            ->where('id_ekskul', $id_ekskul)
+            ->groupBy(DB::raw('YEAR(tgl_entry),  MONTH(tgl_entry)'));
+
         return Datatables::of($list_data)
-                ->editColumn('bulan', function ($item) use ($bulan) {
-                    return $bulan->firstWhere('id_bulan', $item->bulan)->nm_bulan;
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'tahun' => $item->tahun,
-                        'bulan' => $item->bulan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->editColumn('bulan', function ($item) use ($bulan) {
+                return $bulan->firstWhere('id_bulan', $item->bulan)->nm_bulan;
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'tahun' => $item->tahun,
+                    'bulan' => $item->bulan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function datatablesSiswaInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul, $id = null)
@@ -144,7 +148,7 @@ class InputAbsensiEkskulController extends BaseController
         $auth_data = $input->auth_data;
 
         $list_data = PengambilanEkskul::with('siswa', 'siswa.pengguna', 'siswa.pengguna.status_pengguna', 'kelas')->where('id_semester', $id_semester)->where('id_ekskul', $id_ekskul)->get();
-        
+
         if (!empty($id)) {
             $presensi_ekskul = PresensiEkskul::find($id);
             $presensi_ekskul_peserta = PresensiEkskulPeserta::where('id_presensi_ekskul', '=', $presensi_ekskul->id_presensi_ekskul)->get();
@@ -220,7 +224,7 @@ class InputAbsensiEkskulController extends BaseController
         } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-            
+
             // ACTION ADD
             if ($mode == 'manage') {
                 DB::beginTransaction();
@@ -229,7 +233,7 @@ class InputAbsensiEkskulController extends BaseController
                     if (!empty($input->id_presensi_ekskul)) {
                         $presensi_ekskul = PresensiEkskul::find($input->id_presensi_ekskul);
                     } else {
-                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_ekskul = new PresensiEkskul;
                         $presensi_ekskul->id_presensi_ekskul = $id;
                         $presensi_ekskul->id_semester = $input->id_semester;
@@ -244,9 +248,9 @@ class InputAbsensiEkskulController extends BaseController
 
                     $total_siswa = 0;
                     $total_siswa_masuk = 0;
-                    
+
                     $array_combine = array();
-                    
+
                     foreach ($input->id_siswa as $id => $id_siswa) {
                         $array_combine[] = (object) array(
                             'alasan'  => $input->alasan[$id],
@@ -257,17 +261,17 @@ class InputAbsensiEkskulController extends BaseController
 
                     // presensi_ekskul_peserta
                     foreach ($array_combine as $item) {
-                        if (! empty($item->alasan)) {
+                        if (!empty($item->alasan)) {
                             $kehadiran = $item->alasan;
                         } else {
                             $kehadiran = 1;
                         }
-                        
+
                         if ($presensi_ekskul_peserta = PresensiEkskulPeserta::where('id_presensi_ekskul', '=', $presensi_ekskul->id_presensi_ekskul)->where('id_siswa', '=', $item->id_siswa)->first()) {
                             $presensi_ekskul_peserta->updated_by                = $input->auth_data->pengguna->id_pengguna;
                         } else {
                             // make id
-                            $id_presensi_ekskul_peserta = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $id_presensi_ekskul_peserta = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $presensi_ekskul_peserta                                = new PresensiEkskulPeserta;
                             $presensi_ekskul_peserta->id_presensi_ekskul            = $presensi_ekskul->id_presensi_ekskul;
@@ -297,7 +301,7 @@ class InputAbsensiEkskulController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'absensi-ekskul/input-absensi-ekskul/'.$input->id_semester.'/'.$input->id_ekskul,
+                        'path' => 'absensi-ekskul/input-absensi-ekskul/' . $input->id_semester . '/' . $input->id_ekskul,
                         'message' => 'Save Absensi Ekskul Successfully'
                     ];
                 } catch (\Exception $e) {
@@ -332,6 +336,67 @@ class InputAbsensiEkskulController extends BaseController
                     ];
                 }
             }
+        }
+    }
+
+    public function viewExcelInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view(
+            'pelatih-ekskul/absensi-ekskul/input-absensi-ekskul/excel-input-absensi-ekskul',
+            compact('auth_data', 'id_semester', 'id_ekskul')
+        );
+    }
+
+    public function downloadExcelInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul, $day, $start_date, $end_date, $jam_mulai, $jam_selesai)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $dates = CarbonPeriod::create($start_date, $end_date);
+        $tanggal = [];
+
+        $tanggal = collect($dates)->map(function ($date) use ($day) {
+            if ($date->isoWeekday() == $day) {
+                return $date->format('d-m-Y');
+            }
+        })->filter();
+
+        $data_ekskul = Ekskul::find($id_ekskul);
+        $data_siswa = PengambilanEkskul::with('siswa.pengguna')->where('id_semester', $id_semester)->where('id_ekskul', $id_ekskul)->get();
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
+
+        $data['tanggal'] = $tanggal;
+        $data['data_siswa'] = $data_siswa;
+        $data['data_ekskul'] = $data_ekskul;
+        $data['data_semester'] = $data_semester;
+        $data['jam_mulai'] = $jam_mulai;
+        $data['jam_selesai'] = $jam_selesai;
+        return Excel::download(new ExportPresensiEkskul($data), 'Template Presensi Eksul' . $data_ekskul->nm_exskul . '(' . $start_date . ' - ' . $end_date . ').xlsx');
+    }
+
+    public function uploadExcelInputAbsensiEkskul(Request $request)
+    {
+        if ($request->hasFile('file-excel')) {
+            try {
+                Excel::import(new UploadPresensiEkskul, $request->file('file-excel'));
+            } catch (\Exception $e) {
+                return [
+                    'status'     => 200, // FAILED
+                    'message'     => "Gagal Insert"
+                ];
+            }
+            return [
+                'status'     => 200, // FAILED
+                'message'     => "Upload Sukses"
+            ];
+        } else {
+            return [
+                'status'     => 300, // FAILED
+                'message'     => "File Excel tidak ditemukan"
+            ];
         }
     }
 }
