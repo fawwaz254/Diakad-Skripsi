@@ -125,6 +125,10 @@
                     url: datatable_url,
                     type: 'GET'
                 },
+                aLengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 columns: [
                 { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function (data, type, full, meta){
