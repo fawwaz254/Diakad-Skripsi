@@ -44,6 +44,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('input-absensi-ekskul', [InputAbsensiEkskulController::class, 'viewInputAbsensiEkskul']);
             Route::get('input-absensi-ekskul/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewInputAbsensiEkskul']);
             Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewManageInputAbsensiEkskul']);
+
             Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', [InputAbsensiEkskulController::class, 'viewManageInputAbsensiEkskul']);
             Route::get('input-absensi-ekskul/detail/{id_ekskul}/{id_kelas}/{tahun}/{id_bulan}', [InputAbsensiEkskulController::class, 'viewDetailInputAbsensiEkskul']);
 
@@ -51,6 +52,12 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('input-absensi-ekskul/datatables-detail/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', [InputAbsensiEkskulController::class, 'datatablesSiswaInputAbsensiEkskul']);
             Route::post('input-absensi-ekskul/action/{mode}', [InputAbsensiEkskulController::class, 'actionInputAbsensiEkskul']);
             Route::post('input-absensi-ekskul/action/{mode}/{id}', [InputAbsensiEkskulController::class, 'actionInputAbsensiEkskul']);
+
+            Route::get('input-absensi-ekskul/excel/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewExcelInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/excel/download/{id_semester}/{id_ekskul}/{day}/{start_date}/{end_date}/{jam_mulai}/{jam_akhir}', [InputAbsensiEkskulController::class, 'downloadExcelInputAbsensiEkskul']);
+            Route::post('input-absensi-ekskul/excel/upload', [InputAbsensiEkskulController::class, 'uploadExcelInputAbsensiEkskul']);
+
+            // Route::get('input-absensi-ekskul/excel/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewExcelInputAbsensiEkskul']);
 
             // MENU Rekap Absensi Ekskul
             Route::get('rekap-absensi-ekskul', [RekapAbsensiEkskulController::class, 'viewRekapAbsensiEkskul']);
