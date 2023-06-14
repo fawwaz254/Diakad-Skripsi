@@ -13,6 +13,7 @@ use App\Http\Controllers\Administrator\PengelolaanAkun\PencarianController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JurnalPimpinanController;
 use App\Http\Controllers\Administrator\ManajemenMenu\SettingDashboardController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController;
+use App\Http\Controllers\FeaturemenuController;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
@@ -125,6 +126,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('post-view-setting-dashboard', [SettingDashboardController::class, 'actionViewSettingDashboard']);
             Route::get('setting-dashboard/view-detail/{id_role}', [SettingDashboardController::class, 'viewDetailSettingDashboard']);
             Route::post('setting-dashboard', [SettingDashboardController::class, 'actionSettingDashboard']);
+            Route::get('setting-feature-guru', [FeaturemenuController::class, 'index']);
+            Route::post('action-setting-feature-guru', [FeaturemenuController::class, 'save']);
         });
     });
 });
