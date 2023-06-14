@@ -5,6 +5,7 @@ namespace App\Http\Controllers\BK\JunalHarian;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryJurnalHarianTendik;
 use App\Models\LaporanKerjaHarianTendik;
+use App\Models\Siswa;
 use App\Models\UnitKerja;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
@@ -33,7 +34,10 @@ class JurnalHarianBKController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $waktu = Carbon::today()->toDateString();
-        return view('bk/jurnal-harian/tambah-jurnal-harian/add-tambah-jurnal-harian', compact('auth_data',  'waktu'));
+        $all_siswa = Siswa::with('kelas', 'pengguna')->whereHas('kelas')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->orderBy('nis_siswa')->get();
+        return view('bk/jurnal-harian/tambah-jurnal-harian/add-tambah-jurnal-harian', compact('auth_data',  'waktu', 'all_siswa'));
     }
     public function previewFile($id, Request $request)
     {
@@ -92,6 +96,7 @@ class JurnalHarianBKController extends Controller
                     $data->status                       = $input->status;
                     $data->catatan                      = $input->keterangan;
                     $data->id_pengguna                  = $input->auth_data->pengguna->id_pengguna;
+                    $data->id_siswa                     = $input->id_siswa;
                     $data->created_by                   = $input->auth_data->pengguna->id_pengguna;
 
                     if ($request->hasFile('file')) {
@@ -132,7 +137,8 @@ class JurnalHarianBKController extends Controller
                 $data->jenis                        = $input->jenis;
                 $data->keterangan_progres           = $input->keterangan;
                 $data->status                       = $input->status;
-                $data->catatan                      =  $input->keterangan;
+                $data->catatan                      = $input->keterangan;
+                $data->id_siswa                     = $input->id_siswa;
                 $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
@@ -222,6 +228,9 @@ class JurnalHarianBKController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $laporan_kerja_harian_tendik = LaporanKerjaHarianTendik::findOrFail($id);
-        return view('bk/jurnal-harian/tambah-jurnal-harian/edit-tambah-jurnal-harian', compact('auth_data', 'laporan_kerja_harian_tendik'));
+        $all_siswa = Siswa::with('kelas', 'pengguna')->whereHas('kelas')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->orderBy('nis_siswa')->get();
+        return view('bk/jurnal-harian/tambah-jurnal-harian/edit-tambah-jurnal-harian', compact('auth_data', 'laporan_kerja_harian_tendik', 'all_siswa'));
     }
 }
