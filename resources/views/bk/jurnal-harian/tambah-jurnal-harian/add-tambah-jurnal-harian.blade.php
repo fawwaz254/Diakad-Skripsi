@@ -36,6 +36,23 @@
                         </div>
 
                         <h2 class="card-inside-title">
+                            Siswa yang bersangkutan (Opsional)
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control selectpicker show-tick" data-show-subtext="true"
+                                    data-live-search="true" name="id_siswa" data-size="5">
+                                    <option value="" selected>-- Pilih Siswa --</option>
+                                    @foreach ($all_siswa as $item)
+                                        <option value="{{ $item->id_siswa }}">
+                                            {{ $item->pengguna->nm_pengguna . ' ( ' . $item->kelas->nm_kelas . ' ) ' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <h2 class="card-inside-title">
                             Status
                         </h2>
                         <div class="demo-radio-button">
@@ -82,6 +99,12 @@
 </div>
 @include('scriptjs')
 <script>
+    $(function() {
+        $('.selectpicker').selectpicker();
+
+    });
+
+
     $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'DD MMMM YYYY',
