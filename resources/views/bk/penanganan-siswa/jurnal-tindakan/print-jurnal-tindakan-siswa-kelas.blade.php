@@ -201,7 +201,33 @@
 
                     <div class="col-md-4" style="margin-top:50px;">
                         Mengetahui <br> Kepala Sekolah,
-                        <div style="margin-top:100px;">{{ $sekolah_data->nm_kepala_sekolah }}</div>
+                        <br>
+                        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                            <br>
+                            <img src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD"
+                                style="height:90px; margin-left:-40px;" width="220px" />
+                            <br>
+                        @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
+                            <img style="position: absolute; top: 5%; margin-left:-40px;"
+                                src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="160px"
+                                height="160px" class="ttd">
+                            <br>
+                            <br>
+                            <br>
+                        @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                            <img style="position: absolute; top: 5%; margin-left:-70px; margin-top:17px"
+                                src="{{ asset('media/ttd/smpypm2.png') }}" alt="TTD" width="160px"
+                                height="160px" class="ttd">
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        @else
+                            <br>
+                            <br>
+                            <br>
+                        @endif
+                        <div>{{ $sekolah_data->nm_kepala_sekolah }}</div>
                     </div>
 
                     <div class="col-md-4" style="margin-top:75px;">
