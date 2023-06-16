@@ -23,7 +23,7 @@
     @php
         if ($list_data->count() > 0) {
             $total_poin = $list_data->where('id_siswa', $siswa->id_siswa)->sum('jumlah_poin');
-        
+
             $data = App\Models\KesimpulanPelanggaran::where('poin_bawah_kesimpulan_pelanggaran', '<=', $total_poin)
                 ->where('poin_atas_kesimpulan_pelanggaran', '>=', $total_poin)
                 ->first();
