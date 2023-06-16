@@ -185,7 +185,13 @@
             </div>
 
             <div class="col-md-4" style="margin-top:50px;">
-                Sidoarjo, {{ now('Asia/Jakarta')->format('d M Y') }} <br> Wali Kelas,
+                Sidoarjo,
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                 24 Juni 2023
+                @else
+                 {{ now('Asia/Jakarta')->format('d M Y') }} 
+                @endif
+                 <br> Wali Kelas,
                 <div style="margin-top:100px;">
                     {{ $wali_kelas->gelar_depan }} {{ $wali_kelas->nm_wali_kelas }} {{ $wali_kelas->gelar_belakang }}
                 </div>
