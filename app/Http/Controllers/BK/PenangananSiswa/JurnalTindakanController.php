@@ -81,7 +81,7 @@ class JurnalTindakanController extends BaseController
         $wali_kelas = LibGuru::fetchDataWaliKelas($auth_data, $id_kelas)->where('is_aktif', 1)->first();
 
         $siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, $id_siswa == '0' ? null : $id_siswa);
-
+        
         if ($id_siswa !== '0') {
             $gender_siswa = Siswa::select('calon_siswa_baru.jenis_kelamin')->join('calon_siswa_baru', 'calon_siswa_baru.id_c_siswa', 'siswa.id_c_siswa')->where('id_siswa', $id_siswa)->first();
             if (!empty($gender_siswa->jenis_kelamin)) {

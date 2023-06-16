@@ -41,11 +41,12 @@
                 if ($data) {
                     $kategori_pelanggaran = strip_tags($data->deskripsi_kesimpulan_pelanggaran_2);
                     $deskripsi_perilaku_1 = strip_tags($data->deskripsi_kesimpulan_pelanggaran_1);
-                }
-            
-                if ($data->nm_kesimpulan_pelanggaran) {
+                    if ($data->nm_kesimpulan_pelanggaran) {
                     $kategori_pelanggaran = $data->nm_kesimpulan_pelanggaran;
                 }
+                }
+            
+                
             
                 $total_pelanggaran_yang_dilakukan = $list_data->where('id_siswa', $siswa->id_siswa)->sum('frekuensi');
                 if ($total_pelanggaran_yang_dilakukan == 1) {

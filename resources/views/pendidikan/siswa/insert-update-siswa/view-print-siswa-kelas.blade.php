@@ -533,7 +533,8 @@
                     <td>:</td>
                 </tr>
             </table>
-
+            
+            <div class="pagebreak"> </div>
             <li style="font-weight: 500;margin-top: 30px;">KETERANGAN SETELAH SELESAI PENDIDIKAN</li>
             <table style="width: 100%;">
                 <tr>
