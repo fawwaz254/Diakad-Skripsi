@@ -66,7 +66,7 @@
                         <img src="{{ asset('logo/logo-yayasan.png') }}" width="120">
                     </div>
                     <div class="col-md-8">
-                        <h2>YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF <br> TAMAN – SEPANJANG – SIDOARJO</h2>
+                        <h3>YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF <br> TAMAN – SEPANJANG – SIDOARJO</h3>
                         <p>Akte Notaris Goesti Djohan Nomor 91 Tanggal 17 September 1965</p>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
 
             <div class="container text-center" style="margin-top:20px;">
 
-                <h2>LAPORAN PRIBADI SISWA <br> {{ strtoupper($sekolah_data->nm_sekolah) }}</h2>
+                <h3>LAPORAN PRIBADI SISWA <br> {{ strtoupper($sekolah_data->nm_sekolah) }}</h3>
                 <hr>
                 <div class="row" style="margin-top: 15px;">
                     <table class="table table-borderless" style="text-align:left">
