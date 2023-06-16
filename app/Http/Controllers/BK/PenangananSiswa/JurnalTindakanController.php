@@ -124,8 +124,8 @@ class JurnalTindakanController extends BaseController
         }
 
         if ($id_siswa == '0') {
-            return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan-siswa-kelas', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas'));
+            return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan-siswa-kelas', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas','auth_data'));
         }
-        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'jenis_kelamin'));
+        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'jenis_kelamin','auth_data'));
     }
 }
