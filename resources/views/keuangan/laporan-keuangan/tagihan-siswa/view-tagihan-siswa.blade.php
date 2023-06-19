@@ -30,6 +30,7 @@
                             <select class="form-control show-tick" onchange="change_jenis_tagihan()" id="kelas"
                                 name="kelas">
                                 <option value="">Pilih kelas</option>
+                                <option value="all">Semua Kelas</option>
                                 @foreach ($data_kelas as $data)
                                     <option value="{{ $data->id_kelas }}">
                                         {{ $data->nm_kelas }}
