@@ -70,6 +70,7 @@ class TagihanSiswaController extends BaseController
             if ($status == 1) {
                 if (!empty($kelas)) {
                     if($kelas == 'all'){
+                        $list_data = $list_data->whereNotNull('id_kelas');
                     }else{
                         $list_data = $list_data->where('id_kelas', $kelas);
                     }
