@@ -69,13 +69,19 @@ class TagihanSiswaController extends BaseController
 
             if ($status == 1) {
                 if (!empty($kelas)) {
-                    $list_data = $list_data->where('id_kelas', $kelas);
+                    if($kelas == 'all'){
+                    }else{
+                        $list_data = $list_data->where('id_kelas', $kelas);
+                    }
                 }
             } else if ($status == 2) {
                 if (!empty($kelas)) {
-                    $list_data = $list_data->whereHas('last_kelas_siswa', function ($q) use ($kelas) {
-                        $q->where('id_kelas', $kelas)->with('kelas');
-                    });
+                    if($kelas === 'all'){
+                    }else{
+                        $list_data = $list_data->whereHas('last_kelas_siswa', function ($q) use ($kelas) {
+                            $q->where('id_kelas', $kelas)->with('kelas');
+                        });
+                    }
                 }
             }
         }
@@ -229,17 +235,25 @@ class TagihanSiswaController extends BaseController
 
     public function showListTagihan(Request $request, $tahun, $id_kelas)
     {
-        $kelas_data = Kelas::find($id_kelas);
+        // $kelas_data = Kelas::find($id_kelas);
 
         $id_semester_mulai = Semester::where('kode_semester', $tahun . '1')->first()->id_semester;
         $id_semester_selesai = Semester::where('kode_semester', $tahun . '2')->first()->id_semester;
-
-        $tagihan_biaya = TagihanBiaya::where('id_kelas', $id_kelas)
+        if($id_kelas == 'all'){
+            $tagihan_biaya = TagihanBiaya::whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
+                $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+            })
+            ->groupBy('id_detail_biaya')
+            ->pluck('id_detail_biaya');
+        }else{
+            $tagihan_biaya = TagihanBiaya::where('id_kelas', $id_kelas)
             ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
                 $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
             })
             ->groupBy('id_detail_biaya')
             ->pluck('id_detail_biaya');
+        }
+        
 
         $data_detail_biaya = DetailBiaya::with('bulan', 'biaya')->whereIn('id_detail_biaya', $tagihan_biaya)->get();
 
