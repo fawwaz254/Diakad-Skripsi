@@ -149,7 +149,8 @@
             },
         },
         columns: [{
-                data: null,
+                data: 'index_table',
+                defaultContent: '',
                 searchable: false,
                 orderable: false
             },
@@ -191,6 +192,7 @@
         }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
         });
     }).draw();
 
