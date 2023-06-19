@@ -131,6 +131,13 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        dom: 'Bfrtip',
+        buttons: dtButtonConfig,
+
         ajax: {
             url: datatable_url,
             type: 'POST',

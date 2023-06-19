@@ -148,7 +148,12 @@ class TagihanSiswaController extends BaseController
 
         $status = $request->status;
 
-        $kelas_data = Kelas::find($id_kelas);
+        if ($id_kelas == 'all') {
+            $kelas_data = Kelas::get();
+        }else{
+            $kelas_data = Kelas::find($id_kelas);
+        }
+        
 
         $jenis_tagihan_explode = explode(",", $jenis_tagihan);
 
@@ -178,9 +183,13 @@ class TagihanSiswaController extends BaseController
         }, 'pengguna', 'kelas']);
 
         if ($status == 1) {
-            $list_data = $list_data->whereHas('kelas', function ($q) use ($id_kelas) {
-                $q->where('id_kelas', $id_kelas);
-            });
+            if($id_kelas == 'all'){
+                $list_data = $list_data->whereNotNull('id_kelas');
+            }else{
+                $list_data = $list_data->whereHas('kelas', function ($q) use ($id_kelas) {
+                    $q->where('id_kelas', $id_kelas);
+                });
+            }
         } else if ($status == 2) {
             $list_data = $list_data->whereHas('last_kelas_siswa', function ($q) use ($id_kelas) {
                 $q->where('id_kelas', $id_kelas)->with('kelas');
@@ -231,7 +240,7 @@ class TagihanSiswaController extends BaseController
             return $data;
         });
 
-        return view('keuangan/laporan-keuangan/tagihan-siswa/print-tagihan-siswa', compact('auth_data', 'semester_mulai', 'semester_selesai', 'status', 'all_data', 'kelas_data'));
+        return view('keuangan/laporan-keuangan/tagihan-siswa/print-tagihan-siswa', compact('auth_data', 'semester_mulai', 'semester_selesai', 'status', 'all_data', 'kelas_data','id_kelas'));
     }
 
     public function showListTagihan(Request $request, $tahun, $id_kelas)
