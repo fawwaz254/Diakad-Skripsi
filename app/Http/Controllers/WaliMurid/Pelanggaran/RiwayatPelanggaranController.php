@@ -47,6 +47,10 @@ class RiwayatPelanggaranController extends BaseController
                         return "Kesiswaan";
                     } elseif ($item->aktor_input_pelanggaran == 3) {
                         return "Wali Kelas";
+                    } elseif ($item->aktor_input_pelanggaran == 4) {
+                        return "Guru Reguler";
+                    } elseif ($item->aktor_input_pelanggaran == 3) {
+                        return "Guru Piket";
                     }
                 })
                 ->addColumn('nm_jenis_tindakan', function ($item) {
