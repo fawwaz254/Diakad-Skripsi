@@ -27,7 +27,8 @@
                                         <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $sekolah->nm_singkat_sekolah }}/global/logo-sekolah"
                                             alt="Logo Sekolah" style="height:90px;" />
                                         <br>
-                                        <h3 style="font-family: 'Nunito', sans-serif;">Data Penggunaan Diakad Untuk Setiap
+                                        <h3 style="font-family: 'Nunito', sans-serif;">Data Penggunaan
+                                            {{ strtoupper(env('APP_NAME', 'EDUMATE')) }} Untuk Setiap
                                             Guru {{ $semester_aktif->tahun_ajaran }}
                                             {{ $semester_aktif->nm_semester }}</h3>
                                         <h4 style="font-family: 'Nunito', sans-serif;">Per Tanggal :
