@@ -49,7 +49,7 @@ class RiwayatPelanggaranController extends BaseController
                         return "Wali Kelas";
                     } elseif ($item->aktor_input_pelanggaran == 4) {
                         return "Guru Reguler";
-                    } elseif ($item->aktor_input_pelanggaran == 3) {
+                    } elseif ($item->aktor_input_pelanggaran == 5) {
                         return "Guru Piket";
                     }
                 })
