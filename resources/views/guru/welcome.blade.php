@@ -66,6 +66,66 @@
             </a>
         </div>
     </div>
+    
 </div>
+    <div class="row">
+        @foreach (get_moduls() as $modul)
+                    @php
+                        $featuremenu = App\Models\Featuremenu::where('id_modul',$modul->id_modul)->first();
+                    @endphp
+                    @if ($featuremenu->is_aktif == 1)
+                        
+                    @if (auth_data()->sekolah_data->nm_singkat_sekolah !== 'smpypm2' && $modul->nm_modul=="Ketidaksesuaian SOP")
+                    
+                    @else
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 " data-toggle="modal" data-target=".bd-modal-lg-{{ $modul->route }}">
+                        <div class="card" style="margin: 1rem;">
+                            <div class="body bg-teal" style="text-align: -webkit-center;min-height: 26rem;">
+                                <img class="media-object" src="{{url('media/flaticon/'. $modul->route .'.png')}}" width="64" height="64">
+                                <h5>
+                                    {{ $modul->nm_modul }}
+                                </h5>
+                                <small>{{$featuremenu->deskripsi}}</small>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="modal fade bd-modal-lg-{{ $modul->route }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            @foreach ($modul->menus as $menu)
+                                {{-- @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12) --}}
+                                {{-- @else --}}
+                                    <div id="menu-item-{{ $modul->route }}-{{ $menu->page }}" class="submenu col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                        <a class="target-link" href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}">
+                                            <div class="card" style="margin: 1rem;">
+                                                <div class="body bg-teal" style="text-align: -webkit-center;">
+                                                    <h5>
+                                                        {{ $menu->nm_menu }}
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {{-- @endif --}}
+                            @endforeach
+                        </div>
+                    </div>
+                    </div>
+                    @endif
+                    @else
+                    
+                    @endif
+                @endforeach
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('div.submenu').click(function() {
+            $( "body" ).removeClass( "modal-open" );
+            $('.modal-backdrop').remove();
+        });
+    });
+</script>
 
 @include('rilis-note')

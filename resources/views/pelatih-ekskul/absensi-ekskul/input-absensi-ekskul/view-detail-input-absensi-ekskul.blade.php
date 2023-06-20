@@ -56,16 +56,14 @@
                                         <td>{{ $siswa->siswa->pengguna->nm_pengguna }}</td>
                                         <td>{{ $siswa->kelas->nm_kelas }}</td>
                                         @foreach ($data_presensi as $presensi_ekskul)
-                                            @if ($presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere(
-                                                'id_siswa',
-                                                $siswa->id_siswa))
-                                                @if ($presensi_ekskul_peserta->kehadiran == 1)
+                                            @if ($presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $siswa->id_siswa))
+                                                @if ($presensi_ekskul_peserta->kehadiran == '1')
                                                     <td class="is-center bg-light-green"></td>
-                                                @elseif($presensi_ekskul_peserta->kehadiran == 2)
+                                                @elseif($presensi_ekskul_peserta->kehadiran == '2')
                                                     <td class="is-center bg-amber">S</td>
-                                                @elseif($presensi_ekskul_peserta->kehadiran == 3)
+                                                @elseif($presensi_ekskul_peserta->kehadiran == '3')
                                                     <td class="is-center bg-cyan">I</td>
-                                                @elseif($presensi_ekskul_peserta->kehadiran == 4)
+                                                @elseif($presensi_ekskul_peserta->kehadiran == '4')
                                                     <td class="is-center bg-red">A</td>
                                                 @else
                                                     <td></td>

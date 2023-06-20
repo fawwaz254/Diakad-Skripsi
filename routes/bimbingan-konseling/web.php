@@ -17,6 +17,7 @@ use App\Http\Controllers\BK\DataPelanggaran\KategoriPelanggaranController;
 use App\Http\Controllers\BK\PenangananSiswa\TindakanPelanggaranController;
 use App\Http\Controllers\BK\DataPelanggaran\KesimpulanPelanggaranController;
 use App\Http\Controllers\BK\DataPelanggaran\SubkategoriPelanggaranController;
+use App\Http\Controllers\BK\JunalHarian\JurnalHarianBKController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as rekapKesehatanSiswa;
 
 Route::middleware(['token_staff'])->group(function () {
@@ -185,6 +186,18 @@ Route::middleware(['token_staff'])->group(function () {
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', [InputPelanggaranController::class, 'ajaxGetSubkategoriByKategori']);
+        });
+
+        Route::prefix('jurnal-harian')->group(function () {
+            Route::prefix('tambah-jurnal-harian')->group(function () {
+                Route::get('/', [JurnalHarianBKController::class, 'viewLaporanJurnalHarian']);
+                Route::get('add', [JurnalHarianBKController::class, 'addLaporanHarianJurnalHarian']);
+                Route::post('action-jurnal-harian/{mode}/{id}', [JurnalHarianBKController::class, 'actionLaporanHarian']);
+                Route::get('datatables', [JurnalHarianBKController::class, 'datatablesKerjaHarian']);
+                Route::get('edit/{id}', [JurnalHarianBKController::class, 'editKerjaHarian']);
+                Route::get('preview-file/{id}', [JurnalHarianBKController::class, 'previewFile']);
+                Route::get('download-file/{id}', [JurnalHarianBKController::class, 'downloadFile']);
+            });
         });
 
         Route::prefix('laporan-keuangan')->group(function () {

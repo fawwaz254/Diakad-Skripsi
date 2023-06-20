@@ -119,6 +119,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('approve-prestasi-siswa/datatables', [ApprovePrestasiSiswaController::class, 'datatablesApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/{id}/{param}', [ApprovePrestasiSiswaController::class, 'viewDetailPrestasiSiswa']);
             Route::get('approve-prestasi-siswa/print/skpi/{id}', [ApprovePrestasiSiswaController::class, 'printSkpi']);
+            Route::get('approve-prestasi-siswa/printkelas/skpi/{id_kelas}', [ApprovePrestasiSiswaController::class, 'printSkpikelas']);
 
             Route::get('approve-prestasi-siswa/prestasi/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesPrestasiApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesKegiatanApprovePrestasiSiswa']);
@@ -305,6 +306,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('post-view-update-siswa', [InsertUpdateSiswaController::class, 'actionViewUpdateSiswa']);
             Route::get('insert-update-siswa/view-detail/{nis_nama_siswa}', [InsertUpdateSiswaController::class, 'viewDetailUpdateSiswa']);
             Route::get('insert-update-siswa/view-print-siswa/{nis_nama_siswa}', [InsertUpdateSiswaController::class, 'viewPrintSiswa']);
+            Route::get('insert-update-siswa/view-print-siswa-kelas/{id_kelas}', [InsertUpdateSiswaController::class, 'viewPrintSiswaKelas']);
             Route::get('insert-update-siswa/view-cari-siswa/{nis_nama_siswa}', [InsertUpdateSiswaController::class, 'viewCariUpdateSiswa']);
             Route::get('insert-update-siswa/datatables/{nis_nama_siswa}', [InsertUpdateSiswaController::class, 'datatablesCariSiswa']);
             Route::get('insert-update-siswa/changeStatusMasuk', [InsertUpdateSiswaController::class, 'changeStatusSiswa']);
@@ -317,15 +319,17 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-wali-murid/view-eror-data', [SettingWaliMuridController::class, 'viewErorData']);
             Route::get('setting-wali-murid/add', [SettingWaliMuridController::class, 'viewSettingWaliMurid']);
             Route::post('post-view-setting-wali-murid', [SettingWaliMuridController::class, 'actionViewSettingWaliMurid']);
-            Route::get('setting-wali-murid/view-kelas/{id_kelas}', [SettingWaliMuridController::class, 'viewKelasWaliMurid']);
-            Route::get('setting-wali-murid/datatables/{id_kelas}', [SettingWaliMuridController::class, 'datatablesWaliMurid']);
+            Route::get('setting-wali-murid/view-kelas/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'viewKelasWaliMurid']);
+            Route::get('setting-wali-murid/datatables/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'datatablesWaliMurid']);
             Route::get('setting-wali-murid/edit/{id}', [SettingWaliMuridController::class, 'editWaliMurid']);
+            Route::post('setting-wali-murid/getDataKelas', [SettingWaliMuridController::class, 'getDataKelas']);
 
-            Route::get('setting-wali-murid/upload-setting-wali-murid/{id_kelas}', [SettingWaliMuridController::class, 'viewUploadSettingWaliMurid']);
-            Route::get('setting-wali-murid/upload-setting-wali-murid/download/{id_kelas}', [SettingWaliMuridController::class, 'viewDownloadSettingWaliMurid']);
-            Route::post('setting-wali-murid/upload/{id_kelas}', [SettingWaliMuridController::class, 'uploadFileExcel']);
+            Route::get('setting-wali-murid/upload-setting-wali-murid/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'viewUploadSettingWaliMurid']);
+            Route::get('setting-wali-murid/upload-setting-wali-murid/download/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'viewDownloadSettingWaliMurid']);
+            Route::post('setting-wali-murid/upload/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'uploadFileExcel']);
             Route::get('/download-file-excel-wali-murid', [SettingWaliMuridController::class, 'downloadFileExcel'])->name('siswa/download-file-excel-wali-murid');
 
+            Route::post('setting-wali-murid/reset-wali-murid-collect', [SettingWaliMuridController::class, 'resetWaliMuridCollect']);
             Route::post('action-setting-wali-murid/{mode}/{id}', [SettingWaliMuridController::class, 'actionSettingWaliMurid']);
 
             Route::get('wali-murid/get-data', [SettingWaliMuridController::class, 'actionGetWaliMurid']);

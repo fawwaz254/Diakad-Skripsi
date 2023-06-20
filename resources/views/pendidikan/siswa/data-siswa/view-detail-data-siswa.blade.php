@@ -3,8 +3,20 @@
          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
              <div class="card">
                  {{ csrf_field() }}
-                 <div class="header">
-                     <h2>Data Siswa</h2>
+                 <div class="header row">
+                    <h2 class="col-lg-9">Data Siswa</h2>
+                    <div class="dropdown col-lg-3">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Cetak Bidodata Siswa Per-kelas
+                            <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            @foreach ($kelas as $data)
+                            <li> <a target="_blank" href="/kesiswaan/siswa/insert-update-siswa/view-print-siswa-kelas/{{$data->id_kelas}}">
+                                {{$data->nm_kelas}}
+                            </a>
+                        </li>
+                            @endforeach
+                        </ul>
+                    </div>
                  </div>
                  <div class="body">
                      <form id="form-validation" method="POST"

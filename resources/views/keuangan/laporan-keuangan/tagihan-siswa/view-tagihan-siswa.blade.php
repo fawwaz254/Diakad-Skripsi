@@ -30,6 +30,7 @@
                             <select class="form-control show-tick" onchange="change_jenis_tagihan()" id="kelas"
                                 name="kelas">
                                 <option value="">Pilih kelas</option>
+                                <option value="all">Semua Kelas</option>
                                 @foreach ($data_kelas as $data)
                                     <option value="{{ $data->id_kelas }}">
                                         {{ $data->nm_kelas }}
@@ -130,6 +131,13 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        dom: 'Bfrtip',
+        buttons: dtButtonConfig,
+
         ajax: {
             url: datatable_url,
             type: 'POST',
@@ -141,7 +149,8 @@
             },
         },
         columns: [{
-                data: null,
+                data: 'index_table',
+                defaultContent: '',
                 searchable: false,
                 orderable: false
             },
@@ -183,6 +192,7 @@
         }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
         });
     }).draw();
 

@@ -14,6 +14,7 @@ use Yajra\Datatables\Datatables;
 use App\Models\UnitKerja;
 use Carbon\Carbon;
 use Validator;
+
 class DataKategoriJurnalHarianController extends Controller
 {
     public function viewDataKategori(Request $request)
@@ -29,7 +30,7 @@ class DataKategoriJurnalHarianController extends Controller
     {
         $input = (object) $request->input();
 
-        $list_data = CategoryJurnalHarianTendik::with('category_kelompok_jurnal_harian_tendik.pengguna','unit_kerja')->get();
+        $list_data = CategoryJurnalHarianTendik::with('category_kelompok_jurnal_harian_tendik.pengguna', 'unit_kerja')->get();
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
@@ -55,19 +56,19 @@ class DataKategoriJurnalHarianController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $unit_kerja = UnitKerja::all();
-    
+
 
         $pengguna = Pengguna::where('status_join_table', 1)
-        ->where('nm_pengguna', '!=', 'Admin Diakad')
-        ->with('status_pengguna')
-        ->whereHas('status_pengguna', function($query) {
-        $query->where('nm_status_pengguna','=','AKTIF');
-        })->get();
+            ->where('nm_pengguna', '!=', 'Admin Diakad')
+            ->with('status_pengguna')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
 
 
         // $pengguna = Pengguna::where('status_join_table', 2)->get();
         // $pengguna = Role::where('id_role', '<>', '14')->get();
-        return view('humas/jurnal-harian/data-kategori/add-data-kategori', compact('auth_data', 'pengguna','unit_kerja'));
+        return view('humas/jurnal-harian/data-kategori/add-data-kategori', compact('auth_data', 'pengguna', 'unit_kerja'));
     }
 
     public function editDataKategori(Request $request, $id_category_jh_tendik = null)
@@ -78,14 +79,14 @@ class DataKategoriJurnalHarianController extends Controller
         $name = CategoryJurnalHarianTendik::find($id_category_jh_tendik)->first();
         $data_kategori = CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik', $id_category_jh_tendik)->first();
         $pengguna = pengguna::where('status_join_table', 1)
-        ->where('nm_pengguna', '!=', 'Admin Diakad')
-        ->with('status_pengguna')
-        ->whereHas('status_pengguna', function($query) {
-        $query->where('nm_status_pengguna','=','AKTIF');
-        })->get();
-        $allowed_role_pengguna = CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik',$id_category_jh_tendik )->pluck('id_pengguna')->toArray();
+            ->where('nm_pengguna', '!=', 'Admin Diakad')
+            ->with('status_pengguna')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
+        $allowed_role_pengguna = CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik', $id_category_jh_tendik)->pluck('id_pengguna')->toArray();
 
-        return view('humas/jurnal-harian/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'pengguna', 'allowed_role_pengguna','unit_kerja','name'));
+        return view('humas/jurnal-harian/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'pengguna', 'allowed_role_pengguna', 'unit_kerja', 'name'));
     }
 
     // //action POST
@@ -121,7 +122,7 @@ class DataKategoriJurnalHarianController extends Controller
                         $datakategori_tendik = new CategoryKelompokJurnalHarianTendik();
                         $datakategori_tendik->id_c_k_jh_tendik = $uuid;
                         $datakategori_tendik->id_pengguna = $input->allowed_tendik[$key];
-                        $datakategori_tendik->id_category_jh_tendik =  $datakategori->id_category_jh_tendik ;
+                        $datakategori_tendik->id_category_jh_tendik =  $datakategori->id_category_jh_tendik;
                         $datakategori_tendik->save();
                     }
 
@@ -137,31 +138,31 @@ class DataKategoriJurnalHarianController extends Controller
                     ];
                 }
             } elseif ($mode == 'edit') {
-                    // make object to find id
-                    $datakategori                               = CategoryJurnalHarianTendik::find($id);
-                    $datakategori->id_unit_kerja                = $input->id_unit_kerja;
-                    $datakategori->description                  = $input->description;
-                    $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
-                    $datakategori->updated_at                   = $now;
-                    $datakategori->save();
+                // make object to find id
+                $datakategori                               = CategoryJurnalHarianTendik::find($id);
+                $datakategori->id_unit_kerja                = $input->id_unit_kerja;
+                $datakategori->description                  = $input->description;
+                $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $datakategori->updated_at                   = $now;
+                $datakategori->save();
 
-                    // replace category file role
-                    CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik', $id)->delete();
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
-                    foreach ($input->allowed_tendik as $key => $value) {
-                        $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $datakategori_role = new CategoryKelompokJurnalHarianTendik();
-                        $datakategori_role->id_c_k_jh_tendik = $uuid;
-                        $datakategori_role->id_pengguna = $input->allowed_tendik[$key];
-                        $datakategori_role->id_category_jh_tendik = $id;
-                        $datakategori_role->save();
-                    }
+                // replace category file role
+                CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik', $id)->delete();
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                foreach ($input->allowed_tendik as $key => $value) {
+                    $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $datakategori_role = new CategoryKelompokJurnalHarianTendik();
+                    $datakategori_role->id_c_k_jh_tendik = $uuid;
+                    $datakategori_role->id_pengguna = $input->allowed_tendik[$key];
+                    $datakategori_role->id_category_jh_tendik = $id;
+                    $datakategori_role->save();
+                }
 
-                    return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'jurnal-harian/kelompok-jurnal-harian-tendik',
-                        'message' => 'Update Data Kategori Succesfully'
-                    ];
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'jurnal-harian/kelompok-jurnal-harian-tendik',
+                    'message' => 'Update Data Kategori Succesfully'
+                ];
             } elseif ($mode == 'delete') {
                 // dd('sdaasd');
                 if (!CategoryJurnalHarianTendik::where('id_category_jh_tendik', $id)->first()) {
@@ -194,16 +195,17 @@ class DataKategoriJurnalHarianController extends Controller
             }
         }
     }
-    public function viewLaporanAllJurnalHarian(Request $request){
+    public function viewLaporanAllJurnalHarian(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('humas/jurnal-harian/data-kategori/laporan-data-jurnal-harian',compact('auth_data'));
-
+        return view('humas/jurnal-harian/data-kategori/laporan-data-jurnal-harian', compact('auth_data'));
     }
 
-    public function previewFile($id,Request $request){
+    public function previewFile($id, Request $request)
+    {
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -211,56 +213,48 @@ class DataKategoriJurnalHarianController extends Controller
         $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
         $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
-        return view('humas/jurnal-harian/data-kategori/preview-file-jurnal-harian',compact('auth_data','laporan_kerja_harian','link','ext'));
-
+        return view('humas/jurnal-harian/data-kategori/preview-file-jurnal-harian', compact('auth_data', 'laporan_kerja_harian', 'link', 'ext'));
     }
 
     public function downloadFile(Request $request, $id = null)
     {
-        $input = (object) $request->input();
         $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
 
         return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
     }
 
-    public function datatablesKerjaHarianJurnalHarian(Request $request){
-
-        $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
-
-        $list_data = LaporanKerjaHarianTendik::with('category_jurnal_harian_tendik.unit_kerja','pengguna')->get();
+    public function datatablesKerjaHarianJurnalHarian(Request $request)
+    {
+        $list_data = LaporanKerjaHarianTendik::with('category_jurnal_harian_tendik.unit_kerja', 'pengguna')->orderBy('created_at', 'desc');
 
         return Datatables::of($list_data)
-                ->editColumn('tanggal',function($item){
-                    return Carbon::parse($item->tanggal)->format('d M Y');
-                })
-                ->addColumn('action', function($item){
-                    if($item->path_file){
-                        $file =  Storage::disk('spaces')->url($item->path_file);
-                        $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
-                        if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
-                            $note = 'file';
-                        }
-                        else{
-                            $note= 'image';
-                        }
+            ->editColumn('tanggal', function ($item) {
+                return Carbon::parse($item->tanggal)->format('d M Y');
+            })
+            ->addColumn('action', function ($item) {
+                if ($item->path_file) {
+                    $file =  Storage::disk('spaces')->url($item->path_file);
+                    $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
+                    if ($ext == 'pdf' || $ext == 'doc' || $ext == 'docx') {
+                        $note = 'file';
+                    } else {
+                        $note = 'image';
                     }
-                    else{
-                        $file = null;
-                        $note = null;
-                    }
+                } else {
+                    $file = null;
+                    $note = null;
+                }
 
-                    $data = array(
-                        'id'        => $item->id_lap_kerha_t,
-                        'jenis'    =>$item->jenis,
-                        'status'    => $item->status,
-                        'file'      =>$file,
-                        'note'      => $item->catatan,
-                    );
-                    return $data;
-                })
-                ->make(true);
+                $data = array(
+                    'id'        => $item->id_lap_kerha_t,
+                    'jenis'    => $item->jenis,
+                    'status'    => $item->status,
+                    'file'      => $file,
+                    'note'      => $item->catatan,
+                );
+                return $data;
+            })
+            ->make(true);
     }
-
 }

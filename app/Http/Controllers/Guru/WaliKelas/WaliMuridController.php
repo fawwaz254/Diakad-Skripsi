@@ -8,6 +8,7 @@ use Yajra\Datatables\Datatables;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
+use Carbon\Carbon;
 use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\WaliMurid;
@@ -44,6 +45,15 @@ class WaliMuridController extends Controller
             } else {
                 return '';
             }
-        })->make(true);
+        })->addColumn('time_reset_password', function ($item) {
+            if (isset($item->wali_murid->pengguna->last_time_password)) {
+                $specificDateTime = Carbon::parse($item->wali_murid->pengguna->last_time_password);
+                $formattedDateTime = $specificDateTime->diffForHumans();
+                return  $formattedDateTime;
+            } else {
+                return '';
+            }
+        })
+            ->make(true);
     }
 }

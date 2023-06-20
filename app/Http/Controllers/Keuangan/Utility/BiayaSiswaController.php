@@ -171,6 +171,13 @@ class BiayaSiswaController extends BaseController
             ];
         } else {
             if ($mode == 'set') {
+                if (!isset($input->id_siswa)) {
+                    return [
+                        'status' => 300, // FAILED
+                        'message' => 'Pilih Siswa Terlebih Dahulu'
+                    ];
+                }
+
                 $id_siswa_collection = collect($input->id_siswa);
 
                 foreach ($id_siswa_collection->chunk(25) as $chunk_id_siswa) {

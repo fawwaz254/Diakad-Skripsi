@@ -8,6 +8,7 @@ use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\SumberDaya\LibGuru;
+use App\Models\Pengguna;
 use App\Models\PresensiMp;
 
 class MonitoringPresensiGuruController extends Controller
@@ -69,5 +70,42 @@ class MonitoringPresensiGuruController extends Controller
             ->get();
 
         return view('akademik/monitoring/view-detail-presensi-guru', compact('data_presensi', 'id_bulan', 'tahun'));
+    }
+    public function printViewMonitoringPresensiGuru(Request $request, $id_bulan, $tahun)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $now = Carbon::today();
+        if (empty($id_bulan)) {
+            $id_bulan = $now->month;
+        }
+
+        if (empty($tahun)) {
+            $tahun = $now->year;
+        }
+
+        $start_month = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
+        $end_month = Carbon::create($tahun, $id_bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
+        $dates = CarbonPeriod::create($start_month, $end_month);
+        $pengguna = Pengguna::find($auth_data->pengguna->id_pengguna);
+        $bulan = Bulan::find($id_bulan);
+        // $data_bulan = Bulan::orderBy('id_bulan')->get();
+
+        $data_guru = LibGuru::fetchDataAllGuru($auth_data);
+
+        $data_presensi = PresensiMp::select('nm_pengguna', 'pengguna.id_pengguna', 'tgl_presensi')
+            ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'presensi_mp.id_kelas_mp')
+            ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', 'kelas_mp.id_kelas_mp')
+            ->join('guru', 'guru.id_guru', 'pengampu_mp.id_guru')
+            ->join('pengguna', 'pengguna.id_pengguna', 'guru.id_pengguna')
+            ->join('status_pengguna', 'status_pengguna.id_status_pengguna', 'pengguna.id_status_pengguna')
+            ->where('nm_status_pengguna', 'AKTIF')
+            ->whereMonth('tgl_presensi', $id_bulan)
+            ->whereYear('tgl_presensi', $tahun)
+            ->whereIn('pengguna.id_pengguna', $data_guru->pluck('id_pengguna'))
+            ->get();
+
+        return view('akademik/monitoring/print-view-monitoring-presensi-guru', compact('auth_data', 'dates', 'bulan', 'tahun', 'data_guru', 'data_presensi', 'pengguna'));
     }
 }

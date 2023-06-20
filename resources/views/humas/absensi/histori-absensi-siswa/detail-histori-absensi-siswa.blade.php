@@ -95,7 +95,7 @@
                 <br>
                 <table id="example" class="table table-striped table-bordered"
                     style="width:100%; 
-                padding: 10px; ">
+            padding: 10px; ">
                     <thead>
                         <tr>
                             <th>Check-in</th>
@@ -128,8 +128,8 @@
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
 
-    
-@if ($id_kelas!== "0") 
+
+@if ($id_kelas !== '0')
     <a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-mount/' . $id_kelas . '/' . $date) }}"
         target="_blank" class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
@@ -153,7 +153,7 @@
 
             <div class="body">
                 <div class="table-responsive ">
-                    <table class="table table-bordered" width="600px">
+                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
                         <thead style="background:#9C27B0;color:white">
                             <tr>
                                 <th style="text-align: center;">#</th>
@@ -234,6 +234,16 @@
 
 @include('scriptjs')
 <script type="text/javascript">
+    $(document).ready(function() {
+        var table = $('.dataTable').DataTable({
+            paging: false,
+            lengthMenu: [
+                [-1],
+                ["All"]
+            ]
+        });
+    });
+
     function viewGuru() {
         window.location = '/humas#absensi/histori-absensi'
     }

@@ -23,7 +23,7 @@
     @php
         if ($list_data->count() > 0) {
             $total_poin = $list_data->where('id_siswa', $siswa->id_siswa)->sum('jumlah_poin');
-        
+
             $data = App\Models\KesimpulanPelanggaran::where('poin_bawah_kesimpulan_pelanggaran', '<=', $total_poin)
                 ->where('poin_atas_kesimpulan_pelanggaran', '>=', $total_poin)
                 ->first();
@@ -54,7 +54,7 @@
                 <img src="{{ asset('logo/logo-yayasan.png') }}" width="120">
             </div>
             <div class="col-md-8">
-                <h2>YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF <br> TAMAN – SEPANJANG – SIDOARJO</h2>
+                <h3>YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF <br> TAMAN – SEPANJANG – SIDOARJO</h3>
                 <p>Akte Notaris Goesti Djohan Nomor 91 Tanggal 17 September 1965</p>
             </div>
         </div>
@@ -69,7 +69,7 @@
 
     <div class="container text-center" style="margin-top:20px;">
 
-        <h2>LAPORAN PRIBADI SISWA <br> {{ strtoupper($sekolah_data->nm_sekolah) }}</h2>
+        <h3>LAPORAN PRIBADI SISWA <br> {{ strtoupper($sekolah_data->nm_sekolah) }}</h3>
         <hr>
         <div class="row" style="margin-top: 15px;">
             <table class="table table-borderless" style="text-align:left">
@@ -176,7 +176,33 @@
 
             <div class="col-md-4" style="margin-top:50px;">
                 Mengetahui <br> Kepala Sekolah,
-                <div style="margin-top:100px;">{{ $sekolah_data->nm_kepala_sekolah }}</div>
+                <br>
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                            <br>
+                            <img src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD"
+                                style="height:90px; margin-left:-40px;" width="220px" />
+                            <br>
+                        @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
+                            <img style="position: absolute; top: 5%; margin-left:-40px;"
+                                src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="160px"
+                                height="160px" class="ttd">
+                            <br>
+                            <br>
+                            <br>
+                        @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                            <img style="position: absolute; top: 5%; margin-left:-70px; margin-top:17px"
+                                src="{{ asset('media/ttd/smpypm2.png') }}" alt="TTD" width="160px"
+                                height="160px" class="ttd">
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        @else
+                            <br>
+                            <br>
+                            <br>
+                        @endif
+                <div>{{ $sekolah_data->nm_kepala_sekolah }}</div>
             </div>
 
             <div class="col-md-4" style="margin-top:75px;">
@@ -185,7 +211,13 @@
             </div>
 
             <div class="col-md-4" style="margin-top:50px;">
-                Sidoarjo, {{ now('Asia/Jakarta')->format('d M Y') }} <br> Wali Kelas,
+                Sidoarjo,
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                 24 Juni 2023
+                @else
+                 {{ now('Asia/Jakarta')->format('d M Y') }} 
+                @endif
+                 <br> Wali Kelas,
                 <div style="margin-top:100px;">
                     {{ $wali_kelas->gelar_depan }} {{ $wali_kelas->nm_wali_kelas }} {{ $wali_kelas->gelar_belakang }}
                 </div>

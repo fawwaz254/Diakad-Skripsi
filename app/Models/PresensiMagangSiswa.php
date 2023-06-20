@@ -32,4 +32,9 @@ class PresensiMagangSiswa extends Model
     {
         return $this->belongsTo(Siswa::class, 'id_siswa');
     }
+
+    public function presensiMagang()
+    {
+        return $this->belongsTo(PresensiMagang::class, 'id_presensi_magang', 'id_presensi_magang');
+    }
 }

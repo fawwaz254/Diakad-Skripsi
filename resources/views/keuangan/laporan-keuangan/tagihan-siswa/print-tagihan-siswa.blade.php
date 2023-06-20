@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak tagihan siswa yang belum terbayar untuk kelas {{ $kelas_data->nm_kelas }}</title>
+    @if ($id_kelas == 'all')
+        <title>Cetak tagihan siswa yang belum terbayar untuk semua kelas</title>
+    @else
+        <title>Cetak tagihan siswa yang belum terbayar untuk kelas {{ $kelas_data->nm_kelas }}</title>
+    @endif
+
 
     <style>
         .page {
@@ -37,7 +42,11 @@
         <table cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" /></td>
-                <td colspan=6><h1 align="center">TAGIHAN PEMBAYARAN KELAS {{ $kelas_data->nm_kelas }}<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
+                @if ($id_kelas == 'all')
+                    <td colspan=6><h1 align="center">TAGIHAN PEMBAYARAN SEMUA KELAS<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
+                @else
+                    <td colspan=6><h1 align="center">TAGIHAN PEMBAYARAN KELAS {{ $kelas_data->nm_kelas }}<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
+                @endif
             </tr>
         </table>
         @foreach($all_data as $key => $siswa)

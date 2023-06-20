@@ -98,36 +98,44 @@
                     </a>
                 </li>
                 @foreach (get_moduls() as $modul)
-                    <li id="modul-item-{{ $modul->route }}" class="modul-item">
-                        @if (!empty($modul->page))
-                            <a class="target-link" href="{{ url(Request::segment(1) . '#' . $modul->page) }}"
-                                class="menu-toggle waves-effect waves-block">
-                            @else
-                                <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
-                        @endif
-                        <span>{{ $modul->nm_modul }}</span>
-                        </a>
-                        @if (count($modul->menus))
-                            <ul class="ml-menu">
-                                @foreach ($modul->menus as $menu)
-                                    @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12)
+                    @if (auth_data()->sekolah_data->nm_singkat_sekolah !== 'smpypm2' && $modul->nm_modul=="Ketidaksesuaian SOP")
+                        
+                    @else
+                        @if (auth_data()->pengguna->role_pengguna[0]->id_role == 4 && $modul->route == 'kesekretariatan' )
+                        
+                        @else    
+                            <li id="modul-item-{{ $modul->route }}" class="modul-item">
+                                @if (!empty($modul->page))
+                                    <a class="target-link" href="{{ url(Request::segment(1) . '#' . $modul->page) }}"
+                                        class="menu-toggle waves-effect waves-block">
                                     @else
-                                        <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}" class="menu-item">
-                                            @if (!empty($menu->page))
-                                                <a class="target-link"
-                                                    href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
-                                                    class="waves-effect waves-block">
-                                                @else
-                                                    <a href="javascript:void(0);" class="waves-effect waves-block">
+                                        <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                                @endif
+                                <span>{{ $modul->nm_modul }}</span>
+                                </a>
+                                @if (count($modul->menus))
+                                    <ul class="ml-menu">
+                                        @foreach ($modul->menus as $menu)
+                                            @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12)
+                                            @else
+                                                <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}" class="menu-item">
+                                                    @if (!empty($menu->page))
+                                                        <a class="target-link"
+                                                            href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
+                                                            class="waves-effect waves-block">
+                                                        @else
+                                                            <a href="javascript:void(0);" class="waves-effect waves-block">
+                                                    @endif
+                                                    {{ $menu->nm_menu }}
+                                                    </a>
+                                                </li>
                                             @endif
-                                            {{ $menu->nm_menu }}
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        @endif
-                    </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endif    
+                    @endif
                 @endforeach
 
                 <ul class="ml-menu">
