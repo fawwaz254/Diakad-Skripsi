@@ -104,7 +104,13 @@ class HistoriAbsensiSiswaSholatController extends Controller
         }
         $hasil = [];
         $allPresensiPengguna = FPAttendance::where('tanggal', $date)->where('unit', 'Sholat')->get();
-        $rekapPresensoSholat = FPAttendance::where('unit', 'Sholat')->get();
+
+        $sevenDay = now()->subDays(6)->format('Y-m-d'); // Tanggal 7 hari yang lalu
+        $rekapMinggu = FPAttendance::where('unit', 'Sholat')->whereDate('tanggal', '>=', $sevenDay)
+            ->whereDate('tanggal', '<=', $date)
+            ->get();
+
+        // $rekapPresensoSholat = FPAttendance::where('unit', 'Sholat')->get();
         $dates =  Carbon::parse($date);
 
         $firstSubuh = Carbon::create($dates->year, $dates->month, $dates->day, 3, 55, 0);
@@ -129,7 +135,7 @@ class HistoriAbsensiSiswaSholatController extends Controller
             $hasil[$key]['dzuhur'] = '-';
             $hasil[$key]['maghrib'] = '-';
             $hasil[$key]['isya'] = '-';
-            $hasil[$key]['rekap'] = $rekapPresensoSholat->where('username', $value->username)->count();
+            // $hasil[$key]['rekap'] = $rekapMinggu->where('username', $value->username)->count();
 
             $hasil[$key]['id_presensi_pengguna'] = "";
             $attendances =  $allPresensiPengguna->where('username', $value->username);

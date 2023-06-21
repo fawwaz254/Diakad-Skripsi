@@ -255,6 +255,8 @@ class SettingWaliMuridController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'edit') {
+                $id_jurusan = Kelas::where('id_kelas', $input->id_kelas)->first()->id_jurusan;
+
                 $siswa = Siswa::where('id_siswa', '=', $id)->first();
                 $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
 
@@ -281,7 +283,7 @@ class SettingWaliMuridController extends BaseController
 
                     return [
                         'status' => 202,
-                        'path' => 'siswa/setting-wali-murid/view-kelas/' . $input->id_kelas,
+                        'path' => 'siswa/setting-wali-murid/view-kelas/' . $id_jurusan . '/' . $input->id_kelas,
                         'message' => 'Update Data Wali Murid Berhasil'
                     ];
                 } else {
@@ -327,7 +329,7 @@ class SettingWaliMuridController extends BaseController
 
                 return [
                     'status' => 202,
-                    'path' => 'siswa/setting-wali-murid/view-kelas/' . $input->id_kelas,
+                    'path' => 'siswa/setting-wali-murid/view-kelas/' . $id_jurusan . '/' . $input->id_kelas,
                     'message' => 'Update Setting Wali Murid Successfully'
                 ];
             }

@@ -134,7 +134,7 @@
                                 <th style="text-align: center;">Dzuhur</th>
                                 <th style="text-align: center;">Maghrib</th>
                                 <th style="text-align: center;">Isya</th>
-                                <th style="text-align: center;">Rekap Sholat</th>
+                                {{-- <th style="text-align: center;">Rekap 7 Hari Terakhir</th> --}}
 
                             </tr>
                         </thead>
@@ -157,7 +157,7 @@
                                 <td style="text-align: center;">{{ $r['dzuhur'] }}</td>
                                 <td style="text-align: center;">{{ $r['maghrib'] }}</td>
                                 <td style="text-align: center;">{{ $r['isya'] }}</td>
-                                <td style="text-align: center;">{{ $r['rekap'] }}</td>
+                                {{-- <td style="text-align: center;">{{ $r['rekap'] }}</td> --}}
                                 </tr>
                             @endforeach
                         </tbody>
