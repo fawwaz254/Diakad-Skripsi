@@ -151,7 +151,7 @@
             },
             {
                 data: 'nm_kelas',
-                name: 'nm_kelas'
+                name: 'kelas.nm_kelas'
             },
             {
                 data: 'nm_siswa',
