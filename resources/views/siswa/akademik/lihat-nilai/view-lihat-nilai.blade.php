@@ -11,27 +11,30 @@
                     <table class="table table-bordered table-striped table-hover dataTable display responsive wrap">
                         <thead>
                             <tr>
+                                <th>No. </th>
                                 <th>Mapel</th>
+                                <th>Guru Pengampu</th>
+                                <th>Kelas</th>
                                 <th>Nilai Angka</th>
                                 <th>Nilai Huruf</th>
                             </tr>
                         </thead>
                         <tbody>
-                                @foreach ($pengambilanmp as $item)
-                                    @php
-                                        $kelas = App\Models\KelasMP::where('id_kelas_mp',$item->id_kelas_mp)->first();
-                                    @endphp
-                                    <tr>
-                                        <td>
-                                            {{$kelas->nm_kelas_mp}}
-                                        </td>
-                                        <td>
-                                            {{isset($item->nilai_angka) ? $siswa->nilai_angka : 0}}
-                                        </td>
-                                        <td>
-                                            {{$item->nilai_huruf}}
-                                        </td>
-                                    </tr>
+                                @php
+                                    $nomer = 1; 
+                                @endphp
+                                @foreach ($nilaiKBM as $item)
+                                <tr>
+                                    <td>{{$nomer}}</td>
+                                    <td>{{$item->nm_mata_pelajaran}}</td>
+                                    <td>{{$item->nm_pengguna}}</td>
+                                    <td>{{$item->nm_kelas}}</td>
+                                    <td>{{$item->nilai_angka}}</td>
+                                    <td>{{$item->nilai_huruf}}</td>
+                                </tr>
+                                @php
+                                    $nomer++;
+                                @endphp
                                 @endforeach
                         </tbody>
                     </table>
