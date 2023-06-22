@@ -29,6 +29,7 @@ use App\Http\Controllers\Siswa\ELearningSoal\NilaiUjianController;
 use App\Http\Controllers\Siswa\Akademik\KalenderAkademikController;
 use App\Http\Controllers\Siswa\Akademik\JadwalKelasDaringController;
 use App\Http\Controllers\Siswa\Absensi\HistoriAbsensiSiswaController;
+use App\Http\Controllers\Siswa\Akademik\LihatNilaiController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Siswa\Pelanggaran\RiwayatPelanggaranController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
@@ -171,6 +172,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('download/{id}', [JadwalKelasDaringController::class, 'downloadMateri']);
                 Route::post('upload-tugas/{id}', [JadwalKelasDaringController::class, 'uploadTugas']);
             });
+            //Menu Lihat Nilai Kbm
+            Route::get('lihat-nilai-kbm',[LihatNilaiController::class,'index']);
+
+
             // MENU Magang
             Route::get('magang', [MagangController::class, 'viewMagang']);
             Route::get('magang/datatables', [MagangController::class, 'datatablesMagang']);

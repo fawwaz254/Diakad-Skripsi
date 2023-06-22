@@ -4,6 +4,7 @@ use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\WaliMurid\Akademik\LihatNilaiWaliController;
 use App\Http\Controllers\WaliMurid\Akademik\AbsensiController;
 use App\Http\Controllers\WaliMurid\Akademik\JadwalKBMController;
 use App\Http\Controllers\WaliMurid\Akademik\JadwalUjianController;
@@ -67,6 +68,9 @@ Route::middleware(['token_staff'])->group(function () {
             // MENU Jadwal KBM
             Route::get('jadwal-kbm', [JadwalKBMController::class, 'viewJadwalKBM']);
             Route::get('jadwal-kbm/datatables', [JadwalKBMController::class, 'datatablesJadwalKBM']);
+
+            // MENU Lihat Nilai KBM
+            Route::get('lihat-nilai-kbm',[LihatNilaiWaliController::class,'index']);
 
             // MENU Jadwal Ujian
             Route::get('jadwal-ujian', [JadwalUjianController::class, 'viewJadwalUjian']);
