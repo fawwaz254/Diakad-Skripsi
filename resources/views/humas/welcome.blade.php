@@ -6,7 +6,7 @@
         <h2>DASHBOARD | {{$today->format('d M Y')}}</h2>
     </div>
         <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        {{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
             <a class="target-link" href="{{url(Request::segment(1).'#kegiatan-harian/mengisi-form-kesehatan')}}">
                 <div class="card">
                     <div class="body bg-red" style="text-align: -webkit-center;">
@@ -18,7 +18,7 @@
                     </div>
                 </div>
             </a>
-        </div>
+        </div> --}}
         {{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
             <a href="{{ url(Request::segment(0) . Request::segment(1) .'#absensi/device') }}">
                 <div class="card">

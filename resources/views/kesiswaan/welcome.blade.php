@@ -8,7 +8,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
             <h2>DASHBOARD | {{ $today->format('d M Y') }}</h2>
         </div>
         <div class="body">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <a class="target-link"
                         href="{{ url(Request::segment(1) . '#kegiatan-harian/mengisi-form-kesehatan') }}">
@@ -25,7 +25,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                         </div>
                     </a>
                 </div>
-            </div>
+            </div> --}}
             <br>
             <div class="row clearfix">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
