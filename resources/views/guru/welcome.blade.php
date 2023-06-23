@@ -25,7 +25,7 @@
     <div class="block-header">
         <h2>FEATURE MENU</h2>
     </div>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
             <a class="target-link" href="{{url(Request::segment(1).'#kegiatan-harian/mengisi-form-kesehatan')}}">
                 <div class="card">
@@ -65,7 +65,7 @@
                 </div>
             </a>
         </div>
-    </div>
+    </div> --}}
     
 </div>
     <div class="row">
@@ -90,25 +90,29 @@
                         </div>
                     </div>
                 
-                    <div class="modal fade bd-modal-lg-{{ $modul->route }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal fade bd-modal-lg-{{ $modul->route }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
-                            @foreach ($modul->menus as $menu)
-                                {{-- @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12) --}}
-                                {{-- @else --}}
-                                    <div id="menu-item-{{ $modul->route }}-{{ $menu->page }}" class="submenu col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <a class="target-link" href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}">
-                                            <div class="card" style="margin: 1rem;">
-                                                <div class="body bg-teal" style="text-align: -webkit-center;">
-                                                    <h5>
-                                                        {{ $menu->nm_menu }}
-                                                    </h5>
-                                                </div>
+                            <div class="row col-lg-12 d-flex justify-content-center" style="background-color:white;border-radus:1rem;">
+                                <div class=" d-flex justify-content-center">
+                                    @foreach ($modul->menus as $menu)
+                                        {{-- @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12) --}}
+                                        {{-- @else --}}
+                                            <div id="menu-item-{{ $modul->route }}-{{ $menu->page }}" class="d-flex mx-auto submenu col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                                <a class="target-link d-flex mx-auto" href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}">
+                                                    <div class="card" style="margin: 1rem;">
+                                                        <div class="body bg-teal" style="text-align: -webkit-center;">
+                                                            <h5>
+                                                                {{ $menu->nm_menu }}
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </a>
                                             </div>
-                                        </a>
-                                    </div>
-                                {{-- @endif --}}
-                            @endforeach
+                                        {{-- @endif --}}
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                     </div>
