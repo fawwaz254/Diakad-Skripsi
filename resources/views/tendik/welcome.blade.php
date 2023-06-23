@@ -25,7 +25,7 @@
     <div class="block-header">
         <h2>FEATURE MENU</h2>
     </div>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
             <a class="target-link" href="{{url(Request::segment(1).'#kegiatan-harian/mengisi-form-kesehatan')}}">
                 <div class="card">
@@ -39,7 +39,7 @@
                 </div>
             </a>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 @include('rilis-note')
