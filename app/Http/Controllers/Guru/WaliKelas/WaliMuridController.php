@@ -31,7 +31,7 @@ class WaliMuridController extends Controller
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
-        $list_siswa = Siswa::where('id_kelas', $wali_kelas->id_kelas)->whereHas('wali_murid')->with('wali_murid.pengguna', 'pengguna', 'kelas')->get();
+        $list_siswa = Siswa::where('id_kelas', $wali_kelas->id_kelas)->whereHas('wali_murid')->with('wali_murid.pengguna', 'pengguna', 'kelas')->orderBy('nis_siswa', 'ASC')->get();
 
         // dd($list_siswa);
         return Datatables::of($list_siswa)->addColumn('action', function ($item) {
