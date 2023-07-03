@@ -339,4 +339,13 @@ class EntriWisudaController extends BaseController
             ];
         }
     }
+    public function downloadFileExcel()
+    {
+        $file = public_path() . "/excel/ContohFileExcelSettingWaliMurid.xls";
+        $headers = [
+            'Content-Type' => 'application/xlsx',
+        ];
+
+        return response()->download($file, 'ContohFileExcelUploadNomorIjasah.xlsx', $headers);
+    }
 }
