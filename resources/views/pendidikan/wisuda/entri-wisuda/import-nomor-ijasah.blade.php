@@ -14,6 +14,25 @@
                     <div class="row clearfix">
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
+                                Petunjuk
+                            </h2>
+                            <h5>Download file di bawah terlebih dahulu :</h5>
+                            <ul>
+                                <li>
+                                    NIS : Nomor Induk Siswa
+                                </li>
+                                <li>
+                                    Nomor_Ijasah : Nomor Ijasah Siswa
+                                </li>
+                            </ul>
+                            <a class="btn btn-block bg-blue waves-effect" target="_blank"
+                                href="{{ route('wisuda/download-file-excel-nomor-ijasah') }}">
+                                <i class="material-icons">cloud_upload</i>
+                                <span>Download File Excel</span>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
                             
                                 *Pastikan sudah pengajuan wisuda sebelum imput nomor ijasah
                             </h2>

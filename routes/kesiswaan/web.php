@@ -447,6 +447,7 @@ Route::middleware(['token_staff'])->group(function () {
             //Import nomor ijasah
             Route::get('import_nomor_ijazah', [EntriWisudaController::class, 'viewImportNomorIjasah']);
             Route::post('post-file-excel-nomor-ijasah', [EntriWisudaController::class, 'uploadNomorIjasah']);
+            Route::get('/download-file-excel-nomor-ijasah', [EntriWisudaController::class, 'downloadFileExcel'])->name('wisuda/download-file-excel-nomor-ijasah');
 
             // MENU Set Lulus Siswa ==== (BELOM SEMUA) ====
             Route::get('set-lulus', [SetLulusController::class, 'viewSetLulus']);
