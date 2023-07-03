@@ -6,7 +6,7 @@
         <h2>DASHBOARD | {{$today->format('d M Y')}}</h2>
     </div>
     @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smkypm2')
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
             <a class="target-link" href="{{url(Request::segment(1).'#kegiatan-harian/mengisi-form-kesehatan')}}">
                 <div class="card">
@@ -20,8 +20,8 @@
                 </div>
             </a>
         </div>
-    </div>
-    <br>
+    </div> --}}
+    {{-- <br> --}}
     @endif
 
     <div class="row clearfix">
