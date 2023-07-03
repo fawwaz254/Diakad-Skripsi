@@ -155,7 +155,12 @@
                             <?php
                             $test = [$nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'], $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'], $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi3'], $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi4']];
                             $test2 = array_diff($test, [0]);
-                            $test3 = array_sum($test2) / count($test2);
+                            $tes = array_sum($test2);
+                            if ($tes==0) {
+                                $test3= 0;
+                            } else {
+                                $test3 = array_sum($test2) / count($test2);
+                            }
                             ?>
                             {{ round($test3) }}
                         </td>
