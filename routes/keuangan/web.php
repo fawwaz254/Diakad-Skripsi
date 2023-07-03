@@ -385,6 +385,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('tunggakan/{tahun_akademik}', [SppController::class, 'viewMenuTunggakan']);
                 Route::post('tunggakan/save', [SppController::class, 'actionSaveInputTunggakan']);
 
+                Route::get('tunggakanAlumni', [SppController::class, 'viewMenuTunggakanAlumni']);
+                Route::get('tunggakanAlumni/{tahun_akademik}', [SppController::class, 'viewMenuTunggakanAlumni']);
+                Route::post('tunggakanAlumni/datatables', [SppController::class, 'datatablesMenuTunggakanAlumni']);
+
                 Route::get('setting', [SppController::class, 'viewMenuSetting']);
                 Route::post('setting/datatables', [SppController::class, 'datatablesMenuSetting']);
 
