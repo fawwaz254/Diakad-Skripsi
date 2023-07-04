@@ -17,16 +17,15 @@
                                 Tahun Masuk Siswa
                             </h2>
                             <select class="form-control show-tick" name="tahun_akademik_semester">
-                                @foreach ($data_semester as $semester)
-                                    <option value="{{ $semester->thn_akademik_semester }}"
-                                        @if ($semester->thn_akademik_semester == $tahun_akademik_semester) selected @endif>
-                                        {{ $semester->tahun_ajaran }}</option>
+                                @foreach ($thn_masuk_siswa as $thn)
+                                    <option value="{{ $thn }}">
+                                        {{ $thn }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i
-                                    class="material-icons">save</i><span>Ubah Tahun Ajaran</span></button>
+                                    class="material-icons">save</i><span>Ubah Tahun Masuk</span></button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -51,6 +50,23 @@
         </div>
     </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+                <h4 class="modal-title" style="text-align: center">List Detail Tagihan</h4>
+            </div>
+            <div id="place">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @include('scriptjs')
 <script>
     var datatable_url = base_url + '/' + role_url + '/sim/spp/tunggakanAlumni/datatables';
@@ -96,23 +112,16 @@
                 name: 'total_biaya'
             },
             {
-                data: 'id_siswa'
+                data: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="detailAction(this)"  data-id="' +
+                        data.id + '">' +
+                        '    <i class="material-icons">pageview</i>' +
+                        '</button>';
+                }
             },
-
-            // { data: 'nominal_spp_juli', searchable: false, orderable: false },
-            // { data: 'nominal_spp_non_juli', searchable: false, orderable: false },
-            // { data: 'tingkat' },
-            // { data: 'action', searchable: false, orderable: false, 
-            //     render: function(data){
-            //         if(data.status == 0){
-            //             return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="editAction(this)"  data-id="'+  data.id +'">'+
-            //             '    <i class="material-icons">edit</i>'+
-            //             '</button>';
-            //         }else{
-            //             return '';
-            //         }
-            //     }
-            // },
         ]
     });
 
@@ -131,35 +140,42 @@
         primary_table.ajax.reload(null, false);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // function filterAction() {
-    //     var tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
-    //     loadURI('sim/spp/tunggakan/' + tahun_akademik_semester);
-    // }
-</script>
-
-
-{{-- <script>
-    $(function() {
-        $('.datepicker').bootstrapMaterialDatePicker({
-            format: 'YYYY-MM-DD',
-            //lang : 'id',
-            clearButton: true,
-            weekStart: 1,
-            time: false
+    function detailAction(el) {
+        $('button').attr('disabled', 'disabled');
+        $.ajax({
+            type: "POST",
+            url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/tunggakanAlumni/get-detail-data-tungakan-alumni`,
+            data: {
+                id_siswa: $(el).attr('data-id'),
+            },
+            success: function(response) {
+                $('#place').html('');
+                var html = '<table  class="table">';
+                html += '<tr>';
+                html += '<th>No</th>';
+                html += '<th>Kelas</th>';
+                html += '<th>Bulan</th>';
+                html += '<th>Tahun Ajaran</th>';
+                html += '<th>Tagihan</th>';
+                html += '</tr>';
+                $.each(response, function(key, item) {
+                    html += '<tr>';
+                    html += '<td>' + (key + 1) + '</td>';
+                    html += '<td>' + item.kelas.nm_kelas + '</td>';
+                    html += '<td>' + item.detail_biaya.bulan.nm_bulan + '</td>';
+                    html += '<td>' + item.detail_biaya.biaya_sekolah.semester.tahun_ajaran +
+                        '</td>';
+                    html += '<td>' + item.besar_biaya + '</td>';
+                    html += '<tr>';
+                    html += '</tr>';
+                });
+                html += '</table>';
+                $('#place').html(html);
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+                $('#myModal').modal('show');
+            }
         });
-    });
-</script> --}}
+    }
+</script>
