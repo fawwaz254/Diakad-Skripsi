@@ -339,7 +339,7 @@ class EntriWisudaController extends BaseController
             ];
         }
     }
-    public function downloadFileExcel()
+    public function downloadExcel()
     {
         $file = public_path() . "/excel/ContohFileExcelUploadNomorIjazah.xls";
         ob_end_clean();
@@ -348,6 +348,6 @@ class EntriWisudaController extends BaseController
             'Content-Type' => 'application/xls',
         ];
 
-        return response()->download($file, 'ContohFileExcelUploadNomorIjazah.xls', $headers);
+        return response()->download($file, 'ExcelTemplate.xls', $headers);
     }
 }
