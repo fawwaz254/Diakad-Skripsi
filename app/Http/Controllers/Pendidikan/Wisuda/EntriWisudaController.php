@@ -341,11 +341,13 @@ class EntriWisudaController extends BaseController
     }
     public function downloadFileExcel()
     {
-        $file = public_path() . "/excel/ContohFileExcelSettingWaliMurid.xls";
+        $file = public_path() . "/excel/ContohFileExcelUploadNomorIjazah.xls";
+        ob_end_clean();
+        ob_start(); 
         $headers = [
-            'Content-Type' => 'application/xlsx',
+            'Content-Type' => 'application/xls',
         ];
 
-        return response()->download($file, 'ContohFileExcelUploadNomorIjasah.xlsx', $headers);
+        return response()->download($file, 'ContohFileExcelUploadNomorIjazah.xls', $headers);
     }
 }
