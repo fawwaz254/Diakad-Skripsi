@@ -176,7 +176,7 @@ class SettingPesertaEkskulController extends BaseController
         
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PesertaEkskulSet::select('peserta_ekskul_set.is_aktif', 'ekskul.id_ekskul', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'peserta_ekskul_set.id_peserta_ekskul_set')
+        $list_data = PesertaEkskulSet::select('peserta_ekskul_set.is_aktif', 'ekskul.id_ekskul', 'siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'peserta_ekskul_set.id_peserta_ekskul_set')
             ->join('ekskul', 'ekskul.id_ekskul', '=', 'peserta_ekskul_set.id_ekskul')
             ->join('siswa', 'siswa.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -187,8 +187,14 @@ class SettingPesertaEkskulController extends BaseController
             ->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)
             ->where('pengambilan_ekskul.id_semester','=', $id_semester)
             ->get();
-
+        // dd($list_data);
         return Datatables::of($list_data)
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa
+                );
+                return $data;
+            })
             ->addColumn('nm_siswa', function ($item) {
                 return $item->nis_siswa . '-' . $item->nm_pengguna;
             })
@@ -230,7 +236,7 @@ class SettingPesertaEkskulController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), []);
-        if ($validator->fails() && $mode != 'delete') {
+        if (($validator->fails() && $mode != 'delete') || ($validator->fails() && $mode != 'checkdelete')) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -295,8 +301,42 @@ class SettingPesertaEkskulController extends BaseController
                         'message' => 'Input Peserta Ekskul Gagal Dilakukan'
                     ];
                 }
+            }elseif ($mode == 'checkdelete') {
+                    foreach ($input->id_siswa as $id_siswa) {
+                        $key = PesertaEkskulSet::where('id_siswa',$id_siswa)->where('id_ekskul',$id_ekskul)->where('is_aktif',1)->first()->id_peserta_ekskul_set;
+                        // dd($key);
+                        $peserta_ekskul_set = PesertaEkskulSet::where('peserta_ekskul_set.id_peserta_ekskul_set', '=', $key)->first();
+                        $pengambilan_ekskul = PengambilanEkskul::where('pengambilan_ekskul.id_ekskul', '=', $peserta_ekskul_set->id_ekskul)->where('pengambilan_ekskul.id_siswa', '=', $peserta_ekskul_set->id_siswa)->first();
+
+                        if ($pelatih = NilaiEkskul::where('id_pengambilan_ekskul', '=', $pengambilan_ekskul->id_pengambilan_ekskul)->first()) {
+                            return [
+                                'status' => 300, // SUCCESS AND LOAD TABLE
+                                'message' => 'Tidak bisa dihapus karna siswa sudah diberi nilai ekskul'
+                            ];
+                        } else {
+                            // make object to find id
+                            $ekskul                 = PesertaEkskulSet::find($key);
+                            $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
+                            $ekskul->save();
+
+                            $ekskul->forceDelete();
+
+                            $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
+                            $pengambilan->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                            $pengambilan->save();
+
+                            $pengambilan->forceDelete();
+
+                        }
+                    }
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'message' => 'Input Peserta Ekskul Berhasil Dilakukan',
+                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/'
+                    ];
             } elseif ($mode == "delete") {
                 $peserta_ekskul_set = PesertaEkskulSet::where('peserta_ekskul_set.id_peserta_ekskul_set', '=', $id_ekskul)->first();
+                // dd($id_ekskul);
                 $pengambilan_ekskul = PengambilanEkskul::where('pengambilan_ekskul.id_ekskul', '=', $peserta_ekskul_set->id_ekskul)->where('pengambilan_ekskul.id_siswa', '=', $peserta_ekskul_set->id_siswa)->first();
 
                 if ($pelatih = NilaiEkskul::where('id_pengambilan_ekskul', '=', $pengambilan_ekskul->id_pengambilan_ekskul)->first()) {
@@ -310,13 +350,13 @@ class SettingPesertaEkskulController extends BaseController
                     $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                     $ekskul->save();
 
-                    $ekskul->delete();
+                    $ekskul->forceDelete();
 
                     $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
                     $pengambilan->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $pengambilan->save();
 
-                    $pengambilan->delete();
+                    $pengambilan->forceDelete();
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE

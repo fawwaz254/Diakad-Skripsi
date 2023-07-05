@@ -75,21 +75,32 @@
                         </div>
                         <div class="row clearfix">
                             <div class="body">
-                                <div class="table-responsive">
-                                    <table
-                                        class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                                        id="primary_table">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>NIS - Nama Siswa</th>
-                                                <th>Kelas</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+                                <form form id="form-validation1" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-setting-peserta-ekskul/checkdelete/'.$id_ekskul)}}">
+                                    {{csrf_field()}}
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                                            id="primary_table">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>
+                                                        <input id="checkbox_select_all" type="checkbox" name="select_all" class="filled-in">
+                                                        <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
+                                                    </th>
+                                                    <th>NIS - Nama Siswa</th>
+                                                    <th>Kelas</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">delete_forever</i><span>Delete</span></button>
+                                        </div>
+                                    </div>
+
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -125,6 +136,13 @@
                 data: null,
                 searchable: false,
                 orderable: false
+            },
+            { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
+                render: function (data, type, full, meta){
+                    return '<input id="checkbox-' + data.id + '" type="checkbox" name="id_siswa[]" class="filled-in" value="' + data.id + '">'+
+                    '<label for="checkbox-' + data.id + '"></label>'; 
+
+                }
             },
             {
                 data: 'nm_siswa',
@@ -166,4 +184,66 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {        
+        /* Select All Checkbox */
+        $('input[name="select_all"]').change(function() {
+            var select_all_checked = this.checked;
+            var rows = primary_table.rows({ 'search': 'applied' }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+    });
+</script>
+<script>    
+
+    $('#form-validation1').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+            'gender': {
+                required: true
+            }
+        },
+        highlight: function (input) {
+            $(input).parents('.form-line').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-line').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if(response.status == 200){
+                        vex.dialog.alert(response.message);
+                    }else if(response.status == 201){
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    }else if(response.status == 202){
+                        vex.dialog.alert(response.message);
+                        loadURI(response.path);
+                    }else if(response.status == 203){
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    }else if(response.status == 204){
+                        loadURI(response.path);
+                    }else if(response.status == 300){
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+            });
+        }
+    });
 </script>

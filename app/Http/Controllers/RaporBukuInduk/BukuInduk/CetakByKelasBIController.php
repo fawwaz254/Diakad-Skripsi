@@ -17,7 +17,7 @@ class CetakByKelasBIController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $kelas = Kelas::get();
+        $kelas = Kelas::orderBy('tingkat', 'ASC')->orderBy('nm_kelas', 'ASC')->get();
 
         return view('rapor-buku-induk/buku-induk/cetak-by-kelas/view-cetak-by-kelas', compact('auth_data', 'id_kelas', 'kelas'));
     }
