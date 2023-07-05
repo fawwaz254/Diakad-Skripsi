@@ -195,7 +195,7 @@
                 @endif
 
                 {{-- Manajemen File --}}
-                @if ($category_file_role && $role_aktif !== 14 && $role_aktif !== 5 && $role_aktif !== 9)
+                @if ($category_file_role && $role_aktif !== 17 && $role_aktif !== 14 && $role_aktif !== 5 && $role_aktif !== 9)
                     <li id="modul-item-manajemen-file" class="modul-item">
                         <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
                             <span>Manajemen File</span>
