@@ -1034,6 +1034,62 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/view-menu-tunggakan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'tutup_buku_tahunan', 'data_pembayaran_tunggakan', 'sisa_tunggakan', 'data_bulan'));
     }
 
+    public function viewMenuTunggakanAlumni(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa')->get()->pluck('thn_masuk_siswa');
+        return view('keuangan/sim/spp/view-menu-tunggakan-alumni', compact('auth_data', 'thn_masuk_siswa'));
+    }
+
+    public function datatablesMenuTunggakanAlumni(Request $request)
+    {
+        $input = (object) $request->input();
+        $tahun = $input->tahun_akademik_semester;
+
+        $list_data = TagihanBiaya::select('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa', 'kelas.nm_kelas', 'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa', DB::raw('SUM(tagihan_biaya.besar_biaya) as total_biaya'))
+            ->join('siswa', 'tagihan_biaya.id_siswa', '=', 'siswa.id_siswa')
+            ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+            ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
+            ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas') //ini diubah nanti
+            ->groupBy('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa', 'kelas.nm_kelas', 'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa')
+            ->whereRaw('kelas.tingkat = (SELECT MAX(tingkat) FROM kelas)')
+            ->where('tagihan_biaya.is_tagih', '1')
+            ->where('status_pengguna.nm_status_pengguna', 'LULUS')
+            ->where('siswa.thn_masuk_siswa', $tahun)
+            ->get();
+
+        return Datatables::of($list_data)
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa,
+                );
+                return $data;
+            })
+            ->make(true);
+    }
+
+    public function getDetailDataTungakanAlumni(Request $request)
+    {
+        $input = (object) $request->input();
+        // dd($input->id_siswa);
+        // $list_id_semester_lalu = Semester::where('thn_akademik_semester', '<', $input->tahun_akademik_semester)->pluck('id_semester')->toArray();
+        $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('kelas', 'detail_biaya.bulan', 'detail_biaya.biaya_sekolah.semester')->where('is_tagih', '1')->where('id_siswa', $input->id_siswa)
+            ->whereHas('detail_biaya', function ($query) {
+                $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
+            })
+            ->whereHas('detail_biaya.biaya_sekolah')
+            ->get();
+
+        return $data_tagihan_siswa_semester_lalu;
+    }
+
+
+
+
+
+
+
     public function viewMenuSetting(Request $request)
     {
         $input = (object) $request->input();
