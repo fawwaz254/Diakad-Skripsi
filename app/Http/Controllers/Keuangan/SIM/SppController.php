@@ -713,7 +713,7 @@ class SppController extends BaseController
                 $q->where('is_tagih', 1)
                     ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
             }])
-                ->with('pengguna', 'kelas');
+                ->with('pengguna', 'kelas' , 'last_kelas_siswa.kelas');
 
             if (!empty($kelas)) {
                 $list_data = $list_data->whereHas('kelas', function ($q) use ($kelas) {
@@ -742,6 +742,10 @@ class SppController extends BaseController
                 }
 
                 return $array_tagihan_bulan;
+            })
+            ->editColumn('kelas.nm_kelas', function ($item) {  //this example  for edit your columns if colums is empty 
+                $nm_kelas = !empty($item->id_kelas) ? $item->kelas->nm_kelas : 'Alumni ( ' .  $item->last_kelas_siswa->kelas->nm_kelas .' )';
+                return $nm_kelas;
             })
             ->make(true);
     }
