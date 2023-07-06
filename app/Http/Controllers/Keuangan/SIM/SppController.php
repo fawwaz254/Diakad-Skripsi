@@ -25,6 +25,7 @@ use App\Models\Siswa;
 use App\Models\Staff;
 use App\Models\SubkategoriRapb;
 use App\Models\TagihanBiaya;
+use App\Models\TunggakanAlumni;
 use App\Models\TutupBukuBulananBiaya;
 use App\Models\TutupBukuBulananKas;
 use App\Models\TutupBukuTahunanBiaya;
@@ -1054,11 +1055,29 @@ class SppController extends BaseController
             ->groupBy('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa',  'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa')
             ->where('tagihan_biaya.is_tagih', '1')
             ->where('status_pengguna.nm_status_pengguna', 'LULUS')
-            ->where('siswa.thn_masuk_siswa', $tahun)
-            ->with('siswa.last_kelas_siswa.kelas')
+            ->when($tahun != '0', function ($q) use ($tahun) {
+                $q->where('siswa.thn_masuk_siswa', $tahun);
+            })
+            ->with('siswa.last_kelas_siswa.kelas', 'siswa.tunggakan_alumni')
             ->get();
 
         return Datatables::of($list_data)
+            ->addColumn('tunggakan', function ($item) {
+                if (isset($item->siswa->tunggakan_alumni)) {
+                    $data = array(
+                        'jumlah_tunggakan' =>  'Rp ' . number_format($item->siswa->tunggakan_alumni->jumlah_tunggakan),
+                        'status' => ($item->siswa->tunggakan_alumni->jumlah_tunggakan == $item->total_biaya) ? 'sama' : 'tidak sama',
+                    );
+                } else {
+                    $data = array(
+                        'jumlah_tunggakan' =>  '',
+                        'status' => '',
+                    );
+                }
+                return $data;
+            })->editColumn('total_biaya', function ($item) {
+                return 'Rp ' . number_format($item->total_biaya);
+            })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_siswa,
@@ -2005,5 +2024,89 @@ class SppController extends BaseController
             })->get();
 
         return $data_tagihan_siswa_semester_lalu;
+    }
+
+    public function viewMenuUploadTunggakanAlumni(Request $request)
+    {
+        // $input = (object) $request->input();
+        return view('keuangan/sim/spp/view-menu-upload-tunggakan-alumni');
+    }
+
+    public function actionMenuUploadTunggakanAlumni(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        if ($request->hasFile('file-excel')) {
+
+            $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+
+            // dd($data);
+
+            $data = $data[0]; // Sheet 1
+            if (count($data)) {
+                // dd($data);
+
+                DB::beginTransaction();
+                try {
+                    foreach ($data as $key => $item) {
+                        $now = Carbon::now(env('APP_TIMEZONE', ''));
+                        // $item = (object) $item;
+                        // dd($item['nis']);
+                        if (!empty($item["nis"])) {
+                            // dd('test');
+                            // $siswa = Siswa::where('nis_siswa', $item->nis)->first();
+
+                            // if (!$siswa) {
+                            //     return [
+                            //         'status' => 300, // FAILED
+                            //         'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
+                            //     ];
+                            // } else {
+                            // $semester = Semester::where('kode_semester', $item->kode_semester)->first();
+                            // $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
+                            // $keterangan = $item->keterangan;
+                            // $tahun_ajaran = $item->tahun_ajaran;
+
+                            // $tagihan_siswa = TagihanBiaya::where('is_tagih', 1)->where('id_siswa', $siswa->id_siswa)
+                            //     ->whereHas('detail_biaya', function ($q) use ($keterangan) {
+                            //         $q->where('keterangan_biaya', $keterangan)->where('id_jenis_detail_biaya', '!=', 4);
+                            //     })
+                            //     ->whereHas('detail_biaya.biaya_sekolah.semester', function ($q) use ($tahun_ajaran) {
+                            //         $q->where('tahun_ajaran', $tahun_ajaran);
+                            //     })
+                            //     ->first();
+
+                            if ($tunggakan = TunggakanAlumni::where('nis', $item["nis"])->first()) { } else {
+                                $tunggakan = new TunggakanAlumni;
+                                $tunggakan->id_tunggakan_alumni = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $tunggakan->nis = $item["nis"];
+                            }
+
+                            $tunggakan->nm_siswa = $item["nama_siswa"];
+                            $tunggakan->eks = $item["eks"];
+                            $tunggakan->tahun_pelajaran = $item["tahun_pelajaran"];
+                            $tunggakan->jumlah_tunggakan = $item["jumlah_tunggakan"];
+                            $tunggakan->created_by = "upload excel";
+                            $tunggakan->save();
+                        }
+                    }
+
+                    DB::commit();
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'sim/spp/tunggakanAlumni/upload',
+                        'message' => 'Upload Pembayaran Successfully',
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+                    return [
+                        'status' => 203, // GAGAL
+                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine(),
+                    ];
+                }
+            }
+        }
     }
 }

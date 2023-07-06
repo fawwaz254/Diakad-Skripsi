@@ -21,6 +21,7 @@
                                     <option value="{{ $thn }}">
                                         {{ $thn }}</option>
                                 @endforeach
+                                <option value="0">Semua</option>
                             </select>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -39,6 +40,8 @@
                                     <th>Kelas</th>
                                     <th>Tahun Masuk</th>
                                     <th>Total</th>
+                                    <th>Tunggakan Pak Farhan</th>
+                                    <th>Status</th>
                                     <th>Detail</th>
                                 </tr>
                             </thead>
@@ -110,6 +113,14 @@
             {
                 data: 'total_biaya',
                 name: 'total_biaya'
+            },
+            {
+                data: 'tunggakan.jumlah_tunggakan',
+                name: 'tunggakan.jumlah_tunggakan'
+            },
+            {
+                data: 'tunggakan.status',
+                name: 'tunggakan.status'
             },
             {
                 data: 'action',
