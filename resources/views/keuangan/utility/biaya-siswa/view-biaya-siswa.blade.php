@@ -39,9 +39,9 @@
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="sudah">
-                            <div class="body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah" style="width: :100%">
+                            <div class="body" style="width: :100%">
+                                <div class="table-responsive" style="width: :100%">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah" style="width: :100% !important">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -138,6 +138,14 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+    var companies2 = $('#primary_table_sudah');
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        if (e.target.hash == '#sudah') {
+            companies2.columns.adjust().draw()
+        }
+    });
+
 
     function deleteActionBiaya(delete_url, element){
         var item = $(element);
