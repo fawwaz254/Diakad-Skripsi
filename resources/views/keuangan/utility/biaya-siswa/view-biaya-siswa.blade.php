@@ -41,7 +41,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sudah">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah" style="width: :100%">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
