@@ -1047,16 +1047,15 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $tahun = $input->tahun_akademik_semester;
 
-        $list_data = TagihanBiaya::select('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa', 'kelas.nm_kelas', 'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa', DB::raw('SUM(tagihan_biaya.besar_biaya) as total_biaya'))
+        $list_data = TagihanBiaya::select('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa',  'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa', DB::raw('SUM(tagihan_biaya.besar_biaya) as total_biaya'))
             ->join('siswa', 'tagihan_biaya.id_siswa', '=', 'siswa.id_siswa')
             ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
             ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
-            ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas') //ini diubah nanti
-            ->groupBy('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa', 'kelas.nm_kelas', 'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa')
-            ->whereRaw('kelas.tingkat = (SELECT MAX(tingkat) FROM kelas)')
+            ->groupBy('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa',  'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa')
             ->where('tagihan_biaya.is_tagih', '1')
             ->where('status_pengguna.nm_status_pengguna', 'LULUS')
             ->where('siswa.thn_masuk_siswa', $tahun)
+            ->with('siswa.last_kelas_siswa.kelas')
             ->get();
 
         return Datatables::of($list_data)

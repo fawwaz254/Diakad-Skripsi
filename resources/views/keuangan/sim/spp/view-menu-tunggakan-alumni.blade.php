@@ -100,8 +100,8 @@
                 name: 'nm_pengguna'
             },
             {
-                data: 'nm_kelas',
-                name: 'nm_kelas'
+                data: 'siswa.last_kelas_siswa.kelas.nm_kelas',
+                name: 'siswa.last_kelas_siswa.kelas.nm_kelas'
             },
             {
                 data: 'thn_masuk_siswa',
