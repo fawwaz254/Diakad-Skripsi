@@ -84,7 +84,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row clearfix" style="display: none">
+                        <div class="row clearfix" style="display: none" >
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Filter Berdasarkan Abjad
