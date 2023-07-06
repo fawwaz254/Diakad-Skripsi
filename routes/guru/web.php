@@ -327,6 +327,11 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absen-tanpa-jadwal/view-kbm/{id_kelas_mp}', [RekapAbsenTanpaJadwalController::class, 'viewKBMRekapAbsenTanpaJadwal']);
 
             Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', [RekapAbsenTanpaJadwalController::class, 'printKBMRekapAbsenTanpaJadwal']);
+
+            // Presensi Barcode
+            // Route::get('presensi-barcode/{id_kelas}',)
+
+
         });
 
         Route::prefix('penilaian')->group(function () {
