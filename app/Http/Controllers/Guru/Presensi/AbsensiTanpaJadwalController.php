@@ -43,9 +43,16 @@ class AbsensiTanpaJadwalController extends BaseController
         $tanggal_id     = $tanggal->format('d F Y');
         $guru           = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
-        $pengampu_mapel = PengampuMapel::join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'pengampu_mapel.id_mata_pelajaran')
-                            ->select('pengampu_mapel.id_pengampu_mapel', 'pengampu_mapel.id_guru', 'pengampu_mapel.id_mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran')
-                            ->where('pengampu_mapel.id_guru', '=', $guru->id_guru)->get();
+        // $pengampu_mapel = PengampuMapel::join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'pengampu_mapel.id_mata_pelajaran')
+        //     ->select('pengampu_mapel.id_pengampu_mapel', 'pengampu_mapel.id_guru', 'pengampu_mapel.id_mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran')
+        //     ->where('pengampu_mapel.id_guru', '=', $guru->id_guru)->get();
+
+        $id_guru = $guru->id_guru;
+        $kelas_mp = KelasMp::with('mata_pelajaran')->whereHas('pengampu_mp_utama', function ($query) use ($id_guru) {
+            $query->where('id_guru', '=', $id_guru);
+        })->get();
+
+        $pengampu_mapel = $kelas_mp->pluck('mata_pelajaran')->unique();
 
         $kelas          = LibKelas::fetchDataKelas($auth_data, $id = null);
 
@@ -66,7 +73,7 @@ class AbsensiTanpaJadwalController extends BaseController
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
-        if($input->opsi == !null) {
+        if ($input->opsi == !null) {
             $opsi = $input->opsi;
         } else {
             $opsi = 0;
@@ -80,7 +87,7 @@ class AbsensiTanpaJadwalController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'presensi/absensi-tanpa-jadwal/view-kbm/'.$guru->id_guru.'/'.$input->id_mata_pelajaran.'/'.$input->id_kelas.'/'.$opsi
+                'path' => 'presensi/absensi-tanpa-jadwal/view-kbm/' . $guru->id_guru . '/' . $input->id_mata_pelajaran . '/' . $input->id_kelas . '/' . $opsi
             ];
         }
     }
@@ -93,27 +100,24 @@ class AbsensiTanpaJadwalController extends BaseController
         $now                = Carbon::now(env('APP_TIMEZONE', ''));
         $semester_aktif     = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tanggal            = $now->format('d F Y');
-        
 
-        if($kelas_mp = KelasMp::where('id_kelas', '=', $id_kelas)->where('id_semester', '=', $semester_aktif->id_semester)->where('id_mata_pelajaran', '=', $id_mata_pelajaran)->first()) {
+
+        if ($kelas_mp = KelasMp::where('id_kelas', '=', $id_kelas)->where('id_semester', '=', $semester_aktif->id_semester)->where('id_mata_pelajaran', '=', $id_mata_pelajaran)->first()) {
             // cek presensi_mp
-            if($pertemuan = PresensiMp::where('id_kelas_mp', '=', $kelas_mp->id_kelas_mp)->orderBy('pertemuan_ke', 'desc')->first()) {
+            if ($pertemuan = PresensiMp::where('id_kelas_mp', '=', $kelas_mp->id_kelas_mp)->orderBy('pertemuan_ke', 'desc')->first()) {
                 $pertemuan_ke   = $pertemuan->pertemuan_ke;
-                $max_pertemuan  = $pertemuan_ke+1;
+                $max_pertemuan  = $pertemuan_ke + 1;
             } else {
                 $max_pertemuan = 1;
             }
-            
-        } 
-
-        else {
+        } else {
 
             DB::beginTransaction();
 
             try {
                 // insert kelas_mp
                 $kelas_mp                           = new KelasMp;
-                $kelas_mp->id_kelas_mp              = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();;
+                $kelas_mp->id_kelas_mp              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();;
                 $kelas_mp->id_semester              = $semester_aktif->id_semester;
                 $kelas_mp->id_kelas                 = $id_kelas;
                 $kelas_mp->id_mata_pelajaran        = $id_mata_pelajaran;
@@ -122,7 +126,7 @@ class AbsensiTanpaJadwalController extends BaseController
                 $kelas                              = Kelas::where('id_kelas', '=', $id_kelas)->first();
                 $mata_pelajaran                     = MataPelajaran::where('id_mata_pelajaran', '=', $id_mata_pelajaran)->first();
 
-                $kelas_mp->nm_kelas_mp              = $mata_pelajaran->nm_mata_pelajaran."-".$kelas->nm_kelas;
+                $kelas_mp->nm_kelas_mp              = $mata_pelajaran->nm_mata_pelajaran . "-" . $kelas->nm_kelas;
                 $kelas_mp->jml_pertemuan_kelas_mp   = 1;
                 $kelas_mp->created_by               = $auth_data->pengguna->id_pengguna;
                 $kelas_mp->created_at               = $now;
@@ -131,14 +135,13 @@ class AbsensiTanpaJadwalController extends BaseController
                 DB::commit();
 
                 $max_pertemuan                      = 1;
-                
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
 
                 DB::rollback();
                 // something went wrong
             }
         }
-        
+
         $pertemuan_ke       = $max_pertemuan;
         $data_kelas         = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
@@ -165,11 +168,11 @@ class AbsensiTanpaJadwalController extends BaseController
                 return $data;
             })
             ->editColumn('jenis_kelamin', function ($item) {
-                if($item->jenis_kelamin == 1){
+                if ($item->jenis_kelamin == 1) {
                     return 'Laki-Laki';
-                }else if($item->jenis_kelamin == 2){
+                } else if ($item->jenis_kelamin == 2) {
                     return 'Perempuan';
-                }else{
+                } else {
                     return 'Belum diset';
                 }
             })
@@ -222,27 +225,26 @@ class AbsensiTanpaJadwalController extends BaseController
                     // cek kelas_mp
                     $semester_aktif     = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-                    if($kelas_mp = KelasMp::where('id_kelas', '=', $id_kelas)
-                                            ->where('id_semester', '=', $semester_aktif->id_semester)
-                                            ->where('id_mata_pelajaran', '=', $id_mata_pelajaran)
-                                            ->where('status_entry', '=', 2)
-                                            ->first()) {
+                    if ($kelas_mp = KelasMp::where('id_kelas', '=', $id_kelas)
+                        ->where('id_semester', '=', $semester_aktif->id_semester)
+                        ->where('id_mata_pelajaran', '=', $id_mata_pelajaran)
+                        ->where('status_entry', '=', 2)
+                        ->first()
+                    ) {
                         // skip
-                    } 
-
-                    else {
+                    } else {
 
                         // insert kelas_mp
                         $kelas_mp                       = new KelasMp;
-                        $kelas_mp->id_kelas_mp          = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();;
+                        $kelas_mp->id_kelas_mp          = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();;
                         $kelas_mp->id_kelas             = $id_kelas;
                         $kelas_mp->id_semester          = $semester_aktif->id_semester;
                         $kelas_mp->id_mata_pelajaran    = $id_mata_pelajaran;
-                        
+
                         $kelas                          = Kelas::where('id_kelas', '=', $id_kelas)->first();
                         $mata_pelajaran                 = MataPelajaran::where('id_mata_pelajaran', '=', $id_mata_pelajaran)->first();
 
-                        $kelas_mp->nm_kelas_mp          = $kelas->nm_kelas."-".$mata_pelajaran->nm_mata_pelajaran;
+                        $kelas_mp->nm_kelas_mp          = $kelas->nm_kelas . "-" . $mata_pelajaran->nm_mata_pelajaran;
                         $kelas_mp->status_entry         = 2;
                         $kelas_mp->created_at           = $now;
                         $kelas_mp->created_by           = $auth_data->pengguna->id_pengguna;
@@ -250,12 +252,12 @@ class AbsensiTanpaJadwalController extends BaseController
                     }
 
                     // cek pengampu_mp
-                    if($pengampu_mp = PengampuMp::where('id_kelas_mp', '=', $kelas_mp->id_kelas_mp)->where('pjmp_pengampu_mp', '=', 1)->first()) {
+                    if ($pengampu_mp = PengampuMp::where('id_kelas_mp', '=', $kelas_mp->id_kelas_mp)->where('pjmp_pengampu_mp', '=', 1)->first()) {
                         // skip
                     } else {
                         // insert pengampu_mp
                         $pengampu_mp                    = new PengampuMp;
-                        $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pengampu_mp->id_kelas_mp       = $kelas_mp->id_kelas_mp;
                         $pengampu_mp->id_guru           = $id_guru;
                         $pengampu_mp->pjmp_pengampu_mp  = 1;
@@ -268,17 +270,17 @@ class AbsensiTanpaJadwalController extends BaseController
 
                     // insert presensi_mp
                     $presensi_mp                        = new PresensiMp;
-                    $presensi_mp->id_presensi_mp        = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $presensi_mp->id_presensi_mp        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $presensi_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp;
                     $presensi_mp->id_pengampu_mp        = $pengampu_mp->id_pengampu_mp;
 
                     // ambil pertemuan terakhir
-                    if($pertemuan_ke = PresensiMp::where('id_kelas_mp', '=', $kelas_mp->id_kelas_mp)->orderBy('pertemuan_ke', 'desc')->first()) {
-                        $max_pertemuan = $pertemuan_ke->pertemuan_ke+1;
+                    if ($pertemuan_ke = PresensiMp::where('id_kelas_mp', '=', $kelas_mp->id_kelas_mp)->orderBy('pertemuan_ke', 'desc')->first()) {
+                        $max_pertemuan = $pertemuan_ke->pertemuan_ke + 1;
                     } else {
                         $max_pertemuan = 1;
                     }
-            
+
                     $presensi_mp->pertemuan_ke          = $max_pertemuan;
                     $presensi_mp->uraian_materi         = $input->uraian_materi;
                     $presensi_mp->waktu_mulai           = $input->waktu_mulai;
@@ -292,15 +294,15 @@ class AbsensiTanpaJadwalController extends BaseController
 
                     // PresensiMpSiswa
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        if (! empty($alasan)) {
+                        if (!empty($alasan)) {
                             $kehadiran = $alasan;
                         } else {
                             $kehadiran = 1;
                         }
-                    
+
                         // insert presensi_mp_siswa
                         $presensi_mp_siswa                          = new PresensiMpSiswa;
-                        $presensi_mp_siswa->id_presensi_mp_siswa    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $presensi_mp_siswa->id_presensi_mp_siswa    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_mp_siswa->id_presensi_mp          = $presensi_mp->id_presensi_mp;
                         $presensi_mp_siswa->id_siswa                = $id_siswa;
                         $presensi_mp_siswa->kehadiran               = $kehadiran;
@@ -323,7 +325,7 @@ class AbsensiTanpaJadwalController extends BaseController
 
                     return [
                         'status' => 203, // GAGAL
-                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                     ];
                 }
             }
