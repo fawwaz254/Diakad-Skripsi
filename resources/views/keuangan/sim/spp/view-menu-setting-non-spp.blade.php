@@ -17,7 +17,7 @@
             <div class="card">
                 <div class="body">
                     <div class="row clearfix">
-                        <h2 class="card-inside-title">
+                        <h2 class="card-inside-title col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             Tahun Ajaran
                         </h2>
                         <div class="col-md-6 col-sm-12 col-xs-12">

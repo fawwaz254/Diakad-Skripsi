@@ -20,10 +20,11 @@
                             </li>
                     </ul>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade active in" id="belum">
+                        <div role="tabpanel" class="tab-pane fade active in" id="belum" style="width: 100%">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum">
+                                    <table class="table table-bordered table-striped table-hover dataTable display"
+                                        id="primary_table_belum" style="width:100%;">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -41,7 +42,8 @@
                         <div role="tabpanel" class="tab-pane fade" id="sudah">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah" style="width: :100%">
+                                    <table class="table table-bordered table-striped table-hover dataTable display"
+                                        id="primary_table_sudah" style="width:100%;">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -75,6 +77,7 @@
     var primary_table_belum = $('#primary_table_belum').DataTable({
         processing: true,
         serverSide: true,
+        responsive: true,
         ajax: {
             url: datatable_url_belum,
             type: 'GET'
@@ -106,6 +109,7 @@
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
         serverSide: true,
+        responsive: true,
         ajax: {
             url: datatable_url_sudah,
             type: 'GET'
@@ -119,12 +123,12 @@
             { data: 'kelompok_biaya', name: 'kelompok_biaya.nm_kelompok_biaya' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionBiaya(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+                    return `<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="${edit_url}/${data.id}">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionBiaya(\'${delete_url}\', this)" data-id="${data.id}">
+                                <i class="material-icons">delete_forever</i>
+                            </button>`;
                 }
             }
         ]
@@ -136,6 +140,14 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+    var companies2 = $('#primary_table_sudah');
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        if (e.target.hash == '#sudah') {
+            companies2.columns.adjust().draw()
+        }
+    });
+
 
     function deleteActionBiaya(delete_url, element){
         var item = $(element);
