@@ -20,7 +20,7 @@
                             </li>
                     </ul>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade active in" id="belum">
+                        <div role="tabpanel" class="tab-pane fade " id="belum">
                             <div class="body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum">
@@ -38,10 +38,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="sudah">
+                        <div role="tabpanel" class="tab-pane fade active in" id="sudah">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah" style="width: :100%">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
