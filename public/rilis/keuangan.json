@@ -2,22 +2,22 @@
   	"role"  :"keuangan", 
   	"update": [
   	    {
-  	    	"tanggal-update" : "2021-11-15",
+  	    	"tanggal-update" : "2023-06-26",
   	    	"list-update" : [
   	    		{
-  	    			"modul" : "Modul Data Keuangan",
+  	    			"modul" : "Modul SIM",
   	    			"list-fitur" : [
   	    				{
-  	    					"fitur"     : "Menu Kelompok Biaya",
-  	    					"deskripsi" : "Menghapus input status saat menambah kelompok biaya"
+  	    					"fitur"     : "Menu Pemasukan",
+  	    					"deskripsi" : "Tunggakan alumni dan tahun lalu sudah dapat dilihat"
   	    				}
   	    				,{
-  	    					"fitur"     : "Menu Data Biaya Sekolah",
-  	    					"deskripsi" : "Menghapus input besar biaya dan jalur saat menambah biaya sekolah"
+  	    					"fitur"     : "Menu Pemasukan",
+  	    					"deskripsi" : "Pembayaran SPP, tagihan tahun lalu siswa dan alumni sudah dapat dilihat"
   	    				}
   	    				,{
-  	    					"fitur"     : "Menu Data Biaya Sekolah",
-  	    					"deskripsi" : "Mengubah pilihan jenis biaya menjadi 2 (pembayaran per bulan dan pembayaran sekali (opsional)) saja serta menghapus nama biaya internal saat menambahkan detail biaya pada biaya sekolah"
+  	    					"fitur"     : "Menu Pemasukan",
+  	    					"deskripsi" : "Rekap total pembayaran per bulan sudah berhasil ditampilkan"
   	    				}
   	    			]
   	    			
