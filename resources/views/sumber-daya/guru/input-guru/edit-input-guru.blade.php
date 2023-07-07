@@ -38,7 +38,7 @@
                                     <a href="#6" data-toggle="tab">Penugasan</a>
                                 </li>
                                 <li>
-                                    <a href="#6" data-toggle="tab">Data Pasangan</a>
+                                    <a href="#7" data-toggle="tab">Data Pasangan</a>
                                 </li>
                             </ul>
                             <div class="tab-content ">
