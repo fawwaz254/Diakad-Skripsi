@@ -97,8 +97,8 @@
                         <table class="table table-bordered table-striped">
                             <thead style="background:#009efa; color:white">
                                 <tr>
-                                    <th width="5%" style="text-align:center !important">No.</th>
-                                    <th>Hari dan Tanggal</th>
+                                    <th width="5%" style="text-align:center !important">Tanggal</th>
+                                    <th>Hari</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
                                     <th>Status</th>
@@ -111,8 +111,8 @@
                                         @else
                                         <tr>
                                     @endif
-                                    <td align="center">{{ $loop->iteration }}</td>
-                                    <td>{{ $r['hari'] . ', ' . $r['tanggal'] }}</td>
+                                    <td align="center">{{$r['tanggal']}}</td>
+                                    <td>{{ $r['hari']}}</td>
                                     <td>{{ $r['check_in'] }}</td>
                                     <td>{{ $r['check_out'] }}</td>
                                     <td>{{ $r['status'] }}</td>
