@@ -46,6 +46,11 @@ class Siswa extends Model
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
 
+    public function tunggakan_alumni()
+    {
+        return $this->belongsTo(TunggakanAlumni::class, 'nis_siswa', 'nis');
+    }
+
     public function calon_siswa()
     {
         return $this->belongsTo(CalonSiswaBaru::class, 'id_c_siswa');
