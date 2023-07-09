@@ -35,7 +35,7 @@
                             <div class="tab-content ">
                                 <div class="tab-pane active" id="1">
                                     <h2 class="card-inside-title">
-                                        Nama Guru
+                                        Nama Guru <small><strong>*Nama tanpa gelar</strong></small>
                                     </h2>
                                     <div class="row clearfix">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
