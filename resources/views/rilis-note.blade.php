@@ -65,16 +65,30 @@ $mine = array_values($mine);
                                                 class="panel-collapse collapse {{ $key == 0 ? 'in' : '' }}"
                                                 role="tabpanel" aria-labelledby="headingOne_{{ $loop->iteration }}">
                                                 <div class="panel-body">
+                                                    @if ($mine[0]['role'] == "keuangan")
+                                                        @foreach ($r['list-update'] as $s)
+                                                            <h4>{{ $s['modul'] }}</h4>
+                                                            <ul>
+                                                                    <li>{{ $s['list-fitur'][0]['fitur'] }} 
+                                                                        <ul>
+                                                                            @foreach ($s['list-fitur'] as $t)
+                                                                                <li>{{ $t['deskripsi'] }}</li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    </li>
+                                                            </ul>
+                                                        @endforeach
+                                                    @else    
+                                                        @foreach ($r['list-update'] as $s)
+                                                            <h4>{{ $s['modul'] }}</h4>
 
-                                                    @foreach ($r['list-update'] as $s)
-                                                        <h4>{{ $s['modul'] }}</h4>
-
-                                                        <ul>
-                                                            @foreach ($s['list-fitur'] as $t)
-                                                                <li>{{ $t['fitur'] }} : {{ $t['deskripsi'] }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @endforeach
+                                                            <ul>
+                                                                @foreach ($s['list-fitur'] as $t)
+                                                                    <li>{{ $t['fitur'] }} : {{ $t['deskripsi'] }}</li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @endforeach
+                                                    @endif
 
                                                 </div>
                                             </div>
