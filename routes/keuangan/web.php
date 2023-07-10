@@ -391,6 +391,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('tunggakanAlumni/upload', [SppController::class, 'viewMenuUploadTunggakanAlumni']);
                 Route::post('tunggakanAlumni/upload', [SppController::class, 'actionMenuUploadTunggakanAlumni']);
 
+                Route::post('tunggakanAlumni/delete/{id}/{selisih}', [SppController::class, 'deleteTunggakanAlumni']);
 
                 Route::get('setting', [SppController::class, 'viewMenuSetting']);
                 Route::post('setting/datatables', [SppController::class, 'datatablesMenuSetting']);
