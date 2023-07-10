@@ -1,0 +1,33 @@
+{
+    "role"  :"administrator", 
+    "update": [
+        {
+            "tanggal-update" : "2023-06-19",
+            "list-update" : [
+                {
+                    "modul" : "Fitur Report Wali Kelas",
+                    "list-fitur" : [
+                        {
+                            "fitur"     : "Fitur Report Wali Kelas",
+                            "deskripsi" : "Menampilkan progres pengisian biodata siswa, pelanggaran siswa, approve SKPI, home visit, input data wali murid"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tanggal-update" : "2023-06-26",
+            "list-update" : [
+                {
+                    "modul" : "Fitur Report Guru",
+                    "list-fitur" : [
+                        {
+                            "fitur"     : "Fitur Report Guru",
+                            "deskripsi" : "Menampilkan progres input data biodata, kesekretariatan, rapor sisipan, e-learning materi dan soal, presensi siswa di kelas, jurnal harian, pelanggaran siswa, sarana Prasarana"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+} 

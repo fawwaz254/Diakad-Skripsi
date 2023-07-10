@@ -48,6 +48,7 @@
                                                     <th style="width:15%;">Data</th>
                                                     <th style="text-align:center;width: 25%;">Jumlah Data</th>
                                                     <th style="text-align:center;">Progress</th>
+                                                    <th style="text-align:center;">Total Progress</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -60,12 +61,24 @@
                                                         <td>{{ $r['nama'] }} <br> {{ $r['kelas'] }}</td>
                                                         <td>
                                                             @foreach ($r['data'] as $data)
-                                                                {{ $data }} <br>
+                                                                {{ $data }} <br><br>
                                                             @endforeach
                                                         </td>
                                                         <td style="text-align:center;">
                                                             @foreach ($r['status'] as $data)
-                                                                {{ $data }} <br>
+                                                                {{ $data }} <br><br>
+                                                            @endforeach
+
+                                                        </td>
+                                                        <td style="text-align:center;">
+                                                            @foreach ($r['persentase'] as $data)
+                                                                <div class="progress">
+                                                                    <div class="progress-bar progress-bar-red progress-bar-striped active"
+                                                                        role="progressbar" aria-valuenow="{{ $data }}"
+                                                                        aria-valuemin="0" aria-valuemax="100"
+                                                                        style="width: {{ $data }}%;">
+                                                                        {{ round($data, 0) }} %</div>
+                                                                </div>
                                                             @endforeach
 
                                                         </td>

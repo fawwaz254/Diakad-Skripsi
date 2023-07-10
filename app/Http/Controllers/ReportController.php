@@ -563,6 +563,12 @@ class ReportController extends BaseController
             $data[$key]['status'][3] = $temp['status'][3];
             $data[$key]['status'][4] = $temp['status'][4];
             $data[$key]['status'][5] = $temp['status'][5];
+
+            $data[$key]['persentase'][1] = $temp['persentase'][1];
+            $data[$key]['persentase'][2] = $temp['persentase'][2];
+            $data[$key]['persentase'][3] = $temp['persentase'][3];
+            $data[$key]['persentase'][4] = $temp['persentase'][4];
+            $data[$key]['persentase'][5] = $temp['persentase'][5];
             // $data[$key]['catatan'] = $temp['catatan'];
             $data[$key]['progres'] = $temp['progres'];
         }
@@ -592,14 +598,23 @@ class ReportController extends BaseController
 
         //Biodata Siswa
         $param['status'][1] = $biodata_siswa . ' / ' . $semua_siswa . ' Data';
+        $param['persentase'][1]= ($biodata_siswa!=0) ? $biodata_siswa / $semua_siswa * 100 : 0;
         // Pelanggaran Siswa
         $param['status'][2] = $pelanggaran_siswa . ' Data';
+        if ($pelanggaran_siswa>=5){
+            $param['persentase'][2]=100;
+        }else{
+            $param['persentase'][2]=$pelanggaran_siswa*20;
+        };
         // Approve SKPI
         $param['status'][3] = ($kegiatan_siswa_approve + $prestasi_siswa_approve) . '/' . ($kegiatan_siswa + $prestasi_siswa) . ' Data';
+        $param['persentase'][3]= (($kegiatan_siswa_approve + $prestasi_siswa_approve)!=0) ? ($kegiatan_siswa_approve + $prestasi_siswa_approve) / ($kegiatan_siswa + $prestasi_siswa) * 100 : 0;
         // Home Visit
         $param['status'][4] = $home_visit . ' / ' . $semua_siswa . ' Data';
+        $param['persentase'][4]= ($home_visit!=0) ? $home_visit / $semua_siswa * 100 : 0 ;
         // Wali murid
         $param['status'][5] = $wali_murid . ' / ' . $semua_siswa . ' Data';
+        $param['persentase'][5]= ($wali_murid!=0) ?$wali_murid / $semua_siswa * 100 : 0;
 
         $data[1] = ($biodata_siswa / $semua_siswa) * 20;
         $data[2] = ((($pelanggaran_siswa / 5) * 20) > 20) ? 20 : ($pelanggaran_siswa / 5) * 20;

@@ -39,7 +39,7 @@
 
 
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{ route('report.walikelas') }}">
+                    <a href="{{ route('report.walikelas') }}"  target="_blank">
                         <div class="card">
                             <div class="body bg-red" style="text-align: -webkit-center;">
                                 <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"
@@ -56,7 +56,7 @@
 
 
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{ route('report.guru') }}">
+                    <a href="{{ route('report.guru') }}" target="_blank">
                         <div class="card">
                             <div class="body bg-blue" style="text-align: -webkit-center;">
                                 <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"

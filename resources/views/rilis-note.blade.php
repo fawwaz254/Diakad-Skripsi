@@ -8,6 +8,7 @@ $kesiswaan = json_decode(file_get_contents('rilis/kesiswaan.json'), true);
 $pendidikan = json_decode(file_get_contents('rilis/pendidikan.json'), true);
 $guru = json_decode(file_get_contents('rilis/guru.json'), true);
 $keuangan = json_decode(file_get_contents('rilis/keuangan.json'), true);
+$administrator = json_decode(file_get_contents('rilis/administrator.json'), true);
 
 array_push($data, $siswa);
 array_push($data, $akademik);
@@ -15,6 +16,7 @@ array_push($data, $kesiswaan);
 array_push($data, $pendidikan);
 array_push($data, $guru);
 array_push($data, $keuangan);
+array_push($data, $administrator);
 
 $mine = array_filter($data, function ($var) {
     return $var['role'] == Request::segment(1);
@@ -65,16 +67,30 @@ $mine = array_values($mine);
                                                 class="panel-collapse collapse {{ $key == 0 ? 'in' : '' }}"
                                                 role="tabpanel" aria-labelledby="headingOne_{{ $loop->iteration }}">
                                                 <div class="panel-body">
+                                                    @if ($mine[0]['role'] == "keuangan")
+                                                        @foreach ($r['list-update'] as $s)
+                                                            <h4>{{ $s['modul'] }}</h4>
+                                                            <ul>
+                                                                    <li>{{ $s['list-fitur'][0]['fitur'] }} 
+                                                                        <ul>
+                                                                            @foreach ($s['list-fitur'] as $t)
+                                                                                <li>{{ $t['deskripsi'] }}</li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    </li>
+                                                            </ul>
+                                                        @endforeach
+                                                    @else    
+                                                        @foreach ($r['list-update'] as $s)
+                                                            <h4>{{ $s['modul'] }}</h4>
 
-                                                    @foreach ($r['list-update'] as $s)
-                                                        <h4>{{ $s['modul'] }}</h4>
-
-                                                        <ul>
-                                                            @foreach ($s['list-fitur'] as $t)
-                                                                <li>{{ $t['fitur'] }} : {{ $t['deskripsi'] }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @endforeach
+                                                            <ul>
+                                                                @foreach ($s['list-fitur'] as $t)
+                                                                    <li>{{ $t['fitur'] }} : {{ $t['deskripsi'] }}</li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @endforeach
+                                                    @endif
 
                                                 </div>
                                             </div>

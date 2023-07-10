@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header">
-                        <h2>Data Laporan Jurnal Pimpinan</h2>
+                        <h2>DATA LAPORAN JURNAL PIMPINAN</h2>
                     </div>
                     <div class="body">
                        <div class="table-responsive">
