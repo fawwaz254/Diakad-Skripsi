@@ -39,9 +39,9 @@
                                     <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Tahun Masuk</th>
-                                    <th>Total</th>
-                                    <th>Tunggakan Pak Farhan</th>
-                                    <th>Status</th>
+                                    <th>Tunggakan</th>
+                                    <th>Tunggakan Data Lama</th>
+                                    <th>Selisih</th>
                                     <th>Detail</th>
                                 </tr>
                             </thead>
@@ -73,6 +73,8 @@
 @include('scriptjs')
 <script>
     var datatable_url = base_url + '/' + role_url + '/sim/spp/tunggakanAlumni/datatables';
+    var delete_url = base_url + '/' + role_url + '/sim/spp/tunggakanAlumni/delete';
+    var selisih = 0;
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         // serverSide: true,
@@ -119,18 +121,26 @@
                 name: 'tunggakan.jumlah_tunggakan'
             },
             {
-                data: 'tunggakan.status',
-                name: 'tunggakan.status'
+                data: 'tunggakan.selisih',
+                name: 'tunggakan.selisih'
             },
             {
-                data: 'action',
+                data: 'tunggakan',
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="detailAction(this)"  data-id="' +
-                        data.id + '">' +
-                        '    <i class="material-icons">pageview</i>' +
-                        '</button>';
+                    if (data.selisih == '-') {
+                        return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="detailAction(this)"  data-id="' +
+                            data.action + '"  data-status="-" >' +
+                            '    <i class="material-icons">pageview</i>' +
+                            '</button>';
+                    } else {
+                        return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="detailAction(this)"  data-id="' +
+                            data.action + '" data-status="' +
+                            data.selisih + '" >' +
+                            '    <i class="material-icons">pageview</i>' +
+                            '</button>';
+                    }
                 }
             },
         ]
@@ -151,6 +161,78 @@
         primary_table.ajax.reload(null, false);
     }
 
+    function deleteTagihan(el) {
+        var item = $(el);
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to delete this!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function(result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: delete_url + '/' + item.attr('data-id') + '/' + selisih,
+                    success: function(response) {
+                        if (response.status == 200) {
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                            $('#place').html('');
+                            var html = '<h4 style="text-align: center"> Selisih : ' + response
+                                .selisih + '</h4>';
+                            selisih = response.selisih;
+                            html += '<table class="table">';
+                            html += '<tr>';
+                            html += '<th>No</th>';
+                            html += '<th>Kelas</th>';
+                            html += '<th>Bulan</th>';
+                            html += '<th>Tahun Ajaran</th>';
+                            html += '<th>Tagihan</th>';
+                            if (response.selisih != '0') {
+                                html += '<th>Action</th>'
+                            };
+                            html += '</tr>';
+                            $.each(response.data, function(key,
+                                item) {
+                                html += '<tr>';
+                                html += '<td>' + (key + 1) + '</td>';
+                                html += '<td>' + item.kelas.nm_kelas + '</td>';
+                                html += '<td>' + item.detail_biaya.bulan.nm_bulan + '</td>';
+                                html += '<td>' + item.detail_biaya.biaya_sekolah.semester
+                                    .tahun_ajaran +
+                                    '</td>';
+                                html += '<td>Rp ' + item.besar_biaya.toLocaleString() +
+                                    '</td>';
+                                if (response.selisih > '0') {
+                                    html +=
+                                        '<td><button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteTagihan(this)"  data-id="' +
+                                        item.id_tagihan_biaya + '">' +
+                                        '    <i class="material-icons">delete</i>' +
+                                        '</button></td>'
+                                };
+                                html += '</tr>';
+                            });
+                            html += '</table>';
+                            $('#place').html(html);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
     function detailAction(el) {
         $('button').attr('disabled', 'disabled');
         $.ajax({
@@ -158,26 +240,43 @@
             url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/tunggakanAlumni/get-detail-data-tungakan-alumni`,
             data: {
                 id_siswa: $(el).attr('data-id'),
+                status: $(el).attr('data-status'),
             },
             success: function(response) {
                 $('#place').html('');
-                var html = '<table  class="table">';
+                if (response['status'] != '-') {
+                    var html = '<h4 style="text-align: center"> Selisih : ' + response['status'] + '</h4>';
+                    selisih = response['status'];
+                    html += '<table class="table">';
+                } else {
+                    var html = '<table  class="table">';
+                }
                 html += '<tr>';
                 html += '<th>No</th>';
                 html += '<th>Kelas</th>';
                 html += '<th>Bulan</th>';
                 html += '<th>Tahun Ajaran</th>';
                 html += '<th>Tagihan</th>';
+                if (response['status'] != '-') {
+                    html += '<th>Action</th>'
+                };
                 html += '</tr>';
-                $.each(response, function(key, item) {
+                $.each(response['data_tagihan_siswa_semester_lalu'], function(key, item) {
                     html += '<tr>';
                     html += '<td>' + (key + 1) + '</td>';
                     html += '<td>' + item.kelas.nm_kelas + '</td>';
                     html += '<td>' + item.detail_biaya.bulan.nm_bulan + '</td>';
                     html += '<td>' + item.detail_biaya.biaya_sekolah.semester.tahun_ajaran +
                         '</td>';
-                    html += '<td>' + item.besar_biaya + '</td>';
-                    html += '<tr>';
+                    html += '<td>Rp ' + item.besar_biaya.toLocaleString() + '</td>';
+                    if (response['status'] != '-') {
+                        html +=
+                            '<td><button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteTagihan(this)"  data-id="' +
+                            item.id_tagihan_biaya + '">' +
+                            '    <i class="material-icons">delete</i>' +
+                            '</button></td>'
+                    };
+
                     html += '</tr>';
                 });
                 html += '</table>';

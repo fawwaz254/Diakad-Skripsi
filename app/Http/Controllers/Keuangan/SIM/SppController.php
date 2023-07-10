@@ -714,7 +714,7 @@ class SppController extends BaseController
                 $q->where('is_tagih', 1)
                     ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
             }])
-                ->with('pengguna', 'kelas' , 'last_kelas_siswa.kelas');
+                ->with('pengguna', 'kelas', 'last_kelas_siswa.kelas');
 
             if (!empty($kelas)) {
                 $list_data = $list_data->whereHas('kelas', function ($q) use ($kelas) {
@@ -745,7 +745,7 @@ class SppController extends BaseController
                 return $array_tagihan_bulan;
             })
             ->editColumn('kelas.nm_kelas', function ($item) {  //this example  for edit your columns if colums is empty 
-                $nm_kelas = !empty($item->id_kelas) ? $item->kelas->nm_kelas : 'Alumni ( ' .  $item->last_kelas_siswa->kelas->nm_kelas .' )';
+                $nm_kelas = !empty($item->id_kelas) ? $item->kelas->nm_kelas : 'Alumni ( ' .  $item->last_kelas_siswa->kelas->nm_kelas . ' )';
                 return $nm_kelas;
             })
             ->make(true);
@@ -1070,24 +1070,26 @@ class SppController extends BaseController
                 if (isset($item->siswa->tunggakan_alumni)) {
                     $data = array(
                         'jumlah_tunggakan' =>  'Rp ' . number_format($item->siswa->tunggakan_alumni->jumlah_tunggakan),
-                        'status' => ($item->siswa->tunggakan_alumni->jumlah_tunggakan == $item->total_biaya) ? 'sama' : 'tidak sama',
+                        'selisih' => ($item->siswa->tunggakan_alumni->jumlah_tunggakan == $item->total_biaya) ? '-' : 'Rp ' . number_format($item->total_biaya - $item->siswa->tunggakan_alumni->jumlah_tunggakan),
+                        'action' => $item->id_siswa,
                     );
                 } else {
                     $data = array(
-                        'jumlah_tunggakan' =>  '',
-                        'status' => '',
+                        'jumlah_tunggakan' =>  '-',
+                        'selisih' => ($item->total_biaya == '0') ? '-' : 'Rp ' . number_format($item->total_biaya),
+                        'action' => $item->id_siswa,
                     );
                 }
                 return $data;
             })->editColumn('total_biaya', function ($item) {
                 return 'Rp ' . number_format($item->total_biaya);
             })
-            ->addColumn('action', function ($item) {
-                $data = array(
-                    'id' => $item->id_siswa,
-                );
-                return $data;
-            })
+            // ->addColumn('action', function ($item) {
+            //     $data = array(
+            //         'id' => $item->id_siswa,
+            //     );
+            //     return $data;
+            // })
             ->make(true);
     }
 
@@ -1096,6 +1098,7 @@ class SppController extends BaseController
         $input = (object) $request->input();
         // dd($input->id_siswa);
         // $list_id_semester_lalu = Semester::where('thn_akademik_semester', '<', $input->tahun_akademik_semester)->pluck('id_semester')->toArray();
+        // $status =  $input->status;
         $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('kelas', 'detail_biaya.bulan', 'detail_biaya.biaya_sekolah.semester')->where('is_tagih', '1')->where('id_siswa', $input->id_siswa)
             ->whereHas('detail_biaya', function ($query) {
                 $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
@@ -1103,14 +1106,11 @@ class SppController extends BaseController
             ->whereHas('detail_biaya.biaya_sekolah')
             ->get();
 
-        return $data_tagihan_siswa_semester_lalu;
+        $data['status'] = $input->status;
+        $data['data_tagihan_siswa_semester_lalu'] = $data_tagihan_siswa_semester_lalu;
+
+        return $data;
     }
-
-
-
-
-
-
 
     public function viewMenuSetting(Request $request)
     {
@@ -2055,32 +2055,7 @@ class SppController extends BaseController
                 try {
                     foreach ($data as $key => $item) {
                         $now = Carbon::now(env('APP_TIMEZONE', ''));
-                        // $item = (object) $item;
-                        // dd($item['nis']);
                         if (!empty($item["nis"])) {
-                            // dd('test');
-                            // $siswa = Siswa::where('nis_siswa', $item->nis)->first();
-
-                            // if (!$siswa) {
-                            //     return [
-                            //         'status' => 300, // FAILED
-                            //         'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
-                            //     ];
-                            // } else {
-                            // $semester = Semester::where('kode_semester', $item->kode_semester)->first();
-                            // $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
-                            // $keterangan = $item->keterangan;
-                            // $tahun_ajaran = $item->tahun_ajaran;
-
-                            // $tagihan_siswa = TagihanBiaya::where('is_tagih', 1)->where('id_siswa', $siswa->id_siswa)
-                            //     ->whereHas('detail_biaya', function ($q) use ($keterangan) {
-                            //         $q->where('keterangan_biaya', $keterangan)->where('id_jenis_detail_biaya', '!=', 4);
-                            //     })
-                            //     ->whereHas('detail_biaya.biaya_sekolah.semester', function ($q) use ($tahun_ajaran) {
-                            //         $q->where('tahun_ajaran', $tahun_ajaran);
-                            //     })
-                            //     ->first();
-
                             if ($tunggakan = TunggakanAlumni::where('nis', $item["nis"])->first()) { } else {
                                 $tunggakan = new TunggakanAlumni;
                                 $tunggakan->id_tunggakan_alumni = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -2112,5 +2087,41 @@ class SppController extends BaseController
                 }
             }
         }
+    }
+
+    public function deleteTunggakanAlumni(Request $request, $id, $selisih)
+    {
+        $input = (object) $request->input();
+
+        $tagihan_biaya = TagihanBiaya::find($id);
+        $id_siswa =  $tagihan_biaya->id_siswa;
+
+        $selisih = str_replace(['Rp', ' ', ','], '', $selisih);
+        $selisih = intval($selisih);
+
+        $selisih = $selisih - $tagihan_biaya->besar_biaya;
+        if ($selisih > 0) {
+            $selisih = 'Rp ' . number_format($selisih);
+        } else {
+            $selisih = '0';
+        }
+
+        $tagihan_biaya->deleted_by = $input->auth_data->pengguna->id_pengguna;
+        $tagihan_biaya->save();
+        $tagihan_biaya->delete(); //untuk semestara, jika sudah clear maka akan permanent delete
+
+        $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('kelas', 'detail_biaya.bulan', 'detail_biaya.biaya_sekolah.semester')->where('is_tagih', '1')->where('id_siswa', $id_siswa)
+            ->whereHas('detail_biaya', function ($query) {
+                $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
+            })
+            ->whereHas('detail_biaya.biaya_sekolah')
+            ->get();
+
+        return [
+            'status' => 200, // SUCCESS AND LOAD CONTENT
+            'message' => 'Delete Tagihan Successfully',
+            'data' => $data_tagihan_siswa_semester_lalu,
+            'selisih' => $selisih,
+        ];
     }
 }
