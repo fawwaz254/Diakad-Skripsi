@@ -68,6 +68,7 @@ use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruP
 use App\Http\Controllers\Guru\KetidaksesuaianSOP\InputKetidaksesuaianController;
 use App\Http\Controllers\Guru\KetidaksesuaianSOP\KetidaksesuaianSOPController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
+use App\Http\Controllers\Guru\Presensi\AbsensiBarcodeController;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
@@ -329,9 +330,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', [RekapAbsenTanpaJadwalController::class, 'printKBMRekapAbsenTanpaJadwal']);
 
             // Presensi Barcode
-            // Route::get('presensi-barcode/{id_kelas}',)
-
-
+            Route::get('presensi-barcode', [AbsensiBarcodeController::class, 'viewAbsensiBarcode']);
         });
 
         Route::prefix('penilaian')->group(function () {

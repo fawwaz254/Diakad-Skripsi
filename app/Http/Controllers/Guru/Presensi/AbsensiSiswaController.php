@@ -359,7 +359,9 @@ class AbsensiSiswaController extends BaseController
                 $id_jadwal_kelas_mp = $id;
 
                 $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
-
+                if (isset($input->pertemuan_id)) {
+                    $pertemuan_ke = $input->pertemuan_id;
+                }
                 DB::beginTransaction();
                 try {
                     if ($presensi_mp) {
@@ -414,7 +416,6 @@ class AbsensiSiswaController extends BaseController
 
                     DB::commit();
                     // all good
-
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'presensi/absensi-siswa/view-kbm/' . $id_jadwal_kelas_mp . '/' . $pertemuan_ke,
