@@ -8,6 +8,7 @@ $kesiswaan = json_decode(file_get_contents('rilis/kesiswaan.json'), true);
 $pendidikan = json_decode(file_get_contents('rilis/pendidikan.json'), true);
 $guru = json_decode(file_get_contents('rilis/guru.json'), true);
 $keuangan = json_decode(file_get_contents('rilis/keuangan.json'), true);
+$administrator = json_decode(file_get_contents('rilis/administrator.json'), true);
 
 array_push($data, $siswa);
 array_push($data, $akademik);
@@ -15,6 +16,7 @@ array_push($data, $kesiswaan);
 array_push($data, $pendidikan);
 array_push($data, $guru);
 array_push($data, $keuangan);
+array_push($data, $administrator);
 
 $mine = array_filter($data, function ($var) {
     return $var['role'] == Request::segment(1);
