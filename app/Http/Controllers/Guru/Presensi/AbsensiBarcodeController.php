@@ -15,6 +15,11 @@ use App\Models\Setting;
 
 class AbsensiBarcodeController extends BaseController
 {
+    public function cekAbsensiBarcode(Request $request)
+    {
+        return redirect(request()->segment(1) . '#' . request()->segment(2) . '/' . request()->segment(3) . '1');
+    }
+
     public function viewAbsensiBarcode(Request $request)
     {
         $input = (object) $request->input();

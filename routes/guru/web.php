@@ -330,7 +330,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', [RekapAbsenTanpaJadwalController::class, 'printKBMRekapAbsenTanpaJadwal']);
 
             // Presensi Barcode
-            Route::get('presensi-barcode', [AbsensiBarcodeController::class, 'viewAbsensiBarcode']);
+            Route::get('presensi-barcode', [AbsensiBarcodeController::class, 'cekAbsensiBarcode']);
+            Route::get('presensi-barcode1', [AbsensiBarcodeController::class, 'viewAbsensiBarcode']);
         });
 
         Route::prefix('penilaian')->group(function () {

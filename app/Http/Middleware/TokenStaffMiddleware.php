@@ -18,6 +18,7 @@ use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\WaliKelas;
 use App\Models\WaliMurid;
+use Illuminate\Support\Facades\URL;
 
 use Auth;
 use Session;
@@ -103,12 +104,22 @@ class TokenStaffMiddleware
             }
 
             if (request()->segment(1) != $auth_data->role_aktif->path) {
+                //barcode
+                if ($auth_data->role_aktif->path == 'guru' && Session::get('backUrl')) {
+                    return redirect(Session::get('backUrl'));
+                }
+
                 return redirect($auth_data->role_aktif->path);
             }
 
             $request->request->add(['auth_data' => $auth_data]);
             return $next($request);
         } else {
+            //barcode
+            if (!empty(request()->segment(3)) && request()->segment(3) == 'presensi-barcode') {
+                Session::put('backUrl', request()->segment(1) . '/' . request()->segment(2) . '/' . request()->segment(3));
+            }
+
             return redirect('/');
         }
     }
