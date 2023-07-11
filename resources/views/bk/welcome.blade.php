@@ -6,6 +6,22 @@
         <h2>DASHBOARD | {{$today->format('d M Y')}}</h2>
     </div>
     <div class="row">
+        @if ($role_dashboard)
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            PENGUMUMAN
+                        </h2>
+                    </div>
+                    <div class="body">
+                        {!! $role_dashboard->isi_dashboard !!}
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+    {{-- <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
             <a class="target-link" href="{{url(Request::segment(1).'#kegiatan-harian/mengisi-form-kesehatan')}}">
                 <div class="card">
@@ -19,7 +35,7 @@
                 </div>
             </a>
         </div>
-    </div>
+    </div> --}}
     <br>
     <div class="row clearfix">
 
