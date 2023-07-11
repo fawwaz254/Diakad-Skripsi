@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Akademik;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use App\Models\RoleDashboard;
 
 use Yajra\Datatables\Datatables;
 
@@ -32,8 +33,10 @@ class WelcomeController extends BaseController{
         }else{
             $end_monkes = '07:00';
         }
+        $role_aktif = $auth_data->role_aktif;
 
-        return view('akademik/welcome', compact('auth_data','start_monkes','end_monkes')); //folder akademik/nama file welcome.blade
+        $role_dashboard = RoleDashboard::where(['id_role' => $role_aktif->id_role, 'is_aktif' => 1])->first();
+        return view('akademik/welcome', compact('auth_data','start_monkes','end_monkes','role_dashboard')); //folder akademik/nama file welcome.blade
     
     }
 
