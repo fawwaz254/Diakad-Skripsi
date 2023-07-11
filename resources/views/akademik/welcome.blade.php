@@ -6,19 +6,21 @@
         <h2>DASHBOARD | {{$today->format('d M Y')}}</h2>
     </div>
     <div class="row">
-        @if ($role_dashboard->isi_dashboard)
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="header">
-                        <h2>
-                            PENGUMUMAN
-                        </h2>
-                    </div>
-                    <div class="body">
-                        {!! $role_dashboard->isi_dashboard !!}
+        @if ($role_dashboard)
+            @if ($role_dashboard->isi_dashboard!=null)    
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                PENGUMUMAN
+                            </h2>
+                        </div>
+                        <div class="body">
+                            {!! $role_dashboard->isi_dashboard !!}
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
         @endif
     </div>
     @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smkypm2')
