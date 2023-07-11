@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Yajra\Datatables\Datatables;
 
 use Auth;
+use App\Models\RoleDashboard;
 use DB;
 use Session;
 use App\Models\Setting;
@@ -31,7 +32,10 @@ class WelcomeController extends BaseController{
             $end_monkes = '07:00';
         }
 
-        return view('pendidikan/welcome', compact('auth_data','start_monkes','end_monkes'));
+        $role_aktif = $auth_data->role_aktif;
+
+        $role_dashboard = RoleDashboard::where(['id_role' => $role_aktif->id_role, 'is_aktif' => 1])->first();
+        return view('pendidikan/welcome', compact('auth_data','role_dashboard','start_monkes','end_monkes'));
 
     }
 

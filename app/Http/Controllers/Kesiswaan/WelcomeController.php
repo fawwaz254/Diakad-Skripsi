@@ -9,6 +9,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\RoleDashboard;
 
 use Auth;
 use DB;
@@ -53,7 +54,10 @@ class WelcomeController extends BaseController
         } else {
             $end_monkes = '07:00';
         }
+        $role_aktif = $auth_data->role_aktif;
+
+        $role_dashboard = RoleDashboard::where(['id_role' => $role_aktif->id_role, 'is_aktif' => 1])->first();
         // dd($count_siswa);
-        return view('kesiswaan/welcome', compact('auth_data', 'data_tingkat', 'count_siswa', 'last_siswa', 'jenis_kelamin', 'start_monkes', 'end_monkes'));
+        return view('kesiswaan/welcome', compact('auth_data', 'data_tingkat','role_dashboard', 'count_siswa', 'last_siswa', 'jenis_kelamin', 'start_monkes', 'end_monkes'));
     }
 }
