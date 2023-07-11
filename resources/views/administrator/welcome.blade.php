@@ -8,6 +8,24 @@
         </div>
         <div class="body">
             <div class="row">
+                @if ($role_dashboard)
+                    @if ($role_dashboard->isi_dashboard!=null)    
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h2>
+                                        PENGUMUMAN
+                                    </h2>
+                                </div>
+                                <div class="body">
+                                    {!! $role_dashboard->isi_dashboard !!}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
+            </div>
+            <div class="row">
                 {{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <a href="{{ route('report.pimpinan') }}">
                         <div class="card">

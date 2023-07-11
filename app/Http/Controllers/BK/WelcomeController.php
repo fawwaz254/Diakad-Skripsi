@@ -12,6 +12,7 @@ use App\Models\Pengguna;
 use App\Models\PelanggaranSiswa;
 use App\Models\Semester;
 use App\Models\Setting;
+use App\Models\RoleDashboard;
 
 use Auth;
 use DB;
@@ -73,7 +74,11 @@ class WelcomeController extends BaseController{
             $end_monkes = '07:00';
         }
 
-        return view('bk/welcome', compact('auth_data','pelanggaran','pelanggaran_belum_ditindak','pelanggaran_sudah_ditindak','pelanggaran_orang_lain','pelanggaran_orang_lain_belum_ditindak','pelanggaran_orang_lain_sudah_ditindak','semester_aktif','bk_kelas_nama','start_monkes','end_monkes'));
+        $role_aktif = $auth_data->role_aktif;
+
+        $role_dashboard = RoleDashboard::where(['id_role' => $role_aktif->id_role, 'is_aktif' => 1])->first();
+
+        return view('bk/welcome', compact('auth_data','pelanggaran','pelanggaran_belum_ditindak','pelanggaran_sudah_ditindak','pelanggaran_orang_lain','pelanggaran_orang_lain_belum_ditindak','pelanggaran_orang_lain_sudah_ditindak','semester_aktif','bk_kelas_nama','start_monkes','end_monkes','role_dashboard'));
 
     }
 

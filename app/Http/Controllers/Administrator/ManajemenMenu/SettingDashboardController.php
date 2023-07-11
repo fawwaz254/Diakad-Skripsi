@@ -122,7 +122,7 @@ class SettingDashboardController extends BaseController
 
         $validator = Validator::make($request->all(), [
             'id_role'       => 'required',
-            'isi_dashboard' => 'required'
+            // 'isi_dashboard' => 'required'
         ]);
 
         if($validator->fails()) {
