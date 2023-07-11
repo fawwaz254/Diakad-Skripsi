@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use App\Models\Semester;
 use App\Models\Siswa;
 use App\Models\Staff;
+use App\Models\RoleDashboard;
 use Yajra\Datatables\Datatables;
 
 use Auth;
@@ -22,7 +23,10 @@ class WelcomeController extends BaseController
         $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('administrator/welcome', compact('auth_data', 'semester_aktif'));
+        $role_aktif = $auth_data->role_aktif;
+
+        $role_dashboard = RoleDashboard::where(['id_role' => $role_aktif->id_role, 'is_aktif' => 1])->first();
+        return view('administrator/welcome', compact('auth_data', 'role_dashboard' , 'semester_aktif'));
     }
     public function viewBiodata(Request $request)
     {
