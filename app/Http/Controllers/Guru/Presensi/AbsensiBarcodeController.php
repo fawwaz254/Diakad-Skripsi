@@ -74,13 +74,15 @@ class AbsensiBarcodeController extends BaseController
                         ->first();
 
                     if (empty($data_jadwal_kelas_mp)) {
-                        return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
+                        continue;
+                        // return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
                     }
 
                     $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $data_jadwal_kelas_mp->id_jadwal_kelas_mp);
 
                     if (empty($data_kelas)) {
-                        return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
+                        continue;
+                        // return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
                     }
 
                     $start = $start->format('H:i');
