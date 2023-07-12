@@ -8,6 +8,7 @@ use App\Http\Controllers\SumberDaya\DataSumberDaya\StatusAktifTendikController;
 use App\Http\Controllers\SumberDaya\DataSumberDaya\UnitKerjaController;
 use App\Http\Controllers\SumberDaya\DataSumberDaya\UpdateFotoUnitKerjaController;
 use App\Http\Controllers\SumberDaya\Guru\InputGuruController;
+use App\Http\Controllers\SumberDaya\Guru\SettingGuruKpiController;
 use App\Http\Controllers\SumberDaya\Guru\SettingGuruPiketController;
 use App\Http\Controllers\SumberDaya\Guru\UploadDataGuruController;
 use App\Http\Controllers\SumberDaya\Tendik\InputTendikController;
@@ -128,6 +129,19 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-guru-piket/datatablesGuru', [SettingGuruPiketController::class, 'datatablesAddGuruPiket']);
 
             Route::post('action-setting-guru-piket/{mode}/{id}', [SettingGuruPiketController::class, 'actionSettingGuruPiket']);
+        
+            //MENU Setting Guru KPI
+            Route::get('setting-guru-kpi', [SettingGuruKpiController::class, 'viewSettingGuruKpi']);
+            Route::get('setting-guru-kpi/datatables', [SettingGuruKpiController::class, 'datatablesSettingGuruKpi']);
+            Route::get('setting-guru-kpi/add', [SettingGuruKpiController::class, 'addSettingGuruKpi']);
+            Route::get('setting-guru-kpi/datatablesGuru', [SettingGuruKpiController::class, 'datatablesAddGuruKpi']);
+            Route::get('setting-guru-kpi/edit/{id}', [SettingGuruKpiController::class, 'editSettingGuruKpi']);
+
+            Route::post('action-setting-guru-kpi/{mode}/{id}', [SettingGuruKpiController::class, 'actionSettingGuruKpi']);
+
+
+
+
         });
 
         Route::prefix('tendik')->group(function () {
