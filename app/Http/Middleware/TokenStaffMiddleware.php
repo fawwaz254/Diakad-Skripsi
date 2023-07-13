@@ -11,6 +11,7 @@ use App\Models\Modul;
 use App\Models\Role;
 
 use App\Models\Guru;
+use App\Models\GuruKpi;
 use App\Models\GuruPiket;
 use App\Models\JurnalPimpinan;
 use App\Models\PembinaEkskulSet;
@@ -44,6 +45,7 @@ class TokenStaffMiddleware
                 $roles_pengguna = $pengguna->role_pengguna;
                 $role_aktif = $roles_pengguna->where('is_aktif', 1)->first()->role;
                 $moduls = Modul::with('menus')->where(['id_role' => $role_aktif->id_role, 'akses' => 1])->orderBy('urutan', 'asc')->get();
+                $kpi = Modul::where('id_role', 2)->where('nm_modul', 'Guru KPI')->pluck('id_modul')->first();
 
                 $tambahan_modul = [];
                 $id_pengguna = $pengguna->id_pengguna;
@@ -53,6 +55,10 @@ class TokenStaffMiddleware
                     if ($guru) {
                         if ($this->isGuruPiket($id_pengguna)) {
                             $tambahan_modul[] = 35;
+                        }
+
+                        if ($this->isGuruKpi($id_pengguna)) {
+                            $tambahan_modul[] = $kpi;
                         }
 
                         if ($this->isWaliKelas($guru->id_guru)) {
@@ -72,6 +78,9 @@ class TokenStaffMiddleware
                 if ($role_aktif->id_role == 15) {
                     if ($this->isGuruPiket($id_pengguna)) {
                         $tambahan_modul[] = 35;
+                    }
+                    if ($this->isGuruKpi($id_pengguna)) {
+                        $tambahan_modul[] = $kpi;
                     }
                 }
 
@@ -121,6 +130,11 @@ class TokenStaffMiddleware
     private function isGuruPiket($id)
     {
         return GuruPiket::where('id_pengguna', $id)->where('is_aktif', 1)->exists();
+    }
+
+    private function isGuruKpi($id)
+    {
+        return GuruKpi::where('id_pengguna', $id)->where('is_aktif', 1)->exists();
     }
 
     private function isWaliKelas($id)
