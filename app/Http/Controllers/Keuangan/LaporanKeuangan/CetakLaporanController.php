@@ -123,7 +123,7 @@ class CetakLaporanController extends BaseController
         $tahun = $sc_tahun->year;
         $tahun_lalu = $sc_tahun->subYear()->year;
 
-        if ($id_bulan < 7) {
+        if ($id_bulan <= 7) {
             $tahun_semester = $tahun - 1;
         } else {
             $tahun_semester = $tahun;
@@ -137,6 +137,7 @@ class CetakLaporanController extends BaseController
 
         $saldo_before = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->first();
 
+        // dd($saldo_before);
         $validator = Validator::make([
             'start_date' => $start_date,
             'end_date' => $end_date,

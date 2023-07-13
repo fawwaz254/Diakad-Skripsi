@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pengguna;
 use App\Models\Role;
+use App\Models\RolePengguna;
 use App\Models\Sekolah;
 use App\Models\Siswa;
 use App\Models\WaliMurid;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Session;
 
 class SignInController extends BaseController
 {
@@ -53,13 +55,45 @@ class SignInController extends BaseController
             $pengguna = Pengguna::where('username', $input->username)->first();
 
             if (!empty($pengguna)) {
+                //barcode, validasi apakah role gurunya tidak aktif
+                if (Session::get('backUrl')) {
+                    $cek_role = RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->where('id_role', '2')->where('is_aktif', '0')->first();
+                    if ($cek_role) {
+                        $change_role =  RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->where('is_aktif', '1')->first();
+                        $change_role->is_aktif = 0;
+                        $change_role->save();
+
+                        $cek_role->is_aktif =  1;
+                        $cek_role->save();
+                        $pengguna = Pengguna::where('username', $input->username)->first();
+                    }
+                }
+
                 Auth::loginUsingId($pengguna->id_pengguna);
+
                 $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
                 $role = Role::find($role_aktif->id_role);
+                //barcode
+                if ($role->path == 'guru' && Session::get('backUrl')) {
+                    return redirect(Session::get('backUrl'));
+                }
                 return redirect($role->path);
             }
             return back()->with('toast', 'Sign in failed')->withInput();
         } else {
+            //barcode, validasi apakah role gurunya tidak aktif
+            $pengguna = Pengguna::where('username', $input->username)->first();
+            if (Session::get('backUrl')) {
+                $cek_role = RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->where('id_role', '2')->where('is_aktif', '0')->first();
+                if ($cek_role) {
+                    $change_role =  RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->where('is_aktif', '1')->first();
+                    $change_role->is_aktif = 0;
+                    $change_role->save();
+
+                    $cek_role->is_aktif =  1;
+                    $cek_role->save();
+                }
+            }
 
             if (Auth::attempt(['username' => $input->username, 'password' => $input->password], true)) {
                 $pengguna = Auth::user();
@@ -84,6 +118,10 @@ class SignInController extends BaseController
                     return redirect('must-change-password');
                 }
 
+                //barcode
+                if ($role->path == 'guru' && Session::get('backUrl')) {
+                    return redirect(Session::get('backUrl'));
+                }
                 return redirect($role->path);
             } else {
                 return back()->with('toast', 'Sign in failed')->withInput();
