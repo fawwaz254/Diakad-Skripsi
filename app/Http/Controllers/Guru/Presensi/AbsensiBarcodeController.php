@@ -39,6 +39,8 @@ class AbsensiBarcodeController extends BaseController
 
         $setting =  Setting::where('key_setting', 'is_presensi_one_day')->pluck('value')->first();
 
+        $id_guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()->id_guru;
+
         if ($setting == '1') {
             $grup_kbm_perhari = $data_kbm->where('id_jadwal_hari', $id_jadwal_hari)->groupBy('nm_jadwal_hari');
         } else {
@@ -57,7 +59,6 @@ class AbsensiBarcodeController extends BaseController
                     $menit_mulai = $a->menit_mulai;
                     $jam_selesai = $a->jam_selesai;
                     $menit_selesai = $a->menit_selesai;
-                    $id_guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()->id_guru;
 
                     $data_jadwal_kelas_mp = JadwalKelasMp::with('jadwal_jam_mulai', 'jadwal_jam_selesai', 'kelas_mp.pengampu_mp_utama')->where('id_jadwal_hari', $id_jadwal_hari)
                         ->whereHas('jadwal_jam_mulai', function ($query) use ($jam_mulai, $menit_mulai) {
@@ -74,13 +75,15 @@ class AbsensiBarcodeController extends BaseController
                         ->first();
 
                     if (empty($data_jadwal_kelas_mp)) {
-                        return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
+                        continue;
+                        // return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
                     }
 
                     $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $data_jadwal_kelas_mp->id_jadwal_kelas_mp);
 
                     if (empty($data_kelas)) {
-                        return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
+                        continue;
+                        // return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
                     }
 
                     $start = $start->format('H:i');
