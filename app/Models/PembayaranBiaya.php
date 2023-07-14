@@ -21,7 +21,7 @@ class PembayaranBiaya extends Model
     protected $keyType = 'string';
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_tagihan_biaya',
         'id_staff_bayar',
@@ -45,7 +45,12 @@ class PembayaranBiaya extends Model
         return $this->belongsTo('App\Models\TagihanBiaya', 'id_tagihan_biaya');
     }
 
-    public function scopeIsInputByPengguna($query, $id_pengguna){
+    public function scopeIsInputByPengguna($query, $id_pengguna)
+    {
         return $query->where('pembayaran_biaya.created_by', $id_pengguna);
     }
+
+    protected $casts = [
+        'tgl_pembayaran' => 'date',
+    ];
 }
