@@ -14,9 +14,9 @@ class CreateHasKpiTable extends Migration
     public function up()
     {
         Schema::create('has_kpi', function (Blueprint $table) {
-            $table->string('id_has_kpi')->primary();
-            $table->string('id_kpi');
-            $table->string('id_kategori_kpi');
+            $table->string('id_has_kpi', 40)->primary();
+            $table->string('id_kpi', 40);
+            $table->string('id_kategori_kpi', 40);
             $table->timestamps();
         });
     }

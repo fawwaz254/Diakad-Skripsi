@@ -14,12 +14,12 @@ class CreateNilaiKomponenKpiTable extends Migration
     public function up()
     {
         Schema::create('nilai_komponen_kpi', function (Blueprint $table) {
-            $table->string('id_nilai_kpi')->primary();
-            $table->string('id_kpi');
-            $table->string('id_komponen');
-            $table->string('id_siswa');
-            $table->string('nilai_komponen')->nullable();
-            $table->string('deskripsi_nilai')->nullable();
+            $table->string('id_nilai_kpi' , 40)->primary();
+            $table->string('id_kpi', 40);
+            $table->string('id_komponen', 40);
+            $table->string('id_siswa', 40);
+            $table->string('nilai_komponen', 256)->nullable();
+            $table->string('deskripsi_nilai', 256)->nullable();
             $table->timestamps();
         });
     }

@@ -14,9 +14,9 @@ class CreateSubkategoriKpiTable extends Migration
     public function up()
     {
         Schema::create('subkategori_kpi', function (Blueprint $table) {
-            $table->string('id_subkategori_kpi')->primary();
-            $table->string('id_kategori_kpi');
-            $table->string('nm_subkategori')->nullable();
+            $table->string('id_subkategori_kpi', 40)->primary();
+            $table->string('id_kategori_kpi', 40);
+            $table->string('nm_subkategori', 256)->nullable();
             $table->timestamps();
         });
     }
