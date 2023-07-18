@@ -13,6 +13,7 @@ class CreateKpiTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('kpi');
         Schema::create('kpi', function (Blueprint $table) {
             $table->string('id_kpi')->primary();
             $table->string('id_semester');
