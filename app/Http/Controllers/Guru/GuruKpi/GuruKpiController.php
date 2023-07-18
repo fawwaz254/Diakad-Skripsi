@@ -178,14 +178,23 @@ class GuruKpiController extends BaseController
         ]);
         $siswa = Siswa::where('id_siswa',$input->id_siswa)->first();
         $kategori = KategoriKpi::where('semester',$semester->nm_semester)->where('tingkat',$siswa->kelas->tingkat)->get();
-        dd($kategori);
+        // dd($kategori);
         
         $kpi = Kpi::where('id_siswa',$input->id_siswa)->where('id_semester',$input->id_semester)->first();
         if($kpi != null){
             foreach($input->id_komponen as $key=>$value){
                 $now1 = Carbon::now(env('APP_TIMEZONE', ''));
                 $nilai = NilaiKomponenKpi::where('id_kpi',$kpi->id_kpi)->where('id_komponen',$input->id_komponen[$key])->where('id_siswa',$input->id_siswa)->first();
-                $nilai->nilai_komponen = $input->nilai_komponen;
+                $nilai->nilai_komponen = $input->nilai_komponen[$key];
+                if ($input->nilai_komponen[$key] == 'A') {
+                    $nilai->deskripsi_nilai = 'Sangat mampu';
+                }elseif ($input->nilai_komponen[$key] == 'B') {
+                    $nilai->deskripsi_nilai = 'Mampu';
+                }elseif ($input->nilai_komponen[$key] == 'C') {
+                    $nilai->deskripsi_nilai = 'Cukup mampu';
+                }elseif ($input->nilai_komponen[$key] == 'B') {
+                    $nilai->deskripsi_nilai = 'Kurang mampu';
+                }
                 $nilai->updated_at = $now1;
                 $nilai->save();
             }
@@ -197,11 +206,41 @@ class GuruKpiController extends BaseController
             $kpi->id_semester = $input->id_semester;
             $kpi->id_siswa = $input->id_siswa;
             $kpi->id_kelas = $siswa->kelas->id_kelas;
-            $nilai->created_at = $now1;
             $kpi->save();
 
-            $haskpi = new HasKpi;
+
+            // $haskpi = new HasKpi;
+            foreach($kategori as $item){
+                $haskpi = new HasKpi;
+                $haskpi->id_has_kpi = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+                $haskpi->id_kpi = $kpi->id_kpi;
+                $haskpi->id_kategori_kpi = $item->id_kategori_kpi;
+                $haskpi->created_at = $now1;
+                $haskpi->save();
+            }
+
+            foreach($input->id_komponen as $key=>$value){
+                $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+                $nilai = new NilaiKomponenKpi;
+                $nilai->id_nilai_kpi = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+                $nilai->id_kpi= $kpi->id_kpi;
+                $nilai->id_komponen = $input->id_komponen[$key];
+                $nilai->id_siswa = $siswa->id_siswa;
+                $nilai->nilai_komponen = $input->nilai_komponen[$key];
+                if ($input->nilai_komponen[$key] == 'A') {
+                    $nilai->deskripsi_nilai = 'Sangat mampu';
+                }elseif ($input->nilai_komponen[$key] == 'B') {
+                    $nilai->deskripsi_nilai = 'Mampu';
+                }elseif ($input->nilai_komponen[$key] == 'C') {
+                    $nilai->deskripsi_nilai = 'Cukup mampu';
+                }elseif ($input->nilai_komponen[$key] == 'B') {
+                    $nilai->deskripsi_nilai = 'Kurang mampu';
+                }
+                $nilai->updated_at = $now1;
+                $nilai->save();
+            }
             
+
 
 
         }
@@ -213,7 +252,7 @@ class GuruKpiController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'guru-kpi/input-nilai-kpi-detail/' . $input->kelas . '/' . $semester
+                'path' => 'guru-kpi/input-nilai-kpi-detail/' . $siswa->kelas->id_kelas . '/' . $semester->id_semester   
             ];
         }
     }
