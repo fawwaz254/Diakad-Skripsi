@@ -56,6 +56,11 @@ class Siswa extends Model
         return $this->belongsTo(CalonSiswaBaru::class, 'id_c_siswa');
     }
 
+    public function kpi()
+    {
+        return $this->hasMany(Kpi::class, 'id_siswa');
+    }
+
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas');
@@ -99,6 +104,11 @@ class Siswa extends Model
     public function nilai_rapor_sisipan()
     {
         return $this->hasMany(NilaiRaporSisipan::class, 'id_siswa');
+    }
+
+    public function nilai_komponen_kpi()
+    {
+        return $this->hasMany(NilaiKomponenKpi::class, 'id_siswa');
     }
 
     public function last_kelas_siswa()
