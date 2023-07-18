@@ -475,10 +475,15 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('guru-kpi')->group(function () {
             Route::get('rekap-nilai-kpi', [GuruKpiController::class, 'viewIndexKpi']);
+            Route::get('input-nilai-kpi', [GuruKpiController::class, 'viewIndexInputKpi']);
             Route::post('post-rekap-nilai-kpi-detail', [GuruKpiController::class, 'actionviewIndexKpiDetail']);
+            Route::post('post-input-nilai-kpi-detail', [GuruKpiController::class, 'actionviewIndexinputKpiDetail']);
             Route::get('rekap-nilai-kpi-detail/{kelas}/{semester}', [GuruKpiController::class, 'viewIndexKpiDetail']);
+            Route::get('input-nilai-kpi-detail/{kelas}/{semester}', [GuruKpiController::class, 'viewIndexInputKpiDetail']);
             Route::get('rekap-nilai-kpi/datatables/{id_kelas}', [GuruKpiController::class, 'datatablesRekapNilaiKpiSiswa']);
             Route::get('rekap-nilai-kpi/rekap-nilai/{id_siswa}', [GuruKpiController::class, 'RekapNilaiKpiSiswa']);
+            Route::get('input-nilai-kpi/input-nilai/{id_siswa}', [GuruKpiController::class, 'InputNilaiKpiSiswa']);
+            Route::post('post-input-nilai-kpi', [GuruKpiController::class, 'actionInputNilaiKpi']);
         });
 
         Route::prefix('faq')->group(function () {

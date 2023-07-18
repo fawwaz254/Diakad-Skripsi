@@ -7,10 +7,13 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 
 use App\Http\Controllers\Controller;
+use App\Models\HasKpi;
 use App\Models\KategoriKpi;
 use App\Models\Kelas;
 use App\Models\Kpi;
+use App\Models\NilaiKomponenKpi;
 use App\Models\Siswa;
+use Carbon\Carbon;
 use Validator;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
@@ -24,6 +27,13 @@ class GuruKpiController extends BaseController
         $semester = Semester::get();
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         return (view('guru/guru-kpi/rekap-nilai-kpi/index',compact('semester','kelas','auth_data')));
+    }
+    public function viewIndexInputKpi(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // $semester = Semester::get();
+        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        return (view('guru/guru-kpi/input-nilai-kpi/index',compact('kelas','auth_data')));
     }
 
     public function RekapNilaiKpiSiswa(Request $request,$id_siswa){
@@ -44,6 +54,25 @@ class GuruKpiController extends BaseController
         // dd($teskpi);
 
         return (view('guru/guru-kpi/rekap-nilai-kpi/rekapnilai',compact('kpi','auth_data','siswa','semester')));
+    }
+    public function InputNilaiKpiSiswa(Request $request,$id_siswa){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kpi = KategoriKpi::get();
+        $siswa = Siswa::where('id_siswa',$id_siswa)->first();
+        $semester = Semester::where('is_aktif_semester',1)->first();
+
+        // $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
+        //     ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+        //     ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+        //     ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+        //     ->where('siswa.id_wali_murid', '=', $id_wali_murid)
+        //     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+
+        $teskpi = KategoriKpi::join('subkategori_kpi','subkategori_kpi.id_kategori_kpi', '=', 'kategori_kpi.id_kategori_kpi')->get();
+        // dd($teskpi);
+
+        return (view('guru/guru-kpi/input-nilai-kpi/inputnilai',compact('kpi','auth_data','siswa','semester')));
     }
 
     public function actionviewIndexKpiDetail(Request $request)
@@ -70,6 +99,30 @@ class GuruKpiController extends BaseController
         }
     }
 
+    public function actionviewIndexinputKpiDetail(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $semester = Semester::where('is_aktif_semester',1)->first()->id_semester;
+        $validator = Validator::make($request->all(), [
+            'kelas' => 'required',
+            // 'semester' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'guru-kpi/input-nilai-kpi-detail/' . $input->kelas . '/' . $semester
+            ];
+        }
+    }
+
     public function viewIndexKpiDetail(Request $request, $kelas, $semester){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -80,6 +133,18 @@ class GuruKpiController extends BaseController
         // $list_data = LibSiswa::fetchDataSiswa($auth_data, $kelas, null, 'only-aktif');
         // dd($list_data);
         return (view('guru/guru-kpi/rekap-nilai-kpi/indexdetail',compact('semester','data_kelas','kelas','auth_data')));
+    }
+
+    public function viewIndexInputKpiDetail(Request $request, $kelas, $semester){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data_semester = $semester;
+        $semester = Semester::where('id_semester',$data_semester)->first();
+        $data_kelas = LibKelas::fetchDataKelas($auth_data, $kelas);
+
+        // $list_data = LibSiswa::fetchDataSiswa($auth_data, $kelas, null, 'only-aktif');
+        // dd($list_data);
+        return (view('guru/guru-kpi/input-nilai-kpi/indexdetail',compact('semester','data_kelas','kelas','auth_data')));
     }
 
     public function datatablesRekapNilaiKpiSiswa(Request $request, $id_kelas){
@@ -97,6 +162,60 @@ class GuruKpiController extends BaseController
             })
             ->make(true);
 
+    }
+
+    public function actionInputNilaiKpi(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // dd($input);
+        $semester = Semester::where('is_aktif_semester',1)->first();
+        
+        $validator = Validator::make($request->all(), [
+            'id_komponen' => 'required',
+            'nilai_komponen' => 'required',
+        ]);
+        $siswa = Siswa::where('id_siswa',$input->id_siswa)->first();
+        $kategori = KategoriKpi::where('semester',$semester->nm_semester)->where('tingkat',$siswa->kelas->tingkat)->get();
+        dd($kategori);
+        
+        $kpi = Kpi::where('id_siswa',$input->id_siswa)->where('id_semester',$input->id_semester)->first();
+        if($kpi != null){
+            foreach($input->id_komponen as $key=>$value){
+                $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+                $nilai = NilaiKomponenKpi::where('id_kpi',$kpi->id_kpi)->where('id_komponen',$input->id_komponen[$key])->where('id_siswa',$input->id_siswa)->first();
+                $nilai->nilai_komponen = $input->nilai_komponen;
+                $nilai->updated_at = $now1;
+                $nilai->save();
+            }
+        }else{
+            $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+
+            $kpi = new Kpi;
+            $kpi->id_kpi = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+            $kpi->id_semester = $input->id_semester;
+            $kpi->id_siswa = $input->id_siswa;
+            $kpi->id_kelas = $siswa->kelas->id_kelas;
+            $nilai->created_at = $now1;
+            $kpi->save();
+
+            $haskpi = new HasKpi;
+            
+
+
+        }
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'guru-kpi/input-nilai-kpi-detail/' . $input->kelas . '/' . $semester
+            ];
+        }
     }
 
 }

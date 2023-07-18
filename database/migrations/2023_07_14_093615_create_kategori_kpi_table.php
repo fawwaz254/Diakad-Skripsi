@@ -14,10 +14,10 @@ class CreateKategoriKpiTable extends Migration
     public function up()
     {
         Schema::create('kategori_kpi', function (Blueprint $table) {
-            $table->string('id_kategori_kpi')->primary();
-            $table->string('nm_kategori')->nullable();
+            $table->string('id_kategori_kpi', 40)->primary();
+            $table->string('nm_kategori', 40)->nullable();
             $table->integer('tingkat');
-            $table->string('semester');
+            $table->string('semester', 40);
             $table->timestamps();
         });
     }
