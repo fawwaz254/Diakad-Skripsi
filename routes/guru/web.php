@@ -59,6 +59,8 @@ use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
+use App\Http\Controllers\Guru\Faq\FaqController;
+use App\Http\Controllers\Guru\GuruKpi\GuruKpiController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController;
 use App\Http\Controllers\Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController;
 use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRekapKesehatanController;
@@ -469,6 +471,24 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('komplain-sarpras/bukualat-sarpras/edit/{id_buku_alat}/{id}', [KomplainSarprasController::class, 'editBukualatKomplainSarpras']);
 
             Route::post('action-komplain-sarpras/{mode}/{id}', [KomplainSarprasController::class, 'actionKomplainSarpras']);
+        });
+
+        Route::prefix('guru-kpi')->group(function () {
+            Route::get('rekap-nilai-kpi', [GuruKpiController::class, 'viewIndexKpi']);
+            Route::get('input-nilai-kpi', [GuruKpiController::class, 'viewIndexInputKpi']);
+            Route::post('post-rekap-nilai-kpi-detail', [GuruKpiController::class, 'actionviewIndexKpiDetail']);
+            Route::post('post-input-nilai-kpi-detail', [GuruKpiController::class, 'actionviewIndexinputKpiDetail']);
+            Route::get('rekap-nilai-kpi-detail/{kelas}/{semester}', [GuruKpiController::class, 'viewIndexKpiDetail']);
+            Route::get('input-nilai-kpi-detail/{kelas}/{semester}', [GuruKpiController::class, 'viewIndexInputKpiDetail']);
+            Route::get('rekap-nilai-kpi/datatables/{id_kelas}', [GuruKpiController::class, 'datatablesRekapNilaiKpiSiswa']);
+            Route::get('rekap-nilai-kpi/rekap-nilai/{id_siswa}', [GuruKpiController::class, 'RekapNilaiKpiSiswa']);
+            Route::get('input-nilai-kpi/input-nilai/{id_siswa}', [GuruKpiController::class, 'InputNilaiKpiSiswa']);
+            Route::post('post-input-nilai-kpi', [GuruKpiController::class, 'actionInputNilaiKpi']);
+        });
+
+        Route::prefix('faq')->group(function () {
+            Route::get('lihat-faq', [FaqController::class, 'viewIndex']);
+            
         });
 
         Route::prefix('guru-piket')->group(function () {
