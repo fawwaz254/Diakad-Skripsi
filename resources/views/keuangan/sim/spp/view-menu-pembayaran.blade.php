@@ -187,12 +187,6 @@
                                         @endif
                                         <div id="tunggakan-{{ $siswa->id_siswa }}">
                                         </div>
-
-                                        {{-- @if ($tagihan_bulan_lalu != 0)
-                                                <br>
-                                                <button class="passingID" data="{{ $siswa->id_siswa }}">Tagihan Tahun
-                                                    Lalu ({{ $tagihan_bulan_lalu }})</button>
-                                            @endif --}}
                                     </td>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @php
@@ -301,8 +295,6 @@
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         <th class="tdbg-{{ $bulan->id_bulan }}" style=" text-align: center;">
                                             <div id="total_pembayaran-{{ $bulan->id_bulan }}"></div>
-
-                                            {{-- {{ $total_pembayaran[$bulan->id_bulan] . ' X' }} --}}
                                         </th>
                                     @endforeach
                                     {{-- @foreach ($data_ket_tagihan as $ket)
@@ -370,10 +362,7 @@
                     var html = item + ' X';
                     $('#total_pembayaran-' +
                         key).html(html);
-
                 });
-
-
             }
         });
     });
@@ -417,8 +406,6 @@
         });
 
     };
-
-
 
     function takeAction(element) {
         var item = $(element);
@@ -492,8 +479,6 @@
         var scrollAmt = $(this).scrollLeft();
         $('.fixedHeader-floating').css('left', 0 - parseInt(scrollAmt) + 'px');
     });
-
-
 
     $(function() {
         // var start_date = "{{ \Carbon\Carbon::parse($waktu)->addMonth(2)->format('Y-m-d') }}";
