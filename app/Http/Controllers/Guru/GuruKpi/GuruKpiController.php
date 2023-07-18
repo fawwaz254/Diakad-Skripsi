@@ -192,7 +192,7 @@ class GuruKpiController extends BaseController
                     $nilai->deskripsi_nilai = 'Mampu';
                 }elseif ($input->nilai_komponen[$key] == 'C') {
                     $nilai->deskripsi_nilai = 'Cukup mampu';
-                }elseif ($input->nilai_komponen[$key] == 'B') {
+                }elseif ($input->nilai_komponen[$key] == 'D') {
                     $nilai->deskripsi_nilai = 'Kurang mampu';
                 }
                 $nilai->updated_at = $now1;
@@ -233,7 +233,7 @@ class GuruKpiController extends BaseController
                     $nilai->deskripsi_nilai = 'Mampu';
                 }elseif ($input->nilai_komponen[$key] == 'C') {
                     $nilai->deskripsi_nilai = 'Cukup mampu';
-                }elseif ($input->nilai_komponen[$key] == 'B') {
+                }elseif ($input->nilai_komponen[$key] == 'D') {
                     $nilai->deskripsi_nilai = 'Kurang mampu';
                 }
                 $nilai->updated_at = $now1;
