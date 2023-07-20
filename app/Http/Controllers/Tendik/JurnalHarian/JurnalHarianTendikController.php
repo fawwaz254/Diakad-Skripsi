@@ -37,7 +37,7 @@ class JurnalHarianTendikController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $waktu = Carbon::today()->toDateString();
+        $waktu = Carbon::today()->format('d-M-Y');
         $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik', 'category_jurnal_harian_tendik.unit_kerja')->get();
         $jenis = JenisJurnalHarianTendik::all();
         return view('tendik/jurnal-harian/laporan-jurnal-harian/add-data-laporan-jurnal-harian-t', compact('auth_data', 'unit_kerja', 'waktu', 'jenis'));
