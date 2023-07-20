@@ -810,37 +810,38 @@ class SppController extends BaseController
 
             $data_bulan_tagihan = $data_tagihan->unique('nm_bulan')->sortBy('id_bulan')->sortBy('kode_semester')->values()->all();
 
-            $semesterMulai = $semester_mulai->id_semester;
-            $semesterSelesai = $semester_selesai->id_semester;
-            $total_pembayaran = [];
+            // $semesterMulai = $semester_mulai->id_semester;
+            // $semesterSelesai = $semester_selesai->id_semester;
+            // $total_pembayaran = [];
 
-            $data_pembayaran = PembayaranBiaya::whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($query) use ($semesterMulai, $semesterSelesai) {
-                $query->whereIn('id_semester', [$semesterMulai, $semesterSelesai]);
-            })->whereHas('tagihan_biaya', function ($query) use ($id_kelas) {
-                $query->where('id_kelas', $id_kelas);
-            })->get();
+            // $data_pembayaran = PembayaranBiaya::whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($query) use ($semesterMulai, $semesterSelesai) {
+            //     $query->whereIn('id_semester', [$semesterMulai, $semesterSelesai]);
+            // })->whereHas('tagihan_biaya', function ($query) use ($id_kelas) {
+            //     $query->where('id_kelas', $id_kelas);
+            // })->get();
 
-            $total_pembayaran = collect($data_bulan_tagihan)->mapWithKeys(function ($data_bulan) use ($data_pembayaran) {
-                $data = $data_pembayaran->filter(function ($item) use ($data_bulan) {
-                    return $item->tgl_pembayaran->format('m') == $data_bulan->kode_bulan;
-                })->count();
-                return [$data_bulan->id_bulan => $data];
-            })->toArray();
+            // $total_pembayaran = collect($data_bulan_tagihan)->mapWithKeys(function ($data_bulan) use ($data_pembayaran) {
+            //     $data = $data_pembayaran->filter(function ($item) use ($data_bulan) {
+            //         return $item->tgl_pembayaran->format('m') == $data_bulan->kode_bulan;
+            //     })->count();
+            //     return [$data_bulan->id_bulan => $data];
+            // })->toArray();
 
+            // $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all()
 
             $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
                 ->orderBy('nis_siswa')->get();
 
             //semester lain
-            $list_id_semester_lalu = $semester->where('thn_akademik_semester', '<', $tahun_akademik_semester)->pluck('id_semester')->toArray();
+            // $list_id_semester_lalu = $semester->where('thn_akademik_semester', '<', $tahun_akademik_semester)->pluck('id_semester')->toArray();
 
-            $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('detail_biaya.bulan', 'kelas')->where('is_tagih', '1')->whereIn('id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa'))
-                ->whereHas('detail_biaya', function ($query) {
-                    $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
-                })
-                ->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($list_id_semester_lalu) {
-                    $query->whereIn('id_semester',  $list_id_semester_lalu);
-                })->get();
+            // $data_tagihan_siswa_semester_lalu = TagihanBiaya::with('detail_biaya.bulan', 'kelas')->where('is_tagih', '1')->whereIn('id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa'))
+            //     ->whereHas('detail_biaya', function ($query) {
+            //         $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
+            //     })
+            //     ->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($list_id_semester_lalu) {
+            //         $query->whereIn('id_semester',  $list_id_semester_lalu);
+            //     })->get();
 
             $data_ket_tagihan = $data_tagihan_non_bulanan->unique('keterangan')->sortByDesc('keterangan');
         } else {
@@ -853,8 +854,10 @@ class SppController extends BaseController
             $data_ket_tagihan = array();
             $data_tagihan_siswa_semester_lalu = array();
         }
+        //'data_tagihan_siswa_semester_lalu'
+        //'total_pembayaran'
 
-        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'total_pembayaran', 'data_tagihan_siswa_semester_lalu'));
+        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan'));
     }
 
     public function viewMenuPemasukan(Request $request, $tahun_akademik_semester = null, $id_bulan = null)
@@ -1986,6 +1989,69 @@ class SppController extends BaseController
         $terbilang = LibDataKeuangan::getTerbilang($pembayaran->besar_pembayaran);
         return view('keuangan/sim/spp/print-pembayaran-spp', compact('auth_data', 'pembayaran', 'terbilang'));
     }
+
+    public function getJumlahTunggakanPembayaran(Request $request)
+    {
+        $input = (object) $request->input();
+        $semester = Semester::get();
+        $id_kelas = $input->id_kelas;
+        $tahun_akademik_semester = $input->tahun_akademik_semester;
+
+        $data['data_tagihan_siswa_semester_lalu'] = [];
+        $data['total_pembayar'] = [];
+        $data['list_siswa'] = [];
+        $data['list_bulan'] = [];
+
+        if (!empty($id_kelas) && !empty($tahun_akademik_semester)) {
+            $semester_mulai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '1');
+            $semester_selesai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '2');
+
+            $semesterMulai = $semester_mulai->id_semester;
+            $semesterSelesai = $semester_selesai->id_semester;
+
+            $data_pembayaran = PembayaranBiaya::whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($query) use ($semesterMulai, $semesterSelesai) {
+                $query->whereIn('id_semester', [$semesterMulai, $semesterSelesai]);
+            })->whereHas('tagihan_biaya', function ($query) use ($id_kelas) {
+                $query->where('id_kelas', $id_kelas);
+            })->get();
+
+            $bulan = Bulan::get();
+
+            $total_pembayaran = collect($bulan)->mapWithKeys(function ($data_bulan) use ($data_pembayaran) {
+                $data = $data_pembayaran->filter(function ($item) use ($data_bulan) {
+                    return $item->tgl_pembayaran->format('m') == $data_bulan->kode_bulan;
+                })->count();
+                return [$data_bulan->id_bulan => $data];
+            })->toArray();
+
+            $list_id_semester_lalu = $semester->where('thn_akademik_semester', '<', $tahun_akademik_semester)->pluck('id_semester')->toArray();
+
+            $list_siswa = TagihanBiaya::where('id_kelas', $id_kelas)
+                ->whereHas('detail_biaya', function ($query) {
+                    $query->where('validasi_biaya', 1)->where('id_jenis_detail_biaya', 4);
+                })->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($semesterMulai, $semesterSelesai) {
+                    $query->whereIn('id_semester', [$semesterMulai, $semesterSelesai]);
+                })->distinct('id_siswa')->pluck('id_siswa')->toArray();
+
+            $data_tagihan_siswa_semester_lalu = TagihanBiaya::selectRaw('id_siswa, COUNT(*) as jumlah_tagihan')->where('is_tagih', '1')->whereIn('id_siswa', $list_siswa)
+                ->whereHas('detail_biaya', function ($query) {
+                    $query->where('id_jenis_detail_biaya', '=', '4')->where('validasi_biaya', '1');
+                })
+                ->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($list_id_semester_lalu) {
+                    $query->whereIn('id_semester',  $list_id_semester_lalu);
+                })->groupBy('id_siswa')
+                ->get();
+
+            $data['data_tagihan_siswa_semester_lalu'] = $data_tagihan_siswa_semester_lalu;
+            $data['total_pembayar'] =  $total_pembayaran;
+        }
+
+        return $data;
+    }
+
+
+
+
 
     public function getDataTungakanTahunLalu(Request $request)
     {

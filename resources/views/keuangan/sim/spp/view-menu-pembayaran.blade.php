@@ -181,26 +181,13 @@
                                     @endif
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $siswa->nis_siswa }}</td>
-                                    @php
-                                        $tagihan_bulan_lalu = $data_tagihan_siswa_semester_lalu->where('id_siswa', $siswa->id_siswa)->count();
-                                    @endphp
-                                    @if ($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
-                                        <td>{{ $siswa->pengguna->nm_pengguna }}
-                                            @if ($tagihan_bulan_lalu != 0)
-                                                <br>
-                                                <button class="passingID" data="{{ $siswa->id_siswa }}">Tagihan Tahun
-                                                    Lalu ({{ $tagihan_bulan_lalu }})</button>
-                                            @endif
-                                        </td>
-                                    @else
-                                        <td>{{ $siswa->pengguna->nm_pengguna }}<br>(Mutasi/Keluar)
-                                            @if ($tagihan_bulan_lalu != 0)
-                                                <br>
-                                                <button class="passingID" data="{{ $siswa->id_siswa }}">Tagihan Tahun
-                                                    Lalu ({{ $tagihan_bulan_lalu }})</button>
-                                            @endif
-                                        </td>
-                                    @endif
+                                    <td>{{ $siswa->pengguna->nm_pengguna }}
+                                        @if ($siswa->pengguna->status_pengguna->aktif_status_pengguna != 1)
+                                            <br>(Mutasi/Keluar)
+                                        @endif
+                                        <div id="tunggakan-{{ $siswa->id_siswa }}">
+                                        </div>
+                                    </td>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @php
                                             $tagihan = $data_tagihan
@@ -307,7 +294,7 @@
                                     <td colspan="3" align="center"><b>Total</b></td>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         <th class="tdbg-{{ $bulan->id_bulan }}" style=" text-align: center;">
-                                            {{ $total_pembayaran[$bulan->id_bulan] . ' X' }}
+                                            <div id="total_pembayaran-{{ $bulan->id_bulan }}"></div>
                                         </th>
                                     @endforeach
                                     {{-- @foreach ($data_ket_tagihan as $ket)
@@ -323,8 +310,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div class="modal" tabindex="-1" role="dialog" id="myModal">
     <div class="modal-dialog" role="document">
@@ -343,17 +328,53 @@
 </div>
 </div>
 
-
-
 @include('scriptjs')
 <script>
-    $(".passingID").click(function() {
+    var modul_url = 'utility';
+    var lunas_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
+    var detail_tagihan_siswa_url = base_url + '/' + role_url + '#' + modul_url + '/' +
+        'pembayaran-siswa/view-detail-tagihan-siswa';
+    var delete_pembayaran_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'action-pembayaran-siswa/delete-by-tagihan';
+
+    $(document).ready(function() {
+        $.ajax({
+            type: "POST",
+            url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-jumlah-tunggakan-pembayaran`,
+            data: {
+                id_kelas: '{{ $id_kelas }}',
+                tahun_akademik_semester: '{{ $tahun_akademik_semester }}',
+            },
+            success: function(response) {
+                $.each(response['data_tagihan_siswa_semester_lalu'], function(key, item) {
+                    $('#tunggakan-' +
+                        item.id_siswa).html('');
+                    var html = '<br>';
+                    html += '<button onclick="cekTagihan(this)" data-id="' + item.id_siswa +
+                        '">Tagihan Tahun Lalu ' + item.jumlah_tagihan + '</button>'
+                    $('#tunggakan-' +
+                        item.id_siswa).html(html);
+                });
+
+                $.each(response['total_pembayar'], function(key, item) {
+                    $('#total_pembayaran-' +
+                        key).html('');
+                    var html = item + ' X';
+                    $('#total_pembayaran-' +
+                        key).html(html);
+                });
+            }
+        });
+    });
+
+    function cekTagihan(el) {
+        var item = $(el);
         $('button').attr('disabled', 'disabled');
         $.ajax({
             type: "POST",
             url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-data-tungakan-tahun-lalu`,
             data: {
-                id_siswa: $(this).attr('data'),
+                id_siswa: item.attr('data-id'),
                 tahun_akademik_semester: '{{ $tahun_akademik_semester }}',
             },
             success: function(response) {
@@ -384,14 +405,7 @@
             }
         });
 
-    });
-
-    var modul_url = 'utility';
-    var lunas_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
-    var detail_tagihan_siswa_url = base_url + '/' + role_url + '#' + modul_url + '/' +
-        'pembayaran-siswa/view-detail-tagihan-siswa';
-    var delete_pembayaran_url = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'action-pembayaran-siswa/delete-by-tagihan';
+    };
 
     function takeAction(element) {
         var item = $(element);
@@ -436,7 +450,8 @@
                     '<button class="btn btn-block bg-black waves-effect"' +
                     'onclick="takeAction(this)"' +
                     'data-id="' + response.data.id + '"' +
-                    'data-nis="' + response.data.nis_siswa + '">Rp' + response.data.tagihan_bulanan +
+                    'data-nis="' + response.data.nis_siswa + '">Rp' + response.data
+                    .tagihan_bulanan +
                     '</button>' +
                     '</td>'
                 );
@@ -464,8 +479,6 @@
         var scrollAmt = $(this).scrollLeft();
         $('.fixedHeader-floating').css('left', 0 - parseInt(scrollAmt) + 'px');
     });
-
-
 
     $(function() {
         // var start_date = "{{ \Carbon\Carbon::parse($waktu)->addMonth(2)->format('Y-m-d') }}";
