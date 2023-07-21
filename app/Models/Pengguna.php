@@ -12,11 +12,11 @@ class Pengguna extends Authenticatable
 {
     use SoftDeletes;
 
-    #public const PEGAWAI = 1;
-    #public const GURU = 2;
-    #public const SISWA = 3;
-    #public const WALI_MURID = 4;
-    #public const PELATIH_EKSKUL = 5;
+    public const PEGAWAI = 1;
+    public const GURU = 2;
+    public const SISWA = 3;
+    public const WALI_MURID = 4;
+    public const PELATIH_EKSKUL = 5;
 
     protected $table = 'pengguna';
 
