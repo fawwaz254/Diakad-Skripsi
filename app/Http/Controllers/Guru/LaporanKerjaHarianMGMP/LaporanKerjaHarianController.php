@@ -35,7 +35,7 @@ class LaporanKerjaHarianController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $waktu = Carbon::today()->toDateString();
+        $waktu = Carbon::today()->format('d-M-Y');
         $mapel = CategoriFileGuru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
         $jenis = JenisMGMP::all();
         return view('guru/mgmp/laporan-harian-mgmp/add-data-laporan-harian-mgmp', compact('auth_data', 'mapel', 'waktu', 'jenis'));

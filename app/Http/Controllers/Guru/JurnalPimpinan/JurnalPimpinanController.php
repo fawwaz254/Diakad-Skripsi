@@ -31,7 +31,7 @@ class JurnalPimpinanController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $waktu = Carbon::today()->toDateString();
+        $waktu = Carbon::today()->format('d-M-Y');
         // $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik','category_jurnal_harian_tendik.unit_kerja')->get();
         $jenis = JenisJurnalPimpinan::all();
         return view('guru/jurnal-pimpinan/laporan-jurnal-pimpinan/add-data-laporan-jurnal-pimpinan',compact('auth_data','waktu','jenis'));
