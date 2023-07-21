@@ -488,6 +488,8 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('faq')->group(function () {
             Route::get('lihat-faq', [FaqController::class, 'viewIndex']);
+            Route::get('lihat-faq/search', [FaqController::class, 'SearchFaq']);
+            Route::get('lihat-faq/{search}', [FaqController::class, 'viewIndex']);
             
         });
 
