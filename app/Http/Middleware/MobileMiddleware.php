@@ -27,17 +27,17 @@ class MobileMiddleware
 
         $pengguna = Pengguna::where(['id_pengguna' => $id_pengguna, 'api_key' => $api_key])->first();
 
-        if($pengguna){
+        if ($pengguna) {
             $actor = null;
-            if($pengguna->isPegawai){
+            if ($pengguna->isPegawai) {
                 $actor = Staff::where('id_pengguna', $pengguna->id_pengguna)->first();
-            }else if($pengguna->isPegawai){
+            } else if ($pengguna->isPegawai) {
                 $actor = Guru::where('id_pengguna', $pengguna->id_pengguna)->first();
-            }else if($pengguna->isSiswa){
+            } else if ($pengguna->isSiswa) {
                 $actor = Siswa::where('id_pengguna', $pengguna->id_pengguna)->first();
-            }else if($pengguna->isWaliMurid){
+            } else if ($pengguna->isWaliMurid) {
                 $actor = WaliMurid::where('id_pengguna', $pengguna->id_pengguna)->first();
-            }else if($pengguna->isPelatihEkskul){
+            } else if ($pengguna->isPelatihEkskul) {
                 $actor = PelatihEkskul::where('id_pengguna', $pengguna->id_pengguna)->first();
             }
 
@@ -47,13 +47,13 @@ class MobileMiddleware
                 'actor' => $actor
             );
             $request->request->add(['auth_data' => $auth_data]);
-            
+
             return $next($request);
-        }else{
+        } else {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
-                'message' 	=> 'Authentification failed'
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
+                'message'     => 'Authentification failed'
             ]);
         }
     }

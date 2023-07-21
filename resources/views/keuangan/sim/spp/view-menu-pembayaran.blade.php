@@ -394,7 +394,6 @@
                     html += '<td>' + item.besar_biaya + '</td>';
                     html += '<tr>';
                     html += '</tr>';
-                    console.log(item);
                 });
                 html += '</table>';
                 $('#place').html(html);
