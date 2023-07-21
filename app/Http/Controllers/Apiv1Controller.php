@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Bulan;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -63,20 +64,20 @@ use Validator;
 
 class Apiv1Controller extends BaseController
 {
-    
+
     public function actionSignIn(Request $request)
     {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'username' =>'required',
-            'password' =>'required'
+            'username' => 'required',
+            'password' => 'required'
         ]);
-  
+
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -87,9 +88,9 @@ class Apiv1Controller extends BaseController
                 $pengguna->api_key = $api_key;
                 $pengguna->save();
 
-                if(!empty($pengguna->path_foto_pengguna)){
+                if (!empty($pengguna->path_foto_pengguna)) {
                     $foto_pengguna = Storage::disk('spaces')->url($pengguna->path_foto_pengguna);
-                }else{
+                } else {
                     $foto_pengguna = asset('media/blank-user.png');
                 }
 
@@ -110,25 +111,25 @@ class Apiv1Controller extends BaseController
                     'api_key' => $pengguna->api_key
                 );
                 return response()->json([
-                    'status_code' 	=> 200,
-                    'status_text' 	=> 'Success',
-                    'message' 	=> 'Login success',
+                    'status_code'     => 200,
+                    'status_text'     => 'Success',
+                    'message'     => 'Login success',
                     'data' => array(
                         'pengguna' => $data_pengguna
                     )
-                ], 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+                ], 200, [], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
             } else {
                 return response()->json([
-                    'status_code' 	=> 300,
-                    'status_text' 	=> 'Failed',
-                    'message' 	=> 'Password invalid'
+                    'status_code'     => 300,
+                    'status_text'     => 'Failed',
+                    'message'     => 'Password invalid'
                 ]);
             }
         } else {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
-                'message' 	=> 'User cant found'
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
+                'message'     => 'User cant found'
             ]);
         }
     }
@@ -145,9 +146,9 @@ class Apiv1Controller extends BaseController
         $data_pribadi = $data_pribadi->only('nm_pengguna', 'gelar_depan', 'gelar_belakang', 'nik_ptk', 'jenis_kelamin', 'id_kota_lahir', 'tgl_lahir', 'nm_ibu_kandung', 'nomor_telp', 'nomor_hp', 'email');
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'data_pribadi' => $data_pribadi
             )
@@ -160,15 +161,15 @@ class Apiv1Controller extends BaseController
         $auth_data = $input->auth_data;
 
         $id_pengguna = $auth_data->pengguna->id_pengguna;
-        
+
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         DB::beginTransaction();
-        
+
         try {
             // make object to find id
             $pengguna                           = Pengguna::find($id_pengguna);
             $pengguna->nm_pengguna              = $input->nm_pengguna;
-            
+
             $pengguna->gelar_depan              = $input->gelar_depan;
             $pengguna->gelar_belakang           = $input->gelar_belakang;
             $pengguna->email_pengguna           = $input->email;
@@ -188,13 +189,13 @@ class Apiv1Controller extends BaseController
             $guru->updated_by               = $id_pengguna;
             $guru->updated_at               = $now;
             $guru->save();
-            
+
             DB::commit();
             // all good
 
             return response()->json([
-                'status_code' 	=> 200,
-                'status_text' 	=> 'Success',
+                'status_code'     => 200,
+                'status_text'     => 'Success',
                 'message' => 'Update Data Pribadi Successfully'
             ]);
         } catch (\Exception $e) {
@@ -202,10 +203,10 @@ class Apiv1Controller extends BaseController
             // something went wrong
 
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => 'Update data pribadi gagal',
-                "status"=>$e->getMessage()
+                "status" => $e->getMessage()
             ]);
         }
     }
@@ -218,23 +219,22 @@ class Apiv1Controller extends BaseController
         $kota = Kota::select('id_kota', 'id_provinsi', 'nm_kota')->where('kota.is_aktif', '=', 1)->orderBy('nm_kota', 'asc')->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kota' => $kota
             )
         ]);
-        
-                                return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kota' => $kota
             )
         ]);
-        
     }
 
     public function actionGetKelasKBM(Request $request)
@@ -243,13 +243,13 @@ class Apiv1Controller extends BaseController
         $auth_data = $input->auth_data;
 
         $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
-        
+
         $data_kbm = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kelas_kbm' => $data_kbm
             )
@@ -260,13 +260,13 @@ class Apiv1Controller extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kelas' => $data_kelas
             )
@@ -277,13 +277,13 @@ class Apiv1Controller extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'semester' => $data_semester
             )
@@ -298,49 +298,49 @@ class Apiv1Controller extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_kelas' =>'required',
-            'id_semester' =>'required'
+            'id_kelas' => 'required',
+            'id_semester' => 'required'
         ]);
-  
+
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
 
         $id_semester = $input->id_semester;
         $id_kelas = $input->id_kelas;
-        
+
         $list_data = PresensiHarian::with('jadwal_hari', 'guru_entry', 'siswa_entry')
-                                        ->where('id_semester', $id_semester)
-                                        ->where('id_kelas', $id_kelas);
+            ->where('id_semester', $id_semester)
+            ->where('id_kelas', $id_kelas);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'absensi_harian' =>
-                    Datatables::of($list_data)
-                        ->addColumn('tanggal', function ($item) {
-                            return $item->convertDateFormat('tgl_entry', 'd M Y H:i');
-                        })
-                        ->addColumn('petugas', function ($item) {
-                            if (!empty($item->id_guru_entry)) {
-                                return $item->guru_entry->nm_pengguna.' (Guru Piket)';
-                            } elseif (!empty($item->id_siswa_entry)) {
-                                return $item->siswa_entry->nm_pengguna.' (Siswa)';
-                            }
-                        })
-                        ->addColumn('action', function ($item) {
-                            $data = array(
-                                'id' => $item->id_presensi_harian
-                            );
-                            return $data;
-                        })
-                        ->toArray()['data']
+                Datatables::of($list_data)
+                    ->addColumn('tanggal', function ($item) {
+                        return $item->convertDateFormat('tgl_entry', 'd M Y H:i');
+                    })
+                    ->addColumn('petugas', function ($item) {
+                        if (!empty($item->id_guru_entry)) {
+                            return $item->guru_entry->nm_pengguna . ' (Guru Piket)';
+                        } elseif (!empty($item->id_siswa_entry)) {
+                            return $item->siswa_entry->nm_pengguna . ' (Siswa)';
+                        }
+                    })
+                    ->addColumn('action', function ($item) {
+                        $data = array(
+                            'id' => $item->id_presensi_harian
+                        );
+                        return $data;
+                    })
+                    ->toArray()['data']
             )
         ]);
     }
@@ -353,23 +353,23 @@ class Apiv1Controller extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_kelas' =>'required',
-            'id_semester' =>'required'
+            'id_kelas' => 'required',
+            'id_semester' => 'required'
         ]);
-  
+
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
 
         $id_semester = $input->id_semester;
         $id_kelas = $input->id_kelas;
-        
+
         $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
-        
+
         if (!empty($input->presensi_harian)) {
             $presensi_harian = PresensiHarian::find($input->presensi_harian);
             $presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', '=', $presensi_harian->id_presensi_harian)->get();
@@ -379,22 +379,22 @@ class Apiv1Controller extends BaseController
         }
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
-                'tgl_entry' => (!empty($presensi_harian))? date_format(date_create($presensi_harian->tgl_entry), "Y-m-d") : null,
-                'time_entry' => (!empty($presensi_harian))? date_format(date_create($presensi_harian->tgl_entry), "H:i:s") : null,
+                'tgl_entry' => (!empty($presensi_harian)) ? date_format(date_create($presensi_harian->tgl_entry), "Y-m-d") : null,
+                'time_entry' => (!empty($presensi_harian)) ? date_format(date_create($presensi_harian->tgl_entry), "H:i:s") : null,
                 'siswa' =>
-                    Datatables::of($list_data)
-                        ->addColumn('kehadiran', function ($item) use ($presensi_harian_siswa) {
-                            $kehadiran = null;
-                            if ($presensi_harian_siswa && $selected_presensi_harian_siswa = $presensi_harian_siswa->firstWhere('id_siswa', $item->id_siswa)) {
-                                $kehadiran = $selected_presensi_harian_siswa->kehadiran;
-                            }
-                            return $kehadiran;
-                        })
-                        ->toArray()['data']
+                Datatables::of($list_data)
+                    ->addColumn('kehadiran', function ($item) use ($presensi_harian_siswa) {
+                        $kehadiran = null;
+                        if ($presensi_harian_siswa && $selected_presensi_harian_siswa = $presensi_harian_siswa->firstWhere('id_siswa', $item->id_siswa)) {
+                            $kehadiran = $selected_presensi_harian_siswa->kehadiran;
+                        }
+                        return $kehadiran;
+                    })
+                    ->toArray()['data']
             )
         ]);
     }
@@ -410,19 +410,22 @@ class Apiv1Controller extends BaseController
                     'id_semester' => 'required',
                     'tgl_entry' => 'required',
                     'time_entry' => 'required',
-                ]; break;
-                case 'edit':
+                ];
+                break;
+            case 'edit':
                 $required_params = [
                     'id_kelas' => 'required',
                     'id_semester' => 'required',
                     'tgl_entry' => 'required',
                     'time_entry' => 'required',
                     'id_presensi_harian' => 'required',
-                ]; break;
+                ];
+                break;
             case 'delete':
                 $required_params = [
                     'id_presensi_harian' => 'required',
-                ]; break;
+                ];
+                break;
             default:
                 $required_params = [];
         }
@@ -431,49 +434,49 @@ class Apiv1Controller extends BaseController
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-            
+
             // ACTION ADD
             if ($mode == 'add' || $mode == 'edit') {
-                $tgl_entry = Carbon::parse($input->tgl_entry.' '.$input->time_entry);
+                $tgl_entry = Carbon::parse($input->tgl_entry . ' ' . $input->time_entry);
                 DB::beginTransaction();
                 try {
                     if (!empty($input->id_presensi_harian)) {
                         $presensi_harian = PresensiHarian::find($input->id_presensi_harian);
                     } else {
-                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_harian = new PresensiHarian;
                         $presensi_harian->id_presensi_harian = $id;
                         $presensi_harian->id_guru_entry = $input->auth_data->pengguna->id_pengguna;
                         $presensi_harian->id_kelas = $input->id_kelas;
                         $presensi_harian->id_semester = $input->id_semester;
                     }
-                    $presensi_harian->id_jadwal_hari = ($tgl_entry->dayOfWeek == 0)? 7 : $tgl_entry->dayOfWeek;
+                    $presensi_harian->id_jadwal_hari = ($tgl_entry->dayOfWeek == 0) ? 7 : $tgl_entry->dayOfWeek;
                     $presensi_harian->tgl_entry = $tgl_entry;
                     $presensi_harian->save();
 
                     $total_siswa = 0;
                     $total_siswa_masuk = 0;
-                    
+
                     // presensi_harian_siswa
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        if (! empty($alasan)) {
+                        if (!empty($alasan)) {
                             $kehadiran = $alasan;
                         } else {
                             $kehadiran = 1;
                         }
-                        
+
                         if ($presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', '=', $presensi_harian->id_presensi_harian)->where('id_siswa', '=', $id_siswa)->first()) {
                             $presensi_harian_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
                         } else {
                             // make id
-                            $id_presensi_harian_siswa = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $id_presensi_harian_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $presensi_harian_siswa                            = new PresensiHarianSiswa;
                             $presensi_harian_siswa->id_presensi_harian        = $presensi_harian->id_presensi_harian;
@@ -500,8 +503,8 @@ class Apiv1Controller extends BaseController
                     // all good
 
                     return response()->json([
-                        'status_code' 	=> 200,
-                        'status_text' 	=> 'Success',
+                        'status_code'     => 200,
+                        'status_text'     => 'Success',
                         'message' => 'Save Absensi Harian Siswa Successfully'
                     ]);
                 } catch (\Exception $e) {
@@ -509,8 +512,8 @@ class Apiv1Controller extends BaseController
                     // something went wrong
 
                     return response()->json([
-                        'status_code' 	=> 300,
-                        'status_text' 	=> 'Failed',
+                        'status_code'     => 300,
+                        'status_text'     => 'Failed',
                         'message' => 'Absensi Harian Gagal!'
                     ]);
                 }
@@ -524,8 +527,8 @@ class Apiv1Controller extends BaseController
                     // all good
 
                     return response()->json([
-                        'status_code' 	=> 200,
-                        'status_text' 	=> 'Success',
+                        'status_code'     => 200,
+                        'status_text'     => 'Success',
                         'message' => 'Delete Absensi Harian Siswa Successfully'
                     ]);
                 } catch (\Exception $e) {
@@ -533,8 +536,8 @@ class Apiv1Controller extends BaseController
                     // something went wrong
 
                     return response()->json([
-                        'status_code' 	=> 300,
-                        'status_text' 	=> 'Failed',
+                        'status_code'     => 300,
+                        'status_text'     => 'Failed',
                         'message' => 'Absensi Harian Gagal!'
                     ]);
                 }
@@ -542,32 +545,33 @@ class Apiv1Controller extends BaseController
         }
     }
 
-public function viewAddFormKesehatan(Request $request){
-    # code...
-    $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    public function viewAddFormKesehatan(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-    $kegiatan_harian = KegiatanHarian::with('kategori_pertanyaan', 'kategori_pertanyaan.pertanyaan', 'kategori_pertanyaan.pertanyaan.jawaban')->where('is_aktif', 1)->first();
+        $kegiatan_harian = KegiatanHarian::with('kategori_pertanyaan', 'kategori_pertanyaan.pertanyaan', 'kategori_pertanyaan.pertanyaan.jawaban')->where('is_aktif', 1)->first();
 
-    // $data_kegiatan_harian_kategori = [];
-    if(!empty($kegiatan_harian)){
-        $data_kegiatan_harian_kategori = $kegiatan_harian->kategori_pertanyaan;
+        // $data_kegiatan_harian_kategori = [];
+        if (!empty($kegiatan_harian)) {
+            $data_kegiatan_harian_kategori = $kegiatan_harian->kategori_pertanyaan;
+            return response()->json([
+                'status_code'     => 200,
+                'status_text'     => 'Success',
+                'message'     => "",
+                'data' => $kegiatan_harian,
+            ]);
+        }
+
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> "",
-            'data' => $kegiatan_harian,
+            'status_code'     => 300,
+            'status_text'     => 'Fail',
+            'message'     => "Data Belum Tersedia",
         ]);
     }
-
-     return response()->json([
-            'status_code' 	=> 300,
-            'status_text' 	=> 'Fail',
-            'message' 	=> "Data Belum Tersedia",
-        ]);
-}
-public function deletemonitoringkesehatan(Request $request)
-    { 
+    public function deletemonitoringkesehatan(Request $request)
+    {
 
 
         $input = (object) $request->input();
@@ -579,8 +583,8 @@ public function deletemonitoringkesehatan(Request $request)
             'id_pengisian_kegiatan_harian' => 'required',
         ];
 
-$validator = Validator::make($request->all(), $syarat);
- if($validator->fails()) {
+        $validator = Validator::make($request->all(), $syarat);
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -591,7 +595,7 @@ $validator = Validator::make($request->all(), $syarat);
 
         $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
         $pengisian_kegiatan_harian->save();
-        
+
         $pengisian_kegiatan_harian->delete();
 
         return  [
@@ -599,76 +603,78 @@ $validator = Validator::make($request->all(), $syarat);
             'message' => 'Delete Successfully'
         ];
     }
-    public function getdatamonitoringkesehatan(Request $request){
+    public function getdatamonitoringkesehatan(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = PengisianKegiatanHarian::with('pengguna_pengisi');
-        
-        if(!empty($input->id_kelas)){
+
+        if (!empty($input->id_kelas)) {
             $list_data = $list_data->select(
-                                        'pengisian_kegiatan_harian.id_pengisian_kegiatan_harian',
-                                        'pengisian_kegiatan_harian.id_pengguna_pengisi',
-                                        'pengisian_kegiatan_harian.status_join_table',
-                                        'pengisian_kegiatan_harian.tgl_pengisian',
-                                        'pengisian_kegiatan_harian.status_pengisian',
-                                        'pengisian_kegiatan_harian.warna_keadaan',
-                                        'pengisian_kegiatan_harian.created_at',
-                                        'pengisian_kegiatan_harian.updated_at'
-                                    )->leftJoin('siswa', function($q){
-                                        $q->on('siswa.id_pengguna', '=', 'pengisian_kegiatan_harian.id_pengguna_pengisi')
-                                            ->whereNull('siswa.deleted_at');
-                                    })
-                                    ->where('pengisian_kegiatan_harian.status_join_table', 3)
-                                    ->where('id_kelas', $input->id_kelas);
-        }else if(!empty($input->is_tendik_guru)){
-            $list_data = $list_data->whereIn('status_join_table', [1,2]);
-        }else if(!empty($input->pengguna)){
+                'pengisian_kegiatan_harian.id_pengisian_kegiatan_harian',
+                'pengisian_kegiatan_harian.id_pengguna_pengisi',
+                'pengisian_kegiatan_harian.status_join_table',
+                'pengisian_kegiatan_harian.tgl_pengisian',
+                'pengisian_kegiatan_harian.status_pengisian',
+                'pengisian_kegiatan_harian.warna_keadaan',
+                'pengisian_kegiatan_harian.created_at',
+                'pengisian_kegiatan_harian.updated_at'
+            )->leftJoin('siswa', function ($q) {
+                $q->on('siswa.id_pengguna', '=', 'pengisian_kegiatan_harian.id_pengguna_pengisi')
+                    ->whereNull('siswa.deleted_at');
+            })
+                ->where('pengisian_kegiatan_harian.status_join_table', 3)
+                ->where('id_kelas', $input->id_kelas);
+        } else if (!empty($input->is_tendik_guru)) {
+            $list_data = $list_data->whereIn('status_join_table', [1, 2]);
+        } else if (!empty($input->pengguna)) {
             $list_data = $list_data->where('id_pengguna_pengisi', $input->pengguna);
-        }else{
+        } else {
             $list_data = $list_data->where('id_pengguna_pengisi', $auth_data->pengguna->id_pengguna);
         }
 
-        if(!empty($input->status)){
+        if (!empty($input->status)) {
             $list_data = $list_data->where('pengisian_kegiatan_harian.status_pengisian', $input->status);
         }
-        
-        if(!empty($input->date)){
+
+        if (!empty($input->date)) {
             $list_data = $list_data->where('pengisian_kegiatan_harian.tgl_pengisian', $input->date);
         }
 
         return Datatables::of($list_data)
-                ->editColumn('pengguna_pengisi.nm_pengguna', function($item){
-                    return $item->pengguna_pengisi->fullname();
-                })
-                ->editColumn('tgl_pengisian', function($item){
-                    return date_format(date_create($item->tgl_pengisian), 'd M Y');
-                })
-                ->editColumn('created_at', function($item){
-                    return date_format(date_create($item->created_at), 'd M Y H:i').' WIB';
-                })
-                ->editColumn('status', function($item){
-                    $data = [
-                        'status' => $item->status_to_text(),
-                        'warna_keadaan' => $item->warna_keadaan
-                    ];
-                    return $data;
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_pengisian_kegiatan_harian
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->editColumn('pengguna_pengisi.nm_pengguna', function ($item) {
+                return $item->pengguna_pengisi->fullname();
+            })
+            ->editColumn('tgl_pengisian', function ($item) {
+                return date_format(date_create($item->tgl_pengisian), 'd M Y');
+            })
+            ->editColumn('created_at', function ($item) {
+                return date_format(date_create($item->created_at), 'd M Y H:i') . ' WIB';
+            })
+            ->editColumn('status', function ($item) {
+                $data = [
+                    'status' => $item->status_to_text(),
+                    'warna_keadaan' => $item->warna_keadaan
+                ];
+                return $data;
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_pengisian_kegiatan_harian
+                );
+                return $data;
+            })
+            ->make(true);
     }
-    public function viewDetailFormKesehatan(Request $request, $id = '-'){
+    public function viewDetailFormKesehatan(Request $request, $id = '-')
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        if($id == '-') {
+        if ($id == '-') {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => "Tidak Menemuka ID"
             ]);
         }
@@ -677,40 +683,43 @@ $validator = Validator::make($request->all(), $syarat);
         $data_pengisian_jawaban = PengisianJawaban::with('pertanyaan', 'jawaban')->where('id_pengisian_kegiatan_harian', $id)->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'kegiatan_harian' => $pengisian_kegiatan_harian,
-            'data' =>$data_pengisian_jawaban
+            'data' => $data_pengisian_jawaban
         ]);
     }
-    public function viewDetailRekapKesehatan(Request $request, $id_kelas = '-', $id_bulan = null, $tahun = null){
+    public function viewDetailRekapKesehatan(Request $request, $id_kelas = '-', $id_bulan = null, $tahun = null)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         $yesterday = Carbon::yesterday();
-        $satuhari=Carbon::yesterday()->subDays(1)->format("Y-m-d");
-        $duahari=Carbon::yesterday()->subDays(2)->format("Y-m-d");
-        $tigahari=Carbon::yesterday()->subDays(3)->format("Y-m-d");
-       $empathari=Carbon::yesterday()->subDays(4)->format("Y-m-d");
-        $limahari=Carbon::yesterday()->subDays(5)->format("Y-m-d");
-        $namhari=Carbon::yesterday()->subDays(6)->format("Y-m-d");
-        $kemarin_lusa=Carbon::yesterday()->subDays(1)->format("Y-m-d");
-        $satuminggu=array($yesterday->format("Y-m-d"),$satuhari,$duahari,
-        $tigahari,
-       $empathari,
-        $limahari,
-        $namhari,);
+        $satuhari = Carbon::yesterday()->subDays(1)->format("Y-m-d");
+        $duahari = Carbon::yesterday()->subDays(2)->format("Y-m-d");
+        $tigahari = Carbon::yesterday()->subDays(3)->format("Y-m-d");
+        $empathari = Carbon::yesterday()->subDays(4)->format("Y-m-d");
+        $limahari = Carbon::yesterday()->subDays(5)->format("Y-m-d");
+        $namhari = Carbon::yesterday()->subDays(6)->format("Y-m-d");
+        $kemarin_lusa = Carbon::yesterday()->subDays(1)->format("Y-m-d");
+        $satuminggu = array(
+            $yesterday->format("Y-m-d"), $satuhari, $duahari,
+            $tigahari,
+            $empathari,
+            $limahari,
+            $namhari,
+        );
         $minggukemarin = $yesterday->subWeeks(1)->format("Y-m-d");
-        if(empty($id_bulan)){
+        if (empty($id_bulan)) {
             $id_bulan = $now->month;
         }
 
-        if(empty($tahun)){
+        if (empty($tahun)) {
             $tahun = $now->year;
         }
-        
+
         $start_month = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun, $id_bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
         $dates = CarbonPeriod::create($start_month, $end_month);
@@ -718,55 +727,54 @@ $validator = Validator::make($request->all(), $syarat);
         $bulan = Bulan::find($id_bulan);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);        
+        $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'only-aktif');
-        $data_pengisian_mingguan = PengisianKegiatanHarian::whereDate('tgl_pengisian',">",$minggukemarin)->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
-        
+        $data_pengisian_mingguan = PengisianKegiatanHarian::whereDate('tgl_pengisian', ">", $minggukemarin)->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
+
         // $data_pengisian = PengisianKegiatanHarian::whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
-        $data_pengisian_mingguan = $data_pengisian_mingguan->map(function($row) use ($data_siswa){
+        $data_pengisian_mingguan = $data_pengisian_mingguan->map(function ($row) use ($data_siswa) {
             $row->nm_siswa = collect($data_siswa)->where('id_pengguna', $row->id_pengguna_pengisi)->first()->nm_pengguna;
 
             return $row;
         });
-         $pengisian=array();
-         for ($i=0; $i <= 6; $i++){
-             $data_absen= collect($data_pengisian_mingguan)->where('tgl_pengisian', $satuminggu[$i]);
-             $pengisian[$satuminggu[$i]]["jumlah_belum_absen"] =count(collect($data_siswa)->whereNotIn('nm_pengguna', $data_absen->pluck("nm_siswa")));
-             $pengisian[$satuminggu[$i]]["belum_absen"] =collect($data_siswa)->whereNotIn('nm_pengguna', $data_absen->pluck("nm_siswa"))->groupBy("nm_pengguna")->toArray();
-            $normal= collect($data_pengisian_mingguan)->where('status_pengisian', "1")->where('tgl_pengisian', $satuminggu[$i]);
-            $pengisian[$satuminggu[$i]]["jumlah_normal"]=count($normal->groupBy("nm_siswa"));
-            $pengisian[$satuminggu[$i]]["normal"]=$normal->groupBy("nm_siswa")->toArray();
+        $pengisian = array();
+        for ($i = 0; $i <= 6; $i++) {
+            $data_absen = collect($data_pengisian_mingguan)->where('tgl_pengisian', $satuminggu[$i]);
+            $pengisian[$satuminggu[$i]]["jumlah_belum_absen"] = count(collect($data_siswa)->whereNotIn('nm_pengguna', $data_absen->pluck("nm_siswa")));
+            $pengisian[$satuminggu[$i]]["belum_absen"] = collect($data_siswa)->whereNotIn('nm_pengguna', $data_absen->pluck("nm_siswa"))->groupBy("nm_pengguna")->toArray();
+            $normal = collect($data_pengisian_mingguan)->where('status_pengisian', "1")->where('tgl_pengisian', $satuminggu[$i]);
+            $pengisian[$satuminggu[$i]]["jumlah_normal"] = count($normal->groupBy("nm_siswa"));
+            $pengisian[$satuminggu[$i]]["normal"] = $normal->groupBy("nm_siswa")->toArray();
             $warning = collect($data_pengisian_mingguan)->whereNotIn('status_pengisian', "1")->where('tgl_pengisian',  $satuminggu[$i]);
-            $pengisian[$satuminggu[$i]]["warning"]=$warning->groupBy("nm_siswa")->toArray();
-            $pengisian[$satuminggu[$i]]["jumlah_warning"]=count($warning->groupBy("nm_siswa"));
-
-         }
-         return [
+            $pengisian[$satuminggu[$i]]["warning"] = $warning->groupBy("nm_siswa")->toArray();
+            $pengisian[$satuminggu[$i]]["jumlah_warning"] = count($warning->groupBy("nm_siswa"));
+        }
+        return [
             'status' => 200,
             'status text' => "data sukses terambil",
-            "jumlah siswa"=> count($data_siswa),
-            "data"=>$pengisian,
-            "hari"=>$satuminggu,
-            
+            "jumlah siswa" => count($data_siswa),
+            "data" => $pengisian,
+            "hari" => $satuminggu,
+
         ];
     }
 
     public function postmonitoringkesehatan(Request $request)
-    { 
+    {
 
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        if($start_monkes = Setting::where('key_setting', 'start_monkes')->first()){
+        if ($start_monkes = Setting::where('key_setting', 'start_monkes')->first()) {
             $start_monkes = $start_monkes->value;
-        }else{
+        } else {
             $start_monkes = '19:00';
         }
 
-        if($end_monkes = Setting::where('key_setting', 'end_monkes')->first()){
+        if ($end_monkes = Setting::where('key_setting', 'end_monkes')->first()) {
             $end_monkes = $end_monkes->value;
-        }else{
+        } else {
             $end_monkes = '07:00';
         }
 
@@ -778,116 +786,116 @@ $validator = Validator::make($request->all(), $syarat);
         $start_2 = Carbon::createFromTimeString($start_monkes);
         $end_2 = Carbon::createFromTimeString('23:59');
 
-        if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)){
-        }else{
+        if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)) { } else {
             return [
                 'status' => 300, // FAILED
                 'message' => 'Anda mengisi di luar waktu yang ditentukan.'
             ];
         }
-        
-                            $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                            switch($request->segment(1)){
-                                case 'tendik':
-                                    $status_join = 1; break;
-                                case 'guru':
-                                    $status_join = 2; break;
-                                case 'siswa':
-                                    $status_join = 3; break;
-                                default:
-                                    $status_join = 0; break;
-                            }
-                            
-                            DB::beginTransaction();
-                            // dd($input);
-                            try {
-                                
-                                $batch_insert_pengisian_jawaban = array();
-                                // $data= ['{"A8bT515982490575f43586196709": "A8bT515982499235f435bc3aec67"}'];
-                                 
-                                $data = $input->jawaban_pertanyaan;
-                                
-                                $hasil = array(); 
-                                foreach ($data as $key => $value) {
-                                    foreach ($value as $id_pertanyaan => $id_jawaban) {
-                                        $hasil[$id_pertanyaan] = $id_jawaban;
-                                    }
-                                }
-                                
-                                // return json_encode($hasil);
-                                foreach($hasil as $id_pertanyaan => $id_jawaban){
-                                    $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
-                                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-            
-                                    $batch_insert_pengisian_jawaban[] = array(
-                                        'id_pengisian_jawaban'            => $id,
-                                        'id_pengisian_kegiatan_harian'    => $pengisian_kegiatan_harian_id,
-                                        'id_kegiatan_harian_pertanyaan'   => $id_pertanyaan,
-                                        'id_kegiatan_harian_jawaban'      => $id_jawaban,
-                                        'isi_jawaban_text'                => !empty($input->jawaban_text[$id_jawaban])? $input->jawaban_text[$id_jawaban] : null,
-                                        'bobot_jawaban'                   => $kegiatan_harian_jawaban->bobot_jawaban,
-                                        'warna_keadaan'                   => $kegiatan_harian_jawaban->warna_keadaan,
-                                        'created_at'                      => $now,
-                                        'updated_at'                      => $now
-                                    );
-                                }
-            
-                                PengisianJawaban::insert($batch_insert_pengisian_jawaban);
-            
-                                $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian_id)->orderBy('bobot_jawaban', 'desc')->first();
-            
-                                $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
-                                $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian   = $pengisian_kegiatan_harian_id;
-                                $pengisian_kegiatan_harian->id_pengguna_pengisi            = $input->auth_data->pengguna->id_pengguna;
-                                $pengisian_kegiatan_harian->status_join_table              = $status_join;
-                                $pengisian_kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
-                                if ($now->between($start_1, $end_1)){
-                                    $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->format('Y-m-d');
-                                }else if($now->between($start_2, $end_2)){
-                                    $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
-                                }
-                                $pengisian_kegiatan_harian->warna_keadaan = $pengisian_jawaban_terbobot->warna_keadaan;
-                                if($pengisian_jawaban_terbobot->bobot_jawaban == 0){
-                                    $pengisian_kegiatan_harian->status_pengisian = 1;
-                                }else if($pengisian_jawaban_terbobot->bobot_jawaban < 5){
-                                    $pengisian_kegiatan_harian->status_pengisian = 3;
-                                }else{
-                                    $pengisian_kegiatan_harian->status_pengisian = 2;
-                                }
-                                $pengisian_kegiatan_harian->save();
-            
-                                if($pengisian_kegiatan_harian->status_pengisian == 2){
-                                    if($status_join == 3){
-                                        $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan, istirahat yg cukup dan konsumsi makanan yang tingkatkan imun.';
-                                    }else{
-                                        $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan dan membuat pernyataaan lalu mengunggahnya.';
-                                    }
-                                }else if($pengisian_kegiatan_harian->status_pengisian == 3){
-                                    $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Dengan catatan mohon untuk kegiatan spriritualnya ditingkatkan.';
-                                }else{
-                                    $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Pastikan tetap mematuhi protokol kesehatan.';
-                                }
-            
-                                DB::commit();
-            
-                                return [
-                                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                                    'path' => 'kegiatan-harian/mengisi-form-kesehatan',
-                                    'message' => $message
-                                ];
-                            } catch (\Exception $e) {
-                                DB::rollback();
-            
-                                return [
-                                    'status' => 300, // FAILED
-                                    'message' => 'Terjadi Kesalahan' . $e->getMessage()
-                                ];
-                            }
-                       
-                    
-        
+
+        $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        switch ($request->segment(1)) {
+            case 'tendik':
+                $status_join = 1;
+                break;
+            case 'guru':
+                $status_join = 2;
+                break;
+            case 'siswa':
+                $status_join = 3;
+                break;
+            default:
+                $status_join = 0;
+                break;
+        }
+
+        DB::beginTransaction();
+        // dd($input);
+        try {
+
+            $batch_insert_pengisian_jawaban = array();
+            // $data= ['{"A8bT515982490575f43586196709": "A8bT515982499235f435bc3aec67"}'];
+
+            $data = $input->jawaban_pertanyaan;
+
+            $hasil = array();
+            foreach ($data as $key => $value) {
+                foreach ($value as $id_pertanyaan => $id_jawaban) {
+                    $hasil[$id_pertanyaan] = $id_jawaban;
+                }
+            }
+
+            // return json_encode($hasil);
+            foreach ($hasil as $id_pertanyaan => $id_jawaban) {
+                $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                $batch_insert_pengisian_jawaban[] = array(
+                    'id_pengisian_jawaban'            => $id,
+                    'id_pengisian_kegiatan_harian'    => $pengisian_kegiatan_harian_id,
+                    'id_kegiatan_harian_pertanyaan'   => $id_pertanyaan,
+                    'id_kegiatan_harian_jawaban'      => $id_jawaban,
+                    'isi_jawaban_text'                => !empty($input->jawaban_text[$id_jawaban]) ? $input->jawaban_text[$id_jawaban] : null,
+                    'bobot_jawaban'                   => $kegiatan_harian_jawaban->bobot_jawaban,
+                    'warna_keadaan'                   => $kegiatan_harian_jawaban->warna_keadaan,
+                    'created_at'                      => $now,
+                    'updated_at'                      => $now
+                );
+            }
+
+            PengisianJawaban::insert($batch_insert_pengisian_jawaban);
+
+            $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian_id)->orderBy('bobot_jawaban', 'desc')->first();
+
+            $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
+            $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian   = $pengisian_kegiatan_harian_id;
+            $pengisian_kegiatan_harian->id_pengguna_pengisi            = $input->auth_data->pengguna->id_pengguna;
+            $pengisian_kegiatan_harian->status_join_table              = $status_join;
+            $pengisian_kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
+            if ($now->between($start_1, $end_1)) {
+                $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->format('Y-m-d');
+            } else if ($now->between($start_2, $end_2)) {
+                $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
+            }
+            $pengisian_kegiatan_harian->warna_keadaan = $pengisian_jawaban_terbobot->warna_keadaan;
+            if ($pengisian_jawaban_terbobot->bobot_jawaban == 0) {
+                $pengisian_kegiatan_harian->status_pengisian = 1;
+            } else if ($pengisian_jawaban_terbobot->bobot_jawaban < 5) {
+                $pengisian_kegiatan_harian->status_pengisian = 3;
+            } else {
+                $pengisian_kegiatan_harian->status_pengisian = 2;
+            }
+            $pengisian_kegiatan_harian->save();
+
+            if ($pengisian_kegiatan_harian->status_pengisian == 2) {
+                if ($status_join == 3) {
+                    $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan, istirahat yg cukup dan konsumsi makanan yang tingkatkan imun.';
+                } else {
+                    $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan dan membuat pernyataaan lalu mengunggahnya.';
+                }
+            } else if ($pengisian_kegiatan_harian->status_pengisian == 3) {
+                $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Dengan catatan mohon untuk kegiatan spriritualnya ditingkatkan.';
+            } else {
+                $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Pastikan tetap mematuhi protokol kesehatan.';
+            }
+
+            DB::commit();
+
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'kegiatan-harian/mengisi-form-kesehatan',
+                'message' => $message
+            ];
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Terjadi Kesalahan' . $e->getMessage()
+            ];
+        }
     }
-    
+
 
     public function actionGetRekapMonitoringKelasKosong(Request $request)
     {
@@ -895,13 +903,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'on_date' =>'required'
+            'on_date' => 'required'
         ]);
-  
+
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -926,18 +934,18 @@ $validator = Validator::make($request->all(), $syarat);
                                     LEFT JOIN guru g ON g.id_guru = pm.id_guru AND g.deleted_at IS NULL
                                     LEFT JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
                                     LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
-                                        AND DATE(pmp.tgl_presensi) = DATE("'.$on_date.'") 
-                                        AND WEEKDAY(pmp.tgl_presensi) = '.$hari.'-1
+                                        AND DATE(pmp.tgl_presensi) = DATE("' . $on_date . '") 
+                                        AND WEEKDAY(pmp.tgl_presensi) = ' . $hari . '-1
                                         AND pmp.deleted_at IS NULL
-                                    WHERE jkm.id_jadwal_hari = '.$hari.' 
+                                    WHERE jkm.id_jadwal_hari = ' . $hari . ' 
                                     AND jkm.deleted_at IS NULL
                                     AND pmp.id_presensi_mp IS NULL
-                                    AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
+                                    AND kmp.id_semester = "' . $semester_aktif->id_semester . '"
                                     ORDER BY jj.jam_mulai, jj.menit_mulai, k.tingkat, k.nm_kelas');
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kelas_kosong' => $data_kelas_kosong,
             )
@@ -970,19 +978,19 @@ $validator = Validator::make($request->all(), $syarat);
                             JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
                             LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
                                 AND DATE(pmp.tgl_entry) = DATE(NOW()) 
-                                AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
+                                AND WEEKDAY(pmp.tgl_entry) = ' . $hari . '-1
                                 AND pmp.deleted_at IS NULL
-                            WHERE jkm.id_jadwal_hari = '.$hari.' 
+                            WHERE jkm.id_jadwal_hari = ' . $hari . ' 
                             AND jkm.deleted_at IS NULL
-                            AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
-                            AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai)) ORDER BY k.tingkat, k.nm_kelas');
-        
+                            AND kmp.id_semester = "' . $semester_aktif->id_semester . '"
+                            AND TIME("' . $now . '") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai)) ORDER BY k.tingkat, k.nm_kelas');
+
         $group_data_kelas_kosong = collect($data_kelas_kosong)->groupBy('tingkat')->all();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kelas_kosong' => $group_data_kelas_kosong
             )
@@ -997,8 +1005,8 @@ $validator = Validator::make($request->all(), $syarat);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kelas = JadwalKelasMp::with(['kelas_mp', 'kelas_mp.mata_pelajaran', 'kelas_mp.kelas', 'ruangan', 'jadwal_hari'])
-                                        ->where('id_jadwal_kelas_mp', $input->id_jadwal_kelas_mp)
-                                        ->first();
+            ->where('id_jadwal_kelas_mp', $input->id_jadwal_kelas_mp)
+            ->first();
 
         $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $input->id_jadwal_kelas_mp);
 
@@ -1038,9 +1046,9 @@ $validator = Validator::make($request->all(), $syarat);
 
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'rekap_absen_siswa' => $data_siswa
             )
@@ -1076,9 +1084,9 @@ $validator = Validator::make($request->all(), $syarat);
 
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'jadwal' => $list_data
             )
@@ -1090,13 +1098,13 @@ $validator = Validator::make($request->all(), $syarat);
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_jadwal_kelas_mp' =>'required'
+            'id_jadwal_kelas_mp' => 'required'
         ]);
-  
+
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -1106,22 +1114,20 @@ $validator = Validator::make($request->all(), $syarat);
         $data_pertemuan = array();
         $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->get();
 
-        for ($i=1; $i <= 25; $i++) {
+        for ($i = 1; $i <= 25; $i++) {
             $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
             if ($presensiMp) {
-                if (!empty($input->query) && $input->query == 'absensi_is_null') {
-                } else {
+                if (!empty($input->query) && $input->query == 'absensi_is_null') { } else {
                     $pertemuan = array(
-                        'text' => 'Pertemuan pekan '.$i." (Sudah)",
+                        'text' => 'Pertemuan pekan ' . $i . " (Sudah)",
                         'value' => $i
                     );
                     $data_pertemuan[] = $pertemuan;
                 }
             } else {
-                if (!empty($input->query) && $input->query == 'absensi_is_not_null') {
-                } else {
+                if (!empty($input->query) && $input->query == 'absensi_is_not_null') { } else {
                     $pertemuan = array(
-                        'text' => 'Pertemuan pekan '.$i,
+                        'text' => 'Pertemuan pekan ' . $i,
                         'value' => $i
                     );
                     $data_pertemuan[] = $pertemuan;
@@ -1130,9 +1136,9 @@ $validator = Validator::make($request->all(), $syarat);
         }
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'pertemuan' => $data_pertemuan
             )
@@ -1155,9 +1161,9 @@ $validator = Validator::make($request->all(), $syarat);
         $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $input->id_jadwal_kelas_mp, $input->pertemuan_ke);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'presensi_mp' => $presensi_mp_aktif,
                 'siswa' => $data_siswa,
@@ -1194,19 +1200,29 @@ $validator = Validator::make($request->all(), $syarat);
             }
             $siswa->status_kehadiran = $kehadiran;
             switch ($kehadiran) {
-                case 1: $text = 'Hadir'; break;
-                case 2: $text = 'Sakit'; break;
-                case 3: $text = 'Izin'; break;
-                case 4: $text = 'Alpa'; break;
-                default: $text = 'Belum diset'; break;
+                case 1:
+                    $text = 'Hadir';
+                    break;
+                case 2:
+                    $text = 'Sakit';
+                    break;
+                case 3:
+                    $text = 'Izin';
+                    break;
+                case 4:
+                    $text = 'Alpa';
+                    break;
+                default:
+                    $text = 'Belum diset';
+                    break;
             }
             $siswa->status_text = $text;
         }
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'presensi_mp' => $presensi_mp_aktif,
                 'siswa' => $data_siswa,
@@ -1229,8 +1245,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -1242,31 +1258,31 @@ $validator = Validator::make($request->all(), $syarat);
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
 
         $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
-        
+
         DB::beginTransaction();
-        
+
         try {
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             if ($presensi_mp) {
                 $presensi_mp->updated_by         = $input->auth_data->pengguna->id_pengguna;
             } else {
                 $presensi_mp                     = new PresensiMp;
-                $presensi_mp->id_presensi_mp     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $presensi_mp->id_presensi_mp     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $presensi_mp->id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
                 $presensi_mp->id_kelas_mp        = $data_kelas->id_kelas_mp;
                 $presensi_mp->pertemuan_ke       = $input->pertemuan_ke;
                 $presensi_mp->tgl_entry          = $now;
                 $presensi_mp->created_by         = $input->auth_data->pengguna->id_pengguna;
             }
-            
+
             $presensi_mp->uraian_materi      = $input->uraian_materi;
             $presensi_mp->waktu_mulai        = $input->waktu_mulai;
             $presensi_mp->waktu_selesai      = $input->waktu_selesai;
             $presensi_mp->tgl_presensi       = $input->tgl_presensi;
             $presensi_mp->save();
-            
+
             foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                if (! empty($alasan)) {
+                if (!empty($alasan)) {
                     $kehadiran = $alasan;
                 } else {
                     $kehadiran = 1;
@@ -1277,15 +1293,15 @@ $validator = Validator::make($request->all(), $syarat);
                 } else {
                     if ($siswa = Siswa::find($id_siswa)) {
                         $presensi_mp_siswa                            = new PresensiMpSiswa;
-                        $presensi_mp_siswa->id_presensi_mp_siswa      = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $presensi_mp_siswa->id_presensi_mp_siswa      = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_mp_siswa->id_presensi_mp            = $presensi_mp->id_presensi_mp;
                         $presensi_mp_siswa->id_siswa                  = $id_siswa;
                         $presensi_mp_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
                     } else {
                         return response()->json([
-                            'status_code' 	=> 300,
-                            'status_text' 	=> 'Failed',
-                            'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                            'status_code'     => 300,
+                            'status_text'     => 'Failed',
+                            'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                         ]);
                     }
                 }
@@ -1297,17 +1313,17 @@ $validator = Validator::make($request->all(), $syarat);
             DB::commit();
 
             return response()->json([
-                'status_code' 	=> 200,
-                'status_text' 	=> 'Success',
-                'message' 	=> 'Absensi success'
+                'status_code'     => 200,
+                'status_text'     => 'Success',
+                'message'     => 'Absensi success'
             ]);
         } catch (\Exception $e) {
             DB::rollback();
 
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
-                'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
+                'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
             ]);
         }
     }
@@ -1318,13 +1334,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
-        
+
         $data_uts = LibGuru::fetchDataJadwalUTS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kelas_uts' => $data_uts
             )
@@ -1337,13 +1353,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
-        
+
         $data_uas = LibGuru::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kelas_uas' => $data_uas
             )
@@ -1369,19 +1385,29 @@ $validator = Validator::make($request->all(), $syarat);
             }
             $siswa->status_kehadiran = $kehadiran;
             switch ($kehadiran) {
-                case 1: $text = 'Hadir'; break;
-                case 2: $text = 'Sakit'; break;
-                case 3: $text = 'Izin'; break;
-                case 4: $text = 'Alpa'; break;
-                default: $text = 'Belum diset'; break;
+                case 1:
+                    $text = 'Hadir';
+                    break;
+                case 2:
+                    $text = 'Sakit';
+                    break;
+                case 3:
+                    $text = 'Izin';
+                    break;
+                case 4:
+                    $text = 'Alpa';
+                    break;
+                default:
+                    $text = 'Belum diset';
+                    break;
             }
             $siswa->status_text = $text;
         }
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'siswa' => $data_siswa,
             )
@@ -1398,22 +1424,22 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
 
         $auth_data = $input->auth_data;
-        
+
         DB::beginTransaction();
-        
+
         try {
             $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp', '=', $input->id_ujian_mp)->get();
 
             foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
                 if ($presensi_ujian_mp_siswa = $data_ujian_mp_presensi->firstWhere('id_siswa', $id_siswa)) {
-                    if (! empty($alasan)) {
+                    if (!empty($alasan)) {
                         $kehadiran = $alasan;
                     } else {
                         $kehadiran = 1;
@@ -1426,16 +1452,16 @@ $validator = Validator::make($request->all(), $syarat);
             DB::commit();
 
             return response()->json([
-                'status_code' 	=> 200,
-                'status_text' 	=> 'Success',
-                'message' 	=> 'Absensi success'
+                'status_code'     => 200,
+                'status_text'     => 'Success',
+                'message'     => 'Absensi success'
             ]);
         } catch (\Exception $e) {
             DB::rollback();
 
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => 'Absensi gagal'
             ]);
         }
@@ -1451,8 +1477,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -1462,9 +1488,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $input->id_ruangan);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'komplain-ruangan' => $list_data
             )
@@ -1481,8 +1507,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -1492,9 +1518,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $input->id_buku_alat);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'komplain-ruangan' => $list_data
             )
@@ -1516,13 +1542,13 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails() && !in_array($mode, $mode_delete)) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         } else {
             DB::beginTransaction();
-        
+
             try {
                 // mengambil waktu sekarang
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -1533,12 +1559,12 @@ $validator = Validator::make($request->all(), $syarat);
 
                 //** MODE UNTUK RUANGAN
                 if ($mode == 'add-ruangan') {
-                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
                     $komplainSarpras->id_ruangan                = $input->id_ruangan;
-                    if (! empty($input->id_inventaris_ruangan)) {
+                    if (!empty($input->id_inventaris_ruangan)) {
                         $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
                     } else {
                         $komplainSarpras->id_inventaris_ruangan     = null;
@@ -1555,7 +1581,7 @@ $validator = Validator::make($request->all(), $syarat);
                     // make object to find id
                     $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
                     $komplainSarpras->id_ruangan                = $input->id_ruangan;
-                    if (! empty($input->id_inventaris_ruangan)) {
+                    if (!empty($input->id_inventaris_ruangan)) {
                         $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
                     } else {
                         $komplainSarpras->id_inventaris_ruangan     = null;
@@ -1580,8 +1606,8 @@ $validator = Validator::make($request->all(), $syarat);
                 }
                 //** MODE UNTUK BUKU/ALAT
                 elseif ($mode == 'add-bukualat') {
-                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                    
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
                     $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
@@ -1619,16 +1645,16 @@ $validator = Validator::make($request->all(), $syarat);
                 DB::commit();
 
                 return response()->json([
-                    'status_code' 	=> 200,
-                    'status_text' 	=> 'Success',
-                    'message' 	=> $message
+                    'status_code'     => 200,
+                    'status_text'     => 'Success',
+                    'message'     => $message
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
 
                 return response()->json([
-                    'status_code' 	=> 300,
-                    'status_text' 	=> 'Failed',
+                    'status_code'     => 300,
+                    'status_text'     => 'Failed',
                     'message' => 'Terdapat error'
                 ]);
             }
@@ -1645,13 +1671,13 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails() && !in_array($mode, $mode_delete)) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         } else {
             DB::beginTransaction();
-        
+
             try {
 
                 $pengguna = Pengguna::find($input->auth_data->pengguna->id_pengguna);
@@ -1661,17 +1687,17 @@ $validator = Validator::make($request->all(), $syarat);
                 DB::commit();
 
                 return response()->json([
-                    'status_code' 	=> 200,
-                    'status_text' 	=> 'Success',
-                    'message' 	=> ''
+                    'status_code'     => 200,
+                    'status_text'     => 'Success',
+                    'message'     => ''
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
 
                 return response()->json([
-                    'status_code' 	=> 300,
-                    'status_text' 	=> 'Failed',
-                    'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    'status_code'     => 300,
+                    'status_text'     => 'Failed',
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                 ]);
             }
         }
@@ -1685,9 +1711,9 @@ $validator = Validator::make($request->all(), $syarat);
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'ruangan' => $data_ruangan
             )
@@ -1704,8 +1730,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -1715,9 +1741,9 @@ $validator = Validator::make($request->all(), $syarat);
         $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data, $input->id_ruangan);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'inventaris_ruangan' => $data_inventaris_ruangan
             )
@@ -1732,9 +1758,9 @@ $validator = Validator::make($request->all(), $syarat);
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'buku_alat' => $data_buku_alat
             )
@@ -1751,7 +1777,7 @@ $validator = Validator::make($request->all(), $syarat);
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
         $id_guru = $guru->id_guru;
-       
+
         $data_jadwal = KelasMp::select(
             'mata_pelajaran.nm_mata_pelajaran',
             'mata_pelajaran.kd_mata_pelajaran',
@@ -1769,8 +1795,8 @@ $validator = Validator::make($request->all(), $syarat);
             ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
             ->leftJoin('pengampu_mp', function ($join) {
                 $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                                 ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
-                                 ->whereNull('pengampu_mp.deleted_at');
+                    ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
+                    ->whereNull('pengampu_mp.deleted_at');
             })
             ->leftJoin('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
             ->leftJoin('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
@@ -1781,9 +1807,9 @@ $validator = Validator::make($request->all(), $syarat);
             ->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'data_jadwal' => $data_jadwal,
                 'semester_aktif' => $semester,
@@ -1802,8 +1828,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -1812,30 +1838,30 @@ $validator = Validator::make($request->all(), $syarat);
         $id = $input->id_kelas_mp;
 
         $kelas_mp   = KelasMp::select('mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester')
-        ->leftJoin('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-        ->leftJoin('jadwal_hari', 'jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
-        ->leftJoin('jadwal_jam', 'jadwal_jam.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
-        ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-        ->leftJoin('ruangan', 'ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
-        ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
-        ->leftJoin('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-        ->leftJoin('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
-        ->leftJoin('pengguna', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
-        ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-        ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
-        ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
-        ->where('kelas_mp.id_kelas_mp', '=', $id)
-        ->first();
+            ->leftJoin('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+            ->leftJoin('jadwal_hari', 'jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
+            ->leftJoin('jadwal_jam', 'jadwal_jam.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
+            ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+            ->leftJoin('ruangan', 'ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
+            ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
+            ->leftJoin('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+            ->leftJoin('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
+            ->leftJoin('pengguna', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
+            ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+            ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
+            ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
+            ->where('kelas_mp.id_kelas_mp', '=', $id)
+            ->first();
 
         $jadwal     = JadwalKelasMp::where('id_kelas_mp', '=', $id)
-                        ->orderBy('id_jadwal_hari', 'asc')
-                        ->get();
+            ->orderBy('id_jadwal_hari', 'asc')
+            ->get();
         $jml_jadwal = count($jadwal);
 
         $pengampu_mp_pj   = PengampuMp::where('id_kelas_mp', '=', $id)->where('pjmp_pengampu_mp', '=', 1)->first();
         $anggota          = PengampuMp::where('id_kelas_mp', '=', $id)->where('pjmp_pengampu_mp', '=', 2)
-                                ->orderBy('id_guru', 'asc')
-                                ->get();
+            ->orderBy('id_guru', 'asc')
+            ->get();
         $jml_anggota        = count($anggota);
 
         $hari       = JadwalHari::get();
@@ -1844,9 +1870,9 @@ $validator = Validator::make($request->all(), $syarat);
         $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kelas_mp' => $kelas_mp,
                 'jadwal' => $jadwal,
@@ -1874,8 +1900,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         } else {
@@ -1891,14 +1917,14 @@ $validator = Validator::make($request->all(), $syarat);
 
                     if ($cek_jadwal['guru'] == 0) {
                         return response()->json([
-                            'status_code' 	=> 300,
-                            'status_text' 	=> 'Failed',
+                            'status_code'     => 300,
+                            'status_text'     => 'Failed',
                             'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 1'
                         ]);
                     } elseif ($cek_jadwal['ruangan'] == 0) {
                         return response()->json([
-                            'status_code' 	=> 300,
-                            'status_text' 	=> 'Failed',
+                            'status_code'     => 300,
+                            'status_text'     => 'Failed',
                             'message' => 'Ruangan Pada Jadwal 1 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
                         ]);
                     }
@@ -1910,14 +1936,14 @@ $validator = Validator::make($request->all(), $syarat);
 
                         if ($cek_jadwal2['guru'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 2'
                             ]);
                         } elseif ($cek_jadwal2['ruangan'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Ruangan Pada Jadwal 2 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
                             ]);
                         }
@@ -1930,14 +1956,14 @@ $validator = Validator::make($request->all(), $syarat);
 
                         if ($cek_jadwal3['guru'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 3'
                             ]);
                         } elseif ($cek_jadwal3['ruangan'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Ruangan Pada Jadwal 3 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
                             ]);
                         }
@@ -1950,14 +1976,14 @@ $validator = Validator::make($request->all(), $syarat);
 
                         if ($cek_jadwal4['guru'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 4'
                             ]);
                         } elseif ($cek_jadwal4['ruangan'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Ruangan Pada Jadwal 4 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
                             ]);
                         }
@@ -1970,14 +1996,14 @@ $validator = Validator::make($request->all(), $syarat);
 
                         if ($cek_jadwal5['guru'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 5'
                             ]);
                         } elseif ($cek_jadwal5['ruangan'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Ruangan Pada Jadwal 5 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
                             ]);
                         }
@@ -1990,14 +2016,14 @@ $validator = Validator::make($request->all(), $syarat);
 
                         if ($cek_jadwal6['guru'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 6'
                             ]);
                         } elseif ($cek_jadwal6['ruangan'] == 0) {
                             return response()->json([
-                                'status_code' 	=> 300,
-                                'status_text' 	=> 'Failed',
+                                'status_code'     => 300,
+                                'status_text'     => 'Failed',
                                 'message' => 'Ruangan Pada Jadwal 6 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
                             ]);
                         }
@@ -2006,9 +2032,9 @@ $validator = Validator::make($request->all(), $syarat);
 
                 DB::beginTransaction();
 
-                try { 
+                try {
                     //input jadwal 1
-                    if (! empty($input->id_jadwal_kelas_mp_1)) {
+                    if (!empty($input->id_jadwal_kelas_mp_1)) {
                         $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_1);
                         $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal1;
                         $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal1;
@@ -2019,7 +2045,7 @@ $validator = Validator::make($request->all(), $syarat);
                         $jadwal_kelas_mp->save();
                     } else {
                         $jadwal_kelas_mp                        = new JadwalKelasMp;
-                        $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $jadwal_kelas_mp->id_kelas_mp           = $id;
                         $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal1;
                         $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal1;
@@ -2029,21 +2055,20 @@ $validator = Validator::make($request->all(), $syarat);
                         $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                         $jadwal_kelas_mp->save();
                     }
-                    
+
 
                     //input jadwal 2
-                    if (! empty($input->id_jadwal_kelas_mp_2)) {
+                    if (!empty($input->id_jadwal_kelas_mp_2)) {
                         if ($input->jam_jadwal2 != null && $input->jam_jadwal_selesai2 != null && $input->hari_jadwal2 != null && $input->ruangan2 != null) {
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal2;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal2;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2)? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2) ? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan2;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal2 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal2 != null or $input->ruangan2 != null) {
-                        } else {
+                        } elseif ($input->jam_jadwal2 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal2 != null or $input->ruangan2 != null) { } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2054,11 +2079,11 @@ $validator = Validator::make($request->all(), $syarat);
                     } else {
                         if ($input->jam_jadwal2 != null && $input->jam_jadwal_selesai2 != null && $input->hari_jadwal2 != null && $input->ruangan2 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal2;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal2;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2)? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2) ? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan2;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -2067,18 +2092,17 @@ $validator = Validator::make($request->all(), $syarat);
                     }
 
                     //input jadwal 3
-                    if (! empty($input->id_jadwal_kelas_mp_3)) {
+                    if (!empty($input->id_jadwal_kelas_mp_3)) {
                         if ($input->jam_jadwal3 != null && $input->jam_jadwal_selesai3 != null && $input->hari_jadwal3 != null && $input->ruangan3 != null) {
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal3;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal3;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3)? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3) ? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan3;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal3 != null or $input->jam_jadwal_selesai3 != null or $input->hari_jadwal3 != null or $input->ruangan3 != null) {
-                        } else {
+                        } elseif ($input->jam_jadwal3 != null or $input->jam_jadwal_selesai3 != null or $input->hari_jadwal3 != null or $input->ruangan3 != null) { } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2089,11 +2113,11 @@ $validator = Validator::make($request->all(), $syarat);
                     } else {
                         if ($input->jam_jadwal3 != null && $input->jam_jadwal_selesai3 != null && $input->hari_jadwal3 != null && $input->ruangan3 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal3;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal3;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3)? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3) ? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan3;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -2102,18 +2126,17 @@ $validator = Validator::make($request->all(), $syarat);
                     }
 
                     //input jadwal 4
-                    if (! empty($input->id_jadwal_kelas_mp_4)) {
+                    if (!empty($input->id_jadwal_kelas_mp_4)) {
                         if ($input->jam_jadwal4 != null && $input->jam_jadwal_selesai4 != null && $input->hari_jadwal4 != null && $input->ruangan4 != null) {
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal4;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal4;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4)? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4) ? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) {
-                        } else {
+                        } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) { } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2124,11 +2147,11 @@ $validator = Validator::make($request->all(), $syarat);
                     } else {
                         if ($input->jam_jadwal4 != null && $input->jam_jadwal_selesai4 != null && $input->hari_jadwal4 != null && $input->ruangan4 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal4;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal4;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4)? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4) ? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -2137,18 +2160,17 @@ $validator = Validator::make($request->all(), $syarat);
                     }
 
                     //input jadwal 5
-                    if (! empty($input->id_jadwal_kelas_mp_5)) {
+                    if (!empty($input->id_jadwal_kelas_mp_5)) {
                         if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5)? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5) ? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) {
-                        } else {
+                        } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) { } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2159,11 +2181,11 @@ $validator = Validator::make($request->all(), $syarat);
                     } else {
                         if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5)? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5) ? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -2172,18 +2194,17 @@ $validator = Validator::make($request->all(), $syarat);
                     }
 
                     //input jadwal 6
-                    if (! empty($input->id_jadwal_kelas_mp_6)) {
+                    if (!empty($input->id_jadwal_kelas_mp_6)) {
                         if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6)? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6) ? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) {
-                        } else {
+                        } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) { } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2194,11 +2215,11 @@ $validator = Validator::make($request->all(), $syarat);
                     } else {
                         if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6)? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6) ? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -2207,7 +2228,7 @@ $validator = Validator::make($request->all(), $syarat);
                     }
 
                     //input pjma
-                    if (! empty($input->id_pengampu_mp_pj)) {
+                    if (!empty($input->id_pengampu_mp_pj)) {
                         $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp_pj);
                         $pengampu_mp->id_guru           = $id_guru;
                         $pengampu_mp->pjmp_pengampu_mp  = 1;
@@ -2216,7 +2237,7 @@ $validator = Validator::make($request->all(), $syarat);
                         $pengampu_mp->save();
                     } else {
                         $pengampu_mp                    = new PengampuMp;
-                        $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pengampu_mp->id_kelas_mp       = $id;
                         $pengampu_mp->id_guru           = $id_guru;
                         $pengampu_mp->pjmp_pengampu_mp  = 1;
@@ -2226,11 +2247,11 @@ $validator = Validator::make($request->all(), $syarat);
                     }
 
                     DB::commit();
-                    
+
                     // all good
                     return response()->json([
-                        'status_code' 	=> 200,
-                        'status_text' 	=> 'Success',
+                        'status_code'     => 200,
+                        'status_text'     => 'Success',
                         'message' => 'Update Usulan Mata Ajar Successfully'
                     ]);
                 } catch (\Exception $e) {
@@ -2238,16 +2259,16 @@ $validator = Validator::make($request->all(), $syarat);
 
                     // something went wrong
                     return response()->json([
-                        'status_code' 	=> 300,
-                        'status_text' 	=> 'Failed',
+                        'status_code'     => 300,
+                        'status_text'     => 'Failed',
                         'message' => 'Edit Usulan Mata Ajar Gagal!'
                     ]);
                 }
             } elseif ($mode == 'delete') {
                 if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                     return response()->json([
-                        'status_code' 	=> 300,
-                        'status_text' 	=> 'Failed',
+                        'status_code'     => 300,
+                        'status_text'     => 'Failed',
                         'message' => 'Terdapat siswa yang telah mengambil kelas ini'
                     ]);
                 } else {
@@ -2258,8 +2279,8 @@ $validator = Validator::make($request->all(), $syarat);
                     PengampuMp::where('id_kelas_mp', $id)->delete();
 
                     return response()->json([
-                        'status_code' 	=> 200,
-                        'status_text' 	=> 'Success',
+                        'status_code'     => 200,
+                        'status_text'     => 'Success',
                         'message' => 'Delete Jadwal Mata Ajar Successfully'
                     ]);
                 }
@@ -2275,9 +2296,9 @@ $validator = Validator::make($request->all(), $syarat);
         $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'pelanggaran_siswa' => $data_pelanggaran_siswa
             )
@@ -2292,9 +2313,9 @@ $validator = Validator::make($request->all(), $syarat);
         $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kategori_pelanggaran' => $data_kategori
             )
@@ -2311,8 +2332,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -2322,9 +2343,9 @@ $validator = Validator::make($request->all(), $syarat);
         $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $input->id_kategori);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'subkategori_pelanggaran' => $data_subkategori
             )
@@ -2341,22 +2362,22 @@ $validator = Validator::make($request->all(), $syarat);
             'id_subkategori_pelanggaran'   => 'required',
             'catatan_pelanggaran'   => 'required',
         ]);
-        
+
         if ($validator->fails() && $mode != 'delete') {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         } else {
             DB::beginTransaction();
-        
+
             try {
                 // mengambil waktu sekarang
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
 
                 if ($mode == 'add') {
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
@@ -2373,12 +2394,12 @@ $validator = Validator::make($request->all(), $syarat);
                     $presensiMpPelanggaran->save();
 
                     $result = null;
-                    if($siswa = Siswa::find($presensiMpPelanggaran->id_siswa)){
-                        if(!empty($siswa->id_wali_murid)){
+                    if ($siswa = Siswa::find($presensiMpPelanggaran->id_siswa)) {
+                        if (!empty($siswa->id_wali_murid)) {
                             $wali_murid = WaliMurid::find($siswa->id_wali_murid);
 
                             $token_wali_murid = $wali_murid->pengguna->api_token;
-                            if(!empty($token_wali_murid)){
+                            if (!empty($token_wali_murid)) {
                                 $message = 'Putra/Putri Anda melakukan pelanggaran';
                                 $send_data = array(
                                     'title' => 'Informasi',
@@ -2389,7 +2410,7 @@ $validator = Validator::make($request->all(), $syarat);
                                 );
 
                                 $notifikasi = array(
-                                    'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                    'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                                     'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                     'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                     'isi_notifikasi' => $message,
@@ -2402,14 +2423,14 @@ $validator = Validator::make($request->all(), $syarat);
                     }
 
                     $return_array = [
-                        'status_code' 	=> 200,
-                        'status_text' 	=> 'Success',
-                        'message' 	=> 'Save Pelanggaran Siswa Successfully',
+                        'status_code'     => 200,
+                        'status_text'     => 'Success',
+                        'message'     => 'Save Pelanggaran Siswa Successfully',
                         'data' => json_decode($result, true)
                     ];
                 } elseif ($mode == 'edit') {
                     $id = $input->id;
-                    
+
                     // make object to find id
                     $presensiMpPelanggaran                               = PresensiMpPelanggaran::find($id);
                     // $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
@@ -2421,18 +2442,18 @@ $validator = Validator::make($request->all(), $syarat);
                     $presensiMpPelanggaran->save();
 
                     $return_array = [
-                        'status_code' 	=> 200,
-                        'status_text' 	=> 'Success',
-                        'message' 	=> 'Update Pelanggaran Siswa Successfully'
+                        'status_code'     => 200,
+                        'status_text'     => 'Success',
+                        'message'     => 'Update Pelanggaran Siswa Successfully'
                     ];
                 } elseif ($mode == 'delete') {
                     $id = $input->id;
 
                     if ($tindakanPelanggaran = TindakanPelanggaran::where('id_presensi_mp_pelanggaran', $id)->first()) {
                         $return_array = [
-                            'status_code' 	=> 300,
-                            'status_text' 	=> 'Failed',
-                            'message' 	=> 'Failed To Delete, sudah diambil tindakan atas Pelanggaran siswa'
+                            'status_code'     => 300,
+                            'status_text'     => 'Failed',
+                            'message'     => 'Failed To Delete, sudah diambil tindakan atas Pelanggaran siswa'
                         ];
                     } else {
                         // make object to find id
@@ -2443,9 +2464,9 @@ $validator = Validator::make($request->all(), $syarat);
                         $presensiMpPelanggaran->delete();
 
                         $return_array = [
-                            'status_code' 	=> 200,
-                            'status_text' 	=> 'Success',
-                            'message' 	=> 'Delete Pelanggaran Siswa Successfully'
+                            'status_code'     => 200,
+                            'status_text'     => 'Success',
+                            'message'     => 'Delete Pelanggaran Siswa Successfully'
                         ];
                     }
                 }
@@ -2456,9 +2477,9 @@ $validator = Validator::make($request->all(), $syarat);
                 DB::rollback();
 
                 return response()->json([
-                    'status_code' 	=> 300,
-                    'status_text' 	=> 'Failed',
-                    'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    'status_code'     => 300,
+                    'status_text'     => 'Failed',
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                 ]);
             }
         }
@@ -2470,13 +2491,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
-        
+
         $data_pelanggaran_non_kbm = LibSiswa::fetchPelanggaranNonKBM($auth_data, $data_anak_murid_aktif->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'pelanggaran_non_kbm' => $data_pelanggaran_non_kbm
             )
@@ -2489,13 +2510,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
-        
+
         $data_pelanggaran_kbm = LibSiswa::fetchPelanggaranKBM($auth_data, $data_anak_murid_aktif->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'pelanggaran_kbm' => $data_pelanggaran_kbm
             )
@@ -2508,13 +2529,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
-        
+
         $data_tagihan = LibSiswa::fetchTagihanSiswa($auth_data, $data_anak_murid_aktif->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'tagihan' => $data_tagihan
             )
@@ -2527,13 +2548,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
-        
+
         $data_riwayat_bayar = LibSiswa::fetchPembayaranSiswa($auth_data, $data_anak_murid_aktif->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'riwayat_bayar' => $data_riwayat_bayar
             )
@@ -2546,19 +2567,19 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
-        
+
         $data_beasiswa = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa')
-        ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
-        ->join('kelas', 'kelas.id_kelas', '=', 'beasiswa_siswa.id_kelas')
-        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-        ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->where('siswa.id_pengguna', $data_anak_murid_aktif->id_pengguna)
-        ->get();
+            ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
+            ->join('kelas', 'kelas.id_kelas', '=', 'beasiswa_siswa.id_kelas')
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('siswa.id_pengguna', $data_anak_murid_aktif->id_pengguna)
+            ->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'beasiswa' => $data_beasiswa
             )
@@ -2571,7 +2592,7 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
-        
+
         $data_prestasi = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
@@ -2593,25 +2614,25 @@ $validator = Validator::make($request->all(), $syarat);
             'p2.gelar_depan',
             'p2.gelar_belakang'
         )
-        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
-        ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
-        ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
-        ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
-        ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
-        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
-        ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
-        ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
-        ->orderBy('prestasi_siswa.created_at', 'desc')
-        ->orderBy('semester.thn_akademik_semester', 'desc')
-        ->orderBy('semester.nm_semester', 'desc')
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->where('siswa.id_pengguna', $data_anak_murid_aktif->id_pengguna)
-        ->get();
+            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+            ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+            ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+            ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+            ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
+            ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+            ->orderBy('prestasi_siswa.created_at', 'desc')
+            ->orderBy('semester.thn_akademik_semester', 'desc')
+            ->orderBy('semester.nm_semester', 'desc')
+            ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('siswa.id_pengguna', $data_anak_murid_aktif->id_pengguna)
+            ->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'prestasi' => $data_prestasi
             )
@@ -2624,13 +2645,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
-        
+
         $data_magang = LibSiswa::fetchDataMagang($auth_data, $data_anak_murid_aktif->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'magang' => $data_magang
             )
@@ -2643,13 +2664,13 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        
+
         $data_kalender_akademik = LibDataAkademik::fetchDataKalenderAkademik($auth_data, $semester_aktif->id_semester);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kalender_akademik' => $data_kalender_akademik
             )
@@ -2683,9 +2704,9 @@ $validator = Validator::make($request->all(), $syarat);
         }
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'jadwal' => $list_data
             )
@@ -2696,13 +2717,13 @@ $validator = Validator::make($request->all(), $syarat);
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         $data_anak_murid = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'anak_murid' => $data_anak_murid
             )
@@ -2734,9 +2755,9 @@ $validator = Validator::make($request->all(), $syarat);
         }
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'jadwal' => $list_data
             )
@@ -2753,9 +2774,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibDataAkademik::fetchDataKalenderAkademik($auth_data, $semester_aktif->id_semester);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'kalender_akademik' => $list_data
             )
@@ -2770,9 +2791,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibSiswa::fetchDataMagang($auth_data, $auth_data->pengguna->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'magang' => $list_data
             )
@@ -2787,9 +2808,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibSiswa::fetchPembayaranSiswa($auth_data, $auth_data->pengguna->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'riwayat_bayar' => $list_data
             )
@@ -2804,9 +2825,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibSiswa::fetchTagihanSiswa($auth_data, $auth_data->pengguna->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'tagihan' => $list_data
             )
@@ -2821,9 +2842,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibSiswa::fetchPelanggaranKBM($auth_data, $auth_data->pengguna->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'pelanggaran_kbm' => $list_data
             )
@@ -2838,9 +2859,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $auth_data->pengguna->id_pengguna);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'pelanggaran_non_kbm' => $list_data
             )
@@ -2857,8 +2878,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -2868,9 +2889,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $input->id_ruangan);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'komplain-ruangan' => $list_data
             )
@@ -2887,8 +2908,8 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         }
@@ -2898,9 +2919,9 @@ $validator = Validator::make($request->all(), $syarat);
         $list_data = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $input->id_buku_alat);
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'komplain-ruangan' => $list_data
             )
@@ -2922,29 +2943,29 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails() && !in_array($mode, $mode_delete)) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         } else {
             DB::beginTransaction();
-        
+
             try {
                 // mengambil waktu sekarang
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
 
                 // get id_siswa
-                $siswa = Siswa::where('id_pengguna','=',$input->auth_data->pengguna->id_pengguna)->first();
+                $siswa = Siswa::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
                 $id_siswa = $siswa->id_siswa;
 
                 //** MODE UNTUK RUANGAN
                 if ($mode == 'add-ruangan') {
-                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
                     $komplainSarpras->id_ruangan                = $input->id_ruangan;
-                    if (! empty($input->id_inventaris_ruangan)) {
+                    if (!empty($input->id_inventaris_ruangan)) {
                         $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
                     } else {
                         $komplainSarpras->id_inventaris_ruangan     = null;
@@ -2961,7 +2982,7 @@ $validator = Validator::make($request->all(), $syarat);
                     // make object to find id
                     $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
                     $komplainSarpras->id_ruangan                = $input->id_ruangan;
-                    if (! empty($input->id_inventaris_ruangan)) {
+                    if (!empty($input->id_inventaris_ruangan)) {
                         $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
                     } else {
                         $komplainSarpras->id_inventaris_ruangan     = null;
@@ -2986,8 +3007,8 @@ $validator = Validator::make($request->all(), $syarat);
                 }
                 //** MODE UNTUK BUKU/ALAT
                 elseif ($mode == 'add-bukualat') {
-                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                    
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
                     $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
@@ -3025,16 +3046,16 @@ $validator = Validator::make($request->all(), $syarat);
                 DB::commit();
 
                 return response()->json([
-                    'status_code' 	=> 200,
-                    'status_text' 	=> 'Success',
-                    'message' 	=> $message
+                    'status_code'     => 200,
+                    'status_text'     => 'Success',
+                    'message'     => $message
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
 
                 return response()->json([
-                    'status_code' 	=> 300,
-                    'status_text' 	=> 'Failed',
+                    'status_code'     => 300,
+                    'status_text'     => 'Failed',
                     'message' => 'Terdapat error'
                 ]);
             }
@@ -3047,17 +3068,17 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $list_data = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa')
-                                    ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
-                                    ->join('kelas', 'kelas.id_kelas', '=', 'beasiswa_siswa.id_kelas')
-                                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                                    ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                                    ->where('siswa.id_pengguna', $auth_data->pengguna->id_pengguna)
-                                    ->get();
+            ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
+            ->join('kelas', 'kelas.id_kelas', '=', 'beasiswa_siswa.id_kelas')
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('siswa.id_pengguna', $auth_data->pengguna->id_pengguna)
+            ->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'beasiswa' => $list_data
             )
@@ -3090,24 +3111,24 @@ $validator = Validator::make($request->all(), $syarat);
             'p2.gelar_depan',
             'p2.gelar_belakang'
         )
-        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
-        ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
-        ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
-        ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
-        ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
-        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
-        ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
-        ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
-        ->orderBy('prestasi_siswa.created_at', 'desc')
-        ->orderBy('semester.thn_akademik_semester', 'desc')
-        ->orderBy('semester.nm_semester', 'desc')
-        ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+            ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+            ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+            ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+            ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
+            ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+            ->orderBy('prestasi_siswa.created_at', 'desc')
+            ->orderBy('semester.thn_akademik_semester', 'desc')
+            ->orderBy('semester.nm_semester', 'desc')
+            ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+            ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'prestasi' => $list_data
             )
@@ -3120,11 +3141,11 @@ $validator = Validator::make($request->all(), $syarat);
         $auth_data = $input->auth_data;
 
         $list_data = NotifikasiPengguna::select('id_notifikasi_pengguna', 'isi_notifikasi', 'link_url', 'status', 'created_at')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->take('10')->orderBy('created_at', 'desc')->get();
-        
+
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'notif' => $list_data
             )
@@ -3135,42 +3156,44 @@ $validator = Validator::make($request->all(), $syarat);
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $kerja=UnitKerja::select("id_unit_kerja", "nm_unit_kerja")->orderBy("nm_unit_kerja")->get();
-        
+        $kerja = UnitKerja::select("id_unit_kerja", "nm_unit_kerja")->orderBy("nm_unit_kerja")->get();
+
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-        if($request->segment(3)=="guru"){
-            $data_actor = Guru::select("id_guru","id_pengguna","id_unit_kerja","jenis_kelamin","tgl_lahir","nm_ibu_kandung","alamat_jalan","alamat_rt","alamat_rw","alamat_dusun","alamat_kelurahan","alamat_kecamatan","alamat_kodepos","alamat_kota","alamat_provinsi","id_agama","npwp_ptk","kewarganegaraan","status_kawin","nm_pasangan_ptk","nomor_hp","email")->where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
-        }elseif($request->segment(3)=="tendik"){
-            $data_actor = Staff::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
-        }elseif($request->segment(3)=="wali-murid"){
-            $data_actor = WaliMurid::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
-        }elseif($request->segment(3)=="siswa"){
-            $data_actor = Siswa::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
-        } 
-        $kota = Kota::select("id_kota","id_provinsi","nm_kota")->where('kota.is_aktif','=',1)->get();
-        $provinsi = Provinsi::select("id_provinsi","nm_provinsi")->where('provinsi.is_aktif','=',1)->get();
-        $agama = Agama::select("id_agama","kode_agama","nm_agama")->get();
+        if ($request->segment(3) == "guru") {
+            $data_actor = Guru::select("id_guru", "id_pengguna", "id_unit_kerja", "jenis_kelamin", "tgl_lahir", "nm_ibu_kandung", "alamat_jalan", "alamat_rt", "alamat_rw", "alamat_dusun", "alamat_kelurahan", "alamat_kecamatan", "alamat_kodepos", "alamat_kota", "alamat_provinsi", "id_agama", "npwp_ptk", "kewarganegaraan", "status_kawin", "nm_pasangan_ptk", "nomor_hp", "email")->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->get()->first();
+        } elseif ($request->segment(3) == "tendik") {
+            $data_actor = Staff::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->get()->first();
+        } elseif ($request->segment(3) == "wali-murid") {
+            $data_actor = WaliMurid::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->get()->first();
+        } elseif ($request->segment(3) == "siswa") {
+            $data_actor = Siswa::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->get()->first();
+        }
+        $kota = Kota::select("id_kota", "id_provinsi", "nm_kota")->where('kota.is_aktif', '=', 1)->get();
+        $provinsi = Provinsi::select("id_provinsi", "nm_provinsi")->where('provinsi.is_aktif', '=', 1)->get();
+        $agama = Agama::select("id_agama", "kode_agama", "nm_agama")->get();
 
         return response()->json([
-            'status_code' 	=> 200,
-            'status_text' 	=> 'Success',
-            'message' 	=> '',
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
             'data' => array(
                 'data_actor' => $data_actor,
                 'provinsi' => $provinsi,
                 'kota' => $kota,
                 'agama' => $agama,
-                'data_diri' =>$auth_data->pengguna->only("id_pengguna",
-                "id_status_pengguna",
-                "id_sekolah",
-                "nm_pengguna",
-                "gelar_depan",
-                "gelar_belakang",
-                "email_pengguna",
-                "nomor_hp_pengguna",
-                "path_foto_pengguna"),
-                "kerja"=>$kerja,
+                'data_diri' => $auth_data->pengguna->only(
+                    "id_pengguna",
+                    "id_status_pengguna",
+                    "id_sekolah",
+                    "nm_pengguna",
+                    "gelar_depan",
+                    "gelar_belakang",
+                    "email_pengguna",
+                    "nomor_hp_pengguna",
+                    "path_foto_pengguna"
+                ),
+                "kerja" => $kerja,
             )
         ]);
     }
@@ -3185,13 +3208,13 @@ $validator = Validator::make($request->all(), $syarat);
 
         if ($validator->fails()) {
             return response()->json([
-                'status_code' 	=> 300,
-                'status_text' 	=> 'Failed',
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
                 'message' => $validator->errors()->first()
             ]);
         } else {
             DB::beginTransaction();
-        
+
             try {
 
                 $item = NotifikasiPengguna::find($input->id);
@@ -3201,22 +3224,23 @@ $validator = Validator::make($request->all(), $syarat);
                 DB::commit();
 
                 return response()->json([
-                    'status_code' 	=> 200,
-                    'status_text' 	=> 'Success',
-                    'message' 	=> 'Notifikasi read'
+                    'status_code'     => 200,
+                    'status_text'     => 'Success',
+                    'message'     => 'Notifikasi read'
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
 
                 return response()->json([
-                    'status_code' 	=> 300,
-                    'status_text' 	=> 'Failed',
-                    'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    'status_code'     => 300,
+                    'status_text'     => 'Failed',
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                 ]);
             }
         }
     }
-    public function submiteditprofile(Request $request, $mode, $id = null) {
+    public function submiteditprofile(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
         // dd($request->segment(3));
@@ -3224,43 +3248,43 @@ $validator = Validator::make($request->all(), $syarat);
             'nm_pengguna'           => 'required',
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
         }
         // else {
-            // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            DB::beginTransaction();
-        
-            try {
-                $pengguna                           =  Pengguna::find($input->auth_data->pengguna->id_pengguna);
-                // $pengguna->id_status_pengguna       = $input->id_status_pengguna;
-                $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
-                $pengguna->nm_pengguna              = $input->nm_pengguna;
-                // $pengguna->password                 = Hash::make($input->nip_staff);
-                // $pengguna->must_change_password     = 1;
-                // $pengguna->status_join_table        = 1;
-                $pengguna->email_pengguna           = $input->email;
-                $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
-                $pengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
-                $pengguna->created_at               = $now;
-                $pengguna->gelar_depan              = $input->gelar_depan;
-                $pengguna->gelar_belakang           = $input->gelar_belakang;
-                $pengguna->save();
+        DB::beginTransaction();
 
-                if($request->segment(3)=="guru"){
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-// dd($input->jenis_kelamin);
-                    $guru                           =  Guru::where("id_pengguna","=",$input->auth_data->pengguna->id_pengguna)->first();
-            //    dd($guru);
+        try {
+            $pengguna                           =  Pengguna::find($input->auth_data->pengguna->id_pengguna);
+            // $pengguna->id_status_pengguna       = $input->id_status_pengguna;
+            $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
+            $pengguna->nm_pengguna              = $input->nm_pengguna;
+            // $pengguna->password                 = Hash::make($input->nip_staff);
+            // $pengguna->must_change_password     = 1;
+            // $pengguna->status_join_table        = 1;
+            $pengguna->email_pengguna           = $input->email;
+            $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
+            $pengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
+            $pengguna->created_at               = $now;
+            $pengguna->gelar_depan              = $input->gelar_depan;
+            $pengguna->gelar_belakang           = $input->gelar_belakang;
+            $pengguna->save();
+
+            if ($request->segment(3) == "guru") {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                // dd($input->jenis_kelamin);
+                $guru                           =  Guru::where("id_pengguna", "=", $input->auth_data->pengguna->id_pengguna)->first();
+                //    dd($guru);
                 $guru->id_unit_kerja            = $input->id_unit_kerja;
                 /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
                 $guru->jenis_kelamin            = $input->jenis_kelamin;
-                $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir),"Y-m-d");
+                $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
                 $guru->nm_ibu_kandung           = $input->nm_ibu_kandung;
                 $guru->alamat_jalan             = $input->alamat_jalan;
                 $guru->alamat_rt                = $input->alamat_rt;
@@ -3277,12 +3301,11 @@ $validator = Validator::make($request->all(), $syarat);
                 $guru->status_kawin             = $input->status_kawin;
                 $guru->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
                 $guru->nomor_hp                 = $input->nomor_hp;
-                $guru->email                    = $input->email; 
+                $guru->email                    = $input->email;
                 $guru->save();
+            } elseif ($request->segment(3) == "tendik") {
 
-                }elseif($request->segment(3)=="tendik"){
-                
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $staff                           = Staff::find($input->auth_data->pengguna->id_pengguna);;
                 $staff->id_staff                 = $id;
@@ -3290,7 +3313,7 @@ $validator = Validator::make($request->all(), $syarat);
                 $staff->id_unit_kerja            = $input->id_unit_kerja;
                 $staff->jenis_jabatan            = $input->jenis_jabatan;
                 $staff->jenis_kelamin            = $input->jenis_kelamin;
-                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir),"Y-m-d");
+                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
                 $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
                 $staff->alamat_jalan             = $input->alamat_jalan;
                 $staff->alamat_rt                = $input->alamat_rt;
@@ -3307,10 +3330,10 @@ $validator = Validator::make($request->all(), $syarat);
                 $staff->status_kawin             = $input->status_kawin;
                 $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
                 $staff->nomor_hp                 = $input->nomor_hp;
-                $staff->email                    = $input->email; 
+                $staff->email                    = $input->email;
                 $staff->save();
-                }elseif($request->segment(3)=="wali-murid"){
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            } elseif ($request->segment(3) == "wali-murid") {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $staff                           =  WaliMurid::find($input->auth_data->pengguna->id_pengguna);;
                 $staff->id_staff                 = $id;
@@ -3318,7 +3341,7 @@ $validator = Validator::make($request->all(), $syarat);
                 $staff->id_unit_kerja            = $input->id_unit_kerja;
                 /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
                 $staff->jenis_kelamin            = $input->jenis_kelamin;
-                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir),"Y-m-d");
+                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
                 $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
                 $staff->alamat_jalan             = $input->alamat_jalan;
                 $staff->alamat_rt                = $input->alamat_rt;
@@ -3335,56 +3358,55 @@ $validator = Validator::make($request->all(), $syarat);
                 $staff->status_kawin             = $input->status_kawin;
                 $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
                 $staff->nomor_hp                 = $input->nomor_hp;
-                $staff->email                    = $input->email; 
+                $staff->email                    = $input->email;
                 $staff->save();
-                }elseif($request->segment(3)=="siswa"){
-                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-    
-                    $staff                           = Siswa::find($input->auth_data->pengguna->id_pengguna);
-                    $staff->id_staff                 = $id;
-                    $staff->id_pengguna              = $pengguna->id_pengguna;
-                    $staff->id_unit_kerja            = $input->id_unit_kerja;
-                    /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
-                    $staff->jenis_kelamin            = $input->jenis_kelamin;
-                    $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir),"Y-m-d");
-                    $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
-                    $staff->alamat_jalan             = $input->alamat_jalan;
-                    $staff->alamat_rt                = $input->alamat_rt;
-                    $staff->alamat_rw                = $input->alamat_rw;
-                    $staff->alamat_dusun             = $input->alamat_dusun;
-                    $staff->alamat_kelurahan         = $input->alamat_kelurahan;
-                    $staff->alamat_kecamatan         = $input->alamat_kecamatan;
-                    $staff->alamat_kodepos           = $input->alamat_kodepos;
-                    $staff->alamat_kota              = $input->alamat_kota;
-                    $staff->alamat_provinsi          = $input->alamat_provinsi;
-                    $staff->id_agama                 = $input->id_agama;
-                    $staff->npwp_ptk                 = $input->npwp_ptk;
-                    $staff->kewarganegaraan          = $input->kewarganegaraan;
-                    $staff->status_kawin             = $input->status_kawin;
-                    $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
-                    $staff->nomor_hp                 = $input->nomor_hp;
-                    $staff->email                    = $input->email; 
-                    $staff->save();
-                    }
-               DB::commit();
-    // all good
+            } elseif ($request->segment(3) == "siswa") {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-    return response()->json([
-        'status_code' 	=> 200,
-        'status_text' 	=> 'Success',
-        'message' => 'Update Data Pribadi Successfully'
-    ]);
-} catch (\Exception $e) {
-    DB::rollback();
-    // something went wrong
+                $staff                           = Siswa::find($input->auth_data->pengguna->id_pengguna);
+                $staff->id_staff                 = $id;
+                $staff->id_pengguna              = $pengguna->id_pengguna;
+                $staff->id_unit_kerja            = $input->id_unit_kerja;
+                /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
+                $staff->jenis_kelamin            = $input->jenis_kelamin;
+                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
+                $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
+                $staff->alamat_jalan             = $input->alamat_jalan;
+                $staff->alamat_rt                = $input->alamat_rt;
+                $staff->alamat_rw                = $input->alamat_rw;
+                $staff->alamat_dusun             = $input->alamat_dusun;
+                $staff->alamat_kelurahan         = $input->alamat_kelurahan;
+                $staff->alamat_kecamatan         = $input->alamat_kecamatan;
+                $staff->alamat_kodepos           = $input->alamat_kodepos;
+                $staff->alamat_kota              = $input->alamat_kota;
+                $staff->alamat_provinsi          = $input->alamat_provinsi;
+                $staff->id_agama                 = $input->id_agama;
+                $staff->npwp_ptk                 = $input->npwp_ptk;
+                $staff->kewarganegaraan          = $input->kewarganegaraan;
+                $staff->status_kawin             = $input->status_kawin;
+                $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
+                $staff->nomor_hp                 = $input->nomor_hp;
+                $staff->email                    = $input->email;
+                $staff->save();
+            }
+            DB::commit();
+            // all good
 
-    return response()->json([
-        'status_code' 	=> 300,
-        'status_text' 	=> 'Failed',
-        'message' => 'Update data pribadi gagal',
-        "status"=>$e->getMessage()
-    ]);
+            return response()->json([
+                'status_code'     => 200,
+                'status_text'     => 'Success',
+                'message' => 'Update Data Pribadi Successfully'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
 
+            return response()->json([
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
+                'message' => 'Update data pribadi gagal',
+                "status" => $e->getMessage()
+            ]);
         }
     }
 }
