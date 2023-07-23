@@ -185,7 +185,7 @@ class JurnalHarianTendikController extends Controller
         $input = (object) $request->input();
 
         $list_data = LaporanKerjaHarianTendik::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
-            ->with('category_jurnal_harian_tendik.unit_kerja')->orderBy('created_at', 'desc')->orderBy('tanggal', 'DESC');
+            ->with('category_jurnal_harian_tendik.unit_kerja')->orderBy('tanggal', 'DESC');
 
         return Datatables::of($list_data)
             ->editColumn('tanggal', function ($item) {
