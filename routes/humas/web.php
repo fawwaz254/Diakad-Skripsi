@@ -328,7 +328,7 @@ Route::middleware(['token_staff'])->group(function () {
                     Route::get('{id1}/edit/{id2}', [InputKegiatanController::class, 'viewAddEditInputKategoriPertanyaan']);
 
                     Route::post('{id1}/datatables', [InputKegiatanController::class, 'showDatatablesInputKategoriPertanyaan']);
-                    Route::post('{id1}/action/{mode}', [InputKegiatanController::class, 'actionInputKategoriPertanyaan']);
+                    Route::post('action/{mode}/{id1}', [InputKegiatanController::class, 'actionInputKategoriPertanyaan']);
                 });
             });
 
