@@ -320,7 +320,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('add', [InputKegiatanController::class, 'viewAddEditInputKegiatan']);
                 Route::get('edit/{id}', [InputKegiatanController::class, 'viewAddEditInputKegiatan']);
                 Route::post('datatables', [InputKegiatanController::class, 'showDatatablesInputKegiatan']);
-                Route::post('action/{mode}', [InputKegiatanController::class, 'actionInputKegiatan']);
+                Route::post('action/{mode}/{id}', [InputKegiatanController::class, 'actionInputKegiatan']);
 
                 Route::prefix('kategori-pertanyaan')->group(function () {
                     Route::get('detail/{id1}', [InputKegiatanController::class, 'viewInputKategoriPertanyaan']);
