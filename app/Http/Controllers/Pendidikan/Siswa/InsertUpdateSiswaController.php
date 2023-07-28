@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
+use App\Exports\ExportBiodata;
 
 use App\Models\Pengguna as Pengguna;
 use App\Models\Agama as Agama;
@@ -31,6 +32,7 @@ use App\Models\Kota as Kota;
 use App\Models\Provinsi as Provinsi;
 use App\Models\CalonSiswaBeasiswa;
 
+use Maatwebsite\Excel\Facades\Excel;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\LibGlobal;
@@ -166,6 +168,15 @@ class InsertUpdateSiswaController extends BaseController
 
 		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa-kelas', compact('auth_data', 'siswa1','semester_aktif'));
 	}
+
+	public function viewExcelSiswaKelas(Request $request, $id_kelas)
+    {
+        $input = (object) $request->input();
+		$auth_data = $input->auth_data;
+		$kelas = Kelas::where('id_kelas', $id_kelas)->first();
+		$siswa = LibSiswa::fetchDataSiswa($auth_data,$id_kelas);
+        return Excel::download(new ExportBiodata($siswa), 'download_biodata_kelas_'.$kelas->nm_kelas.'.xlsx');
+    }
 
 	public function viewCariUpdateSiswa(Request $request, $nis_nama_siswa)
 	{
