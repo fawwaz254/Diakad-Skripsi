@@ -190,7 +190,7 @@ class LaporanKerjaHarianController extends Controller
         $auth_data = $input->auth_data;
 
         $list_data = LaporanKerjaHarianMGMP::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
-            ->where('id_role', $input->auth_data->role_aktif->id_role)->with('mapel')
+            ->where('id_role', $input->auth_data->role_aktif->id_role)->with('mapel')->orderBy('tanggal', 'DESC')
             ->get();
 
         return Datatables::of($list_data)
@@ -300,6 +300,7 @@ class LaporanKerjaHarianController extends Controller
         $list_data = LaporanKerjaHarianMGMP::where('id_role', $input->auth_data->role_aktif->id_role)
             ->where('mapel', $id)
             ->with('mapel', 'pengguna')
+            ->orderBy('tanggal', 'DESC')
             ->get();
 
         return Datatables::of($list_data)
