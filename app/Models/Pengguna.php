@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class Pengguna
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Pengguna extends Authenticatable
 {
     use SoftDeletes;
+    use Notifiable;
 
     public const PEGAWAI = 1;
     public const GURU = 2;
@@ -180,5 +182,10 @@ class Pengguna extends Authenticatable
             default:
                 return '';
         }
+    }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
     }
 }
