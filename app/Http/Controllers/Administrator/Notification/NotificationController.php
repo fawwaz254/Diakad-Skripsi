@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\administrator\Notification;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\PushNotification;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
 
@@ -14,10 +15,11 @@ class NotificationController extends Controller
         $pengguna = Pengguna::whereNotNull('fcm_token')->get();
 
         $title = "data Title";
-        $body = "data Body";
+        $body = "Test Notifikasi";
 
         $pengguna->each(function ($p) use ($title, $body) {
-            $p->notify((new FcmNotification)->with($title, $body));
+            PushNotification::dispatch($p, $title, $body);
+            // $p->notify((new FcmNotification)->with($title, $body));
         });
     }
 }
