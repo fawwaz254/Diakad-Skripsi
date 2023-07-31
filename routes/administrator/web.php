@@ -13,6 +13,7 @@ use App\Http\Controllers\Administrator\PengelolaanAkun\PencarianController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JurnalPimpinanController;
 use App\Http\Controllers\Administrator\ManajemenMenu\SettingDashboardController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController;
+use App\Http\Controllers\administrator\Notification\NotificationController;
 use App\Http\Controllers\FeaturemenuController;
 
 Route::middleware(['token_staff'])->group(function () {
@@ -29,6 +30,14 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/datatables', [FingerprintController::class, 'commonList']);
             });
         });
+
+        Route::prefix('notification')->group(function () {
+            // Route::get('/', [NotificationController::class, 'indexList']);
+            // Route::get('/datatables', [NotificationController::class, 'commonList']);
+            Route::get('/send', [NotificationController::class, 'send']);
+        });
+
+
 
         Route::prefix('manajemen-file')->group(function () {
             Route::prefix('data-kategori')->group(function () {

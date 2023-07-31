@@ -63,11 +63,14 @@ Route::middleware(['auth.mobile'])->group(function () {
 
 Route::middleware(['auth.mobile'])->group(function () {
     Route::prefix('v1')->group(function () {
+
         Route::prefix('token')->group(function () {
             Route::post('save', [Apiv1Controller::class, 'actionSaveToken']);
         });
+
         Route::post('notifikasi/read', [Apiv1Controller::class, 'actionNotifikasiUpdate']);
         Route::post('notifikasi/get', [Apiv1Controller::class, 'actionGetNotifikasi']);
+        Route::post('send-fcm-token', [Apiv1Controller::class, 'sendFCMToken']);
 
         Route::prefix('guru')->group(function () {
             Route::prefix('data-pribadi')->group(function () {

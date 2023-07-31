@@ -3409,4 +3409,47 @@ class Apiv1Controller extends BaseController
             ]);
         }
     }
+
+    public function sendFCMToken(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'fcm_token' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        } else {
+            DB::beginTransaction();
+
+            try {
+
+                $pengguna = Pengguna::find($input->user_id);
+                $pengguna->fcm_token = $input->fcm_token;
+                $pengguna->save();
+
+                DB::commit();
+
+                return response()->json([
+                    'status_code'     => 200,
+                    'status_text'     => 'Success',
+                    'message'     => 'Save FCM Token Successfully'
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status_code'     => 300,
+                    'status_text'     => 'Failed',
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+                ]);
+            }
+        }
+    }
 }
