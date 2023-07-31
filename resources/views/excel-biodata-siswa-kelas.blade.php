@@ -28,558 +28,262 @@
 </head>
 
 <body>
-    @foreach ($siswa1 as $dsiswa)
-    @php
-    $auth_data = auth_data();
-    $semester_aktif = App\Libraries\Pendidikan\LibDataAkademik::fetchDataSemesterAktif($auth_data);
-    $siswa = App\Libraries\Pendidikan\LibSiswa::fetchDataDetailSiswa($auth_data, $dsiswa->nis_siswa);
-    $beasiswa = App\Models\CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
-
-		$data_beasiswa[0]['urutan_1'] = '61.';
-		$data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
-		$data_beasiswa[0]['urutan_3'] = ': ';
-
-		if ($beasiswa) {
-			foreach ($beasiswa as $key => $value) {
-				if ($key == 0) {
-					$data_beasiswa[$key]['urutan_1'] = '61.';
-					$data_beasiswa[$key]['urutan_2'] = 'Menerima Beasiswa';
-					$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa . ' Tahun ' . $value->tahun_mulai_beasiswa_c_siswa . ' - ' . $value->tahun_selesai_beasiswa_c_siswa;
-				} else {
-					$data_beasiswa[$key]['urutan_1'] = '';
-					$data_beasiswa[$key]['urutan_2'] = '';
-					$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa . ' Tahun ' . $value->tahun_mulai_beasiswa_c_siswa . ' - ' . $value->tahun_selesai_beasiswa_c_siswa;
-				}
-			}
-		}
-    @endphp
-    <div class="container">
-        <h4 class="text-center" style="margin-top: 40px;">LEMBAR DATA PRIBADI PESERTA DIDIK <br> TAHUN PELAJARAN :
-            {{ $semester_aktif->tahun_ajaran }}</h4>
-
-        <ol type="A" style="margin-top: 30px;">
-            <li style="font-weight: 500;">KETERANGAN TENTANG DIRI PESERTA DIDIK</li>
-            {{-- @if (!empty($siswa->path_foto_pengguna))
-                <img src="{{ Storage::disk('spaces')->url($siswa->path_foto_pengguna) }}"
-                    style="position: absolute; right: 10%; height: 270px; width: 180px">
-            @endif --}}
-            <table style="width: 100%;">
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="14">KETERANGAN TENTANG DIRI PESERTA DIDIK</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="7">KETERANGAN TEMPAT TINGGAL</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="5">KETERANGAN KESEHATAN</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="8">KETERANGAN PENDIDIKAN</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="1">KETERANGAN KARTU PERLINDUNGAN SOSIAL</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="9">KETERANGAN TENTANG AYAH KANDUNG</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="9">KETERANGAN TENTANG IBU KANDUNG</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="8">KETERANGAN TENTANG AYAH WALI</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="4">KEGEMARAN PESERTA DIDIK</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="6">KETERANGAN PERKEMBANG PESERTA DIDIK</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="4">KETERANGAN SETELAH SELESAI PENDIDIKAN</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="1">LAIN-LAIN</th>
+            </tr>
+            <tr>
+                <td style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama lengkap Peserta Didik</td>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama panggilan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jenis kelamin</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">NISN</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">NIK</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tempat dan tanggal lahir</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Agama</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Anak ke</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jumlah saudara kandung</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jumlah saudara tiri</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jumlah saudara angkat</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Anak yatim/piatu/yatim-piatu</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Bahasa sehari-hari di rumah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alamat</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nomor telepon / HP</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Email Pribadi</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jenis Tinggal</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jarak tempat tinggal ke sekolah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alat transportasi ke sekolah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Waktu tempuh ke sekolah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Golongan darah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Penyakit yang pernah diderita</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kelainan jasmani</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tinggi dan berat badan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Berkebutuhan khusus</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="4">Pendidikan sebelumnya</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="2">Pindahan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="2">Diterima di sekolah ini</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nomor KPS</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tahun Lahir</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Agama</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pekerjaan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pendidikan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Penghasilan per bulan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alamat rumah / nomor telepon</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Masih hidup / meninggal dunia</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tahun Lahir</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Agama</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pekerjaan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pendidikan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Penghasilan per bulan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alamat rumah / nomor telepon</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Masih hidup / meninggal dunia</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tahun Lahir</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Agama</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pekerjaan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pendidikan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Penghasilan per bulan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alamat rumah / nomor telepon</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kesenian</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Olahraga</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kemasyarakatan / Organisasi</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Lain-lain</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Menerima Beasiswa</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="2">Meninggalkan sekolah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="3">Akhir Pendidikan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Akan melanjutkan ke-</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="3">Bekerja</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Catatan yang penting</th>
+            </tr>
+            <tr>
+                <th style="text-align: center;font-weight: bold;border : 1;">a. Tamatan dari</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">b. Tanggal dan nomor ijazah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">c. Tanggal dan nomor SKHUN</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">d. Lama belajar</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">a. Dari sekolah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">b. Alasan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">a. Di kelas / Semester</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">b. Tanggal</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">a. Tgl meninggalkan sekolah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">b. Alasan</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">a. Tamat Belajar</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">b. Ijazah</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">c. Nomor STTB</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">a. Tanggal mulai bekerja</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">b. Nama Perusahaan / Lembaga</th>
+                <th style="text-align: center;font-weight: bold;border : 1;">c. Penghasilan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($siswa1 as $dsiswa)
+            @php
+            $auth_data = auth_data();
+            $semester_aktif = App\Libraries\Pendidikan\LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $siswa = App\Libraries\Pendidikan\LibSiswa::fetchDataDetailSiswa($auth_data, $dsiswa->nis_siswa);
+            $beasiswa = App\Models\CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
+        
+                $data_beasiswa[0]['urutan_1'] = '61.';
+                $data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
+                $data_beasiswa[0]['urutan_3'] = ': ';
+        
+                if ($beasiswa) {
+                    foreach ($beasiswa as $key => $value) {
+                        if ($key == 0) {
+                            $data_beasiswa[$key]['urutan_1'] = '61.';
+                            $data_beasiswa[$key]['urutan_2'] = 'Menerima Beasiswa';
+                            $data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa . ' Tahun ' . $value->tahun_mulai_beasiswa_c_siswa . ' - ' . $value->tahun_selesai_beasiswa_c_siswa;
+                        } else {
+                            $data_beasiswa[$key]['urutan_1'] = '';
+                            $data_beasiswa[$key]['urutan_2'] = '';
+                            $data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa . ' Tahun ' . $value->tahun_mulai_beasiswa_c_siswa . ' - ' . $value->tahun_selesai_beasiswa_c_siswa;
+                        }
+                    }
+                }
+            @endphp
                 <tr>
-                    <td>1.</td>
-                    <td>Nama lengkap Peserta Didik</td>
-                    <td>: {{ $siswa->nm_c_siswa }}</td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Nama panggilan</td>
-                    <td>: </td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td>Jenis kelamin</td>
+                    <td>{{ $siswa->nm_c_siswa }}</td>
+                    <td></td>
                     @if ($siswa->jenis_kelamin)
-                        <td>: {{ $siswa->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }}</td>
+                        <td>{{ $siswa->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan' }}</td>
                     @else
-                        <td>:</td>
+                        <td></td>
                     @endif
-                </tr>
-                <tr>
-                    <td>4.</td>
-                    <td>NISN</td>
-                    <td>: {{ $siswa->nisn_siswa }}</td>
-                </tr>
-                <tr>
-                    <td>5.</td>
-                    <td>NIK</td>
-                    <td>: {{ $siswa->nik_siswa }}</td>
-                </tr>
-                <tr>
-                    <td>6.</td>
-                    <td>Tempat dan tanggal lahir</td>
-                    <td>: {{ $siswa->nm_kota_lahir ? $siswa->nm_kota_lahir : '-' }},
+                    <td>{{ $siswa->nisn_siswa }}</td>
+                    <td>{{ $siswa->nik_siswa }}</td>
+                    <td>{{ $siswa->nm_kota_lahir ? $siswa->nm_kota_lahir : '-' }},
                         {{ $siswa->tgl_lahir ? date('d F Y', strtotime($siswa->tgl_lahir)) : '-' }}</td>
-                </tr>
-                <tr>
-                    <td>7.</td>
-                    <td>Agama</td>
-                    <td>: {{ $siswa->nm_agama }}</td>
-                </tr>
-                <tr>
-                    <td>8.</td>
-                    <td>Kewarganegaraan</td>
+                    <td>{{ $siswa->nm_agama }}</td>
                     @if ($siswa->kewarganegaraan)
-                        <td>: {{ $siswa->kewarganegaraan == 1 ? 'WNI' : 'WNA' }}</td>
+                        <td>{{ $siswa->kewarganegaraan == 1 ? 'WNI' : 'WNA' }}</td>
                     @else
-                        <td>:</td>
+                        <td></td>
                     @endif
-
-                </tr>
-                <tr>
-                    <td>9.</td>
-                    <td>Anak ke</td>
-                    <td>: {{ $siswa->anak_ke }}</td>
-                </tr>
-                <tr>
-                    <td>10.</td>
-                    <td>Jumlah saudara kandung</td>
+                    <td>{{ $siswa->anak_ke }}</td>
                     <td>: {{ $siswa->dari_x_bersaudara }}</td>
-                </tr>
-                <tr>
-                    <td>11.</td>
-                    <td>Jumlah saudara tiri</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>12.</td>
-                    <td>Jumlah saudara angkat</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>13.</td>
-                    <td>Anak yatim/piatu/yatim-piatu</td>
+                    <td></td>
+                    <td></td>
                     @if ($siswa->status_ayah && $siswa->status_ibu)
                         @if ($siswa->status_ayah == 1 && $siswa->status_ibu == 2)
-                            <td>: piatu</td>
+                            <td>Piatu</td>
                         @elseif($siswa->status_ayah == 2 && $siswa->status_ibu == 1)
-                            <td>: yatim</td>
+                            <td>Yatim</td>
                         @elseif($siswa->status_ayah == 2 && $siswa->status_ibu == 2)
-                            <td>: yatim piatu</td>
+                            <td>Yatim piatu</td>
                         @else
-                            <td>: lengkap</td>
+                            <td>Lengkap</td>
                         @endif
                     @else
-                        <td>:</td>
+                        <td></td>
                     @endif
-                </tr>
-                <tr>
-                    <td>14.</td>
-                    <td>Bahasa sehari-hari di rumah</td>
-                    <td>: {{ $siswa->bahasa_sehari_hari }}</td>
-                </tr>
-            </table>
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN TEMPAT TINGGAL</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>15.</td>
-                    <td>Alamat</td>
-                    <td>: {{ $siswa->alamat_jalan }}</td>
-                </tr>
-                <tr>
-                    <td>16.</td>
-                    <td>Nomor telepon / HP</td>
-                    <td>: Telp. {{ $siswa->nomor_telp_ortu ? $siswa->nomor_telp_ortu : '-' }} / Hp.
+                    <td>{{ $siswa->bahasa_sehari_hari }}</td>
+                    <td>{{ $siswa->alamat_jalan }}</td>
+                    <td>Telp. {{ $siswa->nomor_telp_ortu ? $siswa->nomor_telp_ortu : '-' }} / Hp.
                         {{ $siswa->nomor_hp_ortu ? $siswa->nomor_hp_ortu : '-' }}</td>
-                </tr>
-                <tr>
-                    <td>17.</td>
-                    <td>Email Pribadi</td>
-                    <td>: {{ $siswa->email_pengguna }}</td>
-                </tr>
-                <tr>
-                    <td>18.</td>
-                    <td>Jenis Tinggal</td>
-                    <td>: {{ $siswa->nm_jenis_tinggal }}</td>
-                </tr>
-                <tr>
-                    <td>19.</td>
-                    <td>Jarak tempat tinggal ke sekolah</td>
-                    <td>: {{ $siswa->jarak_rumah_sekolah }} km</td>
-                </tr>
-                <tr>
-                    <td>20.</td>
-                    <td>Alat transportasi ke sekolah</td>
-                    <td>: {{ $siswa->nm_jenis_transportasi }}</td>
-                </tr>
-                <tr>
-                    <td>21.</td>
-                    <td>Waktu tempuh ke sekolah</td>
-                    <td>: {{ $siswa->waktu_tempuh_sekolah_jam * 60 + $siswa->waktu_tempuh_sekolah_menit }} menit</td>
-                </tr>
-            </table>
-
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN KESEHATAN</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>22.</td>
-                    <td>Golongan darah</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>23.</td>
-                    <td>Penyakit yang pernah diderita</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>24.</td>
-                    <td>Kelainan jasmani</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>25.</td>
-                    <td>Tinggi dan berat badan</td>
-                    <td>: {{ $siswa->tinggi_badan }} cm / {{ $siswa->berat_badan }} kg</td>
-                </tr>
-                <tr>
-                    <td>26.</td>
-                    <td>Berkebutuhan khusus</td>
-                    <td>: {{ $siswa->nm_kebutuhan_khusus }}</td>
-                </tr>
-            </table>
-
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN PENDIDIKAN</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>27.</td>
-                    <td>Pendidikan sebelumnya</td>
+                    <td>{{ $siswa->email_pengguna }}</td>
+                    <td>{{ $siswa->nm_jenis_tinggal }}</td>
+                    <td>{{ $siswa->jarak_rumah_sekolah }} km</td>
+                    <td>{{ $siswa->nm_jenis_transportasi }}</td>
+                    <td>{{ $siswa->waktu_tempuh_sekolah_jam * 60 + $siswa->waktu_tempuh_sekolah_menit }} menit</td>
                     <td></td>
-                </tr>
-                <tr>
                     <td></td>
-                    <td>a. Tamatan dari</td>
-                    <td>:</td>
-                </tr>
-                <tr>
                     <td></td>
-                    <td>b. Tanggal dan nomor ijazah</td>
-                    <td>:</td>
-                </tr>
-                <tr>
+                    <td>{{ $siswa->tinggi_badan }} cm / {{ $siswa->berat_badan }} kg</td>
+                    <td>{{ $siswa->nm_kebutuhan_khusus }}</td>
                     <td></td>
-                    <td>c. Tanggal dan nomor SKHUN</td>
-                    <td>:</td>
-                </tr>
-                <tr>
                     <td></td>
-                    <td>d. Lama belajar</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>28.</td>
-                    <td>Pindahan</td>
                     <td></td>
-                </tr>
-                <tr>
                     <td></td>
-                    <td>a. Dari sekolah</td>
-                    <td>: -</td>
-                </tr>
-                <tr>
                     <td></td>
-                    <td>b. Alasan</td>
-                    <td>: -</td>
-                </tr>
-                <tr>
-                    <td>29.</td>
-                    <td>Diterima di sekolah ini</td>
                     <td></td>
-                </tr>
-                <tr>
                     <td></td>
-                    <td>a. Di kelas / Semester</td>
-                    <td>:</td>
-                </tr>
-                <tr>
+                    <td>{{ $siswa->tgl_diterima }}</td>
+                    <td>{{ $siswa->nomor_kps }}</td>
+                    <td>{{ $siswa->nm_ayah }}</td>
+                    <td>{{ date('Y', strtotime($siswa->tgl_lahir_ayah)) }}</td>
                     <td></td>
-                    <td>b. Tanggal</td>
-                    <td>: {{ $siswa->tgl_diterima }}</td>
-                </tr>
-            </table>
-
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN KARTU PERLINDUNGAN SOSIAL</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>30.</td>
-                    <td>Nomor KPS</td>
-                    <td>: {{ $siswa->nomor_kps }}</td>
-                </tr>
-            </table>
-
-            <div class="pagebreak"> </div>
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN TENTANG AYAH KANDUNG</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>31.</td>
-                    <td>Nama</td>
-                    <td>: {{ $siswa->nm_ayah }}</td>
-                </tr>
-                <tr>
-                    <td>32.</td>
-                    <td>Tahun Lahir</td>
-                    <td>: {{ date('Y', strtotime($siswa->tgl_lahir_ayah)) }}</td>
-                </tr>
-                <tr>
-                    <td>33.</td>
-                    <td>Agama</td>
-                    <td>: </td>
-                </tr>
-                <tr>
-                    <td>34.</td>
-                    <td>Kewarganegaraan</td>
-                    <td>: </td>
-                </tr>
-                <tr>
-                    <td>35.</td>
-                    <td>Pekerjaan</td>
-                    <td>: {{ $siswa->nm_jenis_pekerjaan_ayah }}</td>
-                </tr>
-                <tr>
-                    <td>36.</td>
-                    <td>Pendidikan</td>
-                    <td>: {{ $siswa->nm_jenis_pendidikan_ayah }}</td>
-                </tr>
-                <tr>
-                    <td>37.</td>
-                    <td>Penghasilan per bulan</td>
-                    <td>: {{ $siswa->nm_jenis_penghasilan_ayah }}</td>
-                </tr>
-                <tr>
-                    <td>38.</td>
-                    <td>Alamat rumah / nomor telepon</td>
-                    <td>: {{ $siswa->alamat_jalan_ayah }}
+                    <td></td>
+                    <td>{{ $siswa->nm_jenis_pekerjaan_ayah }}</td>
+                    <td>{{ $siswa->nm_jenis_pendidikan_ayah }}</td>
+                    <td>{{ $siswa->nm_jenis_penghasilan_ayah }}</td>
+                    <td>{{ $siswa->alamat_jalan_ayah }}
                         {{ $siswa->almat_rt_ayah ? 'RT ' . $siswa->almat_rt_ayah : '' }}
                         {{ $siswa->alamat_rw_ayah ? 'RW ' . $siswa->alamat_rw_ayah : '' }}
                         {{ $siswa->alamat_kelurahan_ayah ? $siswa->alamat_kelurahan_ayah : '' }}
                         {{ $siswa->alamat_kodepos_ayah ? $siswa->alamat_kodepos_ayah : '' }}
                         {{ $siswa->alamat_kecamatan_ayah ? $siswa->alamat_kecamatan_ayah : '' }}
-                        {{ $siswa->nm_kota_ayah ? $siswa->nm_kota_ayah : '' }}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>Telp. - / Hp. -</td>
-                </tr>
-                <tr>
-                    <td>39.</td>
-                    <td>Masih hidup / meninggal dunia</td>
+                        {{ $siswa->nm_kota_ayah ? $siswa->nm_kota_ayah : '' }}/Telp. - / Hp. -</td>
                     @if ($siswa->status_ayah)
-                        <td>: {{ $siswa->status_ayah == 1 ? 'Masih hidup' : 'Meninggal dunia' }}</td>
+                        <td>{{ $siswa->status_ayah == 1 ? 'Masih hidup' : 'Meninggal dunia' }}</td>
                     @else
-                        <td>:</td>
+                        <td></td>
                     @endif
-                </tr>
-            </table>
-
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN TENTANG IBU KANDUNG</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>40.</td>
-                    <td>Nama</td>
-                    <td>: {{ $siswa->nm_ibu }}</td>
-                </tr>
-                <tr>
-                    <td>41.</td>
-                    <td>Tahun Lahir</td>
-                    <td>: {{ date('Y', strtotime($siswa->tgl_lahir_ibu)) }}</td>
-                </tr>
-                <tr>
-                    <td>42.</td>
-                    <td>Agama</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>43.</td>
-                    <td>Kewarganegaraan</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>44.</td>
-                    <td>Pekerjaan</td>
-                    <td>: {{ $siswa->nm_jenis_pekerjaan_ibu }}</td>
-                </tr>
-                <tr>
-                    <td>45.</td>
-                    <td>Pendidikan</td>
-                    <td>: {{ $siswa->nm_jenis_pendidikan_ibu }}</td>
-                </tr>
-                <tr>
-                    <td>46.</td>
-                    <td>Penghasilan per bulan</td>
-                    <td>: {{ $siswa->nm_jenis_penghasilan_ibu }}</td>
-                </tr>
-                <tr>
-                    <td>47.</td>
-                    <td>Alamat rumah / nomor telepon</td>
-                    <td>: {{ $siswa->alamat_jalan_ibu }} {{ $siswa->almat_rt_ibu ? 'RT ' . $siswa->almat_rt_ibu : '' }}
+                    <td>{{ $siswa->nm_ibu }}</td>
+                    <td>{{ date('Y', strtotime($siswa->tgl_lahir_ibu)) }}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ $siswa->nm_jenis_pekerjaan_ibu }}</td>
+                    <td>{{ $siswa->nm_jenis_pendidikan_ibu }}</td>
+                    <td>{{ $siswa->nm_jenis_penghasilan_ibu }}</td>
+                    <td>{{ $siswa->alamat_jalan_ibu }} {{ $siswa->almat_rt_ibu ? 'RT ' . $siswa->almat_rt_ibu : '' }}
                         {{ $siswa->alamat_rw_ibu ? 'RW ' . $siswa->alamat_rw_ibu : '' }}
                         {{ $siswa->alamat_kelurahan_ibu ? $siswa->alamat_kelurahan_ibu : '' }}
                         {{ $siswa->alamat_kodepos_ibu ? $siswa->alamat_kodepos_ibu : '' }}
                         {{ $siswa->alamat_kecamatan_ibu ? $siswa->alamat_kecamatan_ibu : '' }}
-                        {{ $siswa->nm_kota_ibu ? $siswa->nm_kota_ibu : '' }}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>Telp. - / Hp. -</td>
-                </tr>
-                <tr>
-                    <td>48.</td>
-                    <td>Masih hidup / meninggal dunia</td>
+                        {{ $siswa->nm_kota_ibu ? $siswa->nm_kota_ibu : '' }}/Telp. - / Hp. -</td>
                     @if ($siswa->status_ibu)
-                        <td>: {{ $siswa->status_ibu == 1 ? 'Masih hidup' : 'Meninggal dunia' }}</td>
+                        <td>{{ $siswa->status_ibu == 1 ? 'Masih hidup' : 'Meninggal dunia' }}</td>
                     @else
-                        <td>:</td>
+                        <td></td>
                     @endif
+                    <td>{{ $siswa->nm_wali }}</td>
+                    <td>{{ date('Y', strtotime($siswa->tgl_lahir_wali)) }}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ $siswa->nm_jenis_pekerjaan_wali }}</td>
+                    <td>{{ $siswa->nm_jenis_pendidikan_wali }}</td>
+                    <td>{{ $siswa->nm_jenis_penghasilan_wali }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        @foreach ($data_beasiswa as $r)
+                        {{ $r['urutan_3'] }} 
+                        @endforeach
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
-            </table>
+            @endforeach
 
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN TENTANG AYAH WALI</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>49.</td>
-                    <td>Nama</td>
-                    <td>: {{ $siswa->nm_wali }}</td>
-                </tr>
-                <tr>
-                    <td>50.</td>
-                    <td>Tahun Lahir</td>
-                    <td>: {{ date('Y', strtotime($siswa->tgl_lahir_wali)) }}</td>
-                </tr>
-                <tr>
-                    <td>51.</td>
-                    <td>Agama</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>52.</td>
-                    <td>Kewarganegaraan</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>53.</td>
-                    <td>Pekerjaan</td>
-                    <td>: {{ $siswa->nm_jenis_pekerjaan_wali }}</td>
-                </tr>
-                <tr>
-                    <td>54.</td>
-                    <td>Pendidikan</td>
-                    <td>: {{ $siswa->nm_jenis_pendidikan_wali }}</td>
-                </tr>
-                <tr>
-                    <td>55.</td>
-                    <td>Penghasilan per bulan</td>
-                    <td>: {{ $siswa->nm_jenis_penghasilan_wali }}</td>
-                </tr>
-                <tr>
-                    <td>56.</td>
-                    <td>Alamat rumah / nomor telepon</td>
-                    <td>:</td>
-                </tr>
-            </table>
-
-            <li style="font-weight: 500;margin-top: 30px;">KEGEMARAN PESERTA DIDIK</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>57.</td>
-                    <td>Kesenian</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>58.</td>
-                    <td>Olahraga</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>59.</td>
-                    <td>Kemasyarakatan / Organisasi</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>60.</td>
-                    <td>Lain-lain</td>
-                    <td>:</td>
-                </tr>
-            </table>
-
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN PERKEMBANG PESERTA DIDIK</li>
-            <table style="width: 100%;">
-                @foreach ($data_beasiswa as $r)
-                    <tr>
-                        <td>{{ $r['urutan_1'] }}</td>
-                        <td>{{ $r['urutan_2'] }}</td>
-                        <td>{{ $r['urutan_3'] }}</td>
-                    </tr>
-                @endforeach
-                <tr>
-                    <td>62.</td>
-                    <td>Meninggalkan sekolah</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>a. Tgl meninggalkan sekolah</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>b. Alasan</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>63.</td>
-                    <td>Akhir Pendidikan</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>a. Tamat Belajar</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>b. Ijazah</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>c. Nomor STTB</td>
-                    <td>:</td>
-                </tr>
-            </table>
-            
-            <div class="pagebreak"> </div>
-            <li style="font-weight: 500;margin-top: 30px;">KETERANGAN SETELAH SELESAI PENDIDIKAN</li>
-            <table style="width: 100%;">
-                <tr>
-                    <td>64.</td>
-                    <td>Akan melanjutkan ke-</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td>65.</td>
-                    <td>Bekerja</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>a. Tanggal mulai bekerja</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>b. Nama Perusahaan / Lembaga</td>
-                    <td>:</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>c. Penghasilan</td>
-                    <td>:</td>
-                </tr>
-            </table>
-
-            <li style="font-weight: 500;margin-top: 30px;">LAIN-LAIN</li>
-
-            <table style="width: 100%;">
-                <tr>
-                    <td>66.</td>
-                    <td>Catatan yang penting</td>
-                    <td>: </td>
-                </tr>
-            </table>
-
-        </ol>
-
-    </div>
-    @endforeach
+        </tbody>
+    </table>
     
 
     <!-- Optional JavaScript -->
