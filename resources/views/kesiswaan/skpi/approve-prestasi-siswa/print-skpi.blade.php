@@ -774,6 +774,7 @@
                     {{-- @endif --}}
                 </td>
             </tr>
+            @if (in_array($auth_data->sekolah_data->nm_singkat_sekolah, ['smpypm1', 'smpypm2']))
             <tr>
                 <td>3.{{ $urutan }}2</td>
                 <td>Kegiatan Melatih Keterampilan Hidup
@@ -788,6 +789,7 @@
                     {{-- @endif --}}
                 </td>
             </tr>
+            @endif
 
             <p style="display:none">{{ $no = 2 }}</p>
 
