@@ -25,6 +25,7 @@ use App\Libraries\SumberDaya\LibGuru;
 use App\Models\InformasiTambahan;
 use App\Models\Kelas;
 use App\Models\LogKelasSiswa;
+use App\Models\Pengguna;
 use Auth;
 use DB;
 use Session;
@@ -48,8 +49,10 @@ class ApprovePrestasiSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
-        return view('kesiswaan/skpi/approve-prestasi-siswa/view-detail-prestasi-siswa', compact('auth_data', 'param'));
+        $siswa = Siswa::where('id_siswa',$id)->first();
+        $pengguna = Pengguna::where('id_pengguna',$siswa->id_pengguna)->first();
+        $kelas = Kelas::where('id_kelas',$siswa->id_kelas)->first();
+        return view('kesiswaan/skpi/approve-prestasi-siswa/view-detail-prestasi-siswa', compact('auth_data', 'param', 'pengguna','kelas'));
     }
 
     public function printSkpikelas(Request $request, $id_kelas)
