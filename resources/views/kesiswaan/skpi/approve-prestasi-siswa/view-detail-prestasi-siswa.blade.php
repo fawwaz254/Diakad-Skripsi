@@ -21,7 +21,7 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data Prestasi Siswa</h2>
+                    <h2>Data Prestasi Siswa - {{$pengguna->nm_pengguna}} ({{$kelas->nm_kelas}})</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -58,7 +58,7 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data Kegiatan Siswa</h2>
+                    <h2>Data Kegiatan Siswa - {{$pengguna->nm_pengguna}} ({{$kelas->nm_kelas}})</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -88,7 +88,7 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data Informasi Tambahan</h2>
+                    <h2>Data Informasi Tambahan - {{$pengguna->nm_pengguna}} ({{$kelas->nm_kelas}})</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
