@@ -774,7 +774,6 @@
                     {{-- @endif --}}
                 </td>
             </tr>
-            @if (in_array($auth_data->sekolah_data->nm_singkat_sekolah, ['smpypm1', 'smpypm2']))
             <tr>
                 <td>3.{{ $urutan }}2</td>
                 <td>Kegiatan Melatih Keterampilan Hidup
@@ -782,14 +781,21 @@
                     <br><i>Life Skills Training Activities</i>
                     {{-- @endif --}}
                 </td>
-                <td>Pramuka dan Kemah Wisata <br> (Kedisiplinan, kemandirian, kerjasama dan tanggung jawab)
+                <td>Pramuka
+                    @if (in_array($auth_data->sekolah_data->nm_singkat_sekolah, ['smpypm1', 'smpypm2']))
+                    dan Kemah Wisata
+                    @endif
+                    <br> (Kedisiplinan, kemandirian, kerjasama dan tanggung jawab)
                     {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
-                    <br><i>Scouting and Tourism Camp <br> (Discipline, independence, cooperation and
+                    <br><i>Scouting 
+                    @if (in_array($auth_data->sekolah_data->nm_singkat_sekolah, ['smpypm1', 'smpypm2']))
+                    and Tourism Camp
+                    @endif
+                    <br> (Discipline, independence, cooperation and
                         responsibility)</i>
                     {{-- @endif --}}
                 </td>
             </tr>
-            @endif
 
             <p style="display:none">{{ $no = 2 }}</p>
 
