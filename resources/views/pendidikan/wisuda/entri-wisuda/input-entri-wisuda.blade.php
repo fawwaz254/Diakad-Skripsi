@@ -45,12 +45,12 @@
                                 <input type="text" class="form-control" name="tgl_pengajuan_wisuda" required="" aria-required="true" aria-invalid="true" value="{{$tgl_pengajuan_wisuda}}" readonly >
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                        {{-- <h2 class="card-inside-title">
                             Biodata
-                        </h2>
+                        </h2> --}}
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="status_biodata">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: none !important">
+                                <select class="form-control show-tick" name="status_biodata" >
                                     @if($data_pengajuan_wisuda->status_biodata == 0)
                                         <option value="0" selected >Belum Lengkap</option>
                                         <option value="1">Lengkap</option>
@@ -61,11 +61,11 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                        {{-- <h2 class="card-inside-title">
                             Status Lab
-                        </h2>
+                        </h2> --}}
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: none !important">
                                 <select class="form-control show-tick" name="status_lab">
                                     @if($data_pengajuan_wisuda->status_lab == 0)
                                         <option value="0" selected >Ada Tanggungan</option>
@@ -77,11 +77,11 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                        {{-- <h2 class="card-inside-title">
                             Status Perpus
-                        </h2>
+                        </h2> --}}
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: none !important">
                                 <select class="form-control show-tick" name="status_perpus">
                                     @if($data_pengajuan_wisuda->status_perpus == 0)
                                         <option value="0" selected >Ada Tanggungan</option>
@@ -93,11 +93,11 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                        {{-- <h2 class="card-inside-title">
                             Status Ijasah
-                        </h2>
+                        </h2> --}}
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: none !important">
                                 <select class="form-control show-tick" name="status_ijasah">
                                     @if($data_pengajuan_wisuda->status_ijasah == 0)
                                         <option value="0" selected >Belum Cetak</option>
