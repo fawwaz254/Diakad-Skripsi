@@ -21,10 +21,10 @@
                                         <th>Nama Siswa</th>
                                         <th>Kelas</th>
                                         <th>Tgl Pengajuan Wisuda</th>
-                                        <th>Biodata</th>
+                                        {{-- <th>Biodata</th>
                                         <th>Status Lab</th>
                                         <th>Status Perpus</th>
-                                        <th>Status Ijasah</th>
+                                        <th>Status Ijasah</th> --}}
                                         <th>Nomor SK Kelulusan</th>
                                         <th>Tgl SK Kelulusan</th>
                                         <th>Nomor Ijasah</th>
@@ -68,10 +68,10 @@
             { data: 'nm_pengguna', name: 'nm_pengguna'},
             { data: 'nm_kelas', name: 'nm_kelas'},
             { data: 'tgl_pengajuan_wisuda', name: 'tgl_pengajuan_wisuda'},
-            { data: 'status_biodata', name: 'status_biodata'},
-            { data: 'status_lab', name: 'status_lab'},
-            { data: 'status_perpus', name: 'status_perpus'},
-            { data: 'status_ijasah', name: 'status_ijasah'},
+            // { data: 'status_biodata', name: 'status_biodata'},
+            // { data: 'status_lab', name: 'status_lab'},
+            // { data: 'status_perpus', name: 'status_perpus'},
+            // { data: 'status_ijasah', name: 'status_ijasah'},
             { data: 'nomor_sk_kelulusan', name: 'nomor_sk_kelulusan'},
             { data: 'tgl_sk_kelulusan', name: 'tgl_sk_kelulusan'},
             { data: 'nomor_ijasah', name: 'nomor_ijasah'},
