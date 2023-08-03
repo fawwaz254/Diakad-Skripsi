@@ -341,7 +341,7 @@ class EntriWisudaController extends BaseController
     }
     public function downloadExcel()
     {
-        $file = public_path() . "/excel/ContohFileExcelUploadNomorIjazah.xls";
+        $file = public_path() . "/excel/ContohFileExcelUploadNomorIjazahRev.xls";
         ob_end_clean();
         ob_start(); 
         $headers = [
