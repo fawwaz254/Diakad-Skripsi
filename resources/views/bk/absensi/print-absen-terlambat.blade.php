@@ -37,7 +37,7 @@
         <table>
             <tr>
                 <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:50px;" /></td>
-                <td colspan=6><h1 style="font-size: 10pt;" align="center">KWITANSI PEMBAYARAN<br> {{strtoupper($auth_data->sekolah_data->nm_sekolah)}}</h1></td>
+                <td colspan=6><h1 style="font-size: 10pt;" align="center">SURAT IZIN MASUK<br> {{strtoupper($auth_data->sekolah_data->nm_sekolah)}}</h1></td>
             </tr>
         </table>
         <table style="width: 100%; font-size:12px;font-weight: 700;">
@@ -59,7 +59,7 @@
             <tr>
                 <td>Tanggal</td>
                 <td>:</td>
-                <td>{{$presences->date}}</td>
+                <td>{{ Carbon\Carbon::parse($presences->date)->format('d-m-Y') }}</td>
             </tr>
         </table>
         <hr>
@@ -89,7 +89,7 @@
         </table>
         <hr>
         <div class="ttd" style="font-weight:700;font-size: 12px;">
-            {{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }} {{$presences->date}} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
+            {{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }} {{ Carbon\Carbon::parse($presences->date)->format('d-m-Y') }} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
         </div>
         <div class="clear"></div>
     </div>
