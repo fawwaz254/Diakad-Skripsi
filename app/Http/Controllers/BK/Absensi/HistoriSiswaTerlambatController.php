@@ -41,6 +41,19 @@ class HistoriSiswaTerlambatController extends Controller
         return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'now', 'absensi_siswa', 'sudah_terkirim'));
     }
 
+    public function viewAddnotes(Request $request, $id_presensi_pengguna = null)
+    {
+        $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
+        return view('bk/absensi/add-notes-absensi', compact('presences'));
+    }
+    public function updateAddnotes(Request $request, $id_presensi_pengguna = null)
+    {
+        $input = $request->input();
+        $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
+        $presences->update(['status' => $input['status'], 'notes' => $input['notes'], 'check_in' => $input['check_in'], 'check_out' => $input['check_out']]);
+        return redirect("bimbingan-konseling#absensi/catat-siswa-terlambat");
+    }
+
     public function postSiswaTerlambat(Request $request){
 
         $input = (object) $request->input();
