@@ -61,6 +61,9 @@ class HistoriSiswaTerlambatController extends Controller
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
+        $date = $presences->date;
+        // dd($date->format('d M Y'));
+
         # printing purpose..
         # option = default/struk
         // $lebar = null;
