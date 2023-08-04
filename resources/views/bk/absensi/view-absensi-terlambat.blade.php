@@ -99,6 +99,7 @@
                                     <th>Check In</th>
                                     <th>Jarak Telat</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,6 +145,15 @@
                                             Belum Dilaporkan
                                         @endif
                                     </th>
+                                    <th>
+                                        <button type="button" class="btn bg-teal waves-effect"
+                                                onclick="editAbsensi('{{ $r->id_presensi_pengguna }}')">
+                                                <i class="material-icons">edit</i>
+                                        </button>
+                                        <a href=""
+                                            target="_blank" class="btn bg-red waves-effect">
+                                            <i class="material-icons">print</i></a>
+                                    </th>
                                     </tr>
                                 @endforeach
                                 @endif
@@ -166,7 +176,9 @@
         )
     }).trigger("change")
 
-
+    function editAbsensi(currUser) {
+        window.location = '/bimbingan-konseling#absensi/catat-siswa-terlambat/' + currUser + '/addnotes'
+    }
 
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val());
