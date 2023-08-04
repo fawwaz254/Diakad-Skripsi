@@ -16,6 +16,7 @@ use Validator;
 
 
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\Pendidikan\LibSiswa;
 use Illuminate\Http\Request;
 
 class HistoriSiswaTerlambatController extends Controller
@@ -46,6 +47,28 @@ class HistoriSiswaTerlambatController extends Controller
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
         return view('bk/absensi/add-notes-absensi', compact('presences'));
     }
+
+    public function PrintTerlambat(Request $request, $id =null)
+    {
+        # code..
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $lebar = 70;
+        $nama_sekolah = $auth_data->sekolah_data->nm_sekolah;
+        $presences = PresensiPengguna::where('id_presensi_pengguna', $id)->first();
+
+        $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $presences->id_pengguna);
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        # printing purpose..
+        # option = default/struk
+        // $lebar = null;
+
+        return view('bk/absensi/print-absen-terlambat', compact('auth_data', 'siswa', 'semester_aktif','nama_sekolah','presences','lebar'));
+
+    }
+
     public function updateAddnotes(Request $request, $id_presensi_pengguna = null)
     {
         $input = $request->input();

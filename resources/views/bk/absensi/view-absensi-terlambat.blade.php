@@ -150,7 +150,7 @@
                                                 onclick="editAbsensi('{{ $r->id_presensi_pengguna }}')">
                                                 <i class="material-icons">edit</i>
                                         </button>
-                                        <a href=""
+                                        <a href="bimbingan-konseling/absensi/catat-siswa-terlambat/print/{{$r->id_presensi_pengguna}}"
                                             target="_blank" class="btn bg-red waves-effect">
                                             <i class="material-icons">print</i></a>
                                     </th>
