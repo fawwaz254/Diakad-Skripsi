@@ -72,6 +72,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('catat-siswa-terlambat')->group(function () {
                 Route::get('/', [HistoriSiswaTerlambatController::class, 'viewSiswaTerlambat']);
+                Route::get('/print/{id}', [HistoriSiswaTerlambatController::class, 'PrintTerlambat']);
                 Route::get('/{id}/addnotes', [HistoriSiswaTerlambatController::class, 'viewAddnotes']);
                 Route::post('/{id}/addnotes', [HistoriSiswaTerlambatController::class, 'UpdateAddnotes']);
                 Route::get('/{date}', [HistoriSiswaTerlambatController::class, 'viewSiswaTerlambat']);
