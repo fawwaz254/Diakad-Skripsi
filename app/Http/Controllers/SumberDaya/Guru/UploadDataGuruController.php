@@ -24,7 +24,6 @@ class UploadDataGuruController extends BaseController
         $auth_data = $input->auth_data;
 
         return view('sumber-daya/guru/upload-data-guru/view-upload-data-guru', compact('auth_data'));
-
     }
 
     public function downloadFileExcel()
@@ -70,8 +69,30 @@ class UploadDataGuruController extends BaseController
 
                     //find Unit Kerja
                     $unit = UnitKerja::select('id_unit_kerja')->where('nm_unit_kerja', '=', $value['unit_kerja'])->first();
+                    // dd($unit);
+
 
                     if ($unit == null || $jenis_kelamin == null || $status == null) {
+                        if ($unit == null) {
+                            return [
+                                'status' => 300, // GAGAL
+                                'message' => 'Unit Kerja Tidak Ada',
+                            ];
+                        }
+                        if ($jenis_kelamin == null) {
+                            return [
+                                'status' => 300, // GAGAL
+                                'message' => 'Jenis Kelamin Tidak Ada',
+                            ];
+                        }
+                        if ($status == null) {
+                            return [
+                                'status' => 300, // GAGAL
+                                'message' => 'Status Tidak Ada',
+                            ];
+                        }
+
+
                         // $arr[] = [];
                     } else {
                         //generate id
@@ -92,6 +113,7 @@ class UploadDataGuruController extends BaseController
                     }
                 }
             }
+
             if (!empty($arr)) {
                 DB::beginTransaction();
                 try {
