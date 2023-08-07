@@ -16,6 +16,7 @@ use Validator;
 
 
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\Pendidikan\LibSiswa;
 use Illuminate\Http\Request;
 
 class HistoriSiswaTerlambatController extends Controller
@@ -39,6 +40,44 @@ class HistoriSiswaTerlambatController extends Controller
             return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'terlambat', 'now', 'absensi_siswa', 'sudah_terkirim'));
         }
         return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'now', 'absensi_siswa', 'sudah_terkirim'));
+    }
+
+    public function viewAddnotes(Request $request, $id_presensi_pengguna = null)
+    {
+        $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
+        return view('bk/absensi/add-notes-absensi', compact('presences'));
+    }
+
+    public function PrintTerlambat(Request $request, $id =null)
+    {
+        # code..
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $lebar = 70;
+        $nama_sekolah = $auth_data->sekolah_data->nm_sekolah;
+        $presences = PresensiPengguna::where('id_presensi_pengguna', $id)->first();
+
+        $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $presences->id_pengguna);
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $date = $presences->date;
+        // dd($date->format('d M Y'));
+
+        # printing purpose..
+        # option = default/struk
+        // $lebar = null;
+
+        return view('bk/absensi/print-absen-terlambat', compact('auth_data', 'siswa', 'semester_aktif','nama_sekolah','presences','lebar'));
+
+    }
+
+    public function updateAddnotes(Request $request, $id_presensi_pengguna = null)
+    {
+        $input = $request->input();
+        $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
+        $presences->update(['status' => $input['status'], 'notes' => $input['notes'], 'check_in' => $input['check_in'], 'check_out' => $input['check_out']]);
+        return redirect("bimbingan-konseling#absensi/catat-siswa-terlambat");
     }
 
     public function postSiswaTerlambat(Request $request){

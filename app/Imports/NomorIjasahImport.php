@@ -27,6 +27,7 @@ class NomorIjasahImport implements ToCollection, WithHeadingRow
 
             if ($siswa) {
                 PengajuanWisuda::where('id_siswa', $siswa->id_siswa)->update([
+                    'nomor_sk_kelulusan' => $row['nomor_sk_kelulusan'],
                     'nomor_ijasah' => $row['nomor_ijasah'],
                 ]);
             } else { }
