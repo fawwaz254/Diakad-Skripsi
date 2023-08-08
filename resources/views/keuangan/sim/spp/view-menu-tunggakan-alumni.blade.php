@@ -42,6 +42,7 @@
                                     <th>Tunggakan</th>
                                     <th>Tunggakan Data Lama</th>
                                     <th>Selisih</th>
+                                    <th>Total Tagihan</th>
                                     <th>Detail</th>
                                 </tr>
                             </thead>
@@ -123,6 +124,10 @@
             {
                 data: 'tunggakan.selisih',
                 name: 'tunggakan.selisih'
+            },
+            {
+                data: 'total_tagihan',
+                name: 'total_tagihan'
             },
             {
                 data: 'tunggakan',

@@ -1027,7 +1027,15 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $tahun = $input->tahun_akademik_semester;
 
-        $list_data = TagihanBiaya::select('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa',  'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa', DB::raw('SUM(tagihan_biaya.besar_biaya) as total_biaya'))
+        $list_data = TagihanBiaya::select(
+            'pengguna.nm_pengguna',
+            'tagihan_biaya.id_siswa',
+            'siswa.id_siswa',
+            'siswa.nis_siswa',
+            'siswa.thn_masuk_siswa',
+            DB::raw('SUM(tagihan_biaya.besar_biaya) as total_biaya'),
+            DB::raw('COUNT(tagihan_biaya.id_tagihan_biaya) as total_tagihan')
+        )
             ->join('siswa', 'tagihan_biaya.id_siswa', '=', 'siswa.id_siswa')
             ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
             ->join('detail_biaya', 'tagihan_biaya.id_detail_biaya', '=', 'detail_biaya.id_detail_biaya')
@@ -1061,12 +1069,7 @@ class SppController extends BaseController
             })->editColumn('total_biaya', function ($item) {
                 return 'Rp ' . number_format($item->total_biaya);
             })
-            // ->addColumn('action', function ($item) {
-            //     $data = array(
-            //         'id' => $item->id_siswa,
-            //     );
-            //     return $data;
-            // })
+
             ->make(true);
     }
 
