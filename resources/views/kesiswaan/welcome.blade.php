@@ -27,6 +27,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                 </div>
             </div> --}}
             <br>
+            @if ($count_siswa)    
             <div class="row clearfix">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
@@ -99,6 +100,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                     </div>
                 @endforeach
             </div>
+            @endif
         </div>
     </div>
     <br>
