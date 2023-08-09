@@ -1027,12 +1027,22 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $tahun = $input->tahun_akademik_semester;
 
-        $list_data = TagihanBiaya::select('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa',  'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa', DB::raw('SUM(tagihan_biaya.besar_biaya) as total_biaya'))
+        $list_data = TagihanBiaya::select(
+            'pengguna.nm_pengguna',
+            'tagihan_biaya.id_siswa',
+            'siswa.id_siswa',
+            'siswa.nis_siswa',
+            'siswa.thn_masuk_siswa',
+            DB::raw('SUM(tagihan_biaya.besar_biaya) as total_biaya'),
+            DB::raw('COUNT(tagihan_biaya.id_tagihan_biaya) as total_tagihan')
+        )
             ->join('siswa', 'tagihan_biaya.id_siswa', '=', 'siswa.id_siswa')
             ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+            ->join('detail_biaya', 'tagihan_biaya.id_detail_biaya', '=', 'detail_biaya.id_detail_biaya')
             ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
             ->groupBy('pengguna.nm_pengguna', 'tagihan_biaya.id_siswa',  'siswa.id_siswa', 'siswa.nis_siswa', 'siswa.thn_masuk_siswa')
             ->where('tagihan_biaya.is_tagih', '1')
+            ->where('detail_biaya.id_jenis_detail_biaya', 4)
             ->where('status_pengguna.nm_status_pengguna', 'LULUS')
             ->when($tahun != '0', function ($q) use ($tahun) {
                 $q->where('siswa.thn_masuk_siswa', $tahun);
@@ -1059,12 +1069,7 @@ class SppController extends BaseController
             })->editColumn('total_biaya', function ($item) {
                 return 'Rp ' . number_format($item->total_biaya);
             })
-            // ->addColumn('action', function ($item) {
-            //     $data = array(
-            //         'id' => $item->id_siswa,
-            //     );
-            //     return $data;
-            // })
+
             ->make(true);
     }
 
