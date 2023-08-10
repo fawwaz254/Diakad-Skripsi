@@ -38,6 +38,7 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
+                                                <th>NIS</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
                                                 <th>Sub Kategori</th>
@@ -58,6 +59,7 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
+                                                <th>NIS</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
                                                 <th>Mapel</th>
@@ -79,6 +81,7 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
+                                                <th>NIS</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
                                                 <th>Sub Kategori</th>
@@ -133,6 +136,12 @@
                 data: 'index_table',
                 defaultContent: '',
                 searchable: false,
+                orderable: false
+            },
+            {
+                data: 'nis_siswa',
+                name: 'siswa.nis_siswa',
+                // searchable: false,
                 orderable: false
             },
             {
@@ -218,6 +227,12 @@
                 orderable: false
             },
             {
+                data: 'nis_siswa',
+                name: 'siswa.nis_siswa',
+                // searchable: false,
+                orderable: false
+            },
+            {
                 data: 'nm_siswa',
                 name: 'pengguna.nm_pengguna',
                 // searchable: false,
@@ -299,6 +314,12 @@
                 data: 'index_table',
                 defaultContent: '',
                 searchable: false,
+                orderable: false
+            },
+            {
+                data: 'nis_siswa',
+                name: 'siswa.nis_siswa',
+                // searchable: false,
                 orderable: false
             },
             {
