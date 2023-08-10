@@ -108,7 +108,7 @@ class TindakanPelanggaranController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1");
-
+        // dd($list_data);
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
         if($pengguna){
@@ -122,6 +122,9 @@ class TindakanPelanggaranController extends BaseController
                         $hasil = true;
                     }
                     return $hasil;
+                })
+                ->addColumn('nis_siswa', function ($item) {
+                    return $item->nis_siswa;
                 })
                 ->addColumn('nm_siswa', function ($item) {
                     return $item->nm_pengguna;
@@ -203,6 +206,9 @@ class TindakanPelanggaranController extends BaseController
                     }
                     return $hasil;
                 })
+                ->addColumn('nis_siswa', function ($item) {
+                    return $item->nis_siswa;
+                })
                 ->addColumn('nm_siswa', function ($item) {
                     return $item->nm_pengguna;
                 })
@@ -270,6 +276,9 @@ return [
                         $hasil = true;
                     }
                     return $hasil;
+                })
+                ->addColumn('nis_siswa', function ($item) {
+                    return $item->nis_siswa;
                 })
                 ->addColumn('nm_siswa', function ($item) {
                     if (! empty($item->nm_siswa)) {
