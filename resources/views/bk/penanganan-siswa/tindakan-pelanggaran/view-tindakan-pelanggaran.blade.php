@@ -121,7 +121,7 @@
     var primary_table_belum_nonkbm = $('#primary_table_belum_nonkbm').DataTable({
         processing: true,
         serverSide: true,
-        "bFilter": false,
+        // "bFilter": false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
@@ -138,13 +138,13 @@
             {
                 data: 'nm_siswa',
                 name: 'pengguna.nm_pengguna',
-                searchable: false,
+                // searchable: false,
                 orderable: false
             },
             {
                 data: 'nm_kelas',
                 name: 'kelas.nm_kelas',
-                searchable: false,
+                // searchable: false,
                 orderable: false
             },
             {
@@ -203,7 +203,7 @@
     var primary_table_belum_kbm = $('#primary_table_belum_kbm').DataTable({
         processing: true,
         serverSide: true,
-        "bFilter": false,
+        // "bFilter": false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
@@ -220,19 +220,19 @@
             {
                 data: 'nm_siswa',
                 name: 'pengguna.nm_pengguna',
-                searchable: false,
+                // searchable: false,
                 orderable: false
             },
             {
                 data: 'nm_kelas',
                 name: 'kelas.nm_kelas',
-                searchable: false,
+                // searchable: false,
                 orderable: false
             },
             {
                 data: 'nm_mapel',
                 name: 'mata_pelajaran.nm_mata_pelajaran',
-                searchable: false,
+                // searchable: false,
                 orderable: false,
             },
             {
@@ -287,7 +287,7 @@
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
         serverSide: true,
-        "bFilter": false,
+        // "bFilter": false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
@@ -303,12 +303,12 @@
             },
             {
                 data: 'nm_siswa',
-                searchable: false,
+                // searchable: false,
                 orderable: false
             },
             {
                 data: 'nm_kelas',
-                searchable: false,
+                // searchable: false,
                 orderable: false
             },
             {
