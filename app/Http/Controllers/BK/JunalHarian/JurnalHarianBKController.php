@@ -98,7 +98,7 @@ class JurnalHarianBKController extends Controller
                     $data->id_pengguna                  = $input->auth_data->pengguna->id_pengguna;
                     $data->id_siswa                     = $input->id_siswa;
                     $data->created_by                   = $input->auth_data->pengguna->id_pengguna;
-
+ 
                     if ($request->hasFile('file')) {
                         $validator = Validator::make($request->all(), [
                             'file' => 'mimes:pptx,docx,doc,xlsx,jpeg,jpg,png,pdf|required|max:5120'
