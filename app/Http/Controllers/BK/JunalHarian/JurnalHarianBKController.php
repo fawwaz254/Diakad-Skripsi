@@ -83,9 +83,9 @@ class JurnalHarianBKController extends Controller
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $category_jurnal_harian_tendik = CategoryJurnalHarianTendik::whereHas('unit_kerja', function ($q) {
-                    $q->where('nm_unit_kerja', 'BK');
+                    $q->where('nm_unit_kerja', 'BK')->orWhere('nm_unit_kerja', 'Bimbingan Konseling');;
                 })->first();
-
+                // dd($category_jurnal_harian_tendik);
                 if ($category_jurnal_harian_tendik) {
                     $data                               = new LaporanKerjaHarianTendik();
                     $data->id_lap_kerha_t               = $id;
