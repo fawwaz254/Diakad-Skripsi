@@ -585,10 +585,10 @@ class LibSiswa
 
                 $siswa = $siswa
                     // ->where('pengambilan_mp.status_apv_pengambilan_mp', '=', 1)
+                    ->orderBy('pengguna.nm_pengguna', 'asc')
                     ->orderBy('siswa.nis_siswa', 'asc')
                     ->orderBy('kelas.nm_kelas', 'asc')
                     ->orderBy('kelas.tingkat', 'asc')
-                    ->orderBy('pengguna.nm_pengguna', 'asc')
                     ->get();
             } else {
                 $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
