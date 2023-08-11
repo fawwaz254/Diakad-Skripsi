@@ -225,6 +225,7 @@ class InsertUpdateSiswaController extends BaseController
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		// dd($input->link_google_drive);
 
 		if ($mode == "insert") {
 			$validator = Validator::make($request->all(), [
@@ -253,7 +254,7 @@ class InsertUpdateSiswaController extends BaseController
 					$siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->first();
 				}
 
-				$id_penerimaan 		= Penerimaan::where('jenis_penerimaan', '=', '2')->where('tahun_penerimaan', '=', $input->thn_masuk_siswa)->first();
+				$id_penerimaan 		= Penerimaan::where('jenis_penerimaan', '=', '1')->where('tahun_penerimaan', '=', $input->thn_masuk_siswa)->first();
 
 				//jika tidak ada siswa 
 				if ($siswa == null) {
@@ -398,7 +399,7 @@ class InsertUpdateSiswaController extends BaseController
 						// something went wrong
 						return [
 							'status' 	=> 200, // GAGAL
-							'message'	=> 'Insert Data Siswa Gagal'
+							'message'	=> 'Insert Data Siswa Gagal ' . $e
 						];
 					}
 				} else {
