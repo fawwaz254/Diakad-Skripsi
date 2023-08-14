@@ -83,9 +83,9 @@ class JurnalHarianBKController extends Controller
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $category_jurnal_harian_tendik = CategoryJurnalHarianTendik::whereHas('unit_kerja', function ($q) {
-                    $q->where('nm_unit_kerja', 'BK');
+                    $q->where('nm_unit_kerja', 'BK')->orWhere('nm_unit_kerja', 'Bimbingan Konseling');;
                 })->first();
-
+                // dd($category_jurnal_harian_tendik);
                 if ($category_jurnal_harian_tendik) {
                     $data                               = new LaporanKerjaHarianTendik();
                     $data->id_lap_kerha_t               = $id;
@@ -98,7 +98,7 @@ class JurnalHarianBKController extends Controller
                     $data->id_pengguna                  = $input->auth_data->pengguna->id_pengguna;
                     $data->id_siswa                     = $input->id_siswa;
                     $data->created_by                   = $input->auth_data->pengguna->id_pengguna;
-
+ 
                     if ($request->hasFile('file')) {
                         $validator = Validator::make($request->all(), [
                             'file' => 'mimes:pptx,docx,doc,xlsx,jpeg,jpg,png,pdf|required|max:5120'

@@ -3,7 +3,7 @@
 @endphp
 <div class="container-fluid">
     <div class="block-header">
-        <h2>DASHBOARD | {{$today->format('d M Y')}}</h2>
+        <h2>DASHBOARD TES COBA LAGI| {{$today->format('d M Y')}}</h2>
     </div>
     <div class="row">
         @if ($role_dashboard)

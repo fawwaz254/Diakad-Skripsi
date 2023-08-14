@@ -36,7 +36,7 @@
                         </div>
 
                         <h2 class="card-inside-title">
-                            Siswa yang bersangkutan (Opsional)
+                            Siswa yang bersangkutan ( Opsional )
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
