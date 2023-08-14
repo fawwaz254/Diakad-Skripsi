@@ -133,7 +133,7 @@
             @if ($sekolah == 'SMK PEMUDA KRIAN')
                 <div class="col-md-4">
                     <p>Bendahara PCM<br><br><br><br><br>
-                        <b><u>Drs.ec.H.Nanang Abdul Hakim,ST</u></b>
+                        <b><u>Ahmad Yusa, SE</u></b>
                     </p>
                 </div>
             @endif
