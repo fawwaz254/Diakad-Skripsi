@@ -53,7 +53,7 @@
                                         <th>No</th>
                                         <th>NIS</th>
                                         <th>Nama</th>
-                                        <th>Beri Reward</th>
+                                        <th>Lihat Nilai</th>
                                     </tr>
                                 </thead>
                             </table>

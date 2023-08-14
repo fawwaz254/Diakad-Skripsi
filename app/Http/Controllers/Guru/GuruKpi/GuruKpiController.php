@@ -58,9 +58,12 @@ class GuruKpiController extends BaseController
     public function InputNilaiKpiSiswa(Request $request,$id_siswa){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $kpi = KategoriKpi::get();
         $siswa = Siswa::where('id_siswa',$id_siswa)->first();
+        // dd($siswa->kelas->tingkat);
         $semester = Semester::where('is_aktif_semester',1)->first();
+        // dd($semester->nm_semester);
+        $kpi = KategoriKpi::where('tingkat',$siswa->kelas->tingkat)->where('semester',$semester->nm_semester)->get();
+        // dd($kpi);
 
         // $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
         //     ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
