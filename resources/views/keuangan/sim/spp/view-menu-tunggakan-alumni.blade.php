@@ -106,8 +106,8 @@
                 name: 'nm_pengguna'
             },
             {
-                data: 'siswa.last_kelas_siswa.kelas.nm_kelas',
-                name: 'siswa.last_kelas_siswa.kelas.nm_kelas'
+                data: 'nm_kelas',
+                name: 'nm_kelas'
             },
             {
                 data: 'thn_masuk_siswa',
@@ -269,7 +269,7 @@
                 $.each(response['data_tagihan_siswa_semester_lalu'], function(key, item) {
                     html += '<tr>';
                     html += '<td>' + (key + 1) + '</td>';
-                    html += '<td>' + item.kelas.nm_kelas + '</td>';
+                    html += '<td>' + item.kelas.nm_kelas || '-' + '</td>';
                     html += '<td>' + item.detail_biaya.bulan.nm_bulan + '</td>';
                     html += '<td>' + item.detail_biaya.biaya_sekolah.semester.tahun_ajaran +
                         '</td>';

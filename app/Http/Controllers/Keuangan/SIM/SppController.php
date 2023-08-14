@@ -1066,7 +1066,10 @@ class SppController extends BaseController
                     );
                 }
                 return $data;
-            })->editColumn('total_biaya', function ($item) {
+            })->editColumn('nm_kelas', function ($item) {
+                return $item->siswa->last_kelas_siswa ? $item->siswa->last_kelas_siswa->kelas->nm_kelas : '-';
+            })
+            ->addColumn('total_biaya', function ($item) {
                 return 'Rp ' . number_format($item->total_biaya);
             })
 
