@@ -415,7 +415,7 @@ class LibDataPelanggaran
                 ->leftJoin('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
                 ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                 ->where('presensi_mp_pelanggaran.is_sudah_tindakan', '=', 0)
-                ->where('presensi_mp_pelanggaran.id_kelas', '=', $wali_kelas->id_kelas)
+                ->where('siswa.id_kelas', '=', $wali_kelas->id_kelas)
                 ->orderBy('presensi_mp_pelanggaran.created_at', 'desc');
 
             if ($role == 'guru') {
@@ -466,7 +466,7 @@ class LibDataPelanggaran
                     ->leftJoin('pengguna as p_staff', 'p_staff.id_pengguna', '=', 'pelanggaran_siswa.created_by')
                     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->where('pelanggaran_siswa.is_sudah_tindakan', '=', 0)
-                    ->where('pelanggaran_siswa.id_kelas', '=', $wali_kelas->id_kelas)
+                    ->where('siswa.id_kelas', '=', $wali_kelas->id_kelas)
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
                 if ($is_datatable == null) {
                     $tindakanPelanggaran = $tindakanPelanggaran->get();
@@ -540,7 +540,7 @@ class LibDataPelanggaran
                     ->leftJoin('pengguna as p_guru_presensi', 'p_guru_presensi.id_pengguna', '=', 'presensi_mp_pelanggaran.created_by')
                     ->join('pengguna as p_tindakan', 'p_tindakan.id_pengguna', '=', 'tindakan_pelanggaran.created_by')
                     ->where('jenis_tindakan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->where('pelanggaran_siswa.id_kelas', '=', $wali_kelas->id_kelas)
+                    ->where('siswa.id_kelas', '=', $wali_kelas->id_kelas)
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
                 if ($is_datatable == null) {
