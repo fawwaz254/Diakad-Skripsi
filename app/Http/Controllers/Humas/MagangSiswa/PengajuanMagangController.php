@@ -159,6 +159,7 @@ class PengajuanMagangController extends BaseController
     $auth_data = $input->auth_data;
 
     $id_periode_magang = $input->id_periode_magang;
+    $id_rekanan_magang = $input->id_rekanan_magang;
 
     $data = PengajuanSiswaMagang::select('nm_periode_magang', 'nm_rekanan_magang', 'nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'semester.tahun_ajaran', 'semester.nm_semester', 'pengambilan_magang.status_apv_pengambilan_magang', 'status_magang', 'siswa.id_siswa', 'id_pengambilan_magang')
       ->join('siswa', 'siswa.id_siswa', '=', 'pengambilan_magang.id_siswa')
@@ -169,8 +170,8 @@ class PengajuanMagangController extends BaseController
       ->join('semester', 'semester.id_semester', '=', 'periode_magang.id_semester')
       ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
         $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
-      })->when($input->id_rekanan_magang != 0, function ($q) {
-        $q->where('pengambilan_magang.id_rekanan_magang', $input->id_rekanan_magang);
+      })->when($id_rekanan_magang, function ($q) use ($id_rekanan_magang) {
+        $q->where('pengambilan_magang.id_rekanan_magang', $id_rekanan_magang);
       })
       // ->where('pengambilan_magang.id_rekanan_magang', $input->id_rekanan_magang)
       ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
@@ -242,6 +243,7 @@ class PengajuanMagangController extends BaseController
       ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
       ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
       ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+      ->where('pengambilan_magang.status_apv_pengambilan_magang',null)
       ->where('status_pengguna.aktif_status_pengguna', '=', 1)
       ->orderBy('kelas.tingkat', 'asc')
       ->orderBy('kelas.nm_kelas', 'asc')
