@@ -40,6 +40,7 @@ class WelcomeController extends BaseController
             ->with('pengguna')->whereHas('pengguna.status_pengguna', function ($q) {
                 $q->where('aktif_status_pengguna', 1)->where('nm_status_pengguna', 'AKTIF');
             })
+            ->whereNotNull('id_kelas')
             ->groupBy('jenis_kelamin')
             ->get();
 
