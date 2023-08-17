@@ -104,6 +104,7 @@
                             <th>Izin</th>
                             <th>Sakit</th>
                             <th>Alpha</th>
+                            <th>Tidak Punya Shift</th>
                         </tr>
                     </thead>
                     <tr>
@@ -113,6 +114,7 @@
                         <td>{{ $jumlah_izin }}</td>
                         <td>{{ $jumlah_sakit }}</td>
                         <td>{{ $jumlah_alpha }}</td>
+                        <th>{{ $tidak_punya_shift }}</th>
                     </tr>
                 </table>
             </div>
@@ -173,49 +175,49 @@
                             @php
                                 $no = 1;
                             @endphp
-                            @if (!empty($hasil))
+                            @if (isset($hasil))
                                 @foreach ($hasil as $r)
                                     @if ($no % 2 == 0)
                                         <tr style="background: #DDA0DD">
                                         @else
                                         <tr>
                                     @endif
-                                    @if ($r['shift'])
-                                        @if ($r['status'] == $status || $status == '0')
-                                            <td style="text-align: center;">{{ $no++ }}</td>
-                                            <td style="text-align: center;">{{ $r['kelas'] }}</td>
-                                            <td style="text-align: center;">{{ $r['nis'] }}</td>
-                                            <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
+                                    {{-- @if ($r['shift']) --}}
+                                    @if ($r['status'] == $status || $status == '0')
+                                        <td style="text-align: center;">{{ $no++ }}</td>
+                                        <td style="text-align: center;">{{ $r['kelas'] }}</td>
+                                        <td style="text-align: center;">{{ $r['nis'] }}</td>
+                                        <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
 
-                                            <td>{{ $r['check_in'] }}</td>
-                                            <td>{{ $r['check_out'] }}</td>
-                                            <td
-                                                @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @elseif($r['status'] == 'Belum Absent') style="background: #ffffff" @else style="background: #fffdb5" @endif>
-                                                {{ $r['status'] }}</td>
+                                        <td>{{ $r['check_in'] }}</td>
+                                        <td>{{ $r['check_out'] }}</td>
+                                        <td
+                                            @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @elseif($r['status'] == 'Belum Absent') style="background: #ffffff" @else style="background: #fffdb5" @endif>
+                                            {{ $r['status'] }}</td>
 
-                                            {{-- @if (Request::segment(1) == 'humas') --}}
-                                            <td style="text-align: center;display:flex;justify-content:center">
-                                                @if ($r['id_presensi_pengguna'] == '')
-                                                    <button type="button" class="btn bg-teal waves-effect"
-                                                        onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
-                                                        <i class="material-icons">edit</i>
-                                                    </button>
-                                                @else
-                                                    <button type="button" class="btn bg-teal waves-effect"
-                                                        onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
-                                                        <i class="material-icons">edit</i>
-                                                    </button>
-                                                    <button data-id="{{ $r['id_presensi_pengguna'] }}"
-                                                        style="margin-left:3px;"
-                                                        class="btn bg-red waves-effect delete-record">
-                                                        <i class="material-icons">delete</i>
-                                                    </button>
-                                                @endif
-                                            </td>
-                                            {{-- @endif --}}
-                                            </tr>
-                                        @endif
-                                    @else
+                                        {{-- @if (Request::segment(1) == 'humas') --}}
+                                        <td style="text-align: center;display:flex;justify-content:center">
+                                            @if ($r['id_presensi_pengguna'] == '')
+                                                <button type="button" class="btn bg-teal waves-effect"
+                                                    onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                            @else
+                                                <button type="button" class="btn bg-teal waves-effect"
+                                                    onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button data-id="{{ $r['id_presensi_pengguna'] }}"
+                                                    style="margin-left:3px;"
+                                                    class="btn bg-red waves-effect delete-record">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            @endif
+                                        </td>
+                                        {{-- @endif --}}
+                                        </tr>
+                                        {{-- @endif --}}
+                                        {{-- @else --}}
                                     @endif
                                 @endforeach
                             @else
