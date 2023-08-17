@@ -190,6 +190,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-copy-jadwal-kelas', [SetJadwalKelasController::class, 'copyTambahJadwalKelas']);
 
             Route::post('getMataPelajaran', [SetJadwalKelasController::class, 'getMataPelajaran']);
+            Route::get('remove-kelas-kosong', [SetJadwalKelasController::class, 'removeKelasKosong']);
 
 
 

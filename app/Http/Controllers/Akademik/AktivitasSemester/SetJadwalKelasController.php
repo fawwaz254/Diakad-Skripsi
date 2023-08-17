@@ -451,4 +451,13 @@ class SetJadwalKelasController extends Controller
         }
         return $data;
     }
+    public function removeKelasKosong(Request $request)
+    {
+        $kelas_mp = KelasMp::whereDoesntHave('kelas')->get();
+        foreach ($kelas_mp as $k) {
+            $k->deleted_by = 'remove kelas kosong';
+            $k->save();
+            $k->delete();
+        }
+    }
 }

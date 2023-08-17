@@ -49,7 +49,7 @@
                                 Date
                             </h2>
                             <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY"
-                                value="{{ $now }}" name="date" aria-required="true" aria-invalid="true">
+                                value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
@@ -77,7 +77,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>List Siswa Terlambat ({{ $now }}) <br><br>
+                    <h2>List Siswa Terlambat ({{ $date }}) <br><br>
                         <button class="btn  bg-blue waves-effect" onclick="sendSiswaTerlambat()"><i
                                 class="material-icons">add</i><span>Kirim ke Pelanggaran</span></button>
                     </h2>
@@ -85,7 +85,9 @@
 
                 <div class="body">
                     <div class="table-responsive ">
-                        <table class="table table-bordered" width="600px">
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
+                            {{-- <table class="table table-bordered" width="600px"> --}}
                             <thead style="background:#9C27B0;color:white">
                                 <tr>
                                     <th style="text-align: center;">#</th>
@@ -106,7 +108,7 @@
 
                                 @if (!empty($terlambat))
                                     @foreach ($terlambat as $key => $r)
-                                        @if ($sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
+                                        @if ($sudah_terkirim->firstWhere('id_siswa', $r['pengguna']->siswa->id_siswa))
                                             <tr style="background: #01ff4d">
                                             @else
                                                 @if ($key % 2 == 1)
@@ -116,30 +118,28 @@
                                         @endif
                                     @endif
 
-
                                     <th style="text-align: center;">{{ $loop->iteration }}</th>
                                     <th style="text-align: center;">
-                                        @if (!$sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
-                                            <input id="checkbox-{{ $r->id_pengguna }}" type="checkbox"
-                                                name="id_pengguna" class="filled-in" value="{{ $r->id_pengguna }}">
-                                            <label for="checkbox-{{ $r->id_pengguna }}"></label>
+                                        @if (!$sudah_terkirim->firstWhere('id_siswa', $r['pengguna']->siswa->id_siswa))
+                                            <input id="checkbox-{{ $r['pengguna']->id_pengguna }}" type="checkbox"
+                                                name="id_pengguna" class="filled-in"
+                                                value="{{ $r['pengguna']->id_pengguna }}">
+                                            <label for="checkbox-{{ $r['pengguna']->id_pengguna }}"></label>
                                         @endif
                                     </th>
-                                    <th>{{ $r->pengguna->nm_pengguna }}</th>
-                                    <th>{{ $r->pengguna->siswa->kelas->nm_kelas }}</th>
-                                    <th>{{ $r->check_in }}</th>
+                                    <th>{{ $r['pengguna']->nm_pengguna }}</th>
+                                    <th>{{ $r['pengguna']->siswa->kelas->nm_kelas }}</th>
+                                    <th>{{ $r['pengguna']->presensi_pengguna ? $r['pengguna']->presensi_pengguna->check_in : 'Belum Absent' }}
+                                    </th>
                                     @php
-                                        $options = [
-                                            'join' => ', ',
-                                            'parts' => 2,
-                                            'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE,
-                                        ];
+                                        
                                     @endphp
                                     <th>
-                                        {{ \Carbon\carbon::parse($r->check_in)->diffForHumans(\Carbon\carbon::parse($absensi_siswa->start_time), $options) }}
+                                        {{ $r['keterangan'] }}
+                                        {{-- {{ \Carbon\carbon::parse($r->check_in)->diffForHumans(\Carbon\carbon::parse($absensi_siswa->start_time), $options) }} --}}
                                     </th>
                                     <th>
-                                        @if ($sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
+                                        @if ($sudah_terkirim->firstWhere('id_siswa', $r['pengguna']->siswa->id_siswa))
                                             Sudah Dilaporkan
                                         @else
                                             Belum Dilaporkan
@@ -147,10 +147,10 @@
                                     </th>
                                     <th>
                                         <button type="button" class="btn bg-teal waves-effect"
-                                                onclick="editAbsensi('{{ $r->id_presensi_pengguna }}')">
-                                                <i class="material-icons">edit</i>
+                                            onclick="editAbsensi('{{ $r['pengguna']->presensi_pengguna ? $r['pengguna']->presensi_pengguna->id_presensi_pengguna : 0 }}')">
+                                            <i class="material-icons">edit</i>
                                         </button>
-                                        <a href="bimbingan-konseling/absensi/catat-siswa-terlambat/print/{{$r->id_presensi_pengguna}}"
+                                        <a href="bimbingan-konseling/absensi/catat-siswa-terlambat/print/{{ $r['pengguna']->presensi_pengguna ? $r['pengguna']->presensi_pengguna->id_presensi_pengguna : 0 }}"
                                             target="_blank" class="btn bg-red waves-effect">
                                             <i class="material-icons">print</i></a>
                                     </th>
@@ -175,6 +175,16 @@
             .format(this.getAttribute("data-date-format"))
         )
     }).trigger("change")
+
+    $(document).ready(function() {
+        var table = $('.dataTable').DataTable({
+            paging: false,
+            lengthMenu: [
+                [-1],
+                ["All"]
+            ],
+        });
+    });
 
     function editAbsensi(currUser) {
         window.location = '/bimbingan-konseling#absensi/catat-siswa-terlambat/' + currUser + '/addnotes'
@@ -219,7 +229,7 @@
             type: 'POST',
             data: {
                 data_siswa: pengguna,
-                tanggal: '{{ $now }}'
+                tanggal: '{{ $date }}'
             },
             success: function(response) {
                 if (response.status_code == 200) {

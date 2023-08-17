@@ -14,7 +14,9 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\PembayaranBiaya;
 use Illuminate\Routing\Controller as BaseController;
+use Carbon\Carbon;
 
 class TagihanSiswaController extends BaseController
 {
@@ -69,16 +71,15 @@ class TagihanSiswaController extends BaseController
 
             if ($status == 1) {
                 if (!empty($kelas)) {
-                    if($kelas == 'all'){
+                    if ($kelas == 'all') {
                         $list_data = $list_data->whereNotNull('id_kelas')->orderBy("id_kelas", "asc");
-                    }else{
+                    } else {
                         $list_data = $list_data->where('id_kelas', $kelas);
                     }
                 }
             } else if ($status == 2) {
                 if (!empty($kelas)) {
-                    if($kelas === 'all'){
-                    }else{
+                    if ($kelas === 'all') { } else {
                         $list_data = $list_data->whereHas('last_kelas_siswa', function ($q) use ($kelas) {
                             $q->where('id_kelas', $kelas)->with('kelas');
                         });
@@ -150,10 +151,10 @@ class TagihanSiswaController extends BaseController
 
         if ($id_kelas == 'all') {
             $kelas_data = Kelas::get();
-        }else{
+        } else {
             $kelas_data = Kelas::find($id_kelas);
         }
-        
+
 
         $jenis_tagihan_explode = explode(",", $jenis_tagihan);
 
@@ -183,9 +184,9 @@ class TagihanSiswaController extends BaseController
         }, 'pengguna', 'kelas']);
 
         if ($status == 1) {
-            if($id_kelas == 'all'){
+            if ($id_kelas == 'all') {
                 $list_data = $list_data->whereNotNull('id_kelas');
-            }else{
+            } else {
                 $list_data = $list_data->whereHas('kelas', function ($q) use ($id_kelas) {
                     $q->where('id_kelas', $id_kelas);
                 });
@@ -240,7 +241,7 @@ class TagihanSiswaController extends BaseController
             return $data;
         });
 
-        return view('keuangan/laporan-keuangan/tagihan-siswa/print-tagihan-siswa', compact('auth_data', 'semester_mulai', 'semester_selesai', 'status', 'all_data', 'kelas_data','id_kelas'));
+        return view('keuangan/laporan-keuangan/tagihan-siswa/print-tagihan-siswa', compact('auth_data', 'semester_mulai', 'semester_selesai', 'status', 'all_data', 'kelas_data', 'id_kelas'));
     }
 
     public function showListTagihan(Request $request, $tahun, $id_kelas)
@@ -249,21 +250,21 @@ class TagihanSiswaController extends BaseController
 
         $id_semester_mulai = Semester::where('kode_semester', $tahun . '1')->first()->id_semester;
         $id_semester_selesai = Semester::where('kode_semester', $tahun . '2')->first()->id_semester;
-        if($id_kelas == 'all'){
+        if ($id_kelas == 'all') {
             $tagihan_biaya = TagihanBiaya::whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
                 $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
             })
-            ->groupBy('id_detail_biaya')
-            ->pluck('id_detail_biaya');
-        }else{
+                ->groupBy('id_detail_biaya')
+                ->pluck('id_detail_biaya');
+        } else {
             $tagihan_biaya = TagihanBiaya::where('id_kelas', $id_kelas)
-            ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
-                $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
-            })
-            ->groupBy('id_detail_biaya')
-            ->pluck('id_detail_biaya');
+                ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
+                    $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+                })
+                ->groupBy('id_detail_biaya')
+                ->pluck('id_detail_biaya');
         }
-        
+
 
         $data_detail_biaya = DetailBiaya::with('bulan', 'biaya')->whereIn('id_detail_biaya', $tagihan_biaya)->get();
 
@@ -288,5 +289,44 @@ class TagihanSiswaController extends BaseController
         });
 
         return response()->json($data_detail_biaya_modified);
+    }
+
+    public function bayarBulanJuli(Request $request)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $id_semester =  $semester_aktif->id_semester;
+
+        $tagihan = TagihanBiaya::where('is_tagih', 1)->whereHas('detail_biaya', function ($query) use ($id_semester) {
+            $query->where('id_bulan', '=', '7')->whereHas('biaya_sekolah', function ($query) use ($id_semester) {
+                $query->where('id_semester', '=', $id_semester);
+            });
+        })->get();
+
+        foreach ($tagihan as $t) {
+            $besar = $t->besar_biaya;
+            $t->is_tagih = 0;
+            $t->besar_pembayaran =  $besar;
+            $t->tgl_pelunasan = '2023-07-17 00:00:00';
+            $t->keterangan = 'pembayaran awal tahun';
+
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $pembayaranBiaya = new PembayaranBiaya;
+            $pembayaranBiaya->id_pembayaran_biaya = $uuid;
+            $pembayaranBiaya->id_tagihan_biaya = $t->id_tagihan_biaya;
+            $pembayaranBiaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
+            $pembayaranBiaya->id_semester_bayar = $id_semester;
+            $pembayaranBiaya->besar_pembayaran =  $besar;
+            $pembayaranBiaya->tgl_pembayaran = '2023-07-17 00:00:00';
+            $pembayaranBiaya->keterangan = 'pembayaran awal tahun';
+            $pembayaranBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
+            $pembayaranBiaya->save();
+            $t->save();
+        }
     }
 }

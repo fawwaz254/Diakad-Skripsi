@@ -144,6 +144,18 @@ class Pengguna extends Authenticatable
         return $this->hasMany(FilePengguna::class, 'pengguna_id', 'id_pengguna');
     }
 
+
+    public function presensi_pengguna()
+    {
+        return $this->belongsTo(PresensiPengguna::class, 'id_pengguna', 'id_pengguna');
+    }
+
+    public function shiftPengguna()
+    {
+        return $this->belongsTo(ShiftPengguna::class, 'id_pengguna', 'id_pengguna');
+    }
+
+
     public function status_join_to_text()
     {
         switch ($this->status_join_table) {
