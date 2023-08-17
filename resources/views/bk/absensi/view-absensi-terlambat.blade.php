@@ -100,6 +100,7 @@
                                     <th>Kelas</th>
                                     <th>Check In</th>
                                     <th>Jarak Telat</th>
+                                    <th>Note</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -108,10 +109,10 @@
 
                                 @if (!empty($terlambat))
                                     @foreach ($terlambat as $key => $r)
-                                        @if ($sudah_terkirim->firstWhere('id_siswa', $r['pengguna']->siswa->id_siswa))
+                                        @if ($r['pengguna']->siswa->pelanggaranTerlambat)
                                             <tr style="background: #01ff4d">
                                             @else
-                                                @if ($key % 2 == 1)
+                                                @if ($loop->iteration % 2 != 1)
                                             <tr style="background: #DDA0DD">
                                             @else
                                             <tr>
@@ -120,7 +121,7 @@
 
                                     <th style="text-align: center;">{{ $loop->iteration }}</th>
                                     <th style="text-align: center;">
-                                        @if (!$sudah_terkirim->firstWhere('id_siswa', $r['pengguna']->siswa->id_siswa))
+                                        @if (empty($r['pengguna']->siswa->pelanggaranTerlambat))
                                             <input id="checkbox-{{ $r['pengguna']->id_pengguna }}" type="checkbox"
                                                 name="id_pengguna" class="filled-in"
                                                 value="{{ $r['pengguna']->id_pengguna }}">
@@ -131,15 +132,14 @@
                                     <th>{{ $r['pengguna']->siswa->kelas->nm_kelas }}</th>
                                     <th>{{ $r['pengguna']->presensi_pengguna ? $r['pengguna']->presensi_pengguna->check_in : 'Belum Absent' }}
                                     </th>
-                                    @php
-                                        
-                                    @endphp
                                     <th>
                                         {{ $r['keterangan'] }}
-                                        {{-- {{ \Carbon\carbon::parse($r->check_in)->diffForHumans(\Carbon\carbon::parse($absensi_siswa->start_time), $options) }} --}}
                                     </th>
                                     <th>
-                                        @if ($sudah_terkirim->firstWhere('id_siswa', $r['pengguna']->siswa->id_siswa))
+                                        {{ $r['pengguna']->presensi_pengguna ? $r['pengguna']->presensi_pengguna->notes : '' }}
+                                    </th>
+                                    <th>
+                                        @if ($r['pengguna']->siswa->pelanggaranTerlambat)
                                             Sudah Dilaporkan
                                         @else
                                             Belum Dilaporkan
@@ -157,6 +157,10 @@
                                     </tr>
                                 @endforeach
                                 @endif
+
+                                <div id="place"> </div>
+
+
 
                             </tbody>
                         </table>

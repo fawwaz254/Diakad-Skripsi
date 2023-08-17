@@ -31,8 +31,10 @@ class HistoriSiswaTerlambatController extends Controller
         $terlambat = [];
         if (empty($date)) {
             $date = Carbon::now(env('APP_TIMEZONE', ''))->toDateString();
+        } else {
+            $date = Carbon::parse($date)->toDateString();
         }
-        $date = Carbon::parse($date)->toDateString();
+
         $options = [
             'join' => ', ',
             'parts' => 2,
@@ -45,11 +47,12 @@ class HistoriSiswaTerlambatController extends Controller
             },
             'presensi_pengguna' => function ($query) use ($date) {
                 $query->where('date', $date);
-            }, 'siswa'
+            }, 'siswa.pelanggaranTerlambat' => function ($query) use ($date) {
+                $query->where('tgl_pelanggaran', $date);
+            },
         ],)->whereHas('status_pengguna', function ($query) {
             $query->where('nm_status_pengguna', '=', 'AKTIF');
-        })->where('status_join_table', '3')
-            ->get();
+        })->where('status_join_table', '3')->get();
 
         foreach ($pengguna as $key => $p) {
             if (empty($p->shiftPengguna)) {
@@ -62,10 +65,9 @@ class HistoriSiswaTerlambatController extends Controller
                 $terlambat[$key]['keterangan'] = Carbon::parse($p->presensi_pengguna->check_in)->diffForHumans(Carbon::parse($p->shiftPengguna->shift_master->start_time), $options);
             }
         }
-        // dd($terlambat);
-        $sudah_terkirim = PelanggaranSiswa::where('tgl_pelanggaran', $date)->get();
-        return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'terlambat', 'date',  'sudah_terkirim'));
+        return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'terlambat', 'date'));
     }
+
 
     public function viewAddnotes(Request $request, $id_presensi_pengguna = null)
     {

@@ -362,11 +362,11 @@ class HistoriAbsensiController extends BaseController
             $date = Carbon::now()->format('Y-m-d');
         }
 
-        if (!isset($unit_kerja)) {
+        if (empty($unit_kerja)) {
             $unit_kerja = "0";
         }
 
-        if (!isset($status)) {
+        if (empty($status)) {
             $status = "0";
         }
 
