@@ -225,43 +225,41 @@
                                 @endphp
 
                                 @foreach ($hasil as $r)
-                                    @if ($r['shift'])
-                                        @if ($no % 2 == 1)
-                                            <tr style="background: #DDA0DD">
-                                            @else
-                                            <tr>
-                                        @endif
-                                        @if ($r['status'] == $status || $status == '0')
-                                            <td style="text-align: center;">{{ $no++ }}</td>
-                                            <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-                                            <td>{{ $r['unit_kerja'] }}</td>
-                                            <td>{{ $r['check_in'] }}</td>
-                                            <td>{{ $r['check_out'] }}</td>
-                                            <td
-                                                @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494"  @elseif($r['status'] == 'Belum Absent') style="background: #ffffff" @else style="background: #fffdb5" @endif>
-                                                {{ $r['status'] }}</td>
-                                            <td style="text-align: center;display:flex;justify-content:center">
-                                                @if ($r['id_presensi_pengguna'] == '')
-                                                    <button type="button" class="btn bg-teal waves-effect"
-                                                        onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
-                                                        <i class="material-icons">edit</i>
-                                                    </button>
-                                                @else
-                                                    <button type="button" class="btn bg-teal waves-effect"
-                                                        onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
-                                                        <i class="material-icons">edit</i>
-                                                    </button>
-                                                    <button data-id="{{ $r['id_presensi_pengguna'] }}"
-                                                        style="margin-left:3px;"
-                                                        class="btn bg-red waves-effect delete-record">
-                                                        <i class="material-icons">delete</i>
-                                                    </button>
-                                                @endif
-
-                                            </td>
-                                            </tr>
+                                    @if ($no % 2 == 1)
+                                        <tr style="background: #DDA0DD">
                                         @else
-                                        @endif
+                                        <tr>
+                                    @endif
+                                    @if ($r['status'] == $status || $status == '0')
+                                        <td style="text-align: center;">{{ $no++ }}</td>
+                                        <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
+                                        <td>{{ $r['unit_kerja'] }}</td>
+                                        <td>{{ $r['check_in'] }}</td>
+                                        <td>{{ $r['check_out'] }}</td>
+                                        <td
+                                            @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494"  @elseif($r['status'] == 'Belum Absent') style="background: #ffffff" @else style="background: #fffdb5" @endif>
+                                            {{ $r['status'] }}</td>
+                                        <td style="text-align: center;display:flex;justify-content:center">
+                                            @if ($r['id_presensi_pengguna'] == '')
+                                                <button type="button" class="btn bg-teal waves-effect"
+                                                    onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                            @else
+                                                <button type="button" class="btn bg-teal waves-effect"
+                                                    onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button data-id="{{ $r['id_presensi_pengguna'] }}"
+                                                    style="margin-left:3px;"
+                                                    class="btn bg-red waves-effect delete-record">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            @endif
+
+                                        </td>
+                                        </tr>
+                                    @else
                                     @endif
                                 @endforeach
 
