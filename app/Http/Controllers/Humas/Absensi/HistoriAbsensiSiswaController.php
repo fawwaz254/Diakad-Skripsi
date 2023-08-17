@@ -94,7 +94,7 @@ class HistoriAbsensiSiswaController extends Controller
             $penggunaQuery->whereHas('siswa.kelas', function ($query) {
                 $query->whereIn('tingkat',  [10, 11, 12]);
             });
-        } elseif ($id_kelas == "0") { } else {
+        } elseif ($id_kelas != "0") {
             $penggunaQuery->whereHas('siswa', function ($query) use ($id_kelas) {
                 $query->where('id_kelas', '=', $id_kelas);
             });
