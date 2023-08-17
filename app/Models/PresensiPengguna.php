@@ -20,18 +20,31 @@ class PresensiPengguna extends Model
 
     public $incrementing = false;
 
+
+    protected $fillable = [
+        'id_pengguna',
+        'status_join_table',
+        'unit',
+        'date',
+        'check_in',
+        'check_out',
+        'stataus',
+        'notes',
+        'created_by',
+        'updated_by',
+        'deleted_by'
+    ];
+
     protected $guarded = [];
 
 
-    // public function shift_master()
-    // {
-    //     return $this->belongsTo(ShiftMaster::class, 'code', 'id_shift_master' );
-    // }
-
-    public function pengguna(){
-        return  $this->belongsTo(Pengguna::class,'id_pengguna');
+    public function shiftPengguna()
+    {
+        return $this->belongsTo(ShiftPengguna::class, 'id_pengguna', 'id_pengguna');
     }
 
-
-
+    public function pengguna()
+    {
+        return  $this->belongsTo(Pengguna::class, 'id_pengguna');
+    }
 }

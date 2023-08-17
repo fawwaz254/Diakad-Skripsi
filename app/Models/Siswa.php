@@ -121,6 +121,11 @@ class Siswa extends Model
         return $this->hasOne(PengajuanWisuda::class, 'id_siswa');
     }
 
+    public function pelanggaranTerlambat()
+    {
+        return $this->belongsTo(PelanggaranSiswa::class, 'id_siswa', 'id_siswa');
+    }
+
     public function all_tagihan()
     {
         $tagihan = $this->tagihan_biaya()->isTagih()->with(

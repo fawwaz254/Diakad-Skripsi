@@ -59,57 +59,57 @@ class HistoriAbsensiSiswaController extends Controller
 
     public function viewDetailHistoriAbsensiSiswa(Request $request, $id_kelas, $date, $status)
     {
-        set_time_limit(9800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
-        if (empty($date)) {
-            $date = Carbon::now()->format('Y-m-d');
-        }
-        $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-
         $jumlah_hadir = 0;
         $jumlah_sakit = 0;
         $jumlah_izin = 0;
         $jumlah_telat = 0;
         $jumlah_alpha = 0;
         $belum_absent = 0;
+        $tidak_punya_shift = 0;
+        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        if (empty($date)) {
+            $date = Carbon::now()->format('Y-m-d');
+        }
+        $cek_libur = ManajemenHariLibur::where('date', $date)->first();
+
+        $penggunaQuery = Pengguna::with([
+            'shiftPengguna' => function ($query) use ($date) {
+                $query->where('date', $date)->with('shift_master');
+            },
+            'presensi_pengguna' => function ($query) use ($date) {
+                $query->where('date', $date);
+            }, 'siswa.kelas'
+        ])->whereHas('status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        });
 
         if ($id_kelas == "1") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->whereHas('siswa.kelas', function ($query) {
-                    $query->whereIn('tingkat',  [7, 8, 9]);
-                })->get()->sortBy('siswa.kelas.nm_kelas');
+            $penggunaQuery->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [7, 8, 9]);
+            });
         } elseif ($id_kelas == "2") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->whereHas('siswa.kelas', function ($query) {
-                    $query->whereIn('tingkat',  [10, 11, 12]);
-                })->get()->sortBy('siswa.kelas.nm_kelas');
+            $penggunaQuery->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [10, 11, 12]);
+            });
         } elseif ($id_kelas == "0") {
-            $pengguna = Pengguna::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
-                ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-                ->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF')
-                ->orderBy('kelas.tingkat')
-                ->orderBy('kelas.nm_kelas')
-                ->orderBy('siswa.nis_siswa')
-                ->get();
+            $penggunaQuery->whereHas('siswa');
         } else {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })
-                ->whereHas('siswa', function ($query) use ($id_kelas) {
-                    $query->where('id_kelas', '=', $id_kelas);
-                })->get()->sortBy('siswa.nis_siswa');
+            $penggunaQuery->whereHas('siswa', function ($query) use ($id_kelas) {
+                $query->where('id_kelas', '=', $id_kelas);
+            });
         }
-        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
-        $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
+
+        $pengguna = $penggunaQuery->get()->sortBy('siswa.kelas.tingkat')
+            ->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.nis_siswa');
+
+        // dd($pengguna);
+        // $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        // $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        // $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
+        $hasil = [];
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
@@ -119,97 +119,84 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
-
             $hasil[$key]['id_presensi_pengguna'] = "";
-            $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
-            $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
-            $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
-            $hasil[$key]['shift'] = $shiftMaster;
 
-            if ($attendance) {
-                if ($attendance->status) {
-                    $hasil[$key]['status'] = $attendance->status;
-                    if ($attendance->status == 'sakit') {
-                        $jumlah_sakit++;
-                    } elseif ($attendance->status == 'izin') {
-                        $jumlah_izin++;
-                    }
+            if ($value->presensi_pengguna &&  $value->shiftPengguna && $value->shiftPengguna->shift_master) {
+
+                $hasil[$key]['status'] = $value->presensi_pengguna->status;
+                if ($value->presensi_pengguna->status == 'sakit') {
+                    $jumlah_sakit++;
+                } elseif ($value->presensi_pengguna->status == 'izin') {
+                    $jumlah_izin++;
                 }
 
-                if ($attendance->id_presensi_pengguna) {
-                    $hasil[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
+                if ($value->presensi_pengguna->id_presensi_pengguna) {
+                    $hasil[$key]['id_presensi_pengguna'] = $value->presensi_pengguna->id_presensi_pengguna;
                 }
 
-                if ($attendance->check_in && isset($shiftMaster)) {
-                    $hasil[$key]['check_in'] = $attendance->check_in;
+                if ($value->presensi_pengguna->check_in) {
+                    $hasil[$key]['check_in'] = $value->presensi_pengguna->check_in;
                     $hasil[$key]['status'] = "Masuk";
                     $jumlah_hadir++;
                 }
 
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
-                        $jumlah_telat++;
-                        $hasil[$key]['status'] = "Masuk | Telat";
-                    }
+                if (!$value->shiftPengguna->shift_master->start_time == null && $value->presensi_pengguna->check_in > $value->shiftPengguna->shift_master->start_time) {
+                    $jumlah_telat++;
+                    $hasil[$key]['status'] = "Masuk | Telat";
                 }
 
-                if ($input->auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman') {
-                    if (isset($shiftMaster['end_time'])) {
-                        if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
-
-                            $hasil[$key]['status'] = "Pulang lebih awal";
-                        }
+                if ($value->presensi_pengguna->check_out) {
+                    if ($value->presensi_pengguna->check_out < $value->shiftPengguna->shift_master->end_time && $value->presensi_pengguna->check_out > $value->presensi_pengguna->check_in) {
+                        // $jumlah_pulangcepat++;
+                        $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
                     }
-                    if (isset($shiftMaster['start_time'])) {
-                        if (!$shiftMaster['start_time'] == null && !$attendance->check_out == null  && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
-                            $hasil[$key]['status'] = "Telat dan Pulang lebih awal";
-                        }
-                    }
-                    if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                        $hasil[$key]['status'] = 'Tidak Checkout';
-                    }
-                    if (isset($shiftMaster['start_time'])) {
-                        if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
-
-                            $hasil[$key]['status'] = "Telat & Tidak Checkout";
-                        }
-                    }
+                    $hasil[$key]['check_out'] = $value->presensi_pengguna->check_out;
                 }
 
-
-                if ($attendance->check_out) {
-                    $hasil[$key]['check_out'] = $attendance->check_out;
+                if ($value->shiftPengguna->shift_master->start_time && $value->presensi_pengguna->check_in >= $value->shiftPengguna->shift_master->start_time && $value->presensi_pengguna->check_out <  $value->shiftPengguna->shift_master->end_time && $value->presensi_pengguna->check_out != NULL) {
+                    $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
                 }
-            } else {
 
-                if ($shiftMaster) {
-
-                    if ($date < Carbon::now()->format('Y-m-d')) {
-                        $hasil[$key]['status'] = 'Alpha';
-                        $jumlah_alpha++;
-                    } else if ($date == Carbon::now()->format('Y-m-d')) {
-                        $hasil[$key]['status'] = 'Belum Absent';
-                        $belum_absent++;
-                    } else {
-                        $hasil[$key]['status'] = '';
-                    }
-
-                    if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
-                        $jumlah_alpha--;
+                if ($date < Carbon::now()->format('Y-m-d') && $value->presensi_pengguna->check_in && !$value->presensi_pengguna->check_out) {
+                    $hasil[$key]['status'] = 'Masuk | Tidak Checkout';
+                    // $tidak_checkout++;
+                }
+                if (isset($value->shiftPengguna->shift_master->start_time)) {
+                    if (!$value->shiftPengguna->shift_master->start_time == null && $value->presensi_pengguna->check_in > $value->shiftPengguna->shift_master->start_time && !$value->presensi_pengguna->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout";
                     }
                 }
+            } elseif (empty($value->presensi_pengguna) && $value->shiftPengguna && $value->shiftPengguna->shift_master) {
+                if ($date < Carbon::now()->format('Y-m-d')) {
+                    $hasil[$key]['status'] = 'Alpha';
+                    $jumlah_alpha++;
+                } else if ($date == Carbon::now()->format('Y-m-d')) {
+                    $hasil[$key]['status'] = 'Belum Absent';
+                    $belum_absent++;
+                } else {
+                    $hasil[$key]['status'] = '';
+                }
+                if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
+                    $jumlah_alpha--;
+                }
+            } elseif (empty($value->shiftPengguna) && $value->presensi_pengguna) {
+                $hasil[$key]['check_in'] = $value->presensi_pengguna->check_in;
+                $hasil[$key]['status'] = "Masuk | Tidak Punya Shift";
+                $hasil[$key]['check_out'] = $value->presensi_pengguna->check_out;
+                $tidak_punya_shift++;
             }
+
             if ($cek_libur) {
                 $hasil[$key]['status'] = 'Libur';
-                // $hasil[$key]['notes'] = $cek_libur->explanation;
+            }
+
+            if (empty($value->shiftPengguna) && empty($value->presensi_pengguna)) {
+                unset($hasil[$key]);
+                $tidak_punya_shift++;
             }
         }
 
-        if (isset($hasil)) {
-            return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'belum_absent', 'jumlah_alpha', 'pengguna', 'id_kelas', 'status', 'hasil'));
-        }
-        // untuk sekolah yang belum support fingerprint
-        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'belum_absent', 'jumlah_alpha', 'pengguna', 'id_kelas', 'status'));
+        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'belum_absent', 'jumlah_alpha', 'tidak_punya_shift', 'pengguna', 'id_kelas', 'status', 'hasil'));
     }
 
     public function export_excel_mount(Request $request, $id_kelas = null, $date = null)

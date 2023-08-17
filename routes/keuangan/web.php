@@ -484,7 +484,9 @@ Route::middleware(['token_staff'])->group(function () {
             });
 
             Route::prefix('tagihan-siswa')->group(function () {
+
                 Route::get('/', [LaporanKeuanganTagihanSiswaController::class, 'viewTagihanSiswa']);
+                Route::get('bayarBulanJuli', [LaporanKeuanganTagihanSiswaController::class, 'bayarBulanJuli']);
                 Route::post('datatables', [LaporanKeuanganTagihanSiswaController::class, 'datatablesTagihanSiswa']);
                 Route::get('print/{tahun}/{id_kelas}/{jenis_tagihan}', [LaporanKeuanganTagihanSiswaController::class, 'printTagihanSiswa']);
                 Route::get('show-list-tagihan/{tahun}/{id_kelas}', [LaporanKeuanganTagihanSiswaController::class, 'showListTagihan']);
