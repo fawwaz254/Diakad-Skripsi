@@ -9,7 +9,7 @@
         <div class="body">
             <div class="row">
                 @if ($role_dashboard)
-                    @if ($role_dashboard->isi_dashboard!=null)    
+                    @if ($role_dashboard->isi_dashboard != null)
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="card">
                                 <div class="header">
@@ -40,7 +40,7 @@
                         </div>
                     </a>
                 </div> --}}
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
                     <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}">
                         <div class="card">
                             <div class="body bg-green" style="text-align: -webkit-center;">
@@ -56,8 +56,8 @@
                 </div>
 
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{ route('report.walikelas') }}"  target="_blank">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                    <a href="{{ route('report.walikelas') }}" target="_blank">
                         <div class="card">
                             <div class="body bg-red" style="text-align: -webkit-center;">
                                 <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"
@@ -73,7 +73,7 @@
                 </div>
 
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
                     <a href="{{ route('report.guru') }}" target="_blank">
                         <div class="card">
                             <div class="body bg-blue" style="text-align: -webkit-center;">
@@ -84,6 +84,23 @@
                                 </h5>
                                 <small>Repor Guru
                                     {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                    <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprintRealTime') }}"
+                        target="_blank">
+                        <div class="card">
+                            <div class="body bg-black" style="text-align: -webkit-center;">
+                                <img class="media-object" src="{{ url('media/flaticon/clipboard.png') }}"
+                                    width="64" height="64">
+                                <h5>
+                                    Show Real Time FingerPrint
+                                </h5>
+                                <small>Menampilkan Update data Fingerprint secara Realtime</small>
                             </div>
                         </div>
                     </a>

@@ -29,6 +29,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [FingerprintController::class, 'indexList']);
                 Route::get('/datatables', [FingerprintController::class, 'commonList']);
             });
+            Route::prefix('fingerprintRealTime')->group(function () {
+                // Route::get('/', [FingerprintController::class, 'indexList']);
+                // Route::get('/datatables', [FingerprintController::class, 'commonList']);
+            });
         });
 
         Route::prefix('notification')->group(function () {

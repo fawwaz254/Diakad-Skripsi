@@ -126,13 +126,14 @@
 
         <div class="row" style="margin-top:40px;">
             <div class="col-md-4">
-                <p>Mengetahui<br>Kepala Sekolah<br><br><br><br>
+                <p>Mengetahui,<br>Kepala Sekolah<br><br><br><br>
                     <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                 </p>
             </div>
             @if ($sekolah == 'SMK PEMUDA KRIAN')
                 <div class="col-md-4">
-                    <p>Bendahara PCM<br><br><br><br><br>
+                    <p>Bendahara PCM
+                        <br><br><br><br><br>
                         <b><u>Ahmad Yusa, SE</u></b>
                     </p>
                 </div>
