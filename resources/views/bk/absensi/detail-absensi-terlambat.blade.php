@@ -42,43 +42,42 @@
                 </div>
 
                 <div class="body">
-
-                    <div class="row clearfix">
-                        <div class="col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
-                                Kelas
-                            </h2>
-                            <select class="form-control show-tick" name="kelas">
-                                <option value="0">-- Semua --</option>
-                                @foreach ($kelas as $k)
-                                    <option value="{{ $k->id_kelas }}"
-                                        @if ($id_kelas == $k->id_kelas) SELECTED @endif>{{ $k->nm_kelas }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
-                                Date
-                            </h2>
-                            <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY"
-                                value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
-                        </div>
-
-                        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-                            <div>
-                                <h2 class="card-inside-title" style="visibility: hidden;">
-                                    1
+                    <form id="form-validation" method="POST"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/filter-absensi-terlambat') }}">
+                        {{ csrf_field() }}
+                        <div class="row clearfix">
+                            <div class="col-md-4 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Kelas
                                 </h2>
-                                <button class="btn btn-block bg-red waves-effect" type="submit"
-                                    onclick="filterAction()"><i
-                                        class="material-icons">save</i><span>Tampilkan</span></button>
+                                <select class="form-control show-tick" name="id_kelas">
+                                    <option value="0">-- Semua --</option>
+                                    @foreach ($kelas as $k)
+                                        <option value="{{ $k->id_kelas }}"
+                                            @if ($id_kelas == $k->id_kelas) SELECTED @endif>{{ $k->nm_kelas }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Date
+                                </h2>
+                                <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY"
+                                    value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
                             </div>
 
+                            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                <div>
+                                    <h2 class="card-inside-title" style="visibility: hidden;">
+                                        1
+                                    </h2>
+                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                            class="material-icons">save</i><span>Tampilkan</span></button>
+                                </div>
+                            </div>
                         </div>
-
-                    </div>
-
+                    </form>
                 </div>
 
             </div>
@@ -187,6 +186,7 @@
         </div>
     </div>
 </div>
+@include('scriptjs')
 <script type="text/javascript">
     $id_kelas = '{{ $id_kelas }}';
     $date = '{{ $date }}';

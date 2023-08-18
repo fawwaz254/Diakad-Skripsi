@@ -67,7 +67,7 @@ class HistoriSiswaTerlambatController extends Controller
             }, 'siswa.pelanggaranTerlambat' => function ($query) use ($date) {
                 $query->where('tgl_pelanggaran', $date);
             },
-        ],)->whereHas('status_pengguna', function ($query) {
+        ])->whereHas('status_pengguna', function ($query) {
             $query->where('nm_status_pengguna', '=', 'AKTIF');
         });
 
