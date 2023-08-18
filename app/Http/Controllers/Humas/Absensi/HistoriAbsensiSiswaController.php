@@ -53,7 +53,6 @@ class HistoriAbsensiSiswaController extends Controller
             'status' => 204, // SUCCESS AND LOAD CONTENT
             'path' => 'absensi/histori-absensi-siswa/detail/' . $input->kelas . '/' . $input->date . '/' . $input->status
         ];
-        // }
     }
 
 
