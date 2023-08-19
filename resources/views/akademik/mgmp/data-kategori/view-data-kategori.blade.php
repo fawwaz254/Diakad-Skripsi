@@ -24,6 +24,7 @@
                                     <th>Nama Mapel</th>
                                     <th>Guru Yang diizinkan mengakses</th>
                                     <th>Jenjang Kelas</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -76,9 +77,13 @@
             },
             {
                 data: 'category_file_explanation',
+                class: 'text-center',
                 name: 'category_file_explanation'
             },
             {
+                data: 'is_aktif',
+                name: 'is_aktif',
+            }, {
                 data: 'action',
                 name: 'action',
                 searchable: false,

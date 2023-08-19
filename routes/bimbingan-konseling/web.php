@@ -72,9 +72,14 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('catat-siswa-terlambat')->group(function () {
                 Route::get('/', [HistoriSiswaTerlambatController::class, 'viewSiswaTerlambat']);
+                Route::post('/filter-absensi-terlambat', [HistoriSiswaTerlambatController::class, 'filterSiswaTerlambat']);
+                Route::get('/detail/{id_kelas}/{date}', [HistoriSiswaTerlambatController::class, 'detailSiswaTerlambat']);
                 Route::get('/print/{id}', [HistoriSiswaTerlambatController::class, 'PrintTerlambat']);
-                Route::get('/{id}/addnotes', [HistoriSiswaTerlambatController::class, 'viewAddnotes']);
-                Route::post('/{id}/addnotes', [HistoriSiswaTerlambatController::class, 'UpdateAddnotes']);
+                Route::get('/editnotes/{id_presensi_pengguna}/{id_kelas}/{date}', [HistoriSiswaTerlambatController::class, 'viewEditNotes']);
+                Route::post('/editnotes/{id_presensi_pengguna}', [HistoriSiswaTerlambatController::class, 'ActionEditnotes']);
+
+                Route::get('/addnotes/{id_presensi_pengguna}/{id_kelas}/{date}', [HistoriSiswaTerlambatController::class, 'viewAddNotes']);
+                Route::post('/addnotes/{id_presensi_pengguna}', [HistoriSiswaTerlambatController::class, 'ActionAddnotes']);
                 Route::get('/{date}', [HistoriSiswaTerlambatController::class, 'viewSiswaTerlambat']);
                 Route::post('/post-siswa-terlambat', [HistoriSiswaTerlambatController::class, 'postSiswaTerlambat']);
             });

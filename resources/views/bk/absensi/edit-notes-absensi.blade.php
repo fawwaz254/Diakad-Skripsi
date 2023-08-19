@@ -14,7 +14,7 @@
                 </div>
                 <div class="body">
                     <form method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/addnotes/' . $id_pengguna) }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/editnotes/' . $presences->id_presensi_pengguna) }}">
                         {{ csrf_field() }}
                         <input type="hidden" name='id_kelas' value={{ $id_kelas }}>
                         <input type="hidden" name='date' value={{ $date }}>
@@ -29,17 +29,18 @@
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                             <h2 class="card-inside-title">Check In</h2>
                             <input type="time" name="check_in" class="form-control"
-                                value="{{ \Carbon\Carbon::now()->format('H:i') }}">
+                                value="{{ $presences['check_in'] }}">
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                             <h2 class="card-inside-title">Check Out</h2>
-                            <input type="time" name="check_out" class="form-control">
+                            <input type="time" name="check_out" class="form-control"
+                                value="{{ $presences['check_out'] }}">
                         </div>
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Notes</h2>
-                            <textarea name="notes" class="form-control" cols="30" rows="10"></textarea>
+                            <textarea name="notes" class="form-control" cols="30" rows="10">{{ $presences['notes'] }}</textarea>
                         </div>
 
                         <button id="btn-submit" name="button_type" value="save"

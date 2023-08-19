@@ -60,6 +60,9 @@ class DataKategoriMGMPController extends BaseController
                 );
                 return $data;
             })
+            ->editColumn('is_aktif', function ($item) {
+                return $item->is_aktif == '1' ? "Aktif" : "Tidak Aktif";
+            })
             ->addColumn('guru', function ($item) {
                 $data = [];
                 if ($item->category_file_guru ?? false) {
@@ -139,6 +142,7 @@ class DataKategoriMGMPController extends BaseController
                     $datakategori->category_file_mgmp_id        = $id;
                     $datakategori->category_file_name           = $input->category_file_name;
                     $datakategori->category_file_explanation    = $input->category_file_explanation;
+                    $datakategori->is_aktif                     = 1;
                     $datakategori->created_by                   = $input->auth_data->pengguna->id_pengguna;
                     $datakategori->save();
 
@@ -185,6 +189,7 @@ class DataKategoriMGMPController extends BaseController
                 $datakategori                               = CategoriFileMGMP::find($id);
                 $datakategori->category_file_name           = $input->category_file_name;
                 $datakategori->category_file_explanation    = $input->category_file_explanation;
+                $datakategori->is_aktif                     = $input->is_aktif;
                 $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
                 $datakategori->updated_at                   = $now;
                 $datakategori->save();
