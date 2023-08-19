@@ -36,7 +36,9 @@ class LaporanKerjaHarianController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $waktu = Carbon::today()->format('d-M-Y');
-        $mapel = CategoriFileGuru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
+        $mapel = CategoriFileGuru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->whereHas('categori_file_mgmp', function ($query) {
+            $query->where('is_aktif', 1);
+        })->get();
         $jenis = JenisMGMP::all();
         return view('guru/mgmp/laporan-harian-mgmp/add-data-laporan-harian-mgmp', compact('auth_data', 'mapel', 'waktu', 'jenis'));
     }
@@ -232,22 +234,15 @@ class LaporanKerjaHarianController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $laporan_kerja_harian_mgmp = LaporanKerjaHarianMGMP::findOrFail($id);
-        // $tanggal = $laporan_kerja_harian_mgmp->tanggal;
         $mapel = CategoriFileGuru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
-        // $waktu = Carbon::today()->toDateString();
-        // dd($laporan_kerja_harian_mgmp);
         $jenis = JenisMGMP::all();
         return view('guru/mgmp/laporan-harian-mgmp/edit-data-laporan-harian-mgmp', compact('auth_data', 'mapel', 'laporan_kerja_harian_mgmp', 'jenis'));
     }
 
-
-
     public function viewLaporanKelompokMGMP(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
         return view('guru/mgmp/laporan-harian-mgmp/view-data-laporan-harian-mgmp-kelompok', compact('auth_data'));
     }
 
@@ -255,27 +250,25 @@ class LaporanKerjaHarianController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $id_pengguna = $input->auth_data->pengguna->id_pengguna;
+        $list_data = CategoriFileMGMP::where('is_aktif', 1)->with('category_file_guru.pengguna')->whereHas('category_file_guru', function ($query) use ($id_pengguna) {
+            $query->where('id_pengguna',  $id_pengguna);
+        })->get();
 
-        $list_data = CategoriFileGuru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
-            ->with('categori_file_mgmp', 'laporan_kerja_harian_mgmp.pengguna')
-            ->get();
+        $laporan_kerja_harian_mgmp = LaporanKerjaHarianMGMP::whereIn('mapel', $list_data->pluck('category_file_mgmp_id'))->get();
 
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->categori_file_mgmp->category_file_mgmp_id
+                    'id' => $item->category_file_mgmp_id
                 );
                 return $data;
             })
-            ->addColumn('selesai', function ($item) {
+            ->addColumn('selesai', function ($item) use ($laporan_kerja_harian_mgmp) {
                 $data = [];
-                if ($item->laporan_kerja_harian_mgmp ?? false) {
-                    foreach ($item->laporan_kerja_harian_mgmp as $key => $value) {
-                        $data[$key]['jenis'] = $item->laporan_kerja_harian_mgmp[$key]->jenis;
-                        $data[$key]['pengguna'] = $item->laporan_kerja_harian_mgmp[$key]->pengguna->nm_pengguna;
-                        $data[$key]['status'] = $item->laporan_kerja_harian_mgmp[$key]->status;
-                    }
+                foreach ($item->category_file_guru as $key => $value) {
+                    $data[$key]['total'] =  $laporan_kerja_harian_mgmp->where('id_pengguna', $value->id_pengguna)->where('mapel', $value->category_file_mgmp_id)->count();
+                    $data[$key]['pengguna'] = $value->pengguna->gelar_depan . ' ' . $value->pengguna->nm_pengguna . ' ' . $value->pengguna->gelar_belakang;
                 }
                 return $data;
             })->make(true);
@@ -289,8 +282,6 @@ class LaporanKerjaHarianController extends Controller
         $data = CategoriFileGuru::where('category_file_mgmp_id', $id)->with('pengguna')->get();
         return view('guru/mgmp/laporan-harian-mgmp/detail-data-laporan-harian-mgmp-kelompok', compact('auth_data', 'data', 'id'));
     }
-
-
 
     public function datatablesDetailKerjaHarianKelompokMGMP(Request $request, $id  = null)
     {

@@ -14,7 +14,7 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) .'/' .Request::segment(2) .'/data-kategori-mapel/action-data-kategori/edit/' .$name->category_file_mgmp_id) }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-kategori-mapel/action-data-kategori/edit/' . $name->category_file_mgmp_id) }}">
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Nama Mapel
@@ -22,53 +22,65 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="category_file_name" required="">
-                                    @foreach($mata_pelajaran as $r)
-                                    @if($r->nm_mata_pelajaran == $name->category_file_name )
-                                        <option value="{{$r->nm_mata_pelajaran}}" selected>{{$r->nm_mata_pelajaran}}</option>
+                                    @foreach ($mata_pelajaran as $r)
+                                        @if ($r->nm_mata_pelajaran == $name->category_file_name)
+                                            <option value="{{ $r->nm_mata_pelajaran }}" selected>
+                                                {{ $r->nm_mata_pelajaran }}</option>
                                         @else
-                                        <option value="{{$r->nm_mata_pelajaran}}">{{$r->nm_mata_pelajaran}}</option>
+                                            <option value="{{ $r->nm_mata_pelajaran }}">{{ $r->nm_mata_pelajaran }}
+                                            </option>
                                         @endif
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                        Jenjang Kelas
+                            Jenjang Kelas
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="category_file_explanation" required=""
-                                aria-required="true" aria-invalid="true" value="{{$name->category_file_explanation}}">
-
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="category_file_explanation"
+                                    required="" aria-required="true" aria-invalid="true"
+                                    value="{{ $name->category_file_explanation }}">
                             </div>
                         </div>
 
                         <h2 class="card-inside-title">
+                            Status
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="is_aktif" required="">
+                                    <option value="1" @if ($name->is_aktif == '1') selected @endif>
+                                        Aktif</option>
+                                    <option value="0" @if ($name->is_aktif == '0') selected @endif>
+                                        Tidak Aktif</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Guru yang diizinkan mengakses:
                         </h2>
 
-                        @foreach($pengguna as $guru)
-                        <div class="form-check">
+                        @foreach ($pengguna as $guru)
+                            <div class="form-check">
 
-                            @if(in_array($guru->id_pengguna, $allowed_role_pengguna))
-                        
-                            <input class="form-check-input" name="allowed_guru[{{$guru->id_pengguna}}]" type="checkbox"
-                            value={{$guru->id_pengguna}} id="role-checkbox[{{$guru->id_pengguna}}]" checked>
-                        <label class="form-check-label"
-                            for="role-checkbox[{{$guru->id_pengguna}}]">{{$guru->nm_pengguna}}</label>
-                            @else
-                            <input class="form-check-input" name="allowed_guru[{{$guru->id_pengguna}}]" type="checkbox"
-                            value={{$guru->id_pengguna}} id="role-checkbox[{{$guru->id_pengguna}}]">
-                        <label class="form-check-label"
-                            for="role-checkbox[{{$guru->id_pengguna}}]">{{$guru->nm_pengguna}}</label>
-                            @endif
+                                @if (in_array($guru->id_pengguna, $allowed_role_pengguna))
+                                    <input class="form-check-input" name="allowed_guru[{{ $guru->id_pengguna }}]"
+                                        type="checkbox" value={{ $guru->id_pengguna }}
+                                        id="role-checkbox[{{ $guru->id_pengguna }}]" checked>
+                                    <label class="form-check-label"
+                                        for="role-checkbox[{{ $guru->id_pengguna }}]">{{ $guru->nm_pengguna }}</label>
+                                @else
+                                    <input class="form-check-input" name="allowed_guru[{{ $guru->id_pengguna }}]"
+                                        type="checkbox" value={{ $guru->id_pengguna }}
+                                        id="role-checkbox[{{ $guru->id_pengguna }}]">
+                                    <label class="form-check-label"
+                                        for="role-checkbox[{{ $guru->id_pengguna }}]">{{ $guru->nm_pengguna }}</label>
+                                @endif
 
-                      
-                        </div>
+
+                            </div>
                         @endforeach
 
 
