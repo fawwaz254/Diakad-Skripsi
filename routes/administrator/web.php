@@ -34,6 +34,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [FingerprintRealtimeController::class, 'viewFingerprintRealtime']);
                 Route::get('/datatables', [FingerprintRealtimeController::class, 'datatableFingerprintRealtime']);
                 Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
+                Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
             });
         });
 
