@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Jobs\CreateFPAttendences;
 use App\Models\FPDevice;
+use App\Models\Pengguna;
 
 class FingerprintRealtimeController extends Controller
 {
@@ -90,8 +91,6 @@ class FingerprintRealtimeController extends Controller
         $now = Carbon::now('Asia/Jakarta');
         $date_filter = $now;
         $client = new \GuzzleHttp\Client();
-
-        $last_data = FPAttendance::orderBy('id_fp_attendance', 'desc')->first();
         $finger_sukses = 'Finger yang berhasil diambil = </br>';
         $devices = FPDevice::orderBy('updated_at', 'DESC')->get();
         foreach ($devices as $device) {
@@ -205,8 +204,15 @@ class FingerprintRealtimeController extends Controller
                 continue;
             }
         }
+    }
 
-
+    public function syncDataFingerprintRealtime(Request $request)
+    {
+        set_time_limit(-1);
+        $now = Carbon::now('Asia/Jakarta');
+        $date_filter = $now;
+        $last_check_in = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_in', 'desc')->first();
+        $last_check_out = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_out', 'desc')->first();
         try {
             $data_fingerprint = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->whereNull('unit')->get();
             $collection = $data_fingerprint->groupBy('username')->all();
@@ -259,18 +265,24 @@ class FingerprintRealtimeController extends Controller
                     $presensi->save();
                 }
             }
-
-            $last_data2 = FPAttendance::orderBy('id_fp_attendance', 'desc')->first();
-            if ($last_data->id_fp_attendance == $last_data2->id_fp_attendance) {
-                return false;
-            } else {
-                return true;
-            }
-
             // return 'OK';
         } catch (Exception $e) {
+            // return false;
             // return $e;
         }
+        $last_check_in2 = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_in', 'desc')->first();
+        $last_check_out2 = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_out', 'desc')->first();
+
+
+        if ($last_check_in->check_in != $last_check_in2->check_in) {
+            return true;
+        }
+
+        if ($last_check_out->check_out !=  $last_check_out2->check_out) {
+            return true;
+        }
+
+        return false;
     }
     public function parseXMLData($data, $p1, $p2)
     {
@@ -283,6 +295,44 @@ class FingerprintRealtimeController extends Controller
                 $hasil = substr($data, $awal + strlen($p1), $akhir - strlen($p1));
             }
         }
+        return $hasil;
+    }
+
+    public function filterData($array, $tanggal_input, $datetime_mulai = null)
+    {
+        $hasil = array();
+        $counter = 0;
+
+        foreach (array_reverse($array, true) as $key => $value) {
+            if ($value) {
+                $tanggal = $this->parseXMLData($value, "<DateTime>", "</DateTime>");
+
+                if (empty($datetime_mulai)) {
+                    $tanggal = date('Y-m-d', strtotime($tanggal));
+
+                    if ($tanggal == $tanggal_input) {
+                        $hasil[$counter]['username'] = $this->parseXMLData($value, "<PIN>", "</PIN>");
+                        $hasil[$counter]['tanggal'] = $this->parseXMLData($value, "<DateTime>", "</DateTime>");
+                        $hasil[$counter]['status'] = $this->parseXMLData($value, "<Status>", "</Status>");
+                        $counter++;
+                    } else {
+                        continue;
+                    }
+                } else {
+                    $tanggal = Carbon::createFromFormat('Y-m-d H:i:s', $tanggal);
+
+                    if ($tanggal->gt(Carbon::createFromFormat('Y-m-d H:i:s', $datetime_mulai))) {
+                        $hasil[$counter]['username'] = $this->parseXMLData($value, "<PIN>", "</PIN>");
+                        $hasil[$counter]['tanggal'] = $this->parseXMLData($value, "<DateTime>", "</DateTime>");
+                        $hasil[$counter]['status'] = $this->parseXMLData($value, "<Status>", "</Status>");
+                        $counter++;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
+
         return $hasil;
     }
 }
