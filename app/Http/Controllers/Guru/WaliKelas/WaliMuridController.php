@@ -54,6 +54,15 @@ class WaliMuridController extends Controller
                 return '';
             }
         })
+            ->addColumn('time_last_login', function ($item) {
+                if (isset($item->wali_murid->pengguna->last_time_login)) {
+                    $specificDateTime = Carbon::parse($item->wali_murid->pengguna->last_time_login);
+                    $formattedDateTime = $specificDateTime->diffForHumans();
+                    return  $formattedDateTime;
+                } else {
+                    return '';
+                }
+            })
             ->make(true);
     }
 }
