@@ -66,28 +66,38 @@ class HistoriSiswaTerlambatController extends Controller
                 $query->where('date', $date);
             }, 'siswa.pelanggaranTerlambat' => function ($query) use ($date) {
                 $query->where('tgl_pelanggaran', $date);
-            },
-        ])->whereHas('status_pengguna', function ($query) {
-            $query->where('nm_status_pengguna', '=', 'AKTIF');
-        });
+            }, 'siswa.kelas'
+        ]);
 
-        if ($id_kelas != '0') {
-            $penggunaQuery->whereHas('siswa', function ($query) use ($id_kelas) {
-                $query->where('id_kelas', '=', $id_kelas);
-            });
+
+        if ($id_kelas == '0') {
+            $pengguna =  $penggunaQuery->get()->sortBy('siswa.kelas.nm_kelas');
+        } else {
+            $pengguna =  $penggunaQuery->get()->sortBy('nm_pengguna');
         }
+        // ->whereHas('status_pengguna', function ($query) {
+        //     $query->where('nm_status_pengguna', '=', 'AKTIF');
+        // });
 
-        $pengguna = $penggunaQuery->get();
+        // if ($id_kelas != '0') {
+        //     $penggunaQuery->whereHas('siswa', function ($query) use ($id_kelas) {
+        //         $query->where('id_kelas', '=', $id_kelas);
+        //     });
+        // }
+
+        // $pengguna = $penggunaQuery->get();
 
         foreach ($pengguna as $key => $p) {
-            if (empty($p->shiftPengguna)) {
-                continue;
-            } elseif (empty($p->presensi_pengguna)) {
-                $terlambat[$key]['pengguna'] = $p;
-                $terlambat[$key]['keterangan'] = 'Belum Absent';
-            } elseif ($p->presensi_pengguna->check_in > $p->shiftPengguna->shift_master->start_time) {
-                $terlambat[$key]['pengguna'] = $p;
-                $terlambat[$key]['keterangan'] = Carbon::parse($p->presensi_pengguna->check_in)->diffForHumans(Carbon::parse($p->shiftPengguna->shift_master->start_time), $options);
+            if ($p->siswa->id_kelas &&  $id_kelas == '0' || $p->siswa->id_kelas == $id_kelas) {
+                if (empty($p->shiftPengguna)) {
+                    continue;
+                } elseif (empty($p->presensi_pengguna)) {
+                    $terlambat[$key]['pengguna'] = $p;
+                    $terlambat[$key]['keterangan'] = 'Belum Absent';
+                } elseif ($p->presensi_pengguna->check_in > $p->shiftPengguna->shift_master->start_time) {
+                    $terlambat[$key]['pengguna'] = $p;
+                    $terlambat[$key]['keterangan'] = Carbon::parse($p->presensi_pengguna->check_in)->diffForHumans(Carbon::parse($p->shiftPengguna->shift_master->start_time), $options);
+                }
             }
         }
         return view('bk/absensi/detail-absensi-terlambat', compact('auth_data', 'terlambat', 'date', 'kelas', 'id_kelas'));
