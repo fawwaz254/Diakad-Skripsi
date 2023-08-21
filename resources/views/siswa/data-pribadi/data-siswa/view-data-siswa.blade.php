@@ -71,6 +71,17 @@
                                                 aria-invalid="true" value="{{ $siswa->id_pengguna }}">
                                         </div>
                                     </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nama Panggilan
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-7 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_panggilan" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->nm_panggilan }}">
+                                        </div>
+                                    </div>
                                     <br>
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
@@ -1344,6 +1355,43 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
+                                                Riwayat Penyakit<br>
+                                                <small>Riwayat penyakit peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="riwayat_penyakit" aria-required="true"
+                                                aria-invalid="true" value   ="{{ $siswa->riwayat_penyakit }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Golongan Darah<br>
+                                                <small>Golongan darah peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="golongan_darah" id="golongan_darah" required>
+                                                
+                                                <option value="A" {{ $siswa->golongan_darah == 'A' ? 'selected' : '' }}>A
+                                                </option>
+                                                <option value="B" {{ $siswa->golongan_darah == 'B' ? 'selected' : '' }}>B
+                                                </option>
+                                                <option value="O" {{ $siswa->golongan_darah == 'O' ? 'selected' : '' }}>O
+                                                </option>
+                                                <option value="AB" {{ $siswa->golongan_darah == 'A' ? 'selected' : '' }}>AB
+                                                </option>
+                                                <option value="" {{ $siswa->golongan_darah == null ? 'selected' : '' }}>-
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
                                                 Jarak tempat tinggal ke sekolah <br>
                                                 <small>Dalam km</small>
                                             </h2>
@@ -1374,6 +1422,133 @@
                                             <input type="number" class="form-control" name="waktu_tempuh_sekolah_menit"
                                                 aria-required="true" aria-invalid="true"
                                                 value="{{ $siswa->waktu_tempuh_sekolah_menit }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Asal Sekolah<br>
+                                                <small>Asal sekolah peserta didik sebelumnya</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="asal_sekolah" aria-required="true"
+                                                aria-invalid="true" value   ="{{ $siswa->asal_sekolah }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Alamat Asal Sekolah<br>
+                                                <small>Alamat asal sekolah peserta didik sebelumnya</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="alamat_asal_sekolah" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->alamat_asal_sekolah }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nomor STTB<br>
+                                                <small>Nomor STTB sekolah peserta didik sebelumnya</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nomor_sttb" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->nomor_sttb }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Tanggal STTB
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            @if ($siswa->tanggal_sttb)
+                                                <input type="text" class="datepicker form-control" name="tanggal_sttb"
+                                                    aria-required="true" aria-invalid="true"
+                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_sttb)) }}" required>
+                                            @else
+                                                <input type="text" class="datepicker form-control" name="tanggal_sttb"
+                                                    aria-required="true" aria-invalid="true" required>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nomor SKHUN<br>
+                                                <small>Nomor SKHUN sekolah peserta didik sebelumnya</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nomor_skhus_sebelumnya" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->nomor_skhus_sebelumnya }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Tanggal SKHUN
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            @if ($siswa->tanggal_skhus_sebelumnya)
+                                                <input type="text" class="datepicker form-control" name="tanggal_skhus_sebelumnya"
+                                                    aria-required="true" aria-invalid="true"
+                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_skhus_sebelumnya)) }}" required>
+                                            @else
+                                                <input type="text" class="datepicker form-control" name="tanggal_skhus_sebelumnya"
+                                                    aria-required="true" aria-invalid="true" required>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kegemaran Bidang Kesenian<br>
+                                                <small>Kegemaran kesenian peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="kegemaran_kesenian" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->kegemaran_kesenian }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kegemaran Bidang Olahraga<br>
+                                                <small>Kegemaran olahraga peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="kegemaran_olahraga" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->kegemaran_olahraga }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Organisasi<br>
+                                                <small>Organisasi peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="kegemaran_organisasi" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->kegemaran_organisasi }}">
                                         </div>
                                     </div>
                                     <br>
