@@ -53,7 +53,6 @@ class HistoriAbsensiSiswaController extends Controller
             'status' => 204, // SUCCESS AND LOAD CONTENT
             'path' => 'absensi/histori-absensi-siswa/detail/' . $input->kelas . '/' . $input->date . '/' . $input->status
         ];
-        // }
     }
 
 
@@ -75,7 +74,7 @@ class HistoriAbsensiSiswaController extends Controller
         }
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
 
-        $penggunaQuery = Pengguna::with([
+        $penggunaQuery = Pengguna::where('status_join_table', 3)->with([
             'shiftPengguna' => function ($query) use ($date) {
                 $query->where('date', $date)->with('shift_master');
             },
@@ -94,9 +93,7 @@ class HistoriAbsensiSiswaController extends Controller
             $penggunaQuery->whereHas('siswa.kelas', function ($query) {
                 $query->whereIn('tingkat',  [10, 11, 12]);
             });
-        } elseif ($id_kelas == "0") {
-            $penggunaQuery->whereHas('siswa');
-        } else {
+        } elseif ($id_kelas != "0") {
             $penggunaQuery->whereHas('siswa', function ($query) use ($id_kelas) {
                 $query->where('id_kelas', '=', $id_kelas);
             });
@@ -105,10 +102,6 @@ class HistoriAbsensiSiswaController extends Controller
         $pengguna = $penggunaQuery->get()->sortBy('siswa.kelas.tingkat')
             ->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.nis_siswa');
 
-        // dd($pengguna);
-        // $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
-        // $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
-        // $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
         $hasil = [];
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
@@ -121,8 +114,10 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['status'] = '';
             $hasil[$key]['id_presensi_pengguna'] = "";
 
-            if ($value->presensi_pengguna &&  $value->shiftPengguna && $value->shiftPengguna->shift_master) {
 
+            if ($cek_libur) {
+                $hasil[$key]['status'] = 'Libur';
+            } elseif ($value->presensi_pengguna &&  $value->shiftPengguna && $value->shiftPengguna->shift_master) {
                 $hasil[$key]['status'] = $value->presensi_pengguna->status;
                 if ($value->presensi_pengguna->status == 'sakit') {
                     $jumlah_sakit++;
@@ -184,13 +179,7 @@ class HistoriAbsensiSiswaController extends Controller
                 $hasil[$key]['status'] = "Masuk | Tidak Punya Shift";
                 $hasil[$key]['check_out'] = $value->presensi_pengguna->check_out;
                 $tidak_punya_shift++;
-            }
-
-            if ($cek_libur) {
-                $hasil[$key]['status'] = 'Libur';
-            }
-
-            if (empty($value->shiftPengguna) && empty($value->presensi_pengguna)) {
+            } else {
                 unset($hasil[$key]);
                 $tidak_punya_shift++;
             }

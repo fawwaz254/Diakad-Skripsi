@@ -416,7 +416,9 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['status'] = '';
             $hasil[$key]['id_presensi_pengguna'] = "";
 
-            if ($value->presensi_pengguna &&  $value->shiftPengguna && $value->shiftPengguna->shift_master) {
+            if ($cek_libur) {
+                $hasil[$key]['status'] = 'Libur';
+            } else if ($value->presensi_pengguna &&  $value->shiftPengguna && $value->shiftPengguna->shift_master) {
 
                 $hasil[$key]['status'] = $value->presensi_pengguna->status;
                 if ($value->presensi_pengguna->status == 'sakit') {
@@ -479,12 +481,7 @@ class HistoriAbsensiController extends BaseController
                 $hasil[$key]['status'] = "Masuk | Tidak Punya Shift";
                 $jumlah_hadir++;
                 $hasil[$key]['check_out'] = $value->presensi_pengguna->check_out;
-            }
-
-            if ($cek_libur) {
-                $hasil[$key]['status'] = 'Libur';
-            }
-            if (empty($value->shiftPengguna) && empty($value->presensi_pengguna)) {
+            } else {
                 unset($hasil[$key]);
             }
         }
