@@ -29,7 +29,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('notification:payment')
             ->twiceDaily(11, 15)
-            ->between('8:00', '15:00')
             ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Sekolah;
 use App\Models\Pengguna;
 use App\Models\TagihanBiaya;
 use Illuminate\Console\Command;
@@ -59,6 +60,8 @@ class SendPaymentNotification extends Command
             })
             ->get();
 
+        $schoolName = Sekolah::first()->nm_sekolah;
+
         foreach ($users as $user) {
             $waliMurid = $user->siswa->wali_murid;
 
@@ -67,7 +70,7 @@ class SendPaymentNotification extends Command
             }
 
             $data = [
-                'message' => "Notifikasi Pembayaran SPP\n\nHalo Bapak/Ibu wali murid!\nPembayaran SPP atas nama {$user->nm_pengguna} telah diterima.\n\nTerima kasih!",
+                'message' => "*Konfirmasi Pembayaran SPP*\n\n\nAssalamualaikum Wr.Wb.\nBapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa pembayaran SPP atas nama *" . $user->nm_pengguna . "* telah berhasil kami terima. Keteraturan Anda dalam menjalankan kewajiban ini sangat kami hargai.\n\nDengan adanya pembayaran ini, Anda telah berkontribusi dalam memastikan kelancaran proses pendidikan yang berkualitas bagi *" . $user->nm_pengguna . "*. Terima kasih sekali lagi atas dedikasi Anda dalam memastikan kelancaran pendidikan.\n\n\nSalam,\nKeuangan " . $schoolName,
                 'phone' => $waliMurid->nomor_hp_wali_murid,
             ];
 

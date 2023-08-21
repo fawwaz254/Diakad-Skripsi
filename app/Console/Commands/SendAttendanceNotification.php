@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Sekolah;
 use App\Models\Pengguna;
 use Illuminate\Console\Command;
 use App\Models\PresensiPengguna;
@@ -59,6 +60,8 @@ class SendAttendanceNotification extends Command
             ->whereIn('id_pengguna', $usersId)
             ->get();
 
+        $schoolName = Sekolah::first()->nm_sekolah;
+
         foreach ($users as $user) {
             $waliMurid = $user->siswa->wali_murid;
 
@@ -67,7 +70,7 @@ class SendAttendanceNotification extends Command
             }
 
             $data = [
-                'message' => "Notifikasi Kehadiran Siswa Harian\n\nHalo Bapak/Ibu wali murid!\nAnak Anda, " . $user->nm_pengguna . ", hadir di sekolah hari ini.\n\nTerima kasih!",
+                'message' => "*Konfirmasi Kehadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb.\nBapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa siswa/siswi Anda, *" . $user->nm_pengguna . "* hadir di sekolah hari ini.\n\nTerima kasih atas perhatiannya.\n\n\nSalam,\nKesiswaan " . $schoolName,
                 'phone' => $waliMurid->nomor_hp_wali_murid,
             ];
 
