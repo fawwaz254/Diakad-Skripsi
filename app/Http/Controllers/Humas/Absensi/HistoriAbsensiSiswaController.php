@@ -81,7 +81,7 @@ class HistoriAbsensiSiswaController extends Controller
             'presensi_pengguna' => function ($query) use ($date) {
                 $query->where('date', $date);
             }, 'siswa.kelas'
-        ])->orderBy('username', 'desc')->get();
+        ])->orderBy('username', 'asc')->get();
 
         // if ($id_kelas == '0') {
         //     $pengguna =  $penggunaQuery->get()->sortBy('siswa.kelas.nm_kelas');
