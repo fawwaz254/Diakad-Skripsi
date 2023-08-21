@@ -20,6 +20,7 @@
                                         <th>Nama Wali Murid</th>
                                         <th>Siswa</th>
                                         <th>Kelas</th>
+                                        <th>Last Time Login</th>
                                         <th>Last Time Reset Password</th>
                                         {{-- <th>Multi Role</th> --}}
                                         <th>Action</th>
@@ -73,6 +74,10 @@
                     {
                         data: 'kelas.nm_kelas',
                         name: 'kelas.nm_kelas'
+                    },
+                    {
+                        data: 'time_last_login',
+                        name: 'time_last_login'
                     },
                     {
                         data: 'time_reset_password',

@@ -74,20 +74,20 @@ class HistoriAbsensiSiswaController extends Controller
         }
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
 
-        $penggunaQuery = Pengguna::where('status_join_table', 3)->with([
+        $pengguna = Pengguna::where('status_join_table', 3)->with([
             'shiftPengguna' => function ($query) use ($date) {
                 $query->where('date', $date)->with('shift_master');
             },
             'presensi_pengguna' => function ($query) use ($date) {
                 $query->where('date', $date);
             }, 'siswa.kelas'
-        ]);
+        ])->orderBy('username', 'desc')->get();
 
-        if ($id_kelas == '0') {
-            $pengguna =  $penggunaQuery->get()->sortBy('siswa.kelas.nm_kelas');
-        } else {
-            $pengguna =  $penggunaQuery->get()->sortBy('nm_pengguna');
-        }
+        // if ($id_kelas == '0') {
+        //     $pengguna =  $penggunaQuery->get()->sortBy('siswa.kelas.nm_kelas');
+        // } else {
+        //     $pengguna =  $penggunaQuery->get()->sortBy('nm_pengguna');
+        // }
 
         // ->whereHas('status_pengguna', function ($query) {
         //     $query->where('nm_status_pengguna', '=', 'AKTIF');
@@ -112,6 +112,9 @@ class HistoriAbsensiSiswaController extends Controller
 
         $hasil = [];
         foreach ($pengguna as $key => $value) {
+            if (empty($value->siswa)) {
+                continue;
+            }
             if ($value->siswa->id_kelas &&  $id_kelas == '0' || $value->siswa->id_kelas == $id_kelas) {
                 $hasil[$key]['check_in'] = '-';
                 $hasil[$key]['id_pengguna'] = $value->id_pengguna;
