@@ -127,7 +127,7 @@ class SetJadwalKelasGuruController extends Controller
 
         $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
-        $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->get();
+        $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->where('is_aktif',1)->get();
         // $mapel      = MataPelajaran::all();
         // $data_jurusan = Jurusan::with('mapel')->get();
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
