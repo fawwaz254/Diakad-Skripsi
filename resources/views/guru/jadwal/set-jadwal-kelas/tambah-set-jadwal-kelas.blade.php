@@ -293,16 +293,16 @@
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Ruangan :</label>
                         <select class="form-control show-tick" name="ruangan">
-                            @if ($ruangan = $allruangan->where('id_kelas', $kelas->id_kelas)->first())
+                            {{-- @if ($ruangan = $allruangan->where('id_kelas', $kelas->id_kelas)->first())
                                 <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
                                 </option>
-                            @else
-                                <option disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
-                                </option>
+                            @else --}}
+                                {{-- <option disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
+                                </option> --}}
                                 @foreach ($allruangan as $ruangan)
                                     <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }} </option>
                                 @endforeach
-                            @endif
+                            {{-- @endif --}}
                         </select>
                     </div>
                 </div>
@@ -388,16 +388,16 @@
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Ruangan :</label>
                         <select class="form-control show-tick" name="ruanganEdit">
-                            @if ($ruangan = $allruangan->where('id_kelas', $kelas->id_kelas)->first())
+                            {{-- @if ($ruangan = $allruangan->where('id_kelas', $kelas->id_kelas)->first())
                                 <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
                                 </option>
-                            @else
-                                <option disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
-                                </option>
+                            @else --}}
+                                {{-- <option disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
+                                </option> --}}
                                 @foreach ($allruangan as $ruangan)
                                     <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }} </option>
                                 @endforeach
-                            @endif
+                            {{-- @endif --}}
                         </select>
                     </div>
                 </div>
