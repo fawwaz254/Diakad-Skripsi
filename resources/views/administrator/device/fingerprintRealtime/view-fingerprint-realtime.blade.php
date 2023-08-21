@@ -18,6 +18,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>NIS/NIP</th>
                                     <th>Nama Siswa</th>
                                     <th>Foto</th>
                                     <th>Check-In</th>
@@ -38,7 +39,9 @@
     var modul_url = '{{ Request::segment(2) }}';
     var menu_url = '{{ Request::segment(3) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
-    var var_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/getData';
+    var get_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/getData';
+    var sync_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/syncData';
+
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -53,6 +56,11 @@
                 searchable: false,
                 orderable: false
             }, {
+                data: 'pengguna.username',
+                searchable: false,
+                orderable: false
+            },
+            {
                 data: 'pengguna.nm_pengguna',
                 searchable: false,
                 orderable: false
@@ -103,7 +111,15 @@
         console.log("get data");
         $.ajax({
             type: "POST",
-            url: var_url,
+            url: get_url,
+        });
+    }
+
+    function syncData() {
+        console.log("sync data");
+        $.ajax({
+            type: "POST",
+            url: sync_url,
             success: function(response) {
                 if (response) {
                     primary_table.ajax.reload(null, false);
@@ -115,5 +131,6 @@
         });
     }
 
-    setInterval(getData, 5 * 60 * 1000); // 5 menit
+    setInterval(getData, 5 * 30 * 1000); //setengah 5 menit
+    setInterval(syncData, 5 * 60 * 1000); //5 menit
 </script>
