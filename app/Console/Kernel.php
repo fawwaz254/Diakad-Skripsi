@@ -13,9 +13,26 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+    protected $commands = [
+        Commands\SendAttendanceNotification::class,
+        Commands\SendPaymentNotification::class,
+    ];
+
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('notification:attendance')
+            ->hourly()
+            ->between('8:00', '15:00')
+            ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
+
+        $schedule->command('notification:payment')
+            ->twiceDaily(11, 15)
+            ->between('8:00', '15:00')
+            ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
     }
 
     /**
@@ -25,7 +42,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

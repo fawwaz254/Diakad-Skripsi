@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\Pengguna;
+use App\Models\TagihanBiaya;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
+
+class SendPaymentNotification extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'notification:payment';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Send Payment SPP Notification via WhatsApp';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $url = env('WHATSAPP_API_URL');
+        $now = now()->toDateString();
+
+        $invoiceUsers = TagihanBiaya::where('is_tagih', 0)
+            ->whereDate('tgl_pelunasan', $now)
+            ->get();
+
+        if ($invoiceUsers->isEmpty() || empty($url)) {
+            return 0;
+        }
+
+        $studentsId = $invoiceUsers->pluck('id_siswa')->toArray();
+
+        $users = Pengguna::with('siswa.wali_murid')
+            ->whereHas('siswa', function ($q) use ($studentsId) {
+                $q->whereIn('id_siswa', $studentsId);
+            })
+            ->get();
+
+        foreach ($users as $user) {
+            $waliMurid = $user->siswa->wali_murid;
+
+            if (!$waliMurid || empty($waliMurid->nomor_hp_wali_murid)) {
+                continue;
+            }
+
+            $data = [
+                'message' => "Notifikasi Pembayaran SPP\n\nHalo Bapak/Ibu wali murid!\nPembayaran SPP atas nama {$user->nm_pengguna} telah diterima.\n\nTerima kasih!",
+                'phone' => $waliMurid->nomor_hp_wali_murid,
+            ];
+
+            $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                ->post($url, $data);
+
+            $responseData = $response->json();
+
+            if ($responseData['response'] === 'Device Bot Logged Out') {
+                \Log::info("Failed to send notification, Device bot logged out");
+            } else {
+                \Log::info("Notification sent at " . now());
+            }
+
+            sleep(2);
+        }
+    }
+}
