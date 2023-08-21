@@ -6,6 +6,7 @@ use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Administrator\Device\FingerprintController;
+use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\GuruController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\SiswaController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\TendikController;
@@ -31,8 +32,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/datatables', [FingerprintController::class, 'commonList']);
             });
             Route::prefix('fingerprintRealTime')->group(function () {
-                // Route::get('/', [FingerprintController::class, 'indexList']);
-                // Route::get('/datatables', [FingerprintController::class, 'commonList']);
+                Route::get('/', [FingerprintRealtimeController::class, 'viewFingerprintRealtime']);
+                Route::get('/datatables', [FingerprintRealtimeController::class, 'datatableFingerprintRealtime']);
+                Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
+                Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
             });
         });
 
