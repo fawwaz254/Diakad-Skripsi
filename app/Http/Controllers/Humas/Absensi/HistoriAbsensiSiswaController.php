@@ -86,7 +86,7 @@ class HistoriAbsensiSiswaController extends Controller
         if ($id_kelas == '0') {
             $pengguna =  $penggunaQuery->get()->sortBy('siswa.kelas.nm_kelas');
         } else {
-            $pengguna =  $penggunaQuery->get()->sortBy('username');
+            $pengguna =  $penggunaQuery->get()->sortBy('nm_pengguna');
         }
 
         // ->whereHas('status_pengguna', function ($query) {

@@ -58,7 +58,7 @@ class HistoriSiswaTerlambatController extends Controller
             'syntax' => CarbonInterface::DIFF_ABSOLUTE,
         ];
 
-        $pengguna = Pengguna::where('status_join_table', '3')->with([
+        $penggunaQuery = Pengguna::where('status_join_table', '3')->with([
             'shiftPengguna' => function ($query) use ($date) {
                 $query->where('date', $date)->with('shift_master');
             },
@@ -66,8 +66,15 @@ class HistoriSiswaTerlambatController extends Controller
                 $query->where('date', $date);
             }, 'siswa.pelanggaranTerlambat' => function ($query) use ($date) {
                 $query->where('tgl_pelanggaran', $date);
-            }, 'siswa'
-        ])->get();
+            }, 'siswa.kelas'
+        ]);
+
+
+        if ($id_kelas == '0') {
+            $pengguna =  $penggunaQuery->get()->sortBy('siswa.kelas.nm_kelas');
+        } else {
+            $pengguna =  $penggunaQuery->get()->sortBy('nm_pengguna');
+        }
         // ->whereHas('status_pengguna', function ($query) {
         //     $query->where('nm_status_pengguna', '=', 'AKTIF');
         // });
