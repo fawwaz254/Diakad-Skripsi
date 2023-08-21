@@ -58,7 +58,7 @@ class HistoriSiswaTerlambatController extends Controller
             'syntax' => CarbonInterface::DIFF_ABSOLUTE,
         ];
 
-        $penggunaQuery = Pengguna::where('status_join_table', '3')->with([
+        $pengguna = Pengguna::where('status_join_table', '3')->with([
             'shiftPengguna' => function ($query) use ($date) {
                 $query->where('date', $date)->with('shift_master');
             },
@@ -66,29 +66,14 @@ class HistoriSiswaTerlambatController extends Controller
                 $query->where('date', $date);
             }, 'siswa.pelanggaranTerlambat' => function ($query) use ($date) {
                 $query->where('tgl_pelanggaran', $date);
-            }, 'siswa.kelas'
-        ]);
-
-
-        if ($id_kelas == '0') {
-            $pengguna =  $penggunaQuery->get()->sortBy('siswa.kelas.nm_kelas');
-        } else {
-            $pengguna =  $penggunaQuery->get()->sortBy('nm_pengguna');
-        }
-        // ->whereHas('status_pengguna', function ($query) {
-        //     $query->where('nm_status_pengguna', '=', 'AKTIF');
-        // });
-
-        // if ($id_kelas != '0') {
-        //     $penggunaQuery->whereHas('siswa', function ($query) use ($id_kelas) {
-        //         $query->where('id_kelas', '=', $id_kelas);
-        //     });
-        // }
-
-        // $pengguna = $penggunaQuery->get();
+            }, 'siswa'
+        ])->orderBy('username', 'desc')->get();
 
         foreach ($pengguna as $key => $p) {
-            if ($p->siswa->id_kelas &&  $id_kelas == '0' || $p->siswa->id_kelas == $id_kelas) {
+            if (empty($p->siswa)) {
+                continue;
+            }
+            if ($p->siswa->id_kelas && $id_kelas == '0' || $p->siswa->id_kelas == $id_kelas) {
                 if (empty($p->shiftPengguna)) {
                     continue;
                 } elseif (empty($p->presensi_pengguna)) {
@@ -100,6 +85,7 @@ class HistoriSiswaTerlambatController extends Controller
                 }
             }
         }
+
         return view('bk/absensi/detail-absensi-terlambat', compact('auth_data', 'terlambat', 'date', 'kelas', 'id_kelas'));
     }
 
