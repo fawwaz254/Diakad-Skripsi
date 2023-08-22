@@ -616,11 +616,11 @@ class ReportController extends BaseController
         $param['status'][5] = $wali_murid . ' / ' . $semua_siswa . ' Data';
         $param['persentase'][5]= ($wali_murid!=0) ?$wali_murid / $semua_siswa * 100 : 0;
 
-        $data[1] = ($biodata_siswa / $semua_siswa) * 20;
+        $data[1] = ($biodata_siswa!=0) ? ($biodata_siswa / $semua_siswa) * 20 :0 ;
         $data[2] = ((($pelanggaran_siswa / 5) * 20) > 20) ? 20 : ($pelanggaran_siswa / 5) * 20;
         $data[3] = (($kegiatan_siswa + $prestasi_siswa) == 0) ? 0 : (($kegiatan_siswa_approve + $prestasi_siswa_approve) / ($kegiatan_siswa + $prestasi_siswa)) * 20;
-        $data[4] = ($home_visit / $semua_siswa) * 20;
-        $data[5] = ($wali_murid / $semua_siswa) * 20;
+        $data[4] = ($home_visit!=0) ? ($home_visit / $semua_siswa) * 20 : 0;
+        $data[5] = ($wali_murid!=0) ? ($wali_murid / $semua_siswa) * 20 : 0;
 
         $total = 0;
         for ($i = 1; $i <= 5; $i++) {
