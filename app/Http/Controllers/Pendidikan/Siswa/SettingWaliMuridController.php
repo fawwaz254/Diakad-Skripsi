@@ -187,7 +187,7 @@ class SettingWaliMuridController extends BaseController
             })
             ->when($id_kelas != '0', function ($q) use ($id_kelas) {
                 $q->where('siswa.id_kelas', $id_kelas);
-            });
+            })->orderBy('nis_siswa', 'asc')->get();;
 
 
         return Datatables::of($list_data)
