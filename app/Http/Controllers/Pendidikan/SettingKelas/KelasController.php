@@ -47,7 +47,7 @@ class KelasController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $id_kelas = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/setting-kelas/kelas/add-kelas', compact('auth_data', 'data_jurusan', 'id_kelas'));
     }
@@ -78,10 +78,10 @@ class KelasController extends BaseController
         $tahun_sebelum = (int) $semester->thn_akademik_semester - 2;
 
         $data_semester = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                            ->whereBetween('thn_akademik_semester', [$tahun_sebelum, $now])
-                            ->orderBy('thn_akademik_semester', 'asc')
-                            ->orderBy('nm_semester', 'asc')
-                            ->get();
+            ->whereBetween('thn_akademik_semester', [$tahun_sebelum, $now])
+            ->orderBy('thn_akademik_semester', 'asc')
+            ->orderBy('nm_semester', 'asc')
+            ->get();
 
         return view('pendidikan/setting-kelas/kelas/copy-kelas', compact('auth_data', 'data_semester'));
     }
@@ -93,85 +93,82 @@ class KelasController extends BaseController
         $list_data = LibKelas::fetchDataKelas($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('nm_sekretaris', function ($item) {
-                    if (empty($item->nm_sekretaris)) {
-                        $data = array(
-                            'nm_sekretaris' => 0,
-                            'id' => $item->id_kelas
-                        );
-                    } else {
-                        $data = array(
-                            'nm_sekretaris' => $item->nm_sekretaris
-                        );
-                    }
-                    return $data;
-                })
-                ->addColumn('nm_ruangan', function ($item) {
-                    if (empty($item->nm_ruangan)) {
-                        $data = array(
-                            'nm_ruangan' => 0,
-                            'id' => $item->id_kelas
-                        );
-                    } else {
-                        $data = array(
-                            'nm_ruangan' => $item->nm_ruangan
-                        );
-                    }
-                    return $data;
-                })
-                ->addColumn('nm_wali_kelas', function ($item) {
-                    if (empty($item->nm_wali_kelas)) {
-                        $data = array(
-                            'nm_wali_kelas' => 0,
-                            'id' => $item->id_kelas
-                        );
-                    } else {
-                        if( ! empty($item->gelar_depan_wali_kelas) && ! empty($item->gelar_belakang_wali_kelas)) {
-                            $nm_lengkap_wali_kelas = $item->gelar_depan_wali_kelas." ".$item->nm_wali_kelas.", ".$item->gelar_belakang_wali_kelas;
-                        }
-                        elseif( ! empty($item->gelar_depan_wali_kelas)) {
-                            $nm_lengkap_wali_kelas = $item->gelar_depan_wali_kelas." ".$item->nm_wali_kelas;   
-                        }
-                        elseif( ! empty($item->gelar_belakang_wali_kelas)) {
-                            $nm_lengkap_wali_kelas = $item->nm_wali_kelas.", ".$item->gelar_belakang_wali_kelas;   
-                        }
-                        else {
-                            $nm_lengkap_wali_kelas = $item->nm_wali_kelas; 
-                        }
-                        $data = array(
-                            'nm_wali_kelas' => $nm_lengkap_wali_kelas
-                        );
-                    }
-                    return $data;
-                })
-                //bk
-                ->addColumn('bk_kelas', function ($item) {
-                    if (empty($item->nama_guru_bk)) {
-                        // $data = array(
-                        //     'bk_kelas' => 'ujicoba'
-                        // );
-                        $data = array(
-                            'bk_kelas' => 0,
-                            'id' => $item->id_kelas
-                        );
-                    } else {
-                        $data = array(
-                            'bk_kelas' => $item->nama_guru_bk
-                        );
-                    }
-                      
-                        
-                    
-                    return $data;
-                })
-
-                ->addColumn('action', function ($item) {
+            ->addColumn('nm_sekretaris', function ($item) {
+                if (empty($item->nm_sekretaris)) {
                     $data = array(
+                        'nm_sekretaris' => 0,
                         'id' => $item->id_kelas
                     );
-                    return $data;
-                })
-                ->make(true);
+                } else {
+                    $data = array(
+                        'nm_sekretaris' => $item->nm_sekretaris
+                    );
+                }
+                return $data;
+            })
+            ->addColumn('nm_ruangan', function ($item) {
+                if (empty($item->nm_ruangan)) {
+                    $data = array(
+                        'nm_ruangan' => 0,
+                        'id' => $item->id_kelas
+                    );
+                } else {
+                    $data = array(
+                        'nm_ruangan' => $item->nm_ruangan
+                    );
+                }
+                return $data;
+            })
+            ->addColumn('nm_wali_kelas', function ($item) {
+                if (empty($item->nm_wali_kelas)) {
+                    $data = array(
+                        'nm_wali_kelas' => 0,
+                        'id' => $item->id_kelas
+                    );
+                } else {
+                    if (!empty($item->gelar_depan_wali_kelas) && !empty($item->gelar_belakang_wali_kelas)) {
+                        $nm_lengkap_wali_kelas = $item->gelar_depan_wali_kelas . " " . $item->nm_wali_kelas . ", " . $item->gelar_belakang_wali_kelas;
+                    } elseif (!empty($item->gelar_depan_wali_kelas)) {
+                        $nm_lengkap_wali_kelas = $item->gelar_depan_wali_kelas . " " . $item->nm_wali_kelas;
+                    } elseif (!empty($item->gelar_belakang_wali_kelas)) {
+                        $nm_lengkap_wali_kelas = $item->nm_wali_kelas . ", " . $item->gelar_belakang_wali_kelas;
+                    } else {
+                        $nm_lengkap_wali_kelas = $item->nm_wali_kelas;
+                    }
+                    $data = array(
+                        'nm_wali_kelas' => $nm_lengkap_wali_kelas
+                    );
+                }
+                return $data;
+            })
+            //bk
+            ->addColumn('bk_kelas', function ($item) {
+                if (empty($item->nama_guru_bk)) {
+                    // $data = array(
+                    //     'bk_kelas' => 'ujicoba'
+                    // );
+                    $data = array(
+                        'bk_kelas' => 0,
+                        'id' => $item->id_kelas
+                    );
+                } else {
+                    $data = array(
+                        'bk_kelas' => $item->nama_guru_bk
+                    );
+                }
+
+
+
+                return $data;
+            })
+
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_kelas
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
@@ -197,7 +194,7 @@ class KelasController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kelas                     = new Kelas;
                 $kelas->id_kelas           = $id;
@@ -209,10 +206,10 @@ class KelasController extends BaseController
                 $kelas->save();
 
                 return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'setting-kelas/kelas',
-                        'message' => 'Save Kelas Successfully'
-                    ];
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'setting-kelas/kelas',
+                    'message' => 'Save Kelas Successfully'
+                ];
             } elseif ($mode == 'edit') {
                 // make object to find id
                 $kelas                          = Kelas::find($id);
@@ -249,7 +246,7 @@ class KelasController extends BaseController
 
                     return [
                         'status' => 300, // GAGAL
-                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                     ];
                 }
             } elseif ($mode == 'delete') {
