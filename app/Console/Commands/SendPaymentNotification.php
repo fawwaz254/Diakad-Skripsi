@@ -44,8 +44,14 @@ class SendPaymentNotification extends Command
         $url = env('WHATSAPP_API_URL');
         $now = now()->toDateString();
 
-        $invoiceUsers = TagihanBiaya::where('is_tagih', 0)
-            ->whereDate('tgl_pelunasan', $now)
+        $invoiceUsers = TagihanBiaya::with('detail_biaya', 'pembayaran')
+            ->whereHas('detail_biaya', function ($q) {
+                $q->where('id_jenis_detail_biaya', 4);
+            })
+            ->whereHas('pembayaran', function ($q) use ($now) {
+                $q->whereDate('created_at', $now);
+            })
+            ->where('is_tagih', 0)
             ->get();
 
         if ($invoiceUsers->isEmpty() || empty($url)) {
@@ -82,6 +88,12 @@ class SendPaymentNotification extends Command
             if ($responseData['response'] === 'Device Bot Logged Out') {
                 \Log::info("Failed to send notification, Device bot logged out");
             } else {
+                $matchingInvoice = $invoiceUsers->firstWhere('id_siswa', $user->siswa->id_siswa);
+                if ($matchingInvoice) {
+                    $matchingInvoice->notification_sent = 1;
+                    $matchingInvoice->save();
+                }
+
                 \Log::info("Notification sent at " . now());
             }
 
