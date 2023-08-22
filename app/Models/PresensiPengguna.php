@@ -28,7 +28,7 @@ class PresensiPengguna extends Model
         'date',
         'check_in',
         'check_out',
-        'stataus',
+        'status',
         'notes',
         'created_by',
         'updated_by',
