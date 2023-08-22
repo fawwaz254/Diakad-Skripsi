@@ -167,6 +167,7 @@ class DataSiswaController extends BaseController
 						'kode_voucher' 			=> $calonSiswa->kode_voucher,
 						'password' 				=> $calonSiswa->password,
 						'nm_c_siswa' 			=> strtoupper($input->nm_pengguna),
+						'nm_panggilan' 			=> strtoupper($input->nm_panggilan),
 						'nik_siswa' 			=> $input->nik_siswa,
 						'jenis_kelamin' 		=> $input->jenis_kelamin,
 						'nisn_siswa'			=> $input->nisn_siswa,
@@ -205,6 +206,15 @@ class DataSiswaController extends BaseController
 						'nm_tertera_kip'		=> $input->nm_tertera_kip,
 						'is_layak_pip'			=> $input->is_layak_pip,
 						'id_jenis_layak_pip'	=> $input->id_jenis_layak_pip,
+						'asal_sekolah'			=> $input->asal_sekolah,
+						'alamat_asal_sekolah'	=> $input->alamat_asal_sekolah,
+						'nomor_sttb'			=> $input->nomor_sttb,
+						'tanggal_sttb'			=> date('Y-m-d', strtotime($input->tanggal_sttb)),
+						'nomor_skhus_sebelumnya'=> $input->nomor_skhus_sebelumnya,
+						'tanggal_skhus_sebelumnya'=> date('Y-m-d', strtotime($input->tanggal_skhus_sebelumnya)),
+						'kegemaran_kesenian'	=> $input->kegemaran_kesenian,
+						'kegemaran_olahraga'	=> $input->kegemaran_olahraga,
+						'kegemaran_organisasi'	=> $input->kegemaran_organisasi,
 						'bahasa_sehari_hari'	=> strtoupper($input->bahasa_sehari_hari),
 						'updated_at' 			=> $now,
 						'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
@@ -263,6 +273,8 @@ class DataSiswaController extends BaseController
 					DB::table('calon_siswa_fisik')->where('id_c_siswa', $input->id_c_siswa)->update([
 						'tinggi_badan'				=> $input->tinggi_badan,
 						'berat_badan'				=> $input->berat_badan,
+						'riwayat_penyakit'			=> $input->riwayat_penyakit,
+						'golongan_darah'			=> $input->golongan_darah,
 						'updated_at' 				=> $now,
 						'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 					]);
