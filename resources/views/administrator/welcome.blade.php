@@ -26,7 +26,7 @@
                 @endif
             </div>
             <div class="row">
-                {{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                {{-- <div class="col-sm-6 col-xs-12">
                     <a href="{{ route('report.pimpinan') }}">
                         <div class="card">
                             <div class="body bg-red" style="text-align: -webkit-center;">
@@ -40,10 +40,10 @@
                         </div>
                     </a>
                 </div> --}}
-                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                <div class="col-sm-4 col-xs-12">
                     <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}">
                         <div class="card">
-                            <div class="body bg-green" style="text-align: -webkit-center;">
+                            <div class="body bg-amber" style="text-align: -webkit-center;">
                                 <img class="media-object" src="{{ url('media/flaticon/clipboard.png') }}" width="64"
                                     height="64">
                                 <h5>
@@ -56,7 +56,7 @@
                 </div>
 
 
-                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                <div class="col-sm-4 col-xs-12">
                     <a href="{{ route('report.walikelas') }}" target="_blank">
                         <div class="card">
                             <div class="body bg-red" style="text-align: -webkit-center;">
@@ -73,7 +73,7 @@
                 </div>
 
 
-                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                <div class="col-sm-4 col-xs-12">
                     <a href="{{ route('report.guru') }}" target="_blank">
                         <div class="card">
                             <div class="body bg-blue" style="text-align: -webkit-center;">
@@ -89,18 +89,33 @@
                     </a>
                 </div>
 
-
-                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                <div class="col-sm-4 col-xs-12">
                     <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprintRealTime') }}"
                         target="_blank">
                         <div class="card">
-                            <div class="body bg-black" style="text-align: -webkit-center;">
+                            <div class="body bg-purple" style="text-align: -webkit-center;">
                                 <img class="media-object" src="{{ url('media/flaticon/clipboard.png') }}"
                                     width="64" height="64">
                                 <h5>
-                                    Show Real Time FingerPrint
+                                    Realtime FingerPrint
                                 </h5>
-                                <small>Menampilkan Update data Fingerprint secara Realtime</small>
+                                <small>Data fingerprint secara realtime</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-sm-4 col-xs-12">
+                    <a href="{{ url(Request::segment(0) . Request::segment(1) . '#whatsapp-notification/scan') }}"
+                        target="_blank">
+                        <div class="card">
+                            <div class="body bg-green" style="text-align: -webkit-center;">
+                                <img class="media-object" src="{{ url('media/flaticon/whatsapp.png') }}" width="64"
+                                    height="64">
+                                <h5>
+                                    WhatsApp Notification
+                                </h5>
+                                <small>Scan barcode whatsapp notifikasi</small>
                             </div>
                         </div>
                     </a>
