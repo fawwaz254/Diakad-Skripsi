@@ -41,7 +41,7 @@ class SendPaymentNotification extends Command
      */
     public function handle()
     {
-        $url = env('WHATSAPP_API_URL');
+        $url = env('WHATSAPP_API_SEND');
         $now = now()->toDateString();
 
         $invoiceUsers = TagihanBiaya::with('detail_biaya', 'pembayaran')

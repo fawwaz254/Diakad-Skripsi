@@ -7,4 +7,4 @@
     }
 </style>
 
-<iframe src="https://wa-api.edumate.id/scan"></iframe>
+<iframe src="{{ config('app.whatsapp_scan') }}"></iframe>

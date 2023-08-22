@@ -41,7 +41,7 @@ class SendAttendanceNotification extends Command
      */
     public function handle()
     {
-        $url = env('WHATSAPP_API_URL');
+        $url = env('WHATSAPP_API_SEND');
         $now = now()->toDateString();
 
         $presenceUsers = PresensiPengguna::where([

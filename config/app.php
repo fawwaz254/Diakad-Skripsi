@@ -123,6 +123,10 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+
+    // WHATSAPP API URL
+    'whatsapp_scan' => env('WHATSAPP_API_SCAN', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
