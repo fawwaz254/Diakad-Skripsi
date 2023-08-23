@@ -513,6 +513,7 @@ class LibGuru
             ->join('guru', 'guru.id_guru', '=', 'wali_kelas.id_guru')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->join('semester', 'semester.id_semester', '=', 'wali_kelas.id_semester')
+            ->whereNull('kelas.deleted_at')
             ->where('wali_kelas.id_guru', '=', $id_guru)
             ->where('wali_kelas.id_semester', '=', $id_semester)
             ->where('wali_kelas.is_aktif', '=', '1')
@@ -528,6 +529,7 @@ class LibGuru
                 ->join('semester', 'semester.id_semester', '=', 'wali_kelas.id_semester')
                 ->where('wali_kelas.id_guru', '=', $id_guru)
                 ->where('wali_kelas.is_aktif', '=', '1')
+                ->whereNull('kelas.deleted_at')
                 ->orderBy('semester.thn_akademik_semester', 'asc')
                 ->orderBy('semester.nm_semester', 'asc')
                 ->first();
