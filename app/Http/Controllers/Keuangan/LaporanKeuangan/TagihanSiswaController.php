@@ -150,7 +150,7 @@ class TagihanSiswaController extends BaseController
         $status = $request->status;
 
         if ($id_kelas == 'all') {
-            $kelas_data = Kelas::get();
+            $kelas_data = Kelas::where('is_aktif', 1)->get();
         } else {
             $kelas_data = Kelas::find($id_kelas);
         }

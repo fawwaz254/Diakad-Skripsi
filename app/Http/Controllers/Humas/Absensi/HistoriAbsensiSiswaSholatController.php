@@ -31,7 +31,7 @@ class HistoriAbsensiSiswaSholatController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $date = Carbon::now()->format('Y-m-d');
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
 
@@ -54,7 +54,7 @@ class HistoriAbsensiSiswaSholatController extends Controller
         set_time_limit(9800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
@@ -165,7 +165,7 @@ class HistoriAbsensiSiswaSholatController extends Controller
         set_time_limit(9800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }

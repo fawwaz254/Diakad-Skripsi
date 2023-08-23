@@ -33,7 +33,7 @@ class EntriWisudaController extends BaseController
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data);
 
         $kelas_calon_lulus = Kelas::orderBy('tingkat', 'desc')->first();
-        $data_kelas = Kelas::where('tingkat', $kelas_calon_lulus->tingkat)->orderBy('nm_kelas')->get();
+        $data_kelas = Kelas::where('tingkat', $kelas_calon_lulus->tingkat)->where('is_aktif', 1)->orderBy('nm_kelas')->get();
 
         return view('pendidikan/wisuda/entri-wisuda/view-entri-wisuda', compact('auth_data', 'data_periode_wisuda', 'data_kelas'));
     }
@@ -343,7 +343,7 @@ class EntriWisudaController extends BaseController
     {
         $file = public_path() . "/excel/ExcelTemplateIjazahSKKelulusan.xls";
         ob_end_clean();
-        ob_start(); 
+        ob_start();
         $headers = [
             'Content-Type' => 'application/xls',
         ];
