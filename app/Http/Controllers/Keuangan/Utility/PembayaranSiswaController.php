@@ -1099,8 +1099,11 @@ class PembayaranSiswaController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $pembayaranBiaya = PembayaranBiaya::find($id);
+                if (empty($pembayaranBiaya)) {
+                    $pembayaranBiaya = PembayaranBiaya::where('id_tagihan_biaya', $id)->first();
+                }
 
-                $tagihanBiaya = TagihanBiaya::where('id_tagihan_biaya',$pembayaranBiaya->id_tagihan_biaya)->first();
+                $tagihanBiaya = TagihanBiaya::where('id_tagihan_biaya', $pembayaranBiaya->id_tagihan_biaya)->first();
                 $tagihanBiaya->besar_pembayaran = 0;
                 $tagihanBiaya->is_tagih = 1;
                 $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
