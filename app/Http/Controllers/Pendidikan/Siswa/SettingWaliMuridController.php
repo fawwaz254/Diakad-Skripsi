@@ -54,7 +54,7 @@ class SettingWaliMuridController extends BaseController
     public function getDataKelas(Request $request)
     {
         $input = (object) $request->input();
-        $kelas = Kelas::where('id_jurusan', $input->jurusan)->get();
+        $kelas = Kelas::where('id_jurusan', $input->jurusan)->where('is_aktif', 1)->get();
         return $kelas;
     }
 
@@ -90,7 +90,7 @@ class SettingWaliMuridController extends BaseController
             $q->where('kelas.id_jurusan', $id_jurusan);
         })->when($id_kelas != '0', function ($q) use ($id_kelas) {
             $q->where('siswa.id_kelas', $id_kelas);
-        })->get();
+        })->where('is_aktif', 1)->get();
 
         if ($id_kelas != '0') {
             $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
@@ -150,7 +150,7 @@ class SettingWaliMuridController extends BaseController
 
         $data_kelas = Kelas::when($id_jurusan != '0', function ($q) use ($id_jurusan) {
             $q->where('id_jurusan', $id_jurusan);
-        })->get();
+        })->where('is_aktif', 1)->get();
         $data_jurusan = Jurusan::get();
 
         if ($id_kelas != '0') {

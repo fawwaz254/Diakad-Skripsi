@@ -119,6 +119,13 @@ class KelasController extends BaseController
                 }
                 return $data;
             })
+            ->addColumn('status', function ($item) {
+                if ($item->is_aktif == '1') {
+                    return 'Aktif';
+                } else {
+                    return 'Tidak AKtif';
+                }
+            })
             ->addColumn('nm_wali_kelas', function ($item) {
                 if (empty($item->nm_wali_kelas)) {
                     $data = array(
@@ -156,9 +163,6 @@ class KelasController extends BaseController
                         'bk_kelas' => $item->nama_guru_bk
                     );
                 }
-
-
-
                 return $data;
             })
 
@@ -202,6 +206,7 @@ class KelasController extends BaseController
                 $kelas->nm_kelas           = $input->nm_kelas;
                 $kelas->tingkat            = $input->tingkat;
                 $kelas->keterangan_kelas   = $input->keterangan_kelas;
+                $kelas->is_aktif           = '1';
                 $kelas->created_by         = $input->auth_data->pengguna->id_pengguna;
                 $kelas->save();
 
@@ -217,6 +222,7 @@ class KelasController extends BaseController
                 $kelas->nm_kelas                = $input->nm_kelas;
                 $kelas->tingkat                 = $input->tingkat;
                 $kelas->keterangan_kelas        = $input->keterangan_kelas;
+                $kelas->is_aktif                = $input->is_aktif;
                 $kelas->updated_by              = $input->auth_data->pengguna->id_pengguna;
                 $kelas->updated_at              = $now;
                 $kelas->save();

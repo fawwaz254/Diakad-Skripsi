@@ -39,9 +39,9 @@ class ApprovePrestasiSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $kelas = Kelas::get();
+        $kelas = Kelas::where('is_aktif', 1)->get();
 
-        return view('kesiswaan/skpi/approve-prestasi-siswa/view-approve-prestasi-siswa', compact('auth_data','kelas'));
+        return view('kesiswaan/skpi/approve-prestasi-siswa/view-approve-prestasi-siswa', compact('auth_data', 'kelas'));
     }
 
     public function viewDetailPrestasiSiswa(Request $request, $id, $param)
@@ -49,10 +49,10 @@ class ApprovePrestasiSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $siswa = Siswa::where('id_siswa',$id)->first();
-        $pengguna = Pengguna::where('id_pengguna',$siswa->id_pengguna)->first();
-        $kelas = Kelas::where('id_kelas',$siswa->id_kelas)->first();
-        return view('kesiswaan/skpi/approve-prestasi-siswa/view-detail-prestasi-siswa', compact('auth_data', 'param', 'pengguna','kelas'));
+        $siswa = Siswa::where('id_siswa', $id)->first();
+        $pengguna = Pengguna::where('id_pengguna', $siswa->id_pengguna)->first();
+        $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
+        return view('kesiswaan/skpi/approve-prestasi-siswa/view-detail-prestasi-siswa', compact('auth_data', 'param', 'pengguna', 'kelas'));
     }
 
     public function printSkpikelas(Request $request, $id_kelas)
@@ -62,7 +62,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data = Siswa::where('id_kelas',$id_kelas)->get();
+        $data = Siswa::where('id_kelas', $id_kelas)->get();
         // $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
 
         $kprestasi = PrestasiSiswa::where('prestasi_siswa.id_kelas', $id_kelas)
@@ -107,7 +107,7 @@ class ApprovePrestasiSiswaController extends BaseController
             ->get();
 
         // dd($data);
-        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-kelas', compact('auth_data','data', 'kprestasi', 'kkegiatan', 'kinformasi_tambahan_ekstrakurikuler', 'kinformasi_produk_lomba', 'kinformasi_tambahan'));
+        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-kelas', compact('auth_data', 'data', 'kprestasi', 'kkegiatan', 'kinformasi_tambahan_ekstrakurikuler', 'kinformasi_produk_lomba', 'kinformasi_tambahan'));
     }
 
     public function printSkpi(Request $request, $id)

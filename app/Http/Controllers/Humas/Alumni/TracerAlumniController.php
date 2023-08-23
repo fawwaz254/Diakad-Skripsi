@@ -137,7 +137,7 @@ class TracerAlumniController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 9)->orWhere('tingkat', 3)->get();
+        $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 9)->orWhere('tingkat', 3)->get();
         $alumni = null;
 
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
@@ -152,11 +152,11 @@ class TracerAlumniController extends BaseController
         $data_jurusan = Jurusan::all();
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
-            $data_kelas = Kelas::where('tingkat', 9)->get();
+            $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 9)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('smp', 'calon_siswa')->first();
             // return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni-smp', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
         } else {
-            $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 3)->get();
+            $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 3)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('calon_siswa')->first();
         }
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
@@ -474,14 +474,14 @@ class TracerAlumniController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_kelas = Kelas::where('tingkat', 9)->get();
+        $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 9)->get();
         return view('humas.alumni.tracer-alumni.export-tracer-alumni', compact('auth_data', 'data_kelas', 'id_kelas', 'tahun_lulus'));
     }
     public function cetakTracerAlumni2(Request $request, $id_kelas = null, $tahun_lulus = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 3)->get();
+        $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 3)->get();
         return view('humas.alumni.tracer-alumni.export-tracer-alumni2', compact('auth_data', 'data_kelas', 'id_kelas', 'tahun_lulus'));
     }
 
@@ -517,12 +517,12 @@ class TracerAlumniController extends BaseController
     public function exportAlumnni2(Request $request, $id_kelas, $tahun_lulus)
     {
         $input = (object) $request->input();
-        if ($id_kelas == 'all'){
+        if ($id_kelas == 'all') {
             $alumni['alumni_bekerja'] = Alumni::where('tahun_lulus', $tahun_lulus)->where('status', 'bekerja')->with('calon_siswa', 'kelas', 'bekerja')->get();
             $alumni['alumni_kuliah'] = Alumni::where('tahun_lulus', $tahun_lulus)->where('status', 'kuliah')->with('calon_siswa', 'kelas', 'kuliah')->get();
             $alumni['alumni_menunggu'] = Alumni::where('tahun_lulus', $tahun_lulus)->where('status', 'menunggu')->with('calon_siswa', 'kelas', 'menunggu')->get();
             $alumni['alumni_wirausaha'] = Alumni::where('tahun_lulus', $tahun_lulus)->where('status', 'usaha')->with('calon_siswa', 'kelas', 'usaha')->get();
-        }else{
+        } else {
             $alumni['alumni_bekerja'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'bekerja')->with('calon_siswa', 'kelas', 'bekerja')->get();
             $alumni['alumni_kuliah'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'kuliah')->with('calon_siswa', 'kelas', 'kuliah')->get();
             $alumni['alumni_menunggu'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'menunggu')->with('calon_siswa', 'kelas', 'menunggu')->get();
@@ -541,9 +541,9 @@ class TracerAlumniController extends BaseController
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             $alumnis    = LibAlumni::getAlumnisSearchSmp($id_kelas, $tahun_lulus);
         } else {
-            if ($id_kelas == 'all'){
+            if ($id_kelas == 'all') {
                 $alumnis    = LibAlumni::getAlumnisSearchWithoutKelas($tahun_lulus);
-            }else{
+            } else {
                 $alumnis    = LibAlumni::getAlumnisSearch($id_kelas, $tahun_lulus);
             }
         }

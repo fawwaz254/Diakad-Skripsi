@@ -58,7 +58,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
 
         $data_siswa = Siswa::whereIn('nis_siswa', $data_nis)->get();
         $data_status_pengguna = StatusPengguna::where('status_join_table', '=', '3')->get();
-        $data_kelas = Kelas::get();
+        $data_kelas = Kelas::where('is_aktif', 1)->get();
         $data_jalur = Jalur::get();
         $data_semester_masuk = Semester::get();
         $data_penerimaan = Penerimaan::get();

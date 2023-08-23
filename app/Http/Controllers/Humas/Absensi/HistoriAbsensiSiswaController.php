@@ -33,7 +33,7 @@ class HistoriAbsensiSiswaController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $date = Carbon::now()->format('Y-m-d');
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
@@ -68,7 +68,7 @@ class HistoriAbsensiSiswaController extends Controller
         $jumlah_alpha = 0;
         $belum_absent = 0;
         $tidak_punya_shift = 0;
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
