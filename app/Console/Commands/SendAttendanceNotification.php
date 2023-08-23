@@ -89,7 +89,7 @@ class SendAttendanceNotification extends Command
                         $matchingPresence->save();
                     }
 
-                    \Log::info("Notification sent at " . now());
+                    \Log::info("Success: Notification attendance sent at " . now());
                 }
 
                 sleep(2);

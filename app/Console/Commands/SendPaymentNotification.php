@@ -95,7 +95,7 @@ class SendPaymentNotification extends Command
                         $matchingInvoice->save();
                     }
 
-                    \Log::info("Success: Notification sent at " . now());
+                    \Log::info("Success: Notification payment sent at " . now());
                 }
 
                 sleep(2);
