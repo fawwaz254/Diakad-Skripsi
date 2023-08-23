@@ -180,6 +180,7 @@
                                          <th>Tahun Masuk</th>
                                          <th>Kelas</th>
                                          <th>Kelompok Biaya</th>
+                                         <th>Jumlah Tagihan</th>
                                          <th>Jalur</th>
                                          <!-- <th>Jumlah Tagihan</th> -->
                                      </tr>
@@ -284,6 +285,11 @@
              {
                  data: 'kelompok_biaya',
                  name: 'kelompok_biaya.nm_kelompok_biaya'
+             },
+             {
+                 data: 'jumlah_tagihan',
+                 class: 'text-center',
+                 name: 'jumlah_tagihan'
              },
              {
                  data: 'nm_jalur',
