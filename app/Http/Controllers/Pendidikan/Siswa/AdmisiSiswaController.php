@@ -147,7 +147,7 @@ class AdmisiSiswaController extends BaseController
                 $is_aktif_status_pengguna = 0;
             }
 
-            $admisi                                    = Admisi::where('id_siswa', '=', $input->id_siswa)->where('id_semester', '=', $input->id_semester)->first();
+            $admisi                             = Admisi::where('id_siswa', '=', $input->id_siswa)->where('id_semester', '=', $input->id_semester)->first();
 
             if ($admisi) {
                 $statusPengguna                 = StatusPengguna::where('id_status_pengguna', '=', $admisi->id_status_pengguna)->first();
@@ -207,10 +207,11 @@ class AdmisiSiswaController extends BaseController
 
                 // proses cek admisi sebelumnya
                 if (!empty($id_semester_sebelumnya)) {
-                    $admisi = Admisi::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'admisi.id_status_pengguna')
-                        ->where('admisi.id_siswa', '=', $input->id_siswa)
-                        ->where('admisi.id_semester', '=', $id_semester_sebelumnya)
-                        ->first();
+                    // $admisi = Admisi::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'admisi.id_status_pengguna')
+                    //     ->where('admisi.id_siswa', '=', $input->id_siswa)
+                    //     ->where('admisi.id_semester', '=', $id_semester_sebelumnya)
+                    //     ->first();
+                    $admisi = true;
 
                     if ($admisi) {
                         if ($admisi->kode_status_pengguna == 'CALON_LULUS') {
