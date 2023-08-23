@@ -106,7 +106,7 @@ if (!function_exists('get_keterangan_wali_kelas')) {
                 $query->where('id_pengguna', '=', $id_pengguna);
             })->first();
         if ($wali_kelas) {
-            $data_kelas = Kelas::all();
+            $data_kelas = Kelas::where('is_aktif', 1)->get();
             $find_kelas = $data_kelas->firstWhere('id_kelas', $wali_kelas->id_kelas);
             if ($find_kelas) {
                 $kelas = $find_kelas;

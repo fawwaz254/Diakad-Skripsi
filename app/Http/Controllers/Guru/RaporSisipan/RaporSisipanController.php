@@ -47,7 +47,7 @@ class RaporSisipanController extends Controller
         $auth_data = $input->auth_data;
 
         // $data['list_mapel'] = MataPelajaran::with('jenis_mata_pelajaran')->get();
-        $data['list_kelas'] = Kelas::all();
+        $data['list_kelas'] = Kelas::where('is_aktif', 1)->get();
         $data['list_jurusan'] = Jurusan::all();
         $data['jenis_mapel'] = JenisMataPelajaran::all();
         $data['semester_aktif'] = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -382,7 +382,7 @@ class RaporSisipanController extends Controller
 
         // $auth_data = $input->auth_data;
         // $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');
-        $data['kelas'] = Kelas::where('id_jurusan', $input->jurusan)->get();
+        $data['kelas'] = Kelas::where('id_jurusan', $input->jurusan)->where('is_aktif', 1)->get();
 
         if (!empty($input->jurusan) && !empty($input->jenis_mata_pelajaran)) {
             $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->where('id_jenis_mata_pelajaran', $input->jenis_mata_pelajaran)->get()->sortBy('kd_mata_pelajaran');

@@ -204,7 +204,7 @@ class DetailAbsensiController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_kelas = Kelas::all();
+        $list_kelas = Kelas::where('is_aktif', 1)->get();
         // $pengguna = Guru
         if (empty($start_date) || empty($end_date)) {
             $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
@@ -239,7 +239,7 @@ class DetailAbsensiController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_kelas = Kelas::all();
+        $list_kelas = Kelas::where('is_aktif', 1)->get();
         $nm_pengguna = Pengguna::where('id_pengguna', $pengguna)->pluck('nm_pengguna')->first();
 
         if (empty($start_date) || empty($end_date)) {

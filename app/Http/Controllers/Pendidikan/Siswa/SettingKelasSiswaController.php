@@ -69,6 +69,7 @@ class SettingKelasSiswaController extends BaseController
         $data_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
             ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->where('kelas.id_kelas', '!=', $id_kelas)
+            ->where('kelas.is_aktif', 1)
             ->get();
 
         $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();

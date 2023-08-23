@@ -26,6 +26,7 @@ class LibKelas
             $kelas = Kelas::select(
                 'p3.nm_pengguna as nama_guru_bk',
                 'kelas.id_kelas',
+                'kelas.is_aktif',
                 'jurusan.nm_jurusan',
                 'kelas.nm_kelas',
                 'kelas.tingkat',

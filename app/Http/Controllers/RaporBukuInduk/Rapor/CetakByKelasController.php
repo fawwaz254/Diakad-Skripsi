@@ -23,30 +23,31 @@ use Validator;
 
 class CetakByKelasController extends BaseController
 {
-    public function viewCetakByKelas(Request $request, $id_kelas = null){
+    public function viewCetakByKelas(Request $request, $id_kelas = null)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $kelas = Kelas::orderBy('tingkat', 'ASC')->orderBy('nm_kelas', 'ASC')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'ASC')->orderBy('nm_kelas', 'ASC')->get();
 
-    	return view('rapor-buku-induk/rapor/cetak-by-kelas/view-cetak-by-kelas', compact('auth_data','id_kelas', 'kelas'));
+        return view('rapor-buku-induk/rapor/cetak-by-kelas/view-cetak-by-kelas', compact('auth_data', 'id_kelas', 'kelas'));
     }
 
-    public function actionViewCetakByKelas(Request $request){
+    public function actionViewCetakByKelas(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-  
+
         $validator = Validator::make($request->all(), [
-            'id_kelas' =>'required'
+            'id_kelas' => 'required'
         ]);
-  
-        if($validator->fails()) {
+
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
                 'path' => 'rapor/cetak-by-kelas/' . $input->id_kelas
@@ -54,57 +55,60 @@ class CetakByKelasController extends BaseController
         }
     }
 
-    public function datatablesCetakByKelas(Request $request, $id_kelas){
+    public function datatablesCetakByKelas(Request $request, $id_kelas)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $siswa = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas', 'kelas.tingkat','status_pengguna.nm_status_pengguna','jalur.nm_jalur')
-          ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-          ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-          ->join('status_pengguna','pengguna.id_status_pengguna','=','status_pengguna.id_status_pengguna')
-          ->join('jalur_siswa', function ($join) {
-                            $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
-                                 ->where('jalur_siswa.is_jalur_aktif', '=', 1);
-                        })
-          ->join('jalur','jalur_siswa.id_jalur','=','jalur.id_jalur')
-          ->where(function ($query) use ($id_kelas) {
-                    $query->where('kelas.id_kelas', $id_kelas);
-             })
-          ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-          ->get();
-        
-        $data = $siswa->map(function($row){
-            $pengambilanMpSiswa = PengambilanMp::select('pengambilan_mp.id_semester', 
-                                                        'pengambilan_mp.id_siswa',
-                                                        'kelas_mp.id_kelas',
-                                                        'kelas.nm_kelas',
-                                                        'kelas.tingkat',
-                                                        'semester.nm_semester')
-                                                ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'pengambilan_mp.id_kelas_mp')
-                                                ->join('kelas', 'kelas.id_kelas', 'kelas_mp.id_kelas')
-                                                ->join('semester', 'semester.id_semester', 'pengambilan_mp.id_semester')
-                                                ->where('id_siswa', $row->id_siswa)
-                                                ->where('kelas_mp.id_kelas', $row->id_kelas)
-                                                ->groupBy('id_semester', 'id_siswa', 'id_kelas', 'nm_kelas', 'tingkat', 'nm_semester')
-                                                ->get();
-                                                
+        $siswa = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas', 'kelas.tingkat', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur')
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
+            ->join('jalur_siswa', function ($join) {
+                $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
+                    ->where('jalur_siswa.is_jalur_aktif', '=', 1);
+            })
+            ->join('jalur', 'jalur_siswa.id_jalur', '=', 'jalur.id_jalur')
+            ->where(function ($query) use ($id_kelas) {
+                $query->where('kelas.id_kelas', $id_kelas);
+            })
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->get();
+
+        $data = $siswa->map(function ($row) {
+            $pengambilanMpSiswa = PengambilanMp::select(
+                'pengambilan_mp.id_semester',
+                'pengambilan_mp.id_siswa',
+                'kelas_mp.id_kelas',
+                'kelas.nm_kelas',
+                'kelas.tingkat',
+                'semester.nm_semester'
+            )
+                ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'pengambilan_mp.id_kelas_mp')
+                ->join('kelas', 'kelas.id_kelas', 'kelas_mp.id_kelas')
+                ->join('semester', 'semester.id_semester', 'pengambilan_mp.id_semester')
+                ->where('id_siswa', $row->id_siswa)
+                ->where('kelas_mp.id_kelas', $row->id_kelas)
+                ->groupBy('id_semester', 'id_siswa', 'id_kelas', 'nm_kelas', 'tingkat', 'nm_semester')
+                ->get();
+
             $all_log_kelas = [];
-            foreach($pengambilanMpSiswa as $kelas){
+            foreach ($pengambilanMpSiswa as $kelas) {
                 $all_log_kelas[] = $kelas->toArray();
             }
 
             $row['log_kelas'] = $all_log_kelas;
             return $row;
         });
-        
+
         return Datatables::of($data)
-                ->addColumn('action', function($item) use ($id_kelas) {
-                    $data = array(
-                        'id' => $item->nis_siswa,
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) use ($id_kelas) {
+                $data = array(
+                    'id' => $item->nis_siswa,
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function printRaporSiswa(Request $request)
@@ -112,23 +116,23 @@ class CetakByKelasController extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make(collect($input)->toArray(), [
-            'id_siswa' =>'required|exists:siswa,id_siswa',
-            'id_kelas' =>'required|exists:kelas,id_kelas',
-            'id_semester' =>'required|exists:semester,id_semester',
+            'id_siswa' => 'required|exists:siswa,id_siswa',
+            'id_kelas' => 'required|exists:kelas,id_kelas',
+            'id_semester' => 'required|exists:semester,id_semester',
             'keputusan' => 'nullable|in:0,1,2'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return [
-				'status' => 300, // FAILED
-				'message' => $validator->errors()->first()
-			];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         }
 
         $print = new PrintRaporController($request);
         $pdf = $print->printRaporSiswa();
-        
-        if($pdf['status'] == 200){
+
+        if ($pdf['status'] == 200) {
             return $pdf['pdf']->stream();
         } else {
             return $pdf;

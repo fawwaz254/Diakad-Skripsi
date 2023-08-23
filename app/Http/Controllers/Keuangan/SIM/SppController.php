@@ -767,7 +767,7 @@ class SppController extends BaseController
 
         $data_semester = $semester->unique('thn_akademik_semester');
 
-        $data_kelas = Kelas::select('id_kelas', 'nm_kelas')->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $data_kelas = Kelas::select('id_kelas', 'nm_kelas')->where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
 
         if (!empty($id_kelas) && !empty($tahun_akademik_semester)) {
             $semester_mulai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '1');
@@ -1140,7 +1140,7 @@ class SppController extends BaseController
         $list_data = Kelas::with(['tagihan' => function ($q) use ($data_detail_biaya) {
             $q->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'))
                 ->with('detail_biaya', 'detail_biaya.bulan');
-        }])->orderBy('tingkat')->orderBy('nm_kelas');
+        }])->where('is_aktif', 1)->orderBy('tingkat')->orderBy('nm_kelas');
 
         return Datatables::of($list_data)
             ->addColumn('nominal_spp_juli', function ($item) {
@@ -1223,7 +1223,7 @@ class SppController extends BaseController
         $list_data = Kelas::with(['tagihan' => function ($q) use ($data_detail_biaya) {
             $q->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'))
                 ->with('detail_biaya');
-        }])->orderBy('tingkat');
+        }])->where('is_aktif', 1)->orderBy('tingkat');
 
         $dt = Datatables::of($list_data);
 
