@@ -773,7 +773,7 @@ class SppController extends BaseController
             $semester_mulai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '1');
             $semester_selesai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '2');
 
-            $query_tagihan = TagihanBiaya::select('tagihan_biaya.id_siswa', 'biaya.nm_biaya', 'semester.kode_semester', 'siswa.nis_siswa', 'tagihan_biaya.id_tagihan_biaya', 'tagihan_biaya.is_tagih', 'tagihan_biaya.is_request', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'bulan.kode_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', 'tagihan_biaya.besar_pembayaran', 'tagihan_biaya.tgl_pelunasan')
+            $query_tagihan = TagihanBiaya::select('tagihan_biaya.id_siswa', 'biaya.nm_biaya', 'semester.kode_semester', 'siswa.nis_siswa', 'tagihan_biaya.id_tagihan_biaya', 'tagihan_biaya.is_tagih', 'tagihan_biaya.is_request', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'bulan.kode_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', 'tagihan_biaya.besar_pembayaran', 'tagihan_biaya.tgl_pelunasan', 'tagihan_biaya.updated_at')
                 ->join('siswa', function ($q) {
                     $q->on('tagihan_biaya.id_siswa', '=', 'siswa.id_siswa')
                         ->whereNull('siswa.deleted_at');
