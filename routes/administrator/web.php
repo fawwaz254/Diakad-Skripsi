@@ -20,6 +20,7 @@ use App\Http\Controllers\FeaturemenuController;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::view('/whatsapp-notification/scan', 'iframe-whatsapp');
 
         Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
         Route::get('/report-wali-kelas', [ReportController::class, 'viewReportWaliKelas'])->name('report.walikelas');

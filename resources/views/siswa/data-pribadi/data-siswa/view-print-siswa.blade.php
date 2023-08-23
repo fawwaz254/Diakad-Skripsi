@@ -37,7 +37,7 @@
 		<tr>
 			<td>2.</td>
 			<td>Nama panggilan</td>
-			<td>: </td>
+			<td>: {{$siswa->nm_panggilan}}</td>
 		</tr>
 		<tr>
 			<td>3.</td>
@@ -166,12 +166,12 @@
 		<tr>
 			<td>22.</td>
 			<td>Golongan darah</td>
-			<td>:</td>
+			<td>: {{$siswa->golongan_darah}}</td>
 		</tr>
 		<tr>
 			<td>23.</td>
 			<td>Penyakit yang pernah diderita</td>
-			<td>:</td>
+			<td>: {{$siswa->riwayat_penyakit}}</td>
 		</tr>
 		<tr>
 			<td>24.</td>
@@ -200,7 +200,7 @@
 		<tr>
 			<td></td>
 			<td>a. Tamatan dari</td>
-			<td>:</td>
+			<td>: {{$siswa->asal_sekolah}}</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -210,7 +210,7 @@
 		<tr>
 			<td></td>
 			<td>c. Tanggal dan nomor SKHUN</td>
-			<td>:</td>
+			<td>: {{$siswa->tanggal_skhus_sebelumnya ? date('d F Y', strtotime($siswa->tanggal_skhus_sebelumnya)) : '-'}} / {{$siswa->nomor_skhus_sebelumnya}}</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -423,17 +423,17 @@
 		<tr>
 			<td>57.</td>
 			<td>Kesenian</td>
-			<td>:</td>
+			<td>: {{$siswa->kegemaran_kesenian}}</td>
 		</tr>
 		<tr>
 			<td>58.</td>
 			<td>Olahraga</td>
-			<td>:</td>
+			<td>: {{$siswa->kegemaran_olahraga}}</td>
 		</tr>
 		<tr>
 			<td>59.</td>
 			<td>Kemasyarakatan / Organisasi</td>
-			<td>:</td>
+			<td>: {{$siswa->kegemaran_organisasi}}</td>
 		</tr>
 		<tr>
 			<td>60.</td>
@@ -484,7 +484,7 @@
 		<tr>
 			<td></td>
 			<td>c. Nomor STTB</td>
-			<td>:</td>
+			<td>: {{$siswa->nomor_sttb}}</td>
 		</tr>
 	</table>
 
