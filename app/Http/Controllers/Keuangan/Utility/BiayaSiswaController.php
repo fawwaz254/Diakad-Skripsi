@@ -142,9 +142,9 @@ class BiayaSiswaController extends BaseController
             })
             ->addColumn('kelompok_biaya', function ($item) {
                 if ($item->status_kelompok_biaya == 1) {
-                    return $item->nm_kelompok_biaya . " (Reguler)";
+                    return $item->nm_kelompok_biaya;
                 } else {
-                    return $item->nm_kelompok_biaya . " (Khusus)";
+                    return $item->nm_kelompok_biaya;
                 }
             })
             ->addColumn('action', function ($item) {
