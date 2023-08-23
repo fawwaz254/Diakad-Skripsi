@@ -41,7 +41,7 @@ class ManajemenMateriAjarController extends BaseController
 
         $data['list_mapel'] = MataPelajaran::all();
         $data['list_jurusan'] = Jurusan::all();
-        $data['list_kelas'] = Kelas::all();
+        $data['list_kelas'] = Kelas::where('is_aktif', 1)->get();
 
         return view('guru/e-learning/manajemen-materi-ajar/add-manajemen-materi-ajar', compact('auth_data'), $data);
     }
@@ -56,13 +56,13 @@ class ManajemenMateriAjarController extends BaseController
         $data['list_jurusan'] = Jurusan::all();
 
         $materi_ajar = MateriAjar::with('materi_ajar_file')->find($id);
-        $data['list_kelas'] = Kelas::where('id_jurusan', $materi_ajar->id_jurusan)->get();
+        $data['list_kelas'] = Kelas::where('id_jurusan', $materi_ajar->id_jurusan)->where('is_aktif', 1)->get();
         return view('guru/e-learning/manajemen-materi-ajar/edit-manajemen-materi-ajar', compact('auth_data', 'materi_ajar'), $data);
     }
 
     public function getKelas($id_jurusan)
     {
-        $kelas = Kelas::where('id_jurusan', '=', $id_jurusan)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('id_jurusan', '=', $id_jurusan)->where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         return response()->json($kelas);
     }
 

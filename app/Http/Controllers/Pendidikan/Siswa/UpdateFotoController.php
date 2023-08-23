@@ -38,10 +38,10 @@ class UpdateFotoController extends BaseController
             ->where('status_join_table', '=', 3)
             ->get();
         $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')
-                                  ->distinct()
-                                  ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                                  ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                                  ->orderBy('thn_masuk_siswa', 'ASC')->get();
+            ->distinct()
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->orderBy('thn_masuk_siswa', 'ASC')->get();
 
         return view('pendidikan/siswa/update-foto/view-update-foto', compact('auth_data', 'jurusan', 'jalur', 'status_pengguna', 'thn_masuk_siswa'));
     }
@@ -60,20 +60,18 @@ class UpdateFotoController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $validator = Validator::make($request->all(), [
-         
-      ]);
+        $validator = Validator::make($request->all(), []);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             return [
-                    'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/update-foto/view-detail-update-foto/'.$input->id_jurusan.'/'.$input->id_kelas.'/'.$input->thn_masuk_siswa.'/'.$input->id_jalur.'/'.$input->id_status_pengguna
-                ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'siswa/update-foto/view-detail-update-foto/' . $input->id_jurusan . '/' . $input->id_kelas . '/' . $input->thn_masuk_siswa . '/' . $input->id_jalur . '/' . $input->id_status_pengguna
+            ];
         }
     }
 
@@ -87,17 +85,17 @@ class UpdateFotoController extends BaseController
 
 
         $jurusan = Jurusan::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
-        $kelas = Kelas::where('id_jurusan', '=', $id_jurusan)->get();
+        $kelas = Kelas::where('id_jurusan', '=', $id_jurusan)->where('is_aktif', 1)->get();
         $jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
         $status_pengguna = StatusPengguna::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-          ->where('status_join_table', '=', 3)
-          ->get();
+            ->where('status_join_table', '=', 3)
+            ->get();
         $thn_masuk_siswa_list = Siswa::select('thn_masuk_siswa')
-                                  ->distinct()
-                                  ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                                  ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                                  ->orderBy('thn_masuk_siswa', 'ASC')->get();
-        
+            ->distinct()
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->orderBy('thn_masuk_siswa', 'ASC')->get();
+
         return view('pendidikan/siswa/update-foto/view-detail-update-foto', compact('auth_data', 'id_jurusan', 'id_kelas', 'thn_masuk_siswa', 'id_jalur', 'id_status_pengguna', 'jurusan', 'kelas', 'jalur', 'status_pengguna', 'thn_masuk_siswa_list', 'siswa'));
     }
 
@@ -109,23 +107,23 @@ class UpdateFotoController extends BaseController
         $siswa = LibSiswa::fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna);
 
         return Datatables::of($siswa)
-                ->editColumn('path_foto_pengguna', function ($item) {
-                    if (!empty($item->path_foto_pengguna)) {
-                        return Storage::disk('spaces')->url($item->path_foto_pengguna);
-                    } else {
-                        return asset('media/blank-user.png');
-                    }
-                })
-                ->addColumn('thn_masuk_siswa', function ($item) {
-                    return $item->thn_masuk_siswa;
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_pengguna
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->editColumn('path_foto_pengguna', function ($item) {
+                if (!empty($item->path_foto_pengguna)) {
+                    return Storage::disk('spaces')->url($item->path_foto_pengguna);
+                } else {
+                    return asset('media/blank-user.png');
+                }
+            })
+            ->addColumn('thn_masuk_siswa', function ($item) {
+                return $item->thn_masuk_siswa;
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_pengguna
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function viewUpload(Request $request, $id_pengguna)
@@ -142,9 +140,7 @@ class UpdateFotoController extends BaseController
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $validator = Validator::make($request->all(), [
-
-        ]);
+        $validator = Validator::make($request->all(), []);
 
         if ($validator->fails() && $mode != 'delete' && $mode != 'upload' && $mode != 'delete-file') {
             return [
@@ -154,14 +150,14 @@ class UpdateFotoController extends BaseController
         } else {
             if ($mode == 'upload') {
                 $validator = Validator::make($request->all(), [
-                        'file' => 'file|required|max:2048|mimes:jpg,jpeg,bmp,png'
-                    ]);
+                    'file' => 'file|required|max:2048|mimes:jpg,jpeg,bmp,png'
+                ]);
 
 
                 $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
 
-                $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/siswa/'.$id, request()->file, 'public');
-                
+                $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/siswa/' . $id, request()->file, 'public');
+
                 //save file name to database
                 $siswa                          = Pengguna::find($id);
                 $siswa->path_foto_pengguna      = $file;
@@ -171,7 +167,7 @@ class UpdateFotoController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'message' => 'Succes Upload foto siswa', // SUCCESS AND LOAD CONTENT
-                    'path' => 'kesiswaan#siswa/update-foto/upload/'.$id
+                    'path' => 'kesiswaan#siswa/update-foto/upload/' . $id
                 ];
             }
         }
@@ -197,11 +193,11 @@ class UpdateFotoController extends BaseController
         $upload_image = $request->file('file');
         $filename = pathinfo($upload_image->getClientOriginalName(), PATHINFO_FILENAME);
 
-        if($siswa = Siswa::where('nis_siswa', $filename)->first()){
+        if ($siswa = Siswa::where('nis_siswa', $filename)->first()) {
             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-    
-            $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/siswa/'.$siswa->id_pengguna, $upload_image, 'public');
-            
+
+            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/siswa/' . $siswa->id_pengguna, $upload_image, 'public');
+
             //save file name to database
             $siswa                          = Pengguna::find($siswa->id_pengguna);
             $siswa->path_foto_pengguna      = $file;
@@ -209,8 +205,8 @@ class UpdateFotoController extends BaseController
             $siswa->save();
 
             return Response::json('success', 200);
-        }else{
-            return Response::json('error '.$filename, 400);
+        } else {
+            return Response::json('error ' . $filename, 400);
         }
     }
 }

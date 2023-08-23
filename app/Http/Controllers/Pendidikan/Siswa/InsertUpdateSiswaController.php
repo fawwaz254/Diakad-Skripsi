@@ -52,7 +52,7 @@ class InsertUpdateSiswaController extends BaseController
 		$status_pengguna = StatusPengguna::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
 			->where('status_join_table', '=', 3)
 			->get();
-		$kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('kelas.tingkat', 'asc')->get();
+		$kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('is_aktif', 1)->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('kelas.tingkat', 'asc')->get();
 		$thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
 		$semester = Semester::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'asc')->get();
 		$jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
@@ -163,20 +163,20 @@ class InsertUpdateSiswaController extends BaseController
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
-		$siswa1 = LibSiswa::fetchDataSiswa($auth_data,$id_kelas);
+		$siswa1 = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
 		$semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa-kelas', compact('auth_data', 'siswa1','semester_aktif'));
+		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa-kelas', compact('auth_data', 'siswa1', 'semester_aktif'));
 	}
 
 	public function viewExcelSiswaKelas(Request $request, $id_kelas)
-    {
-        $input = (object) $request->input();
+	{
+		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 		$kelas = Kelas::where('id_kelas', $id_kelas)->first();
-		$siswa = LibSiswa::fetchDataSiswa($auth_data,$id_kelas);
-        return Excel::download(new ExportBiodata($siswa), 'download_biodata_kelas_'.$kelas->nm_kelas.'.xlsx');
-    }
+		$siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
+		return Excel::download(new ExportBiodata($siswa), 'download_biodata_kelas_' . $kelas->nm_kelas . '.xlsx');
+	}
 
 	public function viewCariUpdateSiswa(Request $request, $nis_nama_siswa)
 	{

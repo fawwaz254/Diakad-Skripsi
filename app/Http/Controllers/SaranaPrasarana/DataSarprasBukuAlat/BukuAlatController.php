@@ -45,7 +45,7 @@ class BukuAlatController extends BaseController
 
         $data_jenis_buku_alat = LibDataSarpras::fetchDataJenisBukuAlat($auth_data);
 
-        $data_tingkat_pendidikan = Kelas::select('tingkat')->distinct()->orderBy('tingkat', 'ASC')->get();
+        $data_tingkat_pendidikan = Kelas::select('tingkat')->where('is_aktif', 1)->distinct()->orderBy('tingkat', 'ASC')->get();
 
         $data_mata_pelajaran = LibAkademik::fetchDataMataPelajaran($auth_data);
 
@@ -62,7 +62,7 @@ class BukuAlatController extends BaseController
 
         $data_jenis_buku_alat = LibDataSarpras::fetchDataJenisBukuAlat($auth_data);
 
-        $data_tingkat_pendidikan = Kelas::select('tingkat')->distinct()->orderBy('tingkat', 'ASC')->get();
+        $data_tingkat_pendidikan = Kelas::select('tingkat')->where('is_aktif', 1)->distinct()->orderBy('tingkat', 'ASC')->get();
 
         $data_mata_pelajaran = LibAkademik::fetchDataMataPelajaran($auth_data);
 
