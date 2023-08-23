@@ -371,7 +371,7 @@ class RekapAbsensiController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_kelas = Kelas::all();
+        $list_kelas = Kelas::where('is_aktif', 1)->all();
         $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
         $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
 
@@ -693,7 +693,7 @@ class RekapAbsensiController extends Controller
                 // $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
             }
         }
-        $list_kelas = Kelas::all();
+        $list_kelas = Kelas::where('is_aktif', 1)->get();
         // $hasil;
         foreach ($hasil as $key => $a) {
             $data[$key]['nm_pengguna'] = $a['nm_pengguna'];
@@ -722,6 +722,7 @@ class RekapAbsensiController extends Controller
             ->join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
             ->groupBy('kelas.tingkat', 'jurusan.nm_jurusan', 'kelas.id_jurusan')
             ->orderBy('kelas.tingkat', 'asc')
+            ->where('kelas.is_aktif', 1)
             ->get();
 
         return view('humas/absensi/rekap-absensi-siswa/view-rekap-absensi-siswa', compact('auth_data', 'groupKelas', 'list_kelas', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'tidak_checkout', 'jumlah_pulangcepat', 'start_date', 'end_date', 'id_kelas', 'nama_kelas', 'setting'));

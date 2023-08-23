@@ -143,11 +143,11 @@ class ReportController extends BaseController
 
         if ($id_role == 1) { // Pendidikan
 
-            $data_kelas = Kelas::count();
+            $data_kelas = Kelas::where('is_aktif', 1)->get()->count();
 
             $wali_kelas = WaliKelas::whereIn('id_kelas', Kelas::pluck('id_kelas'))->where('id_semester', $semester_aktif)->count();
             $sekretaris_kelas = SekretarisKelas::whereIn('id_kelas', Kelas::pluck('id_kelas'))->where('id_semester', $semester_aktif)->count();
-            $ruangan_kelas = RuanganKelas::whereIn('id_kelas', Kelas::pluck('id_kelas'))->where('id_semester', $semester_aktif)->count();
+            $ruangan_kelas = RuanganKelas::whereIn('id_kelas', Kelas::where('is_aktif', 1)->get()->pluck('id_kelas'))->where('id_semester', $semester_aktif)->count();
             $kalender = JadwalKegiatan::where('id_semester', $semester_aktif)->count();
 
             $param[0]['catatan'] = 'Sudah melakukan input data kelas';
@@ -598,29 +598,29 @@ class ReportController extends BaseController
 
         //Biodata Siswa
         $param['status'][1] = $biodata_siswa . ' / ' . $semua_siswa . ' Data';
-        $param['persentase'][1]= ($biodata_siswa!=0) ? $biodata_siswa / $semua_siswa * 100 : 0;
+        $param['persentase'][1] = ($biodata_siswa != 0) ? $biodata_siswa / $semua_siswa * 100 : 0;
         // Pelanggaran Siswa
         $param['status'][2] = $pelanggaran_siswa . ' Data';
-        if ($pelanggaran_siswa>=5){
-            $param['persentase'][2]=100;
-        }else{
-            $param['persentase'][2]=$pelanggaran_siswa*20;
+        if ($pelanggaran_siswa >= 5) {
+            $param['persentase'][2] = 100;
+        } else {
+            $param['persentase'][2] = $pelanggaran_siswa * 20;
         };
         // Approve SKPI
         $param['status'][3] = ($kegiatan_siswa_approve + $prestasi_siswa_approve) . '/' . ($kegiatan_siswa + $prestasi_siswa) . ' Data';
-        $param['persentase'][3]= (($kegiatan_siswa_approve + $prestasi_siswa_approve)!=0) ? ($kegiatan_siswa_approve + $prestasi_siswa_approve) / ($kegiatan_siswa + $prestasi_siswa) * 100 : 0;
+        $param['persentase'][3] = (($kegiatan_siswa_approve + $prestasi_siswa_approve) != 0) ? ($kegiatan_siswa_approve + $prestasi_siswa_approve) / ($kegiatan_siswa + $prestasi_siswa) * 100 : 0;
         // Home Visit
         $param['status'][4] = $home_visit . ' / ' . $semua_siswa . ' Data';
-        $param['persentase'][4]= ($home_visit!=0) ? $home_visit / $semua_siswa * 100 : 0 ;
+        $param['persentase'][4] = ($home_visit != 0) ? $home_visit / $semua_siswa * 100 : 0;
         // Wali murid
         $param['status'][5] = $wali_murid . ' / ' . $semua_siswa . ' Data';
-        $param['persentase'][5]= ($wali_murid!=0) ?$wali_murid / $semua_siswa * 100 : 0;
+        $param['persentase'][5] = ($wali_murid != 0) ? $wali_murid / $semua_siswa * 100 : 0;
 
-        $data[1] = ($biodata_siswa!=0) ? ($biodata_siswa / $semua_siswa) * 20 :0 ;
+        $data[1] = ($biodata_siswa != 0) ? ($biodata_siswa / $semua_siswa) * 20 : 0;
         $data[2] = ((($pelanggaran_siswa / 5) * 20) > 20) ? 20 : ($pelanggaran_siswa / 5) * 20;
         $data[3] = (($kegiatan_siswa + $prestasi_siswa) == 0) ? 0 : (($kegiatan_siswa_approve + $prestasi_siswa_approve) / ($kegiatan_siswa + $prestasi_siswa)) * 20;
-        $data[4] = ($home_visit!=0) ? ($home_visit / $semua_siswa) * 20 : 0;
-        $data[5] = ($wali_murid!=0) ? ($wali_murid / $semua_siswa) * 20 : 0;
+        $data[4] = ($home_visit != 0) ? ($home_visit / $semua_siswa) * 20 : 0;
+        $data[5] = ($wali_murid != 0) ? ($wali_murid / $semua_siswa) * 20 : 0;
 
         $total = 0;
         for ($i = 1; $i <= 5; $i++) {

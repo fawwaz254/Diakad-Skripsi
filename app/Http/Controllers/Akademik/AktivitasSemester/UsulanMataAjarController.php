@@ -102,7 +102,7 @@ class UsulanMataAjarController extends BaseController
             })
             ->where('mata_pelajaran.id_mata_pelajaran', '=', $id_mata_pelajaran)
             ->first();
-        $kelas      = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $kelas      = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.is_aktif', 1)->get();
 
         $semester   = Semester::where('id_semester', '=', $id_semester)->first();
 
@@ -140,6 +140,7 @@ class UsulanMataAjarController extends BaseController
                     ->whereRaw('kelas_mp.id_semester = "' . $id_semester . '"')
                     ->whereRaw('kelas_mp.id_mata_pelajaran = "' . $id_mata_pelajaran . '"');
             })
+            ->where('kelas.is_aktif', 1)
             ->orderBy('kelas.tingkat')
             ->orderBy('kelas.nm_kelas')
             ->get();

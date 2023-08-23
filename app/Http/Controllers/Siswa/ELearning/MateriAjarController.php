@@ -42,19 +42,19 @@ class MateriAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $materi_ajar = MateriAjar::with('materi_ajar_file')->find($id);
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-            $cek = MateriAjarView::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_materi_ajar', $materi_ajar->id_materi_ajar)->first();
-            if ($cek) { } else {
-                $viewMAteriAjar = new MateriAjarView;
-                $viewMAteriAjar->id_materi_ajar_view = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $viewMAteriAjar->id_materi_ajar = $materi_ajar->id_materi_ajar;
-                $viewMAteriAjar->id_pengguna = $auth_data->pengguna->id_pengguna;
-                $viewMAteriAjar->time = $now;
-                $viewMAteriAjar->save();
-            }
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $cek = MateriAjarView::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_materi_ajar', $materi_ajar->id_materi_ajar)->first();
+        if ($cek) { } else {
+            $viewMAteriAjar = new MateriAjarView;
+            $viewMAteriAjar->id_materi_ajar_view = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $viewMAteriAjar->id_materi_ajar = $materi_ajar->id_materi_ajar;
+            $viewMAteriAjar->id_pengguna = $auth_data->pengguna->id_pengguna;
+            $viewMAteriAjar->time = $now;
+            $viewMAteriAjar->save();
+        }
         $data['list_mapel'] = MataPelajaran::all();
         $data['list_jurusan'] = Jurusan::all();
-        $data['list_kelas'] = Kelas::all();
+        $data['list_kelas'] = Kelas::where('is_aktif', 1)->get();
 
         return view('siswa/e-learning/materi-ajar/detail-materi-ajar', compact('auth_data', 'materi_ajar'), $data);
     }

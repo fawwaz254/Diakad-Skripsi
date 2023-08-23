@@ -116,7 +116,7 @@ class PlottingMapelSiswaController extends BaseController
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
         $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
-        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $id_jurusan)->get();
+        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $id_jurusan)->where('kelas.is_aktif', 1)->get();
 
         $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
             ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
@@ -139,7 +139,7 @@ class PlottingMapelSiswaController extends BaseController
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
         $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
-        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif', 1)->get();
 
         $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
             ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
@@ -403,7 +403,7 @@ class PlottingMapelSiswaController extends BaseController
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
         $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
-        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $id_jurusan)->get();
+        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $id_jurusan)->where('is_aktif', 1)->get();
 
         $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
             ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
@@ -425,6 +425,7 @@ class PlottingMapelSiswaController extends BaseController
 
         $list_data = Kelas::select(
             'kelas.id_kelas',
+            'kelas.is_aktif',
             'kelas.nm_kelas',
             'jurusan.nm_jurusan',
             DB::raw("(SELECT COUNT(*) FROM siswa 
@@ -452,6 +453,7 @@ class PlottingMapelSiswaController extends BaseController
             // WHERE kelas_mp.id_kelas = kelas.id_kelas AND presensi_mp.deleted_at IS NULL  AND kelas_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL  AND kelas_mp.id_semester = ? ) AS jml_kelas_mp_presensi", [$id_semester])
             ->join('jurusan', 'jurusan.id_jurusan', 'kelas.id_jurusan')
             ->where('kelas.id_jurusan', '=', $id_jurusan)
+            ->where('kelas.is_aktif', 1)
             ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
         return Datatables::of($list_data)

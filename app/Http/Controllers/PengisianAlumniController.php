@@ -29,26 +29,28 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibSiswa;
 
-class PengisianAlumniController extends BaseController{
+class PengisianAlumniController extends BaseController
+{
 
     const PATH = 'alumni/tracer-alumni';
-    const FETCH_WORK_ATTRIBUTE = ['nm_instansi', 'alamat_instansi', 'kontak_instansi', 'bidang_usaha_instansi', 'tahun_masuk_instansi','kapan_mulai_bekerja','lama_bekerja'];
+    const FETCH_WORK_ATTRIBUTE = ['nm_instansi', 'alamat_instansi', 'kontak_instansi', 'bidang_usaha_instansi', 'tahun_masuk_instansi', 'kapan_mulai_bekerja', 'lama_bekerja'];
     const FETCH_COLLEGE_ATTRIBUTE = ['nm_perguruan', 'alamat_perguruan', 'fakultas', 'prodi', 'jenjang', 'tahun_masuk_perguruan'];
     const FETCH_ENTERPRENEUR_ATTRIBUTE = ['nm_usaha', 'alamat_usaha', 'kontak_usaha', 'bidang_usaha', 'jumlah_karyawan', 'tahun_rintis'];
     const FETCH_IDLE_ATTRIBUTE = ['status_menunggu'];
 
-    public function viewPengisianAlumni(){
+    public function viewPengisianAlumni()
+    {
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat',9)->get();
+        $data_kelas = Kelas::where('tingkat', 9)->where('is_aktif', 1)->get();
         $alumni = null;
-    	return view('pengisian-alumni',compact('data_jurusan','data_kelas','alumni'));
-
+        return view('pengisian-alumni', compact('data_jurusan', 'data_kelas', 'alumni'));
     }
 
-    public function actionPengisianAlumni(Request $request){
+    public function actionPengisianAlumni(Request $request)
+    {
 
-        $id_pengguna = Pengguna::where('username','admin')->first()->id_pengguna;
+        $id_pengguna = Pengguna::where('username', 'admin')->first()->id_pengguna;
         $sekolah_data = Sekolah::first();
 
         DB::beginTransaction();
@@ -59,7 +61,7 @@ class PengisianAlumniController extends BaseController{
             $data['nomor_hp']          = $request->nomor_hp;
             $data['id_jurusan']        = $request->jurusan;
             $data['alamat_jalan']      = $request->alamat_siswa;
-            $data['id_c_siswa']        = $sekolah_data->prefix.strtotime(Carbon::now()).uniqid();        
+            $data['id_c_siswa']        = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
             $data['id_penerimaan']     = 0;
             $data['status_verifikasi'] = 0;
             $data['created_by']        = $id_pengguna;
@@ -83,14 +85,14 @@ class PengisianAlumniController extends BaseController{
             $data3['username']              = str_replace(' ', '_', $request->nama_siswa);
             $data3['id_status_pengguna']    = StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna;
             $data3['id_sekolah']            = $sekolah_data->id_sekolah;
-            $data3['id_pengguna']           = $sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+            $data3['id_pengguna']           = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
             $data3['created_by']            = $id_pengguna;
             $data3['created_at']            = Carbon::now(env('APP_TIMEZONE', ''));
 
             Pengguna::insert($data3);
 
             Siswa::insert([
-                'id_siswa'      => $sekolah_data->prefix.strtotime(Carbon::now()).uniqid(), 
+                'id_siswa'      => $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
                 'id_pengguna'   => $data3['id_pengguna'],
                 'id_c_siswa'    => $data['id_c_siswa'],
                 'created_by'    => $id_pengguna,
@@ -102,7 +104,7 @@ class PengisianAlumniController extends BaseController{
             $data4['email']         = $request->email;
             $data4['tahun_lulus']   = $request->tahun_lulus;
             $data4['status']        = $request->status;
-            $data4['id_alumni']     = $sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+            $data4['id_alumni']     = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
             $data4['id_c_siswa']    = $data['id_c_siswa'];
             $data4['created_by']    = $id_pengguna;;
             $data4['created_at']    = Carbon::now(env('APP_TIMEZONE', ''));
@@ -112,56 +114,44 @@ class PengisianAlumniController extends BaseController{
             switch ($request->status) {
                 case 'bekerja':
                     $data5 = $request->only(self::FETCH_WORK_ATTRIBUTE);
-                    $data5['id_alumni_bekerja']    = $sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-                break;
+                    $data5['id_alumni_bekerja']    = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                    break;
                 case 'usaha':
                     $data5 = $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE);
-                    $data5['id_alumni_wirausaha']  = $sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-                break;
+                    $data5['id_alumni_wirausaha']  = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                    break;
                 case 'kuliah':
                     $data5 = $request->only(self::FETCH_COLLEGE_ATTRIBUTE);
-                    $data5['id_alumni_kuliah']     = $sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-                break;
+                    $data5['id_alumni_kuliah']     = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                    break;
                 case 'menunggu':
                     $data5 = $request->only(self::FETCH_IDLE_ATTRIBUTE);
-                    $data5['id_alumni_menunggu']   = $sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-                break;
+                    $data5['id_alumni_menunggu']   = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                    break;
             }
 
             $data5['id_alumni']              = $data4['id_alumni'];
             $data5['created_by']             = $id_pengguna;;
             $data5['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
 
-            if($request->status == 'bekerja'){
+            if ($request->status == 'bekerja') {
                 LibAlumni::storeWorkplace($data5);
-            }
-
-            elseif($request->status == 'usaha'){
-                LibAlumni::storeBusiness($data5); 
-            }
-
-            elseif($request->status == 'kuliah'){
+            } elseif ($request->status == 'usaha') {
+                LibAlumni::storeBusiness($data5);
+            } elseif ($request->status == 'kuliah') {
                 LibAlumni::storeUniversity($data5);
-            }
-
-            elseif($request->status == 'menunggu'){
+            } elseif ($request->status == 'menunggu') {
                 LibAlumni::storeIdleAlumni($data5);
             }
 
             DB::commit();
 
             return redirect('success-page');
+        } catch (\Exception $e) {
 
+            DB::rollback();
+
+            return redirect('error-page');
         }
-
-        catch (\Exception $e) {
-
-           DB::rollback();
-
-           return redirect('error-page');
-
-        }
-
     }
-
 }

@@ -29,7 +29,7 @@ class HistoriSiswaTerlambatController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $kelas = Kelas::get();
+        $kelas = Kelas::where('is_aktif', 1)->get();
         $date = Carbon::now(env('APP_TIMEZONE', ''))->toDateString();
         return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'date', 'kelas'));
     }
@@ -50,7 +50,7 @@ class HistoriSiswaTerlambatController extends Controller
         $auth_data = $input->auth_data;
 
         $date = Carbon::parse($date)->toDateString();
-        $kelas = Kelas::get();
+        $kelas = Kelas::where('is_aktif', 1)->get();
 
         $options = [
             'join' => ', ',

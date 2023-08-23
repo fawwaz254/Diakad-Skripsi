@@ -36,9 +36,9 @@ class TracerAlumniImport implements ToCollection, WithHeadingRow
      */
     public function collection(Collection $data)
     {
-        set_time_limit(9800);
+        set_time_limit(-1);
 
-        $data_kelas = Kelas::get();
+        $data_kelas = Kelas::where('is_aktif', 1)->get();
         $data_jurusan = Jurusan::get();
         $data_penerimaan = Penerimaan::get();
         // $data_siswa = CalonSiswaBaru::get();
@@ -50,11 +50,11 @@ class TracerAlumniImport implements ToCollection, WithHeadingRow
                 $value->$key = $temp_item;
             }
 
-            $id_penerimaan 		= $data_penerimaan->firstWhere('tahun_penerimaan', '=', (int)$value->tahun_masuk);
+            $id_penerimaan         = $data_penerimaan->firstWhere('tahun_penerimaan', '=', (int) $value->tahun_masuk);
 
             if (empty($id_penerimaan)) {
                 $id_penerimaan = $data_penerimaan->firstWhere('tahun_penerimaan', '=', 2022);
-                Debugbar::error( 'Upload Data Siswa Gagal, tahun masuk ' . $value->tahun_masuk . ' tidak ditemukan di dalam sistem');
+                Debugbar::error('Upload Data Siswa Gagal, tahun masuk ' . $value->tahun_masuk . ' tidak ditemukan di dalam sistem');
             }
 
 
@@ -110,73 +110,73 @@ class TracerAlumniImport implements ToCollection, WithHeadingRow
                     'jenis_sekolah'                 => $value->jenis_sekolah,
                     'tahun_masuk_sekolah'           => (int) $value->tahun_masuk,
                 );
-            }}
-            // dd($arr);
-
-            if (count($arr) != 0) {
-
-                DB::beginTransaction();
-                try {
-                    // $pengguna_center = [];
-                    foreach ($arr as $data_siswa) {
-                        $now = Carbon::now(env('APP_TIMEZONE', ''));
-                        //--siswa baru
-                        $row_calon_siswa_baru = [
-                            'id_c_siswa'     => $this->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
-                            'nm_c_siswa'     => $data_siswa['nama_lengkap'],
-                            'id_jurusan'     => $data_siswa['id_jurusan'],
-                            'id_penerimaan'   => $data_siswa['id_penerimaan'],
-                            'nm_c_siswa'   => $data_siswa['nama_lengkap'],
-                            'alamat_jalan'   => $data_siswa['alamat_jalan'],
-                            'nomor_hp'       => $data_siswa['nomor_hp'],
-                            'created_at'     => $this->now,
-                            'created_by'     => $data_siswa['created_by'],
-                        ];
-
-                        DB::table('calon_siswa_baru')->insert($row_calon_siswa_baru);
-                        //---alumni
-                        $row_alumni = [
-                            'id_alumni'                     => $this->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
-                            'id_c_siswa'                    => $row_calon_siswa_baru['nm_c_siswa'],
-                            'id_kelas'                      => $data_siswa['id_kelas'],
-                            'email'                         => $data_siswa['email'],
-                            'tahun_lulus'                   => $data_siswa['tahun_lulus'],
-                            'url_medsos'                    => $data_siswa['url_medsos'],
-                            'status'                        => $data_siswa['status'],
-                            'status_verifikasi'               => $data_siswa['status_verifikasi'],
-                            'created_by'                     => $data_siswa['created_by'],
-                        ];
-
-                        DB::table('alumni')->insert($row_alumni);
-                        //--alumni smp
-                        $row_alumni_smp = [
-                            'id_alumni_smp'                 => $this->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
-                            'id_alumni'                     =>  $row_alumni['id_alumni'],
-                            'nm_sekolah'                    => $data_siswa['nm_sekolah'],
-                            'alamat_sekolah'                => $data_siswa['alamat_sekolah'],
-                            'jurusan'                       => $data_siswa['jurusan'],
-                            'jenis_sekolah'                 => $data_siswa['jenis_sekolah'],
-                            'tahun_masuk_sekolah'           => $data_siswa['tahun_masuk_sekolah'],
-                            'created_at'                    => $this->now,
-                            'created_by'                    => $data_siswa['created_by'],
-                        ];
-
-                        DB::table('alumni_smp')->insert($row_alumni_smp);
-                    }
-
-                    DB::commit();
-
-                    Debugbar::error('Save Siswa Tracer alumni Successfully');
-                } catch (\Exception $e) {
-
-                    DB::rollback();
-                    // something went wrong
-                    //    Debugbar::error( (env('APP_DEBUG', 'true') == 'true') ? 'tesst' : 'Operation error');
-                    Debugbar::error((env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error');
-                }
-            } else {
-                Debugbar::error("File Excel Anda Kosong");
             }
         }
-    }
+        // dd($arr);
 
+        if (count($arr) != 0) {
+
+            DB::beginTransaction();
+            try {
+                // $pengguna_center = [];
+                foreach ($arr as $data_siswa) {
+                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    //--siswa baru
+                    $row_calon_siswa_baru = [
+                        'id_c_siswa'     => $this->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                        'nm_c_siswa'     => $data_siswa['nama_lengkap'],
+                        'id_jurusan'     => $data_siswa['id_jurusan'],
+                        'id_penerimaan'   => $data_siswa['id_penerimaan'],
+                        'nm_c_siswa'   => $data_siswa['nama_lengkap'],
+                        'alamat_jalan'   => $data_siswa['alamat_jalan'],
+                        'nomor_hp'       => $data_siswa['nomor_hp'],
+                        'created_at'     => $this->now,
+                        'created_by'     => $data_siswa['created_by'],
+                    ];
+
+                    DB::table('calon_siswa_baru')->insert($row_calon_siswa_baru);
+                    //---alumni
+                    $row_alumni = [
+                        'id_alumni'                     => $this->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                        'id_c_siswa'                    => $row_calon_siswa_baru['nm_c_siswa'],
+                        'id_kelas'                      => $data_siswa['id_kelas'],
+                        'email'                         => $data_siswa['email'],
+                        'tahun_lulus'                   => $data_siswa['tahun_lulus'],
+                        'url_medsos'                    => $data_siswa['url_medsos'],
+                        'status'                        => $data_siswa['status'],
+                        'status_verifikasi'               => $data_siswa['status_verifikasi'],
+                        'created_by'                     => $data_siswa['created_by'],
+                    ];
+
+                    DB::table('alumni')->insert($row_alumni);
+                    //--alumni smp
+                    $row_alumni_smp = [
+                        'id_alumni_smp'                 => $this->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                        'id_alumni'                     =>  $row_alumni['id_alumni'],
+                        'nm_sekolah'                    => $data_siswa['nm_sekolah'],
+                        'alamat_sekolah'                => $data_siswa['alamat_sekolah'],
+                        'jurusan'                       => $data_siswa['jurusan'],
+                        'jenis_sekolah'                 => $data_siswa['jenis_sekolah'],
+                        'tahun_masuk_sekolah'           => $data_siswa['tahun_masuk_sekolah'],
+                        'created_at'                    => $this->now,
+                        'created_by'                    => $data_siswa['created_by'],
+                    ];
+
+                    DB::table('alumni_smp')->insert($row_alumni_smp);
+                }
+
+                DB::commit();
+
+                Debugbar::error('Save Siswa Tracer alumni Successfully');
+            } catch (\Exception $e) {
+
+                DB::rollback();
+                // something went wrong
+                //    Debugbar::error( (env('APP_DEBUG', 'true') == 'true') ? 'tesst' : 'Operation error');
+                Debugbar::error((env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error');
+            }
+        } else {
+            Debugbar::error("File Excel Anda Kosong");
+        }
+    }
+}

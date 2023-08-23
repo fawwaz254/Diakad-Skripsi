@@ -39,7 +39,7 @@ class PaketSoalController extends Controller
     public function indexManage(Request $request, $id = 0)
     {
         $input = (object) $request->input();
-        $kelas = Kelas::get();
+        $kelas = Kelas::where('is_aktif', 1)->get();
         $kategori = KategoriSoal::all();
         $wali_kelas = get_keterangan_wali_kelas($input->auth_data->pengguna->id_pengguna);
 

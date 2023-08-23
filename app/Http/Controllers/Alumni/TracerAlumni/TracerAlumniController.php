@@ -17,7 +17,7 @@ class TracerAlumniController extends Controller
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 9)->orWhere('tingkat', 3)->get();
+        $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 9)->orWhere('tingkat', 3)->get();
 
         $alumni = null;
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('calon_siswa', 'pengguna')->first();
