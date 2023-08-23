@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Sekolah;
+use App\Models\Setting;
 use App\Models\Pengguna;
 use Illuminate\Console\Command;
 use App\Models\PresensiPengguna;
@@ -44,34 +45,36 @@ class SendAttendanceNotification extends Command
         $url = env('WHATSAPP_API_SEND');
         $now = now()->toDateString();
 
-        $presenceUsers = PresensiPengguna::where([
-            'status_join_table' => 3,
-            'notification_sent' => 0,
-            'date' => $now,
-        ])->get();
+        $listPresensiPengguna = PresensiPengguna::with('pengguna.siswa.wali_murid')
+            ->where([
+                'status_join_table' => 3,
+                'notification_sent' => 0,
+                'date' => $now,
+            ])->get();
 
-        if ($presenceUsers->isEmpty() || empty($url)) {
+        if ($listPresensiPengguna->isEmpty() || empty($url)) {
             return 0;
         }
 
-        $usersId = $presenceUsers->pluck('id_pengguna')->toArray();
-
-        $users = Pengguna::with('siswa.wali_murid')
-            ->whereIn('id_pengguna', $usersId)
-            ->get();
-
-        $schoolName = Sekolah::first()->nm_sekolah;
-
         try {
-            foreach ($users as $user) {
-                $waliMurid = $user->siswa->wali_murid;
+            $namaSekolah = Sekolah::first()->nm_sekolah;
+            $template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->firstOrFail()->value;
+
+            foreach ($listPresensiPengguna as $presensiPengguna) {
+                $waliMurid = $presensiPengguna->pengguna->siswa->wali_murid;
 
                 if (!$waliMurid || empty($waliMurid->nomor_hp_wali_murid)) {
                     continue;
                 }
 
+                $template = str_replace('{{STUDENT_NAME}}', $presensiPengguna->pengguna->nm_pengguna, $template);
+                $template = str_replace('{{SCHOOL_NAME}}', $namaSekolah, $template);
+                $template = str_replace('{{DATE}}', $presensiPengguna->date, $template);
+                $template = str_replace('{{CHECK_IN}}', $presensiPengguna->check_in, $template);
+                $template = str_replace('\n', "\n", $template);
+
                 $data = [
-                    'message' => "*Konfirmasi Kehadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb.\nBapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa siswa/siswi Anda, *" . $user->nm_pengguna . "* hadir di sekolah hari ini.\n\nTerima kasih atas perhatiannya.\n\n\nSalam,\nKesiswaan " . $schoolName,
+                    'message' => $template,
                     'phone' => $waliMurid->nomor_hp_wali_murid,
                 ];
 
@@ -81,13 +84,10 @@ class SendAttendanceNotification extends Command
                 $responseData = $response->json();
 
                 if ($responseData['response'] == 'Device Bot Logged Out') {
-                    \Log::info("Failed to send notification, Device bot logged out");
+                    \Log::info("Warning: Failed to send notification, Device bot logged out");
                 } else {
-                    $matchingPresence = $presenceUsers->firstWhere('id_pengguna', $user->id_pengguna);
-                    if ($matchingPresence) {
-                        $matchingPresence->notification_sent = 1;
-                        $matchingPresence->save();
-                    }
+                    $presensiPengguna->notification_sent = 1;
+                    $presensiPengguna->save();
 
                     \Log::info("Success: Notification attendance sent at " . now());
                 }
@@ -96,7 +96,9 @@ class SendAttendanceNotification extends Command
             }
         } catch (\Exception $e) {
             if ($e->getCode() === 0) {
-                \Log::info("Error: Connection to WhatsApp Api is refused.");
+                \Log::info("Error: Connection to WhatsApp Api is refused");
+            } else {
+                \Log::info($e);
             }
         }
     }
