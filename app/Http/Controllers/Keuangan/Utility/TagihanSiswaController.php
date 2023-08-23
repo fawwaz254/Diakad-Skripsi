@@ -107,6 +107,20 @@ class TagihanSiswaController extends BaseController
 
         $siswa = LibDataKeuangan::fetchDataSiswaTagihan($auth_data, $id_kelas, $id_semester, $id_kelompok_biaya, $id_jalur, "1");
 
+        $tagihanQuery = TagihanBiaya::where('id_kelas', $id_kelas);
+
+        if ($id_kelompok_biaya != 0) {
+            $tagihanQuery->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($id_kelompok_biaya, $id_semester) {
+                $query->where('id_kelompok_biaya', '=', $id_kelompok_biaya)->where('id_semester', '=', $id_semester);
+            });
+        } else {
+            $tagihanQuery->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($id_semester) {
+                $query->where('id_semester', '=', $id_semester);
+            });
+        }
+
+        $tagihan = $tagihanQuery->get();
+
         return Datatables::of($siswa)
             ->addColumn('checkbox', function ($item) {
                 $data = array(
@@ -122,6 +136,9 @@ class TagihanSiswaController extends BaseController
                 } else {
                     return "Belum Di Set";
                 }
+            })
+            ->addColumn('jumlah_tagihan', function ($item) use ($tagihan) {
+                return $tagihan->where('id_siswa', $item->id_siswa)->count();
             })
             ->make(true);
     }
