@@ -62,36 +62,42 @@ class SendAttendanceNotification extends Command
 
         $schoolName = Sekolah::first()->nm_sekolah;
 
-        foreach ($users as $user) {
-            $waliMurid = $user->siswa->wali_murid;
+        try {
+            foreach ($users as $user) {
+                $waliMurid = $user->siswa->wali_murid;
 
-            if (!$waliMurid || empty($waliMurid->nomor_hp_wali_murid)) {
-                continue;
-            }
-
-            $data = [
-                'message' => "*Konfirmasi Kehadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb.\nBapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa siswa/siswi Anda, *" . $user->nm_pengguna . "* hadir di sekolah hari ini.\n\nTerima kasih atas perhatiannya.\n\n\nSalam,\nKesiswaan " . $schoolName,
-                'phone' => $waliMurid->nomor_hp_wali_murid,
-            ];
-
-            $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
-                ->post($url, $data);
-
-            $responseData = $response->json();
-
-            if ($responseData['response'] == 'Device Bot Logged Out') {
-                \Log::info("Failed to send notification, Device bot logged out");
-            } else {
-                $matchingPresence = $presenceUsers->firstWhere('id_pengguna', $user->id_pengguna);
-                if ($matchingPresence) {
-                    $matchingPresence->notification_sent = 1;
-                    $matchingPresence->save();
+                if (!$waliMurid || empty($waliMurid->nomor_hp_wali_murid)) {
+                    continue;
                 }
 
-                \Log::info("Notification sent at " . now());
-            }
+                $data = [
+                    'message' => "*Konfirmasi Kehadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb.\nBapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa siswa/siswi Anda, *" . $user->nm_pengguna . "* hadir di sekolah hari ini.\n\nTerima kasih atas perhatiannya.\n\n\nSalam,\nKesiswaan " . $schoolName,
+                    'phone' => $waliMurid->nomor_hp_wali_murid,
+                ];
 
-            sleep(2);
+                $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                    ->post($url, $data);
+
+                $responseData = $response->json();
+
+                if ($responseData['response'] == 'Device Bot Logged Out') {
+                    \Log::info("Failed to send notification, Device bot logged out");
+                } else {
+                    $matchingPresence = $presenceUsers->firstWhere('id_pengguna', $user->id_pengguna);
+                    if ($matchingPresence) {
+                        $matchingPresence->notification_sent = 1;
+                        $matchingPresence->save();
+                    }
+
+                    \Log::info("Success: Notification attendance sent at " . now());
+                }
+
+                sleep(2);
+            }
+        } catch (\Exception $e) {
+            if ($e->getCode() === 0) {
+                \Log::info("Error: Connection to WhatsApp Api is refused.");
+            }
         }
     }
 }

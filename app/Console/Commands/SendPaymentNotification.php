@@ -68,36 +68,42 @@ class SendPaymentNotification extends Command
 
         $schoolName = Sekolah::first()->nm_sekolah;
 
-        foreach ($users as $user) {
-            $waliMurid = $user->siswa->wali_murid;
+        try {
+            foreach ($users as $user) {
+                $waliMurid = $user->siswa->wali_murid;
 
-            if (!$waliMurid || empty($waliMurid->nomor_hp_wali_murid)) {
-                continue;
-            }
-
-            $data = [
-                'message' => "*Konfirmasi Pembayaran SPP*\n\n\nAssalamualaikum Wr.Wb.\nBapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa pembayaran SPP atas nama *" . $user->nm_pengguna . "* telah berhasil kami terima. Keteraturan Anda dalam menjalankan kewajiban ini sangat kami hargai.\n\nDengan adanya pembayaran ini, Anda telah berkontribusi dalam memastikan kelancaran proses pendidikan yang berkualitas bagi *" . $user->nm_pengguna . "*. Terima kasih sekali lagi atas dedikasi Anda dalam memastikan kelancaran pendidikan.\n\n\nSalam,\nKeuangan " . $schoolName,
-                'phone' => $waliMurid->nomor_hp_wali_murid,
-            ];
-
-            $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
-                ->post($url, $data);
-
-            $responseData = $response->json();
-
-            if ($responseData['response'] === 'Device Bot Logged Out') {
-                \Log::info("Failed to send notification, Device bot logged out");
-            } else {
-                $matchingInvoice = $invoiceUsers->firstWhere('id_siswa', $user->siswa->id_siswa);
-                if ($matchingInvoice) {
-                    $matchingInvoice->notification_sent = 1;
-                    $matchingInvoice->save();
+                if (!$waliMurid || empty($waliMurid->nomor_hp_wali_murid)) {
+                    continue;
                 }
 
-                \Log::info("Notification sent at " . now());
-            }
+                $data = [
+                    'message' => "*Konfirmasi Pembayaran SPP*\n\n\nAssalamualaikum Wr.Wb.\nBapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa pembayaran SPP atas nama *" . $user->nm_pengguna . "* telah berhasil kami terima. Ketertiban Anda dalam menjalankan kewajiban ini sangat kami hargai.\n\nDengan adanya pembayaran ini, Anda telah berkontribusi dalam memastikan kelancaran proses pendidikan yang berkualitas bagi *" . $user->nm_pengguna . "*. Terima kasih sekali lagi atas dedikasi Anda dalam memastikan kelancaran pendidikan.\n\n\nSalam,\nKeuangan " . $schoolName,
+                    'phone' => $waliMurid->nomor_hp_wali_murid,
+                ];
 
-            sleep(2);
+                $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                    ->post($url, $data);
+
+                $responseData = $response->json();
+
+                if ($responseData['response'] === 'Device Bot Logged Out') {
+                    \Log::info("Failed to send notification, Device bot logged out");
+                } else {
+                    $matchingInvoice = $invoiceUsers->firstWhere('id_siswa', $user->siswa->id_siswa);
+                    if ($matchingInvoice) {
+                        $matchingInvoice->notification_sent = 1;
+                        $matchingInvoice->save();
+                    }
+
+                    \Log::info("Success: Notification payment sent at " . now());
+                }
+
+                sleep(2);
+            }
+        } catch (\Exception $e) {
+            if ($e->getCode() === 0) {
+                \Log::info("Error: Connection to WhatsApp Api is refused.");
+            }
         }
     }
 }
