@@ -517,12 +517,12 @@ class TracerAlumniController extends BaseController
     public function exportAlumnni2(Request $request, $id_kelas, $tahun_lulus)
     {
         $input = (object) $request->input();
-        if ($id_kelas == 'all'){
+        if ($id_kelas == 'all') {
             $alumni['alumni_bekerja'] = Alumni::where('tahun_lulus', $tahun_lulus)->where('status', 'bekerja')->with('calon_siswa', 'kelas', 'bekerja')->get();
             $alumni['alumni_kuliah'] = Alumni::where('tahun_lulus', $tahun_lulus)->where('status', 'kuliah')->with('calon_siswa', 'kelas', 'kuliah')->get();
             $alumni['alumni_menunggu'] = Alumni::where('tahun_lulus', $tahun_lulus)->where('status', 'menunggu')->with('calon_siswa', 'kelas', 'menunggu')->get();
             $alumni['alumni_wirausaha'] = Alumni::where('tahun_lulus', $tahun_lulus)->where('status', 'usaha')->with('calon_siswa', 'kelas', 'usaha')->get();
-        }else{
+        } else {
             $alumni['alumni_bekerja'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'bekerja')->with('calon_siswa', 'kelas', 'bekerja')->get();
             $alumni['alumni_kuliah'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'kuliah')->with('calon_siswa', 'kelas', 'kuliah')->get();
             $alumni['alumni_menunggu'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'menunggu')->with('calon_siswa', 'kelas', 'menunggu')->get();
@@ -541,9 +541,9 @@ class TracerAlumniController extends BaseController
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             $alumnis    = LibAlumni::getAlumnisSearchSmp($id_kelas, $tahun_lulus);
         } else {
-            if ($id_kelas == 'all'){
+            if ($id_kelas == 'all') {
                 $alumnis    = LibAlumni::getAlumnisSearchWithoutKelas($tahun_lulus);
-            }else{
+            } else {
                 $alumnis    = LibAlumni::getAlumnisSearch($id_kelas, $tahun_lulus);
             }
         }
