@@ -483,7 +483,7 @@
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
             lang: 'id',
-            clearButton: true,
+            // clearButton: true,
             weekStart: 1,
             time: false,
             minDate: '{{ $minDate }}',
