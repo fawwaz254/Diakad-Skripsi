@@ -107,7 +107,9 @@ class TagihanSiswaController extends BaseController
 
         $siswa = LibDataKeuangan::fetchDataSiswaTagihan($auth_data, $id_kelas, $id_semester, $id_kelompok_biaya, $id_jalur, "1");
 
-        $tagihanQuery = TagihanBiaya::where('id_kelas', $id_kelas);
+        $tagihanQuery = TagihanBiaya::when($id_kelas != '0', function ($q) use ($id_kelas) {
+            $q->where('id_kelas', $id_kelas);
+        });
 
         if ($id_kelompok_biaya != 0) {
             $tagihanQuery->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($id_kelompok_biaya, $id_semester) {
@@ -274,7 +276,7 @@ class TagihanSiswaController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'utility/tagihan-siswa/view-detail-tagihan-siswa/' . $input->thn_masuk_siswa . '/' . $input->id_semester . '/' . $input->id_kelompok_biaya . '/' . $input->id_jalur . '/' . $input->is_insert_replace,
+                        'path' => 'utility/tagihan-siswa/view-detail-tagihan-siswa/' . $input->id_kelas . '/' . $input->id_semester . '/' . $input->id_kelompok_biaya . '/' . $input->id_jalur . '/' . $input->is_insert_replace,
                         'message' => $input->is_insert_replace == '3' ? 'Update Tagihan Siswa Successfully' : 'Generate Tagihan Siswa Successfully'
                     ];
                 } catch (\Exception $e) {
