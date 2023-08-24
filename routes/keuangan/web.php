@@ -40,6 +40,7 @@ Route::middleware(['token_staff'])->group(function () {
     Route::prefix('keuangan')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
         Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        // Route::get('hapus', [\App\Http\Controllers\Administrator\WelcomeController::class, 'deleteTagihanYangSama']);
 
         Route::prefix('manajemen-file')->group(function () {
 
