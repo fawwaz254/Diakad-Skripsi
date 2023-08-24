@@ -482,10 +482,10 @@
     $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
-            // lang: 'id',
+            lang: 'id',
             // clearButton: true,
-            // weekStart: 1,
-            // time: false,
+            weekStart: 1,
+            time: false,
             minDate: '{{ $minDate }}',
             maxDate: '{{ $maxDate }}',
         });

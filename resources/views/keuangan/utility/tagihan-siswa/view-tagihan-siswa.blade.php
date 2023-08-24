@@ -18,6 +18,7 @@
                                 </h2>
                                 <select class="form-control show-tick" name="id_kelas">
                                     <option value="" disabled selected>-- Pilih Kelas --</option>
+                                    <option value="0">-- Semua Kelas --</option>
                                     @foreach ($kelas as $k)
                                         <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                     @endforeach
