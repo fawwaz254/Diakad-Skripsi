@@ -17,6 +17,8 @@
                                  </h2>
                                  <select class="form-control show-tick" name="id_kelas">
                                      <option value="" disabled selected>-- Pilih Kelas--</option>
+                                     <option value="0" @if ($id_kelas == 0) selected @endif>-- Semua
+                                         Kelas --</option>
                                      @foreach ($kelas as $k)
                                          @if ($k->id_kelas == $id_kelas)
                                              <option value="{{ $k->id_kelas }}" selected>
