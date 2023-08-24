@@ -379,8 +379,11 @@ class LibDataKeuangan
                     ->whereNull('status_pengguna.deleted_at');
             })
             ->where('status_pengguna.aktif_status_pengguna', '=', 1)
-            ->where('siswa.id_kelas', '=', $id_kelas)
             ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+
+        if ($id_kelas != "0") {
+            $siswa = $siswa->where('siswa.id_kelas', '=', $id_kelas);
+        }
 
         if ($id_kelompok_biaya != "0") {
             $siswa = $siswa->where('siswa.id_kelompok_biaya', '=', $id_kelompok_biaya);

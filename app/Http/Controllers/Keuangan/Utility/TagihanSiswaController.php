@@ -107,7 +107,9 @@ class TagihanSiswaController extends BaseController
 
         $siswa = LibDataKeuangan::fetchDataSiswaTagihan($auth_data, $id_kelas, $id_semester, $id_kelompok_biaya, $id_jalur, "1");
 
-        $tagihanQuery = TagihanBiaya::where('id_kelas', $id_kelas);
+        $tagihanQuery = TagihanBiaya::when($id_kelas != '0', function ($q) use ($id_kelas) {
+            $q->where('id_kelas', $id_kelas);
+        });
 
         if ($id_kelompok_biaya != 0) {
             $tagihanQuery->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($id_kelompok_biaya, $id_semester) {
