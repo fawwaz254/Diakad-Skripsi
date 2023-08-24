@@ -71,7 +71,7 @@ class CetakRaporController extends Controller
             $id_semester = $input->id_semester;
         }
 
-        $list_data = Kelas::with('jurusan')->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $list_data = Kelas::where('is_aktif', 1)->with('jurusan')->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $list_rapor_sisipan = RaporSisipan::whereHas('semester', function ($query) use ($id_semester) {
             $query->where('id_semester', '=', $id_semester);
         })->get();

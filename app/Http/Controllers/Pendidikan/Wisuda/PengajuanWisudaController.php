@@ -25,9 +25,11 @@ use DB;
 use Session;
 use Validator;
 
-class PengajuanWisudaController extends BaseController{
+class PengajuanWisudaController extends BaseController
+{
 
-    public function viewPengajuanWisuda(Request $request){
+    public function viewPengajuanWisuda(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -35,13 +37,13 @@ class PengajuanWisudaController extends BaseController{
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data);
 
         $kelas_calon_lulus = Kelas::orderBy('tingkat', 'desc')->first();
-        $data_kelas = Kelas::where('tingkat', $kelas_calon_lulus->tingkat)->orderBy('nm_kelas')->get();
+        $data_kelas = Kelas::where('tingkat', $kelas_calon_lulus->tingkat)->where('is_aktif', 1)->where('is_aktif', 1)->orderBy('nm_kelas')->get();
 
-    	return view('pendidikan/wisuda/pengajuan-wisuda/view-pengajuan-wisuda',compact('auth_data','data_periode_wisuda', 'data_kelas'));
-
+        return view('pendidikan/wisuda/pengajuan-wisuda/view-pengajuan-wisuda', compact('auth_data', 'data_periode_wisuda', 'data_kelas'));
     }
 
-    public function actionViewDetailPengajuanWisuda(Request $request){
+    public function actionViewDetailPengajuanWisuda(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -51,32 +53,32 @@ class PengajuanWisudaController extends BaseController{
             'id_kelas' => 'required',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'wisuda/pengajuan-wisuda/view-detail/'.$input->id_periode_wisuda.'/'.$input->id_kelas
-                    ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'wisuda/pengajuan-wisuda/view-detail/' . $input->id_periode_wisuda . '/' . $input->id_kelas
+            ];
         }
     }
 
-    public function viewDetailPengajuanWisuda(Request $request, $id_periode_wisuda, $id_kelas){
+    public function viewDetailPengajuanWisuda(Request $request, $id_periode_wisuda, $id_kelas)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data, $id_periode_wisuda);
 
-        return view('pendidikan/wisuda/pengajuan-wisuda/view-detail-pengajuan-wisuda',compact('auth_data','id_periode_wisuda','data_periode_wisuda', 'id_kelas'));
-
+        return view('pendidikan/wisuda/pengajuan-wisuda/view-detail-pengajuan-wisuda', compact('auth_data', 'id_periode_wisuda', 'data_periode_wisuda', 'id_kelas'));
     }
 
-    public function cancelPengajuanWisuda(Request $request, $id, $id_periode_wisuda, $id_kelas){
+    public function cancelPengajuanWisuda(Request $request, $id, $id_periode_wisuda, $id_kelas)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -84,108 +86,109 @@ class PengajuanWisudaController extends BaseController{
         $data_pengajuan_wisuda = $this->fetchDataPengajuanWisudaDetail($auth_data, $id);
 
         // convert format date
-        $tgl_pengajuan_wisuda = strftime( "%d %B %Y %T", strtotime($data_pengajuan_wisuda->tgl_pengajuan_wisuda));
+        $tgl_pengajuan_wisuda = strftime("%d %B %Y %T", strtotime($data_pengajuan_wisuda->tgl_pengajuan_wisuda));
 
-        return view('pendidikan/wisuda/pengajuan-wisuda/cancel-pengajuan-wisuda',compact('auth_data','data_pengajuan_wisuda','id_periode_wisuda','id_kelas','tgl_pengajuan_wisuda'));
-
+        return view('pendidikan/wisuda/pengajuan-wisuda/cancel-pengajuan-wisuda', compact('auth_data', 'data_pengajuan_wisuda', 'id_periode_wisuda', 'id_kelas', 'tgl_pengajuan_wisuda'));
     }
 
-    public function datatablesPengajuanWisuda(Request $request, $id_periode_wisuda, $id_kelas){
+    public function datatablesPengajuanWisuda(Request $request, $id_periode_wisuda, $id_kelas)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = $this->fetchDataPengajuanWisuda($auth_data, $id_periode_wisuda, $id_kelas);
 
         return Datatables::of($list_data)
-                ->addColumn('nm_periode_wisuda', function($item){
-                    if(! empty($item->id_pengajuan_wisuda) && empty($item->id_periode_wisuda)) {
-                        return "Diajukan Di Periode Lain";
-                    }
-                    else {
-                        return $item->nm_periode_wisuda;
-                    }
-                })
-                ->addColumn('semester', function($item){
-                    if(! empty($item->id_pengajuan_wisuda) && empty($item->id_periode_wisuda)) {
-                        return "Diajukan Di Periode Lain";
-                    }
-                    else {
-                        return $item->tahun_ajaran." ".$item->nm_semester;
-                    }
-                })
-                ->addColumn('action', function($item){
-                    if(! empty($item->id_pengajuan_wisuda)) {
-                        $data = array(
-                            'id' => $item->id_pengajuan_wisuda,
-                            'id_siswa' => $item->id_siswa,
-                            'id_periode_wisuda' => $item->id_periode_wisuda,
-                            'status_wisuda' => $item->status_wisuda
-                        );
-                    }
-                    else {
-                        $data = array(
-                            'id' => null,
-                            'id_siswa' => $item->id_siswa,
-                            'id_periode_wisuda' => $item->id_periode_wisuda,
-                            'status_wisuda' => $item->status_wisuda
-                        );
-                    }
-                    
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_periode_wisuda', function ($item) {
+                if (!empty($item->id_pengajuan_wisuda) && empty($item->id_periode_wisuda)) {
+                    return "Diajukan Di Periode Lain";
+                } else {
+                    return $item->nm_periode_wisuda;
+                }
+            })
+            ->addColumn('semester', function ($item) {
+                if (!empty($item->id_pengajuan_wisuda) && empty($item->id_periode_wisuda)) {
+                    return "Diajukan Di Periode Lain";
+                } else {
+                    return $item->tahun_ajaran . " " . $item->nm_semester;
+                }
+            })
+            ->addColumn('action', function ($item) {
+                if (!empty($item->id_pengajuan_wisuda)) {
+                    $data = array(
+                        'id' => $item->id_pengajuan_wisuda,
+                        'id_siswa' => $item->id_siswa,
+                        'id_periode_wisuda' => $item->id_periode_wisuda,
+                        'status_wisuda' => $item->status_wisuda
+                    );
+                } else {
+                    $data = array(
+                        'id' => null,
+                        'id_siswa' => $item->id_siswa,
+                        'id_periode_wisuda' => $item->id_periode_wisuda,
+                        'status_wisuda' => $item->status_wisuda
+                    );
+                }
+
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function fetchDataPengajuanWisudaDetail($auth_data, $id_pengajuan_wisuda){
+    public function fetchDataPengajuanWisudaDetail($auth_data, $id_pengajuan_wisuda)
+    {
         $pengajuanWisuda = PengajuanWisuda::select('pengajuan_wisuda.id_pengajuan_wisuda', 'pengajuan_wisuda.id_periode_wisuda', 'periode_wisuda.nm_periode_wisuda', 'semester.tahun_ajaran', 'semester.nm_semester', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'pengajuan_wisuda.tgl_pengajuan_wisuda')
-                    ->join('periode_wisuda','periode_wisuda.id_periode_wisuda','=','pengajuan_wisuda.id_periode_wisuda')
-                    ->join('semester','semester.id_semester','=','periode_wisuda.id_semester')
-                    ->join('siswa','siswa.id_siswa','=','pengajuan_wisuda.id_siswa')
-                    ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-                    ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-                    ->where('pengajuan_wisuda.id_pengajuan_wisuda','=',$id_pengajuan_wisuda)
-                    ->first();
+            ->join('periode_wisuda', 'periode_wisuda.id_periode_wisuda', '=', 'pengajuan_wisuda.id_periode_wisuda')
+            ->join('semester', 'semester.id_semester', '=', 'periode_wisuda.id_semester')
+            ->join('siswa', 'siswa.id_siswa', '=', 'pengajuan_wisuda.id_siswa')
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            ->where('pengajuan_wisuda.id_pengajuan_wisuda', '=', $id_pengajuan_wisuda)
+            ->first();
 
         return $pengajuanWisuda;
     }
 
-    public function fetchDataPengajuanWisuda($auth_data, $id_periode_wisuda, $id_kelas){
+    public function fetchDataPengajuanWisuda($auth_data, $id_periode_wisuda, $id_kelas)
+    {
         $kelas_calon_lulus = Kelas::orderBy('tingkat', 'desc')->first();
-        $siswa = Siswa::select('pengajuan_wisuda.id_pengajuan_wisuda','siswa.id_siswa','periode_wisuda.id_periode_wisuda','periode_wisuda.nm_periode_wisuda', 'semester.tahun_ajaran', 'semester.nm_semester', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'pengajuan_wisuda.status_wisuda')
+        $siswa = Siswa::select('pengajuan_wisuda.id_pengajuan_wisuda', 'siswa.id_siswa', 'periode_wisuda.id_periode_wisuda', 'periode_wisuda.nm_periode_wisuda', 'semester.tahun_ajaran', 'semester.nm_semester', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'pengajuan_wisuda.status_wisuda')
             ->leftJoin('pengajuan_wisuda', function ($join) {
-                    $join->on('pengajuan_wisuda.id_siswa','=','siswa.id_siswa')
-                            ->where('pengajuan_wisuda.status_wisuda', '<>', 3)
-                            ->whereNull('pengajuan_wisuda.deleted_at');
-                })
-            ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-            ->join('status_pengguna','status_pengguna.id_status_pengguna','=','pengguna.id_status_pengguna')
-            ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
+                $join->on('pengajuan_wisuda.id_siswa', '=', 'siswa.id_siswa')
+                    ->where('pengajuan_wisuda.status_wisuda', '<>', 3)
+                    ->whereNull('pengajuan_wisuda.deleted_at');
+            })
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+            ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
             ->leftJoin('periode_wisuda', function ($join) use ($id_periode_wisuda) {
-                if($id_periode_wisuda != "0") {
+                if ($id_periode_wisuda != "0") {
                     $join->on('periode_wisuda.id_periode_wisuda', '=', 'pengajuan_wisuda.id_periode_wisuda')
-                    ->where('periode_wisuda.id_periode_wisuda', '=', $id_periode_wisuda);
-                }else{
+                        ->where('periode_wisuda.id_periode_wisuda', '=', $id_periode_wisuda);
+                } else {
                     $join->on('periode_wisuda.id_periode_wisuda', '=', 'pengajuan_wisuda.id_periode_wisuda');
                 }
             })
-            ->leftJoin('semester','semester.id_semester','=','periode_wisuda.id_semester')
-            ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-            ->where('status_pengguna.aktif_status_pengguna','=',1)
-            ->where('kelas.tingkat','=',$kelas_calon_lulus->tingkat)
+            ->leftJoin('semester', 'semester.id_semester', '=', 'periode_wisuda.id_semester')
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('status_pengguna.aktif_status_pengguna', '=', 1)
+            ->where('kelas.tingkat', '=', $kelas_calon_lulus->tingkat)
+            ->where('kelas.is_aktif', 1)
             ->orderBy('kelas.tingkat', 'asc')
             ->orderBy('kelas.nm_kelas', 'asc')
             ->orderBy('siswa.nis_siswa', 'asc');
-        
-            if(!empty($id_kelas)){
-                $siswa = $siswa->where('kelas.id_kelas', $id_kelas);
-            }
-            $siswa = $siswa->get();
+
+        if (!empty($id_kelas)) {
+            $siswa = $siswa->where('kelas.id_kelas', $id_kelas);
+        }
+        $siswa = $siswa->get();
 
         return $siswa;
     }
 
 
     // Action POST
-    public function actionPengajuanWisuda(Request $request, $mode, $id = null, $id_siswa = null, $id_periode_wisuda = null){
+    public function actionPengajuanWisuda(Request $request, $mode, $id = null, $id_siswa = null, $id_periode_wisuda = null)
+    {
 
         $input = (object) $request->input();
 
@@ -197,34 +200,32 @@ class PengajuanWisudaController extends BaseController{
             'keterangan_batal' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'pengajuan') {
+        if ($validator->fails() && $mode != 'pengajuan') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             // ACTION ADD
-            if($mode == 'cancel'){
-                $pengajuanWisudaCek = PengajuanWisuda::where('id_pengajuan_wisuda','=',$id)->where('status_wisuda','=',2)->first();
+            if ($mode == 'cancel') {
+                $pengajuanWisudaCek = PengajuanWisuda::where('id_pengajuan_wisuda', '=', $id)->where('status_wisuda', '=', 2)->first();
 
-                if($pengajuanWisudaCek){
+                if ($pengajuanWisudaCek) {
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Failed To Cancel Pengajuan Wisuda! Siswa Sudah Lulus!'
                     ];
-                }
-                else{
+                } else {
                     $pengajuanWisuda        = PengajuanWisuda::find($id);
 
                     // get status_pengguna kode AKTIF
-                    $statusPengguna = StatusPengguna::where('kode_status_pengguna','=',"AKTIF")
-                                        ->where('status_join_table','=',3)
-                                        ->where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-                                        ->first();
+                    $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', "AKTIF")
+                        ->where('status_join_table', '=', 3)
+                        ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->first();
 
                     // get siswa->id_pengguna
                     $siswa  = Siswa::find($pengajuanWisuda->id_siswa);
@@ -245,42 +246,41 @@ class PengajuanWisudaController extends BaseController{
 
                     // -- DELETE tabel admisi --
                     // get admisi sesuai id_pengajuan_wisuda
-                    $admisi = Admisi::where('id_pengajuan_wisuda','=',$pengajuanWisuda->id_pengajuan_wisuda)
-                                        ->first();
+                    $admisi = Admisi::where('id_pengajuan_wisuda', '=', $pengajuanWisuda->id_pengajuan_wisuda)
+                        ->first();
                     $admisi->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $admisi->save();
 
                     $admisi->delete();
-                    
+
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'wisuda/pengajuan-wisuda/view-detail/'.$input->id_periode_wisuda.'/'.$input->id_kelas,
+                        'path' => 'wisuda/pengajuan-wisuda/view-detail/' . $input->id_periode_wisuda . '/' . $input->id_kelas,
                         'message' => 'Cancel Pengajuan Wisuda Successfully'
                     ];
                 }
-            }
-            elseif($mode == 'pengajuan') {
+            } elseif ($mode == 'pengajuan') {
                 DB::beginTransaction();
 
                 try {
                     // make id
-                    
+
                     // get status_pengguna kode CALON_LULUS
-                    $statusPengguna = StatusPengguna::where('kode_status_pengguna','=',"CALON_LULUS")
-                                            ->where('status_join_table','=',3)
-                                            ->where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-                                            ->first();
-                    
-                    foreach($input->id_siswa as $id_siswa){
-                        $id_pengajuan_wisuda = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', "CALON_LULUS")
+                        ->where('status_join_table', '=', 3)
+                        ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->first();
+
+                    foreach ($input->id_siswa as $id_siswa) {
+                        $id_pengajuan_wisuda = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         // get siswa->id_pengguna
                         $siswa  = Siswa::find($id_siswa);
 
                         // make id
-                        $id_admisi = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $id_admisi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                        if($id_periode_wisuda != "0") {
+                        if ($id_periode_wisuda != "0") {
 
                             // -- UPDATE status_pengguna tabel pengguna --
                             $pengguna                       = Pengguna::find($siswa->id_pengguna);
@@ -312,13 +312,12 @@ class PengajuanWisudaController extends BaseController{
                             $admisi->id_pengajuan_wisuda    = $id_pengajuan_wisuda;
                             $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
                             $admisi->save();
-                        }
-                        else {
+                        } else {
                             // cek periode wisuda aktif sesuai semester aktif
-                            $periodeWisuda = PeriodeWisuda::join('semester','semester.id_semester','=','periode_wisuda.id_semester')
-                                                ->where('periode_wisuda.is_aktif','=',1)
-                                                ->where('semester.is_aktif_semester','=',1)
-                                                ->first();
+                            $periodeWisuda = PeriodeWisuda::join('semester', 'semester.id_semester', '=', 'periode_wisuda.id_semester')
+                                ->where('periode_wisuda.is_aktif', '=', 1)
+                                ->where('semester.is_aktif_semester', '=', 1)
+                                ->first();
                             // -- UPDATE status_pengguna tabel pengguna --
                             $pengguna                       = Pengguna::find($siswa->id_pengguna);
                             $pengguna->id_status_pengguna   = $statusPengguna->id_status_pengguna;
@@ -356,19 +355,16 @@ class PengajuanWisudaController extends BaseController{
                         'status' => 203, // SUCCESS AND LOAD TABLE
                         'message' => 'Pengajuan Wisuda Successfully'
                     ];
-                    
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
 
                     return [
                         'status' => 203, // GAGAL
-                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                     ];
-                }   
-                
+                }
             }
         }
     }
-
 }

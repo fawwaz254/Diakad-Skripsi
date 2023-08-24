@@ -219,7 +219,7 @@
                                                             {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
                                                     @if (
                                                         $tagihan->is_request == 0 &&
-                                                            \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->tgl_pelunasan)
+                                                            \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->updated_at)
                                                         <br>
                                                         <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
                                                             onclick="deleteActionKhusus(this)"
@@ -480,17 +480,14 @@
     });
 
     $(function() {
-        // var start_date = "{{ \Carbon\Carbon::parse($waktu)->addMonth(2)->format('Y-m-d') }}";
-        // var end_date = "{{ \Carbon\Carbon::parse($waktu)->subMonth(2)->format('Y-m-d') }}";
-
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
-            //lang : 'id',
-            clearButton: true,
+            lang: 'id',
+            // clearButton: true,
             weekStart: 1,
             time: false,
-            minDate: '2023/01/01',
-            maxDate: '2023/06/30',
+            minDate: '{{ $minDate }}',
+            maxDate: '{{ $maxDate }}',
         });
     });
 

@@ -18,7 +18,7 @@ class ShiftSiswaController extends Controller
 {
     public function selectKelas(Request $request)
     {
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $date =  Carbon::now()->format('Y-m-d');
         return view('humas/absensi/shift-pengguna/select-shift-siswa', compact('date', 'kelas'));
     }
@@ -26,7 +26,7 @@ class ShiftSiswaController extends Controller
     public function viewShiftSiswa(Request $request, $id_kelas, $date)
     {
 
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $date =  Carbon::parse($date)->format('Y-m-d');
 
         $pengguna = Pengguna::where('status_join_table', 3)
@@ -80,13 +80,13 @@ class ShiftSiswaController extends Controller
 
     public function selectKelasShiftSiswa(Request $request)
     {
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         return view('humas/absensi/shift-siswa/select-kelas-siswa', compact('kelas'));
     }
 
     public function addShiftSiswa(Request $request, $id_kelas)
     {
-        $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
 
         $shifts = ShiftMaster::all();
         $penggunas = Pengguna::where('status_join_table', 3)

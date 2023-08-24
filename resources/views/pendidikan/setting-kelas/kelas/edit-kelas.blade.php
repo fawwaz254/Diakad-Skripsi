@@ -1,6 +1,8 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#setting-kelas/kelas')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link "
+                href="{{ url(Request::segment(1) . '#setting-kelas/kelas') }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -11,20 +13,22 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-kelas/edit/'.$data_kelas->id_kelas)}}">
-                        {{csrf_field()}}
+                    <form id="form-validation" method="POST"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-kelas/edit/' . $data_kelas->id_kelas) }}">
+                        {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Jurusan
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_jurusan">
-                                    @foreach($data_jurusan as $data)
-                                    @if($data->id_jurusan == $data_kelas->id_jurusan)
-                                    <option value="{{$data->id_jurusan}}" selected>{{$data->nm_jurusan}}</option>
-                                    @else
-                                    <option value="{{$data->id_jurusan}}">{{$data->nm_jurusan}}</option>
-                                    @endif
+                                    @foreach ($data_jurusan as $data)
+                                        @if ($data->id_jurusan == $data_kelas->id_jurusan)
+                                            <option value="{{ $data->id_jurusan }}" selected>{{ $data->nm_jurusan }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $data->id_jurusan }}">{{ $data->nm_jurusan }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -34,8 +38,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_kelas" required="" aria-required="true" aria-invalid="true"
-                                    value="{{$data_kelas->nm_kelas}}">
+                                <input type="text" class="form-control" name="nm_kelas" required=""
+                                    aria-required="true" aria-invalid="true" value="{{ $data_kelas->nm_kelas }}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -43,8 +47,21 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="number" class="form-control" name="tingkat" required="" aria-required="true" aria-invalid="true"
-                                    value="{{$data_kelas->tingkat}}">
+                                <input type="number" class="form-control" name="tingkat" required=""
+                                    aria-required="true" aria-invalid="true" value="{{ $data_kelas->tingkat }}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Status
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="is_aktif">
+                                    <option value="1" @if ($data_kelas->tingkat == '1') selected @endif>Aktif
+                                    </option>
+                                    <option value="0" @if ($data_kelas->tingkat == '0') selected @endif>Tidak Aktif
+                                    </option>
+                                </select>
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -52,8 +69,9 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="keterangan_kelas" required="" aria-required="true"
-                                    aria-invalid="true" value="{{$data_kelas->keterangan_kelas}}">
+                                <input type="text" class="form-control" name="keterangan_kelas" required=""
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $data_kelas->keterangan_kelas }}">
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -62,7 +80,8 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </form>
