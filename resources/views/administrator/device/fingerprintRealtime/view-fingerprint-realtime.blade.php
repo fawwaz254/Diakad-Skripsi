@@ -112,6 +112,9 @@
         $.ajax({
             type: "POST",
             url: get_url,
+            success: function(response) {
+                console.log(response);
+            }
         });
     }
 
@@ -121,16 +124,18 @@
             type: "POST",
             url: sync_url,
             success: function(response) {
-                if (response) {
-                    primary_table.ajax.reload(null, false);
-                    console.log("Ada data baru");
-                } else {
-                    console.log("Tidak ada data baru");
-                }
+                primary_table.ajax.reload(null, false);
+                // if (response) {
+                //     primary_table.ajax.reload(null, false);
+                //     console.log("Ada data baru");
+                // } else {
+                //     primary_table.ajax.reload(null, false);
+                //     console.log("Tidak ada data baru");
+                // }
             }
         });
     }
 
-    setInterval(getData, 5 * 30 * 1000); //setengah 5 menit
-    setInterval(syncData, 5 * 60 * 1000); //5 menit
+    setInterval(getData, 1 * 60 * 1000);
+    setInterval(syncData, 1 * 60 * 1000);
 </script>

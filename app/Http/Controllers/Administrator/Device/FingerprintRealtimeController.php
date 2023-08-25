@@ -32,7 +32,7 @@ class FingerprintRealtimeController extends Controller
                 $query->where('date', $date)->with('shift_master');
             },
             'pengguna'
-        ])->take('25')->orderBy('updated_at', 'desc');
+        ])->take('10')->orderBy('updated_at', 'desc');
 
         return Datatables::of($list_data)
             ->editColumn('pengguna.path_foto_pengguna', function ($item) {
@@ -44,7 +44,9 @@ class FingerprintRealtimeController extends Controller
             })
             ->editColumn('updated_at', function ($item) use ($now) {
                 return Carbon::parse($item->updated_at)->diffForHumans($now);
-            })->addColumn(
+                // return Carbon::parse($item->updated_at)->format('H:i:s');
+            })
+            ->addColumn(
                 'status',
                 function ($item) use ($date) {
                     if ($item->notes) {
@@ -91,7 +93,7 @@ class FingerprintRealtimeController extends Controller
         $now = Carbon::now('Asia/Jakarta');
         $date_filter = $now;
         $client = new \GuzzleHttp\Client();
-        $finger_sukses = 'Finger yang berhasil diambil = </br>';
+        $finger_sukses = '';
         $devices = FPDevice::orderBy('updated_at', 'DESC')->get();
         foreach ($devices as $device) {
             $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
@@ -199,11 +201,12 @@ class FingerprintRealtimeController extends Controller
                     CreateFPAttendences::dispatch($list_data);
                     unset($list_data);
                 }
-                $finger_sukses = $finger_sukses . $serial_number . '</br>';
+                $finger_sukses =  $finger_sukses . ' ' . $serial_number;
             } catch (Exception $e) {
                 continue;
             }
         }
+        return $finger_sukses;
     }
 
     public function syncDataFingerprintRealtime(Request $request)
@@ -211,8 +214,8 @@ class FingerprintRealtimeController extends Controller
         set_time_limit(-1);
         $now = Carbon::now('Asia/Jakarta');
         $date_filter = $now;
-        $last_check_in = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_in', 'desc')->first();
-        $last_check_out = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_out', 'desc')->first();
+        // $last_check_in = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_in', 'desc')->first();
+        // $last_check_out = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_out', 'desc')->first();
         try {
             $data_fingerprint = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->whereNull('unit')->get();
             $collection = $data_fingerprint->groupBy('username')->all();
@@ -270,19 +273,19 @@ class FingerprintRealtimeController extends Controller
             // return false;
             // return $e;
         }
-        $last_check_in2 = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_in', 'desc')->first();
-        $last_check_out2 = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_out', 'desc')->first();
+        // $last_check_in2 = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_in', 'desc')->first();
+        // $last_check_out2 = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->orderBy('check_out', 'desc')->first();
 
 
-        if ($last_check_in->check_in != $last_check_in2->check_in) {
-            return true;
-        }
+        // if ($last_check_in->check_in != $last_check_in2->check_in) {
+        //     return true;
+        // }
 
-        if ($last_check_out->check_out !=  $last_check_out2->check_out) {
-            return true;
-        }
+        // if ($last_check_out->check_out !=  $last_check_out2->check_out) {
+        //     return true;
+        // }
 
-        return false;
+        return true;
     }
     public function parseXMLData($data, $p1, $p2)
     {
