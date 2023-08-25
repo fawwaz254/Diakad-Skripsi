@@ -117,13 +117,11 @@
 
     function getData() {
         loops++;
-        $('#status').html('Status : Get Data ('.loops.
-            ')');
+        $('#status').html('Status : Get Data (' + loops + ')');
         $.ajax({
             type: "POST",
             url: get_url,
             success: function(response) {
-                get++;
                 $('#sn').html('SN Finger Berhasil di dapat : <br>' + response);
                 syncData();
             }
@@ -132,8 +130,7 @@
 
     function syncData() {
         loops++;
-        $('#status').html('Status : Sync Data ('.loops.
-            ')');
+        $('#status').html('Status : Sync Data (' + loops + ')');
         $.ajax({
             type: "POST",
             url: sync_url,
