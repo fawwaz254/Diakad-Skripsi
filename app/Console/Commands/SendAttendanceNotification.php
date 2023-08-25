@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Sekolah;
 use App\Models\Setting;
-use App\Models\Pengguna;
 use Illuminate\Console\Command;
 use App\Models\PresensiPengguna;
 use Illuminate\Support\Facades\Http;
@@ -58,7 +57,6 @@ class SendAttendanceNotification extends Command
 
         try {
             $namaSekolah = Sekolah::first()->nm_sekolah;
-            $template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->firstOrFail()->value;
 
             foreach ($listPresensiPengguna as $presensiPengguna) {
                 $waliMurid = $presensiPengguna->pengguna->siswa->wali_murid;
@@ -67,6 +65,7 @@ class SendAttendanceNotification extends Command
                     continue;
                 }
 
+                $template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->firstOrFail()->value;
                 $template = str_replace('{{STUDENT_NAME}}', $presensiPengguna->pengguna->nm_pengguna, $template);
                 $template = str_replace('{{SCHOOL_NAME}}', $namaSekolah, $template);
                 $template = str_replace('{{DATE}}', $presensiPengguna->date, $template);
