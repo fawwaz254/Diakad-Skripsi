@@ -49,6 +49,9 @@
                                 <li>
                                     <a href="#6" data-toggle="tab">DATA PERIODIK</a>
                                 </li>
+                                <li>
+                                    <a href="#7" data-toggle="tab">DATA MUTASI MASUK</a>
+                                </li>
                             </ul>
                             
                             <div class="tab-content ">
@@ -502,7 +505,7 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
-                                                Penerima KPS/PKH
+                                                Penerima Beasiswa
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -518,7 +521,7 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
-                                                No. KPS/KPH <br>
+                                                Sumber Beasiswa<br>
                                                 <small>apabila menerima</small>
                                             </h2>
                                         </div>
@@ -1177,6 +1180,18 @@
                                         </div>
                                     </div>
                                     <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Hubungan dengan peserta didik
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="hub_wali" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->hub_wali }}">
+                                        </div>
+                                    </div>
+                                    <br>
                                     <!-- Status Wali -->
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
@@ -1362,6 +1377,19 @@
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <input type="text" class="form-control" name="riwayat_penyakit" aria-required="true"
                                                 aria-invalid="true" value   ="{{ $siswa->riwayat_penyakit }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kelainan Jasmani<br>
+                                                <small>Riwayat Kelainan Jasmani peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="riwayat_kelainan_jasmani" aria-required="true"
+                                                aria-invalid="true" value   ="{{ $siswa->riwayat_kelainan_jasmani }}">
                                         </div>
                                     </div>
                                     <br>
@@ -1564,6 +1592,66 @@
                                                 value="{{ $siswa->dari_x_bersaudara }}">
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="tab-pane active" id="7">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Asal Sekolah Mutasi<br>
+                                                <small>Sekolah Asal ( Mutasi ) peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="asal_sekolah2" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->asal_sekolah2 }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Alamat Asal Sekolah Mutasi<br>
+                                                <small>Alamat Sekolah Asal ( Mutasi ) peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="alamat_asal_sekolah2" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->alamat_asal_sekolah2 }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Tanggal Mutasi <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            @if ($siswa->tanggal_mutasi_masuk)
+                                                <input type="text" class="datepicker form-control" name="tanggal_mutasi_masuk"
+                                                    aria-required="true" aria-invalid="true"
+                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_mutasi_masuk)) }}" required>
+                                            @else
+                                                <input type="text" class="datepicker form-control" name="tanggal_mutasi_masuk"
+                                                    aria-required="true" aria-invalid="true" required>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Alasan Mutasi<br>
+                                                <small>Alasan mutasi peserta didik</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="alasan_mutasi" aria-required="true"
+                                                aria-invalid="true" value="{{ $siswa->alasan_mutasi }}">
+                                        </div>
+                                    </div>
+                                    <br>
                                 </div>
                             </div>
                         </div>
