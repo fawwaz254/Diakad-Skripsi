@@ -17,7 +17,7 @@ class AddDataTemplateNotificationInSettingTable extends Migration
         Setting::updateOrCreate(
             ['key_setting' => 'template_notif_kehadiran_siswa'],
             [
-                'value' => '*Notifikasi Kehadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa siswa/siswi Anda, *{{STUDENT_NAME}}*, telah tiba di {{SCHOOL_NAME}} pada:\n\nTanggal: {{DATE}}\nJam Check-In: {{CHECK_IN}}\n\nKami menghargai kehadiran *{{STUDENT_NAME}}* di sekolah dan berharap hari yang produktif dan bermakna untuknya. Jangan ragu untuk menghubungi kami jika Anda memiliki pertanyaan atau perlu informasi lebih lanjut.\n\nTerima kasih atas kerjasama Anda.\n\n\nSalam,\n*Kesiswaan {{SCHOOL_NAME}}*',
+                'value' => '*Notifikasi Kehadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan bahwa siswa/siswi Anda, *{{STUDENT_NAME}}*, telah tiba di {{SCHOOL_NAME}} pada:\n\nHari/Tanggal: {{DATE}}\nJam Check-In: {{CHECK_IN}}\n\nKami menghargai kehadiran *{{STUDENT_NAME}}* di sekolah dan berharap hari yang produktif dan bermakna untuknya. Jangan ragu untuk menghubungi kami jika Anda memiliki pertanyaan atau perlu informasi lebih lanjut.\n\nTerima kasih atas kerjasama Anda.\n\n\nSalam,\n*Kesiswaan {{SCHOOL_NAME}}*',
                 'keterangan' => 'template pesan notifikasi kehadiran siswa'
             ]
         );

@@ -68,8 +68,8 @@ class SendAttendanceNotification extends Command
                 $template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->firstOrFail()->value;
                 $template = str_replace('{{STUDENT_NAME}}', $presensiPengguna->pengguna->nm_pengguna, $template);
                 $template = str_replace('{{SCHOOL_NAME}}', $namaSekolah, $template);
-                $template = str_replace('{{DATE}}', $presensiPengguna->date, $template);
-                $template = str_replace('{{CHECK_IN}}', $presensiPengguna->check_in, $template);
+                $template = str_replace('{{DATE}}', \Carbon\Carbon::parse($presensiPengguna->date)->translatedFormat('l, d F Y'), $template);
+                $template = str_replace('{{CHECK_IN}}', date('H:i', strtotime($presensiPengguna->check_in)), $template);
                 $template = str_replace('\n', "\n", $template);
 
                 $data = [
