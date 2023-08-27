@@ -9,11 +9,19 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>DATA Presensi Fingerprint Realtime</h2>
+                    <h2>Data Presensi Fingerprint Realtime</h2>
+                    <br>
+                    <p id="sn">SN Finger Berhasil di dapat :</p>
+                    <h2 style="position: absolute;
+                    top: 0;
+                    right: 0;
+                    margin: 20px;"
+                        id="status"></h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -41,7 +49,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
     var get_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/getData';
     var sync_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/syncData';
-
+    var loops = 0;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -108,29 +116,32 @@
     }).draw();
 
     function getData() {
-        console.log("get data");
+        loops++;
+        $('#status').html('Status : Get Data (' + loops + ')');
         $.ajax({
             type: "POST",
             url: get_url,
-        });
-    }
-
-    function syncData() {
-        console.log("sync data");
-        $.ajax({
-            type: "POST",
-            url: sync_url,
             success: function(response) {
-                if (response) {
-                    primary_table.ajax.reload(null, false);
-                    console.log("Ada data baru");
-                } else {
-                    console.log("Tidak ada data baru");
-                }
+                $('#sn').html('SN Finger Berhasil di dapat : <br>' + response);
+                syncData();
             }
         });
     }
 
-    setInterval(getData, 5 * 30 * 1000); //setengah 5 menit
-    setInterval(syncData, 5 * 60 * 1000); //5 menit
+    function syncData() {
+        loops++;
+        $('#status').html('Status : Sync Data (' + loops + ')');
+        $.ajax({
+            type: "POST",
+            url: sync_url,
+            success: function(response) {
+                primary_table.ajax.reload(null, false);
+                getData();
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        getData();
+    });
 </script>
