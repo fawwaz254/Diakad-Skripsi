@@ -163,6 +163,9 @@
 
 
     function filterAction() {
+        $('tbody').empty();
+        $('#primary_table_info').empty();
+        $('#primary_table_paginate').empty();
         primary_table.ajax.reload(null, false);
     }
 

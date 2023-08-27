@@ -205,9 +205,9 @@
                                                         @endif
                                                     </td>
                                                 @elseif($tagihan->is_tagih == 0)
-                                                    <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}"
+                                                    <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
                                                         style="vertical-align:middle;text-align: center;">
-                                                        {{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}
+                                                        {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}
                                                         @if ($tagihan->is_request == 0)
                                                             <br>
                                                             <button
