@@ -163,7 +163,7 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('aktivitas-semester')->group(function () {
-            // MENU Usulan Mata Ajar
+            // menu view jadwal kelas
             Route::get('view-jadwal-kelas', [UsulanMataAjarController::class, 'viewUsulanMataAjar']);
             Route::post('post-view-jadwal-kelas', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);
             Route::get('view-jadwal-kelas/view-semester-view-jadwal-kelas/{id}', [UsulanMataAjarController::class, 'viewSemesterUsulanMataAjar']);
