@@ -282,7 +282,7 @@
                             <option value="" disabled selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
-                                <option value="{{ $guru->id_guru }}">
+                                <option value="{{ $guru->id_guru }}" @if($id_guru == $guru->id_guru) selected @endif>
                                     {{ $guru->pengguna->gelar_depan }}{{ $guru->pengguna->nm_pengguna }}{{ $guru->pengguna->gelar_belakang }}
                                 </option>
                             @endforeach

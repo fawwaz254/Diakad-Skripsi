@@ -127,7 +127,7 @@ class SetJadwalKelasGuruController extends Controller
 
         $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
-        $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->where('is_aktif',1)->get();
+        $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->where('is_aktif', 1)->get();
         // $mapel      = MataPelajaran::all();
         // $data_jurusan = Jurusan::with('mapel')->get();
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
@@ -150,7 +150,9 @@ class SetJadwalKelasGuruController extends Controller
             $id_jurusan = null;
         }
 
-        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'data_jenis_mata_pelajaran', 'jam', 'id_jurusan', 'list_jurusan', 'list_jenis_mata_pelajaran'));
+        $id_guru = $list_guru->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()->id_guru;
+
+        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'data_jenis_mata_pelajaran', 'jam', 'id_jurusan', 'list_jurusan', 'list_jenis_mata_pelajaran', 'id_guru'));
     }
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
@@ -196,7 +198,7 @@ class SetJadwalKelasGuruController extends Controller
             if ($cek_jadwal['guru'] == 0) {
                 return [
                     'status_code' => 300, // FAILED
-                    'message' => 'Guru yang bersangkutan sudah mengambil waktu ini di kelas lain '
+                    'message' => 'Guru yang bersangkutan sudah mengambil waktu ini di kelas ' . $cek_jadwal['alasan']
                 ];
             } elseif ($cek_jadwal['ruangan'] == 0) {
                 return [
