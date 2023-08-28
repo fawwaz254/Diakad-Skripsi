@@ -58,7 +58,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="form-control" name="rangkuman_home_visit" required=""
-                                    aria-required="true" aria-invalid="true">
+                                    aria-required="true" aria-invalid="true" maxlength="256">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
