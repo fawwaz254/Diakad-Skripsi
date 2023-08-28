@@ -78,87 +78,86 @@
                         </thead>
                         <tbody>
                             @foreach ($jam as $key => $r)
-                                @if ($key % 2 == 1)
-                                    <tr style="background: #98d1d1">
-                                        <td style="text-align: center; vertical-align: middle;">{{ $key + 1 }}
-                                        </td>
-                                    @else
-                                    <tr style="background: #badbdb">
-                                        <td style="text-align: center; vertical-align: middle;">{{ $key + 1 }}
-                                        </td>
-                                @endif
-                                @foreach ($jadwal_hari as $hari)
+                                <tr style="background: #98d1d1">
                                     <td style="text-align: center; vertical-align: middle;">
-                                        @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari] ?? false)
-                                            <table align="center" class="table table-bordered" border="0"
-                                                cellspacing="0" cellpadding="0">
-                                                <tr>
+                                        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
+                                            {{ $key }}
+                                        @else
+                                            {{ $key + 1 }}
+                                        @endif
+                                    </td>
+                                    @foreach ($jadwal_hari as $hari)
+                                        <td style="text-align: center; vertical-align: middle;">
+                                            @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari] ?? false)
+                                                <table align="center" class="table table-bordered" border="0"
+                                                    cellspacing="0" cellpadding="0">
+                                                    <tr>
 
-                                                    <td width="85px"
-                                                        style="padding:  0 10px 0 10px ; background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}; font-weight: bold;text-align:left;vertical-align: middle">
-                                                        <span style="float:right;">
-                                                            @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
-                                                                {{-- <button type="button"class="btn bg-blue waves-effect passingID3"
+                                                        <td width="85px"
+                                                            style="padding:  0 10px 0 10px ; background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}; font-weight: bold;text-align:left;vertical-align: middle">
+                                                            <span style="float:right;">
+                                                                @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
+                                                                    {{-- <button type="button"class="btn bg-blue waves-effect passingID3"
                                                                     style="padding: 0 4px 0 4px " ata-toggle="modal"
                                                                     data-id='test'  id="person">
                                                                     <i class="material-icons">person</i></button> --}}
-                                                                <button
-                                                                    type="button"class="btn bg-blue waves-effect passingID2"
-                                                                    data-toggle="modal"
-                                                                    data-id-jadwal-kelas-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_kelas_mp'] }}'
-                                                                    {{-- data-id-jadwal-hari = '{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_hari'] }} '  --}}
-                                                                    data-id-jadwal-jam='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam'] }}'
-                                                                    data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'
-                                                                    data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'
-                                                                    data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'
-                                                                    data-id-guru='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_guru'] }}'
-                                                                    data-hari=" {{ $hari->id_jadwal_hari }}"
-                                                                    data-id-pengampu-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_pengampu_mp'] }}'
-                                                                    id="edit" style="padding: 0 4px 0 4px ">
-                                                                    <i class="material-icons">edit</i></button>
-                                                                {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam']  }}
+                                                                    <button
+                                                                        type="button"class="btn bg-blue waves-effect passingID2"
+                                                                        data-toggle="modal"
+                                                                        data-id-jadwal-kelas-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_kelas_mp'] }}'
+                                                                        {{-- data-id-jadwal-hari = '{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_hari'] }} '  --}}
+                                                                        data-id-jadwal-jam='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam'] }}'
+                                                                        data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'
+                                                                        data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'
+                                                                        data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'
+                                                                        data-id-guru='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_guru'] }}'
+                                                                        data-hari=" {{ $hari->id_jadwal_hari }}"
+                                                                        data-id-pengampu-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_pengampu_mp'] }}'
+                                                                        id="edit" style="padding: 0 4px 0 4px ">
+                                                                        <i class="material-icons">edit</i></button>
+                                                                    {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam']  }}
                                                                     {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }} --}}
-                                                        </span>
-                                                    @else
-                                        @endif
-
-                                    </td>
-                                    <td
-                                        style="background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}">
-                                        @if (
-                                            $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1' &&
-                                                empty($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_presensi_mp']))
-                                            <button type="button"class="btn bg-red waves-effect delete-record"
-                                                data-id="{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_kelas_mp'] }}"
-                                                style="padding: 0 4px 0 4px ">
-                                                <i class="material-icons">close</i></button>
-                                        @else
-                                            <br>
-                                        @endif
-                                    </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align:right; background-color:white; font-size:9px">
-                                            <span style="font-weight: bold; ">
-
-                                                {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_mata_pelajaran'] }}
-                                                ({{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }})
-                                            </span><br>
-                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_depan'] }}
-                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}
-                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_belakang'] }}
+                                                            </span>
+                                                        @else
+                                            @endif
 
                                         </td>
-                                        <td style="font-size:9px;background-color:white">
-                                            @if (!empty($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna']))
-                                                <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna'] }}"
-                                                    alt="img" height="50" />
+                                        <td
+                                            style="background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}">
+                                            @if (
+                                                $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1' &&
+                                                    empty($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_presensi_mp']))
+                                                <button type="button"class="btn bg-red waves-effect delete-record"
+                                                    data-id="{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_kelas_mp'] }}"
+                                                    style="padding: 0 4px 0 4px ">
+                                                    <i class="material-icons">close</i></button>
                                             @else
-                                                <img src="https://ui-avatars.com/api/?size=100&name={{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}"
-                                                    height="50" />
+                                                <br>
                                             @endif
                                         </td>
-                                    </tr>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right; background-color:white; font-size:9px">
+                                        <span style="font-weight: bold; ">
+
+                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_mata_pelajaran'] }}
+                                            ({{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }})
+                                        </span><br>
+                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_depan'] }}
+                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}
+                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_belakang'] }}
+
+                                    </td>
+                                    <td style="font-size:9px;background-color:white">
+                                        @if (!empty($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna']))
+                                            <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna'] }}"
+                                                alt="img" height="50" />
+                                        @else
+                                            <img src="https://ui-avatars.com/api/?size=100&name={{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}"
+                                                height="50" />
+                                        @endif
+                                    </td>
+                                </tr>
                     </table>
                 @else
                     <button type="button" class="btn bg-green waves-effect passingID" data-toggle="modal"
