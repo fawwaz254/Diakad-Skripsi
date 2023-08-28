@@ -3159,7 +3159,7 @@ class Apiv1Controller extends BaseController
         $kerja = UnitKerja::select("id_unit_kerja", "nm_unit_kerja")->orderBy("nm_unit_kerja")->get();
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        // $now = Carbon::now(env('APP_TIMEZONE', ''));
         if ($request->segment(3) == "guru") {
             $data_actor = Guru::select("id_guru", "id_pengguna", "id_unit_kerja", "jenis_kelamin", "tgl_lahir", "nm_ibu_kandung", "alamat_jalan", "alamat_rt", "alamat_rw", "alamat_dusun", "alamat_kelurahan", "alamat_kecamatan", "alamat_kodepos", "alamat_kota", "alamat_provinsi", "id_agama", "npwp_ptk", "kewarganegaraan", "status_kawin", "nm_pasangan_ptk", "nomor_hp", "email")->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->get()->first();
         } elseif ($request->segment(3) == "tendik") {
@@ -3172,6 +3172,7 @@ class Apiv1Controller extends BaseController
         $kota = Kota::select("id_kota", "id_provinsi", "nm_kota")->where('kota.is_aktif', '=', 1)->get();
         $provinsi = Provinsi::select("id_provinsi", "nm_provinsi")->where('provinsi.is_aktif', '=', 1)->get();
         $agama = Agama::select("id_agama", "kode_agama", "nm_agama")->get();
+
 
         return response()->json([
             'status_code'     => 200,
