@@ -25,7 +25,7 @@ class AddDataTemplateNotificationInSettingTable extends Migration
         Setting::updateOrCreate(
             ['key_setting' => 'template_notif_pembayaran_spp'],
             [
-                'value' => '*Notifikasi Pembayaran SPP*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami ingin menginformasikan bahwa pembayaran SPP untuk siswa/siswi Anda, *{{STUDENT_NAME}}*, di *{{SCHOOL_NAME}}* telah berhasil diterima:\n\nBulan Pembayaran: {{PAYMENT_MONTH}}\nJumlah Pembayaran: Rp. {{PAYMENT_AMOUNT}},\nTanggal Pembayaran: {{PAYMENT_DATE}},\n\nKami mengucapkan terima kasih atas kesediaan Anda untuk memenuhi kewajiban pembayaran SPP. Dukungan Anda membantu menjaga kualitas pendidikan di *{{SCHOOL_NAME}}*. Jika Anda memiliki pertanyaan terkait pembayaran atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Keuangan {{SCHOOL_NAME}}*',
+                'value' => '*Notifikasi Pembayaran SPP*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami ingin menginformasikan bahwa pembayaran SPP untuk siswa/siswi Anda, *{{STUDENT_NAME}}*, di {{SCHOOL_NAME}} telah berhasil diterima:\n\nBulan Pembayaran: {{PAYMENT_MONTH}}\nJumlah Pembayaran: Rp. {{PAYMENT_AMOUNT}},\nTanggal Pembayaran: {{PAYMENT_DATE}},\n\nKami mengucapkan terima kasih atas kesediaan Anda untuk memenuhi kewajiban pembayaran SPP. Dukungan Anda membantu menjaga kualitas pendidikan di *{{SCHOOL_NAME}}*. Jika Anda memiliki pertanyaan terkait pembayaran atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Keuangan {{SCHOOL_NAME}}*',
                 'keterangan' => 'template pesan notifikasi pembayaran SPP siswa'
             ]
         );
