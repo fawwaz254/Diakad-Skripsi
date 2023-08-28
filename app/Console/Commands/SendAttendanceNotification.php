@@ -49,7 +49,9 @@ class SendAttendanceNotification extends Command
                 'status_join_table' => 3,
                 'notification_sent' => 0,
                 'date' => $now,
-            ])->get();
+            ])
+            ->take(250)
+            ->get();
 
         if ($listPresensiPengguna->isEmpty() || empty($url)) {
             return 0;
@@ -68,8 +70,8 @@ class SendAttendanceNotification extends Command
                 $template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->firstOrFail()->value;
                 $template = str_replace('{{STUDENT_NAME}}', $presensiPengguna->pengguna->nm_pengguna, $template);
                 $template = str_replace('{{SCHOOL_NAME}}', $namaSekolah, $template);
-                $template = str_replace('{{DATE}}', $presensiPengguna->date, $template);
-                $template = str_replace('{{CHECK_IN}}', $presensiPengguna->check_in, $template);
+                $template = str_replace('{{DATE}}', \Carbon\Carbon::parse($presensiPengguna->date)->translatedFormat('l, d F Y'), $template);
+                $template = str_replace('{{CHECK_IN}}', date('H:i', strtotime($presensiPengguna->check_in)), $template);
                 $template = str_replace('\n', "\n", $template);
 
                 $data = [
@@ -91,7 +93,7 @@ class SendAttendanceNotification extends Command
                     \Log::info("Success: Notification attendance sent at " . now());
                 }
 
-                sleep(2);
+                sleep(rand(10, 15));
             }
         } catch (\Exception $e) {
             if ($e->getCode() === 0) {
