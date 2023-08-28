@@ -49,7 +49,9 @@ class SendAttendanceNotification extends Command
                 'status_join_table' => 3,
                 'notification_sent' => 0,
                 'date' => $now,
-            ])->get();
+            ])
+            ->take(250)
+            ->get();
 
         if ($listPresensiPengguna->isEmpty() || empty($url)) {
             return 0;
@@ -91,7 +93,7 @@ class SendAttendanceNotification extends Command
                     \Log::info("Success: Notification attendance sent at " . now());
                 }
 
-                sleep(2);
+                sleep(rand(10, 15));
             }
         } catch (\Exception $e) {
             if ($e->getCode() === 0) {
