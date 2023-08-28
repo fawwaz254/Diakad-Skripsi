@@ -90,7 +90,7 @@ class KelasController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibKelas::fetchDataKelas($auth_data);
+        $list_data = LibKelas::fetchDataKelas($auth_data, null, false, false);
 
         return Datatables::of($list_data)
             ->addColumn('nm_sekretaris', function ($item) {
