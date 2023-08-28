@@ -16,7 +16,7 @@ use DB;
 class LibKelas
 {
     /** KELAS **/
-    static function fetchDataKelas($auth_data, $id = null, $siswa_aktif = false)
+    static function fetchDataKelas($auth_data, $id = null, $siswa_aktif = false, $only_aktif = true)
     {
 
         // get mode view
@@ -71,7 +71,11 @@ class LibKelas
                 ->leftJoin('guru', 'guru.id_guru', '=', 'wali_kelas.id_guru')
                 ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
                 ->leftJoin('pengguna as p3', 'p3.id_pengguna', '=', 'bk_kelas.id_pengguna')
-                ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+            if ($only_aktif) {
+                $kelas->where('kelas.is_aktif', 1);
+            }
+            $kelas = $kelas
                 ->orderBy('jurusan.kode_jurusan', 'asc')
                 ->orderBy('kelas.tingkat', 'asc')
                 ->orderBy('kelas.nm_kelas', 'asc')

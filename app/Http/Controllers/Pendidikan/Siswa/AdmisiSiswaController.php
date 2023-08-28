@@ -207,11 +207,10 @@ class AdmisiSiswaController extends BaseController
 
                 // proses cek admisi sebelumnya
                 if (!empty($id_semester_sebelumnya)) {
-                    // $admisi = Admisi::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'admisi.id_status_pengguna')
-                    //     ->where('admisi.id_siswa', '=', $input->id_siswa)
-                    //     ->where('admisi.id_semester', '=', $id_semester_sebelumnya)
-                    //     ->first();
-                    $admisi = true;
+                    $admisi = Admisi::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'admisi.id_status_pengguna')
+                        ->where('admisi.id_siswa', '=', $input->id_siswa)
+                        ->where('admisi.id_semester', '=', $id_semester_sebelumnya)
+                        ->first();
 
                     if ($admisi) {
                         if ($admisi->kode_status_pengguna == 'CALON_LULUS') {
@@ -219,43 +218,46 @@ class AdmisiSiswaController extends BaseController
                                 'status' => 203, // GAGAL
                                 'message' => 'Update Admisi Gagal, Siswa Sudah Berstatus Calon Lulus Di Semester Sebelumnya!'
                             ];
-                        } else {
-                            $admisi                         = new Admisi;
-                            $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $admisi->id_status_pengguna     = $input->id_status_pengguna;
-                            if ($is_aktif_status_pengguna == 0) {
-                                $admisi->tgl_keluar           = date_format(date_create($input->tgl_keluar), "Y-m-d H:i");
-                            }
-                            $admisi->keterangan_admisi      = $input->keterangan_admisi;
-                            $admisi->id_semester            = $input->id_semester;
-                            $admisi->id_siswa               = $input->id_siswa;
-                            $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
-                            $admisi->save();
-
-                            $siswa                          = Siswa::find($input->id_siswa);
-
-                            $pengguna                       = Pengguna::find($siswa->id_pengguna);
-                            $pengguna->id_status_pengguna   = $input->id_status_pengguna;
-                            $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
-                            $pengguna->updated_at           = $now;
-                            $pengguna->save();
-
-                            $siswa->id_kelas             = null;
-                            $siswa->updated_by           = $input->auth_data->pengguna->id_pengguna;
-                            $siswa->save();
-
-                            return [
-                                'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
-                                'path' => 'data-kesiswaan/admisi-siswa/view-detail/' . $input->nis_nama_siswa,
-                                'message' => 'Insert Admisi Successfully'
-                            ];
                         }
-                    } else {
-                        return [
-                            'status' => 203, // GAGAL
-                            'message' => 'Update Admisi Gagal, Siswa Belum Mempunyai Admisi Di Semester Sebelumnya!'
-                        ];
                     }
+
+
+                    $admisi                         = new Admisi;
+                    $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $admisi->id_status_pengguna     = $input->id_status_pengguna;
+                    if ($is_aktif_status_pengguna == 0) {
+                        $admisi->tgl_keluar           = date_format(date_create($input->tgl_keluar), "Y-m-d H:i");
+                    }
+                    $admisi->keterangan_admisi      = $input->keterangan_admisi;
+                    $admisi->id_semester            = $input->id_semester;
+                    $admisi->id_siswa               = $input->id_siswa;
+                    $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
+                    $admisi->save();
+
+                    $siswa                          = Siswa::find($input->id_siswa);
+
+                    $pengguna                       = Pengguna::find($siswa->id_pengguna);
+                    $pengguna->id_status_pengguna   = $input->id_status_pengguna;
+                    $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                    $pengguna->updated_at           = $now;
+                    $pengguna->save();
+
+                    $siswa->id_kelas             = null;
+                    $siswa->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                    $siswa->save();
+
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
+                        'path' => 'data-kesiswaan/admisi-siswa/view-detail/' . $input->nis_nama_siswa,
+                        'message' => 'Insert Admisi Successfully'
+                    ];
+                    // }
+                    // } else {
+                    //     return [
+                    //         'status' => 203, // GAGAL
+                    //         'message' => 'Update Admisi Gagal, Siswa Belum Mempunyai Admisi Di Semester Sebelumnya!'
+                    //     ];
+                    // }
                 } else {
                     return [
                         'status' => 203, // GAGAL
