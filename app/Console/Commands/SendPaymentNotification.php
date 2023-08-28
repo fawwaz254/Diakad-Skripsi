@@ -110,7 +110,7 @@ class SendPaymentNotification extends Command
                     \Log::info("Success: Notification payment sent at " . now());
                 }
 
-                sleep(2);
+                sleep(rand(15, 20));
             }
 
             if (!empty($tagihanToUpdate)) {
