@@ -3452,4 +3452,32 @@ class Apiv1Controller extends BaseController
             }
         }
     }
+
+    public function actionGetDataKomplainRuanganSiswa(Request $request)
+    {
+        $list_data = KomplainSarpras::whereNotNull('id_ruangan')->with('ruangan')->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'komplainRuangan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetDataBukuAlatSiswa(Request $request)
+    {
+        $list_data = KomplainSarpras::whereNotNull('id_buku_alat')->with('buku_alat')->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'komplainRuangan' => $list_data
+            )
+        ]);
+    }
 }

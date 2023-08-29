@@ -277,6 +277,9 @@ Route::middleware(['auth.mobile'])->group(function () {
             });
 
             Route::prefix('komplain-sarpras')->group(function () {
+
+                Route::post('ruangan/get', [Apiv1Controller::class, 'actionGetDataKomplainRuanganSiswa']);
+                Route::post('buku-alat/get', [Apiv1Controller::class, 'actionGetDataBukuAlatSiswa']);
                 Route::post('ruangan/detail', [Apiv1Controller::class, 'actionGetKomplainRuanganSiswa']);
                 Route::post('buku-alat/detail', [Apiv1Controller::class, 'actionGetKomplainBukuAlatSiswa']);
                 Route::post('{mode}/submit', [Apiv1Controller::class, 'actionKomplainSarprasSiswa']);
