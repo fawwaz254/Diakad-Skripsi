@@ -71,6 +71,7 @@ use App\Http\Controllers\Guru\KetidaksesuaianSOP\InputKetidaksesuaianController;
 use App\Http\Controllers\Guru\KetidaksesuaianSOP\KetidaksesuaianSOPController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Guru\Presensi\AbsensiBarcodeController;
+use App\Http\Controllers\Guru\Presensi\PresensiQrCodeController;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
@@ -330,6 +331,11 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absen-tanpa-jadwal/view-kbm/{id_kelas_mp}', [RekapAbsenTanpaJadwalController::class, 'viewKBMRekapAbsenTanpaJadwal']);
 
             Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', [RekapAbsenTanpaJadwalController::class, 'printKBMRekapAbsenTanpaJadwal']);
+
+            //Presensi Qrcode
+            Route::get('absensi-kode-qr', [PresensiQrCodeController::class, 'viewPresensiQr']);
+            Route::post('absensi-kode-qr/result', [PresensiQrCodeController::class, 'resultPresensiQr']);
+            
 
             // Presensi Barcode
             Route::get('presensi-barcode', [AbsensiBarcodeController::class, 'cekAbsensiBarcode']);
