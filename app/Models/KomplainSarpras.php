@@ -16,10 +16,10 @@ class KomplainSarpras extends Model
 
     protected $primaryKey = 'id_komplain_sarpras';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_ruangan',
         'id_inventaris_ruangan',
@@ -40,9 +40,13 @@ class KomplainSarpras extends Model
 
     protected $guarded = [];
 
+    public function ruangan()
+    {
+        return $this->belongsTo(Ruangan::class, 'id_ruangan');
+    }
 
-
-
-
-
+    public function buku_alat()
+    {
+        return $this->belongsTo(BukuAlat::class, 'id_buku_alat');
+    }
 }
