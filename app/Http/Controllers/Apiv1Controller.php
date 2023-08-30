@@ -1724,21 +1724,21 @@ class Apiv1Controller extends BaseController
     {
         $input = (object) $request->input();
 
-        $validator = Validator::make($request->all(), [
-            'id_ruangan' => 'required'
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'id_ruangan' => 'required'
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status_code'     => 300,
-                'status_text'     => 'Failed',
-                'message' => $validator->errors()->first()
-            ]);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'status_code'     => 300,
+        //         'status_text'     => 'Failed',
+        //         'message' => $validator->errors()->first()
+        //     ]);
+        // }
 
         $auth_data = $input->auth_data;
 
-        $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data, $input->id_ruangan);
+        $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data);
 
         return response()->json([
             'status_code'     => 200,
