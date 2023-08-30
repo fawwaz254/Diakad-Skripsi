@@ -932,9 +932,11 @@ class LibSiswa
         $siswa = Siswa::where('id_pengguna', '=', $id_pengguna)->first();
         $id_siswa = $siswa->id_siswa;
 
-        $jadwalUAS = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'ujian_mp.id_ujian_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'kelas.nm_kelas', 'pengampu_mp.pjmp_uas', 'ujian_mp.is_online')
+        $jadwalUAS = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'ruangan.nm_ruangan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'ujian_mp.id_ujian_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'kelas.nm_kelas', 'pengampu_mp.pjmp_uas', 'ujian_mp.is_online')
             ->join('ujian_mp_presensi', 'ujian_mp_presensi.id_siswa', '=', 'siswa.id_siswa')
             ->join('ujian_mp', 'ujian_mp.id_ujian_mp', '=', 'ujian_mp_presensi.id_ujian_mp')
+            ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
+            ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
             ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
             ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
             ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')

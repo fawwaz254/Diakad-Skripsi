@@ -102,6 +102,7 @@
                                                                         {{-- data-id-jadwal-hari = '{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_hari'] }} '  --}}
                                                                         data-id-jadwal-jam='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam'] }}'
                                                                         data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'
+                                                                        data-id-ruangan='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_ruangan'] }}'
                                                                         data-id-guru='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_guru'] }}'
                                                                         data-hari=" {{ $hari->id_jadwal_hari }}"
                                                                         data-id-pengampu-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_pengampu_mp'] }}'
@@ -297,10 +298,12 @@
                                 <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
                                 </option>
                             @else --}}
-                            {{-- <option disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
-                                </option> --}}
+                            <option disabled>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
+                            </option>
                             @foreach ($allruangan as $ruangan)
-                                <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }} </option>
+                                <option value="{{ $ruangan->id_ruangan }}"
+                                    @if ($kelas->id_kelas == $ruangan->id_kelas) selected @endif>{{ $ruangan->nm_ruangan }}
+                                </option>
                             @endforeach
                             {{-- @endif --}}
                         </select>
@@ -387,16 +390,18 @@
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Ruangan :</label>
-                        <select class="form-control show-tick" name="ruanganEdit">
+                        <select class="form-control show-tick" name="ruanganEdit" id="ruanganEdit">
                             {{-- @if ($ruangan = $allruangan->where('id_kelas', $kelas->id_kelas)->first())
                                 <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
                                 </option>
                             @else --}}
-                            {{-- <option disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
-                                </option> --}}
+                            <option disabled>Otomatis terpilih jika sudah set ruang kelas di role Sarpras
+                            </option>
                             @foreach ($allruangan as $ruangan)
-                                <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }} </option>
+                                <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }}
+                                </option>
                             @endforeach
+                            {{-- @if ($ruangan->id_kelas == $kelas->id_kelas) selected @endif --}}
                             {{-- @endif --}}
                         </select>
                     </div>
@@ -488,10 +493,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 @include('scriptjs')
 
 
@@ -512,6 +513,7 @@
         var jadwal_kelas_kelas_mp = parseInt($(this).attr('data-id-jadwal-kelas-mp'));
         var jadwal_jam = $(this).attr('data-id-jadwal-jam');
         var jadwal_jam_selesai = $(this).attr('data-id-jadwal-jam-selesai');
+        var ruangan = $(this).attr('data-id-ruangan');
         var guru = $(this).attr('data-id-guru');
         const $select1 = document.querySelector('#jamMasukEdit');
         $select1.value = jadwal_jam;
@@ -520,6 +522,13 @@
         $select2.value = jadwal_jam_selesai;
         const $select3 = document.querySelector('#guruEdit');
         $select3.value = guru;
+        const $select4 = document.querySelector('#ruanganEdit');
+        if (ruangan != null) {
+            $select4.value = ruangan;
+        }
+
+
+
         var hari = parseInt($(this).attr('data-hari'));
         $("#hari").val(hari);
 

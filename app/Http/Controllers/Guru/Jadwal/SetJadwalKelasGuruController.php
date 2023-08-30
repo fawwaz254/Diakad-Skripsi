@@ -80,7 +80,7 @@ class SetJadwalKelasGuruController extends Controller
             $query->where('id_kelas', '=', $id_kelas)->where('id_semester', '=', $id_semester);
         })->get();
 
-        $kelas_mp   = KelasMp::select('mata_pelajaran.id_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', 'jadwal_jam.jam_mulai', 'jadwal_jam.menit_mulai', 'jadwal_jam.jam_selesai', 'jadwal_jam.menit_selesai', 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.path_foto_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'jadwal_kelas_mp.id_jadwal_hari', 'jadwal_kelas_mp.id_jadwal_jam', 'jadwal_kelas_mp.id_jadwal_jam_selesai', 'kelas_mp.id_mata_pelajaran', 'pengampu_mp.id_guru', 'pengampu_mp.id_pengampu_mp')
+        $kelas_mp   = KelasMp::select('mata_pelajaran.id_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', 'jadwal_jam.jam_mulai', 'jadwal_jam.menit_mulai', 'jadwal_jam.jam_selesai', 'jadwal_jam.menit_selesai', 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'ruangan.id_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.path_foto_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'jadwal_kelas_mp.id_jadwal_hari', 'jadwal_kelas_mp.id_jadwal_jam', 'jadwal_kelas_mp.id_jadwal_jam_selesai', 'kelas_mp.id_mata_pelajaran', 'pengampu_mp.id_guru', 'pengampu_mp.id_pengampu_mp')
             // ->join('kelas_mp','kelas_mp.id_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp')
             ->join('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
             ->join('jadwal_hari', 'jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
@@ -151,7 +151,6 @@ class SetJadwalKelasGuruController extends Controller
         }
 
         $id_guru = $list_guru->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()->id_guru;
-
         return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'data_jenis_mata_pelajaran', 'jam', 'id_jurusan', 'list_jurusan', 'list_jenis_mata_pelajaran', 'id_guru'));
     }
 
