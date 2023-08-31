@@ -239,16 +239,16 @@ Route::middleware(['auth.mobile'])->group(function () {
         });
 
         Route::prefix('siswa')->group(function () {
-            //done
-            Route::prefix('data-pribadi')->group(function () {
-                Route::post('get', [Apiv1Controller::class, 'geteditprofile']);
-                Route::post('submit', [Apiv1Controller::class, 'submiteditprofile']);
-            });
 
             Route::post('semester/get', [Apiv1Controller::class, 'actionGetSemester']);
             Route::post('kota/get', [Apiv1Controller::class, 'actionGetKota']);
             Route::post('kelas-all/get', [Apiv1Controller::class, 'actionGetKelasAll']);
 
+            //done
+            Route::prefix('data-pribadi')->group(function () {
+                Route::post('get', [Apiv1Controller::class, 'geteditprofile']);
+                Route::post('submit', [Apiv1Controller::class, 'submiteditprofile']);
+            });
             //done
             Route::post('jadwal/get', [Apiv1Controller::class, 'actionGetJadwalSiswa']);
             //done
@@ -276,11 +276,13 @@ Route::middleware(['auth.mobile'])->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetPelanggaranNonKBMSiswa']);
             });
 
-            //proses
+            //done
             Route::prefix('komplain-sarpras')->group(function () {
-
-                Route::post('ruangan/get', [Apiv1Controller::class, 'actionGetDataKomplainRuanganSiswa']);
-                Route::post('buku-alat/get', [Apiv1Controller::class, 'actionGetDataBukuAlatSiswa']);
+                Route::post('ruangan/get', [Apiv1Controller::class, 'actionGetRuangan']);
+                Route::post('inventaris-ruangan/get', [Apiv1Controller::class, 'actionGetInventarisRuangan']);
+                Route::post('buku-alat/get', [Apiv1Controller::class, 'actionGetBukuAlat']);
+                Route::post('ruangan-list/get', [Apiv1Controller::class, 'actionGetDataKomplainRuanganSiswa']);
+                Route::post('buku-alat-list/get', [Apiv1Controller::class, 'actionGetDataBukuAlatSiswa']);
                 Route::post('ruangan/detail', [Apiv1Controller::class, 'actionGetKomplainRuanganSiswa']);
                 Route::post('buku-alat/detail', [Apiv1Controller::class, 'actionGetKomplainBukuAlatSiswa']);
                 Route::post('{mode}/submit', [Apiv1Controller::class, 'actionKomplainSarprasSiswa']);
@@ -294,9 +296,9 @@ Route::middleware(['auth.mobile'])->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetPrestasiSiswa']);
             });
 
-            Route::post('ruangan/get', [Apiv1Controller::class, 'actionGetRuangan']);
-            Route::post('inventaris-ruangan/get', [Apiv1Controller::class, 'actionGetInventarisRuangan']);
-            Route::post('buku-alat/get', [Apiv1Controller::class, 'actionGetBukuAlat']);
+            Route::prefix('fingerprint')->group(function () {
+                Route::post('get', [Apiv1Controller::class, 'actionGetFingerprint']);
+            });
         });
     });
 });
