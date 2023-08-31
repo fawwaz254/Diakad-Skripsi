@@ -3622,4 +3622,30 @@ class Apiv1Controller extends BaseController
             )
         ]);
     }
+
+    public function actionGetPresensiGuru(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+
+        $bulan = $input->bulan;
+        $tahun = $input->tahun;
+
+        $presensi_harian = PresensiMpSiswa::where('id_siswa', $siswa->id_siswa)
+            ->whereHas('presensi_mp', function ($q) use ($bulan, $tahun) {
+                $q->whereMonth('tgl_presensi', $bulan)->whereYear('tgl_presensi', $tahun);
+            })->with('presensi_mp.kelas_mp', 'presensi_mp.jadwal_kelas_mp.jadwal_hari')
+            ->get();
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'presensi_harian' => $presensi_harian
+            )
+        ]);
+    }
 }
