@@ -58,7 +58,9 @@ use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\LibGlobal;
-
+use App\Models\ManajemenHariLibur;
+use App\Models\PresensiPengguna;
+use App\Models\ShiftPengguna;
 use DB;
 use Validator;
 
@@ -1724,21 +1726,21 @@ class Apiv1Controller extends BaseController
     {
         $input = (object) $request->input();
 
-        $validator = Validator::make($request->all(), [
-            'id_ruangan' => 'required'
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'id_ruangan' => 'required'
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status_code'     => 300,
-                'status_text'     => 'Failed',
-                'message' => $validator->errors()->first()
-            ]);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'status_code'     => 300,
+        //         'status_text'     => 'Failed',
+        //         'message' => $validator->errors()->first()
+        //     ]);
+        // }
 
         $auth_data = $input->auth_data;
 
-        $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data, $input->id_ruangan);
+        $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data);
 
         return response()->json([
             'status_code'     => 200,
@@ -3156,10 +3158,10 @@ class Apiv1Controller extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $kerja = UnitKerja::select("id_unit_kerja", "nm_unit_kerja")->orderBy("nm_unit_kerja")->get();
+        // $kerja = UnitKerja::select("id_unit_kerja", "nm_unit_kerja")->orderBy("nm_unit_kerja")->get();
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        // $now = Carbon::now(env('APP_TIMEZONE', ''));
         if ($request->segment(3) == "guru") {
             $data_actor = Guru::select("id_guru", "id_pengguna", "id_unit_kerja", "jenis_kelamin", "tgl_lahir", "nm_ibu_kandung", "alamat_jalan", "alamat_rt", "alamat_rw", "alamat_dusun", "alamat_kelurahan", "alamat_kecamatan", "alamat_kodepos", "alamat_kota", "alamat_provinsi", "id_agama", "npwp_ptk", "kewarganegaraan", "status_kawin", "nm_pasangan_ptk", "nomor_hp", "email")->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->get()->first();
         } elseif ($request->segment(3) == "tendik") {
@@ -3169,9 +3171,10 @@ class Apiv1Controller extends BaseController
         } elseif ($request->segment(3) == "siswa") {
             $data_actor = Siswa::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->get()->first();
         }
-        $kota = Kota::select("id_kota", "id_provinsi", "nm_kota")->where('kota.is_aktif', '=', 1)->get();
-        $provinsi = Provinsi::select("id_provinsi", "nm_provinsi")->where('provinsi.is_aktif', '=', 1)->get();
-        $agama = Agama::select("id_agama", "kode_agama", "nm_agama")->get();
+        // $kota = Kota::select("id_kota", "id_provinsi", "nm_kota")->where('kota.is_aktif', '=', 1)->get();
+        // $provinsi = Provinsi::select("id_provinsi", "nm_provinsi")->where('provinsi.is_aktif', '=', 1)->get();
+        // $agama = Agama::select("id_agama", "kode_agama", "nm_agama")->get();
+
 
         return response()->json([
             'status_code'     => 200,
@@ -3179,9 +3182,9 @@ class Apiv1Controller extends BaseController
             'message'     => '',
             'data' => array(
                 'data_actor' => $data_actor,
-                'provinsi' => $provinsi,
-                'kota' => $kota,
-                'agama' => $agama,
+                // 'provinsi' => $provinsi,
+                // 'kota' => $kota,
+                // 'agama' => $agama,
                 'data_diri' => $auth_data->pengguna->only(
                     "id_pengguna",
                     "id_status_pengguna",
@@ -3193,7 +3196,7 @@ class Apiv1Controller extends BaseController
                     "nomor_hp_pengguna",
                     "path_foto_pengguna"
                 ),
-                "kerja" => $kerja,
+                // "kerja" => $kerja,
             )
         ]);
     }
@@ -3257,7 +3260,6 @@ class Apiv1Controller extends BaseController
         // else {
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-
         DB::beginTransaction();
 
         try {
@@ -3272,123 +3274,123 @@ class Apiv1Controller extends BaseController
             $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
             $pengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
             $pengguna->created_at               = $now;
-            $pengguna->gelar_depan              = $input->gelar_depan;
-            $pengguna->gelar_belakang           = $input->gelar_belakang;
+            // $pengguna->gelar_depan              = $input->gelar_depan;
+            // $pengguna->gelar_belakang           = $input->gelar_belakang;
             $pengguna->save();
 
-            if ($request->segment(3) == "guru") {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                // dd($input->jenis_kelamin);
-                $guru                           =  Guru::where("id_pengguna", "=", $input->auth_data->pengguna->id_pengguna)->first();
-                //    dd($guru);
-                $guru->id_unit_kerja            = $input->id_unit_kerja;
-                /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
-                $guru->jenis_kelamin            = $input->jenis_kelamin;
-                $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
-                $guru->nm_ibu_kandung           = $input->nm_ibu_kandung;
-                $guru->alamat_jalan             = $input->alamat_jalan;
-                $guru->alamat_rt                = $input->alamat_rt;
-                $guru->alamat_rw                = $input->alamat_rw;
-                $guru->alamat_dusun             = $input->alamat_dusun;
-                $guru->alamat_kelurahan         = $input->alamat_kelurahan;
-                $guru->alamat_kecamatan         = $input->alamat_kecamatan;
-                $guru->alamat_kodepos           = $input->alamat_kodepos;
-                $guru->alamat_kota              = $input->alamat_kota;
-                $guru->alamat_provinsi          = $input->alamat_provinsi;
-                $guru->id_agama                 = $input->id_agama;
-                $guru->npwp_ptk                 = $input->npwp_ptk;
-                $guru->kewarganegaraan          = $input->kewarganegaraan;
-                $guru->status_kawin             = $input->status_kawin;
-                $guru->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
-                $guru->nomor_hp                 = $input->nomor_hp;
-                $guru->email                    = $input->email;
-                $guru->save();
-            } elseif ($request->segment(3) == "tendik") {
+            // if ($request->segment(3) == "guru") {
+            //     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            //     // dd($input->jenis_kelamin);
+            //     $guru                           =  Guru::where("id_pengguna", "=", $input->auth_data->pengguna->id_pengguna)->first();
+            //     //    dd($guru);
+            //     $guru->id_unit_kerja            = $input->id_unit_kerja;
+            //     /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
+            //     $guru->jenis_kelamin            = $input->jenis_kelamin;
+            //     $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
+            //     $guru->nm_ibu_kandung           = $input->nm_ibu_kandung;
+            //     $guru->alamat_jalan             = $input->alamat_jalan;
+            //     $guru->alamat_rt                = $input->alamat_rt;
+            //     $guru->alamat_rw                = $input->alamat_rw;
+            //     $guru->alamat_dusun             = $input->alamat_dusun;
+            //     $guru->alamat_kelurahan         = $input->alamat_kelurahan;
+            //     $guru->alamat_kecamatan         = $input->alamat_kecamatan;
+            //     $guru->alamat_kodepos           = $input->alamat_kodepos;
+            //     $guru->alamat_kota              = $input->alamat_kota;
+            //     $guru->alamat_provinsi          = $input->alamat_provinsi;
+            //     $guru->id_agama                 = $input->id_agama;
+            //     $guru->npwp_ptk                 = $input->npwp_ptk;
+            //     $guru->kewarganegaraan          = $input->kewarganegaraan;
+            //     $guru->status_kawin             = $input->status_kawin;
+            //     $guru->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
+            //     $guru->nomor_hp                 = $input->nomor_hp;
+            //     $guru->email                    = $input->email;
+            //     $guru->save();
+            // } elseif ($request->segment(3) == "tendik") {
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            //     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                $staff                           = Staff::find($input->auth_data->pengguna->id_pengguna);;
-                $staff->id_staff                 = $id;
-                $staff->id_pengguna              = $pengguna->id_pengguna;
-                $staff->id_unit_kerja            = $input->id_unit_kerja;
-                $staff->jenis_jabatan            = $input->jenis_jabatan;
-                $staff->jenis_kelamin            = $input->jenis_kelamin;
-                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
-                $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
-                $staff->alamat_jalan             = $input->alamat_jalan;
-                $staff->alamat_rt                = $input->alamat_rt;
-                $staff->alamat_rw                = $input->alamat_rw;
-                $staff->alamat_dusun             = $input->alamat_dusun;
-                $staff->alamat_kelurahan         = $input->alamat_kelurahan;
-                $staff->alamat_kecamatan         = $input->alamat_kecamatan;
-                $staff->alamat_kodepos           = $input->alamat_kodepos;
-                $staff->alamat_kota              = $input->alamat_kota;
-                $staff->alamat_provinsi          = $input->alamat_provinsi;
-                $staff->id_agama                 = $input->id_agama;
-                $staff->npwp_ptk                 = $input->npwp_ptk;
-                $staff->kewarganegaraan          = $input->kewarganegaraan;
-                $staff->status_kawin             = $input->status_kawin;
-                $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
-                $staff->nomor_hp                 = $input->nomor_hp;
-                $staff->email                    = $input->email;
-                $staff->save();
-            } elseif ($request->segment(3) == "wali-murid") {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            //     $staff                           = Staff::find($input->auth_data->pengguna->id_pengguna);;
+            //     $staff->id_staff                 = $id;
+            //     $staff->id_pengguna              = $pengguna->id_pengguna;
+            //     $staff->id_unit_kerja            = $input->id_unit_kerja;
+            //     $staff->jenis_jabatan            = $input->jenis_jabatan;
+            //     $staff->jenis_kelamin            = $input->jenis_kelamin;
+            //     $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
+            //     $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
+            //     $staff->alamat_jalan             = $input->alamat_jalan;
+            //     $staff->alamat_rt                = $input->alamat_rt;
+            //     $staff->alamat_rw                = $input->alamat_rw;
+            //     $staff->alamat_dusun             = $input->alamat_dusun;
+            //     $staff->alamat_kelurahan         = $input->alamat_kelurahan;
+            //     $staff->alamat_kecamatan         = $input->alamat_kecamatan;
+            //     $staff->alamat_kodepos           = $input->alamat_kodepos;
+            //     $staff->alamat_kota              = $input->alamat_kota;
+            //     $staff->alamat_provinsi          = $input->alamat_provinsi;
+            //     $staff->id_agama                 = $input->id_agama;
+            //     $staff->npwp_ptk                 = $input->npwp_ptk;
+            //     $staff->kewarganegaraan          = $input->kewarganegaraan;
+            //     $staff->status_kawin             = $input->status_kawin;
+            //     $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
+            //     $staff->nomor_hp                 = $input->nomor_hp;
+            //     $staff->email                    = $input->email;
+            //     $staff->save();
+            // } elseif ($request->segment(3) == "wali-murid") {
+            //     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                $staff                           =  WaliMurid::find($input->auth_data->pengguna->id_pengguna);;
-                $staff->id_staff                 = $id;
-                $staff->id_pengguna              = $pengguna->id_pengguna;
-                $staff->id_unit_kerja            = $input->id_unit_kerja;
-                /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
-                $staff->jenis_kelamin            = $input->jenis_kelamin;
-                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
-                $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
-                $staff->alamat_jalan             = $input->alamat_jalan;
-                $staff->alamat_rt                = $input->alamat_rt;
-                $staff->alamat_rw                = $input->alamat_rw;
-                $staff->alamat_dusun             = $input->alamat_dusun;
-                $staff->alamat_kelurahan         = $input->alamat_kelurahan;
-                $staff->alamat_kecamatan         = $input->alamat_kecamatan;
-                $staff->alamat_kodepos           = $input->alamat_kodepos;
-                $staff->alamat_kota              = $input->alamat_kota;
-                $staff->alamat_provinsi          = $input->alamat_provinsi;
-                $staff->id_agama                 = $input->id_agama;
-                $staff->npwp_ptk                 = $input->npwp_ptk;
-                $staff->kewarganegaraan          = $input->kewarganegaraan;
-                $staff->status_kawin             = $input->status_kawin;
-                $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
-                $staff->nomor_hp                 = $input->nomor_hp;
-                $staff->email                    = $input->email;
-                $staff->save();
-            } elseif ($request->segment(3) == "siswa") {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            //     $staff                           =  WaliMurid::find($input->auth_data->pengguna->id_pengguna);;
+            //     $staff->id_staff                 = $id;
+            //     $staff->id_pengguna              = $pengguna->id_pengguna;
+            //     $staff->id_unit_kerja            = $input->id_unit_kerja;
+            //     /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
+            //     $staff->jenis_kelamin            = $input->jenis_kelamin;
+            //     $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
+            //     $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
+            //     $staff->alamat_jalan             = $input->alamat_jalan;
+            //     $staff->alamat_rt                = $input->alamat_rt;
+            //     $staff->alamat_rw                = $input->alamat_rw;
+            //     $staff->alamat_dusun             = $input->alamat_dusun;
+            //     $staff->alamat_kelurahan         = $input->alamat_kelurahan;
+            //     $staff->alamat_kecamatan         = $input->alamat_kecamatan;
+            //     $staff->alamat_kodepos           = $input->alamat_kodepos;
+            //     $staff->alamat_kota              = $input->alamat_kota;
+            //     $staff->alamat_provinsi          = $input->alamat_provinsi;
+            //     $staff->id_agama                 = $input->id_agama;
+            //     $staff->npwp_ptk                 = $input->npwp_ptk;
+            //     $staff->kewarganegaraan          = $input->kewarganegaraan;
+            //     $staff->status_kawin             = $input->status_kawin;
+            //     $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
+            //     $staff->nomor_hp                 = $input->nomor_hp;
+            //     $staff->email                    = $input->email;
+            //     $staff->save();
+            // } elseif ($request->segment(3) == "siswa") {
+            //     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                $staff                           = Siswa::find($input->auth_data->pengguna->id_pengguna);
-                $staff->id_staff                 = $id;
-                $staff->id_pengguna              = $pengguna->id_pengguna;
-                $staff->id_unit_kerja            = $input->id_unit_kerja;
-                /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
-                $staff->jenis_kelamin            = $input->jenis_kelamin;
-                $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
-                $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
-                $staff->alamat_jalan             = $input->alamat_jalan;
-                $staff->alamat_rt                = $input->alamat_rt;
-                $staff->alamat_rw                = $input->alamat_rw;
-                $staff->alamat_dusun             = $input->alamat_dusun;
-                $staff->alamat_kelurahan         = $input->alamat_kelurahan;
-                $staff->alamat_kecamatan         = $input->alamat_kecamatan;
-                $staff->alamat_kodepos           = $input->alamat_kodepos;
-                $staff->alamat_kota              = $input->alamat_kota;
-                $staff->alamat_provinsi          = $input->alamat_provinsi;
-                $staff->id_agama                 = $input->id_agama;
-                $staff->npwp_ptk                 = $input->npwp_ptk;
-                $staff->kewarganegaraan          = $input->kewarganegaraan;
-                $staff->status_kawin             = $input->status_kawin;
-                $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
-                $staff->nomor_hp                 = $input->nomor_hp;
-                $staff->email                    = $input->email;
-                $staff->save();
-            }
+            //     $staff                           = Siswa::find($input->auth_data->pengguna->id_pengguna);
+            //     $staff->id_staff                 = $id;
+            //     $staff->id_pengguna              = $pengguna->id_pengguna;
+            //     $staff->id_unit_kerja            = $input->id_unit_kerja;
+            //     /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
+            //     $staff->jenis_kelamin            = $input->jenis_kelamin;
+            //     $staff->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
+            //     $staff->nm_ibu_kandung           = $input->nm_ibu_kandung;
+            //     $staff->alamat_jalan             = $input->alamat_jalan;
+            //     $staff->alamat_rt                = $input->alamat_rt;
+            //     $staff->alamat_rw                = $input->alamat_rw;
+            //     $staff->alamat_dusun             = $input->alamat_dusun;
+            //     $staff->alamat_kelurahan         = $input->alamat_kelurahan;
+            //     $staff->alamat_kecamatan         = $input->alamat_kecamatan;
+            //     $staff->alamat_kodepos           = $input->alamat_kodepos;
+            //     $staff->alamat_kota              = $input->alamat_kota;
+            //     $staff->alamat_provinsi          = $input->alamat_provinsi;
+            //     $staff->id_agama                 = $input->id_agama;
+            //     $staff->npwp_ptk                 = $input->npwp_ptk;
+            //     $staff->kewarganegaraan          = $input->kewarganegaraan;
+            //     $staff->status_kawin             = $input->status_kawin;
+            //     $staff->nm_pasangan_ptk          = $input->nm_pasangan_ptk;
+            //     $staff->nomor_hp                 = $input->nomor_hp;
+            //     $staff->email                    = $input->email;
+            //     $staff->save();
+            // }
             DB::commit();
             // all good
 
@@ -3451,5 +3453,199 @@ class Apiv1Controller extends BaseController
                 ]);
             }
         }
+    }
+
+    public function actionGetDataKomplainRuanganSiswa(Request $request)
+    {
+        $list_data = KomplainSarpras::whereNotNull('id_ruangan')->with('ruangan')->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'komplainRuangan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetDataBukuAlatSiswa(Request $request)
+    {
+        $list_data = KomplainSarpras::whereNotNull('id_buku_alat')->with('buku_alat')->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'komplainRuangan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetFingerprint(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $presences = PresensiPengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereBetween('date', [$input->start_date, $input->end_date])->get();
+        $list_shiftPengguna = ShiftPengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereBetween('date', [$input->start_date, $input->end_date])->with('shift_master')->get();
+        $libur = ManajemenHariLibur::whereBetween('date', [$input->start_date, $input->end_date])->get();
+        $dates = CarbonPeriod::create($input->start_date, $input->end_date);
+
+        $hasil = [];
+
+        $jumlah_hadir = 0;
+        $jumlah_sakit = 0;
+        $jumlah_izin = 0;
+        $jumlah_telat = 0;
+        $jumlah_pulangcepat = 0;
+        $jumlah_alpha = 0;
+        $tidak_checkout = 0;
+
+        $hariIndo = [
+            0 => 'Minggu',
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+        ];
+
+        foreach ($dates as $key => $value) {
+
+            $hasil[$key]['tanggal'] = $value->format('d-M-Y');
+            $hasil[$key]['hari'] = $hariIndo[$value->dayOfWeek];
+            $hasil[$key]['check_in'] = '-';
+            $hasil[$key]['check_out'] = '-';
+            $hasil[$key]['status'] = '';
+            $hasil[$key]['shift'] = '';
+            $hasil[$key]['start'] = '';
+            $hasil[$key]['end'] = '';
+
+            $cek_libur = $libur->where('date', $value->format('Y-m-d'))->first();
+            $shiftPengguna = $list_shiftPengguna->firstWhere('date', $value->format('Y-m-d'));
+            $attendance = $presences->firstWhere('date', $value->format('Y-m-d'));
+
+            // if (!empty($shiftPengguna->shift_master)) {
+            $shiftMaster = $shiftPengguna->shift_master;
+            if (!empty($shiftMaster)) {
+                $hasil[$key]['shift'] = $shiftMaster['code'];
+                $hasil[$key]['start'] = minimalisTime($shiftMaster['start_time']);
+                $hasil[$key]['end'] = minimalisTime($shiftMaster['end_time']);
+            }
+            // }
+
+            if (!empty($attendance)) {
+
+                if ($attendance->status) {
+                    $hasil[$key]['status'] = $attendance->status;
+                    if ($attendance->status == 'sakit') {
+                        $jumlah_sakit++;
+                    } elseif ($attendance->status == 'izin') {
+                        $jumlah_izin++;
+                    }
+                }
+
+                if (isset($shiftMaster['start_time']) && $shiftMaster['end_time']) {
+
+                    if ($attendance->check_in) {
+                        $hasil[$key]['check_in'] = $attendance->check_in;
+                        $hasil[$key]['status'] = "Masuk";
+                        $jumlah_hadir++;
+                    }
+
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
+                        $jumlah_telat++;
+                        $hasil[$key]['status'] = "Masuk | Telat";
+                    }
+
+                    if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+                        $jumlah_pulangcepat++;
+                        $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
+                    }
+
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                        $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
+                    }
+
+                    if ($attendance->check_out) {
+                        $hasil[$key]['check_out'] = $attendance->check_out;
+                    }
+
+                    if ($value->format('Y-m-d') < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                        $hasil[$key]['status'] = 'Masuk | Tidak Checkout';
+                        $tidak_checkout++;
+                    }
+
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $value->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = "Masuk | Telat & Tidak Checkout";
+                    }
+                }
+            } else {
+                if (!empty($shiftMaster)) {
+                    if ($value->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = 'Alpha';
+                        $jumlah_alpha++;
+                    } else if ($value->format('Y-m-d') == Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = 'Belum Absent';
+                    } else {
+                        $hasil[$key]['status'] = '';
+                    }
+
+                    if ($value->format('Y-m-d') < Carbon::now()->format('Y-m-d') && $cek_libur) {
+                        $jumlah_alpha--;
+                    }
+                }
+            }
+            if (!empty($cek_libur)) {
+                $hasil[$key]['status'] = 'Libur';
+            }
+        }
+
+        $rekap['jumlah_hadir'] = $jumlah_hadir;
+        $rekap['jumlah_sakit'] = $jumlah_sakit;
+        $rekap['jumlah_izin'] = $jumlah_izin;
+        $rekap['jumlah_telat'] = $jumlah_telat;
+        $rekap['jumlah_pulangcepat'] = $jumlah_pulangcepat;
+        $rekap['jumlah_alpha'] = $jumlah_alpha;
+        $rekap['tidak_checkout'] = $tidak_checkout;
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'presences' => $hasil,
+                'rekap' => $rekap
+            )
+        ]);
+    }
+
+    public function actionGetPresensiGuru(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+
+        $bulan = $input->bulan;
+        $tahun = $input->tahun;
+
+        $presensi_harian = PresensiMpSiswa::where('id_siswa', $siswa->id_siswa)
+            ->whereHas('presensi_mp', function ($q) use ($bulan, $tahun) {
+                $q->whereMonth('tgl_presensi', $bulan)->whereYear('tgl_presensi', $tahun);
+            })->with('presensi_mp.kelas_mp', 'presensi_mp.jadwal_kelas_mp.jadwal_hari')
+            ->get();
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'presensi_harian' => $presensi_harian
+            )
+        ]);
     }
 }
