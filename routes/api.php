@@ -299,6 +299,9 @@ Route::middleware(['auth.mobile'])->group(function () {
             Route::prefix('fingerprint')->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetFingerprint']);
             });
+            Route::prefix('presensiGuru')->group(function () {
+                Route::post('get', [Apiv1Controller::class, 'actionGetPresensiGuru']);
+            });
         });
     });
 });

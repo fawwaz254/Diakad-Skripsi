@@ -162,6 +162,7 @@ class SppController extends BaseController
 
     public function actionMenuUpload(Request $request)
     {
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
