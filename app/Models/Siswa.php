@@ -126,6 +126,11 @@ class Siswa extends Model
         return $this->belongsTo(PelanggaranSiswa::class, 'id_siswa', 'id_siswa');
     }
 
+    public function wa_notif_kehadiran_siswa()
+    {
+        return $this->hasMany(WaNotifKehadiranSiswa::class, 'id_siswa');
+    }
+
     public function all_tagihan()
     {
         $tagihan = $this->tagihan_biaya()->isTagih()->with(

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Setting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -20,12 +21,19 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('notification:attendance')
-            ->hourly()
-            ->between('8:00', '15:00')
-            ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
-            ->timezone('Asia/Jakarta')
-            ->withoutOverlapping();
+        $timeRange = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->value('value');
+        $timeParts = explode('-', $timeRange);
+        if (count($timeParts) === 2) {
+            $start_time = trim($timeParts[0]);
+            $end_time = trim($timeParts[1]);
+
+            $schedule->command('notification:attendance')
+                ->hourly()
+                ->between($start_time, $end_time)
+                ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
+                ->timezone('Asia/Jakarta')
+                ->withoutOverlapping();
+        }
 
         $schedule->command('notification:payment')
             ->twiceDaily(11, 15)
