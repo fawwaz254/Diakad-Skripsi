@@ -149,7 +149,7 @@ class TagihanSiswaController extends BaseController
     // Action POST
     public function actionTagihanSiswa(Request $request, $mode)
     {
-
+        set_time_limit(-1);
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
