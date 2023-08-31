@@ -58,7 +58,9 @@ use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\LibGlobal;
-
+use App\Models\ManajemenHariLibur;
+use App\Models\PresensiPengguna;
+use App\Models\ShiftPengguna;
 use DB;
 use Validator;
 
@@ -3477,6 +3479,146 @@ class Apiv1Controller extends BaseController
             'message'     => '',
             'data' => array(
                 'komplainRuangan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetFingerprint(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $presences = PresensiPengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereBetween('date', [$input->start_date, $input->end_date])->get();
+        $list_shiftPengguna = ShiftPengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereBetween('date', [$input->start_date, $input->end_date])->with('shift_master')->get();
+        $libur = ManajemenHariLibur::whereBetween('date', [$input->start_date, $input->end_date])->get();
+        $dates = CarbonPeriod::create($input->start_date, $input->end_date);
+
+        $hasil = [];
+
+        $jumlah_hadir = 0;
+        $jumlah_sakit = 0;
+        $jumlah_izin = 0;
+        $jumlah_telat = 0;
+        $jumlah_pulangcepat = 0;
+        $jumlah_alpha = 0;
+        $tidak_checkout = 0;
+
+        $hariIndo = [
+            0 => 'Minggu',
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+        ];
+
+        foreach ($dates as $key => $value) {
+
+            $hasil[$key]['tanggal'] = $value->format('d-M-Y');
+            $hasil[$key]['hari'] = $hariIndo[$value->dayOfWeek];
+            $hasil[$key]['check_in'] = '-';
+            $hasil[$key]['check_out'] = '-';
+            $hasil[$key]['status'] = '';
+            $hasil[$key]['shift'] = '';
+            $hasil[$key]['start'] = '';
+            $hasil[$key]['end'] = '';
+
+            $cek_libur = $libur->where('date', $value->format('Y-m-d'))->first();
+            $shiftPengguna = $list_shiftPengguna->firstWhere('date', $value->format('Y-m-d'));
+            $attendance = $presences->firstWhere('date', $value->format('Y-m-d'));
+
+            // if (!empty($shiftPengguna->shift_master)) {
+            $shiftMaster = $shiftPengguna->shift_master;
+            if (!empty($shiftMaster)) {
+                $hasil[$key]['shift'] = $shiftMaster['code'];
+                $hasil[$key]['start'] = minimalisTime($shiftMaster['start_time']);
+                $hasil[$key]['end'] = minimalisTime($shiftMaster['end_time']);
+            }
+            // }
+
+            if (!empty($attendance)) {
+
+                if ($attendance->status) {
+                    $hasil[$key]['status'] = $attendance->status;
+                    if ($attendance->status == 'sakit') {
+                        $jumlah_sakit++;
+                    } elseif ($attendance->status == 'izin') {
+                        $jumlah_izin++;
+                    }
+                }
+
+                if (isset($shiftMaster['start_time']) && $shiftMaster['end_time']) {
+
+                    if ($attendance->check_in) {
+                        $hasil[$key]['check_in'] = $attendance->check_in;
+                        $hasil[$key]['status'] = "Masuk";
+                        $jumlah_hadir++;
+                    }
+
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
+                        $jumlah_telat++;
+                        $hasil[$key]['status'] = "Masuk | Telat";
+                    }
+
+                    if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+                        $jumlah_pulangcepat++;
+                        $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
+                    }
+
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                        $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
+                    }
+
+                    if ($attendance->check_out) {
+                        $hasil[$key]['check_out'] = $attendance->check_out;
+                    }
+
+                    if ($value->format('Y-m-d') < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                        $hasil[$key]['status'] = 'Masuk | Tidak Checkout';
+                        $tidak_checkout++;
+                    }
+
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $value->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = "Masuk | Telat & Tidak Checkout";
+                    }
+                }
+            } else {
+                if (!empty($shiftMaster)) {
+                    if ($value->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = 'Alpha';
+                        $jumlah_alpha++;
+                    } else if ($value->format('Y-m-d') == Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = 'Belum Absent';
+                    } else {
+                        $hasil[$key]['status'] = '';
+                    }
+
+                    if ($value->format('Y-m-d') < Carbon::now()->format('Y-m-d') && $cek_libur) {
+                        $jumlah_alpha--;
+                    }
+                }
+            }
+            if (!empty($cek_libur)) {
+                $hasil[$key]['status'] = 'Libur';
+            }
+        }
+
+        $rekap['jumlah_hadir'] = $jumlah_hadir;
+        $rekap['jumlah_sakit'] = $jumlah_sakit;
+        $rekap['jumlah_izin'] = $jumlah_izin;
+        $rekap['jumlah_telat'] = $jumlah_telat;
+        $rekap['jumlah_pulangcepat'] = $jumlah_pulangcepat;
+        $rekap['jumlah_alpha'] = $jumlah_alpha;
+        $rekap['tidak_checkout'] = $tidak_checkout;
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'presences' => $hasil,
+                'rekap' => $rekap
             )
         ]);
     }
