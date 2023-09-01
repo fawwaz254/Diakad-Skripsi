@@ -44,7 +44,7 @@ class SendPaymentNotification extends Command
         $url = env('WHATSAPP_API_SEND');
         $now = now()->toDateString();
 
-        $listTagihanBiaya = TagihanBiaya::selectRaw('tagihan_biaya.id_tagihan_biaya, tagihan_biaya.id_siswa, tagihan_biaya.besar_pembayaran, tagihan_biaya.tgl_pelunasan, tagihan_biaya.notification_sent, pengguna.nm_pengguna, wali_murid.nomor_hp_wali_murid, CONCAT("SPP ", bulan.nm_bulan) as bulan_pembayaran')
+        $list_tagihan_biaya = TagihanBiaya::selectRaw('tagihan_biaya.id_tagihan_biaya, tagihan_biaya.id_siswa, tagihan_biaya.besar_pembayaran, tagihan_biaya.tgl_pelunasan, tagihan_biaya.notification_sent, pengguna.nm_pengguna, wali_murid.nomor_hp_wali_murid, CONCAT("SPP ", bulan.nm_bulan) as bulan_pembayaran')
             ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
             ->join('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
             ->leftJoin('pembayaran_biaya', function ($q) {
@@ -61,67 +61,63 @@ class SendPaymentNotification extends Command
             ->orderBy('detail_biaya.id_bulan', 'asc')
             ->get();
 
-        if ($listTagihanBiaya->isEmpty() || empty($url)) {
+        if ($list_tagihan_biaya->isEmpty() || empty($url)) {
             return 0;
         }
 
         try {
-            $namaSekolah = Sekolah::first()->nm_sekolah;
+            $nama_sekolah = Sekolah::first()->nm_sekolah;
 
-            $tagihanToUpdate = [];
+            $tagihan_to_update = [];
 
-            foreach ($listTagihanBiaya->groupBy('id_siswa') as $groupTagihanBiaya) {
-                $bulanPembayaran = '';
-                $nomorHpWaliMurid = '';
-                $namaPengguna = '';
+            foreach ($list_tagihan_biaya->groupBy('id_siswa') as $group_tagihan_biaya) {
+                $nama_pengguna = '';
+                $bulan_pembayaran = '';
+                $nomor_hp_wali_murid = '';
 
-                foreach ($groupTagihanBiaya as $tagihan) {
-                    $bulanPembayaran .= $tagihan->bulan_pembayaran . ', ';
-                    $nomorHpWaliMurid = $tagihan->nomor_hp_wali_murid;
-                    $namaPengguna = $tagihan->nm_pengguna;
+                foreach ($group_tagihan_biaya as $tagihan) {
+                    $nama_pengguna = $tagihan->nm_pengguna;
+                    $bulan_pembayaran .= $tagihan->bulan_pembayaran . ', ';
+                    $nomor_hp_wali_murid = $tagihan->nomor_hp_wali_murid;
                 }
 
-                if (empty($nomorHpWaliMurid)) {
+                if (empty($nomor_hp_wali_murid)) {
                     continue;
                 }
 
                 $template = Setting::where('key_setting', 'template_notif_pembayaran_spp')->firstOrFail()->value;
-                $template = str_replace('{{STUDENT_NAME}}', $namaPengguna, $template);
-                $template = str_replace('{{SCHOOL_NAME}}', $namaSekolah, $template);
+                $template = str_replace('{{STUDENT_NAME}}', $nama_pengguna, $template);
+                $template = str_replace('{{SCHOOL_NAME}}', $nama_sekolah, $template);
                 $template = str_replace('{{PAYMENT_DATE}}', \Carbon\Carbon::parse($now)->translatedFormat('l, d F Y'), $template);
-                $template = str_replace('{{PAYMENT_MONTH}}', $bulanPembayaran, $template);
-                $template = str_replace('{{PAYMENT_AMOUNT}}', number_format($groupTagihanBiaya->sum('besar_pembayaran'), '0', '', '.'), $template);
+                $template = str_replace('{{PAYMENT_MONTH}}', $bulan_pembayaran, $template);
+                $template = str_replace('{{PAYMENT_AMOUNT}}', number_format($group_tagihan_biaya->sum('besar_pembayaran'), '0', '', '.'), $template);
                 $template = str_replace('\n', "\n", $template);
 
                 $data = [
                     'message' => $template,
-                    'phone' => $nomorHpWaliMurid,
+                    'phone' => $nomor_hp_wali_murid,
                 ];
 
                 $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
                     ->post($url, $data);
 
-                $responseData = $response->json();
+                $response_data = $response->json();
 
-                if ($responseData['response'] === 'Device Bot Logged Out') {
-                    \Log::info("Warning: Failed to send notification, Device bot logged out");
+                if ($response_data['response'] === 'Device Bot Logged Out') {
+                    \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
                 } else {
-                    $tagihanToUpdate = array_merge($tagihanToUpdate, $groupTagihanBiaya->pluck('id_tagihan_biaya')->toArray());
-                    \Log::info("Success: Notification payment sent at " . now());
+                    $tagihan_to_update = array_merge($tagihan_to_update, $group_tagihan_biaya->pluck('id_tagihan_biaya')->toArray());
+                    \Log::info("Notification Success: Notification payment sent at " . now());
                 }
 
-                sleep(rand(15, 20));
+                sleep(rand(5, 20));
             }
 
-            if (!empty($tagihanToUpdate)) {
-                TagihanBiaya::whereIn('id_tagihan_biaya', $tagihanToUpdate)->update(['notification_sent' => 1]);
+            if (!empty($tagihan_to_update)) {
+                TagihanBiaya::whereIn('id_tagihan_biaya', $tagihan_to_update)->update(['notification_sent' => 1]);
             }
         } catch (\Exception $e) {
-            if ($e->getCode() === 0) {
-                \Log::info("Error: Connection to WhatsApp Api is refused");
-            } else {
-                \Log::info($e);
-            }
+            \Log::info("Notification Error: " . $e->getMessage());
         }
     }
 }
