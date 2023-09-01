@@ -3648,4 +3648,18 @@ class Apiv1Controller extends BaseController
             )
         ]);
     }
+    public function actionGetLowonganKerja(Request $request)
+    {
+
+
+
+        // return response()->json([
+        //     'status_code'     => 200,
+        //     'status_text'     => 'Success',
+        //     'message'     => '',
+        //     'data' => array(
+        //         'presensi_harian' => $presensi_harian
+        //     )
+        // ]);
+    }
 }
