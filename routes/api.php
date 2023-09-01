@@ -295,12 +295,17 @@ Route::middleware(['auth.mobile'])->group(function () {
             Route::prefix('prestasi')->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetPrestasiSiswa']);
             });
-
+            //done
             Route::prefix('fingerprint')->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetFingerprint']);
             });
+            //done
             Route::prefix('presensiGuru')->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetPresensiGuru']);
+            });
+            //proses
+            Route::prefix('presensiGuru')->group(function () {
+                Route::post('get', [Apiv1Controller::class, 'actionGetLowonganKerja']);
             });
         });
     });
