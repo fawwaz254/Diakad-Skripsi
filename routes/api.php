@@ -304,8 +304,8 @@ Route::middleware(['auth.mobile'])->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetPresensiGuru']);
             });
             //proses
-            Route::prefix('presensiGuru')->group(function () {
-                Route::post('get', [Apiv1Controller::class, 'actionGetLowonganKerja']);
+            Route::prefix('bkk')->group(function () {
+                Route::post('get', [Apiv1Controller::class, 'actionGetBkk']);
             });
         });
     });

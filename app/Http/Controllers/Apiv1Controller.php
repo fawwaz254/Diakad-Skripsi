@@ -58,6 +58,7 @@ use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\LibGlobal;
+use App\Models\LowonganKerja;
 use App\Models\ManajemenHariLibur;
 use App\Models\PresensiPengguna;
 use App\Models\ShiftPengguna;
@@ -3648,18 +3649,16 @@ class Apiv1Controller extends BaseController
             )
         ]);
     }
-    public function actionGetLowonganKerja(Request $request)
+    public function actionGetBkk(Request $request)
     {
-
-
-
-        // return response()->json([
-        //     'status_code'     => 200,
-        //     'status_text'     => 'Success',
-        //     'message'     => '',
-        //     'data' => array(
-        //         'presensi_harian' => $presensi_harian
-        //     )
-        // ]);
+        $bkk = LowonganKerja::orderBy('created_at', 'desc')->get();
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'bkk' => $bkk
+            )
+        ]);
     }
 }
