@@ -2,11 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Siswa;
 use App\Models\Sekolah;
 use App\Models\Setting;
 use Illuminate\Console\Command;
 use App\Models\PresensiPengguna;
+use App\Models\ManajemenHariLibur;
 use Illuminate\Support\Facades\Http;
+use App\Models\WaNotifKehadiranSiswa;
 
 class SendAttendanceNotification extends Command
 {
@@ -41,66 +44,142 @@ class SendAttendanceNotification extends Command
      */
     public function handle()
     {
-        $url = env('WHATSAPP_API_SEND');
-        $now = now()->toDateString();
-
-        $listPresensiPengguna = PresensiPengguna::with('pengguna.siswa.wali_murid')
-            ->where([
-                'status_join_table' => 3,
-                'notification_sent' => 0,
-                'date' => $now,
-            ])
-            ->take(250)
-            ->get();
-
-        if ($listPresensiPengguna->isEmpty() || empty($url)) {
-            return 0;
-        }
-
         try {
-            $namaSekolah = Sekolah::first()->nm_sekolah;
+            $url = env('WHATSAPP_API_SEND');
+            if (empty($url)) {
+                return;
+            }
 
-            foreach ($listPresensiPengguna as $presensiPengguna) {
-                $waliMurid = $presensiPengguna->pengguna->siswa->wali_murid;
+            $now = now()->toDateString();
+            $hari_libur = ManajemenHariLibur::where('date', $now)->exists();
 
-                if (!$waliMurid || empty($waliMurid->nomor_hp_wali_murid)) {
-                    continue;
+            if ($hari_libur) {
+                return;
+            }
+
+            $nama_sekolah = Sekolah::value('nm_sekolah');
+            $list_notif_terkirim = WaNotifKehadiranSiswa::whereDate('created_at', $now)->pluck('id_siswa')->toArray();
+            $mode = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->value('value');
+            $base_template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->value('value');
+
+            if ($mode === 'PRESENT_ONLY' || $mode === 'ALL') {
+                $list_presensi_pengguna = PresensiPengguna::with('pengguna.siswa.wali_murid')
+                    ->where('status_join_table', 3)
+                    ->where('date', $now)
+                    ->take(250)
+                    ->get();
+
+                foreach ($list_presensi_pengguna as $presensi_pengguna) {
+                    if (in_array($presensi_pengguna->pengguna->siswa->id_siswa, $list_notif_terkirim)) {
+                        continue;
+                    }
+
+                    $wali_murid = $presensi_pengguna->pengguna->siswa->wali_murid;
+                    if (!$wali_murid || empty($wali_murid->nomor_hp_wali_murid)) {
+                        continue;
+                    }
+
+                    $formatted_date = now()->translatedFormat('l, d F Y');
+                    $formatted_check_in = date('H:i', strtotime($presensi_pengguna->check_in));
+                    $template = $base_template;
+                    $message = str_replace(
+                        ['{{STUDENT_NAME}}', '{{SCHOOL_NAME}}', '{{DATE}}', '{{CHECK_IN}}'],
+                        [$presensi_pengguna->pengguna->nm_pengguna, $nama_sekolah, $formatted_date, $formatted_check_in],
+                        $template
+                    );
+
+                    $data = [
+                        'message' => $message,
+                        'phone' => $wali_murid->nomor_hp_wali_murid,
+                    ];
+
+                    $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                        ->post($url, $data);
+
+                    $response_data = $response->json();
+
+                    if ($response_data['response'] == 'Device Bot Logged Out') {
+                        \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                    } else {
+                        $notif_kehadiran = new WaNotifKehadiranSiswa();
+                        $notif_kehadiran->id_notif = strtotime($now) . uniqid();
+                        $notif_kehadiran->id_siswa = $presensi_pengguna->pengguna->siswa->id_siswa;
+                        $notif_kehadiran->save();
+
+                        \Log::info("Notification Success: Notification attendance sent at " . now());
+                    }
+
+                    sleep(rand(5, 20));
                 }
+            }
 
-                $template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->firstOrFail()->value;
-                $template = str_replace('{{STUDENT_NAME}}', $presensiPengguna->pengguna->nm_pengguna, $template);
-                $template = str_replace('{{SCHOOL_NAME}}', $namaSekolah, $template);
-                $template = str_replace('{{DATE}}', \Carbon\Carbon::parse($presensiPengguna->date)->translatedFormat('l, d F Y'), $template);
-                $template = str_replace('{{CHECK_IN}}', date('H:i', strtotime($presensiPengguna->check_in)), $template);
-                $template = str_replace('\n', "\n", $template);
+            if ($mode === 'ABSENT_ONLY' || $mode === 'ALL') {
+                $id_pengguna_hadir = PresensiPengguna::where('status_join_table', 3)
+                    ->where('date', $now)
+                    ->pluck('id_pengguna')
+                    ->toArray();
 
-                $data = [
-                    'message' => $template,
-                    'phone' => $waliMurid->nomor_hp_wali_murid,
-                ];
+                $list_siswa = Siswa::with([
+                    'pengguna.presensi_pengguna',
+                    'wali_murid',
+                    'pengguna.shiftPengguna' => function ($q) use ($now) {
+                        $q->where('date', $now)->with('shift_master');
+                    }
+                ])
+                    ->whereNotNull('id_kelas')
+                    ->whereHas('pengguna.status_pengguna', function ($q) {
+                        $q->where('aktif_status_pengguna', 1)->where('nm_status_pengguna', 'AKTIF');
+                    })
+                    ->whereHas('pengguna', function ($q) use ($id_pengguna_hadir) {
+                        $q->where('status_join_table', 3)->whereNotIn('pengguna.id_pengguna', $id_pengguna_hadir);
+                    })
+                    ->take(250)
+                    ->get();
 
-                $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
-                    ->post($url, $data);
+                foreach ($list_siswa as $siswa) {
+                    if (in_array($siswa->id_siswa, $list_notif_terkirim)) {
+                        continue;
+                    }
 
-                $responseData = $response->json();
+                    $wali_murid = $siswa->wali_murid;
+                    if (!$wali_murid || empty($wali_murid->nomor_hp_wali_murid)) {
+                        continue;
+                    }
 
-                if ($responseData['response'] == 'Device Bot Logged Out') {
-                    \Log::info("Warning: Failed to send notification, Device bot logged out");
-                } else {
-                    $presensiPengguna->notification_sent = 1;
-                    $presensiPengguna->save();
+                    $formatted_date = now()->translatedFormat('l, d F Y');
+                    $template = $base_template;
+                    $message = str_replace(
+                        ['{{STUDENT_NAME}}', '{{SCHOOL_NAME}}', '{{DATE}}'],
+                        [$siswa->pengguna->nm_pengguna, $nama_sekolah, $formatted_date],
+                        $template
+                    );
 
-                    \Log::info("Success: Notification attendance sent at " . now());
+                    $data = [
+                        'message' => $message,
+                        'phone' => $wali_murid->nomor_hp_wali_murid,
+                    ];
+
+                    $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                        ->post($url, $data);
+
+                    $response_data = $response->json();
+
+                    if ($response_data['response'] == 'Device Bot Logged Out') {
+                        \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                    } else {
+                        $notif_kehadiran = new WaNotifKehadiranSiswa();
+                        $notif_kehadiran->id_notif = strtotime($now) . uniqid();
+                        $notif_kehadiran->id_siswa = $siswa->id_siswa;
+                        $notif_kehadiran->save();
+
+                        \Log::info("Notification Success: Notification attendance sent at " . now());
+                    }
+
+                    sleep(rand(5, 20));
                 }
-
-                sleep(rand(10, 15));
             }
         } catch (\Exception $e) {
-            if ($e->getCode() === 0) {
-                \Log::info("Error: Connection to WhatsApp Api is refused");
-            } else {
-                \Log::info($e);
-            }
+            \Log::info("Notification Error: " . $e->getMessage());
         }
     }
 }
