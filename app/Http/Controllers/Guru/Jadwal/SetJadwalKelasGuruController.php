@@ -134,17 +134,23 @@ class SetJadwalKelasGuruController extends Controller
         // $ruangan    = Ruangan::where('id_kelas', $id_kelas)->first();
 
         $id_jurusan = $kelas->id_jurusan;
-        $data_jenis_mata_pelajaran = JenisMataPelajaran::with('mapel')->whereHas('mapel', function ($query) use ($id_jurusan) {
+        $data_jenis_mata_pelajaran = JenisMataPelajaran::with(['mapel' => function ($query) {
+            $query->orderBy('kd_mata_pelajaran');
+        }])->whereHas('mapel', function ($query) use ($id_jurusan) {
             $query->where('id_jurusan', '=', $id_jurusan);
         })->get();
 
         if (empty($data_jenis_mata_pelajaran)) {
-            $data_jenis_mata_pelajaran = JenisMataPelajaran::with('mapel')->get();
+            $data_jenis_mata_pelajaran = JenisMataPelajaran::with(['mapel' => function ($query) {
+                $query->orderBy('kd_mata_pelajaran');
+            }])->get();
         }
 
 
         $list_jurusan = Jurusan::all();
-        $list_jenis_mata_pelajaran = JenisMataPelajaran::all();
+        $list_jenis_mata_pelajaran = JenisMataPelajaran::with(['mapel' => function ($query) {
+            $query->orderBy('kd_mata_pelajaran');
+        }])->get();
 
         if (MataPelajaran::where('id_jurusan', $id_jurusan)->first()) { } else {
             $id_jurusan = null;
