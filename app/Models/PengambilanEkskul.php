@@ -19,7 +19,7 @@ class PengambilanEkskul extends Model
     public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_ekskul',
         'id_siswa',
@@ -39,6 +39,11 @@ class PengambilanEkskul extends Model
     public function siswa()
     {
         return $this->belongsTo('App\Models\Siswa', 'id_siswa');
+    }
+
+    public function ekskul()
+    {
+        return $this->belongsTo('App\Models\Ekskul', 'id_ekskul');
     }
 
     public function kelas()
