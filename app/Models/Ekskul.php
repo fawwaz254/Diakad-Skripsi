@@ -16,10 +16,10 @@ class Ekskul extends Model
 
     protected $primaryKey = 'id_ekskul';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'nm_ekskul',
         'nomor_sk_ekskul',
@@ -32,8 +32,8 @@ class Ekskul extends Model
     protected $guarded = [];
 
 
-
-
-
-
+    public function presensi_ekskul()
+    {
+        return $this->hasMany('App\Models\PresensiEkskul', 'id_ekskul');
+    }
 }

@@ -16,10 +16,10 @@ class PresensiEkskulPeserta extends Model
 
     protected $primaryKey = 'id_presensi_ekskul_peserta';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_presensi_ekskul',
         'id_siswa',
@@ -32,9 +32,8 @@ class PresensiEkskulPeserta extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function presensi_ekskul()
+    {
+        return $this->belongsTo('App\Models\PresensiEkskul', 'id_presensi_ekskul');
+    }
 }

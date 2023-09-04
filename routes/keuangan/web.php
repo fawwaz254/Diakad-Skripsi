@@ -373,6 +373,8 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('pemasukan', [SppController::class, 'viewMenuPemasukan']);
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', [SppController::class, 'viewMenuPemasukan']);
+                Route::post('get-pemasukan', [SppController::class, 'getPemasukanData']);
+
 
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/report', [SppController::class, 'indexDownloadLapBulanan']);
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/refresh', [SppController::class, 'actionRefreshLapBulanan']);
