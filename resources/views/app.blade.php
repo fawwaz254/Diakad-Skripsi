@@ -178,6 +178,8 @@
 <!-- Moment Plugin Js -->
 <script src="{{ asset('plugins/momentjs/moment-with-locales.min.js') }}"></script>
 
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
 <!-- Bootstrap Material Datetime Picker Plugin Js -->
 <script src="{{ asset('plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}">
 </script>
