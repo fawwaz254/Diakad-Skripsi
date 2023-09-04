@@ -15,11 +15,12 @@ class PresensiQrCodeController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+
         return view('guru/presensi/absensi-qr/view-absensi-qr-code', compact('auth_data'));
     }
     public function resultPresensiQr(Request $request)
     {
         $nis = $request->qr_code;
-        dd($nis);
+        return view('guru/presensi/absensi-qr/view-absensi-qr-code1', compact('auth_data', 'nis'));
     }
 }
