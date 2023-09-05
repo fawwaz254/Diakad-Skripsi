@@ -62,7 +62,7 @@ class HasilTestController extends Controller
         if ($question_package = PaketSoal::where('id_paket_soal', $id_paket_soal)->first()) {
             return view('guru/e-learning-soal/hasil-test/detail-hasil-test', compact('question_package'));
         } else {
-            return view('404');
+            return abort(404);
         }
     }
 
