@@ -32,7 +32,7 @@ class SoalController extends Controller
         } elseif ($tipe_soal == "submit") {
             return view('guru/e-learning-soal/soal/add-soal-submit', compact('kategori'));
         }
-        return view('404');
+        return abort(404);
     }
     public function addKategori(Request $request)
     {
