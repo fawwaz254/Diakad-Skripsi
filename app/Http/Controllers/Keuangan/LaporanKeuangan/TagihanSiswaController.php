@@ -244,24 +244,49 @@ class TagihanSiswaController extends BaseController
         return view('keuangan/laporan-keuangan/tagihan-siswa/print-tagihan-siswa', compact('auth_data', 'semester_mulai', 'semester_selesai', 'status', 'all_data', 'kelas_data', 'id_kelas'));
     }
 
-    public function showTotalTagihan(Request $request, $tahun, $id_kelas)
+    public function showTotalTagihan(Request $request, $tahun, $id_kelas, $status)
     {
-        $id_semester_mulai = Semester::where('kode_semester', $tahun . '1')->first()->id_semester;
-        $id_semester_selesai = Semester::where('kode_semester', $tahun . '2')->first()->id_semester;
 
-        if ($id_kelas == 'all') {
-            $tagihan_biaya = TagihanBiaya::where('is_tagih', '1')->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
-                $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
-            })->get();
-        } else {
-            $tagihan_biaya = TagihanBiaya::where('is_tagih', '1')->where('id_kelas', $id_kelas)
-                ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
-                    $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
-                })->get();
+        $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
+
+        $id_semester_mulai = $semester_mulai->id_semester;
+        $id_semester_selesai = $semester_selesai->id_semester;
+        $data_id_biaya_sekolah = BiayaSekolah::select('id_biaya_sekolah')->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai])->get()->pluck('id_biaya_sekolah');
+
+        $list_data = Siswa::with(['tagihan_tertagih' => function ($q) use ($data_id_biaya_sekolah) {
+            $q->whereHas('detail_biaya', function ($query) use ($data_id_biaya_sekolah) {
+                $query->whereIn('id_biaya_sekolah', $data_id_biaya_sekolah)->where('id_jenis_detail_biaya', '4');
+            });
+        }]);
+
+
+        if ($status == '1') {
+            if (!empty($id_kelas)) {
+                if ($id_kelas == 'all') {
+                    $list_data = $list_data->whereNotNull('id_kelas');
+                } else {
+                    $list_data = $list_data->where('id_kelas', $id_kelas);
+                }
+            }
+        } else if ($status == '2') {
+            if (!empty($id_kelas)) {
+                if ($id_kelas === 'all') { } else {
+                    $list_data = $list_data->whereHas('last_kelas_siswa', function ($q) use ($id_kelas) {
+                        $q->where('id_kelas', $id_kelas);
+                    });
+                }
+            }
         }
 
-        $total_besar_biaya = $tagihan_biaya->sum('besar_biaya');
-        return response()->json('Rp' . number_format($total_besar_biaya));
+        $data = $list_data->get();
+        $nominal = 0;
+        foreach ($data as $d) {
+            foreach ($d->tagihan_tertagih as $tagihan_biaya)
+                $nominal  +=   $tagihan_biaya->detail_biaya->besar_biaya;
+        }
+
+        return response()->json('Rp' . number_format($nominal));
     }
 
     public function showListTagihan(Request $request, $tahun, $id_kelas)
