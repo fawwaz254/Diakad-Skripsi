@@ -493,7 +493,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('datatables', [LaporanKeuanganTagihanSiswaController::class, 'datatablesTagihanSiswa']);
                 Route::get('print/{tahun}/{id_kelas}/{jenis_tagihan}', [LaporanKeuanganTagihanSiswaController::class, 'printTagihanSiswa']);
                 Route::get('show-list-tagihan/{tahun}/{id_kelas}', [LaporanKeuanganTagihanSiswaController::class, 'showListTagihan']);
-                Route::get('show-total-tagihan/{tahun}/{id_kelas}', [LaporanKeuanganTagihanSiswaController::class, 'showTotalTagihan']);
+                Route::get('show-total-tagihan/{tahun}/{id_kelas}/{status}', [LaporanKeuanganTagihanSiswaController::class, 'showTotalTagihan']);
             });
         });
     });
