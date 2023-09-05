@@ -12,7 +12,7 @@
             border: 1px solid black;
             text-align: left;
             font-size: 10px;
-           
+
         }
 
         th {
@@ -110,14 +110,15 @@
     <div style="margin-top:40px;">
         <center>
             <img class="logo"
-            src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
-            alt="Logo Sekolah" style="height:50px; width:45px" />
-            <h2 style="margin-top:-2px">{{ strtoupper($auth_data->sekolah_data->nm_sekolah)}}</h2>
-            <h3 style="margin-top:-2px">Laporan Pembayaran Kelas {{ $data_kelas->nm_kelas }} Tahun {{ $tahun_akademik_semester }}</h3>
-            </center>
+                src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
+                alt="Logo Sekolah" style="height:50px; width:45px" />
+            <h2 style="margin-top:-2px">{{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h2>
+            <h3 style="margin-top:-2px">Laporan Pembayaran Kelas {{ $data_kelas->nm_kelas }} Tahun
+                {{ $tahun_akademik_semester }}</h3>
+        </center>
         </td>
-  
-{{--        
+
+        {{--        
         <center>
             
         </center> --}}
@@ -183,10 +184,10 @@
                                 @endphp
                                 <td style="vertical-align:middle;text-align: center;"></td>
                             @elseif($tagihan->is_tagih == 0)
-                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}"
+                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
                                     style="vertical-align:middle;text-align: center;">
                                     <b
-                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b>
+                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b>
                                 </td>
                             @endif
                         @else
@@ -207,10 +208,10 @@
                                 @endphp
                                 <td style="vertical-align:middle;text-align: center;"></td>
                             @elseif($tagihan->is_tagih == 0)
-                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}"
+                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
                                     style="vertical-align:middle;text-align: center;">
                                     <b
-                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b>
+                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b>
                                 </td>
                             @endif
                         @else
@@ -227,9 +228,14 @@
             <br>
             <br>
             @php
-            $nm_wali_kelas = App\Models\WaliKelas::where('id_kelas', $id_kelas)->where('is_aktif',1)->with('guru.pengguna')->first();
+                $nm_wali_kelas = App\Models\WaliKelas::where('id_kelas', $id_kelas)
+                    ->where('is_aktif', 1)
+                    ->with('guru.pengguna')
+                    ->first();
             @endphp
-            <p style="text-align: right">{{ $nm_wali_kelas->guru->pengguna->gelar_depan }}{{ $nm_wali_kelas->guru->pengguna->nm_pengguna }}{{ $nm_wali_kelas->guru->pengguna->gelar_belakang }}</p>
+            <p style="text-align: right">
+                {{ $nm_wali_kelas->guru->pengguna->gelar_depan }}{{ $nm_wali_kelas->guru->pengguna->nm_pengguna }}{{ $nm_wali_kelas->guru->pengguna->gelar_belakang }}
+            </p>
         </div>
     </div>
 </body>
