@@ -244,6 +244,26 @@ class TagihanSiswaController extends BaseController
         return view('keuangan/laporan-keuangan/tagihan-siswa/print-tagihan-siswa', compact('auth_data', 'semester_mulai', 'semester_selesai', 'status', 'all_data', 'kelas_data', 'id_kelas'));
     }
 
+    public function showTotalTagihan(Request $request, $tahun, $id_kelas)
+    {
+        $id_semester_mulai = Semester::where('kode_semester', $tahun . '1')->first()->id_semester;
+        $id_semester_selesai = Semester::where('kode_semester', $tahun . '2')->first()->id_semester;
+
+        if ($id_kelas == 'all') {
+            $tagihan_biaya = TagihanBiaya::where('is_tagih', '1')->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
+                $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+            })->get();
+        } else {
+            $tagihan_biaya = TagihanBiaya::where('is_tagih', '1')->where('id_kelas', $id_kelas)
+                ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
+                    $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+                })->get();
+        }
+
+        $total_besar_biaya = $tagihan_biaya->sum('besar_biaya');
+        return response()->json('Rp' . number_format($total_besar_biaya));
+    }
+
     public function showListTagihan(Request $request, $tahun, $id_kelas)
     {
         // $kelas_data = Kelas::find($id_kelas);
