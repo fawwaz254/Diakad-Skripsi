@@ -96,6 +96,7 @@
 
         var tahun = $('#tahun_akademik_semester').val();
         var kelas = $('#kelas').val();
+        var status = $('input[name=status]:checked').val();
 
         $('#jenis_tagihan').empty();
         $('#total_tagihan').empty();
@@ -129,11 +130,13 @@
             });
 
             $.ajax({
-                url: base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/show-total-tagihan/' + tahun +
-                    '/' + kelas,
+                url: base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/show-total-tagihan/' +
+                    tahun + '/' + kelas +
+                    '/' + status,
                 type: 'get',
                 dataType: 'json',
                 success: function(response) {
+                    console.log(response);
                     $('#total_tagihan').empty();
                     $('#total_tagihan').append('Total Tagihan : ' + response);
 
