@@ -923,98 +923,129 @@ class SppController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerTingkat($auth_data, $input->start_date, $input->end_date);
-
         $data = [];
-        foreach ($data_laporan['dates'] as $date) {
-            $id_bulan = $date->format('n');
-            $periode_bulan_sekolah = collect([7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6]);
 
-            if ($id_bulan < 7) {
-                $index_splice = $id_bulan + 5;
-                $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
-                $index_periode_bulan_ini->all();
+        if ($input->status == '1') {
+            foreach ($data_laporan['dates'] as $date) {
+                $id_bulan = $date->format('n');
+                $periode_bulan_sekolah = collect([7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6]);
+                if ($id_bulan < 7) {
+                    $index_splice = $id_bulan + 5;
+                    $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+                    $index_periode_bulan_ini->all();
 
-                $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
-                $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
-            } elseif ($id_bulan == 7) {
-                $where_bayar_bulan_ini_dan_kedepannya = [7];
-                $where_bayar_bulan_lalu_dan_belakangnya = [];
-            } else {
-                $index_splice = $id_bulan - 7;
-                $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
-                $index_periode_bulan_ini->all();
+                    $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
+                    $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
+                } elseif ($id_bulan == 7) {
+                    $where_bayar_bulan_ini_dan_kedepannya = [7];
+                    $where_bayar_bulan_lalu_dan_belakangnya = [];
+                } else {
+                    $index_splice = $id_bulan - 7;
+                    $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+                    $index_periode_bulan_ini->all();
 
-                $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
-                $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
-            }
+                    $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
+                    $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
+                }
 
-            foreach ($data_laporan['tingkat'] as $tingkat) {
-                $data[$tingkat . '-' . '1' . '-' . $date->format('Y-m-d')] = 'Rp ' . number_format(
-                    $data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where(
-                        'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
-                        $data_laporan['semester_aktif']->tahun_ajaran,
-                    )->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->filter(function ($item) use ($date) {
-                        return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
-                    })->sum('besar_pembayaran'),
-                );
+                foreach ($data_laporan['tingkat'] as $tingkat) {
+                    $data[$tingkat . '-' . '1' . '-' . $date->format('Y-m-d')] = 'Rp ' . number_format(
+                        $data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where(
+                            'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
+                            $data_laporan['semester_aktif']->tahun_ajaran,
+                        )->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->filter(function ($item) use ($date) {
+                            return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
+                        })->sum('besar_pembayaran'),
+                    );
+                }
 
-                $data[$tingkat . '-' . '2' . '-' . $date->format('Y-m-d')] = 'Rp ' . number_format(
-                    $data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where(
-                        'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
-                        $data_laporan['semester_aktif']->tahun_ajaran,
-                    )->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->filter(function ($item) use ($date) {
-                        return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
-                    })->sum('besar_pembayaran'),
-                );
-            }
-
-            $data['jumlah-' . $date->format('Y-m-d')] = 'Rp ' .
-                number_format(
-                    $data_laporan['data']->where(
-                        'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
-                        $data_laporan['semester_aktif']->tahun_ajaran,
-                    )->filter(function ($item) use ($date) {
-                        return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
-                    })->sum('besar_pembayaran'),
-                );
-
-            $data['tahun-lalu-masuk-' . $date->format('Y-m-d')] = 'Rp ' .
-                number_format(
-                    $data_laporan['data_tunggakan']->filter(function ($item) use ($date) {
-                        return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
-                    })->sum('besar_pembayaran') +
+                $data['jumlah-' . $date->format('Y-m-d')] = 'Rp ' .
+                    number_format(
                         $data_laporan['data']->where(
                             'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
-                            '!=',
                             $data_laporan['semester_aktif']->tahun_ajaran,
                         )->filter(function ($item) use ($date) {
                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                         })->sum('besar_pembayaran'),
+                    );
+            }
+
+            foreach ($data_laporan['tingkat'] as $tingkat) {
+                $data['total-' . $tingkat . '-' . '1'] = 'Rp ' .
+                    number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->sum('besar_pembayaran'));
+            }
+
+            $data['total-jumlah'] = 'Rp ' .
+                number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->sum('besar_pembayaran'));
+
+            return $data;
+        } else {
+            foreach ($data_laporan['dates'] as $date) {
+                $id_bulan = $date->format('n');
+                $periode_bulan_sekolah = collect([7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6]);
+
+                if ($id_bulan < 7) {
+                    $index_splice = $id_bulan + 5;
+                    $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+                    $index_periode_bulan_ini->all();
+
+                    $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
+                    $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
+                } elseif ($id_bulan == 7) {
+                    $where_bayar_bulan_ini_dan_kedepannya = [7];
+                    $where_bayar_bulan_lalu_dan_belakangnya = [];
+                } else {
+                    $index_splice = $id_bulan - 7;
+                    $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+                    $index_periode_bulan_ini->all();
+
+                    $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
+                    $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
+                }
+
+                foreach ($data_laporan['tingkat'] as $tingkat) {
+                    $data[$tingkat . '-' . '2' . '-' . $date->format('Y-m-d')] = 'Rp ' . number_format(
+                        $data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where(
+                            'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
+                            $data_laporan['semester_aktif']->tahun_ajaran,
+                        )->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->filter(function ($item) use ($date) {
+                            return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
+                        })->sum('besar_pembayaran'),
+                    );
+                }
+
+                $data['tahun-lalu-masuk-' . $date->format('Y-m-d')] = 'Rp ' .
+                    number_format(
+                        $data_laporan['data_tunggakan']->filter(function ($item) use ($date) {
+                            return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
+                        })->sum('besar_pembayaran') +
+                            $data_laporan['data']->where(
+                                'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
+                                '!=',
+                                $data_laporan['semester_aktif']->tahun_ajaran,
+                            )->filter(function ($item) use ($date) {
+                                return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
+                            })->sum('besar_pembayaran'),
+                    );
+            }
+
+            foreach ($data_laporan['tingkat'] as $tingkat) {
+                $data['total-' . $tingkat . '-' . '2'] = 'Rp ' .
+                    number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->sum('besar_pembayaran'));
+            }
+
+
+            $data['total-tahun-lalu-masuk'] = 'Rp ' .
+                number_format(
+                    $data_laporan['data_tunggakan']->sum('besar_pembayaran') +
+                        $data_laporan['data']->where(
+                            'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
+                            '!=',
+                            $data_laporan['semester_aktif']->tahun_ajaran,
+                        )->sum('besar_pembayaran'),
                 );
+            return $data;
         }
-
-        foreach ($data_laporan['tingkat'] as $tingkat) {
-            $data['total-' . $tingkat . '-' . '1'] = 'Rp ' .
-                number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->sum('besar_pembayaran'));
-
-            $data['total-' . $tingkat . '-' . '2'] = 'Rp ' .
-                number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->sum('besar_pembayaran'));
-        }
-
-        $data['total-jumlah'] = 'Rp ' .
-            number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->sum('besar_pembayaran'));
-
-        $data['total-tahun-lalu-masuk'] = 'Rp ' .
-            number_format(
-                $data_laporan['data_tunggakan']->sum('besar_pembayaran') +
-                    $data_laporan['data']->where(
-                        'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
-                        '!=',
-                        $data_laporan['semester_aktif']->tahun_ajaran,
-                    )->sum('besar_pembayaran'),
-            );
-
-        return $data;
     }
 
 
