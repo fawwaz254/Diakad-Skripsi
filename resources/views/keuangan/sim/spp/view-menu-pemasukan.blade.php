@@ -259,12 +259,37 @@
     }
 
     $(document).ready(function() {
+        getBulanIni();
+    });
+
+
+    function getBulanIni() {
         $.ajax({
             type: "POST",
             url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-pemasukan`,
             data: {
                 start_date: '{{ $start_date }}',
                 end_date: '{{ $end_date }}',
+                status: '1'
+            },
+            success: function(response) {
+                $.each(response, function(key, item) {
+                    $('#' + key).html(item);
+                });
+                getBulanLalu();
+            }
+        });
+    }
+
+
+    function getBulanLalu() {
+        $.ajax({
+            type: "POST",
+            url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-pemasukan`,
+            data: {
+                start_date: '{{ $start_date }}',
+                end_date: '{{ $end_date }}',
+                status: '2'
             },
             success: function(response) {
                 $.each(response, function(key, item) {
@@ -272,5 +297,5 @@
                 });
             }
         });
-    });
+    }
 </script>
