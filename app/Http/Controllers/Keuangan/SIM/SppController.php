@@ -258,7 +258,7 @@ class SppController extends BaseController
                                     $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
                                     $id_bulan = $item->id_bulan;
 
-                                    $tagihan_siswa = TagihanBiaya::where('is_tagih', 1)->where('id_siswa', $siswa->id_siswa)
+                                    $tagihan_siswa = TagihanBiaya::where('id_siswa', $siswa->id_siswa)
                                         ->whereHas('detail_biaya', function ($q) use ($id_bulan) {
                                             $q->where('id_bulan', $id_bulan)->where('id_jenis_detail_biaya', 4);
                                         })
@@ -266,7 +266,14 @@ class SppController extends BaseController
                                             $q->where('id_semester', $semester->id_semester);
                                         })->first();
 
-                                    if ($tagihan_siswa) {
+                                    if (empty($tagihan_siswa)) {
+                                        return [
+                                            'status' => 300, // FAILED
+                                            'message' => "Tagihan dengan nomor " . $item->nis . 'tidak ditemukan didalam sistem, ',
+                                        ];
+                                    }
+
+                                    if ($tagihan_siswa->is_tagih == '1') {
                                         $pembayaran_biaya = new PembayaranBiaya;
                                         $pembayaran_biaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                         $pembayaran_biaya->id_tagihan_biaya = $tagihan_siswa->id_tagihan_biaya;
