@@ -78,7 +78,8 @@
                         </thead>
                         <tbody>
                             @foreach ($jam as $key => $r)
-                                <tr style="background: #98d1d1">
+                                <tr
+                                    @if ($key % 2 == 1) style="background: #98d1d1" @else style="background: #badbdb" @endif>
                                     <td style="text-align: center; vertical-align: middle;">
                                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
                                             {{ $key }}

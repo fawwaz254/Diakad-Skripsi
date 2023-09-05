@@ -66,6 +66,10 @@
                                     class="material-icons">print</i><span>Print Data Tagihan</span></button>
                         </div>
                     </div>
+                    <div id="total_tagihan">
+                        <p>Total Tagihan : </p>
+                    </div>
+                    <br>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display nowrap"
                             id="primary_table">
@@ -92,8 +96,11 @@
 
         var tahun = $('#tahun_akademik_semester').val();
         var kelas = $('#kelas').val();
+        var status = $('input[name=status]:checked').val();
 
         $('#jenis_tagihan').empty();
+        $('#total_tagihan').empty();
+        $('#total_tagihan').append('Total Tagihan : ');
 
         if (kelas == "") {
             $('#jenis_tagihan').append(`
@@ -122,9 +129,25 @@
                 }
             });
 
-        }
+            $.ajax({
+                url: base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/show-total-tagihan/' +
+                    tahun + '/' + kelas +
+                    '/' + status,
+                type: 'get',
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    $('#total_tagihan').empty();
+                    $('#total_tagihan').append('Total Tagihan : ' + response);
 
+                },
+                error: function() {
+                    alert('terjadi kesalahan, silahkan hubungi admin');
+                }
+            });
+        }
     }
+
 
     var datatable_url = base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/datatables';
     var print_tagihan_url = base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/print';

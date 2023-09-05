@@ -178,6 +178,8 @@
 <!-- Moment Plugin Js -->
 <script src="{{ asset('plugins/momentjs/moment-with-locales.min.js') }}"></script>
 
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
 <!-- Bootstrap Material Datetime Picker Plugin Js -->
 <script src="{{ asset('plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}">
 </script>
@@ -268,7 +270,17 @@
     </script>
 @endif
 
-@if (auth()->check())
+@if (auth()->check() &&
+        \App\Models\Setting::where('key_setting', 'is_active_live_chat')->value('value') == 1 &&
+        in_array(now()->dayOfWeek, [
+            \Carbon\Carbon::MONDAY,
+            \Carbon\Carbon::TUESDAY,
+            \Carbon\Carbon::WEDNESDAY,
+            \Carbon\Carbon::THURSDAY,
+            \Carbon\Carbon::FRIDAY,
+        ]) &&
+        now()->hour >= 9 &&
+        now()->hour < 17)
     <script type="text/javascript">
         var Tawk_API = Tawk_API || {},
             Tawk_LoadStart = new Date();

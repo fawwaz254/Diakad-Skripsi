@@ -95,7 +95,11 @@
                                     <tr>
                                         <td>{{ $date->format('Y-m-d') }}</td>
                                         @foreach ($data_laporan['tingkat'] as $tingkat)
-                                            <td>Rp
+                                            <td>
+                                                <div id="{{ $tingkat . '-' . '1' . '-' . $date->format('Y-m-d') }}">
+                                                    Loading
+                                                </div>
+                                                {{-- Rp
                                                 {{ number_format(
                                                     $data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where(
                                                             'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
@@ -103,11 +107,16 @@
                                                         )->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->filter(function ($item) use ($date) {
                                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                                         })->sum('besar_pembayaran'),
-                                                ) }}
+                                                ) }} --}}
                                             </td>
                                         @endforeach
                                         @foreach ($data_laporan['tingkat'] as $tingkat)
-                                            <td>Rp
+                                            <td>
+                                                <div id="{{ $tingkat . '-' . '2' . '-' . $date->format('Y-m-d') }}">
+                                                    Loading
+                                                </div>
+
+                                                {{-- Rp
                                                 {{ number_format(
                                                     $data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where(
                                                             'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
@@ -115,10 +124,14 @@
                                                         )->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->filter(function ($item) use ($date) {
                                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                                         })->sum('besar_pembayaran'),
-                                                ) }}
+                                                ) }} --}}
                                             </td>
                                         @endforeach
-                                        <td>Rp
+                                        <td>
+                                            <div id="{{ 'jumlah-' . $date->format('Y-m-d') }}">
+                                                Loading
+                                            </div>
+                                            {{-- Rp
                                             {{ number_format(
                                                 $data_laporan['data']->where(
                                                         'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
@@ -126,9 +139,14 @@
                                                     )->filter(function ($item) use ($date) {
                                                         return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                                     })->sum('besar_pembayaran'),
-                                            ) }}
+                                            ) }} --}}
                                         </td>
-                                        <td>Rp
+                                        <td>
+                                            <div id="{{ 'tahun-lalu-masuk-' . $date->format('Y-m-d') }}">
+                                                Loading
+                                            </div>
+
+                                            {{-- Rp
                                             {{ number_format(
                                                 $data_laporan['data_tunggakan']->filter(function ($item) use ($date) {
                                                         return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
@@ -140,7 +158,7 @@
                                                         )->filter(function ($item) use ($date) {
                                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                                         })->sum('besar_pembayaran'),
-                                            ) }}
+                                            ) }} --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -170,19 +188,35 @@
                                 <tr>
                                     <td>TOTAL</td>
                                     @foreach ($data_laporan['tingkat'] as $tingkat)
-                                        <td>Rp
-                                            {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->sum('besar_pembayaran')) }}
+                                        <td>
+                                            <div id="{{ 'total-' . $tingkat . '-' . '1' }}">
+                                                Loading
+                                            </div>
+                                            {{-- Rp
+                                            {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->sum('besar_pembayaran')) }} --}}
                                         </td>
                                     @endforeach
                                     @foreach ($data_laporan['tingkat'] as $tingkat)
-                                        <td>Rp
-                                            {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->sum('besar_pembayaran')) }}
+                                        <td>
+                                            <div id="{{ 'total-' . $tingkat . '-' . '2' }}">
+                                                Loading
+                                            </div>
+                                            {{-- Rp
+                                            {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->sum('besar_pembayaran')) }} --}}
                                         </td>
                                     @endforeach
-                                    <td>Rp
-                                        {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->sum('besar_pembayaran')) }}
+                                    <td>
+                                        <div id="{{ 'total-jumlah' }}">
+                                            Loading
+                                        </div>
+                                        {{-- Rp
+                                        {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->sum('besar_pembayaran')) }} --}}
                                     </td>
-                                    <td>Rp
+                                    <td>
+                                        <div id="{{ 'total-tahun-lalu-masuk' }}">
+                                            Loading
+                                        </div>
+                                        {{-- Rp
                                         {{ number_format(
                                             $data_laporan['data_tunggakan']->sum('besar_pembayaran') +
                                                 $data_laporan['data']->where(
@@ -190,7 +224,7 @@
                                                         '!=',
                                                         $data_laporan['semester_aktif']->tahun_ajaran,
                                                     )->sum('besar_pembayaran'),
-                                        ) }}
+                                        ) }} --}}
                                     </td>
                                 </tr>
                             </tbody>
@@ -220,6 +254,47 @@
             },
             complete: function() {
                 $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        getBulanIni();
+    });
+
+
+    function getBulanIni() {
+        $.ajax({
+            type: "POST",
+            url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-pemasukan`,
+            data: {
+                start_date: '{{ $start_date }}',
+                end_date: '{{ $end_date }}',
+                status: '1'
+            },
+            success: function(response) {
+                $.each(response, function(key, item) {
+                    $('#' + key).html(item);
+                });
+                getBulanLalu();
+            }
+        });
+    }
+
+
+    function getBulanLalu() {
+        $.ajax({
+            type: "POST",
+            url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-pemasukan`,
+            data: {
+                start_date: '{{ $start_date }}',
+                end_date: '{{ $end_date }}',
+                status: '2'
+            },
+            success: function(response) {
+                $.each(response, function(key, item) {
+                    $('#' + key).html(item);
+                });
             }
         });
     }

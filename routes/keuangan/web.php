@@ -373,6 +373,8 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('pemasukan', [SppController::class, 'viewMenuPemasukan']);
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', [SppController::class, 'viewMenuPemasukan']);
+                Route::post('get-pemasukan', [SppController::class, 'getPemasukanData']);
+
 
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/report', [SppController::class, 'indexDownloadLapBulanan']);
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/refresh', [SppController::class, 'actionRefreshLapBulanan']);
@@ -491,6 +493,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('datatables', [LaporanKeuanganTagihanSiswaController::class, 'datatablesTagihanSiswa']);
                 Route::get('print/{tahun}/{id_kelas}/{jenis_tagihan}', [LaporanKeuanganTagihanSiswaController::class, 'printTagihanSiswa']);
                 Route::get('show-list-tagihan/{tahun}/{id_kelas}', [LaporanKeuanganTagihanSiswaController::class, 'showListTagihan']);
+                Route::get('show-total-tagihan/{tahun}/{id_kelas}/{status}', [LaporanKeuanganTagihanSiswaController::class, 'showTotalTagihan']);
             });
         });
     });

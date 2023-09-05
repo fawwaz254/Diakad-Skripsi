@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Models\Guru;
+use App\Models\PembayaranBiaya;
 use App\Models\RolePengguna;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -46,25 +47,11 @@ class WelcomeController extends BaseController
         return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
     }
 
-//     public function deleteTagihanYangSama(Request $request){
-//         set_time_limit(-1);
-//         $duplicates = TagihanBiaya::select('id_siswa', 'id_detail_biaya', DB::raw('COUNT(*) as jumlah_duplikat'))
-//         ->groupBy('id_siswa', 'id_detail_biaya')
-//         ->havingRaw('COUNT(*) > 1')
-//         ->get();
-
-//         // dd($duplicates);
-//     $tagihan = TagihanBiaya::where('is_tagih', 1)->get();
-    
-
-//     foreach ($duplicates as $d) {
-//         $t = $tagihan->where('id_siswa', $d->id_siswa)->where('id_detail_biaya', $d->id_detail_biaya)->first();
-//             if ($t) {
-//             $t->deleted_by = 'delete duplikat senin';
-//             $t->save();
-//             $t->delete();
-//             }
-//         }
-// //         dd('delete duplikat');
-//     }
+    public function deleteTagihanYangSama(Request $request){
+        set_time_limit(-1);
+        $grouptagihanbiaya = TagihanBiaya::where('updated_by' , 'khairil-changetagihan30/07')->pluck('id_tagihan_biaya')->toArray();
+        // dd($grouptagihanbiaya);
+        $pembayaran = PembayaranBiaya::whereIn('id_tagihan_biaya',$grouptagihanbiaya)->get();
+        dd($pembayaran);
+    }
 }
