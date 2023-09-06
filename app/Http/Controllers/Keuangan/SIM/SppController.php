@@ -824,6 +824,8 @@ class SppController extends BaseController
                 ->whereIn('biaya_sekolah.id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester])
                 ->where('tagihan_biaya.id_kelas', $id_kelas);
 
+
+
             $clone_query_tagihan = clone $query_tagihan;
             $data_tagihan = $query_tagihan->where('detail_biaya.id_jenis_detail_biaya', 4)->get();
 
@@ -831,6 +833,12 @@ class SppController extends BaseController
             $data_tagihan_non_bulanan = $clone_query_tagihan->get();
 
             $data_bulan_tagihan = $data_tagihan->unique('nm_bulan')->sortBy('id_bulan')->sortBy('kode_semester')->values()->all();
+
+
+            $total_pembayaran =  'Rp ' . number_format($data_tagihan->where('is_tagih', '0')->sum('besar_pembayaran'));
+            $total_tunggakan = 'Rp ' . number_format($data_tagihan->where('is_tagih', '1')->sum('besar_biaya'));
+            $jumlah_pembayaran = $data_tagihan->where('is_tagih', '0')->count();
+            $jumlah_tunggakan = $data_tagihan->where('is_tagih', '1')->count();
 
             // $semesterMulai = $semester_mulai->id_semester;
             // $semesterSelesai = $semester_selesai->id_semester;
@@ -882,7 +890,7 @@ class SppController extends BaseController
         $minDate = Carbon::parse($waktu)->subDays(60)->format('Y/m/d');
         $maxDate = Carbon::parse($waktu)->addDays(60)->format('Y/m/d');
 
-        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'minDate', 'maxDate'));
+        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'minDate', 'maxDate', 'total_pembayaran', 'total_tunggakan', 'jumlah_pembayaran', 'jumlah_tunggakan'));
     }
 
     public function viewMenuPemasukan(Request $request, $tahun_akademik_semester = null, $id_bulan = null)

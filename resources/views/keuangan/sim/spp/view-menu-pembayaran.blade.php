@@ -148,6 +148,9 @@
                             </div>
                         </div>
                     </div>
+                    <div>Ada <b> {{ $jumlah_tunggakan }} </b>Tunggakan, Total <b>{{ $total_tunggakan }} </b></div>
+                    <div>Ada <b>{{ $jumlah_pembayaran }} </b>Pembayaran, Total <b>{{ $total_pembayaran }} </b></div>
+                    <br>
                     <div class="table-responsive">
                         <table class="table is-fixed table-bordered table-striped table-hover dataTable"
                             id="primary_table">
@@ -363,6 +366,8 @@
                     $('#total_pembayaran-' +
                         key).html(html);
                 });
+
+
             }
         });
     });
