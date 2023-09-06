@@ -239,12 +239,21 @@ class SppController extends BaseController
                     }
                 } else {
                     DB::beginTransaction();
+
+                    $listNis = collect($data)->pluck('nis')->unique();
+                    $listSiswa = Siswa::whereIn('nis_siswa', $listNis)->get();
+                    $listSemester = Semester::get();
+                    $listIdSiswa = $listSiswa->pluck('id_siswa');
+                    $listTagihanSiswa = TagihanBiaya::whereIn('id_siswa', $listIdSiswa)->whereHas('detail_biaya', function ($q) {
+                        $q->where('id_jenis_detail_biaya', 4);
+                    })->whereHas('detail_biaya.biaya_sekolah')->get();
+
                     try {
                         foreach ($data as $key => $item) {
                             $item = (object) $item;
 
                             if (!empty($item->nis)) {
-                                $siswa = Siswa::where('nis_siswa', $item->nis)->first();
+                                $siswa = $listSiswa->where('nis_siswa', $item->nis)->first();
 
                                 if (!$siswa) {
                                     return [
@@ -252,19 +261,23 @@ class SppController extends BaseController
                                         'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
                                     ];
                                 } else {
-                                    $semester = Semester::where('kode_semester', $item->kode_semester)->first();
+                                    $semester = $listSemester->where('kode_semester', $item->kode_semester)->first();
                                     // $semester = Semester::where('tahun_ajaran', $item->tahun_ajaran)->where('nm_semester', strtoupper($item->nm_semester))->first();
 
                                     $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
                                     $id_bulan = $item->id_bulan;
 
-                                    $tagihan_siswa = TagihanBiaya::where('id_siswa', $siswa->id_siswa)
-                                        ->whereHas('detail_biaya', function ($q) use ($id_bulan) {
-                                            $q->where('id_bulan', $id_bulan)->where('id_jenis_detail_biaya', 4);
-                                        })
-                                        ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($semester) {
-                                            $q->where('id_semester', $semester->id_semester);
-                                        })->first();
+                                    $tagihan_siswa = $listTagihanSiswa->where('id_siswa', $siswa->id_siswa)
+                                        ->where('detail_biaya.id_bulan', $id_bulan)
+                                        ->where('detail_biaya.biaya_sekolah.id_semester', $semester->id_semester)->first();
+
+                                    // $tagihan_siswa = $listTagihanSiswa->where('id_siswa', $siswa->id_siswa)
+                                    //     ->whereHas('detail_biaya', function ($q) use ($id_bulan) {
+                                    //         $q->where('id_bulan', $id_bulan);
+                                    //     })
+                                    //     ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($semester) {
+                                    //         $q->where('id_semester', $semester->id_semester);
+                                    //     })->first();
 
                                     if (empty($tagihan_siswa)) {
                                         return [
@@ -811,6 +824,8 @@ class SppController extends BaseController
                 ->whereIn('biaya_sekolah.id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester])
                 ->where('tagihan_biaya.id_kelas', $id_kelas);
 
+
+
             $clone_query_tagihan = clone $query_tagihan;
             $data_tagihan = $query_tagihan->where('detail_biaya.id_jenis_detail_biaya', 4)->get();
 
@@ -818,6 +833,12 @@ class SppController extends BaseController
             $data_tagihan_non_bulanan = $clone_query_tagihan->get();
 
             $data_bulan_tagihan = $data_tagihan->unique('nm_bulan')->sortBy('id_bulan')->sortBy('kode_semester')->values()->all();
+
+
+            $total_pembayaran =  'Rp ' . number_format($data_tagihan->where('is_tagih', '0')->sum('besar_pembayaran'));
+            $total_tunggakan = 'Rp ' . number_format($data_tagihan->where('is_tagih', '1')->sum('besar_biaya'));
+            $jumlah_pembayaran = $data_tagihan->where('is_tagih', '0')->count();
+            $jumlah_tunggakan = $data_tagihan->where('is_tagih', '1')->count();
 
             // $semesterMulai = $semester_mulai->id_semester;
             // $semesterSelesai = $semester_selesai->id_semester;
@@ -869,7 +890,7 @@ class SppController extends BaseController
         $minDate = Carbon::parse($waktu)->subDays(60)->format('Y/m/d');
         $maxDate = Carbon::parse($waktu)->addDays(60)->format('Y/m/d');
 
-        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'minDate', 'maxDate'));
+        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'minDate', 'maxDate', 'total_pembayaran', 'total_tunggakan', 'jumlah_pembayaran', 'jumlah_tunggakan'));
     }
 
     public function viewMenuPemasukan(Request $request, $tahun_akademik_semester = null, $id_bulan = null)
