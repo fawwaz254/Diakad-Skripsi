@@ -791,6 +791,9 @@ class SppController extends BaseController
 
         $data_kelas = Kelas::select('id_kelas', 'nm_kelas')->where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
 
+
+
+
         if (!empty($id_kelas) && !empty($tahun_akademik_semester)) {
             $semester_mulai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '1');
             $semester_selesai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '2');
@@ -833,6 +836,8 @@ class SppController extends BaseController
             $data_tagihan_non_bulanan = $clone_query_tagihan->get();
 
             $data_bulan_tagihan = $data_tagihan->unique('nm_bulan')->sortBy('id_bulan')->sortBy('kode_semester')->values()->all();
+
+
 
 
             $total_pembayaran =  'Rp ' . number_format($data_tagihan->where('is_tagih', '0')->sum('besar_pembayaran'));
@@ -883,6 +888,11 @@ class SppController extends BaseController
             $data_tagihan_non_bulanan = array();
             $data_ket_tagihan = array();
             $data_tagihan_siswa_semester_lalu = array();
+
+            $total_pembayaran =  0;
+            $total_tunggakan = 0;
+            $jumlah_pembayaran = 0;
+            $jumlah_tunggakan = 0;
         }
         //'data_tagihan_siswa_semester_lalu'
         //'total_pembayaran'
