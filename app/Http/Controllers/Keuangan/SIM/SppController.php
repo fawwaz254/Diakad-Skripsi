@@ -2253,10 +2253,6 @@ class SppController extends BaseController
         return $data;
     }
 
-
-
-
-
     public function getDataTungakanTahunLalu(Request $request)
     {
         $input = (object) $request->input();
@@ -2271,6 +2267,23 @@ class SppController extends BaseController
 
         return $data_tagihan_siswa_semester_lalu;
     }
+
+
+    public function deleteDataTungakanTahunLalu(Request $request, $id)
+    {
+        $input = (object) $request->input();
+
+        $tagihan_biaya = TagihanBiaya::find($id);
+        if ($tagihan_biaya) {
+            $tagihan_biaya->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $tagihan_biaya->save();
+            $tagihan_biaya->delete(); //untuk semestara, jika sudah clear maka akan permanent delete
+            return $id;
+        } else {
+            return false;
+        }
+    }
+
 
     public function viewMenuUploadTunggakanAlumni(Request $request)
     {
@@ -2366,4 +2379,18 @@ class SppController extends BaseController
             'selisih' => $selisih,
         ];
     }
+
+
+    public function tunggakanSudahDihapus(Request $request)
+    {
+        return view('keuangan/sim/spp/view-menu-setting', compact('auth_data'));
+    }
+
+    public function datatablesTunggakanSudahDihapus(Request $request){
+    //     $list_data = Tungg
+
+    //     return Datatables::of($list_data)
+           
+    //         ->make(true);
+    // }
 }
