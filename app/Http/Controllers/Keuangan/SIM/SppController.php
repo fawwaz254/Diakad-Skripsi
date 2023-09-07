@@ -2386,11 +2386,12 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/view-menu-setting', compact('auth_data'));
     }
 
-    public function datatablesTunggakanSudahDihapus(Request $request){
-    //     $list_data = Tungg
+    public function datatablesTunggakanSudahDihapus(Request $request)
+    {
+        //     $list_data = Tungg
 
-    //     return Datatables::of($list_data)
-           
-    //         ->make(true);
-    // }
+        //     return Datatables::of($list_data)
+
+        //         ->make(true);
+    }
 }
