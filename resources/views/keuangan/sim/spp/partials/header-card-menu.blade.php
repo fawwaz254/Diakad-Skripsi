@@ -31,6 +31,10 @@
                         class="target-link waves-effect waves-block">Tunggakan Tahun Lalu</a></li>
                 <li><a href="javascript:void(0);" class=" waves-effect waves-block">Input Belum Masuk Keseluruhan</a>
                 </li>
+                <li>
+                    <a href="{{ Request::segment(1) }}#sim/spp/tunggakan-sudah-dihapus"
+                        class="target-link waves-effect waves-block">Tunggakan Sudah Dihapus</a>
+                </li>
             </ul>
         </li>
         <li class="dropdown">
