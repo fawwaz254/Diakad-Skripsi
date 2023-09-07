@@ -370,6 +370,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('get-jumlah-tunggakan-pembayaran', [SppController::class, 'getJumlahTunggakanPembayaran']);
                 Route::post('get-data-tungakan-tahun-lalu', [SppController::class, 'getDataTungakanTahunLalu']);
                 Route::get('print-pembayaran/{id}', [SppController::class, 'printPembayaran']);
+                Route::post('delete-data-tungakan-tahun-lalu/{id}', [SppController::class, 'deleteDataTungakanTahunLalu']);
 
                 Route::get('pemasukan', [SppController::class, 'viewMenuPemasukan']);
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', [SppController::class, 'viewMenuPemasukan']);
@@ -396,6 +397,9 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('tunggakanAlumni/upload', [SppController::class, 'actionMenuUploadTunggakanAlumni']);
 
                 Route::post('tunggakanAlumni/delete/{id}/{selisih}', [SppController::class, 'deleteTunggakanAlumni']);
+
+                Route::get('tunggakan-sudah-dihapus', [SppController::class, 'tunggakanSudahDihapus']);
+                Route::post('tunggakan-sudah-dihapus/datatables', [SppController::class, 'datatablesTunggakanSudahDihapus']);
 
                 Route::get('setting', [SppController::class, 'viewMenuSetting']);
                 Route::post('setting/datatables', [SppController::class, 'datatablesMenuSetting']);
