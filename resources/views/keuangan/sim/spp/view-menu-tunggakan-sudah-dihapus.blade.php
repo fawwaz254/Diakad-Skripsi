@@ -59,56 +59,60 @@
                 orderable: false
             },
             {
-                data: 'nis_siswa',
-                name: 'nis_siswa',
+                data: 'siswa.nis_siswa',
+                name: 'siswa.nis_siswa',
             },
             {
-                data: 'nm_pengguna',
-                name: 'nm_pengguna'
+                data: 'siswa.pengguna.nm_pengguna',
+                name: 'siswa.pengguna.nm_pengguna'
             },
             {
-                data: 'nm_kelas',
-                name: 'nm_kelas'
+                data: 'kelas.nm_kelas',
+                name: 'kelas.nm_kelas'
             },
             {
-                data: 'thn_masuk_siswa',
-                name: 'thn_masuk_siswa'
+                data: 'detail_biaya.bulan.nm_bulan',
+                name: 'detail_biaya.bulan.nm_bulan'
             },
             {
-                data: 'total_biaya',
-                name: 'total_biaya'
+                data: 'detail_biaya.biaya_sekolah.kelompok.nm_kelompok_biaya',
+                name: 'detail_biaya.biaya_sekolah.kelompok.nm_kelompok_biaya'
             },
             {
-                data: 'tunggakan.jumlah_tunggakan',
-                name: 'tunggakan.jumlah_tunggakan'
+                data: 'semester',
+                name: 'semester'
             },
             {
-                data: 'tunggakan.selisih',
-                name: 'tunggakan.selisih'
+                data: 'besar_biaya',
+                name: 'besar_biaya'
             },
             {
-                data: 'total_tagihan',
-                name: 'total_tagihan'
+                data: 'deleted_at',
+                name: 'deleted_at'
             },
-            {
-                data: 'tunggakan',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    if (data.selisih == '-') {
-                        return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="detailAction(this)"  data-id="' +
-                            data.action + '"  data-status="-" >' +
-                            '    <i class="material-icons">pageview</i>' +
-                            '</button>';
-                    } else {
-                        return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="detailAction(this)"  data-id="' +
-                            data.action + '" data-status="' +
-                            data.selisih + '" >' +
-                            '    <i class="material-icons">pageview</i>' +
-                            '</button>';
-                    }
-                }
-            },
+            // {
+            //     data: 'total_tagihan',
+            //     name: 'total_tagihan'
+            // },
+            // {
+            //     data: 'tunggakan',
+            //     searchable: false,
+            //     orderable: false,
+            //     render: function(data) {
+            //         if (data.selisih == '-') {
+            //             return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="detailAction(this)"  data-id="' +
+            //                 data.action + '"  data-status="-" >' +
+            //                 '    <i class="material-icons">pageview</i>' +
+            //                 '</button>';
+            //         } else {
+            //             return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="detailAction(this)"  data-id="' +
+            //                 data.action + '" data-status="' +
+            //                 data.selisih + '" >' +
+            //                 '    <i class="material-icons">pageview</i>' +
+            //                 '</button>';
+            //         }
+            //     }
+            // },
         ]
     });
 
