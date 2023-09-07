@@ -2383,15 +2383,21 @@ class SppController extends BaseController
 
     public function tunggakanSudahDihapus(Request $request)
     {
-        return view('keuangan/sim/spp/view-menu-setting', compact('auth_data'));
+        $auth_data = $request->auth_data;
+        return view('keuangan/sim/spp/view-menu-tunggakan-sudah-dihapus', compact('auth_data'));
     }
 
     public function datatablesTunggakanSudahDihapus(Request $request)
     {
-        //     $list_data = Tungg
+        $list_data = TagihanBiaya::onlyTrashed()->with('detail_biaya.bulan', 'detail_biaya.biaya_sekolah.semester', 'detail_biaya.biaya_sekolah.kelompok', 'siswa.pengguna', 'kelas')->orderBy('deleted_at', 'desc');
 
-        //     return Datatables::of($list_data)
-
-        //         ->make(true);
+        return Datatables::of($list_data)
+            ->addColumn('semester', function ($item) {
+                return  $item->detail_biaya->biaya_sekolah->semester->tahun_ajaran . ' ' . $item->detail_biaya->biaya_sekolah->semester->nm_semester;
+            })
+            ->editColumn('deleted_at', function ($item) {
+                return Carbon::parse($item->deleted_at)->format('Y-m-d H:i:s');
+            })
+            ->make(true);
     }
 }
