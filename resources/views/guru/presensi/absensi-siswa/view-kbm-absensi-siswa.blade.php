@@ -50,12 +50,12 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 @if ($presensi_mp_aktif)
-                                    <input type="text" class="datepicker form-control" name="tgl_presensi" required=""
-                                        aria-required="true" aria-invalid="true"
+                                    <input type="text" class="datepicker form-control" name="tgl_presensi"
+                                        required="" aria-required="true" aria-invalid="true"
                                         value="{{ $presensi_mp_aktif->tgl_presensi }}">
                                 @else
-                                    <input type="text" class="datepicker form-control" name="tgl_presensi" required=""
-                                        aria-required="true" aria-invalid="true"
+                                    <input type="text" class="datepicker form-control" name="tgl_presensi"
+                                        required="" aria-required="true" aria-invalid="true"
                                         value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
                                 @endif
                             </div>
@@ -66,8 +66,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 @if ($presensi_mp_aktif)
-                                    <textarea class="form-control" name="uraian_materi" rows="4"
-                                        cols="100">{{ $presensi_mp_aktif->uraian_materi }}</textarea>
+                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ $presensi_mp_aktif->uraian_materi }}</textarea>
                                 @else
                                     <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ $data_kelas->uraian_materi }}</textarea>
                                 @endif
@@ -85,7 +84,7 @@
                                 @else
                                     <input type="text" class="datepicker-time form-control" name="waktu_mulai"
                                         required="" aria-required="true" aria-invalid="true"
-                                        value="{{ $data_kelas->waktu_mulai }}">
+                                        value="{{ \Carbon\Carbon::parse($data_kelas->jam_mulai . ':' . $data_kelas->menit_mulai)->format('H:i') }}">
                                 @endif
                             </div>
                         </div>
@@ -101,7 +100,7 @@
                                 @else
                                     <input type="text" class="datepicker-time form-control" name="waktu_selesai"
                                         required="" aria-required="true" aria-invalid="true"
-                                        value="{{ $data_kelas->waktu_selesai }}">
+                                        value="{{ \Carbon\Carbon::parse($data_kelas->jam_selesai . ':' . $data_kelas->menit_selesai)->format('H:i') }}">
                                 @endif
                             </div>
                         </div>

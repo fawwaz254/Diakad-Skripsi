@@ -416,9 +416,10 @@ class AbsensiSiswaController extends BaseController
 
                     DB::commit();
                     // all good
+
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'presensi/absensi-siswa/view-kbm/' . $id_jadwal_kelas_mp . '/' . $pertemuan_ke,
+                        'path' => 'presensi/absensi-siswa',
                         'message' => 'Save Absensi KBM Siswa Successfully'
                     ];
                 } catch (\Exception $e) {
