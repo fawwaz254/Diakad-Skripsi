@@ -55,6 +55,7 @@ class SendPaymentNotification extends Command
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
             ->whereDate('pembayaran_biaya.tgl_pembayaran', $now)
+            ->whereNotNull('nomor_hp_wali_murid')
             ->where('detail_biaya.id_jenis_detail_biaya', 4)
             ->where('tagihan_biaya.is_tagih', 0)
             ->where('tagihan_biaya.notification_sent', 0)
@@ -79,10 +80,6 @@ class SendPaymentNotification extends Command
                     $nama_pengguna = $tagihan->nm_pengguna;
                     $bulan_pembayaran .= $tagihan->bulan_pembayaran . ', ';
                     $nomor_hp_wali_murid = $tagihan->nomor_hp_wali_murid;
-                }
-
-                if (empty($nomor_hp_wali_murid)) {
-                    continue;
                 }
 
                 $template = Setting::where('key_setting', 'template_notif_pembayaran_spp')->firstOrFail()->value;
