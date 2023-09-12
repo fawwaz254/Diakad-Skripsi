@@ -64,6 +64,9 @@ class SendAttendanceNotification extends Command
 
             if ($mode === 'PRESENT_ONLY' || $mode === 'ALL') {
                 $list_presensi_pengguna = PresensiPengguna::with('pengguna.siswa.wali_murid')
+                    ->whereHas('pengguna.siswa.wali_murid', function ($q) {
+                        $q->whereNotNull('nomor_hp_wali_murid');
+                    })
                     ->where('status_join_table', 3)
                     ->where('date', $now)
                     ->take(250)
@@ -71,11 +74,6 @@ class SendAttendanceNotification extends Command
 
                 foreach ($list_presensi_pengguna as $presensi_pengguna) {
                     if (in_array($presensi_pengguna->pengguna->siswa->id_siswa, $list_notif_terkirim)) {
-                        continue;
-                    }
-
-                    $wali_murid = $presensi_pengguna->pengguna->siswa->wali_murid;
-                    if (!$wali_murid || empty($wali_murid->nomor_hp_wali_murid)) {
                         continue;
                     }
 
@@ -90,7 +88,7 @@ class SendAttendanceNotification extends Command
 
                     $data = [
                         'message' => $message,
-                        'phone' => $wali_murid->nomor_hp_wali_murid,
+                        'phone' => $presensi_pengguna->pengguna->siswa->wali_murid,
                     ];
 
                     $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
@@ -141,11 +139,6 @@ class SendAttendanceNotification extends Command
                         continue;
                     }
 
-                    $wali_murid = $siswa->wali_murid;
-                    if (!$wali_murid || empty($wali_murid->nomor_hp_wali_murid)) {
-                        continue;
-                    }
-
                     $formatted_date = now()->translatedFormat('l, d F Y');
                     $template = $base_template;
                     $message = str_replace(
@@ -156,7 +149,7 @@ class SendAttendanceNotification extends Command
 
                     $data = [
                         'message' => $message,
-                        'phone' => $wali_murid->nomor_hp_wali_murid,
+                        'phone' => $siswa->wali_murid->nomor_hp_wali_murid,
                     ];
 
                     $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
