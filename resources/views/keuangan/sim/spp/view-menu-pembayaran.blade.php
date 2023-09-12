@@ -148,6 +148,9 @@
                             </div>
                         </div>
                     </div>
+                    <div>Ada <b> {{ $jumlah_tunggakan }} </b>Belum Dibayar, Total <b>{{ $total_tunggakan }} </b></div>
+                    <div>Ada <b>{{ $jumlah_pembayaran }} </b>Pembayaran, Total <b>{{ $total_pembayaran }} </b></div>
+                    <br>
                     <div class="table-responsive">
                         <table class="table is-fixed table-bordered table-striped table-hover dataTable"
                             id="primary_table">
@@ -336,8 +339,14 @@
         'pembayaran-siswa/view-detail-tagihan-siswa';
     var delete_pembayaran_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'action-pembayaran-siswa/delete-by-tagihan';
+    var delete_url = base_url + '/' + role_url + '/sim/spp/delete-data-tungakan-tahun-lalu';
 
     $(document).ready(function() {
+        getTagihanAndTotal();
+    });
+
+
+    function getTagihanAndTotal() {
         $.ajax({
             type: "POST",
             url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-jumlah-tunggakan-pembayaran`,
@@ -363,9 +372,11 @@
                     $('#total_pembayaran-' +
                         key).html(html);
                 });
+
+
             }
         });
-    });
+    }
 
     function cekTagihan(el) {
         var item = $(el);
@@ -385,13 +396,19 @@
                 html += '<th>Kelas</th>';
                 html += '<th>Bulan</th>';
                 html += '<th>Tagihan</th>';
+                html += '<th>Aksi</th>';
                 html += '</tr>';
                 $.each(response, function(key, item) {
-                    html += '<tr>';
+                    html += '<tr id="tagihan-tahun-lalu-' + item.id_tagihan_biaya + '">';
                     html += '<td>' + (key + 1) + '</td>';
                     html += '<td>' + item.kelas.nm_kelas + '</td>';
                     html += '<td>' + item.detail_biaya.bulan.nm_bulan + '</td>';
                     html += '<td>' + item.besar_biaya + '</td>';
+                    html +=
+                        '<td><button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteTagihan(this)"  data-id="' +
+                        item.id_tagihan_biaya + '">' +
+                        '    <i class="material-icons">delete</i>' +
+                        '</button></td>';
                     html += '<tr>';
                     html += '</tr>';
                 });
@@ -505,4 +522,43 @@
         scrollCollapse: true,
         paging: false
     });
+
+
+    function deleteTagihan(el) {
+
+        var item = $(el);
+        $('button').attr('disabled', 'disabled');
+        console.log(item.attr('data-id'));
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to delete this!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function(result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: delete_url + '/' + item.attr('data-id'),
+                    success: function(response) {
+                        console.log(response);
+                        if (response) {
+                            $('#tagihan-tahun-lalu-' + response).empty();
+                            getTagihanAndTotal();
+                        }
+
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
 </script>

@@ -307,6 +307,10 @@ Route::middleware(['auth.mobile'])->group(function () {
             Route::prefix('bkk')->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetBkk']);
             });
+            Route::prefix('ekskul')->group(function () {
+                Route::post('get', [Apiv1Controller::class, 'actionGetEkskul']);
+                Route::post('getPresensi', [Apiv1Controller::class, 'actionGetPresensiEkskul']);
+            });
         });
     });
 });
