@@ -860,6 +860,8 @@
                     <td style="border: none;">Kab. Sidoarjo,
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                         08 Mei 2023
+                        @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
+                        05 Mei 2023
                         @else
                         {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                         @endif
