@@ -1,0 +1,34 @@
+version: 2.1
+
+jobs:
+  deploy-to-staging:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh -t $SSH_USER@$SERVER_DEV "cd /var/www/diakademik_demo && git pull origin master"
+
+  deploy-to-prod:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh -t $SSH_USER@$SERVER_DEV "cd /var/www/diakademik && git pull origin latest-release"
+workflows:
+  to-staging:
+    jobs:
+      - deploy-to-staging:
+        filters:
+          branches:
+            only: master # only deploy on the master branch
+
+  to-production:
+    jobs:
+      - deploy-to-prod:
+        filters:
+          branches:
+            only: latest-release # only deploy on the latest-release branch
