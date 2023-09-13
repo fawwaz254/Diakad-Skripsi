@@ -304,6 +304,11 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         // serverSide: true,
+        aLengthMenu: [
+            [25, 50, 100, 200, -1],
+            [25, 50, 100, 200, "All"]
+        ],
+        iDisplayLength: -1,
         ajax: {
             url: datatable_url_belum,
             type: 'GET',
@@ -364,6 +369,11 @@
     var secondary_table = $('#secondary_table').DataTable({
         processing: true,
         serverSide: true,
+        aLengthMenu: [
+            [25, 50, 100, 200, -1],
+            [25, 50, 100, 200, "All"]
+        ],
+        iDisplayLength: -1,
         ajax: {
             url: datatable_url_sudah,
             type: 'GET',
