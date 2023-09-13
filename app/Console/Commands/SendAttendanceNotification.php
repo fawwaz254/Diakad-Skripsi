@@ -69,7 +69,7 @@ class SendAttendanceNotification extends Command
                     })
                     ->where('status_join_table', 3)
                     ->where('date', $now)
-                    ->take(250)
+                    ->take(50)
                     ->get();
 
                 foreach ($list_presensi_pengguna as $presensi_pengguna) {
