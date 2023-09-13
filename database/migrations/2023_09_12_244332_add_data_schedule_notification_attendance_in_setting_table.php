@@ -17,7 +17,7 @@ class AddDataScheduleNotificationAttendanceInSettingTable extends Migration
         Setting::updateOrCreate(
             ['key_setting' => 'jadwal_jam_notif_kehadiran_siswa'],
             [
-                'value' => '8:00-15:00',
+                'value' => '10:00-15:00',
                 'keterangan' => 'Jadwal rentang waktu notif kehadiran siswa'
             ]
         );
