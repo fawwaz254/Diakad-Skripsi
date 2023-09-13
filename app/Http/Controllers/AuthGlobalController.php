@@ -294,27 +294,4 @@ class AuthGlobalController extends BaseController
         Auth::logout();
         return redirect('/');
     }
-
-    public function actionMerge(Request $request)
-    {
-        $input = (object) $request->input();
-
-        if (!empty($input->b)) {
-            $name_branch = $input->b;
-
-            $cmd = [];
-            $cmd[] = 'sh /usr/local/bin/merge-diakad.sh "' . $name_branch . '"';
-
-            $process = new Process(implode(' && ', $cmd));
-            $process->setTimeout(360);
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new \RuntimeException($process->getErrorOutput());
-            }
-
-            return $process->getOutput();
-        }
-
-        return 'false';
-    }
 }
