@@ -230,7 +230,7 @@
                     <td style="width: 40%;">No. Induk Sekolah dan Nasional
                         <br><i>School and National Student Identification Number</i>
                     </td>
-                    <td> {{ $siswa->nis_siswa }}</td>
+                    <td> {{ $siswa->nis_siswa }} / {{ $siswa->nisn_siswa }}</td>
                 </tr>
                 <tr>
                     <td style="width: 5%;">1.A4</td>
@@ -677,7 +677,7 @@
                 <tr style="background-color: white;border:none;">
                     <td style="width: 70%; border: none;"></td>
                     <td style="border: none;"></td>
-                    <td style="border: none">pada tanggal {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                    <td style="border: none">pada tanggal 5 Mei 2023
                     </td>
                 </tr>
                 <tr>
