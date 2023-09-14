@@ -107,6 +107,9 @@ class ApprovePrestasiSiswaController extends BaseController
             ->get();
 
         // dd($data);
+
+
+
         return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-kelas', compact('auth_data', 'data', 'kprestasi', 'kkegiatan', 'kinformasi_tambahan_ekstrakurikuler', 'kinformasi_produk_lomba', 'kinformasi_tambahan'));
     }
 
@@ -119,6 +122,12 @@ class ApprovePrestasiSiswaController extends BaseController
 
         $data = Siswa::findOrFail($id);
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
+        $jurusan = null;
+        if (empty($siswa->nm_jurusan)) {
+            $log_kelas = LogKelasSiswa::where('id_siswa', $siswa->id_siswa)->with('kelas.jurusan')->first();
+            $jurusan = $log_kelas->kelas->jurusan->nm_jurusan;
+        }
+
 
         $prestasi = PrestasiSiswa::where('prestasi_siswa.id_siswa', $id)
             ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
@@ -160,6 +169,11 @@ class ApprovePrestasiSiswaController extends BaseController
             ->where('informasi_tambahan.status', 1)
             ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->get();
+
+
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2') {
+            return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-smk-ypm2', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan', 'jurusan'));
+        }
 
         return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan'));
     }

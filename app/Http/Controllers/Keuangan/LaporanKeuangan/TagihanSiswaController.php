@@ -356,7 +356,7 @@ class TagihanSiswaController extends BaseController
             $besar = $t->besar_biaya;
             $t->is_tagih = 0;
             $t->besar_pembayaran =  $besar;
-            $t->tgl_pelunasan = '2023-07-17 00:00:00';
+            $t->tgl_pelunasan = '2023-07-31 00:00:00';
             $t->keterangan = 'pembayaran awal tahun';
 
             $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -367,7 +367,7 @@ class TagihanSiswaController extends BaseController
             $pembayaranBiaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
             $pembayaranBiaya->id_semester_bayar = $id_semester;
             $pembayaranBiaya->besar_pembayaran =  $besar;
-            $pembayaranBiaya->tgl_pembayaran = '2023-07-17 00:00:00';
+            $pembayaranBiaya->tgl_pembayaran = '2023-07-31 00:00:00';
             $pembayaranBiaya->keterangan = 'pembayaran awal tahun';
             $pembayaranBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
             $pembayaranBiaya->save();
