@@ -82,6 +82,39 @@ jobs:
           command: |
             ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
 
+  deploy-to-ytpnu:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy to MANU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/manu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to MINU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/minu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to MTSNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/mtsnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to SDNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/sdnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to SMKNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/smknu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to SMPNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/smpnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to TKQNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/tkqnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+
 workflows:
   # to-staging-only-master:
   #   when:
