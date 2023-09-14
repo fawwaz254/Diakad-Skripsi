@@ -672,12 +672,16 @@
                 <tr>
                     <td style="width: 70%; border: none;"></td>
                     <td style="border: none;"></td>
-                    <td style="border: none;">Kab. Sidoarjo,
-                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                    <td style="border: none;">Ditetapkan di Sidoarjo</td>
+                </tr>
+                <tr style="background-color: white;border:none;">
+                    <td style="width: 70%; border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none">pada tanggal {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                     </td>
                 </tr>
                 <tr>
-                <tr style="vertical-align: top;top:20px">
+                <tr style="vertical-align: top;top:20px; background-color: white;">
                     <td style="width: 70%; border: none;"></td>
                     <td style="border: none;">
                         @if (isset($siswa->pengguna->path_foto_pengguna))
@@ -686,8 +690,10 @@
                         @endif
                     </td>
 
-                    <td style="border: none; position: relative;">
+                    <td style="border: none; position: relative;background-color: white;">
                         Kepala Sekolah
+                        <br>
+                        SMK YPM 2 TAMAN SIDOARJO
                         <br>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                             <br>
