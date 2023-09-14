@@ -131,7 +131,7 @@ class SendAttendanceNotification extends Command
                     ->whereHas('pengguna', function ($q) use ($id_pengguna_hadir) {
                         $q->where('status_join_table', 3)->whereNotIn('pengguna.id_pengguna', $id_pengguna_hadir);
                     })
-                    ->take(250)
+                    ->take(50)
                     ->get();
 
                 foreach ($list_siswa as $siswa) {
