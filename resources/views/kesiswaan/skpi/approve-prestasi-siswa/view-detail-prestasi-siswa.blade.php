@@ -21,7 +21,10 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data Prestasi Siswa - {{$pengguna->nm_pengguna}} ({{$kelas->nm_kelas}})</h2>
+                    <h2>Data Prestasi Siswa - {{ $pengguna->nm_pengguna }} @if (isset($kelas->nm_kelas))
+                            ({{ $kelas->nm_kelas }})
+                        @endif
+                    </h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -58,7 +61,10 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data Kegiatan Siswa - {{$pengguna->nm_pengguna}} ({{$kelas->nm_kelas}})</h2>
+                    <h2>Data Kegiatan Siswa - {{ $pengguna->nm_pengguna }} @if (isset($kelas->nm_kelas))
+                            ({{ $kelas->nm_kelas }})
+                        @endif
+                    </h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -88,7 +94,10 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data Informasi Tambahan - {{$pengguna->nm_pengguna}} ({{$kelas->nm_kelas}})</h2>
+                    <h2>Data Informasi Tambahan - {{ $pengguna->nm_pengguna }} @if (isset($kelas->nm_kelas))
+                            ({{ $kelas->nm_kelas }})
+                        @endif
+                    </h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">

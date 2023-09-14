@@ -17,7 +17,7 @@ class AddDataModeNotificationAttendanceInSettingTable extends Migration
         Setting::updateOrCreate(
             ['key_setting' => 'mode_notif_kehadiran_siswa'],
             [
-                'value' => 'PRESENT_ONLY',
+                'value' => 'ABSENT_ONLY',
                 'keterangan' => 'PRESENT_ONLY|ABSENT_ONLY|ALL'
             ]
         );

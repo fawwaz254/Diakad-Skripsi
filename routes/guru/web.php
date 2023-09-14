@@ -372,11 +372,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('post-view-input-nilai', [InputNilaiController::class, 'actionViewKelasInputNilai']);
             Route::get('input-nilai/view-kelas/{id_kelas_mp}', [InputNilaiController::class, 'viewKelasInputNilai']);
             Route::get('input-nilai/datatables/{id_kelas_mp}', [InputNilaiController::class, 'datatablesInputNilai']);
-            /*
-            Route::post('post-view-input-tryout', [InputNilaiController::class, 'actionViewKelasInputTryOut']);
-            Route::get('input-tryout/view-kelas/{id_kelas_mp}', [InputNilaiController::class, 'viewKelasInputTryOut']);
-            Route::get('input-tryout/datatables/{id_kelas_mp}', [InputNilaiController::class, 'datatablesInputTryOut']);
-             */
 
             Route::post('action-input-nilai/{mode}/{id}', [InputNilaiController::class, 'actionInputNilai']);
 

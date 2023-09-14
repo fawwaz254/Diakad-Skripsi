@@ -21,9 +21,8 @@ use UniSharp\LaravelFilemanager\Controllers\RenameController;
 use UniSharp\LaravelFilemanager\Controllers\ResizeController;
 use UniSharp\LaravelFilemanager\Controllers\UploadController;
 
-// DO NOT CHANGE
-Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
-
+// Only for deploy to other prod server, 
+// Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('laravel-filemanager')->group(function () {

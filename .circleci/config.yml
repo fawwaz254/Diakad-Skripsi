@@ -1,0 +1,139 @@
+version: 2.1
+
+jobs:
+  deploy-to-staging:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy To SERVER DEV
+          command: |
+            ssh -t $SSH_USER@$SERVER_DEV "cd /var/www/diakademik_demo && git pull origin master && php artisan migrate --force"
+
+  deploy-to-smp-ypm-1:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMPYPM1 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-sma-wh-2:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMAWH2 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-smk-tanada:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMAWH2 "cd /var/www/smktanada/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-smk-ypm-1:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMKYPM1 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-smk-ypm-2:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMKYPM1 "cd /var/www/smkypm2taman/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-smp-ypm-2:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMKYPM1 "cd /var/www/smpypm2sukodono/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-smk-pemuda:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMKPEMUDA "cd /var/www/smkpemudakrian/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-smk-siti-aminah:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMKPEMUDA "cd /var/www/smksitiaminah/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-smk-ypm-3:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+  deploy-to-ytpnu:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy to MANU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/manu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to MINU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/minu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to MTSNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/mtsnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to SDNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/sdnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to SMKNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/smknu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to SMPNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/smpnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+      - run:
+          name: Deploy to TKQNU
+          command: |
+            ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/tkqnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+
+workflows:
+  # to-staging-only-master:
+  #   when:
+  #     or:
+  #       - equal: [master, << pipeline.git.branch >>]
+  #   jobs:
+  #     - deploy-to-staging
+
+  to-production:
+    when:
+      or:
+        - equal: [latest-release, << pipeline.git.branch >>]
+    jobs:
+      - deploy-to-smp-ypm-1
+      - deploy-to-sma-wh-2
+      - deploy-to-smk-tanada
+      - deploy-to-smk-ypm-1
+      - deploy-to-smk-ypm-2
+      - deploy-to-smp-ypm-2
+      # - deploy-to-smk-pemuda
+      - deploy-to-smk-siti-aminah
+      - deploy-to-smk-ypm-3
