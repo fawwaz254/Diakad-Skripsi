@@ -33,13 +33,12 @@
                              @endforeach
                          </ul>
                      </div>
-                     
                  </div>
                  <div class="body">
                      <form id="form-validation" method="POST"
                          action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-data-siswa') }}">
                          {{ csrf_field() }}
-                         <div class="row clearfix">
+                         <div class="row clearfix trigger-hide">
                              <div class="col-md-6 col-sm-12 col-xs-12">
                                  <h2 class="card-inside-title">
                                      Jurusan
@@ -379,6 +378,28 @@
  <script type="text/javascript">
      $(document).ready(function() {
          $('select').select();
+
+         if ($('#status_siswa').val().slice(5) == '15549654925caee3g111ag3') {
+             $('.trigger-hide').hide();
+         } else if ($('#status_siswa').val().slice(5) == '15549657185caee4d6983fc') {
+             $('.trigger-hide').hide();
+         }
+
+         $('#status_siswa').change(function() {
+             var selectedOption = $(this).val().slice(5);
+
+             if (selectedOption == '15549654925caee3g111ag3') {
+                 $('.trigger-hide').hide();
+                 $('#jurusan').val('0');
+                 $('#kelas').val('0');
+             } else if (selectedOption == '15549657185caee4d6983fc') {
+                 $('.trigger-hide').hide();
+                 $('#jurusan').val('0');
+                 $('#kelas').val('0');
+             } else {
+                 $('.trigger-hide').show();
+             }
+         });
      });
 
      var modul_url = 'siswa';
