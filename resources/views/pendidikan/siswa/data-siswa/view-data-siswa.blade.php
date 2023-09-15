@@ -21,7 +21,7 @@
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-data-siswa') }}">
                         {{ csrf_field() }}
-                        <div class="row clearfix">
+                        <div class="row clearfix trigger-hide">
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Jurusan
@@ -84,14 +84,14 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row clearfix" style="display: none" >
+                        <div class="row clearfix" style="display: none">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Filter Berdasarkan Abjad
                                 </h2>
                                 <select class="form-control" name="filter_by" id="filter_by">
                                     <option value="0">Semua</option>
-                                    @foreach (range('A','Z') as $value)
+                                    @foreach (range('A', 'Z') as $value)
                                         <option value="{{ $value }}">{{ $value }}</option>
                                     @endforeach
                                 </select>
@@ -113,6 +113,22 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('select').select();
+
+        $('#status_siswa').change(function() {
+            var selectedOption = $(this).val().slice(5);
+
+            if (selectedOption == '15549654925caee3g111ag3') {
+                $('.trigger-hide').hide();
+                $('#jurusan').val('0');
+                $('#kelas').val('0');
+            } else if (selectedOption == '15549657185caee4d6983fc') {
+                $('.trigger-hide').hide();
+                $('#jurusan').val('0');
+                $('#kelas').val('0');
+            } else {
+                $('.trigger-hide').show();
+            }
+        });
     });
 
     var modul_url = 'siswa';
