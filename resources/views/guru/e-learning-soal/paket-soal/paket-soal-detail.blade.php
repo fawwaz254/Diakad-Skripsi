@@ -18,62 +18,35 @@
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                        <li role="presentation" class="active"><a href="#not" data-toggle="tab"
-                                class="col-pink">Kategori Ini</a></li>
-                        <li role="presentation"><a href="#order" data-toggle="tab" class="col-pink">Kategori Lain</a>
-                        </li>
-                        <li role="presentation"><a href="#selected" data-toggle="tab" class="col-green">List Soal Sudah
+                        <li role="presentation" class="active"><a href="#selected" data-toggle="tab"
+                                class="col-green">Soal Sudah
                                 Dipilih</a></li>
+                        <li role="presentation"><a href="#not" data-toggle="tab" class="col-pink">Bank Soal Kategori
+                                Ini</a>
+                        </li>
+                        <li role="presentation"><a href="#order" data-toggle="tab" class="col-pink">Bank Soal Kategori
+                                Lain</a>
+                        </li>
+
                     </ul>
 
-                    <!-- Tab panes -->
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="not">
-                            <b>Kategori Ini</b>
-                            <button style="margin-left: 10px" id="addAll">Tambah Semua Soal</button>
-                            <div class="table-responsive">
-                                <table id="primary_table"
-                                    class="table table-bordered table-striped table-hover dataTable"
-                                    style="width: 100%;">
-
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Tipe Soal</th>
-                                            <th>Mapel</th>
-                                            <th>Pembuat</th>
-                                            <th>Soal</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="order">
-                            <b>Katerogi Lain</b>
-                            <div class="table-responsive">
-                                <table id="primary_table2"
-                                    class="table table-bordered table-striped table-hover dataTable"
-                                    style="width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Tipe Soal</th>
-                                            <th>Mapel</th>
-                                            <th>Pembuat</th>
-                                            <th>Soal</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="selected">
-                            <b>List Soal sudah dipilih</b>
+                        <div role="tabpanel" class="tab-pane fade in active" id="selected">
+                            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                                href="{{ url('guru#e-learning-soal/soal/new/pilihan-ganda') }}">
+                                <i class="material-icons">add_box</i>
+                                <span>Type Pilihan Ganda</span>
+                            </a>
+                            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                                href="{{ url('guru#e-learning-soal/soal/new/essay') }}">
+                                <i class="material-icons">add_box</i>
+                                <span>Type Essay</span>
+                            </a>
+                            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                                href="{{ url('guru#e-learning-soal/soal/new/submit') }}">
+                                <i class="material-icons">add_box</i>
+                                <span>Type File</span>
+                            </a>
                             <div class="table-responsive">
                                 <table id="secondary_table"
                                     class="table table-bordered table-striped table-hover dataTable"
@@ -93,6 +66,51 @@
                                 </table>
                             </div>
                         </div>
+                        <div role="tabpanel" class="tab-pane fade " id="not">
+                            <button class="btn btn-success" id="addAll" style="margin-bottom: 15px"><i
+                                    class="material-icons">add_box</i> <span>Tambah
+                                    Semua Soal</span></button>
+                            <br>
+                            <div class="table-responsive">
+                                <table id="primary_table"
+                                    class="table table-bordered table-striped table-hover dataTable"
+                                    style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tipe Soal</th>
+                                            <th>Mapel</th>
+                                            <th>Pembuat</th>
+                                            <th>Soal</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="order">
+                            <div class="table-responsive">
+                                <table id="primary_table2"
+                                    class="table table-bordered table-striped table-hover dataTable"
+                                    style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tipe Soal</th>
+                                            <th>Mapel</th>
+                                            <th>Pembuat</th>
+                                            <th>Soal</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

@@ -62,25 +62,24 @@ class PaketSoalController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-
-        $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna)->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas')->orderBy('paket_soal.created_at', 'desc')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
-            return $q->whereNotNull('content');
-        }])
-            ->when($input->status == 0, function ($q) {
-                $q->where('status', 0);
+        $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna)->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas')->orderBy('paket_soal.created_at', 'desc')
+            ->when($input->status == '0', function ($q) {
+                $q->doesntHave('test');
+            })->when($input->status == '1', function ($q) {
+                $q->whereHas('test');
             });
 
         return Datatables::of($list_data)
             ->addColumn('total_question', function ($item) {
-                return $item->detail_paket_soal->count();
+                return  $item->detail_paket_soal->count();
             })
-            ->addColumn('total_answer', function ($item) {
-                $value = 0;
-                foreach ($item->detail_paket_soal as $data) {
-                    $value += $data->soal->pilihan_soal->count();
-                }
-                return $value;
-            })->editColumn('waktu_pengerjaan', function ($item) {
+            ->editColumn('waktu_mulai', function ($item) {
+                return Carbon::parse($item->waktu_mulai)->format('d-m-Y (H:i)');
+            })
+            ->editColumn('waktu_selesai', function ($item) {
+                return Carbon::parse($item->waktu_selesai)->format('d-m-Y (H:i)');
+            })
+            ->editColumn('waktu_pengerjaan', function ($item) {
                 return $item->waktu_pengerjaan . ' Menit';
             })
             ->addColumn('action', function ($item) use ($input) {

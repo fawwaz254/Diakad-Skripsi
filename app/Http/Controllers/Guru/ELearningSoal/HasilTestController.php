@@ -16,7 +16,7 @@ use Carbon\Carbon;
 
 class HasilTestController extends Controller
 {
-    public function indexList(Request $request)
+    public function indexList()
     {
         return view('guru/e-learning-soal/hasil-test/view-hasil-test');
     }
@@ -24,24 +24,18 @@ class HasilTestController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-        $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna)->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
-            return $q->whereNotNull('content');
-        }])->orderBy('paket_soal.created_at', 'desc');
-
+        $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna)->with('kelas', 'test', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas.siswa')->orderBy('paket_soal.created_at', 'desc');
 
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
-                $id_kelas = [];
-                foreach ($item->paket_soal_kelas as $key => $kelas) {
-                    $id_kelas[$key] = $kelas->id_kelas;
+                $total = 0;
+                foreach ($item->paket_soal_kelas as $kelas) {
+                    $total += $kelas->kelas->siswa->count();
                 }
-                $total = Siswa::whereIn('id_kelas', $id_kelas)->count();
                 return $total;
             })
             ->addColumn('total_mengerjakan', function ($item) {
-                $mengerjakan = Test::where('id_paket_soal', $item->id_paket_soal)->count();
-
-                return $mengerjakan;
+                return $item->test->count();
             })
             ->addColumn('action', function ($item) {
                 $nm_kelas = [];

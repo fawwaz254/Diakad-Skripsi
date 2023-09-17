@@ -5,22 +5,22 @@
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/new/pilihan-ganda') }}">
                 <i class="material-icons">add_box</i>
-                <span>Tambah Pilihan Ganda</span>
+                <span>Type Pilihan Ganda</span>
             </a>
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/new/essay') }}">
                 <i class="material-icons">add_box</i>
-                <span>Tambah Jawaban Essay</span>
+                <span>Type Essay</span>
             </a>
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/new/submit') }}">
                 <i class="material-icons">add_box</i>
-                <span>Tambah Jawaban File</span>
+                <span>Type File</span>
             </a>
             <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/kategori') }}">
                 <i class="material-icons">settings</i>
-                <span>kategori Mata Pelajaran</span>
+                <span>Mata Pelajaran</span>
             </a>
             <div class="card">
                 <div class="header">

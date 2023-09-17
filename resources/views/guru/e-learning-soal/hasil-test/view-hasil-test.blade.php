@@ -15,7 +15,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
-                                    <th>List_Kelas</th>
+                                    <th>Kelas</th>
                                     <th>Mapel</th>
                                     <th>Total Siswa</th>
                                     <th>Siswa Mengerjakan</th>
@@ -41,9 +41,6 @@
     var detail_url = role_url + '#' + modul_url + '/' + 'hasil-test';
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/print/skpi';
 
-
-
-
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
@@ -66,7 +63,6 @@
                 data: 'action',
                 name: 'action',
                 render: function(data) {
-                    // alert(data.nm_kelas);
                     let html = '';
                     data.nm_kelas.forEach(element => {
                         html += '- ' +
@@ -81,16 +77,17 @@
             {
                 data: 'total_siswa',
                 name: 'total_siswa',
+                className: 'align-center',
                 searchable: false,
                 orderable: false
             },
             {
                 data: 'total_mengerjakan',
                 name: 'total_mengerjakan',
+                className: 'align-center',
                 searchable: false,
                 orderable: false
             },
-            // { data: 'nilai'},                     { data: 'nilai'},
             {
                 data: 'action',
                 name: 'action',
