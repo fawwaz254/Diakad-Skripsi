@@ -1,14 +1,23 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
             <a type="button" class="btn btn-success" style=" margin-right: 10px"
                 href="{{ url('guru#e-learning-soal/paket-soal/manage') }}">
                 <i class="material-icons">add_box</i>
                 <span>Tambah Paket Soal</span>
             </a>
+            <a type="button" class="btn btn-success" style=" margin-right: 10px"
+                href="{{ url('guru#e-learning-soal/paket-soal/bank-soal') }}">
+                <i class="material-icons">collections_bookmark</i>
+                <span>Bank Soal</span>
+            </a>
+            <a type="button" class="btn btn-primary" style=" margin-right: 10px"
+                href="{{ url('guru#e-learning-soal/paket-soal/bank-soal/kategori') }}">
+                <i class="material-icons">settings</i>
+                <span>Mata Pelajaran</span>
+            </a>
             <input type="checkbox" id="data_alumni" class="checkbox">
-            <label for="data_alumni"> Paket Soal Yang Sudah Dikerjakan</label>
+            <label for="data_alumni">Sudah Dikerjakan</label>
             <input type="hidden" id="status" value="0">
             <br><br>
             <div class="card">
@@ -35,18 +44,18 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
-                                    <th>List_Kelas</th>
+                                    <th>Kelas</th>
                                     <th>Mapel</th>
                                     <th>Total Soal</th>
+                                    <th>Tambah Soal</th>
                                     {{-- <th>Total Answer</th> --}}
-                                    <th>Nilai Soal Pilihan Ganda</th>
-                                    <th>Waktu Mulai</th>
-                                    <th>Waktu Akhir</th>
+                                    <th>Poin Pilihan Ganda</th>
+                                    <th>Mulai</th>
+                                    <th>Selesai</th>
                                     <th>Durasi Pengerjaan</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-
                             <tbody>
                             </tbody>
                         </table>
@@ -55,12 +64,10 @@
             </div>
         </div>
     </div>
-    <!-- #END# Basic Examples -->
 </div>
 <script>
-    $('.checkbox').on('change', function() { // on change of state
-        if (this.checked) // if changed state is "CHECKED"
-        {
+    $('.checkbox').on('change', function() {
+        if (this.checked) {
             $('#status').val(1);
             primary_table.draw();
         } else {
@@ -117,17 +124,37 @@
                 data: 'total_question',
                 name: 'total_question',
                 searchable: false,
-                orderable: false
+                orderable: false,
+                className: 'align-center',
+
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        detail_url + '/detail/' + data.id + '">' +
+                        '    <i class="material-icons">add</i>' +
+                        '</a>';
+
+                }
             },
             // { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
             {
-                data: 'nilai'
+                data: 'nilai',
+                className: 'align-center'
             }, {
-                data: 'waktu_mulai'
+                data: 'waktu_mulai',
+                className: 'align-center'
             }, {
-                data: 'waktu_selesai'
+                data: 'waktu_selesai',
+                className: 'align-center'
             }, {
-                data: 'waktu_pengerjaan'
+                data: 'waktu_pengerjaan',
+                className: 'align-center'
             },
             {
                 data: 'action',
@@ -135,13 +162,8 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-
                     if (data.status == 0) {
-                        return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                            detail_url + '/detail/' + data.id + '">' +
-                            '    <i class="material-icons">library_add</i>' +
-                            '</a>' +
-                            '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                             detail_url + '/manage/' + data.id + '">' +
                             '    <i class="material-icons">mode_edit</i>' +
                             '</a>' +

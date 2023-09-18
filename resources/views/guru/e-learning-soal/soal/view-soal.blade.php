@@ -1,48 +1,39 @@
 <div class="container-fluid">
     <div class="row clearfix">
-
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
-                href="{{ url('guru#e-learning-soal/soal/new/pilihan-ganda') }}">
-                <i class="material-icons">add_box</i>
-                <span>Tambah Pilihan Ganda</span>
+            <a type="button" class="btn bg-grey waves-effect" style="margin-bottom: 15px"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal') }}">
+                <i class="material-icons">keyboard_backspace</i>
+                <span>Kembali</span>
             </a>
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
-                href="{{ url('guru#e-learning-soal/soal/new/essay') }}">
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/pilihan-ganda') }}">
                 <i class="material-icons">add_box</i>
-                <span>Tambah Jawaban Essay</span>
+                <span>Type Pilihan Ganda</span>
             </a>
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
-                href="{{ url('guru#e-learning-soal/soal/new/submit') }}">
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/essay') }}">
                 <i class="material-icons">add_box</i>
-                <span>Tambah Jawaban File</span>
+                <span>Type Essay</span>
             </a>
-            <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
+            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/submit') }}">
+                <i class="material-icons">add_box</i>
+                <span>Type File</span>
+            </a>
+            {{-- <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/kategori') }}">
                 <i class="material-icons">settings</i>
-                <span>kategori Mata Pelajaran</span>
-            </a>
+                <span>Mata Pelajaran</span>
+            </a> --}}
             <div class="card">
                 <div class="header">
                     <h2>
                         Bank Soal
-                        {{-- <a href=""> <i class="material-icons">add_box</i></a> --}}
                     </h2>
-                    {{-- <button type="button" class="btn btn-success">Tambah Soal</button> --}}
-                    {{-- <ul class="header-dropdown m-r--5">
-                        <li class="dropdown">
-                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="{{url('guru#e-learning-soal/soal/new')}}">tambah soal baru</a></li>
-                            </ul>
-                        </li>
-                    </ul> --}}
                 </div>
 
                 <div class="body">
-
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
                             <a href="#belum" data-toggle="tab">
@@ -95,26 +86,19 @@
                                     </thead>
                                 </table>
                             </div>
-
                         </div>
                     </div>
-
-
-
-                    {{-- <button type="button" class="btn btn-success" style="margin-bottom: 15px"><i class="material-icons"></i> Tambah Soal</button> --}}
-
                 </div>
             </div>
         </div>
     </div>
-    <!-- #END# Basic Examples -->
 </div>
 @include('scriptjs')
 <script>
     var modul_url = '{{ Request::segment(2) }}';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'soal/table';
-    var detail_url = role_url + '#' + modul_url + '/' + 'soal';
-    var delete_url = role_url + '/' + modul_url + '/' + 'soal';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/bank-soal/table';
+    var detail_url = role_url + '#' + modul_url + '/' + 'paket-soal/bank-soal';
+    var delete_url = role_url + '/' + modul_url + '/' + 'paket-soal/bank-soal';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
