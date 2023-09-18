@@ -3,7 +3,7 @@
         <div class="block-header">
             <h2>
                 <h2><a type="button" class="btn bg-grey waves-effect"
-                        href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/soal') }}">
+                        href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal') }}">
                         <i class="material-icons">keyboard_backspace</i>
                         <span>Kembali</span>
                     </a></h2>

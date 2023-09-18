@@ -34,7 +34,7 @@ class SoalController extends Controller
         }
         return abort(404);
     }
-    public function addKategori(Request $request)
+    public function addKategori()
     {
         return view('guru/e-learning-soal/soal/add-kategori-soal');
     }
@@ -86,7 +86,6 @@ class SoalController extends Controller
         $auth_data = $input->auth_data;
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $list_data = KategoriSoal::orderBy('created_at', 'DESC')->with('soal', 'paket_soal', 'pengguna');
-
 
         return Datatables::of($list_data)
             ->addColumn('use', function ($item) {
@@ -153,7 +152,7 @@ class SoalController extends Controller
     public function actionDelete(Request $request)
     {
         $input = (object) $request->input();
-        if ($soal = DetailPaketSoal::where('id_soal', $input->id_soal)->first()) {
+        if (DetailPaketSoal::where('id_soal', $input->id_soal)->first()) {
             return [
                 'status' => 300, // FAILED
                 'message' => 'Gagal dihapus, Soal sudah digunakan'
@@ -220,7 +219,7 @@ class SoalController extends Controller
             $question->save();
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'e-learning-soal/soal',
+                'path' => 'e-learning-soal/paket-soal/bank-soal',
                 'message' => 'Berhasil Mengubah Soal'
             ];
         } else {
@@ -230,7 +229,7 @@ class SoalController extends Controller
                 if ($input->id_tipe_soal == 1) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         //validasi ketika ada data yg sama
-                        if ($validasi = Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                             $question = new Soal;
                             $question->id_kategori_soal = $input->kategori;
                             $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -278,7 +277,7 @@ class SoalController extends Controller
                     }
                 } else if ($input->id_tipe_soal == 2) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        if ($validasi2 = Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                             $question = new Soal;
                             $question->id_kategori_soal = $input->kategori;
                             $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -305,7 +304,7 @@ class SoalController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'e-learning-soal/soal',
+                    'path' => 'e-learning-soal/paket-soal/bank-soal',
                     'message' => 'Berhasil Menambah Soal'
                 ];
             } catch (\Exception $e) {

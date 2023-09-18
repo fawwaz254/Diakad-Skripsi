@@ -7,17 +7,15 @@
                 <span>Tambah Paket Soal</span>
             </a>
             <a type="button" class="btn btn-success" style=" margin-right: 10px"
-                href="{{ url('guru#e-learning-soal/paket-soal/manage') }}">
+                href="{{ url('guru#e-learning-soal/paket-soal/bank-soal') }}">
                 <i class="material-icons">collections_bookmark</i>
                 <span>Bank Soal</span>
             </a>
             <a type="button" class="btn btn-primary" style=" margin-right: 10px"
-                href="{{ url('guru#e-learning-soal/soal/kategori') }}">
+                href="{{ url('guru#e-learning-soal/paket-soal/bank-soal/kategori') }}">
                 <i class="material-icons">settings</i>
                 <span>Mata Pelajaran</span>
             </a>
-
-
             <input type="checkbox" id="data_alumni" class="checkbox">
             <label for="data_alumni">Sudah Dikerjakan</label>
             <input type="hidden" id="status" value="0">

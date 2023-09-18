@@ -175,42 +175,60 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('e-learning-soal')->group(function () {
 
-            Route::prefix('soal')->group(function () {
-                Route::get('/', [SoalController::class, 'indexList']);
-                // Route::get('uploadImage', [SoalController::class,'uploadImageCkeditor']);
-                Route::get('new/{tipe_soal}', [SoalController::class, 'indexNew']);
-                Route::get('kategori', [SoalController::class, 'addKategori']);
-                Route::post('kategori', [SoalController::class, 'actionKategori']);
-                Route::get('kategori/table', [SoalController::class, 'commonListKategori']);
-                Route::post('kategori/delete', [SoalController::class, 'actionDeleteKategori']);
-                Route::post('new', [SoalController::class, 'actionSave']);
-                Route::post('/table', [SoalController::class, 'commonList']);
-                Route::get('edit/{id}', [SoalController::class, 'indexManage']);
-                Route::get('test/{id}', [SoalController::class, 'indexTest']);
-                Route::get('detail/{id}', [SoalController::class, 'indexOrder']);
-                // Route::post('order/save', [QuestionController::class, 'actionOrderSave']);
-                Route::post('/delete', [SoalController::class, 'actionDelete']);
-            });
+            // Route::prefix('soal')->group(function () {
+            //     Route::get('/', [SoalController::class, 'indexList']);
+            //     // Route::get('uploadImage', [SoalController::class,'uploadImageCkeditor']);
+            //     Route::get('new/{tipe_soal}', [SoalController::class, 'indexNew']);
+            //     Route::get('kategori', [SoalController::class, 'addKategori']);
+            //     Route::post('kategori', [SoalController::class, 'actionKategori']);
+            //     Route::get('kategori/table', [SoalController::class, 'commonListKategori']);
+            //     Route::post('kategori/delete', [SoalController::class, 'actionDeleteKategori']);
+            //     Route::post('new', [SoalController::class, 'actionSave']);
+            //     Route::post('/table', [SoalController::class, 'commonList']);
+            //     Route::get('edit/{id}', [SoalController::class, 'indexManage']);
+            //     Route::get('test/{id}', [SoalController::class, 'indexTest']);
+            //     Route::get('detail/{id}', [SoalController::class, 'indexOrder']);
+            //     // Route::post('order/save', [QuestionController::class, 'actionOrderSave']);
+            //     Route::post('/delete', [SoalController::class, 'actionDelete']);
+            // });
             Route::prefix('paket-soal')->group(function () {
                 Route::get('/', [PaketSoalController::class, 'indexList']);
+                Route::post('/', [PaketSoalController::class, 'actionSave']);
+                Route::post('table', [PaketSoalController::class, 'commonList']);
                 Route::get('manage', [PaketSoalController::class, 'indexManage']);
                 Route::get('manage/{id}', [PaketSoalController::class, 'indexManage']);
-                Route::post('table', [PaketSoalController::class, 'commonList']);
-                Route::post('/', [PaketSoalController::class, 'actionSave']);
                 Route::post('delete', [PaketSoalController::class, 'actionDelete']);
                 Route::get('detail/{id}', [PaketSoalController::class, 'indexDetail']);
+                Route::post('detail/add', [PaketSoalController::class, 'actionDetailAdd']);
                 Route::get('test/{id}', [PaketSoalController::class, 'indexTest']);
                 // Route::post('detail/table', [PaketSoalController::class,'detailList']);
                 Route::post('detail/table/{id}/{tipe}', [PaketSoalController::class, 'detailList']);
-                Route::post('detail/add', [PaketSoalController::class, 'actionDetailAdd']);
                 Route::post('detail/delete', [PaketSoalController::class, 'actionDetailDelete']);
+
+                Route::prefix('bank-soal')->group(function () {
+                    Route::get('/', [SoalController::class, 'indexList']);
+                    // Route::get('uploadImage', [SoalController::class,'uploadImageCkeditor']);
+                    Route::post('/table', [SoalController::class, 'commonList']);
+                    Route::get('new/{tipe_soal}', [SoalController::class, 'indexNew']);
+                    Route::post('new', [SoalController::class, 'actionSave']);
+                    Route::get('kategori', [SoalController::class, 'addKategori']);
+                    Route::post('kategori', [SoalController::class, 'actionKategori']);
+                    Route::get('kategori/table', [SoalController::class, 'commonListKategori']);
+                    Route::post('kategori/delete', [SoalController::class, 'actionDeleteKategori']);
+                    Route::get('edit/{id}', [SoalController::class, 'indexManage']);
+                    Route::get('test/{id}', [SoalController::class, 'indexTest']);
+                    Route::get('detail/{id}', [SoalController::class, 'indexOrder']);
+                    // Route::post('order/save', [QuestionController::class, 'actionOrderSave']);
+                    Route::post('/delete', [SoalController::class, 'actionDelete']);
+                });
             });
+
             Route::prefix('hasil-test')->group(function () {
                 Route::get('/', [HasilTestController::class, 'indexList']);
+                Route::post('table', [HasilTestController::class, 'commonList']);
                 Route::get('koreksi/{id_test}/{id_pengguna}', [HasilTestController::class, 'indexKoreksi']);
                 Route::get('koreksi/{id_paket_soal}/{id_test}/{id_pengguna}', [HasilTestController::class, 'indexKoreksi']);
                 Route::post('koreksi', [HasilTestController::class, 'actionKoreksiHasilTest']);
-                Route::post('table', [HasilTestController::class, 'commonList']);
                 Route::get('detail/{id}', [HasilTestController::class, 'indexDetail']);
                 Route::post('detail/table/{id}', [HasilTestController::class, 'detailList']);
             });

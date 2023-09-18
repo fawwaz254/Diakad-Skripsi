@@ -1,6 +1,6 @@
 <div class="block-header">
     <h2><a type="button" class="btn bg-grey waves-effect"
-            href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/soal') }}">
+            href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal') }}">
             <i class="material-icons">keyboard_backspace</i>
             <span>Kembali</span>
         </a>
@@ -21,10 +21,8 @@
     </h2>
 </div>
 
-
-
 <form class="form-validation" id="form-validation" method="POST"
-    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/soal/new') }}">
+    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/paket-soal/bank-soal/new') }}">
     {{ csrf_field() }}
     <input type="hidden" name="id_tipe_soal" value="2">
     <br>
@@ -50,9 +48,6 @@
         </div>
     </div>
     <br>
-
-
-
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -62,7 +57,6 @@
                     </h2>
                 </div>
                 <div class="body">
-
                     <h2 class="card-inside-title">Soal</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -79,8 +73,6 @@
             </div>
         </div>
     </div>
-
-
     <div id="place">
     </div>
     <br>
@@ -91,7 +83,6 @@
         </div>
     </div>
 </form>
-
 
 
 @include('scriptjs')
@@ -127,19 +118,6 @@
 
         }
     });
-
-    // var editor = CKEDITOR.replace('q1', options);
-    // // CKFinder.setupCKEditor(editor);
-
-    // timer = setInterval(updateDiv, 100);
-
-    // function updateDiv() {
-    //     var editorText = CKEDITOR.instances.q1.getData();
-    //     $('#q1').val(editorText);
-    //     var text = CKEDITOR.instances.q1.document.getBody().getText();
-    //     $('#t1').val(text);
-
-    // }
 </script>
 <script>
     //untuk fungsi  add jumlah soal
