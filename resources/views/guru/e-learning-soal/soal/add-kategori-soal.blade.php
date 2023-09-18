@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a type="button" class="btn bg-grey waves-effect"
-                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/soal') }}">
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal') }}">
                 <i class="material-icons">keyboard_backspace</i>
                 <span>Kembali</span>
             </a>
@@ -17,7 +17,7 @@
                 </div>
                 <div class="body">
                     <form class="form-validation" id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/soal/kategori') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/paket-soal/bank-soal/kategori') }}">
                         {{ csrf_field() }}
 
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -70,10 +70,10 @@
     var modul_url = '{{ Request::segment(2) }}';
     var menu_url = '{{ Request::segment(3) }}';
 
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/soal/kategori/table';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/paket-soal/bank-soal/kategori/table';
     // var edit_url        = role_url + '#' + modul_url + '/tracer-alumni/edit';
     // var detail_url      = role_url + '#' + modul_url + '/kategori-pertanyaan/detail';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/soal/kategori';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/paket-soal/bank-soal/kategori';
     // alert(datatable_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,

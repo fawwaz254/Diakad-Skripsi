@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a type="button" class="btn bg-grey waves-effect"
-                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/soal') }}">
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal') }}">
                 <i class="material-icons">keyboard_backspace</i>
                 <span>Kembali</span>
             </a>
@@ -10,7 +10,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-pink">
+                {{-- <div class="header bg-pink">
                     <h2>EDIT SOAL PILIHAN GANDA</h2>
                     <div class="header-dropdown m-r-15" style="top:12px">
                         <a class="btn bg-orange waves-effect"
@@ -20,23 +20,25 @@
                             <span>To Test Page</span>
                         </a>
                     </div>
-                </div>
+                </div> --}}
                 <div class="body">
                     <form class="form-validation" method="POST" id="form-validation"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/soal/new') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/paket-soal/bank-soal/new') }}">
                         {{ csrf_field() }}
                         <input type="hidden" name="id_soal" value="{{ $item->id_soal }}">
                         <input type="hidden" name="id_tipe_soal" value="{{ $item->id_tipe_soal }}">
-                        <input type="hidden" id="t1" name="text" >
+                        <input type="hidden" id="t1" name="text">
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <label>Mata Pelajaran</label>
-                            <select class="form-control show-tick" name="kategori" >
-                                <option disabled>-- Pilih Mata Pelajaran --</option>
-                                @foreach ($kategori as $r)
-                                    <option value="{{ $r->id_kategori_soal }}" @if($r->id_kategori_soal == $item->id_kategori_soal) selected @endif>{{ $r->nm_kategori_soal }}</option>
-                                @endforeach
-                            </select>
+                                <label>Mata Pelajaran</label>
+                                <select class="form-control show-tick" name="kategori">
+                                    <option disabled>-- Pilih Mata Pelajaran --</option>
+                                    @foreach ($kategori as $r)
+                                        <option value="{{ $r->id_kategori_soal }}"
+                                            @if ($r->id_kategori_soal == $item->id_kategori_soal) selected @endif>{{ $r->nm_kategori_soal }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <h2 class="card-inside-title">Soal</h2>
@@ -81,83 +83,89 @@
 </div>
 @include('scriptjs')
 <!-- CKeditor Plugin Js -->
-<script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
+<script src="{{ asset('plugins/ckeditor/ckeditor.js') }}"></script>
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
-   var options = {
-    filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
-    filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
-    filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
-    filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
-  };
+    var options = {
+        filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+        filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+        filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+        filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
+    };
 
 
 
-CKEDITOR.replace( 'q1',options); 
+    CKEDITOR.replace('q1', options);
 
-// custom code to key binding ckeditor
-timer = setInterval(updateDiv,100);
-function updateDiv(){
-    var editorText = CKEDITOR.instances.q1.getData();
-    $('#q1').val(editorText);
-    var text = CKEDITOR.instances.q1.document.getBody().getText();
-    $('#t1').val(text);
-
-}
-</script>
-
-<script>
-CKEDITOR.replace( 'a0',options );
-
-// custom code to key binding ckeditor
-timer = setInterval(updateDiv,100);
-function updateDiv(){
-    var editorText = CKEDITOR.instances.a0.getData();
-    $('#a0').val(editorText);
-}
-</script>
-
-<script>
-CKEDITOR.replace( 'a1',options);
-
-// custom code to key binding ckeditor
-timer = setInterval(updateDiv,100);
-function updateDiv(){
-    var editorText = CKEDITOR.instances.a1.getData();
-    $('#a1').val(editorText);
-}
-</script> 
-
-<script>
-    CKEDITOR.replace( 'a2',options);
-    
     // custom code to key binding ckeditor
-    timer = setInterval(updateDiv,100);
-    function updateDiv(){
+    timer = setInterval(updateDiv, 100);
+
+    function updateDiv() {
+        var editorText = CKEDITOR.instances.q1.getData();
+        $('#q1').val(editorText);
+        var text = CKEDITOR.instances.q1.document.getBody().getText();
+        $('#t1').val(text);
+
+    }
+</script>
+
+<script>
+    CKEDITOR.replace('a0', options);
+
+    // custom code to key binding ckeditor
+    timer = setInterval(updateDiv, 100);
+
+    function updateDiv() {
+        var editorText = CKEDITOR.instances.a0.getData();
+        $('#a0').val(editorText);
+    }
+</script>
+
+<script>
+    CKEDITOR.replace('a1', options);
+
+    // custom code to key binding ckeditor
+    timer = setInterval(updateDiv, 100);
+
+    function updateDiv() {
+        var editorText = CKEDITOR.instances.a1.getData();
+        $('#a1').val(editorText);
+    }
+</script>
+
+<script>
+    CKEDITOR.replace('a2', options);
+
+    // custom code to key binding ckeditor
+    timer = setInterval(updateDiv, 100);
+
+    function updateDiv() {
         var editorText = CKEDITOR.instances.a2.getData();
         $('#a2').val(editorText);
     }
-    </script> 
+</script>
 
 <script>
-    CKEDITOR.replace( 'a3',options);
-    
+    CKEDITOR.replace('a3', options);
+
     // custom code to key binding ckeditor
-    timer = setInterval(updateDiv,100);
-    function updateDiv(){
+    timer = setInterval(updateDiv, 100);
+
+    function updateDiv() {
         var editorText = CKEDITOR.instances.a3.getData();
         $('#a3').val(editorText);
     }
-    </script> 
+</script>
 
 <script>
-    CKEDITOR.replace( 'a4',options );
-    
+    CKEDITOR.replace('a4', options);
+
     // custom code to key binding ckeditor
-    timer = setInterval(updateDiv,100);
-    function updateDiv(){
+    timer = setInterval(updateDiv, 100);
+
+    function updateDiv() {
         var editorText = CKEDITOR.instances.a4.getData();
         $('#a4').val(editorText);
     }
-    </script> 
+</script>

@@ -49,4 +49,9 @@ class PaketSoal extends Model
     {
         return $this->hasMany('App\Models\PaketSoalKelas', 'id_paket_soal');
     }
+
+    public function test()
+    {
+        return $this->hasMany(Test::class, 'id_paket_soal');
+    }
 }
