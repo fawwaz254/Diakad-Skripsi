@@ -7,22 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Models\DetailPaketSoal;
 use App\Models\KategoriSoal;
 use App\Models\Kelas;
-
 use App\Models\PaketSoal;
 use App\Models\PaketSoalKelas;
 use App\Models\Soal;
 use App\Models\Test;
-use App\Models\WaliKelas;
 use Yajra\Datatables\Datatables;
-use Auth;
-use DB;
-use Validator;
 use Carbon\Carbon;
 
 
 class PaketSoalController extends Controller
 {
-    public function indexList(Request $request)
+    public function indexList()
     {
         return view('guru/e-learning-soal/paket-soal/view-paket-soal');
     }
@@ -99,6 +94,7 @@ class PaketSoalController extends Controller
 
     public function detailList(Request $request, $question_package_id = 0, $tipe)
     {
+        $input = (object) $request->input();
         $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id);
         $list_question_selected = $question_package_details->pluck('id_soal');
         $paket_soal = PaketSoal::find($question_package_id);
@@ -110,10 +106,13 @@ class PaketSoalController extends Controller
             $list_data = Soal::with('pengguna', 'kategori_soal')->whereIn('id_soal', $list_question_selected);
         }
 
+        // $id_pengguna = $input->auth_data->pengguna->id_pengguna;
+
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->id_soal
+                    'id' => $item->id_soal,
+                    // 'edit' => $item->id_pengguna == $id_pengguna ? true : false
                 );
                 return $data;
             })
@@ -130,18 +129,7 @@ class PaketSoalController extends Controller
 
     public function actionSave(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'title' => 'required',
-        //     'event' => 'required'
-        // ]);
-
-        // if($validator->fails()) {
-        //     return back()->with('toast', $validator->errors()->first());
-        // }
-
         $input = (object) $request->input();
-
-
         if ($paket_soal = PaketSoal::find($input->id_paket_soal)) {
 
             $paket_soal_kelass = PaketSoalKelas::where('id_paket_soal', $input->id_paket_soal)->get();
@@ -199,14 +187,11 @@ class PaketSoalController extends Controller
                 $question_package_class->save();
             }
 
-
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'e-learning-soal/paket-soal',
                 'message' => 'Berhasil Menambah paket Soal'
             ];
-
-            // return back()->with('toast', 'Save item Successfully');
         }
     }
 
@@ -228,26 +213,11 @@ class PaketSoalController extends Controller
                 'path' => 'e-learning-soal/paket-soal',
                 'message' => 'Berhasil Menghapus paket Soal'
             ];
-        } else {
-            // return response()->json([
-            //     'status' => 500,
-            //     'message' => 'Error'
-            // ]);
-        }
+        } else { }
     }
 
     public function actionDetailAdd(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'question_package_id' => 'required',
-        //     'question_id' => 'required'
-        // ]);
-
-        // if($validator->fails()) {
-        //     return back()->with('toast', $validator->errors()->first());
-        // }
-
-
         $input = (object) $request->input();
         if ($input->id_soal != '0') {
             if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) { } else {
@@ -289,15 +259,6 @@ class PaketSoalController extends Controller
 
     public function actionDetailDelete(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'question_package_id' => 'required',
-        //     'question_id' => 'required'
-        // ]);
-
-        // if($validator->fails()) {
-        //     return back()->with('toast', $validator->errors()->first());
-        // }
-
         $input = (object) $request->input();
         if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) {
             $question_package_detail->delete();
@@ -307,11 +268,5 @@ class PaketSoalController extends Controller
                 'message' => 'Berhasil Menghapus paket Soal'
             ];
         }
-        // }else{
-        //     return response()->json([
-        //         'status' => 500,
-        //         'message' => 'Error'
-        //     ]);
-        // }
     }
 }

@@ -34,6 +34,20 @@ class SoalController extends Controller
         }
         return abort(404);
     }
+
+    public function indexNew2(Request $request, $tipe_soal, $id_paket_soal)
+    {
+        $paket_soal = PaketSoal::find($id_paket_soal);
+        if ($tipe_soal == "pilihan-ganda") {
+            return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda2', compact('paket_soal'));
+        } elseif ($tipe_soal == "essay") {
+            return view('guru/e-learning-soal/soal/add-soal-essay2', compact('paket_soal'));
+        } elseif ($tipe_soal == "submit") {
+            return view('guru/e-learning-soal/soal/add-soal-submit2', compact('paket_soal'));
+        }
+        return abort(404);
+    }
+
     public function addKategori()
     {
         return view('guru/e-learning-soal/soal/add-kategori-soal');
@@ -140,12 +154,6 @@ class SoalController extends Controller
                 return view('guru/e-learning-soal/soal/edit-soal-essay', compact('item', 'kategori'));
             }
         }
-
-        // if ($item = Soal::find($id_soal)) {
-        //     $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
-        // } else {
-        //     $question_options = null;
-        // }
     }
 
 
@@ -318,6 +326,170 @@ class SoalController extends Controller
         }
     }
 
+    public function actionSave2(Request $request)
+    {
+        $input = (object) $request->input();
+
+        if ($input->id_tipe_soal == 1) {
+            $validator = Validator::make($request->all(), [
+                'soal' => 'required',
+                'jawaban_benar' => 'required',
+            ]);
+        } else {
+            $validator = Validator::make($request->all(), [
+                'soal' => 'required',
+            ]);
+        }
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300,
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        if (!empty($input->id_soal) && $question = Soal::find($input->id_soal)) {
+            $question->content = $input->soal;
+            $question->text = $input->text;
+            $question->id_kategori_soal = $input->id_kategori_soal;
+            if ($input->id_tipe_soal == 1) {
+                $id_pilihan_soal_benar = 0;
+                foreach ($input->jawaban as $no_answer => $answer) {
+                    $question_option = PilihanSoal::find($input->id_jawaban[$no_answer]);
+                    $question_option->id_soal = $question->id_soal;
+                    $question_option->number_option = $no_answer;
+                    $question_option->content = $answer;
+                    $question_option->text = $answer;
+                    if ($input->jawaban_benar == $no_answer) {
+                        $question_option->correct = 1;
+                        $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                    } else {
+                        $question_option->correct = 0;
+                    }
+                    $question_option->save();
+                }
+                $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+            }
+            $question->save();
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'e-learning-soal/paket-soal/bank-soal',
+                'message' => 'Berhasil Mengubah Soal'
+            ];
+        } else {
+            DB::beginTransaction();
+            try {
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                if ($input->id_tipe_soal == 1) {
+                    for ($i = 1; $i <= count($input->soal); $i++) {
+                        //validasi ketika ada data yg sama
+                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                            $question = new Soal;
+                            $question->id_kategori_soal = $input->id_kategori_soal;
+                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_tipe_soal = $input->id_tipe_soal;
+                            $question->content = $input->soal[$i];
+                            $question->text = strip_tags($input->soal[$i]);
+                            $question->save();
+
+                            $detail_paket_soal = new DetailPaketSoal;
+                            $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
+                            $detail_paket_soal->id_soal = $question->id_soal;
+                            $detail_paket_soal->save();
+
+                            if (empty(strip_tags($input->soal[$i]))) {
+                                DB::rollback();
+                                return [
+                                    'status' => 300,
+                                    'message' => 'Eror Ada Kolom yg kosong tau save sekali lagi'
+                                ];
+                            }
+                            foreach ($input->jawaban[$i] as $no_answer => $answer) {
+                                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                                $question_option = new PilihanSoal;
+                                $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $question_option->number_option = $no_answer;
+                                $question_option->id_soal = $question->id_soal;
+                                $question_option->content = $answer;
+                                $question_option->text = $answer;
+                                if (empty(strip_tags($answer))) {
+                                    DB::rollback();
+                                    return [
+                                        'status' => 300,
+                                        'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi'
+                                    ];
+                                }
+                                if ($input->jawaban_benar[$i] == $no_answer) {
+                                    $question_option->correct = 1;
+                                } else {
+                                    $question_option->correct = 0;
+                                }
+                                $question_option->save();
+
+                                if ($input->jawaban_benar[$i] == $no_answer) {
+                                    $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                                }
+                            }
+                            $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+                            $question->save();
+                        }
+                    }
+                } else if ($input->id_tipe_soal == 2) {
+                    for ($i = 1; $i <= count($input->soal); $i++) {
+                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                            $question = new Soal;
+                            $question->id_kategori_soal = $input->id_kategori_soal;
+                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_tipe_soal = $input->id_tipe_soal;
+                            $question->content = $input->soal[$i];
+                            $question->text = strip_tags($input->soal[$i]);
+                            $question->jawaban = $input->jawaban[$i];
+                            $question->save();
+
+                            $detail_paket_soal = new DetailPaketSoal;
+                            $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
+                            $detail_paket_soal->id_soal = $question->id_soal;
+                            $detail_paket_soal->save();
+                        }
+                    }
+                } else {
+                    $question = new Soal;
+                    $question->id_kategori_soal = $input->id_kategori_soal;
+                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_tipe_soal = $input->id_tipe_soal;
+                    $question->content = $input->soal;
+                    $question->text = strip_tags($input->soal);
+                    // $question->jawaban = $input->jawaban;
+                    $question->save();
+
+                    $detail_paket_soal = new DetailPaketSoal;
+                    $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
+                    $detail_paket_soal->id_soal = $question->id_soal;
+                    $detail_paket_soal->save();
+                }
+                DB::commit();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'e-learning-soal/paket-soal/detail/' . $input->id_paket_soal,
+                    'message' => 'Berhasil Menambah Soal'
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+                // something went wrong
+                return [
+                    'status' => 300,
+                    'message' => $e->getMessage()
+                ];
+            }
+        }
+    }
 
 
     public function indexTest(Request $request, $id_soal = 0)

@@ -175,22 +175,6 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('e-learning-soal')->group(function () {
 
-            // Route::prefix('soal')->group(function () {
-            //     Route::get('/', [SoalController::class, 'indexList']);
-            //     // Route::get('uploadImage', [SoalController::class,'uploadImageCkeditor']);
-            //     Route::get('new/{tipe_soal}', [SoalController::class, 'indexNew']);
-            //     Route::get('kategori', [SoalController::class, 'addKategori']);
-            //     Route::post('kategori', [SoalController::class, 'actionKategori']);
-            //     Route::get('kategori/table', [SoalController::class, 'commonListKategori']);
-            //     Route::post('kategori/delete', [SoalController::class, 'actionDeleteKategori']);
-            //     Route::post('new', [SoalController::class, 'actionSave']);
-            //     Route::post('/table', [SoalController::class, 'commonList']);
-            //     Route::get('edit/{id}', [SoalController::class, 'indexManage']);
-            //     Route::get('test/{id}', [SoalController::class, 'indexTest']);
-            //     Route::get('detail/{id}', [SoalController::class, 'indexOrder']);
-            //     // Route::post('order/save', [QuestionController::class, 'actionOrderSave']);
-            //     Route::post('/delete', [SoalController::class, 'actionDelete']);
-            // });
             Route::prefix('paket-soal')->group(function () {
                 Route::get('/', [PaketSoalController::class, 'indexList']);
                 Route::post('/', [PaketSoalController::class, 'actionSave']);
@@ -204,6 +188,13 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::post('detail/table', [PaketSoalController::class,'detailList']);
                 Route::post('detail/table/{id}/{tipe}', [PaketSoalController::class, 'detailList']);
                 Route::post('detail/delete', [PaketSoalController::class, 'actionDetailDelete']);
+
+                Route::prefix('input-soal')->group(function () {
+                    Route::get('new/{tipe_soal}/{id_paket_soal}', [SoalController::class, 'indexNew2']);
+                    Route::post('new', [SoalController::class, 'actionSave2']);
+                    Route::get('edit/{id}', [SoalController::class, 'indexManage']);
+                    Route::post('/delete', [SoalController::class, 'actionDelete']);
+                });
 
                 Route::prefix('bank-soal')->group(function () {
                     Route::get('/', [SoalController::class, 'indexList']);

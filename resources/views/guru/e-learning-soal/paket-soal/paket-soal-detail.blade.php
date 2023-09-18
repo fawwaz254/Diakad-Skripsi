@@ -11,12 +11,10 @@
             <div class="card">
                 <div class="header bg-pink">
                     <h2>
-                        Pilih Soal
+                        Pilih Soal {{ $question_package->text }}
                     </h2>
                 </div>
                 <div class="body">
-
-                    <!-- Nav tabs -->
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
                         <li role="presentation" class="active"><a href="#selected" data-toggle="tab"
                                 class="col-green">Soal Sudah
@@ -27,23 +25,22 @@
                         <li role="presentation"><a href="#order" data-toggle="tab" class="col-pink">Bank Soal Kategori
                                 Lain</a>
                         </li>
-
                     </ul>
 
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="selected">
                             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
-                                href="{{ url('guru#e-learning-soal/soal/new/pilihan-ganda') }}">
+                                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/input-soal/new/pilihan-ganda/' . $question_package->id_paket_soal) }}">
                                 <i class="material-icons">add_box</i>
                                 <span>Type Pilihan Ganda</span>
                             </a>
                             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
-                                href="{{ url('guru#e-learning-soal/soal/new/essay') }}">
+                                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/input-soal/new/essay/' . $question_package->id_paket_soal) }}">
                                 <i class="material-icons">add_box</i>
                                 <span>Type Essay</span>
                             </a>
                             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
-                                href="{{ url('guru#e-learning-soal/soal/new/submit') }}">
+                                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/input-soal/new/submit/' . $question_package->id_paket_soal) }}">
                                 <i class="material-icons">add_box</i>
                                 <span>Type File</span>
                             </a>
@@ -56,8 +53,8 @@
                                             <th>No</th>
                                             <th>Tipe Soal</th>
                                             <th>Mapel</th>
-                                            <th>Pembuat</th>
                                             <th>Soal</th>
+                                            <th>Pembuat</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -80,8 +77,8 @@
                                             <th>No</th>
                                             <th>Tipe Soal</th>
                                             <th>Mapel</th>
-                                            <th>Pembuat</th>
                                             <th>Soal</th>
+                                            <th>Pembuat</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -100,8 +97,8 @@
                                             <th>No</th>
                                             <th>Tipe Soal</th>
                                             <th>Mapel</th>
-                                            <th>Pembuat</th>
                                             <th>Soal</th>
+                                            <th>Pembuat</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -119,7 +116,6 @@
 </div>
 <script>
     var test = "{{ $question_package->id_paket_soal }}";
-
     var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/table/' + test + '/1';
     var datatable2_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/table/' + test + '/2';
@@ -127,12 +123,84 @@
         '/0';
     var add_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/add';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/delete';
+    var detail_url = role_url + '#' + modul_url + '/' + 'paket-soal/bank-soal';
+    var delete_url2 = role_url + '/' + modul_url + '/' + 'paket-soal/bank-soal';
 
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="token"]').attr('content')
         }
     });
+
+    var secondary_table = $('#secondary_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: datatable2_url,
+            type: 'POST'
+        },
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'tipe_soal'
+            },
+            {
+                data: 'kategori_soal.nm_kategori_soal'
+            },
+            {
+                data: 'text',
+                name: 'text',
+                orderable: false
+            },
+            {
+                data: 'pengguna.nm_pengguna'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    // if (data.edit) {
+                    //     return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                    //         detail_url + '/edit/' + data.id + '">' +
+                    //         '    <i class="material-icons">mode_edit</i>' +
+                    //         '</a>' +
+                    //         '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                    //         detail_url + '/test/' + data.id + '">' +
+                    //         '    T' +
+                    //         '</a>' +
+                    //         '<button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" data-id="' +
+                    //         data.id + '" onclick="actionDelete2(this)">' +
+                    //         '    <i class="material-icons">delete_forever</i>' +
+                    //         '</button>' +
+                    //         '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
+                    //         data.id + '" onclick="actionDelete(this)">' +
+                    //         '    <i class="material-icons">delete</i>' +
+                    //         '</button>';
+                    // } else {
+                    return '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
+                        data.id + '" onclick="actionDelete(this)">' +
+                        '    <i class="material-icons">delete</i>' +
+                        '</button>';
+                    // }
+                }
+            }
+        ]
+    });
+
+    secondary_table.on('draw', function() {
+        secondary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -153,12 +221,12 @@
                 data: 'kategori_soal.nm_kategori_soal'
             },
             {
-                data: 'pengguna.nm_pengguna'
-            },
-            {
                 data: 'text',
                 name: 'text',
                 orderable: false
+            },
+            {
+                data: 'pengguna.nm_pengguna'
             },
             {
                 data: 'action',
@@ -185,58 +253,6 @@
         });
     }).draw();
 
-    var secondary_table = $('#secondary_table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: datatable2_url,
-            type: 'POST'
-        },
-        columns: [{
-                data: null,
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'tipe_soal'
-            },
-            {
-                data: 'kategori_soal.nm_kategori_soal'
-            },
-            {
-                data: 'pengguna.nm_pengguna'
-            },
-            {
-                data: 'text',
-                name: 'text',
-                orderable: false
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    return '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
-                        data.id + '" onclick="actionDelete(this)">' +
-                        '    <i class="material-icons">delete</i>' +
-                        '</button>';
-                }
-            }
-        ]
-    });
-
-    secondary_table.on('draw', function() {
-        secondary_table.column(0, {
-            search: 'applied',
-            order: 'applied'
-        }).nodes().each(function(cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = i + 1;
-        });
-    }).draw();
-
-
     var primary_table2 = $('#primary_table2').DataTable({
         processing: true,
         serverSide: true,
@@ -256,12 +272,12 @@
                 data: 'kategori_soal.nm_kategori_soal'
             },
             {
-                data: 'pengguna.nm_pengguna'
-            },
-            {
                 data: 'text',
                 name: 'text',
                 orderable: false
+            },
+            {
+                data: 'pengguna.nm_pengguna'
             },
             {
                 data: 'action',
@@ -337,7 +353,6 @@
     }
 
     $('#addAll').click(function() {
-
         var button = $(this);
         button.prop('disabled', true);
         // item.prop('disabled', true);
@@ -362,4 +377,35 @@
             });
         }
     });
+
+    // function actionDelete2(element) {
+    //     var item = $(element);
+    //     item.prop('disabled', true);
+    //     var url = delete_url2 + '/delete';
+    //     vex.dialog.confirm({
+    //         message: 'Apakah yakin mau menghapus soal?',
+    //         callback: function(value) {
+    //             if (value) {
+    //                 $.ajax({
+    //                     type: "POST",
+    //                     url: url,
+    //                     data: {
+    //                         id_soal: item.attr('data-id')
+    //                     },
+    //                     success: function(data) {
+    //                         vex.dialog.alert(data.message);
+    //                         setTimeout(() => {
+    //                             secondary_table.ajax.reload(null, false);
+    //                         }, 2000)
+    //                     },
+    //                     error: function(xhr, status, error) {
+    //                         console.log(xhr.responseText);
+    //                     }
+    //                 });
+    //             } else {
+    //                 item.prop('disabled', false);
+    //             }
+    //         }
+    //     })
+    // }
 </script>
