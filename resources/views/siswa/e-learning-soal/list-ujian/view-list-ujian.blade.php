@@ -90,7 +90,8 @@
                 orderable: false,
                 render: function(data) {
                     if (data.status == 1) {
-                        return '<a type="button" style="pointer-events: none" class="btn btn-primary btn-circle waves-effect waves-circle waves-float" href="">' +
+                        return '<a type="button"  class="btn btn-primary btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + data.id + '">' +
                             '    <i class="material-icons">done</i>' +
                             '</a>';
                     } else if (data.status == 2) {
