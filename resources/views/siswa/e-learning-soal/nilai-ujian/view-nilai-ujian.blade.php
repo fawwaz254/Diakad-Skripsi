@@ -22,8 +22,10 @@
                                     <th>No</th>
                                     <th>Nama Test</th>
                                     <th>Mapel</th>
+                                    <th>Waktu Pengerjaan</th>
                                     {{-- <th>Jam Pengerjaan</th> --}}
                                     <th>Nilai Pilihan Ganda</th>
+
                                     <th>Jumlah Soal</th>
                                     <th>Total Nilai Pilihan Ganda</th>
                                     <th>Total Nilai Essay / File</th>
@@ -50,7 +52,7 @@
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
-        // serverSide: true,
+        serverSide: true,
         ajax: {
             url: datatable_url,
             type: 'POST'
@@ -69,6 +71,10 @@
                 name: 'paket_soal.kategori_soal.nm_kategori_soal'
             },
             {
+                data: 'waktu_mulai_pengerjaan',
+                name: 'waktu_mulai_pengerjaan'
+            },
+            {
                 data: 'paket_soal.nilai',
                 name: 'paket_soal.nilai'
             },
@@ -85,9 +91,12 @@
             {
                 data: 'total_nilai',
                 render: function(data) {
-                    if(data.validasi_pilihan_essay_submit){
+
+                    if (data.belum_dikoreksi) {
+                        return `${data.nilai_pilihan_essay_submit} <a href="${koreksi_hasil_test_url}/${data.id_test}">(Belum Dikoreksi)</a>`
+                    } else if (data.validasi_pilihan_essay_submit) {
                         return `${data.nilai_pilihan_essay_submit} <a href="${koreksi_hasil_test_url}/${data.id_test}">(Lihat Penilaian)</a>`
-                    }else{
+                    } else {
                         return '-'
                     }
                 }
@@ -100,8 +109,7 @@
             }
         ],
         order: [
-            [2, 'asc'],
-            [1, 'asc']
+            [3, 'desc']
         ]
     });
 

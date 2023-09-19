@@ -19,22 +19,25 @@ class NilaiUjianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $test = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('status', 1)->with('pengguna', 'paket_soal', 'detail_paket_soal')->with(['paket_soal.kategori_soal'])->get();
+        $test = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('status', 1)->with('detail_paket_soal', 'paket_soal.kategori_soal', 'jawaban_test');
 
         return Datatables::of($test)
             ->editColumn('detail_paket_soal', function ($item) {
                 return $item->detail_paket_soal->count();
             })
             ->addColumn('total_nilai', function ($item) {
-                $nilai = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->pluck('nilai')->sum();
-                $nilai_pilihan_ganda = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal', 1)->pluck('nilai')->sum();
-                $nilai_pilihan_essay_submit = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
-                $validasi_pilihan_essay_submit =  JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->first();
+                $nilai = $item->jawaban_test->pluck('nilai')->sum();
+                $nilai_pilihan_ganda = $item->jawaban_test->where('id_tipe_soal', 1)->pluck('nilai')->sum();
+                $nilai_pilihan_essay_submit = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
+                $validasi_pilihan_essay_submit =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->first();
+                $belum_dikoreksi =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', '0')->first();
+
                 $data = array(
                     'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
                     'nilai_pilihan_essay_submit' => $nilai_pilihan_essay_submit,
                     'nilai' => $nilai,
                     'status_koreksi' => 1,
+                    'belum_dikoreksi' => $belum_dikoreksi ? true : false,
                     'validasi_pilihan_essay_submit' =>  $validasi_pilihan_essay_submit ? true : false,
                     'id_test' => $item->id_test
                 );
@@ -46,7 +49,7 @@ class NilaiUjianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $questions = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('soal')->get();
+        $questions = JawabanTest::where('id_test', $id_test)->whereIn('id_tipe_soal', [2, 3])->where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('soal')->get();
 
         return view('siswa/e-learning-soal/nilai-ujian/view-penilaian-ujian', compact('questions'));
     }
