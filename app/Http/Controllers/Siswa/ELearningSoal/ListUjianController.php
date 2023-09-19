@@ -119,8 +119,16 @@ class ListUjianController extends Controller
     {
         $input = (object) $request->input();
         $account = $input->auth_data->pengguna->id_pengguna;
-        if ($test = Test::where('id_pengguna', $account)->where('id_paket_soal', $id_paket_soal)->first() && session()->has($id_paket_soal)) {
-            return redirect('siswa/e-learning-soal/list-ujian/test/' . $id_paket_soal . '/1');
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $test = Test::where('id_pengguna', $account)->where('id_paket_soal', $id_paket_soal)->first();
+        if ($test && session()->has($id_paket_soal)) {
+            if ($now > $test->waktu_selesai_pengerjaan) {
+                $test->status = 1;
+                $test->save();
+                return redirect('siswa/e-learning-soal/list-ujian');
+            } else {
+                return redirect('siswa/e-learning-soal/list-ujian/test/' . $id_paket_soal . '/1');
+            }
         } else {
             $soal = PaketSoal::find($id_paket_soal);
             $test_duration = $soal->waktu_pengerjaan;
@@ -135,8 +143,13 @@ class ListUjianController extends Controller
                 $question_number++;
             }
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-            if ($test) { } else {
+            if ($test) {
+                if ($now > $test->waktu_selesai_pengerjaan) {
+                    $test->status = 1;
+                    $test->save();
+                    return redirect('siswa/e-learning-soal/list-ujian');
+                }
+            } else {
                 $test = new Test;
                 $test->id_test = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $test->id_pengguna = $account;
