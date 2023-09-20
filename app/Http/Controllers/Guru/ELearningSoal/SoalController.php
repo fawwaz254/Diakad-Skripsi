@@ -31,6 +31,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/add-soal-essay', compact('kategori'));
         } elseif ($tipe_soal == "submit") {
             return view('guru/e-learning-soal/soal/add-soal-submit', compact('kategori'));
+        } elseif ($tipe_soal == "pilihan-ganda-kompleks") {
+            return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda-kompleks', compact('kategori'));
         }
         return abort(404);
     }
@@ -150,8 +152,13 @@ class SoalController extends Controller
             if ($item->id_tipe_soal == 1) {
                 $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
                 return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda', compact('item', 'question_options', 'kategori'));
-            } else {
+            } else if ($item->id_tipe_soal == 2) {
                 return view('guru/e-learning-soal/soal/edit-soal-essay', compact('item', 'kategori'));
+            } else if ($item->id_tipe_soal == 3) {
+                return view('guru/e-learning-soal/soal/edit-soal-essay', compact('item', 'kategori'));
+            } else if ($item->id_tipe_soal == 4) {
+                $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
+                return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda-kompleks', compact('item', 'question_options', 'kategori'));
             }
         }
     }
@@ -297,7 +304,7 @@ class SoalController extends Controller
                             $question->save();
                         }
                     }
-                } else {
+                } else if ($input->id_tipe_soal == 3) {
                     $question = new Soal;
                     $question->id_kategori_soal = $input->kategori;
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -307,6 +314,55 @@ class SoalController extends Controller
                     $question->text = strip_tags($input->soal);
                     // $question->jawaban = $input->jawaban;
                     $question->save();
+                } else if ($input->id_tipe_soal == 4) {
+                    for ($i = 1; $i <= count($input->soal); $i++) {
+                        //validasi ketika ada data yg sama
+                        if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                            $question = new Soal;
+                            $question->id_kategori_soal = $input->kategori;
+                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_tipe_soal = $input->id_tipe_soal;
+                            $question->content = $input->soal[$i];
+                            $question->text = strip_tags($input->soal[$i]);
+                            $question->save();
+                            if (empty(strip_tags($input->soal[$i]))) {
+                                DB::rollback();
+                                return [
+                                    'status' => 300,
+                                    'message' => 'Eror Ada Kolom yg kosong tau save sekali lagi'
+                                ];
+                            }
+                            foreach ($input->jawaban[$i] as $no_answer => $answer) {
+                                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                                $question_option = new PilihanSoal;
+                                $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $question_option->number_option = $no_answer;
+                                $question_option->id_soal = $question->id_soal;
+                                $question_option->content = $answer;
+                                $question_option->text = $answer;
+                                if (empty(strip_tags($answer))) {
+                                    DB::rollback();
+                                    return [
+                                        'status' => 300,
+                                        'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi'
+                                    ];
+                                }
+                                if (in_array($no_answer, $input->jawaban_benar[$i])) {
+                                    $question_option->correct = 1;
+                                } else {
+                                    $question_option->correct = 0;
+                                }
+                                $question_option->save();
+
+                                // if ($input->jawaban_benar[$i] == $no_answer) {
+                                //     $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                                // }
+                            }
+                            // $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+                            $question->save();
+                        }
+                    }
                 }
                 DB::commit();
 
@@ -501,8 +557,11 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda', compact('question', 'question_options'));
         } else if ($question->id_tipe_soal == 2) {
             return view('guru/e-learning-soal/soal/test-soal-essay', compact('question'));
-        } else {
+        } else if ($question->id_tipe_soal == 3) {
             return view('guru/e-learning-soal/soal/test-soal-submit', compact('question'));
+        } else if ($question->id_tipe_soal == 4) {
+            $question_options = PilihanSoal::where('id_soal', $question->id_soal)->orderBy('number_option')->get();
+            return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda-kompleks', compact('question', 'question_options'));
         }
     }
 
@@ -530,8 +589,11 @@ class SoalController extends Controller
                     return "Pilihan Ganda";
                 } else if ($item->id_tipe_soal == 2) {
                     return "Essay";
+                } else if ($item->id_tipe_soal == 3) {
+                    return "File";
+                } else if ($item->id_tipe_soal == 4) {
+                    return "Pilihan Ganda Kompleks";
                 }
-                return "File";
             })
             ->make(true);
     }
