@@ -10,6 +10,7 @@
                      <form id="form-validation" method="POST"
                          action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-tagihan-siswa') }}">
                          {{ csrf_field() }}
+                         <input type="hidden" value="0" name="id_jalur">
                          <div class="row clearfix">
                              <div class="col-md-6 col-sm-12 col-xs-12">
                                  <h2 class="card-inside-title">
@@ -101,7 +102,7 @@
                                      @endif
                                  </select>
                              </div>
-                             <div class="col-md-6 col-sm-12 col-xs-12">
+                             {{-- <div class="col-md-6 col-sm-12 col-xs-12">
                                  <h2 class="card-inside-title">
                                      Jalur
                                  </h2>
@@ -125,8 +126,8 @@
                                  </select>
                              </div>
                          </div>
-                         <div class="row clearfix">
-                             <div class="col-md-12 col-sm-12 col-xs-12">
+                         <div class="row clearfix"> --}}
+                             <div class="col-md-6 col-sm-12 col-xs-12">
                                  <h2 class="card-inside-title">
                                      Insert/Replace Tagihan <small>* REPLACE digunakan untuk menghapus Tagihan Lama dan
                                          mengganti dengan Tagihan Baru <br>
