@@ -14,7 +14,7 @@
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/essay') }}">
                 <i class="material-icons">add_box</i>
-                <span>Type Essay</span>
+                <span>Type Isian</span>
             </a>
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/submit') }}">
@@ -25,6 +25,11 @@
                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/pilihan-ganda-kompleks') }}">
                 <i class="material-icons">add_box</i>
                 <span>Type Pilihan Ganda Kompleks</span>
+            </a>
+            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/simple-essay') }}">
+                <i class="material-icons">add_box</i>
+                <span>Type Isian Singkat</span>
             </a>
             {{-- <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/kategori') }}">

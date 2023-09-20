@@ -120,11 +120,13 @@ class PaketSoalController extends Controller
                 if ($item->id_tipe_soal == 1) {
                     return "Pilihan Ganda";
                 } else if ($item->id_tipe_soal == 2) {
-                    return "Essay";
+                    return "Isian";
                 } else if ($item->id_tipe_soal == 3) {
                     return "File";
                 } else if ($item->id_tipe_soal == 4) {
                     return "Pilihan Kompleks";
+                } else if ($item->id_tipe_soal == 5) {
+                    return "Isian Singkat";
                 }
             })
             ->make(true);

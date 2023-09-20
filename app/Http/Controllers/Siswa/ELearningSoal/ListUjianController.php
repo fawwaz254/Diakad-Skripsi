@@ -284,6 +284,41 @@ class ListUjianController extends Controller
             );
 
             session([$input->paket_soal . '_jawaban' . $input->no => $jawaban]);
+        } elseif ($input->id_tipe_soal == 5) {
+            $alternatif_jawaban1 = session($input->paket_soal)['bank_soal'][$input->no]['soal']['alternatif_jawaban1'];
+            $alternatif_jawaban2 = session($input->paket_soal)['bank_soal'][$input->no]['soal']['alternatif_jawaban2'];
+            $alternatif_jawaban3 = session($input->paket_soal)['bank_soal'][$input->no]['soal']['alternatif_jawaban3'];
+            $alternatif_jawaban4 = session($input->paket_soal)['bank_soal'][$input->no]['soal']['alternatif_jawaban4'];
+            $alternatif_jawaban5 = session($input->paket_soal)['bank_soal'][$input->no]['soal']['alternatif_jawaban5'];
+
+
+            if (
+                strtolower($alternatif_jawaban1)  == strtolower($input->jawaban_essay) ||
+                strtolower($alternatif_jawaban2)  == strtolower($input->jawaban_essay) ||
+                strtolower($alternatif_jawaban3)  == strtolower($input->jawaban_essay) ||
+                strtolower($alternatif_jawaban4)  == strtolower($input->jawaban_essay) ||
+                strtolower($alternatif_jawaban5)  == strtolower($input->jawaban_essay)
+            ) {
+                $nilai =  session($input->paket_soal)['point_pilihan_ganda'];
+            } else {
+                $nilai = 0;
+            }
+
+            $test_answer = array(
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
+                'id_test' => session($input->paket_soal)['id_test'],
+                'nomer' => $input->no,
+                'id_soal' => $input->question,
+                'nilai' => $nilai,
+                'jawaban_essay' => $input->jawaban_essay,
+                'status_koreksi' => 0,
+                'id_tipe_soal' => $input->id_tipe_soal,
+                'created_at' => Carbon::now('Asia/Jakarta'),
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
+                'updated_at' => Carbon::now('Asia/Jakarta')
+            );
+            session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban_essay]);
         }
 
         ElearningAnswer::dispatch($test_answer);

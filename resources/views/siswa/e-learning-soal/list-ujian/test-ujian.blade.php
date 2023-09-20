@@ -102,6 +102,12 @@
                                             <br>
                                         @endforeach
                                     </div>
+                                @elseif($detailPaketSoal->soal->id_tipe_soal == 5)
+                                    <h2 class="card-inside-title">Jawaban Singkat</h2>
+                                    <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short
+                                        @if ($jawabanTest) style="background-color: #CFE795;" @endif>{{ $jawabanTest }}</textarea>
+                                    <input type="hidden" name="id_tipe_soal"
+                                        value="{{ $detailPaketSoal->soal->id_tipe_soal }}">
                                 @else
                                 @endif
                             </div>

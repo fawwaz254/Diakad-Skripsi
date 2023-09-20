@@ -33,6 +33,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/add-soal-submit', compact('kategori'));
         } elseif ($tipe_soal == "pilihan-ganda-kompleks") {
             return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda-kompleks', compact('kategori'));
+        } elseif ($tipe_soal == "simple-essay") {
+            return view('guru/e-learning-soal/soal/add-soal-simple-essay', compact('kategori'));
         }
         return abort(404);
     }
@@ -363,6 +365,24 @@ class SoalController extends Controller
                             $question->save();
                         }
                     }
+                } else if ($input->id_tipe_soal == 5) {
+                    for ($i = 1; $i <= count($input->soal); $i++) {
+                        if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                            $question = new Soal;
+                            $question->id_kategori_soal = $input->kategori;
+                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_tipe_soal = $input->id_tipe_soal;
+                            $question->content = $input->soal[$i];
+                            $question->text = strip_tags($input->soal[$i]);
+                            $question->alternatif_jawaban1 = $input->jawaban[1];
+                            $question->alternatif_jawaban2 = $input->jawaban[2];
+                            $question->alternatif_jawaban3 = $input->jawaban[3];
+                            $question->alternatif_jawaban4 = $input->jawaban[4];
+                            $question->alternatif_jawaban5 = $input->jawaban[5];
+                            $question->save();
+                        }
+                    }
                 }
                 DB::commit();
 
@@ -588,11 +608,13 @@ class SoalController extends Controller
                 if ($item->id_tipe_soal == 1) {
                     return "Pilihan Ganda";
                 } else if ($item->id_tipe_soal == 2) {
-                    return "Essay";
+                    return "Isian";
                 } else if ($item->id_tipe_soal == 3) {
                     return "File";
                 } else if ($item->id_tipe_soal == 4) {
                     return "Pilihan Ganda Kompleks";
+                } else if ($item->id_tipe_soal == 5) {
+                    return "Isian Singkat";
                 }
             })
             ->make(true);
