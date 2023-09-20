@@ -225,7 +225,7 @@ class ListUjianController extends Controller
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
             session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban_essay]);
-        } else {
+        } elseif ($input->id_tipe_soal == 3) {
             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
             $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/jawaban_test', request()->file, 'public');
             $test_answer = array(
@@ -244,6 +244,46 @@ class ListUjianController extends Controller
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
             session([$input->paket_soal . '_jawaban' . $input->no => $file]);
+        } elseif ($input->id_tipe_soal == 4) {
+            $jawaban_benar = 0;
+            $jawaban = [];
+            foreach ($input->question_option as $question_option) {
+                $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_soal']->where('id_pilihan_soal', $question_option)->first();
+                if ($pilihan_jawaban->correct == 1) {
+                    $jawaban_benar++;
+                } else {
+                    $jawaban_benar--;
+                }
+                $jawaban[] = $question_option;
+            }
+
+            if ($jawaban_benar < 0) {
+                $jawaban_benar = 0;
+            }
+
+            $nilai = (session($input->paket_soal)['point_pilihan_ganda'] * $jawaban_benar) / 5;
+
+            $test_answer = array(
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
+                'id_test' => session($input->paket_soal)['id_test'],
+                'nomer' => $input->no,
+                'id_soal' => $input->question,
+                'nilai' => $nilai,
+                'id_pilihan_soal' => null,
+                'id_pilihan_soal_kompleks1' => isset($jawaban[0]) ? $jawaban[0] : null,
+                'id_pilihan_soal_kompleks2' => isset($jawaban[1]) ? $jawaban[1] : null,
+                'id_pilihan_soal_kompleks3' => isset($jawaban[2]) ? $jawaban[2] : null,
+                'id_pilihan_soal_kompleks4' => isset($jawaban[3]) ? $jawaban[3] : null,
+                'id_pilihan_soal_kompleks5' => isset($jawaban[4]) ? $jawaban[4] : null,
+                'status_koreksi' => 1,
+                'id_tipe_soal' => $input->id_tipe_soal,
+                'created_at' => Carbon::now('Asia/Jakarta'),
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
+                'updated_at' => Carbon::now('Asia/Jakarta')
+            );
+
+            session([$input->paket_soal . '_jawaban' . $input->no => $jawaban]);
         }
 
         ElearningAnswer::dispatch($test_answer);
@@ -270,18 +310,18 @@ class ListUjianController extends Controller
         $end_date = Carbon::createFromFormat('Y-m-d H:i:s',  $all_session['end_time']);
         $waktu = Carbon::now('Asia/Jakarta');
 
-        if (strtotime($start_date) < strtotime($waktu) && strtotime($end_date) > strtotime($waktu)) {
-            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
-        } else {
-            $input = (object) $request->input();
-            $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($id_paket_soal)['id_test'])->first();
-            if ($test) {
-                $test->status = 1;
-                $test->save();
-            }
+        // if (strtotime($start_date) < strtotime($waktu) && strtotime($end_date) > strtotime($waktu)) {
+        return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
+        // } else {
+        //     $input = (object) $request->input();
+        //     $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($id_paket_soal)['id_test'])->first();
+        //     if ($test) {
+        //         $test->status = 1;
+        //         $test->save();
+        //     }
 
-            return redirect('siswa/e-learning-soal/list-ujian');
-        }
+        //     return redirect('siswa/e-learning-soal/list-ujian');
+        // }
     }
 
     public function actionEndTest(Request $request)

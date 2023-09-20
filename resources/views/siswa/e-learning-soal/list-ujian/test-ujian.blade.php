@@ -65,12 +65,44 @@
                                         @if ($jawabanTest) style="background-color: #CFE795;" @endif>{{ $jawabanTest }}</textarea>
                                     <input type="hidden" name="id_tipe_soal"
                                         value="{{ $detailPaketSoal->soal->id_tipe_soal }}">
-                                @else
+                                @elseif($detailPaketSoal->soal->id_tipe_soal == 3)
                                     <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
                                     <input type="file" class="form-control" name="file" required=""
                                         @if (!empty($jawabanTest)) style="background-color: #CFE795;" @endif
                                         aria-required="true" aria-invalid="true"
                                         accept=".pdf, .doc, .docx, .ppt, .xlsx">
+                                @elseif($detailPaketSoal->soal->id_tipe_soal == 4)
+                                    <div class="demo-radio-button">
+                                        @foreach ($detailPaketSoal->soal->pilihan_soal as $no_option => $question_option)
+                                            <input type="hidden" name="{{ $detailPaketSoal->soal_id_tipe_soal }}">
+                                            @if (empty($jawabanTest))
+                                                <input name="question_option[{{ $no_option }}]" type="checkbox"
+                                                    id="checkbox_{{ $no_option }}"
+                                                    value="{{ $question_option->id_pilihan_soal }}">
+                                                <label for="checkbox_{{ $no_option }}">
+                                                    <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                </label>
+                                            @else
+                                                @if (in_array($question_option->id_pilihan_soal, $jawabanTest))
+                                                    <input name="question_option[{{ $no_option }}]" type="checkbox"
+                                                        checked="" id="checkbox_{{ $no_option }}"
+                                                        value="{{ $question_option->id_pilihan_soal }}">
+                                                    <label for="checkbox_{{ $no_option }}">
+                                                        <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
+                                                    </label>
+                                                @else
+                                                    <input name="question_option[{{ $no_option }}]" type="checkbox"
+                                                        id="checkbox_{{ $no_option }}"
+                                                        value="{{ $question_option->id_pilihan_soal }}">
+                                                    <label for="checkbox_{{ $no_option }}">
+                                                        <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                    </label>
+                                                @endif
+                                            @endif
+                                            <br>
+                                        @endforeach
+                                    </div>
+                                @else
                                 @endif
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
