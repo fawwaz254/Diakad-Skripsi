@@ -112,7 +112,7 @@ class DataPrestasiSiswaController extends BaseController
                 $prestasi = new PrestasiSiswa;
                 $prestasi->id_prestasi_siswa = $id;
                 $prestasi->id_siswa = $siswa->id_siswa;
-                $prestasi->id_kelas = $siswa->id_kelas;
+                $prestasi->id_kelas = $siswa->id_kelas ?? 'SISWA_LULUS';
                 $prestasi->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
                 $prestasi->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
                 // $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
