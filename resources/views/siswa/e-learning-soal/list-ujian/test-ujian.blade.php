@@ -31,7 +31,7 @@
                                 @if ($detailPaketSoal->soal->id_tipe_soal == 1)
                                     <div class="demo-radio-button">
                                         @foreach ($detailPaketSoal->soal->pilihan_soal as $no_option => $question_option)
-                                            <input type="hidden" name="{{ $detailPaketSoal->soal_id_tipe_soal }}">
+                                            {{-- <input type="hidden" name="{{ $detailPaketSoal->soal_id_tipe_soal }}"> --}}
                                             @if (empty($jawabanTest))
                                                 <input name="question_option" type="radio"
                                                     id="radio_{{ $no_option }}"
@@ -65,12 +65,115 @@
                                         @if ($jawabanTest) style="background-color: #CFE795;" @endif>{{ $jawabanTest }}</textarea>
                                     <input type="hidden" name="id_tipe_soal"
                                         value="{{ $detailPaketSoal->soal->id_tipe_soal }}">
-                                @else
+                                @elseif($detailPaketSoal->soal->id_tipe_soal == 3)
                                     <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
                                     <input type="file" class="form-control" name="file" required=""
                                         @if (!empty($jawabanTest)) style="background-color: #CFE795;" @endif
                                         aria-required="true" aria-invalid="true"
                                         accept=".pdf, .doc, .docx, .ppt, .xlsx">
+                                @elseif($detailPaketSoal->soal->id_tipe_soal == 4)
+                                    <div class="demo-radio-button">
+                                        @foreach ($detailPaketSoal->soal->pilihan_soal as $no_option => $question_option)
+                                            {{-- <input type="hidden" name="{{ $detailPaketSoal->soal_id_tipe_soal }}"> --}}
+                                            @if (empty($jawabanTest))
+                                                <input name="question_option[{{ $no_option }}]" type="checkbox"
+                                                    id="checkbox_{{ $no_option }}"
+                                                    value="{{ $question_option->id_pilihan_soal }}">
+                                                <label for="checkbox_{{ $no_option }}">
+                                                    <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                </label>
+                                            @else
+                                                @if (in_array($question_option->id_pilihan_soal, $jawabanTest))
+                                                    <input name="question_option[{{ $no_option }}]" type="checkbox"
+                                                        checked="" id="checkbox_{{ $no_option }}"
+                                                        value="{{ $question_option->id_pilihan_soal }}">
+                                                    <label for="checkbox_{{ $no_option }}">
+                                                        <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
+                                                    </label>
+                                                @else
+                                                    <input name="question_option[{{ $no_option }}]" type="checkbox"
+                                                        id="checkbox_{{ $no_option }}"
+                                                        value="{{ $question_option->id_pilihan_soal }}">
+                                                    <label for="checkbox_{{ $no_option }}">
+                                                        <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                    </label>
+                                                @endif
+                                            @endif
+                                            <br>
+                                        @endforeach
+                                    </div>
+                                @elseif($detailPaketSoal->soal->id_tipe_soal == 5)
+                                    <h2 class="card-inside-title">Jawaban Singkat</h2>
+                                    <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short
+                                        @if ($jawabanTest) style="background-color: #CFE795;" @endif>{{ $jawabanTest }}</textarea>
+                                    <input type="hidden" name="id_tipe_soal"
+                                        value="{{ $detailPaketSoal->soal->id_tipe_soal }}">
+                                @elseif($detailPaketSoal->soal->id_tipe_soal == 6)
+                                    {{-- <input type="hidden" name="{{ $detailPaketSoal->soal_id_tipe_soal }}"> --}}
+                                    <br><br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                            <div id="pertanyan">
+                                                @foreach ($detailPaketSoal->soal->pilihan_pertanyaan as $no_option => $question_option)
+                                                    <div class="card"
+                                                        style="background-color: #e3e3e3; padding: 10px; box-shadow:none">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                                                <h2 class="card-inside-title">Pertanyaan
+                                                                    {{ $no_option + 1 }}
+                                                                </h2>
+                                                                <pre
+                                                                    style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px;white-space: pre-wrap;
+                            word-wrap: break-word;">{!! $question_option->text !!}</pre>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                                <h2 class="card-inside-title">Jawaban</h2>
+                                                                <select class="form-control show-tick"
+                                                                    style="background-color: #CFE795"
+                                                                    name="jawaban[{{ $question_option->nomer }}]"
+                                                                    required>
+                                                                    <option value="0">
+                                                                        Pilih
+                                                                    </option>
+                                                                    @foreach ($detailPaketSoal->soal->pilihan_jawaban as $jawaban)
+                                                                        @if (empty($jawabanTest))
+                                                                            <option value="{{ $jawaban->nomer }}">
+                                                                                {{ $jawaban->nomer }}
+                                                                            </option>
+                                                                        @else
+                                                                            <option value="{{ $jawaban->nomer }}"
+                                                                                @if ($jawabanTest[$no_option + 1] == $jawaban->nomer) selected @endif>
+                                                                                {{ $jawaban->nomer }}
+                                                                            </option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <br>
+                                                @endforeach
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                            <div id="jawaban">
+                                                @foreach ($detailPaketSoal->soal->pilihan_jawaban as $no_option => $question_option)
+                                                    <div class="card"
+                                                        style="background-color: #e3e3e3; padding: 10px; box-shadow:none">
+                                                        <h2 class="card-inside-title">Jawaban
+                                                            {{ $question_option->nomer }}</h2>
+                                                        <pre
+                                                            style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px;  white-space: pre-wrap;
+                    word-wrap: break-word;">{!! $question_option->text !!}</pre>
+                                                    </div>
+                                                    <br><br>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
                                 @endif
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

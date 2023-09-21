@@ -13,10 +13,10 @@ class Soal extends Model
 
     protected $primaryKey = 'id_soal';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_pengguna',
         'id_pilihan_soal_benar',
@@ -29,16 +29,28 @@ class Soal extends Model
 
     protected $guarded = [];
 
-    public function pengguna(){
+    public function pengguna()
+    {
         return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
     }
 
-    public function kategori_soal(){
+    public function kategori_soal()
+    {
         return $this->belongsTo('App\Models\KategoriSoal', 'id_kategori_soal');
     }
 
-    public function pilihan_soal(){
+    public function pilihan_soal()
+    {
         return $this->hasMany('App\Models\PilihanSoal', 'id_soal');
     }
 
+    public function pilihan_pertanyaan()
+    {
+        return $this->hasMany('App\Models\PilihanPertanyaan', 'id_soal')->orderBy('nomer', 'asc');
+    }
+
+    public function pilihan_jawaban()
+    {
+        return $this->hasMany('App\Models\PilihanJawaban', 'id_soal')->orderBy('nomer', 'asc');
+    }
 }

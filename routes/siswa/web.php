@@ -92,15 +92,13 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('list-ujian')->group(function () {
                 Route::get('/', [ListUjianController::class, 'indexList']);
-                Route::post('test/end', [ListUjianController::class, 'actionEndTest']);
-                //untuk bagian data table
                 Route::post('table', [ListUjianController::class, 'commonList']);
-                //untuk bagian test
-                // Route::get('test', [TestController::class, 'index']);
                 Route::get('cek/{id_paket_soal}', [ListUjianController::class, 'indexTest']);
-                Route::get('test/{id_paket_soal}/{no}', [ListUjianController::class, 'indexTest2']);
-                Route::post('test/answer', [ListUjianController::class, 'actionSaveAnswer']);
-                // Route::get('test/result', [TestController::class, 'indexReview']);
+                Route::prefix('test')->group(function () {
+                    Route::post('end', [ListUjianController::class, 'actionEndTest']);
+                    Route::post('answer', [ListUjianController::class, 'actionSaveAnswer']);
+                    Route::get('{id_paket_soal}/{no}', [ListUjianController::class, 'indexTest2']);
+                });
             });
             Route::prefix('nilai-ujian')->group(function () {
                 Route::get('/', [NilaiUjianController::class, 'indexList']);
@@ -173,7 +171,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('upload-tugas/{id}', [JadwalKelasDaringController::class, 'uploadTugas']);
             });
             //Menu Lihat Nilai Kbm
-            Route::get('lihat-nilai-kbm',[LihatNilaiController::class,'index']);
+            Route::get('lihat-nilai-kbm', [LihatNilaiController::class, 'index']);
 
 
             // MENU Magang
