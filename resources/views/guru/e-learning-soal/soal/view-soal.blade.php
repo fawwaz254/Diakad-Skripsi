@@ -31,6 +31,11 @@
                 <i class="material-icons">add_box</i>
                 <span>Type Isian Singkat</span>
             </a>
+            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/match') }}">
+                <i class="material-icons">add_box</i>
+                <span>Type Penjodohan</span>
+            </a>
             {{-- <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/kategori') }}">
                 <i class="material-icons">settings</i>

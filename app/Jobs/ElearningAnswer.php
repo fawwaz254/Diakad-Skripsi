@@ -55,6 +55,14 @@ class ElearningAnswer implements ShouldQueue
                 $jawaban_test->nilai = $this->test_answer['nilai'];
                 $jawaban_test->jawaban_essay =  $this->test_answer['jawaban_essay'];
                 $jawaban_test->save();
+            } elseif ($this->test_answer['id_tipe_soal'] == 6) {
+                $jawaban_test->nilai = $this->test_answer['nilai'];
+                $jawaban_test->pilihan_jawaban1 =  $this->test_answer['pilihan_jawaban1'];
+                $jawaban_test->pilihan_jawaban2 =  $this->test_answer['pilihan_jawaban2'];
+                $jawaban_test->pilihan_jawaban3 =  $this->test_answer['pilihan_jawaban3'];
+                $jawaban_test->pilihan_jawaban4 =  $this->test_answer['pilihan_jawaban4'];
+                $jawaban_test->pilihan_jawaban5 =  $this->test_answer['pilihan_jawaban5'];
+                $jawaban_test->save();
             }
         } else {
             JawabanTest::insert($this->test_answer);
