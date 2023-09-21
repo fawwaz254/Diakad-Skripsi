@@ -129,7 +129,7 @@
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                                                 <h2 class="card-inside-title">Jawaban</h2>
                                                                 <select class="form-control show-tick"
-                                                                    style="background-color: #CFE795"
+                                                                    @if ($jawabanTest) style="background-color: #CFE795" @endif
                                                                     name="jawaban[{{ $question_option->nomer }}]"
                                                                     required>
                                                                     <option value="0">

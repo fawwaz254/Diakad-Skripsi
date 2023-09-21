@@ -70,7 +70,7 @@
                             <div id="pertanyan">
                                 <div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                     <h2 class="card-inside-title">Pertanyaan 1</h2>
-                                    <textarea id="pertanyaan1" class="form-control" required="" name="pertanyaan[1]" rows="3"></textarea>
+                                    <textarea class="form-control" required="" name="pertanyaan[1]" rows="3"></textarea>
                                     <h2 class="card-inside-title">No Jawaban</h2>
                                     <input id="noJawaban1" type="number" class="form-control" required=""
                                         name="noJawaban[1]" />
@@ -102,14 +102,14 @@
                                     <pre>Jawaban</pre>
                                 </button>
                             </div>
-                            <div id="tambah" style="margin-bottom:20px">
-                                <button class="btn btn-danger btn-block" type="button"><i
+                            <div style="margin-bottom:20px">
+                                <button class="btn btn-danger btn-block" id="hapusPertanyaan" type="button"><i
                                         class="material-icons">delete</i>
                                     <pre>Pertanyaan </pre>
                                 </button>
                             </div>
-                            <div id="tambah" style="margin-bottom:20px">
-                                <button class="btn btn-danger btn-block" type="button"><i
+                            <div style="margin-bottom:20px">
+                                <button class="btn btn-danger btn-block" type="button" id="hapusJawaban"><i
                                         class="material-icons">delete</i>
                                     <pre>Jawaban</pre>
                                 </button>
@@ -176,32 +176,49 @@
         if (pertanyaan != 5) {
             pertanyaan++;
             $('#pertanyan').append(`
-		<div class="card" style="background-color: #e3e3e3; padding: 10px;">
+            <div id="pertanyaan${pertanyaan}">
+		<div class="card" style="background-color: #e3e3e3; padding: 10px;" >
                                 <h2 class="card-inside-title">Pertanyaan ${pertanyaan}</h2>
                                 <textarea id="pertanyaan${pertanyaan }" class="form-control" required="" name="pertanyaan[${pertanyaan }]" rows="3"></textarea>
                                 <h2 class="card-inside-title">No Jawaban</h2>
                                 <input id="noJawaban${pertanyaan }" type="number" class="form-control" required=""
                                     name="noJawaban[${pertanyaan }]"></input>
                             </div>
-							<br><br>`);
+							<br><br></div>`);
         }
     });
-
 
     $('#tambahJawaban').click(function() {
         if (jawaban != 5) {
             jawaban++;
             $('#jawaban').append(`
+            <div id="jawaban${jawaban}">
 		<div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                     <h2 class="card-inside-title">Jawaban ${jawaban}</h2>
                                     <textarea id="jawaban${jawaban}" class="form-control" required="" name="jawaban[${jawaban}]" rows="3"></textarea>
                                 </div>
-							<br><br>`);
+							<br><br></div>`);
         }
     });
 
+    $('#hapusPertanyaan').click(function() {
+        if (pertanyaan != 1) {
+            var element = document.getElementById('pertanyaan' + pertanyaan);
+            element.remove();
+            pertanyaan--;
+        }
+
+    });
 
 
+    $('#hapusJawaban').click(function() {
+        if (jawaban != 1) {
+            var element = document.getElementById('jawaban' + jawaban);
+            element.remove();
+            jawaban--;
+        }
+
+    });
 
 
 
