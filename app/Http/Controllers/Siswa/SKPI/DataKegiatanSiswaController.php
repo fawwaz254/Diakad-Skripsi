@@ -86,7 +86,7 @@ class DataKegiatanSiswaController extends BaseController{
         		$kegiatan = new KegiatanSiswa;
         		$kegiatan->id_kegiatan_siswa = $id;
         		$kegiatan->id_siswa = $siswa->id_siswa;
-        		$kegiatan->id_kelas = $siswa->id_kelas ?? 'SISWA LULUS';
+        		$kegiatan->id_kelas = $siswa->id_kelas ?? 'SISWA_LULUS';
         		$kegiatan->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
         		$kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
                 $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
