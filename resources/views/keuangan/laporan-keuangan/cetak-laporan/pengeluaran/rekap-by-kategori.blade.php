@@ -87,6 +87,9 @@
         </table>
         <br>
         <table border="1" cellspacing="0" cellpadding="10" style="width: 100%;">
+            @php
+                $danaPembangunan = 0;
+            @endphp
             @if (isset($data_laporan['data']))
                 @foreach ($data_laporan['data'] as $nm_kategori => $kategori_laporan)
                     <tr>
@@ -113,9 +116,39 @@
                             <td style="text-align: right;">{{ number_format($laporan->dana_realisasi) }}</td>
                         </tr>
                     @endforeach
+
+                    @if ($nm_kategori == 'K.5.4 Beban Pengembangan Pendidikan')
+                        @if (!empty($data_laporan['danaPembangunan']['4%']))
+                            <tr>
+                                <td>{{ $no++ }}</td>
+                                <td></td>
+                                <td colspan="3">Dana Pembangunan 4%</td>
+                                <td style="text-align: right;">
+                                    {{ number_format($data_laporan['danaPembangunan']['4%']) }}</td>
+                            </tr>
+                            @php
+                                $danaPembangunan += $data_laporan['danaPembangunan']['4%'];
+                            @endphp
+                        @endif
+
+                        @if (!empty($data_laporan['danaPembangunan']['7%']))
+                            <tr>
+                                <td>{{ $no++ }}</td>
+                                <td></td>
+                                <td colspan="3">Dana Pembangunan 7%</td>
+                                <td style="text-align: right;">
+                                    {{ number_format($data_laporan['danaPembangunan']['7%']) }}</td>
+                                {{ $danaPembangunan += $data_laporan['danaPembangunan']['4%'] }}
+                            </tr>
+                            @php
+                                $danaPembangunan += $data_laporan['danaPembangunan']['7%'];
+                            @endphp
+                        @endif
+                    @endif
+
                     <tr>
                         <th colspan="5">TOTAL</th>
-                        <th>{{ number_format($kategori_laporan->sum('dana_realisasi')) }}</th>
+                        <th>{{ number_format($kategori_laporan->sum('dana_realisasi') + $danaPembangunan) }}</th>
                     </tr>
                     <tr>
                         <td colspan="6"></td>
@@ -165,7 +198,7 @@
                     @endif
                     <tr>
                         <th colspan="5">GRAND TOTAL</th>
-                        <th>{{ number_format($data_laporan['total_data']) }}</th>
+                        <th>{{ number_format($data_laporan['total_data'] + $danaPembangunan) }}</th>
                     </tr>
                 @endif
             @endif
