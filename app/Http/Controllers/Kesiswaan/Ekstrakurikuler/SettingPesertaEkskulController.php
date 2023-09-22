@@ -252,7 +252,7 @@ class SettingPesertaEkskulController extends BaseController
 
                 try {
                     foreach ($input->id_siswa as $id_siswa) {
-                        $cekSiswa = PesertaEkskulSet::where('peserta_ekskul_set.id_siswa', '=', $id_siswa)->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)->first();
+                        $cekSiswa = PesertaEkskulSet::where('peserta_ekskul_set.id_siswa', '=', $id_siswa)->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)->where('peserta_ekskul_set.id_semester', $semester->id_semester)->first();
                         if ($cekSiswa) {
                             DB::rollback();
                             return [
@@ -281,6 +281,7 @@ class SettingPesertaEkskulController extends BaseController
                         $peserta_ekskul_set->id_peserta_ekskul_set  = $id_peserta_ekskul_set;
                         $peserta_ekskul_set->id_siswa               = $id_siswa;
                         $peserta_ekskul_set->id_ekskul              = $id_ekskul;
+                        $peserta_ekskul_set->id_semester            = $semester->id_semester;
                         $peserta_ekskul_set->is_aktif               = 1;
                         $peserta_ekskul_set->created_at             = $now;
                         $peserta_ekskul_set->created_by             = $input->auth_data->pengguna->id_pengguna;
