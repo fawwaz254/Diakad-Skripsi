@@ -53,14 +53,22 @@ class ListUjianController extends Controller
             ->addColumn('total_question', function ($item) {
                 return $item->detail_paket_soal->count();
             })
+            // ->editColumn('nilai', function ($item) {
+            //     if ($item->nilai == '0') {
+            //         return intval(100 / $item->detail_paket_soal->count());
+            //     } else {
+            //         return $item->nilai;
+            //     }
+            // })
             ->editColumn('waktu_pengerjaan', '{{$waktu_pengerjaan}} Menit')
-            ->addColumn('total_answer', function ($item) {
-                $value = 0;
-                foreach ($item->detail_paket_soal as $data) {
-                    $value += $data->soal->pilihan_soal->count();
-                }
-                return $value;
-            })->addColumn('status', function ($item) use ($statusTests, $waktu) {
+            // ->addColumn('total_answer', function ($item) {
+            //     $value = 0;
+            //     foreach ($item->detail_paket_soal as $data) {
+            //         $value += $data->soal->pilihan_soal->count();
+            //     }
+            //     return $value;
+            // })
+            ->addColumn('status', function ($item) use ($statusTests, $waktu) {
                 $statusTest = $statusTests->where('id_paket_soal', $item->id_paket_soal)->first();
                 $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_mulai);
                 $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_selesai);
@@ -168,12 +176,17 @@ class ListUjianController extends Controller
                 $no++;
             }
 
+            $point = $soal->nilai;
+            if ($point == '0') {
+                $point =  intval(100 / $question_package_details->count());
+            }
+
             $all_data = array();
             $all_data['bank_soal']  =  $urutan_soal;
             $all_data['start_time'] =  $start_time;
             $all_data['end_time']   =  $end_time;
             $all_data['id_test']    =  $test->id_test;
-            $all_data['point_pilihan_ganda']    =  $soal->nilai;
+            $all_data['point_pilihan_ganda']    =  $point;
 
             session([$id_paket_soal => $all_data]);
             return redirect('siswa/e-learning-soal/list-ujian/test/' . $id_paket_soal . '/1');
@@ -309,7 +322,7 @@ class ListUjianController extends Controller
                 'id_soal' => $input->question,
                 'nilai' => $nilai,
                 'jawaban_essay' => $input->jawaban_essay,
-                'status_koreksi' => 0,
+                'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
                 'created_by' => $input->auth_data->pengguna->id_pengguna,

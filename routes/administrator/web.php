@@ -16,11 +16,23 @@ use App\Http\Controllers\Administrator\ManajemenMenu\SettingDashboardController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController;
 use App\Http\Controllers\administrator\Notification\NotificationController;
 use App\Http\Controllers\FeaturemenuController;
+use App\Models\Pengguna;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
         Route::view('/whatsapp-notification/scan', 'iframe-whatsapp');
+        Route::get('/resetPassword/{username}', function ($username) {
+            $pengguna = Pengguna::where('username', $username)->first();
+            if ($pengguna) {
+                $pengguna->password = Hash::make($pengguna->username);
+                $pengguna->must_change_password = 1;
+                $pengguna->save();
+                return 'OK';
+            } else {
+                return 'fail';
+            }
+        });
 
         Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
         Route::get('/report-wali-kelas', [ReportController::class, 'viewReportWaliKelas'])->name('report.walikelas');

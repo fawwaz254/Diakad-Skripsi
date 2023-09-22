@@ -17,7 +17,7 @@
                         <input type="hidden" name="id_paket_soal" value="{{ $id_paket_soal }}">
                         <input type="hidden" name="id_pengguna" value="{{ $id_pengguna }}">
                         <input type="hidden" name="total_nilai" value="{{ $total_nilai }}">
-                        Total Nilai Pilihan Ganda : {{ $total_nilai }}
+                        Total Nilai : {{ $total_nilai }}
                         @foreach ($questions as $question)
                             <hr style="height:1px;border:none;color:#333;background-color:#333;">
                             <p>Soal no. {{ $nomor++ }}</p>

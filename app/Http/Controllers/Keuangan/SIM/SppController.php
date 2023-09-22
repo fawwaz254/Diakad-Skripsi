@@ -2124,6 +2124,32 @@ class SppController extends BaseController
         ];
     }
 
+
+    public function actionGetKeterangan(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $tahun_akademik_semester = $input->tahun_akademik_semester;
+        if (empty($tahun_akademik_semester)) {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+        }
+
+        $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester . '1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester . '2')->first();
+
+        $data_pembayaran_tunggakan = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)
+            ->where('id_semester_selesai', $semester_selesai->id_semester)
+            ->isInputByPengguna($auth_data->pengguna->id_pengguna)
+            ->whereMonth('tgl_pembayaran', $input->id_bulan)
+            ->get();
+
+
+        return  $data_pembayaran_tunggakan;
+    }
+
+
     public function actionSaveInputTunggakan(Request $request)
     {
         $input = (object) $request->input();
@@ -2389,7 +2415,7 @@ class SppController extends BaseController
 
     public function datatablesTunggakanSudahDihapus(Request $request)
     {
-        $list_data = TagihanBiaya::onlyTrashed()->with('detail_biaya.bulan', 'detail_biaya.biaya_sekolah.semester', 'detail_biaya.biaya_sekolah.kelompok', 'siswa.pengguna', 'kelas')->orderBy('deleted_at', 'desc');
+        $list_data = TagihanBiaya::onlyTrashed()->whereHas('detail_biaya')->with('detail_biaya.bulan', 'detail_biaya.biaya_sekolah.semester', 'detail_biaya.biaya_sekolah.kelompok', 'siswa.pengguna', 'kelas')->orderBy('deleted_at', 'desc');
 
         return Datatables::of($list_data)
             ->addColumn('semester', function ($item) {

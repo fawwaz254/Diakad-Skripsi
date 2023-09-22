@@ -18,7 +18,7 @@
                                     {{-- <th>Kelas</th> --}}
                                     <th>Mapel</th>
                                     <th>Jumlah Soal</th>
-                                    <th>Nilai Pilihan Ganda</th>
+                                    {{-- <th>Nilai Tiap Soal</th> --}}
                                     <th>Waktu Mulai</th>
                                     <th>Waktu Akhir</th>
                                     <th>Durasi Pengerjaan</th>
@@ -71,11 +71,14 @@
                 data: 'total_question',
                 name: 'total_question',
                 searchable: false,
-                orderable: false
+                orderable: false,
+                className: 'align-center',
             },
+            // {
+            //     data: 'nilai',
+            //     className: 'align-center',
+            // },
             {
-                data: 'nilai'
-            }, {
                 data: 'waktu_mulai'
             }, {
                 data: 'waktu_selesai'

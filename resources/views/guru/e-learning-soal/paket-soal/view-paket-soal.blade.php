@@ -49,7 +49,7 @@
                                     <th>Total Soal</th>
                                     <th>Tambah Soal</th>
                                     {{-- <th>Total Answer</th> --}}
-                                    <th>Poin Pilihan Ganda</th>
+                                    <th>Poin Soal</th>
                                     <th>Mulai</th>
                                     <th>Selesai</th>
                                     <th>Durasi Pengerjaan</th>
