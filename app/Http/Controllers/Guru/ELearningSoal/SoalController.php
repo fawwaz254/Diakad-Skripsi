@@ -612,18 +612,20 @@ class SoalController extends Controller
 
     public function indexTest(Request $request, $id_soal = 0)
     {
-        $question = Soal::find($id_soal);
+        $question = Soal::where('id_soal', $id_soal)->with('pilihan_soal', 'pilihan_pertanyaan', 'pilihan_jawaban')->first();
 
         if ($question->id_tipe_soal == 1) {
-            $question_options = PilihanSoal::where('id_soal', $question->id_soal)->orderBy('number_option')->get();
-            return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda', compact('question', 'question_options'));
+            return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda', compact('question'));
         } else if ($question->id_tipe_soal == 2) {
             return view('guru/e-learning-soal/soal/test-soal-essay', compact('question'));
         } else if ($question->id_tipe_soal == 3) {
             return view('guru/e-learning-soal/soal/test-soal-submit', compact('question'));
         } else if ($question->id_tipe_soal == 4) {
-            $question_options = PilihanSoal::where('id_soal', $question->id_soal)->orderBy('number_option')->get();
-            return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda-kompleks', compact('question', 'question_options'));
+            return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda-kompleks', compact('question'));
+        } else if ($question->id_tipe_soal == 5) {
+            return view('guru/e-learning-soal/soal/test-soal-simple-essay', compact('question'));
+        } else if ($question->id_tipe_soal == 6) {
+            return view('guru/e-learning-soal/soal/test-soal-match', compact('question'));
         }
     }
 

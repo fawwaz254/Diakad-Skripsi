@@ -25,7 +25,8 @@
                     <div class="ol-lg-6 col-md-6 col-sm-12 col-xs-12" id="place_file">
                         <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
                         <input type="file" class="form-control" name="file[]" required="" aria-required="true"
-                            aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx">
+                            aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx"
+                            style="background-color: #CFE795">
                     </div>
                 </div>
                 {{-- <h2 class="card-inside-title">Jawaban</h2>
