@@ -147,18 +147,21 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                        detail_url + '/edit/' + data.id + '">' +
-                        '    <i class="material-icons">mode_edit</i>' +
-                        '</a>' +
-                        '<a type="button" class="btn  btn-circle waves-effect waves-circle waves-float" href="' +
-                        detail_url + '/test/' + data.id + '">' +
-                        '    T' +
-                        '</a>' +
-                        '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
-                        data.id + '" onclick="actionDelete(this)">' +
-                        '    <i class="material-icons">delete</i>' +
-                        '</button>';
+                    if (data.delete) {
+                        return '<a type="button" class="btn  btn-circle btn-info waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/test/' + data.id + '">' +
+                            '    T' +
+                            '</a>' +
+                            '<button type="button" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" data-id="' +
+                            data.id + '" onclick="actionDelete(this)">' +
+                            '    <i class="material-icons">delete</i>' +
+                            '</button>';
+                    } else {
+                        return '<a type="button" class="btn btn-info  btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/test/' + data.id + '">' +
+                            '    T' +
+                            '</a>';
+                    }
                 }
             },
             {
@@ -210,7 +213,7 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<center><a type="button" class="btn  btn-circle waves-effect waves-circle waves-float" href="' +
+                    return '<center><a type="button" class="btn btn-info   btn-circle waves-effect waves-circle waves-float" href="' +
                         detail_url + '/test/' + data.id + '">' +
                         '    T' +
                         '</a></center>';
@@ -235,19 +238,14 @@
         });
     }).draw();
 
-
-
     function actionDelete(element) {
         var item = $(element);
         item.prop('disabled', true);
         var url = delete_url + '/delete';
-        // var url = '{{ url('organizer/question/delete') }}';
         vex.dialog.confirm({
             message: 'Apakah yakin mau menghapus soal?',
             callback: function(value) {
-                // alert(url)
                 if (value) {
-                    // alert(url);
                     $.ajax({
                         type: "POST",
                         url: url,
@@ -257,10 +255,7 @@
                         success: function(data) {
                             vex.dialog.alert(data.message);
                             setTimeout(() => {
-                                // $('.primary_table').DataTable().ajax.reload(null, false);
-                                // primary_table.ajax.reload(null, false);
                                 primary_table.ajax.reload(null, false);
-                                //    location.reload();
                             }, 2000)
                         },
                         error: function(xhr, status, error) {
