@@ -23,6 +23,7 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\InformasiTambahan;
+use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\LogKelasSiswa;
 use App\Models\Pengguna;
@@ -115,8 +116,6 @@ class ApprovePrestasiSiswaController extends BaseController
 
     public function printSkpi(Request $request, $id)
     {
-
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -125,7 +124,13 @@ class ApprovePrestasiSiswaController extends BaseController
         $jurusan = null;
         if (empty($siswa->nm_jurusan)) {
             $log_kelas = LogKelasSiswa::where('id_siswa', $siswa->id_siswa)->with('kelas.jurusan')->first();
-            $jurusan = $log_kelas->kelas->jurusan->nm_jurusan;
+            if (isset($log_kelas->kelas->jurusan)) {
+                $jurusan = $log_kelas->kelas->jurusan->nm_jurusan;
+            } else {
+                $log_kelas = Kelas::withTrashed()->where('id_kelas', $log_kelas->id_kelas)->first();
+                $log_kelas =  Jurusan::withTrashed()->where('id_jurusan', $log_kelas->id_jurusan)->first();
+                $jurusan = $log_kelas->nm_jurusan;
+            }
         }
 
 
