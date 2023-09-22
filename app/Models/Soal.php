@@ -53,4 +53,9 @@ class Soal extends Model
     {
         return $this->hasMany('App\Models\PilihanJawaban', 'id_soal')->orderBy('nomer', 'asc');
     }
+
+    public function detail_paket_soal()
+    {
+        return $this->hasMany('App\Models\DetailPaketSoal', 'id_soal');
+    }
 }
