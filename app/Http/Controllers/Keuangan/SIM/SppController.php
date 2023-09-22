@@ -2389,7 +2389,7 @@ class SppController extends BaseController
 
     public function datatablesTunggakanSudahDihapus(Request $request)
     {
-        $list_data = TagihanBiaya::onlyTrashed()->with('detail_biaya.bulan', 'detail_biaya.biaya_sekolah.semester', 'detail_biaya.biaya_sekolah.kelompok', 'siswa.pengguna', 'kelas')->orderBy('deleted_at', 'desc');
+        $list_data = TagihanBiaya::onlyTrashed()->whereHas('detail_biaya')->with('detail_biaya.bulan', 'detail_biaya.biaya_sekolah.semester', 'detail_biaya.biaya_sekolah.kelompok', 'siswa.pengguna', 'kelas')->orderBy('deleted_at', 'desc');
 
         return Datatables::of($list_data)
             ->addColumn('semester', function ($item) {
