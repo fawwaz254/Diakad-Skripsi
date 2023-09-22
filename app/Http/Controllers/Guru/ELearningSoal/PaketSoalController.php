@@ -70,7 +70,11 @@ class PaketSoalController extends Controller
             })
             ->addColumn('nilai', function ($item) {
                 if ($item->nilai == '0') {
-                    return intval(100 / $item->detail_paket_soal->count());
+                    if ($item->detail_paket_soal->count() == '0') {
+                        return intval(100 / 1);
+                    } else {
+                        return intval(100 / $item->detail_paket_soal->count());
+                    }
                 }
                 return  $item->nilai;
             })
