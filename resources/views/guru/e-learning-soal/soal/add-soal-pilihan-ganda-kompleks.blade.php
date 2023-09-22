@@ -4,11 +4,11 @@
             <i class="material-icons">keyboard_backspace</i>
             <span>Kembali</span>
         </a>
-        <button type="button" id="add" class="btn bg-green waves-effect">
+        {{-- <button type="button" id="add" class="btn bg-green waves-effect">
             <i class="material-icons">add_box</i>
             <span>Tambah Jumlah Soal</span>
-        </button>
-        <button type="button" id="remove" class="btn bg-red waves-effect">
+        </button> --}}
+        {{-- <button type="button" id="remove" class="btn bg-red waves-effect">
             <i class="material-icons">indeterminate_check_box</i>
             <span>Hapus Jumlah Soal</span>
         </button>
@@ -17,7 +17,7 @@
         <span style="background-color: white;padding:7px;border: 1px solid black;">
             <input type="checkbox" id="wuswug" class="checkbox">
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
-        </span>
+        </span> --}}
     </h2>
 </div>
 
@@ -54,7 +54,7 @@
             <div class="card">
                 <div class="header bg-pink">
                     <h2>
-                        1. SOAL PILIHAN GANDA
+                        PILIHAN GANDA KOMPLEKS
                     </h2>
                 </div>
                 <div class="body">

@@ -75,7 +75,7 @@
                             <div class="row clearfix">
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <div class="input-group">
-                                        <span class="input-group-addon">Nilai Pilihan Ganda :</span>
+                                        <span class="input-group-addon">Nilai Soal :</span>
                                     </div>
                                 </div>
                                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
@@ -105,15 +105,15 @@
                                                         Soal</option>
                                                     <option @if ($item->nilai == 0) selected @endif
                                                         value="0">
-                                                        Tidak Mengunakan Pilihan Ganda</option>
+                                                        Otomatis</option>
                                                 @else
-                                                    <option disabled selected value="">-- Pilih Nilai --</option>
+                                                    {{-- <option disabled  value="">-- Pilih Nilai --</option> --}}
                                                     <option value="20">20 Point per Soal</option>
                                                     <option value="10">10 Point per Soal</option>
                                                     <option value="5">5 Point per Soal</option>
                                                     <option value="2.5">2,5 Point per Soal</option>
                                                     <option value="2">2 Point per Soal</option>
-                                                    <option value="0">Tidak Mengunakan Pilihan Ganda</option>
+                                                    <option selected value="0">Otomatis</option>
                                                 @endif
 
                                             </select>

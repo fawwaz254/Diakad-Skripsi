@@ -27,7 +27,7 @@ class NilaiUjianController extends Controller
             })
             ->addColumn('total_nilai', function ($item) {
                 $nilai = $item->jawaban_test->pluck('nilai')->sum();
-                $nilai_pilihan_ganda = $item->jawaban_test->where('id_tipe_soal', 1)->pluck('nilai')->sum();
+                $nilai_pilihan_ganda = $item->jawaban_test->whereIn('id_tipe_soal', [1, 4, 5, 6, 7])->pluck('nilai')->sum();
                 $nilai_pilihan_essay_submit = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
                 $validasi_pilihan_essay_submit =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->first();
                 $belum_dikoreksi =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', '0')->first();

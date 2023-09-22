@@ -24,10 +24,9 @@
                                     <th>Mapel</th>
                                     <th>Waktu Pengerjaan</th>
                                     {{-- <th>Jam Pengerjaan</th> --}}
-                                    <th>Nilai Pilihan Ganda</th>
-
                                     <th>Jumlah Soal</th>
-                                    <th>Total Nilai Pilihan Ganda</th>
+                                    {{-- <th>Nilai Otomatis</th> --}}
+                                    <th>Total Nilai Otomatis</th>
                                     <th>Total Nilai Essay / File</th>
                                     <th>Total Nilai</th>
                                 </tr>
@@ -74,10 +73,10 @@
                 data: 'waktu_mulai_pengerjaan',
                 name: 'waktu_mulai_pengerjaan'
             },
-            {
-                data: 'paket_soal.nilai',
-                name: 'paket_soal.nilai'
-            },
+            // {
+            //     data: 'paket_soal.nilai',
+            //     name: 'paket_soal.nilai'
+            // },
             {
                 data: 'detail_paket_soal',
                 name: 'detail_paket_soal'
