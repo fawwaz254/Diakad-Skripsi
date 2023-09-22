@@ -63,8 +63,8 @@
                                     <h2 class="card-inside-title">Jawaban</h2>
                                     <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short
                                         @if ($jawabanTest) style="background-color: #CFE795;" @endif>{{ $jawabanTest }}</textarea>
-                                    <input type="hidden" name="id_tipe_soal"
-                                        value="{{ $detailPaketSoal->soal->id_tipe_soal }}">
+                                    {{-- <input type="hidden" name="id_tipe_soal"
+                                        value="{{ $detailPaketSoal->soal->id_tipe_soal }}"> --}}
                                 @elseif($detailPaketSoal->soal->id_tipe_soal == 3)
                                     <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
                                     <input type="file" class="form-control" name="file" required=""
@@ -106,8 +106,8 @@
                                     <h2 class="card-inside-title">Jawaban Singkat</h2>
                                     <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short
                                         @if ($jawabanTest) style="background-color: #CFE795;" @endif>{{ $jawabanTest }}</textarea>
-                                    <input type="hidden" name="id_tipe_soal"
-                                        value="{{ $detailPaketSoal->soal->id_tipe_soal }}">
+                                    {{-- <input type="hidden" name="id_tipe_soal"
+                                        value="{{ $detailPaketSoal->soal->id_tipe_soal }}"> --}}
                                 @elseif($detailPaketSoal->soal->id_tipe_soal == 6)
                                     {{-- <input type="hidden" name="{{ $detailPaketSoal->soal_id_tipe_soal }}"> --}}
                                     <br><br>

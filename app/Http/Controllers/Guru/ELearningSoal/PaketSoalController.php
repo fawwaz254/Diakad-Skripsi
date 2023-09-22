@@ -48,10 +48,8 @@ class PaketSoalController extends Controller
 
     public function indexTest(Request $request, $id = 0)
     {
-        $item = PaketSoal::find($id);
-        $question_package_details = DetailPaketSoal::with('soal', 'soal.pilihan_soal')->where('id_paket_soal', $item->id_paket_soal)->get();
-
-        return view('guru/e-learning-soal/paket-soal/test-paket-soal', compact('item', 'question_package_details'));
+        $item = PaketSoal::where('id_paket_soal', $id)->with('detail_paket_soal.soal.pilihan_soal', 'detail_paket_soal.soal.pilihan_jawaban', 'detail_paket_soal.soal.pilihan_pertanyaan')->first();
+        return view('guru/e-learning-soal/paket-soal/test-paket-soal', compact('item'));
     }
 
     public function commonList(Request $request)
@@ -70,7 +68,11 @@ class PaketSoalController extends Controller
             })
             ->addColumn('nilai', function ($item) {
                 if ($item->nilai == '0') {
-                    return intval(100 / $item->detail_paket_soal->count());
+                    if ($item->detail_paket_soal->count() == '0') {
+                        return intval(100 / 1);
+                    } else {
+                        return intval(100 / $item->detail_paket_soal->count());
+                    }
                 }
                 return  $item->nilai;
             })

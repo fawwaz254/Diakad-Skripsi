@@ -32,12 +32,38 @@
 
                             </div>
                         </div>
-                        <h2 class="card-inside-title">Kunci Jawaban</h2>
+                        <h2 class="card-inside-title">Alternatif Jawaban 1</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <pre>{!! $question->jawaban !!}</pre>
+                                <pre>{!! $question->alternatif_jawaban1 !!}</pre>
                             </div>
                         </div>
+                        <h2 class="card-inside-title">Alternatif Jawaban 2</h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <pre>{!! $question->alternatif_jawaban2 !!}</pre>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">Alternatif Jawaban 3</h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <pre>{!! $question->alternatif_jawaban3 !!}</pre>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">Alternatif Jawaban 4</h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <pre>{!! $question->alternatif_jawaban4 !!}</pre>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">Alternatif Jawaban 5</h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <pre>{!! $question->alternatif_jawaban5 !!}</pre>
+                            </div>
+                        </div>
+
+
                         <h2 class="card-inside-title">Jawaban</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

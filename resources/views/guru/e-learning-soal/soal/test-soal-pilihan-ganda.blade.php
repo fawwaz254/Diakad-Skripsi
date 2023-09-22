@@ -28,7 +28,7 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         {{-- {{csrf_field()}} --}}
                         <div class="demo-radio-button">
-                            @foreach ($question_options as $no_option => $question_option)
+                            @foreach ($question->pilihan_soal as $no_option => $question_option)
                                 @if ($question_option->correct == 1)
                                     <input name="question_option" type="radio" id="radio_{{ $no_option }}"
                                         value="{{ $question_option->id_pilihan_soal }}">
