@@ -44,6 +44,21 @@
                                 <i class="material-icons">add_box</i>
                                 <span>Type File</span>
                             </a>
+                            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/input-soal/new/pilihan-ganda-kompleks/' . $question_package->id_paket_soal) }}">
+                                <i class="material-icons">add_box</i>
+                                <span>Type Pilihan Ganda Kompleks</span>
+                            </a>
+                            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/input-soal/new/simple-essay/' . $question_package->id_paket_soal) }}">
+                                <i class="material-icons">add_box</i>
+                                <span>Type Isian Singkat</span>
+                            </a>
+                            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/input-soal/new/match/' . $question_package->id_paket_soal) }}">
+                                <i class="material-icons">add_box</i>
+                                <span>Type Penjodohan</span>
+                            </a>
                             <div class="table-responsive">
                                 <table id="secondary_table"
                                     class="table table-bordered table-striped table-hover dataTable"
