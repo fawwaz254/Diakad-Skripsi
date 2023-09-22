@@ -804,6 +804,8 @@ class LibCetakKeuangan
 
         $dataLaporan = []; // tgl, keterangan, tipe (debit/kredit), nominal
         $tempDataLaporan = [];
+        $danaPembangunan['4%'] = null;
+        $danaPembangunan['7%'] = null;
 
         $allBiaya = Biaya::get();
 
@@ -834,6 +836,8 @@ class LibCetakKeuangan
                 ->whereHas('tagihan_biaya.detail_biaya', function ($q) {
                     $q->where('id_jenis_detail_biaya', 4);
                 });
+
+
             if ($print_setting == 'self') {
                 $pembayaran_non_kbm = $pembayaran_non_kbm->where('pembayaran_biaya.created_by', $auth_data->pengguna->id_pengguna)->get();
             } else {
@@ -852,7 +856,7 @@ class LibCetakKeuangan
                     $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
                     foreach ($detailBiayaInternal as $x) {
-                        if ($x->nm_detail_biaya_internal != 'SPP MURNI') {
+                        if ($x->nm_detail_biaya_internal != 'SPP MURNI' && $x->nm_detail_biaya_internal != "Dana Pembangunan 4%" && $x->nm_detail_biaya_internal != "Dana Pembangunan 7%") {
                             if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                                 $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                             } else {
@@ -860,6 +864,10 @@ class LibCetakKeuangan
                             }
 
                             $total_bayar_non_kbm += $x->besar_biaya;
+                        } else if ($x->nm_detail_biaya_internal == "Dana Pembangunan 4%") {
+                            $danaPembangunan['4%'] += $x->besar_biaya;
+                        } else if ($x->nm_detail_biaya_internal == "Dana Pembangunan 7%") {
+                            $danaPembangunan['7%'] += $x->besar_biaya;
                         }
                     }
                 }
@@ -876,9 +884,8 @@ class LibCetakKeuangan
             ];
         }
 
-        // dd($temp_data_bayar_non_kbm);
-        // END SHOW BEBAN NON-KBM
 
+        // END SHOW BEBAN NON-KBM
         $data = [
             'data' => $allDataRealisasi->groupBy(function ($item, $key) {
                 return $item->rapb->subkategori->kode_subkategori_rapb . ' ' . $item->rapb->subkategori->nm_subkategori_rapb;
@@ -886,6 +893,7 @@ class LibCetakKeuangan
             'total_data' => $totalLaporan,
             'subkategori_non_kbm' => $subkategori_non_kbm,
             'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat'),
+            'danaPembangunan' => $danaPembangunan,
         ];
 
         return $data;

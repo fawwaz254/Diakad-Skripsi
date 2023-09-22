@@ -165,7 +165,7 @@ class SoalController extends Controller
             } else if ($item->id_tipe_soal == 4) {
                 $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
                 return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda-kompleks', compact('item', 'question_options', 'kategori'));
-            }
+            } else if ($item->id_tipe_soal == 5) { } else if ($item->id_tipe_soal == 6) { }
         }
     }
 
@@ -219,25 +219,25 @@ class SoalController extends Controller
             $question->content = $input->soal;
             $question->text = $input->text;
             $question->id_kategori_soal = $input->kategori;
-            if ($input->id_tipe_soal == 1) {
-                $id_pilihan_soal_benar = 0;
-                foreach ($input->jawaban as $no_answer => $answer) {
-                    $question_option = PilihanSoal::find($input->id_jawaban[$no_answer]);
-                    $question_option->id_soal = $question->id_soal;
-                    $question_option->number_option = $no_answer;
-                    $question_option->content = $answer;
-                    $question_option->text = $answer;
-                    if ($input->jawaban_benar == $no_answer) {
-                        $question_option->correct = 1;
-                        $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
-                    } else {
-                        $question_option->correct = 0;
-                    }
-                    $question_option->save();
-                }
-                $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
-            }
-            $question->save();
+            // if ($input->id_tipe_soal == 1) {
+            //     $id_pilihan_soal_benar = 0;
+            //     foreach ($input->jawaban as $no_answer => $answer) {
+            //         $question_option = PilihanSoal::find($input->id_jawaban[$no_answer]);
+            //         $question_option->id_soal = $question->id_soal;
+            //         $question_option->number_option = $no_answer;
+            //         $question_option->content = $answer;
+            //         $question_option->text = $answer;
+            //         if ($input->jawaban_benar == $no_answer) {
+            //             $question_option->correct = 1;
+            //             $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+            //         } else {
+            //             $question_option->correct = 0;
+            //         }
+            //         $question_option->save();
+            //     }
+            //     $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+            // }
+            // $question->save();
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'e-learning-soal/paket-soal/bank-soal',
@@ -632,17 +632,20 @@ class SoalController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = Soal::with('pengguna', 'kategori_soal')->orderBy('created_at', 'DESC')->when($input->status == 0, function ($q) use ($auth_data) {
+        $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal')->orderBy('created_at', 'DESC')->when($input->status == 0, function ($q) use ($auth_data) {
             $q->where('id_pengguna', $auth_data->pengguna->id_pengguna);
         });
+
 
         return Datatables::of($list_data)
             ->addColumn('time', function ($item) {
                 return $item->created_at->diffForHumans();
             })
             ->addColumn('action', function ($item) {
+                // dd($item->detail_paket_soal);
                 $data = array(
-                    'id' => $item->id_soal
+                    'id' => $item->id_soal,
+                    'delete' => count($item->detail_paket_soal) == '0' ? true : false,
                 );
                 return $data;
             })

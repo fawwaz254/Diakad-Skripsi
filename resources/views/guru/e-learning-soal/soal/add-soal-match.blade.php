@@ -189,16 +189,16 @@
     });
 
     $('#tambahJawaban').click(function() {
-        if (jawaban != 5) {
-            jawaban++;
-            $('#jawaban').append(`
+        // if (jawaban != 5) {
+        jawaban++;
+        $('#jawaban').append(`
             <div id="jawaban${jawaban}">
 		<div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                     <h2 class="card-inside-title">Jawaban ${jawaban}</h2>
                                     <textarea id="jawaban${jawaban}" class="form-control" required="" name="jawaban[${jawaban}]" rows="3"></textarea>
                                 </div>
 							<br><br></div>`);
-        }
+        // }
     });
 
     $('#hapusPertanyaan').click(function() {
