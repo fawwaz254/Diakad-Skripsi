@@ -68,6 +68,12 @@ class PaketSoalController extends Controller
             ->addColumn('total_question', function ($item) {
                 return  $item->detail_paket_soal->count();
             })
+            ->addColumn('nilai', function ($item) {
+                if ($item->nilai == '0') {
+                    return intval(100 / $item->detail_paket_soal->count());
+                }
+                return  $item->nilai;
+            })
             ->editColumn('waktu_mulai', function ($item) {
                 return Carbon::parse($item->waktu_mulai)->format('d-m-Y (H:i)');
             })

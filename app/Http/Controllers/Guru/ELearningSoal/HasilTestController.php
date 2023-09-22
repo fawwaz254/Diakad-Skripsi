@@ -120,15 +120,15 @@ class HasilTestController extends Controller
         return Datatables::of($test)
             ->editColumn('detail_paket_soal', function ($item) {
                 return $item->detail_paket_soal->count();
-            })->addColumn('pilihan_ganda', function ($item) {
-                return $item->jawaban_test->where('id_tipe_soal', 1)->count() . ' (Benar : ' .  $item->jawaban_test->where('id_tipe_soal', 1)->where('nilai', '!=', '0')->count() . ' x ' . $item->paket_soal->nilai  . ')';
+            })->addColumn('soal_terisi', function ($item) {
+                return $item->jawaban_test->count();
             })
-            ->addColumn('essay', function ($item) {
-                return $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->count();
-            })
+            // ->addColumn('essay', function ($item) {
+            //     return $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->count();
+            // })
             ->addColumn('total_nilai', function ($item) {
                 //pilihan ganda
-                $nilai_pilihan_ganda = $item->jawaban_test->where('id_tipe_soal', 1)->pluck('nilai')->sum();
+                $nilai_pilihan_ganda = $item->jawaban_test->whereIn('id_tipe_soal', [1, 4, 5, 6, 7])->pluck('nilai')->sum();
                 $nilai_paket_soal_pilihan_ganda = $item->paket_soal->nilai;
 
                 //essay

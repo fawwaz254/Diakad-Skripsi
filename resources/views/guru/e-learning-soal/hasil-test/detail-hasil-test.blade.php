@@ -21,9 +21,9 @@
                                     <th>Nama Siswa</th>
                                     <th>Kelas</th>
                                     <th>Jumlah Soal</th>
-                                    <th>Pilihan Ganda Terisi</th>
-                                    <th>Essay Terisi</th>
-                                    <th>Nilai Pilihan Ganda</th>
+                                    <th>Soal Terisi</th>
+                                    {{-- <th>Essay Terisi</th> --}}
+                                    <th>Nilai</th>
                                     <th>Nilai Jawaban Essay / Jawaban File</th>
                                     <th>Total Nilai</th>
                                 </tr>
@@ -68,20 +68,23 @@
             {
                 data: 'detail_paket_soal',
                 searchable: false,
-                orderable: false
+                orderable: false,
+                className: 'align-center',
             },
             {
-                data: 'pilihan_ganda',
+                data: 'soal_terisi',
                 searchable: false,
-                orderable: false
+                orderable: false,
+                className: 'align-center',
             },
-            {
-                data: 'essay',
-                searchable: false,
-                orderable: false
-            },
+            // {
+            //     data: 'essay',
+            //     searchable: false,
+            //     orderable: false
+            // },
             {
                 data: 'total_nilai',
+                className: 'align-center',
                 render: function(data) {
                     return data.nilai_pilihan_ganda
                 }
@@ -98,6 +101,7 @@
             },
             {
                 data: 'total_nilai',
+                className: 'align-center',
                 render: function(data) {
                     return data.nilai
                 }
