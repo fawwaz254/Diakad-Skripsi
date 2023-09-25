@@ -716,6 +716,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('prestasi-siswa/edit/{id}', [WaliKelasSKPIController::class, 'editPrestasiSiswa']);
                 Route::post('prestasi-siswa/action/{mode}/{id}', [WaliKelasSKPIController::class, 'actionDataPrestasiSiswa']);
                 Route::get('prestasi-siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewPrestasiSiswa']);
+
+                Route::get('print/{id_siswa}',  [ApprovePrestasiSiswaController::class, 'printSkpi']);
             });
         });
 
