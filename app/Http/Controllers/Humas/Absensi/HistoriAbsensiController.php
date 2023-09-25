@@ -20,6 +20,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class HistoriAbsensiController extends BaseController
 {
+    public function getDataHistoriAbsensi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('humas/absensi/histori-absensi/get-data-fingerprint', compact('auth_data'));
+    }
+
     public function export_excel_week(Request $request, $date = null, $unit_kerja = null)
     {
         set_time_limit(9800);

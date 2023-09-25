@@ -41,12 +41,20 @@
                     <strong>Tanggal {{ $date }} merupakan hari libur yaitu {{ $cek_libur->explanation }}
                 </div>
             @endif
+
+            <div class="block-header">
+                <h2><a class="btn bg-green waves-effect target-link "
+                        href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/get-data') }}"><i
+                            class="material-icons">library_add</i><span>Get Data Fingerprint</span></a></h2>
+            </div>
             <button type="button" class="btn btn-primary">
                 Data Histori Absensi Guru dan Pegawai
             </button>
             <button type="button" onclick="viewSiswa()" class="btn btn-default">
                 Data Histori Absensi Siswa
             </button>
+
+
             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
                 <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
                     Data Histori Absensi Siswa Pondok

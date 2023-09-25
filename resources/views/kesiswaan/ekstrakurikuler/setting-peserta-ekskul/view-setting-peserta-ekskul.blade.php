@@ -37,18 +37,29 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <label>Semester</label>
                                 <select class="form-control show-tick" name="id_semester" required="">
-                                    @foreach ($data_semester as $data)
-                                        <option value="{{ $data->id_semester }}" @if ($data->is_aktif_semester == 1)
-                                            selected
-                                            @endif
-                                            @if ($id_semester == $data->id_semester) selected @endif>
-                                            {{ $data->tahun_ajaran }}
-                                            {{ $data->nm_semester }}
-                                            @if ($data->is_aktif_semester == 1)
-                                                (Aktif)
-                                            @endif
-                                        </option>
-                                    @endforeach
+                                    @if ($id_semester)
+                                        @foreach ($data_semester as $data)
+                                            <option value="{{ $data->id_semester }}"
+                                                @if ($id_semester == $data->id_semester) selected @endif>
+                                                {{ $data->tahun_ajaran }}
+                                                {{ $data->nm_semester }}
+                                                @if ($data->is_aktif_semester == 1)
+                                                    (Aktif)
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        @foreach ($data_semester as $data)
+                                            <option value="{{ $data->id_semester }}"
+                                                @if ($data->is_aktif_semester == 1) selected @endif>
+                                                {{ $data->tahun_ajaran }} {{ $data->nm_semester }}
+                                                @if ($data->is_aktif_semester == 1)
+                                                    (Aktif)
+                                                @endif
+                                            </option>
+                                        @endforeach
+
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -68,15 +79,16 @@
                         <div class="block-header">
                             <h2>
                                 <a class="btn bg-blue waves-effect target-link"
-                                    href="{{ url(Request::segment(1) . '#ekstrakurikuler/setting-peserta-ekskul/add/' . $id_ekskul) }}"><i
+                                    href="{{ url(Request::segment(1) . '#ekstrakurikuler/setting-peserta-ekskul/add/' . $id_semester . '/' . $id_ekskul) }}"><i
                                         class="material-icons">note_add</i><span>Tambah Peserta Ekskul</span></a>
                                 {{-- <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ekstrakurikuler/setting-peserta-ekskul/setting/'.$id_ekskul)}}"><i class="material-icons">settings_applications</i><span>Setting Pengambilan Ekskul</span></a> --}}
                             </h2>
                         </div>
                         <div class="row clearfix">
                             <div class="body">
-                                <form form id="form-validation1" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-setting-peserta-ekskul/checkdelete/'.$id_ekskul)}}">
-                                    {{csrf_field()}}
+                                <form form id="form-validation1" method="POST"
+                                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-setting-peserta-ekskul/checkdelete/' . $id_ekskul) }}">
+                                    {{ csrf_field() }}
                                     <div class="table-responsive">
                                         <table
                                             class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
@@ -85,8 +97,10 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>
-                                                        <input id="checkbox_select_all" type="checkbox" name="select_all" class="filled-in">
-                                                        <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
+                                                        <input id="checkbox_select_all" type="checkbox"
+                                                            name="select_all" class="filled-in">
+                                                        <label for="checkbox_select_all"
+                                                            style="margin-bottom: -10px;"></label>
                                                     </th>
                                                     <th>NIS - Nama Siswa</th>
                                                     <th>Kelas</th>
@@ -96,7 +110,8 @@
                                             </thead>
                                         </table>
                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">delete_forever</i><span>Delete</span></button>
+                                            <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                                    class="material-icons">delete_forever</i><span>Delete</span></button>
                                         </div>
                                     </div>
 
@@ -137,10 +152,16 @@
                 searchable: false,
                 orderable: false
             },
-            { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
-                render: function (data, type, full, meta){
-                    return '<input id="checkbox-' + data.id + '" type="checkbox" name="id_siswa[]" class="filled-in" value="' + data.id + '">'+
-                    '<label for="checkbox-' + data.id + '"></label>'; 
+            {
+                data: 'checkbox',
+                name: 'checkbox',
+                searchable: false,
+                orderable: false,
+                render: function(data, type, full, meta) {
+                    return '<input id="checkbox-' + data.id +
+                        '" type="checkbox" name="id_siswa[]" class="filled-in" value="' + data.id +
+                        '">' +
+                        '<label for="checkbox-' + data.id + '"></label>';
 
                 }
             },
@@ -186,18 +207,19 @@
     }).draw();
 </script>
 <script type="text/javascript">
-    $(document).ready(function() {        
+    $(document).ready(function() {
         /* Select All Checkbox */
         $('input[name="select_all"]').change(function() {
             var select_all_checked = this.checked;
-            var rows = primary_table.rows({ 'search': 'applied' }).nodes();
+            var rows = primary_table.rows({
+                'search': 'applied'
+            }).nodes();
 
             $('input[type="checkbox"]', rows).prop('checked', this.checked);
         });
     });
 </script>
-<script>    
-
+<script>
     $('#form-validation1').validate({
         rules: {
             'checkbox': {
@@ -207,13 +229,13 @@
                 required: true
             }
         },
-        highlight: function (input) {
+        highlight: function(input) {
             $(input).parents('.form-line').addClass('error');
         },
-        unhighlight: function (input) {
+        unhighlight: function(input) {
             $(input).parents('.form-line').removeClass('error');
         },
-        errorPlacement: function (error, element) {
+        errorPlacement: function(error, element) {
             $(element).parents('.form-group').append(error);
         },
         submitHandler: function(form) {
@@ -223,20 +245,20 @@
                 type: form.method,
                 data: $(form).serialize(),
                 success: function(response) {
-                    if(response.status == 200){
+                    if (response.status == 200) {
                         vex.dialog.alert(response.message);
-                    }else if(response.status == 201){
+                    } else if (response.status == 201) {
                         vex.dialog.alert(response.message);
                         window.location.href = response.link;
-                    }else if(response.status == 202){
+                    } else if (response.status == 202) {
                         vex.dialog.alert(response.message);
                         loadURI(response.path);
-                    }else if(response.status == 203){
+                    } else if (response.status == 203) {
                         vex.dialog.alert(response.message);
                         primary_table.ajax.reload(null, false);
-                    }else if(response.status == 204){
+                    } else if (response.status == 204) {
                         loadURI(response.path);
-                    }else if(response.status == 300){
+                    } else if (response.status == 300) {
                         vex.dialog.alert(response.message);
                     }
                 },

@@ -46,7 +46,7 @@ class SettingPesertaEkskulController extends BaseController
         $selected_semester = null;
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
-        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'selected_semester', 'data_semester','id_semester'));
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'selected_semester', 'data_semester', 'id_semester'));
     }
 
     public function actionViewSettingPesertaEkskul(Request $request)
@@ -68,24 +68,24 @@ class SettingPesertaEkskulController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-ekskul/' . $input->id_semester .'/' . $input->id_ekskul
+                'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-ekskul/' . $input->id_semester . '/' . $input->id_ekskul
             ];
         }
     }
 
-    public function viewEkskulSettingPesertaEkskul(Request $request,$id_semester, $id_ekskul)
+    public function viewEkskulSettingPesertaEkskul(Request $request, $id_semester, $id_ekskul)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
-        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data); 
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
         $ekskul_pilih = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
-        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'ekskul_pilih','data_semester','selected_semester','id_semester'));
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'ekskul_pilih', 'data_semester', 'selected_semester', 'id_semester'));
     }
 
-    public function addSettingPesertaEkskul(Request $request, $id_ekskul, $id_kelas = null)
+    public function addSettingPesertaEkskul(Request $request, $id_semester, $id_ekskul, $id_kelas = null)
     {
         # code...
         $input = (object) $request->input();
@@ -93,7 +93,7 @@ class SettingPesertaEkskulController extends BaseController
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $ekskul = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
 
-        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-kelas-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'data_kelas', 'id_kelas', 'ekskul'));
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-kelas-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'data_kelas', 'id_kelas', 'ekskul', 'id_semester'));
     }
 
     public function actionAddSettingPesertaEkskul(Request $request)
@@ -114,12 +114,12 @@ class SettingPesertaEkskulController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-kelas/' . $input->id_ekskul . '/' . $input->id_kelas
+                'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-kelas/' . $input->id_semester . '/' . $input->id_ekskul . '/' . $input->id_kelas
             ];
         }
     }
 
-    public function viewKelasSettingPesertaEkskul(Request $request, $id_ekskul, $id_kelas)
+    public function viewKelasSettingPesertaEkskul(Request $request, $id_semester, $id_ekskul, $id_kelas)
     {
         # code...
         $input = (object) $request->input();
@@ -128,7 +128,7 @@ class SettingPesertaEkskulController extends BaseController
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $kelas_siswa = Siswa::where('id_kelas', '=', $id_kelas)->get();
 
-        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-kelas-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'data_kelas', 'id_kelas', 'data_kelas', 'kelas_siswa', 'ekskul'));
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-kelas-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'data_kelas', 'id_kelas', 'data_kelas', 'kelas_siswa', 'ekskul', 'id_semester'));
     }
 
     public function editSettingPesertaEkskul(Request $request, $id_peserta_ekskul_set)
@@ -171,9 +171,9 @@ class SettingPesertaEkskulController extends BaseController
         return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/set-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'ekskul', 'semester', 'data_semester', 'jumlah_pengambilan'));
     }
 
-    public function datatablesSettingPesertaEkskul(Request $request, $id_ekskul,$id_semester)
+    public function datatablesSettingPesertaEkskul(Request $request, $id_ekskul, $id_semester)
     {
-        
+
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = PesertaEkskulSet::select('peserta_ekskul_set.is_aktif', 'ekskul.id_ekskul', 'siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'peserta_ekskul_set.id_peserta_ekskul_set')
@@ -181,11 +181,11 @@ class SettingPesertaEkskulController extends BaseController
             ->join('siswa', 'siswa.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-            ->join('pengambilan_ekskul','pengambilan_ekskul.id_siswa', '=','peserta_ekskul_set.id_siswa')
+            ->join('pengambilan_ekskul', 'pengambilan_ekskul.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
             // ->where('pengambilan_ekskul.id_siswa','=', 'peserta_ekskul_set.id_siswa')
-            ->where('pengambilan_ekskul.id_ekskul','=', $id_ekskul)
+            ->where('pengambilan_ekskul.id_ekskul', '=', $id_ekskul)
             ->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)
-            ->where('pengambilan_ekskul.id_semester','=', $id_semester)
+            ->where('pengambilan_ekskul.id_semester', '=', $id_semester)
             ->get();
         // dd($list_data);
         return Datatables::of($list_data)
@@ -302,39 +302,38 @@ class SettingPesertaEkskulController extends BaseController
                         'message' => 'Input Peserta Ekskul Gagal Dilakukan'
                     ];
                 }
-            }elseif ($mode == 'checkdelete') {
-                    foreach ($input->id_siswa as $id_siswa) {
-                        $key = PesertaEkskulSet::where('id_siswa',$id_siswa)->where('id_ekskul',$id_ekskul)->where('is_aktif',1)->first()->id_peserta_ekskul_set;
-                        // dd($key);
-                        $peserta_ekskul_set = PesertaEkskulSet::where('peserta_ekskul_set.id_peserta_ekskul_set', '=', $key)->first();
-                        $pengambilan_ekskul = PengambilanEkskul::where('pengambilan_ekskul.id_ekskul', '=', $peserta_ekskul_set->id_ekskul)->where('pengambilan_ekskul.id_siswa', '=', $peserta_ekskul_set->id_siswa)->first();
+            } elseif ($mode == 'checkdelete') {
+                foreach ($input->id_siswa as $id_siswa) {
+                    $key = PesertaEkskulSet::where('id_siswa', $id_siswa)->where('id_ekskul', $id_ekskul)->where('is_aktif', 1)->first()->id_peserta_ekskul_set;
+                    // dd($key);
+                    $peserta_ekskul_set = PesertaEkskulSet::where('peserta_ekskul_set.id_peserta_ekskul_set', '=', $key)->first();
+                    $pengambilan_ekskul = PengambilanEkskul::where('pengambilan_ekskul.id_ekskul', '=', $peserta_ekskul_set->id_ekskul)->where('pengambilan_ekskul.id_siswa', '=', $peserta_ekskul_set->id_siswa)->first();
 
-                        if ($pelatih = NilaiEkskul::where('id_pengambilan_ekskul', '=', $pengambilan_ekskul->id_pengambilan_ekskul)->first()) {
-                            return [
-                                'status' => 300, // SUCCESS AND LOAD TABLE
-                                'message' => 'Tidak bisa dihapus karna siswa sudah diberi nilai ekskul'
-                            ];
-                        } else {
-                            // make object to find id
-                            $ekskul                 = PesertaEkskulSet::find($key);
-                            $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
-                            $ekskul->save();
+                    if ($pelatih = NilaiEkskul::where('id_pengambilan_ekskul', '=', $pengambilan_ekskul->id_pengambilan_ekskul)->first()) {
+                        return [
+                            'status' => 300, // SUCCESS AND LOAD TABLE
+                            'message' => 'Tidak bisa dihapus karna siswa sudah diberi nilai ekskul'
+                        ];
+                    } else {
+                        // make object to find id
+                        $ekskul                 = PesertaEkskulSet::find($key);
+                        $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
+                        $ekskul->save();
 
-                            $ekskul->forceDelete();
+                        $ekskul->forceDelete();
 
-                            $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
-                            $pengambilan->deleted_by = $input->auth_data->pengguna->id_pengguna;
-                            $pengambilan->save();
+                        $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
+                        $pengambilan->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                        $pengambilan->save();
 
-                            $pengambilan->forceDelete();
-
-                        }
+                        $pengambilan->forceDelete();
                     }
-                    return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'message' => 'Input Peserta Ekskul Berhasil Dilakukan',
-                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/'
-                    ];
+                }
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Input Peserta Ekskul Berhasil Dilakukan',
+                    'path' => 'ekstrakurikuler/setting-peserta-ekskul/'
+                ];
             } elseif ($mode == "delete") {
                 $peserta_ekskul_set = PesertaEkskulSet::where('peserta_ekskul_set.id_peserta_ekskul_set', '=', $id_ekskul)->first();
                 // dd($id_ekskul);

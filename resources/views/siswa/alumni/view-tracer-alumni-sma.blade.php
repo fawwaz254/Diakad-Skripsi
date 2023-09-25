@@ -1,20 +1,20 @@
 <div class="container-fluid">
     <div class="block-header">
-        @if (empty($alumni))
-            <h2><a class="btn bg-blue  waves-effect target-link"
-                    href="{{ url(Request::segment(1) . '#alumni/tracer-alumni/add') }}">
-                    <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
-        @else
+        {{-- @if (empty($alumni)) --}}
+        <h2><a class="btn bg-blue  waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#alumni/tracer-alumni/add') }}">
+                <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
+        {{-- @else
             <h2><a class="btn bg-grey  waves-effect target-link"
                     style="pointer-events: none">
                     <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
-        @endif
+        @endif --}}
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>DATA ALUMNI SMA</h2>
+                    <h2>DATA ALUMNI SMA/SMK</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -27,6 +27,8 @@
                                     <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Tahun Lulus</th>
+                                    <th>Status</th>
+                                    <th>info</th>
                                     {{-- <th>Nama Sekolah</th> --}}
                                     <th>Kompetensi Keahlian</th>
                                     {{-- <th>Status Verifikasi</th> --}}
@@ -72,6 +74,12 @@
                 data: 'tahun_lulus'
             },
             {
+                data: 'status'
+            },
+            {
+                data: 'info'
+            },
+            {
                 data: 'nm_jurusan'
             },
             // { data: 'status' },
@@ -86,9 +94,11 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+'<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        edit_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">edit</i>' +
+                        '</a> ' +
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
                         delete_url + '\', this)" data-id="' + data.id + '">' +
                         '    <i class="material-icons">delete_forever</i>' +
                         '</button>';

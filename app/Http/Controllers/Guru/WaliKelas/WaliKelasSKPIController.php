@@ -59,6 +59,11 @@ class WaliKelasSKPIController extends Controller
                     'count' => $item->prestasi_siswa->count()
                 );
                 return $data;
+            })->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa,
+                );
+                return $data;
             })
             // ->addColumn('informasi_tambahan', function ($item) {
             //     $data = array(

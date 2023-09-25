@@ -103,27 +103,33 @@ class SetJadwalKelasGuruController extends Controller
             ->get();
 
         $data_kelas_mp = [];
+        $data_kelas_mp2 = [];
         $jadwal = $jadwal_kelas_mp->toArray();
-        // dd($jadwal);
         foreach ($jadwal as $j) {
-            foreach ($j as $a) {
-                // if($j['id_jadwal_jam'] == $j['id_jadwal_jam_selesai'])
-                // $data_kelas_mp[$j['id_jadwal_jam'] . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
-                $data_kelas_mp[$j['id_jadwal_jam_selesai'] . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
-                // else
-                $mulai = $jadwal_jam->firstWhere('id_jadwal_jam',  $j['id_jadwal_jam']);
-                $selesai =  $jadwal_jam->firstWhere('id_jadwal_jam',  $j['id_jadwal_jam_selesai']);
+            // foreach ($j as $a) {
+            // if($j['id_jadwal_jam'] == $j['id_jadwal_jam_selesai'])
+            // $data_kelas_mp[$j['id_jadwal_jam'] . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
+            // $data_kelas_mp[$j['id_jadwal_jam_selesai'] . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
+            // else
+            $mulai = $jadwal_jam->firstWhere('id_jadwal_jam',  $j['id_jadwal_jam']);
+            $selesai =  $jadwal_jam->firstWhere('id_jadwal_jam',  $j['id_jadwal_jam_selesai']);
 
-                $i = $mulai->jam_ke;
-                // dd($mulai);
-                $rand = str_pad(dechex(rand(0x000000, 0xFFFFFF)), 6, 0, STR_PAD_LEFT);
-                for ($i; $i <= $selesai->jam_ke; $i++) {
+            $i = $mulai->jam_ke;
+            $rand = str_pad(dechex(rand(0x000000, 0xFFFFFF)), 6, 0, STR_PAD_LEFT);
+            for ($i; $i <= $selesai->jam_ke; $i++) {
+                if (empty($data_kelas_mp[$i . $j['id_jadwal_hari']])) {
                     $data_kelas_mp[$i . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
                     $data_kelas_mp[$i . $j['id_jadwal_hari'] . 'color'] =  $rand;
                     $data_kelas_mp[$i . $j['id_jadwal_hari'] . 'primary'] = $i == $mulai->jam_ke ? '1' : '0';
+                } elseif ($data_kelas_mp[$i . $j['id_jadwal_hari']] == $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp'])) { } else {
+                    $data_kelas_mp2[$i . $j['id_jadwal_hari']] = $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
+                    $data_kelas_mp2[$i . $j['id_jadwal_hari'] . 'color'] =  $rand;
+                    $data_kelas_mp2[$i . $j['id_jadwal_hari'] . 'primary'] = $i == $mulai->jam_ke ? '1' : '0';
                 }
             }
+            // }
         }
+
 
         $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
         // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
@@ -157,7 +163,7 @@ class SetJadwalKelasGuruController extends Controller
         }
 
         $id_guru = $list_guru->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()->id_guru;
-        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'data_jenis_mata_pelajaran', 'jam', 'id_jurusan', 'list_jurusan', 'list_jenis_mata_pelajaran', 'id_guru'));
+        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'data_kelas_mp2', 'semester', 'list_guru', 'data_jenis_mata_pelajaran', 'jam', 'id_jurusan', 'list_jurusan', 'list_jenis_mata_pelajaran', 'id_guru'));
     }
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
@@ -168,7 +174,7 @@ class SetJadwalKelasGuruController extends Controller
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         //validasi waktu
-        if ($mode != 'delete') {
+        if ($mode == 'add') {
             $validator = Validator::make($request->all(), [
                 'jamMasuk'          => 'required',
                 'jamSelesai'        => 'required',
@@ -176,7 +182,19 @@ class SetJadwalKelasGuruController extends Controller
                 'guru'               => 'required',
                 'id_hari'           => 'required',
                 'id_semester'       => 'required',
-                'id_kelas'          => 'required'
+                'id_kelas'          => 'required',
+                'mapel'             => 'required',
+            ]);
+        } elseif ($mode == 'edit') {
+            $validator = Validator::make($request->all(), [
+                'jamMasuk'          => 'required',
+                'jamSelesai'        => 'required',
+                'ruangan'           => 'required',
+                'guru'               => 'required',
+                'id_hari'           => 'required',
+                'id_semester'       => 'required',
+                'id_kelas'          => 'required',
+
             ]);
         }
 

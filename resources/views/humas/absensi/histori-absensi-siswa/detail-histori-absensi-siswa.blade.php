@@ -1,5 +1,10 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="block-header">
+            <h2><a class="btn bg-green waves-effect target-link "
+                    href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/histori-absensi/get-data') }}"><i
+                        class="material-icons">library_add</i><span>Get Data Fingerprint</span></a></h2>
+        </div>
         @if (Request::segment(1) == 'humas')
             <button type="button" onclick="viewGuru()" class="btn btn-default">
                 Data Histori Absensi Guru dan Pegawai
@@ -43,7 +48,8 @@
                                 @endif
                                 @foreach ($kelas as $k)
                                     <option @if ($id_kelas == $k->id_kelas) selected @endif
-                                        value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
+                                        value="{{ $k->id_kelas }}">
+                                        {{ $k->nm_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>

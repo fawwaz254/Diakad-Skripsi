@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
 use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
 use App\Http\Controllers\Guru\WelcomeController;
 use App\Http\Controllers\Guru\Tutorial\VideoController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Guru\Penilaian\InputNilaiController;
 use App\Http\Controllers\Guru\Penilaian\RekapNilaiController;
 use App\Http\Controllers\Guru\Presensi\AbsensiSiswaController;
 use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
+use App\Http\Controllers\Humas\Absensi\HistoriAbsensiController as HistoriAbsensiController2;
 use App\Http\Controllers\Guru\WaliKelas\RekapNomorHpController;
 use App\Http\Controllers\Guru\ELearningSoal\HasilTestController;
 use App\Http\Controllers\Guru\ELearningSoal\PaketSoalController;
@@ -228,6 +230,10 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('absensi')->group(function () {
             Route::prefix('histori-absensi')->group(function () {
                 Route::get('/', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
+                Route::get('/get-data', [HistoriAbsensiController2::class, 'getDataHistoriAbsensi']);
+                Route::get('/datatables', [FingerprintRealtimeController::class, 'datatableFingerprintRealtime']);
+                Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
+                Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
                 Route::get('/{start_date}/{end_date}', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
                 Route::get('cetak/{start_date}/{end_date}', [HistoriAbsensiController::class, 'cetakHistoriAbsensi']);
             });
@@ -237,6 +243,11 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::get('get-kelas/{id_jurusan}', [HistoriAbsensiSiswaController::class, 'getKelas']);
                 Route::post('/', [HistoriAbsensiSiswaController::class, 'actionDetailHistoriAbsensiSiswa']);
                 Route::get('/detail/{kelas}/{date}/{status}', [HistoriAbsensiSiswaController::class, 'viewDetailHistoriAbsensiSiswa']);
+                Route::get('/getData', [HistoriAbsensiController2::class, 'getDataHistoriAbsensi']);
+                Route::get('/datatables', [FingerprintRealtimeController::class, 'datatableFingerprintRealtime']);
+                Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
+                Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
+
                 // Route::get('/details/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'viewDetailsHistoriAbsensiSiswa']);
                 Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_mount']);
                 Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_week']);
@@ -705,6 +716,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('prestasi-siswa/edit/{id}', [WaliKelasSKPIController::class, 'editPrestasiSiswa']);
                 Route::post('prestasi-siswa/action/{mode}/{id}', [WaliKelasSKPIController::class, 'actionDataPrestasiSiswa']);
                 Route::get('prestasi-siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewPrestasiSiswa']);
+
+                Route::get('print/{id_siswa}',  [ApprovePrestasiSiswaController::class, 'printSkpi']);
             });
         });
 
