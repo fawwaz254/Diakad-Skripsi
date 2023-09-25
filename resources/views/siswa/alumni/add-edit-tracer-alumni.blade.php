@@ -48,17 +48,20 @@
                     {{ csrf_field() }}
                     {{-- {{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'alumni/tracer-alumni/action/edit/' . $alumni->id_alumni : 'alumni/tracer-alumni/action/add2/0' }} --}}
                     <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
+                    <input type="hidden" name="id_kelas" value="{{ $log_kelas->id_kelas }}">
+                    <input type="hidden" name="jurusan" value="{{ $log_kelas->kelas->id_jurusan }}">
                     <input type="hidden" name="old_status" value="{{ !empty($alumni) ? $alumni->status : '' }}">
                     <input type="hidden" name="id_c_siswa"
                         value="{{ !empty($alumni) ? $alumni->id_c_siswa : $siswa->id_c_siswa }}">
-                    <div class="col-md-4">
+
+                    {{-- <div class="col-md-4">
                         <h2 class="card-inside-title"> Nama Siswa </h2>
                         <input type="text" class="form-control" name="nama_siswa" aria-required="true"
                             aria-invalid="true"
                             value="{{ !empty($alumni) ? $alumni->calon_siswa->nm_c_siswa : $siswa->pengguna->nm_pengguna }}"
                             disabled>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    </div> --}}
+                    {{-- <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Kelas </h2>
                         <div class="form-group">
                             <div class="form-line">
@@ -83,10 +86,7 @@
                                 <select class="form-control show-tick" name="jurusan"
                                     {{ !empty($alumni) ? 'readonly' : '' }}>
 
-                                    @if (
-                                        $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ||
-                                            $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
-                                            $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                                    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                                         <option value="" disabled> Pilih Jurusan </option>
                                         @foreach ($data_jurusan as $jurusan)
                                             <option value="{{ $jurusan->id_jurusan }}" selected>
@@ -106,8 +106,8 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                    </div> --}}
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Tahun Lulus </h2>
                         <input type="number" class="form-control" name="tahun_lulus" required=""
                             aria-required="true" aria-invalid="true"
@@ -125,13 +125,13 @@
                             <input type="text" class="form-control" name="email" required=""
                                 aria-required="true" aria-invalid="true" value="{{ $alumni->email }}">
                         </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Alamat </h2>
                             <input type="text" class="form-control" name="alamat_siswa" required=""
                                 aria-required="true" aria-invalid="true"
                                 value="{{ $alumni->calon_siswa->alamat_jalan }}">
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Alamat URL Instagram / Facebook </h2>
                             <input type="text" class="form-control" name="url_medsos" required=""
                                 aria-required="true" aria-invalid="true" value="{{ $alumni->url_medsos }}">
@@ -149,7 +149,7 @@
                                 aria-required="true" aria-invalid="true"
                                 value="{{ $siswa->pengguna->email_pengguna }}">
                         </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Alamat </h2>
                             <input type="text" class="form-control" name="alamat_siswa" required=""
                                 aria-required="true" aria-invalid="true"
@@ -162,7 +162,7 @@
                                             $siswa->calon_siswa->alamat_rw
                                     )) value="{{ $siswa->calon_siswa->alamat_kecamatan }},{{ $siswa->calon_siswa->alamat_kelurahan }},{{ $siswa->calon_siswa->alamat_dusun }},{{ $siswa->calon_siswa->alamat_rt }},{{ $siswa->calon_siswa->alamat_rw }}" @endif>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Alamat URL Instagram / Facebook </h2>
                             <input type="text" class="form-control" name="url_medsos" required=""
                                 aria-required="true" aria-invalid="true">

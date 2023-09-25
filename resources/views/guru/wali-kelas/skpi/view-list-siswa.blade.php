@@ -20,6 +20,7 @@
                                         {{-- <th>Kelas</th> --}}
                                         <th>Kegiatan Siswa</th>
                                         <th>Prestasi Siswa</th>
+                                        <th>Action</th>
                                         {{-- <th>Informasi Tambahan</th> --}}
                                     </tr>
                                 </thead>
@@ -43,6 +44,7 @@
             var kegiatan_siswa_url = role_url + '#' + modul_url + '/input-skpi-siswa/kegiatan-siswa';
             var prestasi_siswa = role_url + '#' + modul_url + '/input-skpi-siswa/prestasi-siswa';
             // var informasi_tambahan = role_url + '#' + modul_url + '/input-skpi-siswa/informasi-tambahan';
+            var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-skpi-siswa/print';
 
             var primary_table = $('#primary_table').DataTable({
                 processing: true,
@@ -89,6 +91,17 @@
                                 prestasi_siswa + '/' + data.id + '">' +
                                 '    <i class="material-icons">remove_red_eye</i>' +
                                 '</a> ' + data.count + ' Data'
+                        }
+                    }, {
+                        data: 'action',
+                        name: 'action',
+                        searchable: false,
+                        orderable: false,
+                        render: function(data) {
+                            return '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                                print_url + '/' + data.id + '">' +
+                                '    <i class="material-icons">print</i>' +
+                                '</a>';
                         }
                     }
                     // ,

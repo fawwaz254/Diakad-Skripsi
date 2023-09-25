@@ -7,6 +7,7 @@ use App\Models\Siswa;
 use App\Models\Jurusan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\LogKelasSiswa;
 
 class TracerAlumniController extends Controller
 {
@@ -16,12 +17,13 @@ class TracerAlumniController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 9)->orWhere('tingkat', 3)->get();
+        // $data_jurusan = Jurusan::all();
+        // $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 9)->orWhere('tingkat', 3)->get();
 
         $alumni = null;
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('calon_siswa', 'pengguna')->first();
+        $log_kelas = LogKelasSiswa::where('id_siswa', $siswa->id_siswa)->with('kelas')->orderBy('created_at', 'desc')->first();
 
-        return view('siswa.alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas', 'siswa'));
+        return view('siswa.alumni.add-edit-tracer-alumni', compact('auth_data', 'alumni', 'log_kelas', 'siswa'));
     }
 }

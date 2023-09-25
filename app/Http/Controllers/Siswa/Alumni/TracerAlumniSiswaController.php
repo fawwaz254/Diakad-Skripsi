@@ -10,6 +10,7 @@ use App\Models\Siswa;
 use Yajra\Datatables\Datatables;
 use App\Libraries\Humas\LibAlumni;
 use App\Models\Alumni;
+use App\Models\LogKelasSiswa;
 
 class TracerAlumniSiswaController extends Controller
 {
@@ -41,15 +42,17 @@ class TracerAlumniSiswaController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_jurusan = Jurusan::all();
+        // $data_jurusan = Jurusan::all();
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
-            $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 9)->get();
+            // $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 9)->get();
         } else {
-            $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 3)->orwhere('tingkat', 12)->get();
+            // $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 3)->orwhere('tingkat', 12)->get();
         }
         $alumni = null;
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('calon_siswa', 'pengguna')->first();
-        return view('siswa/alumni/add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas', 'siswa'));
+        $log_kelas = LogKelasSiswa::where('id_siswa', $siswa->id_siswa)->with('kelas')->orderBy('created_at', 'desc')->first();
+        // $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('calon_siswa', 'pengguna')->first();
+        return view('siswa/alumni/add-edit-tracer-alumni', compact('auth_data',  'alumni', 'log_kelas', 'siswa'));
     }
 
     public function editTracerAlumni($id, Request $request)
@@ -58,18 +61,19 @@ class TracerAlumniSiswaController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_jurusan = Jurusan::all();
+        // $data_jurusan = Jurusan::all();
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
-            $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 9)->get();
+            // $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 9)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('smp', 'calon_siswa')->first();
         } else {
-            $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 3)->get();
+            // $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 3)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('calon_siswa')->first();
         }
+        $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('calon_siswa', 'pengguna')->first();
+        $log_kelas = LogKelasSiswa::where('id_siswa', $siswa->id_siswa)->with('kelas')->orderBy('created_at', 'desc')->first();
 
-
-        return view('siswa/alumni/add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
+        return view('siswa/alumni/add-edit-tracer-alumni', compact('auth_data',  'alumni', 'log_kelas'));
     }
 
 
@@ -86,6 +90,18 @@ class TracerAlumniSiswaController extends Controller
         }
 
         return Datatables::of($alumnis)
+            ->addColumn('info', function ($item) {
+
+                if ($item->nm_instansi) {
+                    return $item->nm_instansi;
+                } else if ($item->nm_perguruan) {
+                    return $item->nm_perguruan;
+                } else if ($item->mencari_kerja) {
+                    return $item->mencari_kerja;
+                } else {
+                    return '-';
+                }
+            })
             ->addColumn('status_verifikasi', function ($item) {
                 if ($item->status_verifikasi == 0) {
                     $data['status'] = 'Belum Diverikasi';
