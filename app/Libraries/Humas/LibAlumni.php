@@ -61,10 +61,24 @@ class LibAlumni
   public static function getAlumnisWithId($id)
   {
     return DB::table('alumni')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas', 'bekerja.nm_instansi', 'kuliah.nm_perguruan', 'menunggu.status_menunggu')
+      ->leftjoin('alumni_bekerja as bekerja', function ($join) {
+        $join->on('alumni.id_alumni', '=', 'bekerja.id_alumni');
+        $join->whereNull('bekerja.deleted_at');
+      })
+
+      ->leftjoin('alumni_kuliah as kuliah', function ($join) {
+        $join->on('alumni.id_alumni', '=', 'kuliah.id_alumni');
+        $join->whereNull('kuliah.deleted_at');
+      })
+
+      ->leftjoin('alumni_menunggu as menunggu', function ($join) {
+        $join->on('alumni.id_alumni', '=', 'menunggu.id_alumni');
+        $join->whereNull('menunggu.deleted_at');
+      })
       ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
       ->join('jurusan', 'siswa.id_jurusan', '=', 'jurusan.id_jurusan')
       ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
-      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas')
       ->where('alumni.deleted_at', null)
       ->where('alumni.id_c_siswa', $id)
       ->get();
