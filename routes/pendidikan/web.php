@@ -23,6 +23,7 @@ use App\Http\Controllers\Pendidikan\SettingKelas\SekretarisKelasController;
 use App\Http\Controllers\Pendidikan\SettingKelas\WaliKelasController;
 use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
 use App\Http\Controllers\Pendidikan\Siswa\DataSiswaController;
+use App\Http\Controllers\Pendidikan\Siswa\InsertUpdateSiswaController;
 use App\Http\Controllers\Pendidikan\WelcomeController;
 use App\Http\Controllers\Pendidikan\Wisuda\EntriWisudaController;
 use App\Http\Controllers\Pendidikan\Wisuda\PengajuanWisudaController;
@@ -36,7 +37,7 @@ Route::middleware(['token_staff'])->group(function () {
     // url: /pendidikan
     Route::prefix('pendidikan')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         /** ==== MODUL MANAJEMEN FILE ==== **/
         // url: /pendidikan/manajemen-file
@@ -225,6 +226,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('post-view-data-siswa', [DataSiswaController::class, 'actionViewDataSiswa']);
             Route::get('data-siswa/view-detail-data-siswa/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}/{filter_by}', [DataSiswaController::class, 'viewDetailDataSiswa']);
             Route::get('data-siswa/datatables/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', [DataSiswaController::class, 'datatablesDataSiswa']);
+            Route::get('insert-update-siswa/view-print-siswa/{nis_nama_siswa}', [InsertUpdateSiswaController::class, 'viewPrintSiswa']);
 
             //MENU CARI SISWA
             Route::get('cari-siswa', [CariSiswaController::class, 'viewCariSiswa']);
