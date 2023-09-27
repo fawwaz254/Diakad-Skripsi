@@ -773,7 +773,7 @@ class SppController extends BaseController
             ->make(true);
     }
 
-    public function viewMenuPembayaran(Request $request, $tahun_akademik_semester = null, $id_kelas = null, $waktu = null)
+    public function viewMenuPembayaran(Request $request, $tahun_akademik_semester = null, $id_kelas = null, $waktu = null, $nama_siswa = null)
     {
         if ($waktu == null) {
             $waktu = Carbon::today()->toDateString();
@@ -864,7 +864,13 @@ class SppController extends BaseController
 
             // $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all()
 
-            $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
+            $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')
+                ->when($nama_siswa, function ($data_siswa) use ($nama_siswa) {
+                    $data_siswa = $data_siswa->whereHas('pengguna', function ($q) use ($nama_siswa) {
+                        $q->where('nm_pengguna', 'like', '%' . $nama_siswa . '%');
+                    });
+                })
+                ->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
                 ->orderBy('nis_siswa')->get();
 
             //semester lain
