@@ -244,7 +244,7 @@
                                             @php
                                                 $tagihan = $data_tagihan_non_bulanan
                                                     ->where('id_siswa', $siswa->id_siswa)
-                                                    ->where('title_biaya', $ket->title_biaya)
+                                                    ->where('keterangan', $ket->keterangan)
                                                     ->first();
                                             @endphp
                                             @if (!empty($tagihan) > 0)
