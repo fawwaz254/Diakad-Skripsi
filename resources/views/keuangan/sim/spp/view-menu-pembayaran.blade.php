@@ -151,6 +151,16 @@
                     <div>Ada <b> {{ $jumlah_tunggakan }} </b>Belum Dibayar, Total <b>{{ $total_tunggakan }} </b></div>
                     <div>Ada <b>{{ $jumlah_pembayaran }} </b>Pembayaran, Total <b>{{ $total_pembayaran }} </b></div>
                     <br>
+
+                    <div class="row clearfix">
+                        <div class="col-md-10 col-sm-12 col-xs-12">
+                            <input type="text" class="form-control" name="nama_siswa" width="200" placeholder="Cari berdasarkan nama siswa ...">
+                        </div>
+                        <div class="col-md-2 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()">Cari</button>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table is-fixed table-bordered table-striped table-hover dataTable"
                             id="primary_table">
@@ -486,8 +496,9 @@
         var kelas = $('select[name=kelas]').val();
         var tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
         var waktu = $('input[name=tgl_pembayaran]').val()
+        var nama_siswa = $('input[name=nama_siswa]').val();
 
-        loadURI('sim/spp/pembayaran/' + tahun_akademik_semester + '/' + kelas + '/' + waktu);
+        loadURI('sim/spp/pembayaran/' + tahun_akademik_semester + '/' + kelas + '/' + waktu + '/' + nama_siswa);
     }
 </script>
 <script>
