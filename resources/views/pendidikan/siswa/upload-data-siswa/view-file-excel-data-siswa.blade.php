@@ -183,7 +183,6 @@
                                 <td><b>Voucer:</b></td>
                                 @foreach ($jenis['data_voucher'] as $voucher)
                                     <td>{{ $voucher->kode_voucher }}
-                                        ({{ $voucher->keterangan_voucher }})
                                     </td>
                                 @endforeach
                             </tr>
