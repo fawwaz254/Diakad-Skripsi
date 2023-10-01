@@ -267,6 +267,11 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('/download-file-excel', [UploadDataSiswaController::class, 'downloadFileExcel'])->name('siswa/download-file-excel');
             Route::get('/download-file-excel-lite', [UploadDataSiswaController::class, 'downloadFileExcelLite'])->name('siswa/download-file-excel-lite');
             Route::post('post-file-excel', [UploadDataSiswaController::class, 'uploadFileExcel']);
+            Route::post('cek-file-excel', [UploadDataSiswaController::class, 'cekFileExcel']);
+            Route::get('upload-data-siswa/cek-data-siswa', [UploadDataSiswaController::class, 'viewCekFileExcel']);
+            Route::post('upload-data-siswa/cek-data-siswa', [UploadDataSiswaController::class, 'postCekFileExcel']);
+
+
 
             //MENU CARI SISWA
             Route::get('cari-siswa', [CariSiswaController::class, 'viewCariSiswa']);
