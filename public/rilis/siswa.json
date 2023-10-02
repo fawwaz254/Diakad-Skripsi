@@ -1,36 +1,4 @@
 {
-  	"role"  :"siswa", 
-  	"update": [
-  	    {
-  	    	"tanggal-update" : "2021-08-09",
-  	    	"list-update" : [
-  	    		{
-  	    			"modul" : "Modul Akademik",
-  	    			"list-fitur" : [
-  	    				{
-  	    					"fitur"     : "Menu Lihat Absensi",
-  	    					"deskripsi" : "Di menu ini anda dapat melihat histori absen anda"
-  	    				},
-  	    				{
-  	    					"fitur"     : "Menu Jadwal Kelas Daring",
-  	    					"deskripsi" : "Di menu ini anda dapat melihat jadwal kelas daring anda"
-  	    				}
-  	    			]
-  	    		},
-  	    		{
-  	    			"modul" : "Modul Kesiswaan",
-  	    			"list-fitur" : [
-  	    				{
-  	    					"fitur"     : "Menu Absensi Eksul",
-  	    					"deskripsi" : "Di menu ini anda dapat melihat absen dari ekskul yang anda ikuti"
-  	    				},
-  	    				{
-  	    					"fitur"     : "Menu Nilai Ekskul",
-  	    					"deskripsi" : "Di menu ini anda dapat melihat nilai dari ekskul yang anda ikuti"
-  	    				}
-  	    			]
-  	    		}
-  	    	]
-  		}
-  	]
-} 
+    "role": "siswa",
+    "update": []
+}
