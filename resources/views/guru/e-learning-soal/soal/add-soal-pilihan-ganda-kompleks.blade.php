@@ -11,13 +11,13 @@
         {{-- <button type="button" id="remove" class="btn bg-red waves-effect">
             <i class="material-icons">indeterminate_check_box</i>
             <span>Hapus Jumlah Soal</span>
-        </button>
-        <input type="text" name="jumlah" style="padding:7px; background-color:white;border: 1px solid black;"
-            value="Jumlah Soal = 1" disabled>
+        </button> --}}
+        {{-- <input type="text" name="jumlah" style="padding:7px; background-color:white;border: 1px solid black;"
+            value="Jumlah Soal = 1" disabled> --}}
         <span style="background-color: white;padding:7px;border: 1px solid black;">
             <input type="checkbox" id="wuswug" class="checkbox">
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
-        </span> --}}
+        </span>
     </h2>
 </div>
 
@@ -61,7 +61,7 @@
                     <h2 class="card-inside-title">Paste Soal dan Jawaban dari file World</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="1" class="form-control " onpaste="pasteFunction(this)" rows="5"></textarea>
+                            <textarea id="1" class="form-control " onpaste="pasteFunction(this)" rows="5"> </textarea>
                         </div>
                     </div>
                     <h2 class="card-inside-title">Soal</h2>
@@ -148,74 +148,74 @@
         }
     });
 
-    $('#add').click(function() {
-        if (jumlah != 10) {
+    // $('#add').click(function() {
+    //     if (jumlah != 10) {
 
-            jumlah++;
-            var value = 'Jumlah Soal = ' + jumlah;
-            $("input[name='jumlah']").val(value);
-            $('#place').append(`
-        <div class="row clearfix" style="margin-top: 10px" id="${jumlah }">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
-                <div class="header bg-pink">
-                    <h2>
-                       ${jumlah} . SOAL PILIHAN GANDA
-                    </h2>
-                </div>
-                <div class="body">
-                    <h2 class="card-inside-title">Paste Soal dan Jawaban dari file World</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="${jumlah}" onpaste="pasteFunction(this)" class="form-control " rows="1"></textarea>
-                        </div>
-                    </div>
-                    <h2 class="card-inside-title">Soal</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q${jumlah}" class="form-control q${jumlah}" required="" name="soal[${jumlah}]" rows="3"></textarea>
-                        </div>
-                    </div>
-                    @for ($i = 0; $i < 5; $i++)
-                        <h2 class="card-inside-title">Jawaban {{ $i + 1 }}</h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea id="a${jumlah}{{ $i }}" class="form-control a${jumlah}{{ $i }}" required="" name="jawaban[${jumlah}][]"></textarea>
-                            </div>
-                        </div>
-                    @endfor
-                    <h2 class="card-inside-title">Jawaban Benar</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <select class="form-control show-tick" name="jawaban_benar[${jumlah}]" required="">
-                                @for ($i = 0; $i < 5; $i++)
-                                    <option value="{{ $i }}">Jawaban {{ $i + 1 }}</option>
-                                @endfor
-                            </select>
-                           
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-        `);
+    //         jumlah++;
+    //         var value = 'Jumlah Soal = ' + jumlah;
+    //         $("input[name='jumlah']").val(value);
+    //         $('#place').append(`
+    //     <div class="row clearfix" style="margin-top: 10px" id="${jumlah }">
+    //     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    //         <div class="card">
+    //             <div class="header bg-pink">
+    //                 <h2>
+    //                    ${jumlah} . SOAL PILIHAN GANDA
+    //                 </h2>
+    //             </div>
+    //             <div class="body">
+    //                 <h2 class="card-inside-title">Paste Soal dan Jawaban dari file World</h2>
+    //                 <div class="row clearfix">
+    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    //                         <textarea id="${jumlah}" onpaste="pasteFunction(this)" class="form-control " rows="1"></textarea>
+    //                     </div>
+    //                 </div>
+    //                 <h2 class="card-inside-title">Soal</h2>
+    //                 <div class="row clearfix">
+    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    //                         <textarea id="q${jumlah}" class="form-control q${jumlah}" required="" name="soal[${jumlah}]" rows="3"></textarea>
+    //                     </div>
+    //                 </div>
+    //                 @for ($i = 0; $i < 5; $i++)
+    //                     <h2 class="card-inside-title">Jawaban {{ $i + 1 }}</h2>
+    //                     <div class="row clearfix">
+    //                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    //                             <textarea id="a${jumlah}{{ $i }}" class="form-control a${jumlah}{{ $i }}" required="" name="jawaban[${jumlah}][]"></textarea>
+    //                         </div>
+    //                     </div>
+    //                 @endfor
+    //                 <h2 class="card-inside-title">Jawaban Benar</h2>
+    //                 <div class="row clearfix">
+    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    //                         <select class="form-control show-tick" name="jawaban_benar[${jumlah}]" required="">
+    //                             @for ($i = 0; $i < 5; $i++)
+    //                                 <option value="{{ $i }}">Jawaban {{ $i + 1 }}</option>
+    //                             @endfor
+    //                         </select>
 
-        }
-    });
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     </div>
+    //     </div>
+    //     `);
 
-    $('#remove').click(function() {
-        if (jumlah != 1) {
-            var element = document.getElementById(jumlah);
-            jumlah--;
-            var value = 'Jumlah Soal = ' + jumlah;
-            $("input[name='jumlah']").val(value);
-            while (element.firstChild) {
-                element.removeChild(element.firstChild);
-            }
-            element.remove();
-        }
-    });
+    //     }
+    // });
+
+    // $('#remove').click(function() {
+    //     if (jumlah != 1) {
+    //         var element = document.getElementById(jumlah);
+    //         jumlah--;
+    //         var value = 'Jumlah Soal = ' + jumlah;
+    //         $("input[name='jumlah']").val(value);
+    //         while (element.firstChild) {
+    //             element.removeChild(element.firstChild);
+    //         }
+    //         element.remove();
+    //     }
+    // });
 
     function pasteFunction(el) {
         var i = el.id;

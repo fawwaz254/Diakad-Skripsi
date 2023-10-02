@@ -171,7 +171,11 @@ class SoalController extends Controller
             } else if ($item->id_tipe_soal == 4) {
                 $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
                 return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda-kompleks', compact('item', 'question_options', 'kategori'));
-            } else if ($item->id_tipe_soal == 5) { } else if ($item->id_tipe_soal == 6) { }
+            } else if ($item->id_tipe_soal == 5) { 
+                return view('guru/e-learning-soal/soal/edit-soal-simple-essay2', compact('item', 'kategori'));
+            } else if ($item->id_tipe_soal == 6) { 
+                return view('guru/e-learning-soal/soal/add-soal-match2', compact('item', 'paket_soal'));
+            }
         }
     }
 
@@ -221,29 +225,34 @@ class SoalController extends Controller
         }
 
         if (!empty($input->id_soal) && $question = Soal::find($input->id_soal)) {
-
             $question->content = $input->soal;
-            $question->text = $input->text;
+            $question->text = strip_tags($input->soal);
             $question->id_kategori_soal = $input->kategori;
-            // if ($input->id_tipe_soal == 1) {
-            //     $id_pilihan_soal_benar = 0;
-            //     foreach ($input->jawaban as $no_answer => $answer) {
-            //         $question_option = PilihanSoal::find($input->id_jawaban[$no_answer]);
-            //         $question_option->id_soal = $question->id_soal;
-            //         $question_option->number_option = $no_answer;
-            //         $question_option->content = $answer;
-            //         $question_option->text = $answer;
-            //         if ($input->jawaban_benar == $no_answer) {
-            //             $question_option->correct = 1;
-            //             $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
-            //         } else {
-            //             $question_option->correct = 0;
-            //         }
-            //         $question_option->save();
-            //     }
-            //     $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
-            // }
-            // $question->save();
+            if ($input->id_tipe_soal == 1) {
+                $id_pilihan_soal_benar = 0;
+                foreach ($input->jawaban as $no_answer => $answer) {
+                    $question_option = PilihanSoal::find($input->id_jawaban[$no_answer]);
+                    $question_option->id_soal = $question->id_soal;
+                    $question_option->number_option = $no_answer;
+                    $question_option->content = $answer;
+                    $question_option->text = $answer;
+                    if ($input->jawaban_benar == $no_answer) {
+                        $question_option->correct = 1;
+                        $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                    } else {
+                        $question_option->correct = 0;
+                    }
+                    $question_option->save();
+                }
+                $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+            } else if ($input->id_tipe_soal == 5) {
+                $question->alternatif_jawaban1 = $input->jawaban[1];
+                $question->alternatif_jawaban2 = $input->jawaban[2];
+                $question->alternatif_jawaban3 = $input->jawaban[3];
+                $question->alternatif_jawaban4 = $input->jawaban[4];
+                $question->alternatif_jawaban5 = $input->jawaban[5];
+            }
+            $question->save();
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'e-learning-soal/paket-soal/bank-soal',
@@ -256,68 +265,68 @@ class SoalController extends Controller
                 if ($input->id_tipe_soal == 1) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         //validasi ketika ada data yg sama
-                        if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
-                            $question = new Soal;
-                            $question->id_kategori_soal = $input->kategori;
-                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                            $question->id_tipe_soal = $input->id_tipe_soal;
-                            $question->content = $input->soal[$i];
-                            $question->text = strip_tags($input->soal[$i]);
-                            $question->created_by = $input->auth_data->pengguna->id_pengguna;
-                            $question->save();
-                            if (empty(strip_tags($input->soal[$i]))) {
+                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        $question = new Soal;
+                        $question->id_kategori_soal = $input->kategori;
+                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_tipe_soal = $input->id_tipe_soal;
+                        $question->content = $input->soal[$i] ? $input->soal[$i] : '-';
+                        $question->text = strip_tags($input->soal[$i]);
+                        $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $question->save();
+                        if (empty(strip_tags($input->soal[$i]))) {
+                            DB::rollback();
+                            return [
+                                'status' => 300,
+                                'message' => 'Eror Ada Kolom yg kosong tau save sekali lagi'
+                            ];
+                        }
+                        foreach ($input->jawaban[$i] as $no_answer => $answer) {
+                            $now = Carbon::now(env('APP_TIMEZONE', ''));
+                            $question_option = new PilihanSoal;
+                            $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question_option->number_option = $no_answer;
+                            $question_option->id_soal = $question->id_soal;
+                            $question_option->content = $answer ? $answer : '-';
+                            $question_option->text = strip_tags($answer);
+                            $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
+                            if (empty(strip_tags($answer))) {
                                 DB::rollback();
                                 return [
                                     'status' => 300,
-                                    'message' => 'Eror Ada Kolom yg kosong tau save sekali lagi'
+                                    'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi'
                                 ];
                             }
-                            foreach ($input->jawaban[$i] as $no_answer => $answer) {
-                                $now = Carbon::now(env('APP_TIMEZONE', ''));
-                                $question_option = new PilihanSoal;
-                                $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                $question_option->number_option = $no_answer;
-                                $question_option->id_soal = $question->id_soal;
-                                $question_option->content = $answer;
-                                $question_option->text = $answer;
-                                $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
-                                if (empty(strip_tags($answer))) {
-                                    DB::rollback();
-                                    return [
-                                        'status' => 300,
-                                        'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi'
-                                    ];
-                                }
-                                if ($input->jawaban_benar[$i] == $no_answer) {
-                                    $question_option->correct = 1;
-                                } else {
-                                    $question_option->correct = 0;
-                                }
-                                $question_option->save();
-
-                                if ($input->jawaban_benar[$i] == $no_answer) {
-                                    $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
-                                }
+                            if ($input->jawaban_benar[$i] == $no_answer) {
+                                $question_option->correct = 1;
+                            } else {
+                                $question_option->correct = 0;
                             }
-                            $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
-                            $question->save();
+                            $question_option->save();
+
+                            if ($input->jawaban_benar[$i] == $no_answer) {
+                                $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                            }
                         }
+                        $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+                        $question->save();
+                        // }
                     }
                 } else if ($input->id_tipe_soal == 2) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
-                            $question = new Soal;
-                            $question->id_kategori_soal = $input->kategori;
-                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                            $question->id_tipe_soal = $input->id_tipe_soal;
-                            $question->content = $input->soal[$i];
-                            $question->text = strip_tags($input->soal[$i]);
-                            $question->jawaban = $input->jawaban[$i];
-                            $question->created_by = $input->auth_data->pengguna->id_pengguna;
-                            $question->save();
-                        }
+                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        $question = new Soal;
+                        $question->id_kategori_soal = $input->kategori;
+                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_tipe_soal = $input->id_tipe_soal;
+                        $question->content = $input->soal[$i] ? $input->soal[$i] : '-';
+                        $question->text = strip_tags($input->soal[$i]);
+                        $question->jawaban = $input->jawaban[$i];
+                        $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $question->save();
+                        // }
                     }
                 } else if ($input->id_tipe_soal == 3) {
                     $question = new Soal;
@@ -325,7 +334,7 @@ class SoalController extends Controller
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
-                    $question->content = $input->soal;
+                    $question->content = $input->soal ? $input->soal : '-';
                     $question->text = strip_tags($input->soal);
                     $question->created_by = $input->auth_data->pengguna->id_pengguna;
                     // $question->jawaban = $input->jawaban;
@@ -333,72 +342,72 @@ class SoalController extends Controller
                 } else if ($input->id_tipe_soal == 4) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         //validasi ketika ada data yg sama
-                        if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
-                            $question = new Soal;
-                            $question->id_kategori_soal = $input->kategori;
-                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                            $question->id_tipe_soal = $input->id_tipe_soal;
-                            $question->content = $input->soal[$i];
-                            $question->text = strip_tags($input->soal[$i]);
-                            $question->created_by = $input->auth_data->pengguna->id_pengguna;
-                            $question->save();
-                            if (empty(strip_tags($input->soal[$i]))) {
+                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        $question = new Soal;
+                        $question->id_kategori_soal = $input->kategori;
+                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_tipe_soal = $input->id_tipe_soal;
+                        $question->content = $input->soal[$i] ? $input->soal[$i] : '-';
+                        $question->text = strip_tags($input->soal[$i]);
+                        $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $question->save();
+                        if (empty(strip_tags($input->soal[$i]))) {
+                            DB::rollback();
+                            return [
+                                'status' => 300,
+                                'message' => 'Eror Ada Kolom yg kosong tau save sekali lagi'
+                            ];
+                        }
+                        foreach ($input->jawaban[$i] as $no_answer => $answer) {
+                            $now = Carbon::now(env('APP_TIMEZONE', ''));
+                            $question_option = new PilihanSoal;
+                            $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question_option->number_option = $no_answer;
+                            $question_option->id_soal = $question->id_soal;
+                            $question_option->content = $answer ? $answer : '-';
+                            $question_option->text = strip_tags($answer);
+                            $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
+                            if (empty(strip_tags($answer))) {
                                 DB::rollback();
                                 return [
                                     'status' => 300,
-                                    'message' => 'Eror Ada Kolom yg kosong tau save sekali lagi'
+                                    'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi'
                                 ];
                             }
-                            foreach ($input->jawaban[$i] as $no_answer => $answer) {
-                                $now = Carbon::now(env('APP_TIMEZONE', ''));
-                                $question_option = new PilihanSoal;
-                                $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                $question_option->number_option = $no_answer;
-                                $question_option->id_soal = $question->id_soal;
-                                $question_option->content = $answer;
-                                $question_option->text = $answer;
-                                $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
-                                if (empty(strip_tags($answer))) {
-                                    DB::rollback();
-                                    return [
-                                        'status' => 300,
-                                        'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi'
-                                    ];
-                                }
-                                if (in_array($no_answer, $input->jawaban_benar[$i])) {
-                                    $question_option->correct = 1;
-                                } else {
-                                    $question_option->correct = 0;
-                                }
-                                $question_option->save();
-
-                                // if ($input->jawaban_benar[$i] == $no_answer) {
-                                //     $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
-                                // }
+                            if (in_array($no_answer, $input->jawaban_benar[$i])) {
+                                $question_option->correct = 1;
+                            } else {
+                                $question_option->correct = 0;
                             }
-                            // $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
-                            $question->save();
+                            $question_option->save();
+
+                            // if ($input->jawaban_benar[$i] == $no_answer) {
+                            //     $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                            // }
                         }
+                        // $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+                        $question->save();
+                        // }
                     }
                 } else if ($input->id_tipe_soal == 5) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
-                            $question = new Soal;
-                            $question->id_kategori_soal = $input->kategori;
-                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                            $question->id_tipe_soal = $input->id_tipe_soal;
-                            $question->content = $input->soal[$i];
-                            $question->text = strip_tags($input->soal[$i]);
-                            $question->alternatif_jawaban1 = $input->jawaban[1];
-                            $question->alternatif_jawaban2 = $input->jawaban[2];
-                            $question->alternatif_jawaban3 = $input->jawaban[3];
-                            $question->alternatif_jawaban4 = $input->jawaban[4];
-                            $question->alternatif_jawaban5 = $input->jawaban[5];
-                            $question->created_by = $input->auth_data->pengguna->id_pengguna;
-                            $question->save();
-                        }
+                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        $question = new Soal;
+                        $question->id_kategori_soal = $input->kategori;
+                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_tipe_soal = $input->id_tipe_soal;
+                        $question->content = $input->soal[$i] ? $input->soal[$i] : '-';
+                        $question->text = strip_tags($input->soal[$i]);
+                        $question->alternatif_jawaban1 = $input->jawaban[1];
+                        $question->alternatif_jawaban2 = $input->jawaban[2];
+                        $question->alternatif_jawaban3 = $input->jawaban[3];
+                        $question->alternatif_jawaban4 = $input->jawaban[4];
+                        $question->alternatif_jawaban5 = $input->jawaban[5];
+                        $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $question->save();
+                        // }
                     }
                 } else if ($input->id_tipe_soal == 6) {
                     $question = new Soal;
@@ -406,7 +415,7 @@ class SoalController extends Controller
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
-                    $question->content = $input->soal;
+                    $question->content = $input->soal ? $input->soal : '-';
                     $question->text = strip_tags($input->soal);
                     $question->created_by = $input->auth_data->pengguna->id_pengguna;
                     $question->save();
@@ -416,7 +425,7 @@ class SoalController extends Controller
                         $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pertanyaan->id_soal =  $question->id_soal;
                         $pertanyaan->nomer = $i;
-                        $pertanyaan->text = $input->pertanyaan[$i];
+                        $pertanyaan->text = $input->pertanyaan[$i] ?  $input->pertanyaan[$i]  : '-';
                         $pertanyaan->jawaban = $input->noJawaban[$i];
                         $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
                         $pertanyaan->save();
@@ -427,7 +436,7 @@ class SoalController extends Controller
                         $jawaban->id_pilihan_jawaban = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $jawaban->id_soal =  $question->id_soal;
                         $jawaban->nomer = $i;
-                        $jawaban->text = $input->jawaban[$i];
+                        $jawaban->text = $input->jawaban[$i] ? $input->jawaban[$i] : '-';
                         $jawaban->created_by = $input->auth_data->pengguna->id_pengguna;
                         $jawaban->save();
                     }
@@ -474,7 +483,7 @@ class SoalController extends Controller
 
         if (!empty($input->id_soal) && $question = Soal::find($input->id_soal)) {
             $question->content = $input->soal;
-            $question->text = $input->text;
+            $question->text = strip_tags($input->soal);
             $question->id_kategori_soal = $input->id_kategori_soal;
             if ($input->id_tipe_soal == 1) {
                 $id_pilihan_soal_benar = 0;
@@ -493,6 +502,12 @@ class SoalController extends Controller
                     $question_option->save();
                 }
                 $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+            } else if ($input->id_tipe_soal == 5) {
+                $question->alternatif_jawaban1 = $input->jawaban[1];
+                $question->alternatif_jawaban2 = $input->jawaban[2];
+                $question->alternatif_jawaban3 = $input->jawaban[3];
+                $question->alternatif_jawaban4 = $input->jawaban[4];
+                $question->alternatif_jawaban5 = $input->jawaban[5];
             }
             $question->save();
             return [
@@ -767,7 +782,6 @@ class SoalController extends Controller
                 return $item->created_at->diffForHumans();
             })
             ->addColumn('action', function ($item) {
-                // dd($item->detail_paket_soal);
                 $data = array(
                     'id' => $item->id_soal,
                     'delete' => count($item->detail_paket_soal) == '0' ? true : false,
@@ -775,19 +789,7 @@ class SoalController extends Controller
                 return $data;
             })
             ->addColumn('tipe_soal', function ($item) {
-                if ($item->id_tipe_soal == 1) {
-                    return "Pilihan Ganda";
-                } else if ($item->id_tipe_soal == 2) {
-                    return "Isian";
-                } else if ($item->id_tipe_soal == 3) {
-                    return "File";
-                } else if ($item->id_tipe_soal == 4) {
-                    return "Pilihan Ganda Kompleks";
-                } else if ($item->id_tipe_soal == 5) {
-                    return "Isian Singkat";
-                } else if ($item->id_tipe_soal == 6) {
-                    return "Menjodohkan";
-                }
+                return $item->tipe_soal_to_text();
             })
             ->make(true);
     }
