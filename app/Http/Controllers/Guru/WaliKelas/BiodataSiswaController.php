@@ -65,7 +65,10 @@ class BiodataSiswaController extends Controller
         //     $query->where('id_kelas', '=', $wali_kelas->id_kelas);
         // });
 
-        $list_siswa = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('kelas', 'pengguna');
+        $list_siswa = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('kelas', 'pengguna', 'pengguna.status_pengguna')
+            ->whereHas('pengguna.status_pengguna', function ($q) {
+                $q->where('aktif_status_pengguna', 1);
+            });
 
         return Datatables::of($list_siswa)->addColumn('action', function ($item) {
             $data = array(
