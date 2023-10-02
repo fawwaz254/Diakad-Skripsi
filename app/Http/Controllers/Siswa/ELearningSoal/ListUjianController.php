@@ -369,6 +369,44 @@ class ListUjianController extends Controller
             );
 
             session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban]);
+        } elseif ($input->id_tipe_soal == 7) {
+            $jawaban_benar = 0;
+            $jawaban = [];
+            $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_pertanyaan'];
+            foreach ($pilihan_jawaban as $jawaban) {
+                if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
+                    $jawaban_benar++;
+                } else {
+                    $jawaban_benar--;
+                }
+            }
+
+            if ($jawaban_benar < 0) {
+                $jawaban_benar = 0;
+            }
+
+            $nilai = (session($input->paket_soal)['point_pilihan_ganda'] * $jawaban_benar) / $pilihan_jawaban->count();
+
+            $test_answer = array(
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
+                'id_test' => session($input->paket_soal)['id_test'],
+                'nomer' => $input->no,
+                'id_soal' => $input->question,
+                'nilai' => $nilai,
+                'pilihan_jawaban1' => isset($input->jawaban[1]) ? $input->jawaban[1] : null,
+                'pilihan_jawaban2' => isset($input->jawaban[2]) ? $input->jawaban[2] : null,
+                'pilihan_jawaban3' => isset($input->jawaban[3]) ? $input->jawaban[3] : null,
+                'pilihan_jawaban4' => isset($input->jawaban[4]) ? $input->jawaban[4] : null,
+                'pilihan_jawaban5' => isset($input->jawaban[5]) ? $input->jawaban[5] : null,
+                'status_koreksi' => 1,
+                'id_tipe_soal' => $input->id_tipe_soal,
+                'created_at' => Carbon::now('Asia/Jakarta'),
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
+                'updated_at' => Carbon::now('Asia/Jakarta')
+            );
+
+            session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban]);
         }
 
         ElearningAnswer::dispatch($test_answer);

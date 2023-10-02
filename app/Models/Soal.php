@@ -29,15 +29,33 @@ class Soal extends Model
 
     protected $guarded = [];
 
-    public function tipe_soal_to_text(){
-        switch($this->id_tipe_soal){
-            case 1: return 'Pilihan Ganda'; break;
-            case 2: return 'Isian'; break;
-            case 3: return 'File'; break;
-            case 4: return 'Pilihan Ganda Kompleks'; break;
-            case 5: return 'Isian Singkat'; break;
-            case 6: return 'Menjodohkan'; break;
-            default: return ''; break;
+    public function tipe_soal_to_text()
+    {
+        switch ($this->id_tipe_soal) {
+            case 1:
+                return 'Pilihan Ganda';
+                break;
+            case 2:
+                return 'Isian';
+                break;
+            case 3:
+                return 'File';
+                break;
+            case 4:
+                return 'Pilihan Ganda Kompleks';
+                break;
+            case 5:
+                return 'Isian Singkat';
+                break;
+            case 6:
+                return 'Menjodohkan';
+                break;
+            case 7:
+                return 'True/False';
+                break;
+            default:
+                return '';
+                break;
         }
     }
 

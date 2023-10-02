@@ -55,7 +55,14 @@ class PaketSoalController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-        $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna)->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas')->orderBy('paket_soal.created_at', 'desc')
+
+        if (auth_data()->role_aktif->id_role == '7') {
+            $list_data = PaketSoal::query();
+        } else {
+            $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna);
+        }
+
+        $list_data->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas')->orderBy('paket_soal.created_at', 'desc')
             ->when($input->status == '0', function ($q) {
                 $q->doesntHave('test');
             })->when($input->status == '1', function ($q) {
@@ -137,6 +144,8 @@ class PaketSoalController extends Controller
                     return "Isian Singkat";
                 } else if ($item->id_tipe_soal == 6) {
                     return "Menjodohkan";
+                } else if ($item->id_tipe_soal == 7) {
+                    return "True/False";
                 }
             })
             ->make(true);
@@ -171,11 +180,19 @@ class PaketSoalController extends Controller
                 $question_package_class->save();
             }
 
-            return [
-                'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'e-learning-soal/paket-soal',
-                'message' => 'Berhasil Merubah paket Soal'
-            ];
+            if (auth_data()->role_aktif->id_role != '7') {
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'e-learning-soal/paket-soal',
+                    'message' => 'Berhasil Merubah paket Soal'
+                ];
+            } else {
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'aktivitas-semester/paket-soal',
+                    'message' => 'Berhasil Merubah paket Soal'
+                ];
+            }
         } else {
 
             $now = Carbon::now(env('APP_TIMEZONE', ''));
