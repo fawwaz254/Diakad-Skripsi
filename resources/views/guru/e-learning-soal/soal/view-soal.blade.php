@@ -148,7 +148,11 @@
                 orderable: false,
                 render: function(data) {
                     if (data.delete) {
-                        return '<a type="button" class="btn  btn-circle btn-info waves-effect waves-circle waves-float" href="' +
+                        return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/edit/' + data.id + '">' +
+                            '    <i class="material-icons">mode_edit</i>' +
+                            '</a>' +
+                            '<a type="button" class="btn  btn-circle btn-info waves-effect waves-circle waves-float" href="' +
                             detail_url + '/test/' + data.id + '">' +
                             '    T' +
                             '</a>' +
@@ -157,7 +161,11 @@
                             '    <i class="material-icons">delete</i>' +
                             '</button>';
                     } else {
-                        return '<a type="button" class="btn btn-info  btn-circle waves-effect waves-circle waves-float" href="' +
+                        return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/edit/' + data.id + '">' +
+                            '    <i class="material-icons">mode_edit</i>' +
+                            '</a>' +
+                            '<a type="button" class="btn btn-info  btn-circle waves-effect waves-circle waves-float" href="' +
                             detail_url + '/test/' + data.id + '">' +
                             '    T' +
                             '</a>';
