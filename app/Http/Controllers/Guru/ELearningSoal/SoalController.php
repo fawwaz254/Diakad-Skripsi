@@ -262,7 +262,7 @@ class SoalController extends Controller
                         $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
-                        $question->content = $input->soal[$i];
+                        $question->content = $input->soal[$i] ? $input->soal[$i] : '-';
                         $question->text = strip_tags($input->soal[$i]);
                         $question->created_by = $input->auth_data->pengguna->id_pengguna;
                         $question->save();
@@ -279,8 +279,8 @@ class SoalController extends Controller
                             $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $question_option->number_option = $no_answer;
                             $question_option->id_soal = $question->id_soal;
-                            $question_option->content = $answer;
-                            $question_option->text = $answer;
+                            $question_option->content = $answer ? $answer : '-';
+                            $question_option->text = strip_tags($answer);
                             $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
                             if (empty(strip_tags($answer))) {
                                 DB::rollback();
@@ -312,7 +312,7 @@ class SoalController extends Controller
                         $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
-                        $question->content = $input->soal[$i];
+                        $question->content = $input->soal[$i] ? $input->soal[$i] : '-';
                         $question->text = strip_tags($input->soal[$i]);
                         $question->jawaban = $input->jawaban[$i];
                         $question->created_by = $input->auth_data->pengguna->id_pengguna;
@@ -325,7 +325,7 @@ class SoalController extends Controller
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
-                    $question->content = $input->soal;
+                    $question->content = $input->soal ? $input->soal : '-';
                     $question->text = strip_tags($input->soal);
                     $question->created_by = $input->auth_data->pengguna->id_pengguna;
                     // $question->jawaban = $input->jawaban;
@@ -339,7 +339,7 @@ class SoalController extends Controller
                         $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
-                        $question->content = $input->soal[$i];
+                        $question->content = $input->soal[$i] ? $input->soal[$i] : '-';
                         $question->text = strip_tags($input->soal[$i]);
                         $question->created_by = $input->auth_data->pengguna->id_pengguna;
                         $question->save();
@@ -356,8 +356,8 @@ class SoalController extends Controller
                             $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $question_option->number_option = $no_answer;
                             $question_option->id_soal = $question->id_soal;
-                            $question_option->content = $answer;
-                            $question_option->text = $answer;
+                            $question_option->content = $answer ? $answer : '-';
+                            $question_option->text = strip_tags($answer);
                             $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
                             if (empty(strip_tags($answer))) {
                                 DB::rollback();
@@ -389,7 +389,7 @@ class SoalController extends Controller
                         $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
-                        $question->content = $input->soal[$i];
+                        $question->content = $input->soal[$i] ? $input->soal[$i] : '-';
                         $question->text = strip_tags($input->soal[$i]);
                         $question->alternatif_jawaban1 = $input->jawaban[1];
                         $question->alternatif_jawaban2 = $input->jawaban[2];
@@ -406,7 +406,7 @@ class SoalController extends Controller
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
-                    $question->content = $input->soal;
+                    $question->content = $input->soal ? $input->soal : '-';
                     $question->text = strip_tags($input->soal);
                     $question->created_by = $input->auth_data->pengguna->id_pengguna;
                     $question->save();
@@ -416,7 +416,7 @@ class SoalController extends Controller
                         $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pertanyaan->id_soal =  $question->id_soal;
                         $pertanyaan->nomer = $i;
-                        $pertanyaan->text = $input->pertanyaan[$i];
+                        $pertanyaan->text = $input->pertanyaan[$i] ?  $input->pertanyaan[$i]  : '-';
                         $pertanyaan->jawaban = $input->noJawaban[$i];
                         $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
                         $pertanyaan->save();
@@ -427,7 +427,7 @@ class SoalController extends Controller
                         $jawaban->id_pilihan_jawaban = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $jawaban->id_soal =  $question->id_soal;
                         $jawaban->nomer = $i;
-                        $jawaban->text = $input->jawaban[$i];
+                        $jawaban->text = $input->jawaban[$i] ? $input->jawaban[$i] : '-';
                         $jawaban->created_by = $input->auth_data->pengguna->id_pengguna;
                         $jawaban->save();
                     }

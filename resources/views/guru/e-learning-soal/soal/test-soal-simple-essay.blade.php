@@ -64,12 +64,12 @@
                         </div>
 
 
-                        <h2 class="card-inside-title">Jawaban</h2>
+                        {{-- <h2 class="card-inside-title">Jawaban</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <input class="form-control" disabled style="background-color: #CFE795">
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
