@@ -13,11 +13,11 @@
             <span>Hapus Jumlah Soal</span>
         </button>
         <input type="text" name="jumlah" style="padding:7px; background-color:white;border: 1px solid black;"
-            value="Jumlah Soal = 1" disabled>
+            value="Jumlah Soal = 1" disabled> --}}
         <span style="background-color: white;padding:7px;border: 1px solid black;">
             <input type="checkbox" id="wuswug" class="checkbox">
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
-        </span> --}}
+        </span>
     </h2>
 </div>
 
@@ -70,7 +70,7 @@
                             <div id="pertanyan">
                                 <div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                     <h2 class="card-inside-title">Pertanyaan 1</h2>
-                                    <textarea class="form-control" required="" name="pertanyaan[1]" rows="3"></textarea>
+                                    <textarea class="form-control" required="" id="inputPertanyaan1" name="pertanyaan[1]" rows="3"></textarea>
                                     <h2 class="card-inside-title">No Jawaban</h2>
                                     <input id="noJawaban1" type="number" class="form-control" required=""
                                         name="noJawaban[1]" />
@@ -84,7 +84,7 @@
                             <div id="jawaban">
                                 <div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                     <h2 class="card-inside-title">Jawaban 1</h2>
-                                    <textarea id="q1" class="form-control q1" required="" name="jawaban[1]" rows="3"></textarea>
+                                    <textarea id="inputJawaban1" class="form-control q1" required="" name="jawaban[1]" rows="3"></textarea>
                                 </div>
                                 <br><br>
                             </div>
@@ -137,7 +137,7 @@
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
-    var jumlah = 1;
+    // var jumlah = 1;
     var jawaban = 1;
     var pertanyaan = 1;
     var options = {
@@ -150,23 +150,41 @@
     $('.checkbox').on('change', function() { // on change of state
         if (this.checked) // if changed state is "CHECKED"
         {
-            for (var i = 1; i <= jumlah; i++) {
-                id = 'q' + i;
+            for (var i = 1; i <= pertanyaan; i++) {
+                id = 'inputPertanyaan' + i;
                 var editor = CKEDITOR.replace(id, options);
-                for (var j = 0; j < 5; j++) {
-                    idjawaban = 'a' + i + j;
-                    var editorjawaban = CKEDITOR.replace(idjawaban, options);
-                }
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                // }
+            }
+
+            for (var i = 1; i <= jawaban; i++) {
+                id = 'inputJawaban' + i;
+                var editor = CKEDITOR.replace(id, options);
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                // }
             }
 
         } else {
-            for (var i = 1; i <= jumlah; i++) {
-                id = 'q' + i;
+            for (var i = 1; i <= pertanyaan; i++) {
+                id = 'inputPertanyaan' + i;
                 CKEDITOR.instances[id].destroy();
-                for (var j = 0; j < 5; j++) {
-                    idjawaban = 'a' + i + j;
-                    CKEDITOR.instances[idjawaban].destroy();
-                }
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     CKEDITOR.instances[idjawaban].destroy();
+                // }
+            }
+
+            for (var i = 1; i <= jawaban; i++) {
+                id = 'inputJawaban' + i;
+                CKEDITOR.instances[id].destroy();
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     CKEDITOR.instances[idjawaban].destroy();
+                // }
             }
 
         }
@@ -179,7 +197,7 @@
             <div id="pertanyaan${pertanyaan}">
 		<div class="card" style="background-color: #e3e3e3; padding: 10px;" >
                                 <h2 class="card-inside-title">Pertanyaan ${pertanyaan}</h2>
-                                <textarea id="pertanyaan${pertanyaan }" class="form-control" required="" name="pertanyaan[${pertanyaan }]" rows="3"></textarea>
+                                <textarea id="inputPertanyaan${pertanyaan }" class="form-control" required="" name="pertanyaan[${pertanyaan }]" rows="3"></textarea>
                                 <h2 class="card-inside-title">No Jawaban</h2>
                                 <input id="noJawaban${pertanyaan }" type="number" class="form-control" required=""
                                     name="noJawaban[${pertanyaan }]"></input>
@@ -195,7 +213,7 @@
             <div id="jawaban${jawaban}">
 		<div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                     <h2 class="card-inside-title">Jawaban ${jawaban}</h2>
-                                    <textarea id="jawaban${jawaban}" class="form-control" required="" name="jawaban[${jawaban}]" rows="3"></textarea>
+                                    <textarea id="inputJawaban${jawaban}" class="form-control" required="" name="jawaban[${jawaban}]" rows="3"></textarea>
                                 </div>
 							<br><br></div>`);
         // }
