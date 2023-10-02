@@ -30,6 +30,8 @@ use App\Http\Controllers\Akademik\Ujian\TryOutController;
 use App\Http\Controllers\Akademik\Ujian\UjianUASController;
 use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
 use App\Http\Controllers\Akademik\WelcomeController;
+use App\Http\Controllers\Guru\ELearningSoal\HasilTestController;
+use App\Http\Controllers\Guru\ELearningSoal\PaketSoalController;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
@@ -40,6 +42,7 @@ use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Models\PaketSoal;
 use App\Models\RaporSisipan;
 
 // ROLE AKADEMIK
@@ -163,6 +166,61 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('aktivitas-semester')->group(function () {
+            Route::prefix('paket-soal')->group(function () {
+                Route::get('/', [PaketSoalController::class, 'indexList']);
+                Route::post('/', [PaketSoalController::class, 'actionSave']);
+                Route::post('table', [PaketSoalController::class, 'commonList']);
+                Route::get('manage', [PaketSoalController::class, 'indexManage']);
+                Route::get('manage/{id}', [PaketSoalController::class, 'indexManage']);
+                Route::post('delete', [PaketSoalController::class, 'actionDelete']);
+                Route::get('detail/{id}', [PaketSoalController::class, 'indexDetail']);
+                Route::post('detail/add', [PaketSoalController::class, 'actionDetailAdd']);
+                Route::get('test/{id}', [PaketSoalController::class, 'indexTest']);
+                // Route::post('detail/table', [PaketSoalController::class,'detailList']);
+                Route::post('detail/table/{id}/{tipe}', [PaketSoalController::class, 'detailList']);
+                Route::post('detail/delete', [PaketSoalController::class, 'actionDetailDelete']);
+
+                Route::prefix('input-soal')->group(function () {
+                    Route::get('new/{tipe_soal}/{id_paket_soal}', [SoalController::class, 'indexNew2']);
+                    Route::post('new', [SoalController::class, 'actionSave2']);
+                    Route::get('edit/{id}', [SoalController::class, 'indexManage']);
+                    Route::post('/delete', [SoalController::class, 'actionDelete']);
+                });
+
+                Route::prefix('bank-soal')->group(function () {
+                    Route::get('/', [SoalController::class, 'indexList']);
+                    // Route::get('uploadImage', [SoalController::class,'uploadImageCkeditor']);
+                    Route::post('/table', [SoalController::class, 'commonList']);
+                    Route::get('new/{tipe_soal}', [SoalController::class, 'indexNew']);
+                    Route::post('new', [SoalController::class, 'actionSave']);
+                    Route::get('kategori', [SoalController::class, 'addKategori']);
+                    Route::post('kategori', [SoalController::class, 'actionKategori']);
+                    Route::get('kategori/table', [SoalController::class, 'commonListKategori']);
+                    Route::post('kategori/delete', [SoalController::class, 'actionDeleteKategori']);
+                    Route::get('edit/{id}', [SoalController::class, 'indexManage']);
+                    Route::get('test/{id}', [SoalController::class, 'indexTest']);
+                    Route::get('detail/{id}', [SoalController::class, 'indexOrder']);
+                    // Route::post('order/save', [QuestionController::class, 'actionOrderSave']);
+                    Route::post('/delete', [SoalController::class, 'actionDelete']);
+                });
+            });
+
+            Route::prefix('hasil-test')->group(function () {
+                Route::get('/', [HasilTestController::class, 'indexList']);
+                Route::post('table', [HasilTestController::class, 'commonList']);
+                Route::get('koreksi/{id_test}/{id_pengguna}', [HasilTestController::class, 'indexKoreksi']);
+                Route::get('koreksi/{id_paket_soal}/{id_test}/{id_pengguna}', [HasilTestController::class, 'indexKoreksi']);
+                Route::post('koreksi', [HasilTestController::class, 'actionKoreksiHasilTest']);
+                Route::get('detail/{id}', [HasilTestController::class, 'indexDetail']);
+                Route::post('detail/table/{id}', [HasilTestController::class, 'detailList']);
+            });
+
+            // Route::post('post-view-jadwal-kelas', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);
+
+
+
+
+
             // menu view jadwal kelas
             Route::get('view-jadwal-kelas', [UsulanMataAjarController::class, 'viewUsulanMataAjar']);
             Route::post('post-view-jadwal-kelas', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);

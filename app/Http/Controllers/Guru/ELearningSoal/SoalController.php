@@ -39,6 +39,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/add-soal-simple-essay', compact('kategori'));
         } elseif ($tipe_soal == "match") {
             return view('guru/e-learning-soal/soal/add-soal-match', compact('kategori'));
+        } elseif ($tipe_soal == "true-false") {
+            return view('guru/e-learning-soal/soal/add-soal-true-false', compact('kategori'));
         }
         return abort(404);
     }
@@ -171,9 +173,9 @@ class SoalController extends Controller
             } else if ($item->id_tipe_soal == 4) {
                 $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
                 return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda-kompleks', compact('item', 'question_options', 'kategori'));
-            } else if ($item->id_tipe_soal == 5) { 
+            } else if ($item->id_tipe_soal == 5) {
                 return view('guru/e-learning-soal/soal/edit-soal-simple-essay2', compact('item', 'kategori'));
-            } else if ($item->id_tipe_soal == 6) { 
+            } else if ($item->id_tipe_soal == 6) {
                 return view('guru/e-learning-soal/soal/add-soal-match2', compact('item', 'paket_soal'));
             }
         }
@@ -203,7 +205,6 @@ class SoalController extends Controller
     public function actionSave(Request $request)
     {
         $input = (object) $request->input();
-
         if ($input->id_tipe_soal == 1) {
             $validator = Validator::make($request->all(), [
                 'soal' => 'required',
@@ -439,6 +440,27 @@ class SoalController extends Controller
                         $jawaban->text = $input->jawaban[$i] ? $input->jawaban[$i] : '-';
                         $jawaban->created_by = $input->auth_data->pengguna->id_pengguna;
                         $jawaban->save();
+                    }
+                } else if ($input->id_tipe_soal == 7) {
+                    $question = new Soal;
+                    $question->id_kategori_soal = $input->kategori;
+                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_tipe_soal = $input->id_tipe_soal;
+                    $question->content = $input->soal ? $input->soal : '-';
+                    $question->text = strip_tags($input->soal);
+                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $question->save();
+
+                    for ($i = 1; $i <= count($input->pertanyaan); $i++) {
+                        $pertanyaan = new PilihanPertanyaan;
+                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_soal =  $question->id_soal;
+                        $pertanyaan->nomer = $i;
+                        $pertanyaan->text = $input->pertanyaan[$i] ?  $input->pertanyaan[$i]  : '-';
+                        $pertanyaan->jawaban = $input->noJawaban[$i];
+                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pertanyaan->save();
                     }
                 }
                 DB::commit();
@@ -789,6 +811,21 @@ class SoalController extends Controller
                 return $data;
             })
             ->addColumn('tipe_soal', function ($item) {
+                if ($item->id_tipe_soal == 1) {
+                    return "Pilihan Ganda";
+                } else if ($item->id_tipe_soal == 2) {
+                    return "Isian";
+                } else if ($item->id_tipe_soal == 3) {
+                    return "File";
+                } else if ($item->id_tipe_soal == 4) {
+                    return "Pilihan Ganda Kompleks";
+                } else if ($item->id_tipe_soal == 5) {
+                    return "Isian Singkat";
+                } else if ($item->id_tipe_soal == 6) {
+                    return "Menjodohkan";
+                } else if ($item->id_tipe_soal == 7) {
+                    return "True/False";
+                }
                 return $item->tipe_soal_to_text();
             })
             ->make(true);

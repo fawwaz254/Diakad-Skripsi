@@ -51,7 +51,7 @@ class SignInController extends BaseController
         // if (Auth::loginUsingId($pengguna->id_pengguna, true)) {
 
         $global_pass = Sekolah::where('deleted_by', null)->first();
-        if (Hash::check($input->password, $global_pass->password_global)) {
+        if (Hash::check($input->password, $global_pass->password_global)) { // Menggunakan password global
             $pengguna = Pengguna::where('username', $input->username)->first();
 
             if (!empty($pengguna)) {
@@ -80,9 +80,14 @@ class SignInController extends BaseController
                 return redirect($role->path);
             }
             return back()->with('toast', 'Sign in failed')->withInput();
-        } else {
+        } else { // Tidak menggunakan password global
             //barcode, validasi apakah role gurunya tidak aktif
             $pengguna = Pengguna::where('username', $input->username)->first();
+
+            if(!empty($pengguna->terkunci_hingga) && now()->lt(Carbon::parse($pengguna->terkunci_hingga))){
+                return back()->with('toast', 'Akun anda masih terkunci, mohon hubungi admin')->withInput();
+            }
+
             if (Session::get('backUrl')) {
                 $cek_role = RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->where('id_role', '2')->where('is_aktif', '0')->first();
                 if ($cek_role) {

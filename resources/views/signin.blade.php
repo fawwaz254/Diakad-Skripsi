@@ -106,14 +106,15 @@
 @section('js')
 <!-- Javascript -->
 <script>
-function tooglePassword(el) {
-    $(el).find('i').toggleClass("fa-eye fa-eye-slash");
-    var input = $('input[name=password]');
-    if (input.attr("type") == "password") {
-        input.attr("type", "text");
-    } else {
-        input.attr("type", "password");
+    localStorage.clear();
+    function tooglePassword(el) {
+        $(el).find('i').toggleClass("fa-eye fa-eye-slash");
+        var input = $('input[name=password]');
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
     }
-}
 </script>
 @endsection

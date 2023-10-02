@@ -37,9 +37,6 @@
                             <textarea id="q1" class="form-control q1" required="" name="soal" rows="3"></textarea>
                         </div>
                     </div>
-
-
-
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-pink waves-effect" id="btn-submit"
