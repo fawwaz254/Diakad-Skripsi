@@ -294,4 +294,18 @@ class AuthGlobalController extends BaseController
         Auth::logout();
         return redirect('/');
     }
+
+    public function actionLocked(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $pengguna = $input->auth_data->pengguna;
+        $pengguna->is_online = 0;
+        $pengguna->terkunci_hingga = now()->addHours(24);
+        $pengguna->save();
+
+        Session::flush();
+        Auth::logout();
+        return redirect('/');
+    }
 }

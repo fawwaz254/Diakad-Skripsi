@@ -13,6 +13,24 @@
 @endsection
 
 @section('js')
+    <script>
+        document.addEventListener("visibilitychange", () => {
+            var original_title = location.hash;
+            var target_url = original_title.replace('#', '');
+
+            if(target_url.includes('e-learning-soal/list-ujian/test')){
+                if (document.visibilityState === 'visible') {
+                    if(localStorage.getItem('blok_user_next')){               
+                        alert('Maaf akun anda akan di lock');
+                        window.location.href = `${base_url}/${role_url}/user-locked`;
+                    }else{
+                        localStorage.setItem('blok_user_next', true);
+                        alert('Kamu melakukan pelanggaran dengan membuka tab lain di browser, 1x lagi akun dapat terkena lock');
+                    }
+                }
+            }
+        });
+    </script>
     <!-- Javascript -->
     <script>
         var dtButtonConfig = {
