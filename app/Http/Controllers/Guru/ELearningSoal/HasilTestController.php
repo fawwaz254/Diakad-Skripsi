@@ -24,7 +24,14 @@ class HasilTestController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-        $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna)->with('kelas', 'test', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas.siswa')->orderBy('paket_soal.created_at', 'desc');
+
+        if (auth_data()->role_aktif->id_role == '7') {
+            $list_data = PaketSoal::query();
+        } else {
+            $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna);
+        }
+
+        $list_data->with('kelas', 'test', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas.siswa')->orderBy('paket_soal.created_at', 'desc');
 
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
