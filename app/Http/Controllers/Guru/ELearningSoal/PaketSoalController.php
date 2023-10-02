@@ -137,6 +137,8 @@ class PaketSoalController extends Controller
                     return "Isian Singkat";
                 } else if ($item->id_tipe_soal == 6) {
                     return "Menjodohkan";
+                } else if ($item->id_tipe_soal == 7) {
+                    return "True/False";
                 }
             })
             ->make(true);
