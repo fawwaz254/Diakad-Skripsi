@@ -128,11 +128,7 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        detail_url + '/detail/' + data.id + '">' +
-                        '    <i class="material-icons">remove_red_eye</i>' +
-                        '</a>' +
-                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">' +
+                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">' +
                         '    <i class="material-icons">delete_forever</i>' +
                         '</button>';
                 }
