@@ -95,8 +95,11 @@ class PaketSoalController extends Controller
             ->addColumn('action', function ($item) use ($input) {
                 $nm_kelas = [];
                 foreach ($item->paket_soal_kelas as $key => $paket_soal_kelas) {
-                    // $nm_kelas[$key] = $paket_soal_kelas->kelas->nm_kelas;
-                    $nm_kelas[$key] = '';
+                    if ($paket_soal_kelas->kelas) {
+                        $nm_kelas[$key] = $paket_soal_kelas->kelas->nm_kelas;
+                    } else {
+                        $nm_kelas[$key] = '';
+                    }
                 }
                 $data = array(
                     'id' => $item->id_paket_soal,
