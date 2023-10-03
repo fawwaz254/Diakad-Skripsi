@@ -37,7 +37,9 @@ class HasilTestController extends Controller
             ->addColumn('total_siswa', function ($item) {
                 $total = 0;
                 foreach ($item->paket_soal_kelas as $kelas) {
-                    $total += $kelas->kelas->siswa->count();
+                    if(!empty($kelas->kelas)){
+                        $total += $kelas->kelas->siswa->count();
+                    }
                 }
                 return $total;
             })
@@ -47,7 +49,9 @@ class HasilTestController extends Controller
             ->addColumn('action', function ($item) {
                 $nm_kelas = [];
                 foreach ($item->paket_soal_kelas as $key => $kelas) {
-                    $nm_kelas[$key] = $kelas->kelas->nm_kelas;
+                    if(!empty($kelas->kelas)){
+                        $nm_kelas[$key] = $kelas->kelas->nm_kelas;
+                    }
                 }
                 $data = array(
                     'id' => $item->id_paket_soal,
@@ -160,10 +164,27 @@ class HasilTestController extends Controller
             })
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->pengguna->id_pengguna
+                    'id' => $item->id_test
                 );
                 return $data;
             })
             ->make(true);
+    }
+
+    public function actionDeleteTest(Request $request, $id){
+        if($test = Test::find($id)){
+            JawabanTest::where('id_test', $test->id_test)->delete();
+            $test->delete();
+
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Hasil Test Successfully'
+            ];
+        }else{
+            return [
+                'status' => 300, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Failed'
+            ];
+        }
     }
 }

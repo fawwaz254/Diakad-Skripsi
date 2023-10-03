@@ -152,6 +152,7 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('password', [AuthGlobalController::class, 'indexPassword']);
         Route::post('password', [AuthGlobalController::class, 'actionChangePassword']);
         Route::get('signout', [AuthGlobalController::class, 'actionSignOut']);
+        Route::get('user-locked', [AuthGlobalController::class, 'actionLocked']);
 
         Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
     });

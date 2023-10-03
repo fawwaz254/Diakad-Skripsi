@@ -302,6 +302,7 @@
     var var_url = 'siswa/e-learning-soal/list-ujian/test/end';
     var timeout = 'e-learning-soal/list-ujian';
     var distance = '{{ $sisaWaktu }}';
+
     clearInterval(x);
     var x = setInterval(function() {
         var hours = Math.floor((distance % (1 * 60 * 60 * 24)) / (1 * 60 * 60));

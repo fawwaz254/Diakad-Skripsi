@@ -26,6 +26,7 @@
                                     <th>Nilai</th>
                                     <th>Nilai Jawaban Essay / Jawaban File</th>
                                     <th>Total Nilai</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,6 +45,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/detail/table/' + paket_soal;
     var detail_url = role_url + '#' + modul_url + '/' + 'paket-soal';
     var koreksi_hasil_test_url = role_url + '#' + modul_url + '/' + 'hasil-test' + '/' + 'koreksi';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -105,7 +107,7 @@
                 render: function(data) {
                     return data.nilai
                 }
-            }
+            },
 
 
             // { data: 'waktu_mulai_pengerjaan' },
@@ -120,6 +122,17 @@
             //             '</a>'
             //     }
             // }
+
+            {
+                data: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
+                }
+            }
         ],
         // order: [
         //     [2, 'asc'],
