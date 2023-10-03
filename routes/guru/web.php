@@ -226,6 +226,12 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('detail/table/{id}', [HasilTestController::class, 'detailList']);
                 Route::post('delete/{id}', [HasilTestController::class, 'actionDeleteTest']);
             });
+
+            Route::prefix('pengguna-terkunci')->group(function () {
+                Route::get('/', [PenggunaTerkunciController::class, 'indexList']);
+                Route::post('table', [PenggunaTerkunciController::class, 'commonList']);
+                Route::post('unlock', [PenggunaTerkunciController::class, 'actionUnlock']);
+            });
         });
 
         Route::prefix('absensi')->group(function () {

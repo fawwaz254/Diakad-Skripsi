@@ -32,6 +32,7 @@ use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
 use App\Http\Controllers\Akademik\WelcomeController;
 use App\Http\Controllers\Guru\ELearningSoal\HasilTestController;
 use App\Http\Controllers\Guru\ELearningSoal\PaketSoalController;
+use App\Http\Controllers\Guru\ELearningSoal\PenggunaTerkunciController;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
@@ -214,6 +215,12 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('detail/{id}', [HasilTestController::class, 'indexDetail']);
                 Route::post('detail/table/{id}', [HasilTestController::class, 'detailList']);
                 Route::post('delete/{id}', [HasilTestController::class, 'actionDeleteTest']);
+            });
+
+            Route::prefix('pengguna-terkunci')->group(function () {
+                Route::get('/', [PenggunaTerkunciController::class, 'indexList']);
+                Route::post('table', [PenggunaTerkunciController::class, 'commonList']);
+                Route::post('unlock', [PenggunaTerkunciController::class, 'actionUnlock']);
             });
 
             // Route::post('post-view-jadwal-kelas', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);

@@ -1,6 +1,14 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/hasil-test') }}">
+                <span>Hasil Test</span>
+            </a>
+            <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/pengguna-terkunci') }}">
+                <span>Reset Lock Siswa</span>
+            </a>
+            <br/>
+            <br/>
             <div class="card">
                 <div class="header">
                     <h2>
@@ -17,10 +25,9 @@
                                     <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Mapel</th>
+                                    <th>Waktu</th>
                                     <th>Total Siswa</th>
                                     <th>Siswa Mengerjakan</th>
-                                    {{-- <th>Jumlah Nilai diatas 75</th>
-                                    <th>Jumlah Nilai dibawah 75</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -75,6 +82,14 @@
                 data: 'kategori_soal.nm_kategori_soal'
             },
             {
+                data: 'waktu_mulai',
+                searchable: false,
+                orderable: true,
+                render: function(data, type, row) {
+                    return moment(data).format('dddd, DD MMM YYYY HH:mm') + ' - ' + moment(row.waktu_selesai).format('HH:mm');
+                }
+            },
+            {
                 data: 'total_siswa',
                 name: 'total_siswa',
                 className: 'align-center',
@@ -106,8 +121,7 @@
             }
         ],
         order: [
-            [2, 'asc'],
-            [1, 'asc']
+            [4, 'desc']
         ]
     });
 
