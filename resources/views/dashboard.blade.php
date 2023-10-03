@@ -13,7 +13,7 @@
 @endsection
 
 @section('js')
-    <script>
+    <!-- <script>
         document.addEventListener("visibilitychange", () => {
             var original_title = location.hash;
             var target_url = original_title.replace('#', '');
@@ -30,7 +30,7 @@
                 }
             }
         });
-    </script>
+    </script> -->
     <!-- Javascript -->
     <script>
         var dtButtonConfig = {
