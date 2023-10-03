@@ -213,6 +213,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('koreksi', [HasilTestController::class, 'actionKoreksiHasilTest']);
                 Route::get('detail/{id}', [HasilTestController::class, 'indexDetail']);
                 Route::post('detail/table/{id}', [HasilTestController::class, 'detailList']);
+                Route::post('delete/{id}', [HasilTestController::class, 'actionDeleteTest']);
             });
 
             // Route::post('post-view-jadwal-kelas', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);
