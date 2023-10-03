@@ -18,6 +18,10 @@
             <input type="checkbox" id="wuswug" class="checkbox">
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
         </span> --}}
+        <span style="background-color: white;padding:7px;border: 1px solid black;">
+            <input type="checkbox" id="wuswug" class="checkbox">
+            <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
+        </span>
     </h2>
 </div>
 
@@ -109,71 +113,89 @@
     $('.checkbox').on('change', function() { // on change of state
         if (this.checked) // if changed state is "CHECKED"
         {
-            for (var i = 1; i <= jumlah; i++) {
-                id = 'q' + i;
-                var editor = CKEDITOR.replace(id, options);
+            // for (var i = 1; i <= jumlah; i++) {
+            // id = 'q' + i;
+            var editor = CKEDITOR.replace('q1', options);
 
-            }
+            // }
 
         } else {
-            for (var i = 1; i <= jumlah; i++) {
-                id = 'q' + i;
-                CKEDITOR.instances[id].destroy();
+            // for (var i = 1; i <= jumlah; i++) {
+            // id = 'q' + i;
+            CKEDITOR.instances['q1'].destroy();
 
-            }
+            // }
 
         }
     });
+    // $('.checkbox').on('change', function() { // on change of state
+    //     if (this.checked) // if changed state is "CHECKED"
+    //     {
+    //         for (var i = 1; i <= jumlah; i++) {
+    //             id = 'q' + i;
+    //             var editor = CKEDITOR.replace(id, options);
+
+    //         }
+
+    //     } else {
+    //         for (var i = 1; i <= jumlah; i++) {
+    //             id = 'q' + i;
+    //             CKEDITOR.instances[id].destroy();
+
+    //         }
+
+    //     }
+    // });
 </script>
 <script>
     //untuk fungsi  add jumlah soal
     var jumlah = 1;
-    $('#add').click(function() {
-        if (jumlah != 10) {
-            jumlah++;
-            var value = 'Jumlah Soal = ' + jumlah;
-            $("input[name='jumlah']").val(value);
-            $('#place').append(`
-    <div class="row clearfix" style="margin-top: 10px" id="${jumlah }">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
-                <div class="header bg-pink">
-                    <h2>
-                        ${jumlah} . SOAL ESSAY
-                    </h2>
-                </div>
-                <div class="body">
+    // $('#add').click(function() {
+    //     if (jumlah != 10) {
+    //         jumlah++;
+    //         var value = 'Jumlah Soal = ' + jumlah;
+    //         $("input[name='jumlah']").val(value);
+    //         $('#place').append(`
+    // <div class="row clearfix" style="margin-top: 10px" id="${jumlah }">
+    //     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    //         <div class="card">
+    //             <div class="header bg-pink">
+    //                 <h2>
+    //                     ${jumlah} . SOAL ESSAY
+    //                 </h2>
+    //             </div>
+    //             <div class="body">
 
-                    <h2 class="card-inside-title">Soal</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q${jumlah}" class="form-control q${jumlah}" required="" name="soal[${jumlah}]" rows="3"></textarea>
-                        </div>
-                    </div>
-                    <h2 class="card-inside-title">Kunci Jawaban (akan di tampilkan ketika koreksi jawaban)</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q1" class="form-control q1" required="" name="jawaban[${jumlah}]" rows="3"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        `);
-        }
-    });
+    //                 <h2 class="card-inside-title">Soal</h2>
+    //                 <div class="row clearfix">
+    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    //                         <textarea id="q${jumlah}" class="form-control q${jumlah}" required="" name="soal[${jumlah}]" rows="3"></textarea>
+    //                     </div>
+    //                 </div>
+    //                 <h2 class="card-inside-title">Kunci Jawaban (akan di tampilkan ketika koreksi jawaban)</h2>
+    //                 <div class="row clearfix">
+    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    //                         <textarea id="q1" class="form-control q1" required="" name="jawaban[${jumlah}]" rows="3"></textarea>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     </div>
+    // </div>
+    //     `);
+    //     }
+    // });
 
-    $('#remove').click(function() {
-        if (jumlah != 1) {
-            var element = document.getElementById(jumlah);
-            jumlah--;
-            var value = 'Jumlah Soal = ' + jumlah;
-            $("input[name='jumlah']").val(value);
-            while (element.firstChild) {
-                element.removeChild(element.firstChild);
-            }
-            element.remove();
-        }
-    });
+    // $('#remove').click(function() {
+    //     if (jumlah != 1) {
+    //         var element = document.getElementById(jumlah);
+    //         jumlah--;
+    //         var value = 'Jumlah Soal = ' + jumlah;
+    //         $("input[name='jumlah']").val(value);
+    //         while (element.firstChild) {
+    //             element.removeChild(element.firstChild);
+    //         }
+    //         element.remove();
+    //     }
+    // });
 </script>
