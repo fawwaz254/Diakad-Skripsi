@@ -160,10 +160,27 @@ class HasilTestController extends Controller
             })
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->pengguna->id_pengguna
+                    'id' => $item->id_test
                 );
                 return $data;
             })
             ->make(true);
+    }
+
+    public function actionDeleteTest(Request $request, $id){
+        if($test = Test::find($id)){
+            JawabanTest::where('id_test', $test->id_test)->delete();
+            $test->delete();
+
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Hasil Test Successfully'
+            ];
+        }else{
+            return [
+                'status' => 300, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Failed'
+            ];
+        }
     }
 }
