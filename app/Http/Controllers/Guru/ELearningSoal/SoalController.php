@@ -60,6 +60,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/add-soal-simple-essay2', compact('paket_soal'));
         } elseif ($tipe_soal == "match") {
             return view('guru/e-learning-soal/soal/add-soal-match2', compact('paket_soal'));
+        } elseif ($tipe_soal == "true-false") {
+            return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('paket_soal'));
         }
         return abort(404);
     }
@@ -177,6 +179,8 @@ class SoalController extends Controller
                 return view('guru/e-learning-soal/soal/edit-soal-simple-essay2', compact('item', 'kategori'));
             } else if ($item->id_tipe_soal == 6) {
                 return view('guru/e-learning-soal/soal/add-soal-match2', compact('item', 'paket_soal'));
+            } else if ($item->id_tipe_soal == 7) {
+                return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('item', 'paket_soal'));
             }
         }
     }
@@ -750,7 +754,38 @@ class SoalController extends Controller
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
+                } else if ($input->id_tipe_soal == 7) {
+                    $question = new Soal;
+                    $question->id_kategori_soal = $input->id_kategori_soal;
+                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_tipe_soal = $input->id_tipe_soal;
+                    $question->content = $input->soal ? $input->soal : '-';
+                    $question->text = strip_tags($input->soal);
+                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $question->save();
+
+                    for ($i = 1; $i <= count($input->pertanyaan); $i++) {
+                        $pertanyaan = new PilihanPertanyaan;
+                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_soal =  $question->id_soal;
+                        $pertanyaan->nomer = $i;
+                        $pertanyaan->text = $input->pertanyaan[$i] ?  $input->pertanyaan[$i]  : '-';
+                        $pertanyaan->jawaban = $input->noJawaban[$i];
+                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pertanyaan->save();
+                    }
+
+                    $detail_paket_soal = new DetailPaketSoal;
+                    $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
+                    $detail_paket_soal->id_soal = $question->id_soal;
+                    $detail_paket_soal->save();
                 }
+
+
+
+
                 DB::commit();
 
                 return [
