@@ -176,6 +176,34 @@ class ListUjianController extends Controller
                 $no++;
             }
 
+            if ($test) {
+                $jawaban_test = JawabanTest::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
+                    ->where('id_test', $test->id_test)
+                    ->whereIn('id_soal', $question_package_details->pluck('id_soal'))->get();
+
+                foreach ($urutan_soal as $key => $value) {
+                    $jawaban = $jawaban_test->firstWhere('id_soal', $value->id_soal);
+                    if ($jawaban) {
+                        if ($jawaban->id_tipe_soal == '1') {
+                            session([$id_paket_soal . '_jawaban' . $key => $jawaban->id_pilihan_soal]);
+                        } elseif ($jawaban->id_tipe_soal == '2') {
+                            session([$id_paket_soal . '_jawaban' . $key => $jawaban->jawaban_essay]);
+                        } elseif ($jawaban->id_tipe_soal == '3') {
+                            session([$id_paket_soal . '_jawaban' . $key => $jawaban->link_file]);
+                        } elseif ($jawaban->id_tipe_soal == '4') {
+                            session([$id_paket_soal . '_jawaban' . $key => [1 => $jawaban->id_pilihan_soal_kompleks1, 2 => $jawaban->id_pilihan_soal_kompleks2, 3 => $jawaban->id_pilihan_soal_kompleks3, 4 => $jawaban->id_pilihan_soal_kompleks4, 5 => $jawaban->id_pilihan_soal_kompleks5]]);
+                        } elseif ($jawaban->id_tipe_soal == '5') {
+                            session([$id_paket_soal . '_jawaban' . $key => $jawaban->link_file]);
+                        } elseif ($jawaban->id_tipe_soal == '6') {
+                            session([$id_paket_soal . '_jawaban' . $key => [1 => $jawaban->pilihan_jawaban1, 2 => $jawaban->pilihan_jawaban2, 3 => $jawaban->pilihan_jawaban3, 4 => $jawaban->pilihan_jawaban4, 5 => $jawaban->pilihan_jawaban5]]);
+                        } elseif ($jawaban->id_tipe_soal == '7') {
+                            session([$id_paket_soal . '_jawaban' . $key => [1 => $jawaban->pilihan_jawaban1, 2 => $jawaban->pilihan_jawaban2, 3 => $jawaban->pilihan_jawaban3, 4 => $jawaban->pilihan_jawaban4, 5 => $jawaban->pilihan_jawaban5]]);
+                        }
+                    }
+                }
+            }
+
+
             $point = $soal->nilai;
             if ($point == '0') {
                 $point =  intval(100 / $question_package_details->count());
