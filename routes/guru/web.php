@@ -61,6 +61,7 @@ use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
+use App\Http\Controllers\Guru\ELearningSoal\PenggunaDikunciController;
 use App\Http\Controllers\Guru\Faq\FaqController;
 use App\Http\Controllers\Guru\GuruKpi\GuruKpiController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController;
@@ -225,6 +226,18 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('detail/{id}', [HasilTestController::class, 'indexDetail']);
                 Route::post('detail/table/{id}', [HasilTestController::class, 'detailList']);
                 Route::post('delete/{id}', [HasilTestController::class, 'actionDeleteTest']);
+            });
+
+            Route::prefix('pengguna-terkunci')->group(function () {
+                Route::get('/', [PenggunaTerkunciController::class, 'indexList']);
+                Route::post('table', [PenggunaTerkunciController::class, 'commonList']);
+                Route::post('unlock', [PenggunaTerkunciController::class, 'actionUnlock']);
+            });
+
+            Route::prefix('pengguna-dikunci')->group(function () {
+                Route::get('/', [PenggunaDikunciController::class, 'indexList']);
+                Route::post('table', [PenggunaDikunciController::class, 'commonList']);
+                Route::post('lock', [PenggunaDikunciController::class, 'actionLock']);
             });
         });
 

@@ -25,10 +25,11 @@
                                     <th>Waktu Pengerjaan</th>
                                     {{-- <th>Jam Pengerjaan</th> --}}
                                     <th>Jumlah Soal</th>
+                                    <th>Jumlah Terjawab</th>
                                     {{-- <th>Nilai Otomatis</th> --}}
-                                    <th>Total Nilai Otomatis</th>
+                                    <!-- <th>Total Nilai Otomatis</th>
                                     <th>Total Nilai Essay / File</th>
-                                    <th>Total Nilai</th>
+                                    <th>Total Nilai</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,33 +80,39 @@
             // },
             {
                 data: 'detail_paket_soal',
-                name: 'detail_paket_soal'
+                searchable: false,
+                orderable: false
             },
             {
-                data: 'total_nilai',
-                render: function(data) {
-                    return data.nilai_pilihan_ganda
-                }
+                data: 'jawaban_test',
+                searchable: false,
+                orderable: false
             },
-            {
-                data: 'total_nilai',
-                render: function(data) {
+            // {
+            //     data: 'total_nilai',
+            //     render: function(data) {
+            //         return data.nilai_pilihan_ganda
+            //     }
+            // },
+            // {
+            //     data: 'total_nilai',
+            //     render: function(data) {
 
-                    if (data.belum_dikoreksi) {
-                        return `${data.nilai_pilihan_essay_submit} <a href="${koreksi_hasil_test_url}/${data.id_test}">(Belum Dikoreksi)</a>`
-                    } else if (data.validasi_pilihan_essay_submit) {
-                        return `${data.nilai_pilihan_essay_submit} <a href="${koreksi_hasil_test_url}/${data.id_test}">(Lihat Penilaian)</a>`
-                    } else {
-                        return '-'
-                    }
-                }
-            },
-            {
-                data: 'total_nilai',
-                render: function(data) {
-                    return data.nilai
-                }
-            }
+            //         if (data.belum_dikoreksi) {
+            //             return `${data.nilai_pilihan_essay_submit} <a href="${koreksi_hasil_test_url}/${data.id_test}">(Belum Dikoreksi)</a>`
+            //         } else if (data.validasi_pilihan_essay_submit) {
+            //             return `${data.nilai_pilihan_essay_submit} <a href="${koreksi_hasil_test_url}/${data.id_test}">(Lihat Penilaian)</a>`
+            //         } else {
+            //             return '-'
+            //         }
+            //     }
+            // },
+            // {
+            //     data: 'total_nilai',
+            //     render: function(data) {
+            //         return data.nilai
+            //     }
+            // }
         ],
         order: [
             [3, 'desc']

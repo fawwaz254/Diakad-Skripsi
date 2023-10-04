@@ -178,9 +178,9 @@ class SoalController extends Controller
             } else if ($item->id_tipe_soal == 5) {
                 return view('guru/e-learning-soal/soal/edit-soal-simple-essay2', compact('item', 'kategori'));
             } else if ($item->id_tipe_soal == 6) {
-                return view('guru/e-learning-soal/soal/add-soal-match2', compact('item', 'paket_soal'));
+                return view('guru/e-learning-soal/soal/add-soal-match2', compact('item', 'kategori'));
             } else if ($item->id_tipe_soal == 7) {
-                return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('item', 'paket_soal'));
+                return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('item', 'kategori'));
             }
         }
     }
@@ -830,7 +830,7 @@ class SoalController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal')->orderBy('created_at', 'DESC')->when($input->status == 0, function ($q) use ($auth_data) {
-            $q->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+            $q->where('soal.id_pengguna', $auth_data->pengguna->id_pengguna);
         });
 
 
