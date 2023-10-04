@@ -39,12 +39,12 @@ class ListUjianController extends Controller
             'detail_paket_soal',
             'detail_paket_soal.soal',
             'kategori_soal',
-        )->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
-            $query->where('id_kelas', '=', $id_kelas);
-        })->orderBy('paket_soal.created_at', 'desc')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+        )->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return
                 $q->whereNotNull('content');
-        }]);
+        }])->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
+            $query->where('id_kelas', '=', $id_kelas);
+        });
 
         $waktu = Carbon::now('Asia/Jakarta');
         $statusTests = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
