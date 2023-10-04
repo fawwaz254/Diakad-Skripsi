@@ -120,11 +120,11 @@ class PaketSoalController extends Controller
         $list_question_selected = $question_package_details->pluck('id_soal');
         $paket_soal = PaketSoal::find($question_package_id);
         if ($tipe == 1) {
-            $list_data = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal')->whereNotIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
+            $list_data = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereNotIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
         } else if ($tipe == 0) {
-            $list_data = Soal::where('id_kategori_soal', '!=', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal')->whereNotIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
+            $list_data = Soal::where('id_kategori_soal', '!=', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereNotIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
         } else {
-            $list_data = Soal::with('pengguna', 'kategori_soal')->whereIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
+            $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
         }
 
         // $id_pengguna = $input->auth_data->pengguna->id_pengguna;
@@ -136,6 +136,18 @@ class PaketSoalController extends Controller
                     // 'edit' => $item->id_pengguna == $id_pengguna ? true : false
                 );
                 return $data;
+            })->addColumn('kelas', function ($item) {
+                $nm_kelas = [];
+                if ($item->detail_paket_soal) {
+                    foreach ($item->detail_paket_soal as $detail_paket_soal) {
+                        if ($detail_paket_soal->paket_soal) {
+                            foreach ($detail_paket_soal->paket_soal->paket_soal_kelas as $paket_soal_kelas) {
+                                $nm_kelas[] = $paket_soal_kelas->kelas->nm_kelas;
+                            }
+                        }
+                    }
+                }
+                return $nm_kelas;
             })
             ->addColumn('tipe_soal', function ($item) {
                 if ($item->id_tipe_soal == 1) {

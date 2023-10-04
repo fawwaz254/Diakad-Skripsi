@@ -80,6 +80,7 @@
                                             <th>Tipe Soal</th>
                                             <th>Mata Pelajaran</th>
                                             <th>Pertanyaan</th>
+                                            <th>Kelas</th>
                                             <th>Action</th>
                                             <th>Tanggal Pembuatan</th>
                                         </tr>
@@ -99,7 +100,9 @@
                                             <th>Tipe Soal</th>
                                             <th>Mata Pelajaran</th>
                                             <th>Pertanyaan</th>
+                                            <th>Kelas</th>
                                             <th>Action</th>
+
                                             <th>Pembuat</th>
                                             <th>Tanggal Pembuatan</th>
                                         </tr>
@@ -145,6 +148,19 @@
                 data: 'text',
                 name: 'text',
                 orderable: false
+            },
+            {
+                data: 'kelas',
+                orderable: false,
+                render: function(data) {
+                    let html = '';
+                    data.forEach(element => {
+                        html += '- ' +
+                            element + ` <br>`;
+                    });
+                    return html;
+
+                }
             },
             {
                 data: 'action',
@@ -219,6 +235,19 @@
                 data: 'text',
                 name: 'text',
                 orderable: false
+            },
+            {
+                data: 'kelas',
+                orderable: false,
+                render: function(data) {
+                    let html = '';
+                    data.forEach(element => {
+                        html += '- ' +
+                            element + ` <br>`;
+                    });
+                    return html;
+
+                }
             },
             {
                 data: 'action',
