@@ -19,8 +19,7 @@
                                     <th>Mapel</th>
                                     <th>Jumlah Soal</th>
                                     {{-- <th>Nilai Tiap Soal</th> --}}
-                                    <th>Waktu Mulai</th>
-                                    <th>Waktu Akhir</th>
+                                    <th>Waktu</th>
                                     <th>Durasi Pengerjaan</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -52,14 +51,14 @@
             url: datatable_url,
             type: 'POST'
         },
-        columns: [{
+        columns: [
+            {
                 data: null,
                 searchable: false,
                 orderable: false
             },
             {
-                data: 'text',
-                name: 'text'
+                data: 'text'
             },
             // {
             //     data: 'kelas.nm_kelas'
@@ -79,13 +78,22 @@
             //     className: 'align-center',
             // },
             {
-                data: 'waktu_mulai'
-            }, {
-                data: 'waktu_selesai'
-            }, {
-                data: 'waktu_pengerjaan'
-            }, {
-                data: 'status'
+                data: 'waktu_mulai',
+                searchable: false,
+                orderable: true,
+                render: function(data, type, row) {
+                    return moment(data).format('dddd, DD MMM YYYY HH:mm') + ' - ' + moment(row.waktu_selesai).format('HH:mm');
+                }
+            },
+            {
+                data: 'waktu_pengerjaan',
+                searchable: false,
+                orderable: false,
+            }, 
+            {
+                data: 'status',
+                searchable: false,
+                orderable: false,
             },
             {
                 data: 'action',
@@ -106,9 +114,7 @@
                             '    <i class="material-icons">access_time</i>' +
                             '</a>';
                     } else if (data.status == 98) {
-                        return '<a type="button" style="pointer-events: none" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" href="">' +
-                            '    <i class="material-icons">access_time</i>' +
-                            '</a>';
+                        return '';
                     } else {
                         return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                             detail_url + data.id + '">' +
@@ -119,8 +125,7 @@
             }
         ],
         order: [
-            [2, 'asc'],
-            [1, 'asc']
+            [4, 'desc']
         ]
     });
 
