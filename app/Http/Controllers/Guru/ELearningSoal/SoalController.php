@@ -178,9 +178,9 @@ class SoalController extends Controller
             } else if ($item->id_tipe_soal == 5) {
                 return view('guru/e-learning-soal/soal/edit-soal-simple-essay2', compact('item', 'kategori'));
             } else if ($item->id_tipe_soal == 6) {
-                return view('guru/e-learning-soal/soal/add-soal-match2', compact('item', 'paket_soal'));
+                return view('guru/e-learning-soal/soal/add-soal-match2', compact('item', 'kategori'));
             } else if ($item->id_tipe_soal == 7) {
-                return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('item', 'paket_soal'));
+                return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('item', 'kategori'));
             }
         }
     }
