@@ -56,6 +56,7 @@
                                     <th>Mulai</th>
                                     <th>Selesai</th>
                                     <th>Durasi Pengerjaan</th>
+                                    <th>Versi</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -160,6 +161,10 @@
                 className: 'align-center'
             },
             {
+                data: 'version',
+                className: 'align-center'
+            },
+            {
                 data: 'action',
                 name: 'action',
                 searchable: false,
@@ -179,7 +184,11 @@
                             '    <i class="material-icons">delete</i>' +
                             '</button>';
                     } else {
-                        return '<a type="button" class="btn btn-orange btn-circle waves-effect waves-circle waves-float" href="' +
+                        return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/manage/' + data.id + '">' +
+                            '    <i class="material-icons">mode_edit</i>' +
+                            '</a>' +
+                            '<a type="button" class="btn btn-orange btn-circle waves-effect waves-circle waves-float" href="' +
                             detail_url + '/test/' + data.id + '">' +
                             '    T' +
                             '</a>';
