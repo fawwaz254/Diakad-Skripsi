@@ -364,10 +364,12 @@ class ListUjianController extends Controller
             $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_pertanyaan'];
 
             foreach ($pilihan_jawaban as $jawaban) {
-                if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
-                    $jawaban_benar++;
-                } else {
-                    $jawaban_benar--;
+                if(isset($input->jawaban[$jawaban->nomer])){
+                    if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
+                        $jawaban_benar++;
+                    } else {
+                        $jawaban_benar--;
+                    }
                 }
             }
 
@@ -402,10 +404,12 @@ class ListUjianController extends Controller
             $jawaban = [];
             $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_pertanyaan'];
             foreach ($pilihan_jawaban as $jawaban) {
-                if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
-                    $jawaban_benar++;
-                } else {
-                    $jawaban_benar--;
+                if(isset($input->jawaban[$jawaban->nomer])){
+                    if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
+                        $jawaban_benar++;
+                    } else {
+                        $jawaban_benar--;
+                    }
                 }
             }
 
