@@ -91,6 +91,8 @@ class PaketSoalController extends Controller
             })
             ->editColumn('waktu_pengerjaan', function ($item) {
                 return $item->waktu_pengerjaan . ' Menit';
+            })->editColumn('version', function ($item) {
+                return $item->version ? $item->version : '-';
             })
             ->addColumn('action', function ($item) use ($input) {
                 $nm_kelas = [];
@@ -172,6 +174,7 @@ class PaketSoalController extends Controller
             $paket_soal->waktu_mulai = $input->waktu_mulai;
             $paket_soal->waktu_selesai = $input->waktu_selesai;
             $paket_soal->waktu_pengerjaan = $input->waktu_pengerjaan;
+            $paket_soal->version = $input->version;
             $paket_soal->save();
 
             foreach ($input->kelas as $id_kelas) {
@@ -210,6 +213,7 @@ class PaketSoalController extends Controller
             $question_package->waktu_selesai        = $input->waktu_selesai;
             $question_package->waktu_pengerjaan     = $input->waktu_pengerjaan;
             $question_package->status               = 0;
+            $question_package->version               = 1;
             $question_package->created_by           = $input->auth_data->pengguna->id_pengguna;
             $question_package->save();
 
