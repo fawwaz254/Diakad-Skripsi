@@ -4,8 +4,11 @@
             <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/hasil-test') }}">
                 <span>Hasil Test</span>
             </a>
-            <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/pengguna-terkunci') }}">
-                <span>Reset Lock Siswa</span>
+            <a class="btn bg-teal waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/pengguna-terkunci') }}">
+                <span>UnLock Siswa</span>
+            </a>
+            <a class="btn bg-red waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/pengguna-dikunci') }}">
+                <span>Lock Siswa</span>
             </a>
             <br/>
             <br/>

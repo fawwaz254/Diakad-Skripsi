@@ -25,10 +25,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Unlock All <input id="checkbox_select_all" type="checkbox"
-                                                            name="select_all" class="filled-in">
-                                                        <label for="checkbox_select_all"
-                                                            style="margin-bottom: -10px;"></th>
+                                    <th>Lock & Logout</th>
                                     <th>NIS</th>
                                     <th>Nama</th>
                                     <th>Kelas</th>
@@ -36,8 +33,8 @@
                             </thead>
                         </table>
                     </div>
-                    <button id="next_process" disabled class="btn bg-teal waves-effect">
-                        <span>Unlock pengguna yang dicentang</span>
+                    <button id="next_process" disabled class="btn bg-red waves-effect">
+                        <span>Kunci pengguna yang dicentang</span>
                     </button>
                 </div>
             </div>
@@ -47,7 +44,7 @@
 </div>
 <script>
     var modul_url = '{{ Request::segment(2) }}';
-    var action_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengguna-terkunci';
+    var action_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengguna-dikunci';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -97,18 +94,6 @@
         });
     }).draw();
 
-    $(document).ready(function() {
-        $('input[name="select_all"]').change(function() {
-            var select_all_checked = this.checked;
-            var rows = primary_table.rows({
-                'search': 'applied'
-            }).nodes();
-
-            $('input[type="checkbox"]', rows).prop('checked', this.checked);
-            elChangeCheck();
-        });
-    });
-
     function elChangeCheck() {
         if ($('.el_check:checked').length > 0) {
             $('#next_process').removeAttr('disabled', 'disabled');
@@ -138,7 +123,7 @@
                     data_checked.push($(this).val());
                 });
                 $.ajax({
-                    url: action_url + '/unlock',
+                    url: action_url + '/lock',
                     type: 'POST',
                     data: {
                         data_id: data_checked,
