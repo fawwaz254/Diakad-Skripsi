@@ -142,7 +142,7 @@
                                                                             </option>
                                                                         @else
                                                                             <option value="{{ $jawaban->nomer }}"
-                                                                                @if ($jawabanTest[$no_option + 1] == $jawaban->nomer) selected @endif>
+                                                                                @if (isset($jawabanTest[$no_option + 1]) && $jawabanTest[$no_option + 1] == $jawaban->nomer) selected @endif>
                                                                                 {{ $jawaban->nomer }}
                                                                             </option>
                                                                         @endif
@@ -209,11 +209,11 @@
                                                                         </option>
                                                                     @else
                                                                         <option value="1"
-                                                                            @if ($jawabanTest[$no_option + 1] == '1') selected @endif>
+                                                                            @if (isset($jawabanTest[$no_option + 1]) && $jawabanTest[$no_option + 1] == '1') selected @endif>
                                                                             True
                                                                         </option>
                                                                         <option value="0"
-                                                                            @if ($jawabanTest[$no_option + 1] == '0') selected @endif>
+                                                                            @if (isset($jawabanTest[$no_option + 1]) && $jawabanTest[$no_option + 1] == '0') selected @endif>
                                                                             False
                                                                         </option>
                                                                     @endif
