@@ -22,6 +22,9 @@ class NilaiUjianController extends Controller
         $test = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('status', 1)->with('detail_paket_soal', 'paket_soal.kategori_soal', 'jawaban_test');
 
         return Datatables::of($test)
+            ->editColumn('jawaban_test', function ($item) {
+                return $item->jawaban_test->count();
+            })
             ->editColumn('detail_paket_soal', function ($item) {
                 return $item->detail_paket_soal->count();
             })
