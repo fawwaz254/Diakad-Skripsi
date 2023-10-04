@@ -1152,19 +1152,22 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $tahun = $input->tahun;
+        // $tahun = $input->tahun;
         $tgl_awal = $input->tgl_awal;
         $tgl_akhir = $input->tgl_akhir;
-        $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
-        $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
+        // $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
+        // $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
 
         $list_data = Realisasi::with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function ($q) {
             $q->where('tipe_kategori_rapb', 1);
-        })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])
-            ->whereDate('tgl_realisasi', '>=', $tgl_awal)
+        })->
+            // whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])
+            // ->
+            whereDate('tgl_realisasi', '>=', $tgl_awal)
             ->whereDate('tgl_realisasi', '<=', $tgl_akhir)
-            ->isInputByPengguna($auth_data->pengguna->id_pengguna);
+            ->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
+        // dd($list_data);
         return Datatables::of($list_data)
             ->editColumn('tgl_realisasi', function ($item) {
                 return date_format(date_create($item->tgl_realisasi), "d M Y");
