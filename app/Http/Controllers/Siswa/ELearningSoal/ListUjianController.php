@@ -475,12 +475,12 @@ class ListUjianController extends Controller
         //     session([$id_paket_soal => $all_data]);
         // }
 
-        if (session($id_paket_soal)['version'] == $paket_soal->version) {
+        // if (session($id_paket_soal)['version'] == $paket_soal->version) {
             return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
-        } else {
-            session()->forget($id_paket_soal);
-            return redirect('siswa/e-learning-soal/list-ujian');
-        }
+        // } else {
+        //     session()->forget($id_paket_soal);
+        //     return redirect('siswa/e-learning-soal/list-ujian');
+        // }
     }
 
     public function actionEndTest(Request $request)
