@@ -830,7 +830,7 @@ class SoalController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal')->orderBy('created_at', 'DESC')->when($input->status == 0, function ($q) use ($auth_data) {
-            $q->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+            $q->where('soal.id_pengguna', $auth_data->pengguna->id_pengguna);
         });
 
 
