@@ -80,7 +80,8 @@
             // },
             {
                 data: 'detail_paket_soal',
-                name: 'detail_paket_soal'
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'jawaban_test',
