@@ -75,6 +75,7 @@
                                             <th>Mapel</th>
                                             <th>Soal</th>
                                             <th>Pembuat</th>
+                                            <th>Kelas</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -99,6 +100,7 @@
                                             <th>Mapel</th>
                                             <th>Soal</th>
                                             <th>Pembuat</th>
+                                            <th>Kelas</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -119,6 +121,7 @@
                                             <th>Mapel</th>
                                             <th>Soal</th>
                                             <th>Pembuat</th>
+                                            <th>Kelas</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -177,6 +180,19 @@
             },
             {
                 data: 'pengguna.nm_pengguna'
+            },
+            {
+                data: 'kelas',
+                orderable: false,
+                render: function(data) {
+                    let html = '';
+                    data.forEach(element => {
+                        html += '- ' +
+                            element + ` <br>`;
+                    });
+                    return html;
+
+                }
             },
             {
                 data: 'action',
@@ -249,6 +265,19 @@
                 data: 'pengguna.nm_pengguna'
             },
             {
+                data: 'kelas',
+                orderable: false,
+                render: function(data) {
+                    let html = '';
+                    data.forEach(element => {
+                        html += '- ' +
+                            element + ` <br>`;
+                    });
+                    return html;
+
+                }
+            },
+            {
                 data: 'action',
                 name: 'action',
                 searchable: false,
@@ -298,6 +327,19 @@
             },
             {
                 data: 'pengguna.nm_pengguna'
+            },
+            {
+                data: 'kelas',
+                orderable: false,
+                render: function(data) {
+                    let html = '';
+                    data.forEach(element => {
+                        html += '- ' +
+                            element + ` <br>`;
+                    });
+                    return html;
+
+                }
             },
             {
                 data: 'action',
