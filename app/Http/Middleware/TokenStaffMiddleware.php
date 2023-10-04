@@ -22,6 +22,7 @@ use App\Models\WaliMurid;
 use Illuminate\Support\Facades\URL;
 
 use Auth;
+use Carbon\Carbon;
 use Session;
 
 class TokenStaffMiddleware
@@ -36,10 +37,15 @@ class TokenStaffMiddleware
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
+            $pengguna = Auth::user();
+            if(!empty($pengguna->terkunci_hingga) && now()->lt(Carbon::parse($pengguna->terkunci_hingga))){
+                Auth::logout();
+            }
+            
             if (Session::has('auth_data')) {
                 $auth_data = Session::get('auth_data');
             } else {
-                $pengguna = Auth::user();
+
                 $sekolah_data = $pengguna->sekolah;
                 $google_id = Setting::where('key_setting', 'is_google_analytic')->first()->value;
 
