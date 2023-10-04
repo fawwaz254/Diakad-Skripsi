@@ -13,10 +13,10 @@ class DetailPaketSoal extends Model
 
     protected $primaryKey = 'id_detail_paket_soal';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_paket_soal',
         'id_soal',
@@ -26,7 +26,12 @@ class DetailPaketSoal extends Model
     ];
 
     protected $guarded = [];
-    public function soal(){
+    public function soal()
+    {
         return $this->belongsTo('App\Models\Soal', 'id_soal');
+    }
+    public function paket_soal()
+    {
+        return $this->belongsTo(PaketSoal::class, 'id_paket_soal');
     }
 }

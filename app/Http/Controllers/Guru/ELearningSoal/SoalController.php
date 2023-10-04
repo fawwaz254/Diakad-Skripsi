@@ -829,14 +829,26 @@ class SoalController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal')->orderBy('created_at', 'DESC')->when($input->status == 0, function ($q) use ($auth_data) {
+        $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->orderBy('created_at', 'DESC')->when($input->status == 0, function ($q) use ($auth_data) {
             $q->where('soal.id_pengguna', $auth_data->pengguna->id_pengguna);
         });
-
 
         return Datatables::of($list_data)
             ->addColumn('time', function ($item) {
                 return $item->created_at->diffForHumans();
+            })
+            ->addColumn('kelas', function ($item) {
+                $nm_kelas = [];
+                if ($item->detail_paket_soal) {
+                    foreach ($item->detail_paket_soal as $detail_paket_soal) {
+                        if ($detail_paket_soal->paket_soal) {
+                            foreach ($detail_paket_soal->paket_soal->paket_soal_kelas as $paket_soal_kelas) {
+                                $nm_kelas[] = $paket_soal_kelas->kelas->nm_kelas;
+                            }
+                        }
+                    }
+                }
+                return $nm_kelas;
             })
             ->addColumn('action', function ($item) {
                 $data = array(

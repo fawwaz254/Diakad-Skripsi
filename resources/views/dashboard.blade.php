@@ -18,15 +18,31 @@
             var original_title = location.hash;
             var target_url = original_title.replace('#', '');
 
-            if(target_url.includes('e-learning-soal/list-ujian/test')){
+            if (target_url.includes('e-learning-soal/list-ujian/test')) {
                 if (document.visibilityState === 'visible') {
-                    if(localStorage.getItem('blok_user_next')){               
+                    if (localStorage.getItem('blok_user_next')) {
                         // alert('Kamu melakukan pelanggaran dengan membuka tab lain di browser. Hati-hati agar akun tidak terlock');
                         alert('Maaf akun anda akan di lock');
                         window.location.href = `${base_url}/${role_url}/user-locked`;
-                    }else{
-                        localStorage.setItem('blok_user_next', true);
-                        alert('Kamu melakukan pelanggaran dengan membuka tab lain di browser, 1x lagi akun dapat terkena lock');
+                    } else {
+
+                        if (localStorage.getItem('count_blok_user_next')) {
+                            localStorage.setItem('count_blok_user_next', parseInt(localStorage.getItem(
+                                'count_blok_user_next')) + 1);
+                        } else {
+                            localStorage.setItem('count_blok_user_next', 1);
+                        }
+
+                        if (localStorage.getItem('count_blok_user_next') == 5) {
+                            localStorage.setItem('blok_user_next', true);
+                        }
+
+
+                        let sisa = 5 - localStorage.getItem(
+                            'count_blok_user_next');
+                        alert(
+                            `Kamu melakukan pelanggaran dengan membuka tab lain di browser, ${sisa} lagi akun dapat terkena lock`
+                        );
                     }
                 }
             }
