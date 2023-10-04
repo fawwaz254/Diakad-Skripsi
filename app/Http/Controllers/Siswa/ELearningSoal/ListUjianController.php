@@ -465,48 +465,22 @@ class ListUjianController extends Controller
         $allDetailPaketSoal = $all_session['bank_soal'];
         $jawabanTest = session()->has($id_paket_soal . '_jawaban' . $no) ? session($id_paket_soal . '_jawaban' . $no) : null;
         $sisaWaktu =  Carbon::now('Asia/Jakarta')->diffInSeconds($all_session['end_time']);
-        // $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $all_session['start_time']);
-        // $end_date = Carbon::createFromFormat('Y-m-d H:i:s',  $all_session['end_time']);
-        // $waktu = Carbon::now('Asia/Jakarta');
-
-        // if (strtotime($start_date) < strtotime($waktu) && strtotime($end_date) > strtotime($waktu)) {
-        // if ($waktu > $end_date) {
-        //     $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($id_paket_soal)['id_test'])->first();
-        //     if ($test) {
-        //         $test->status = 1;
-        //         $test->save();
-        //         return redirect('siswa/e-learning-soal/list-ujian');
-        //     } else {
 
         $paket_soal = PaketSoal::find($id_paket_soal);
 
-        if(!isset(session($id_paket_soal)['version'])){
-            session()->forget($id_paket_soal);
-            return redirect('siswa/e-learning-soal/list-ujian');
-        }
+        // if(!isset(session($id_paket_soal)['version'])){
+        //     $all_data = session($id_paket_soal);
+        //     $all_data['version'] = $paket_soal->version;
+
+        //     session([$id_paket_soal => $all_data]);
+        // }
 
         if (session($id_paket_soal)['version'] == $paket_soal->version) {
             return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
         } else {
             session()->forget($id_paket_soal);
             return redirect('siswa/e-learning-soal/list-ujian');
-            // return view('siswa/e-learning-soal/list-ujian/view-list-ujian');
-            // return redirect('siswa');
         }
-
-        // }
-        // }
-
-        // } else {
-        //     $input = (object) $request->input();
-        //     $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($id_paket_soal)['id_test'])->first();
-        //     if ($test) {
-        //         $test->status = 1;
-        //         $test->save();
-        //     }
-
-        //     return redirect('siswa/e-learning-soal/list-ujian');
-        // }
     }
 
     public function actionEndTest(Request $request)
