@@ -310,6 +310,26 @@
                                 </div>
                             </div>
 
+                            @if ($item)
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Version :</span>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="number" class="form-control" name="version"
+                                                aria-required="true" aria-invalid="true"
+                                                value="{{ $item->version }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-pink waves-effect" id="btn-submit"
                                     type="submit">Save</button>

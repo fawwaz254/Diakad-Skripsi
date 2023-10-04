@@ -215,6 +215,7 @@ class ListUjianController extends Controller
             $all_data['end_time']   =  $end_time;
             $all_data['id_test']    =  $test->id_test;
             $all_data['point_pilihan_ganda']    =  $point;
+            $all_data['version'] = $soal->version;
 
             session([$id_paket_soal => $all_data]);
             return redirect('siswa/e-learning-soal/list-ujian/test/' . $id_paket_soal . '/1');
@@ -476,7 +477,19 @@ class ListUjianController extends Controller
         //         $test->save();
         //         return redirect('siswa/e-learning-soal/list-ujian');
         //     } else {
-        return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
+
+        $paket_soal = PaketSoal::find($id_paket_soal);
+
+
+        if (session($id_paket_soal)['version'] == $paket_soal->version) {
+            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
+        } else {
+            session()->forget($id_paket_soal);
+            return redirect('siswa/e-learning-soal/list-ujian');
+            // return view('siswa/e-learning-soal/list-ujian/view-list-ujian');
+            // return redirect('siswa');
+        }
+
         // }
         // }
 
