@@ -1,111 +1,107 @@
 <head>
     <title>
-        {{-- Rekap Absen Kelas {{ $data_kelas->nm_kelas }}, Hari {{ $data_kelas->nm_jadwal_hari }},
-        {{ $data_kelas->nm_mata_pelajaran }} ({{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}) --}}
+        {{ $paket_soal->text }}
     </title>
-    <style>
-        table.is-bordered,
-        table.is-bordered th,
-        table.is-bordered td {
-            border: 1px solid black;
-            border-spacing: 0;
-        }
 
-        table.is-bordered th,
-        table.is-bordered td {
-            padding: 0.5em;
-        }
-
-        table.is-bordered th,
-        .is-center {
-            text-align: center;
-            vertical-align: middle !important;
-        }
-
-        table th.is-left,
-        table td.is-left {
-            text-align: left;
-        }
-    </style>
-    <style type="text/css" media="print">
-        @page {
-            size: landscape;
-        }
-    </style>
 </head>
 
 <body>
-    <h2 style="text-align: center; text-transform: capitalize;">
-        {{-- REKAP ABSEN GURU {{ strtoupper($bulan->nm_bulan) }} {{ $tahun }} --}}
-    </h2>
-    <h3 style="text-align: center">
-        {{-- {{ $pengguna->gelar_depan . ' ' . $pengguna->nm_pengguna . ', ' . $pengguna->gelar_belakang }} --}}
-    </h3>
-    <br>
-    <br>
-    <table class="is-bordered">
-        <thead>
-            <tr>
-                <th rowspan="2">No.</th>
-                <th rowspan="2">Nama</th>
-                <th rowspan="2">Total Presensi</th>
-                {{-- <th colspan="{{ $dates->count() }}">Tanggal</th> --}}
-            </tr>
-            <tr>
-                {{-- @foreach ($dates as $date)
-                    <th>
-                        {{ substr(\Carbon\Carbon::create($date)->isoFormat('dddd'), 0, 3) }}
-                        <br>
-                        {{ $date->format('d') }}
-                    </th>
-                @endforeach --}}
-            </tr>
-        </thead>
-        <tbody>
-            {{-- @foreach ($data_guru as $guru)
-                <tr>
-                    <td class="text-center">{{ $loop->iteration }}</td>
-                    <td>{{ $guru->nm_pengguna }}</td>
-                    <td style="text-align: center">
-                        {{ $data_presensi->where('id_pengguna', $guru->id_pengguna)->count() }}
-                    </td>
-                    @foreach ($dates as $date)
-                        @php
-                            $all_presensi = $data_presensi
-                                ->where('tgl_presensi', $date->format('Y-m-d'))
-                                ->where('id_pengguna', $guru->id_pengguna)
-                                ->all();
-                        @endphp
-                        @if ($auth_data->sekolah_data->nm_sekolah == 'SMK YPM 3 Taman')
-                            @if (count($all_presensi) > 0)
-                                <td style="background: #91d18b; text-align:center;">
-                                    <b><a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/monitoring-presensi-guru/' . $date->format('d') . '/' . $bulan->id_bulan . '/' . $tahun . '/' . $guru->id_pengguna) }}"
-                                            class="target-link">{{ count($all_presensi) }}x</a></b>
-                                </td>
-                            @elseif($date->format('l') == 'Saturday' || $date->format('l') == 'Sunday')
-                                <td style="background: #ffffff; text-align:center;">
-                                    <b><a class="target-link">Libur</a></b>
-                                </td>
-                            @else
-                                <td></td>
-                            @endif
-                        @else
-                            @if (count($all_presensi) > 0)
-                                <td style="background: #91d18b; text-align:center;">
-                                    <b><a class="target-link">{{ count($all_presensi) }}x</a></b>
-                                </td>
-                            @elseif($date->format('l') == 'Sunday')
-                                <td style="background: #ffffff; text-align:center;">
-                                    <b><a class="target-link">Libur</a></b>
-                                </td>
-                            @else
-                                <td></td>
-                            @endif
-                        @endif
-                    @endforeach
-                </tr>
-            @endforeach --}}
-        </tbody>
+    <table width="100%" style="margin-top: 30px;">
+        <tr>
+            <td width="20%" style="text-align: center;">
+                <img id="logo"
+                    src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
+                    height="100">
+            </td>
+            <td width="40%" style="text-align: center;">
+                <h3>BERITA ACARA<br>
+                    PENYELENGGARA STS DAN PHB<br>
+                    TAHUN AJARAN {{ $semester_aktif->tahun_ajaran }}
+                </h3>
+            </td>
+            <td width="20%"></td>
+        </tr>
+    </table>
+
+    <table width="100%" style="margin-top: 15px; ">
+        <tr>
+            <td style="text-align: center;">Pada hari ini <b>{{ $time->locale('id')->dayName }}</b> tanggal
+                <b>{{ $time->format('d') }}</b> bulan
+                <b>{{ $time->locale('id')->monthName }}</b> tahun
+                <b>{{ $time->format('Y') }}</b>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center">Telah diselenggarakan PAS dari pukul
+                <b>{{ \Carbon\Carbon::parse($paket_soal->waktu_mulai)->format('H:i') }}</b> sampai
+                dengan pukul <b>{{ \Carbon\Carbon::parse($paket_soal->waktu_selesai)->format('H:i') }}
+            </td>
+        </tr>
+    </table>
+
+    <table width="100%" style="margin-top: 15px; margin-left: 50px; margin-right: 50px;">
+        <tr>
+            <td width="30%">Pada Sekolah</td>
+            <td>{{ ':  ' . $auth_data->sekolah_data->nm_sekolah }}</td>
+        </tr>
+        <tr>
+            <td width="30%">Ruang</td>
+            <td>{{ ':  ' }}</td>
+        </tr>
+        <tr>
+            <td width="30%">Kelas</td>
+            <td>{{ ':  ' . $kelas }}</td>
+        </tr>
+        <tr>
+            <td width="30%">Mata Pelajaran</td>
+            <td>{{ ':  ' . $paket_soal->kategori_soal->nm_kategori_soal }}</td>
+        </tr>
+        <tr>
+            <td width="30%">Jumlah Peserta Seharusnya</td>
+            <td>{{ ':  ' . $siswa_seharusnya . ' Orang' }}</td>
+        </tr>
+        <tr>
+            <td width="30%">Jumlah Peserta yang Tidak Hadir</td>
+            <td>{{ ':  ' . $siswa_tidak_masuk . ' Orang' }}</td>
+        </tr>
+        <tr>
+            <td width="30%">Jumlah Peserta yang Hadir</td>
+            <td>{{ ':  ' . $paket_soal->test->count() . ' Orang' }}</td>
+        </tr>
+    </table>
+
+    <table width="70%" style="margin-top: 15px; margin-left: 50px; margin-right: 50px;">
+        <tr>
+            <td>Catatan selama pelaksanaan Ujian *)</td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px dotted #000"> <br></td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px dotted #000"><br> </td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px dotted #000"><br> </td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px dotted #000"><br> </td>
+        </tr>
+        <tr>
+
+            <td>
+                <br>Berita acara ini dibuat dengan sesungguhnya.
+            </td>
+        </tr>
+    </table>
+    <table width="100%" style="margin-top: 45px; ">
+        <tr>
+            <td width="70%"></td>
+            <td width="30%">Yang membuat berita acara <br>Pengawas
+                <br><br><br><br><br><br>
+                (____________________)
+            </td>
+
+        </tr>
     </table>
 </body>
 <script>
