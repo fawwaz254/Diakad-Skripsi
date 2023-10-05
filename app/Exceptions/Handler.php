@@ -53,7 +53,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        return response()->view('errors.custom-handler', array('exception' => $this));
-        // return parent::render($request, $exception);
+        if(env('APP_ENV', 'local') == 'local'){
+            return parent::render($request, $exception);
+        }else{
+            return response()->view('errors.custom-handler', array('exception' => $this));
+        }
     }
 }

@@ -1,17 +1,20 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/hasil-test') }}">
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/hasil-test') }}">
                 <span>Hasil Test</span>
             </a>
-            <a class="btn bg-teal waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/pengguna-terkunci') }}">
+            <a class="btn bg-teal waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/pengguna-terkunci') }}">
                 <span>UnLock Siswa</span>
             </a>
-            <a class="btn bg-red waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/pengguna-dikunci') }}">
+            <a class="btn bg-red waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/pengguna-dikunci') }}">
                 <span>Lock Siswa</span>
             </a>
-            <br/>
-            <br/>
+            <br />
+            <br />
             <div class="card">
                 <div class="header">
                     <h2>
@@ -49,7 +52,7 @@
     var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/table';
     var detail_url = role_url + '#' + modul_url + '/' + 'hasil-test';
-    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/print/skpi';
+    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/print';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -89,7 +92,8 @@
                 searchable: false,
                 orderable: true,
                 render: function(data, type, row) {
-                    return moment(data).format('dddd, DD MMM YYYY HH:mm') + ' - ' + moment(row.waktu_selesai).format('HH:mm');
+                    return moment(data).format('dddd, DD MMM YYYY HH:mm') + ' - ' + moment(row
+                        .waktu_selesai).format('HH:mm');
                 }
             },
             {
