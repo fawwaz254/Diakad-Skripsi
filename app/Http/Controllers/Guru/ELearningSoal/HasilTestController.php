@@ -37,7 +37,7 @@ class HasilTestController extends Controller
             ->addColumn('total_siswa', function ($item) {
                 $total = 0;
                 foreach ($item->paket_soal_kelas as $kelas) {
-                    if(!empty($kelas->kelas)){
+                    if (!empty($kelas->kelas)) {
                         $total += $kelas->kelas->siswa->count();
                     }
                 }
@@ -49,7 +49,7 @@ class HasilTestController extends Controller
             ->addColumn('action', function ($item) {
                 $nm_kelas = [];
                 foreach ($item->paket_soal_kelas as $key => $kelas) {
-                    if(!empty($kelas->kelas)){
+                    if (!empty($kelas->kelas)) {
                         $nm_kelas[$key] = $kelas->kelas->nm_kelas;
                     }
                 }
@@ -171,8 +171,9 @@ class HasilTestController extends Controller
             ->make(true);
     }
 
-    public function actionDeleteTest(Request $request, $id){
-        if($test = Test::find($id)){
+    public function actionDeleteTest(Request $request, $id)
+    {
+        if ($test = Test::find($id)) {
             JawabanTest::where('id_test', $test->id_test)->delete();
             $test->delete();
 
@@ -180,11 +181,18 @@ class HasilTestController extends Controller
                 'status' => 203, // SUCCESS AND LOAD TABLE
                 'message' => 'Delete Hasil Test Successfully'
             ];
-        }else{
+        } else {
             return [
                 'status' => 300, // SUCCESS AND LOAD TABLE
                 'message' => 'Delete Failed'
             ];
         }
+    }
+
+    public function printHasilTest(Request $request, $id)
+    {
+        // dd($id);
+        // return $id;
+        return view('guru/e-learning-soal/hasil-test/print-hasil-test', compact('id'));
     }
 }
