@@ -226,6 +226,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('detail/{id}', [HasilTestController::class, 'indexDetail']);
                 Route::post('detail/table/{id}', [HasilTestController::class, 'detailList']);
                 Route::post('delete/{id}', [HasilTestController::class, 'actionDeleteTest']);
+                Route::get('print/{id}', [HasilTestController::class, 'printHasilTest']);
             });
 
             Route::prefix('pengguna-terkunci')->group(function () {
