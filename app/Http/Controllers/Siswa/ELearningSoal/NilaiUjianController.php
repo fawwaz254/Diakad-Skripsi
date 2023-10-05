@@ -19,7 +19,7 @@ class NilaiUjianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $test = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('status', 1)->with('detail_paket_soal', 'paket_soal.kategori_soal', 'jawaban_test');
+        $test = Test::where('test.id_pengguna', $auth_data->pengguna->id_pengguna)->where('status', 1)->with('detail_paket_soal', 'paket_soal.kategori_soal', 'jawaban_test');
 
         return Datatables::of($test)
             ->editColumn('jawaban_test', function ($item) {
