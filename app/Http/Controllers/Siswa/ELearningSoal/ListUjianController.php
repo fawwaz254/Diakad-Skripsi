@@ -443,7 +443,7 @@ class ListUjianController extends Controller
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
 
-            session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban]);
+            session([$input->paket_soal . '_jawaban' . $input->no => $jawaban]);
         }
 
         ElearningAnswer::dispatch($test_answer);

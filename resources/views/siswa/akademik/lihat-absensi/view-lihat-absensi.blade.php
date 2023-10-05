@@ -75,7 +75,7 @@
                                     <tr>
 
                                         <td>{{$date->format('d')}}</td>
-                                        <td>{{$date->format('l')}}</td>
+                                        <td>{{$date->translatedFormat('l')}}</td>
 
                                         @php
 
