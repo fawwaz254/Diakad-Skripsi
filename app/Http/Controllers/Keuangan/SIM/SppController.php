@@ -871,7 +871,7 @@ class SppController extends BaseController
                     });
                 })
                 ->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
-                ->get();
+                ->orderBy('nis_siswa')->get();
 
             //semester lain
             // $list_id_semester_lalu = $semester->where('thn_akademik_semester', '<', $tahun_akademik_semester)->pluck('id_semester')->toArray();
