@@ -120,11 +120,11 @@ class PaketSoalController extends Controller
         $list_question_selected = $question_package_details->pluck('id_soal');
         $paket_soal = PaketSoal::find($question_package_id);
         if ($tipe == 1) {
-            $list_data = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereNotIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
+            $list_data = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereNotIn('id_soal', $list_question_selected)->orderBy('soal.created_at', 'desc');
         } else if ($tipe == 0) {
-            $list_data = Soal::where('id_kategori_soal', '!=', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereNotIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
+            $list_data = Soal::where('id_kategori_soal', '!=', $paket_soal->id_kategori_soal)->with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereNotIn('id_soal', $list_question_selected)->orderBy('soal.created_at', 'desc');
         } else {
-            $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereIn('id_soal', $list_question_selected)->orderBy('created_at', 'desc');
+            $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->whereIn('id_soal', $list_question_selected)->orderBy('soal.created_at', 'desc');
         }
 
         // $id_pengguna = $input->auth_data->pengguna->id_pengguna;
