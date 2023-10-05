@@ -178,9 +178,11 @@ class SoalController extends Controller
             } else if ($item->id_tipe_soal == 5) {
                 return view('guru/e-learning-soal/soal/edit-soal-simple-essay2', compact('item', 'kategori'));
             } else if ($item->id_tipe_soal == 6) {
-                return view('guru/e-learning-soal/soal/add-soal-match2', compact('item', 'kategori'));
+                $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
+                return view('guru/e-learning-soal/soal/edit-soal-match2', compact('item', 'question_options', 'kategori'));
             } else if ($item->id_tipe_soal == 7) {
-                return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('item', 'kategori'));
+                $question_options = PilihanPertanyaan::where('id_soal', $item->id_soal)->orderBy('nomer')->get();
+                return view('guru/e-learning-soal/soal/edit-soal-true-false2', compact('item', 'question_options', 'kategori'));
             }
         }
     }
@@ -256,6 +258,13 @@ class SoalController extends Controller
                 $question->alternatif_jawaban3 = $input->jawaban[3];
                 $question->alternatif_jawaban4 = $input->jawaban[4];
                 $question->alternatif_jawaban5 = $input->jawaban[5];
+            } else if ($input->id_tipe_soal == 7) {
+                foreach ($input->pertanyaan as $no_pertanyaan => $pertanyaan) {
+                    $question_option = PilihanPertanyaan::find($input->id_pilihan_pertanyaan[$no_pertanyaan]);
+                    $question_option->text = $pertanyaan;
+                    $question_option->jawaban = $input->noJawaban[$no_pertanyaan];
+                    $question_option->save();
+                }
             }
             $question->save();
             return [
