@@ -4,20 +4,6 @@
             <i class="material-icons">keyboard_backspace</i>
             <span>Kembali</span>
         </a>
-        {{-- <button type="button" id="add" class="btn bg-green waves-effect">
-            <i class="material-icons">add_box</i>
-            <span>Tambah Jumlah Soal</span>
-        </button>
-        <button type="button" id="remove" class="btn bg-red waves-effect">
-            <i class="material-icons">indeterminate_check_box</i>
-            <span>Hapus Jumlah Soal</span>
-        </button>
-        <input type="text" name="jumlah" style="padding:7px; background-color:white;border: 1px solid black;"
-            value="Jumlah Soal = 1" disabled>
-        <span style="background-color: white;padding:7px;border: 1px solid black;">
-            <input type="checkbox" id="wuswug" class="checkbox">
-            <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
-        </span> --}}
         <span style="background-color: white;padding:7px;border: 1px solid black;">
             <input type="checkbox" id="wuswug" class="checkbox">
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>

@@ -20,7 +20,7 @@
                         <h2 class="card-inside-title">Penjelasan</h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea id="soal" class="form-control soal" required="" name="soal" rows="3">{{$item->content}}</textarea>
+                                <textarea id="soal" class="form-control is-editor" required="" name="soal" rows="3">{{$item->content}}</textarea>
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -33,7 +33,7 @@
                                     <div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                         <h2 class="card-inside-title">Pertanyaan {{$no}}</h2>
                                         <input type="hidden" name="id_pilihan_pertanyaan[]" value="{{ $question_option->id_pilihan_pertanyaan }}">
-                                        <textarea class="form-control" required="" id="inputPertanyaan1" name="pertanyaan[]" rows="3">{{$question_option->text}}</textarea>
+                                        <textarea class="form-control is-editor" required="" id="inputPertanyaan1" name="pertanyaan[]" rows="3">{{$question_option->text}}</textarea>
                                         <h2 class="card-inside-title">Jawaban</h2>
                                         <select class="form-control show-tick" id="noJawaban1" name="noJawaban[]"
                                             required="">
@@ -62,6 +62,17 @@
         </div>
     </div>
 </div>
-
-
 @include('scriptjs')
+
+<script src="{{ asset('plugins/ckeditor/ckeditor.js') }}"></script>
+<script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
+<script>
+    var options = {
+        filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+        filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+        filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+        filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
+    };
+
+    CKEDITOR.replaceAll( 'is-editor', options );
+</script>
