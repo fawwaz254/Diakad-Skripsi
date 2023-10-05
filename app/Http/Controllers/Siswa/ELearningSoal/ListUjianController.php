@@ -43,7 +43,7 @@ class ListUjianController extends Controller
             return
                 $q->whereNotNull('content');
         }])->whereHas('paket_soal_kelas', function ($query) use ($id_kelas, $siswa) {
-            if($siswa->nis_siswa != '10001'){
+            if ($siswa->nis_siswa != '10001') {
                 $query->where('id_kelas', '=', $id_kelas);
             }
         });
@@ -290,7 +290,7 @@ class ListUjianController extends Controller
         } elseif ($input->id_tipe_soal == 4) {
             $jawaban_benar = 0;
             $jawaban = [];
-            if(isset($input->question_option)){
+            if (isset($input->question_option)) {
                 foreach ($input->question_option as $question_option) {
                     $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_soal']->where('id_pilihan_soal', $question_option)->first();
                     if ($pilihan_jawaban->correct == 1) {
@@ -300,7 +300,7 @@ class ListUjianController extends Controller
                     }
                     $jawaban[] = $question_option;
                 }
-    
+
                 if ($jawaban_benar < 0) {
                     $jawaban_benar = 0;
                 }
@@ -369,7 +369,7 @@ class ListUjianController extends Controller
             $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_pertanyaan'];
 
             foreach ($pilihan_jawaban as $jawaban) {
-                if(isset($input->jawaban[$jawaban->nomer])){
+                if (isset($input->jawaban[$jawaban->nomer])) {
                     if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
                         $jawaban_benar++;
                     } else {
@@ -403,13 +403,13 @@ class ListUjianController extends Controller
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
 
-            session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban]);
+            session([$input->paket_soal . '_jawaban' . $input->no => isset($input->jawaban) ? $input->jawaban : null]);
         } elseif ($input->id_tipe_soal == 7) {
             $jawaban_benar = 0;
             $jawaban = [];
             $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_pertanyaan'];
             foreach ($pilihan_jawaban as $jawaban) {
-                if(isset($input->jawaban[$jawaban->nomer])){
+                if (isset($input->jawaban[$jawaban->nomer])) {
                     if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
                         $jawaban_benar++;
                     } else {
@@ -442,8 +442,7 @@ class ListUjianController extends Controller
                 'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
-
-            session([$input->paket_soal . '_jawaban' . $input->no => $jawaban]);
+            session([$input->paket_soal . '_jawaban' . $input->no => isset($input->jawaban) ? $input->jawaban : null]);
         }
 
         ElearningAnswer::dispatch($test_answer);
@@ -478,7 +477,7 @@ class ListUjianController extends Controller
         // }
 
         // if (session($id_paket_soal)['version'] == $paket_soal->version) {
-            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
+        return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('detailPaketSoal', 'no', 'sisaWaktu', 'jawabanTest', 'allDetailPaketSoal',));
         // } else {
         //     session()->forget($id_paket_soal);
         //     return redirect('siswa/e-learning-soal/list-ujian');
