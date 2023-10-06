@@ -69,10 +69,7 @@ class SendAttendanceNotififcationByClass extends Command
             $mode = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->value('value');
 
             if ($mode === 'PRESENT_ONLY' || $mode === 'ALL') {
-                $list_presensi_pengguna_group = PresensiPengguna::with('pengguna.siswa.wali_murid', 'pengguna.siswa.kelas')
-                    ->whereHas('pengguna.siswa.wali_murid', function ($q) {
-                        $q->whereNotNull('nomor_hp_wali_murid');
-                    })
+                $list_presensi_pengguna_group = PresensiPengguna::with('pengguna.siswa.kelas')
                     ->where('status_join_table', 3)
                     ->where('date', $now)
                     ->get()
@@ -102,8 +99,8 @@ class SendAttendanceNotififcationByClass extends Command
 
                     $response_data = $response->json();
 
-                    if ($response_data['response'] == 'Device Bot Logged Out') {
-                        \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                    if ($response_data['response'] == 'Device is logged out') {
+                        \Log::info("Notification Warning: Failed to send notification, device is logged out");
                     } else {
                         $notif_kehadiran = new WaNotifKehadiranSiswa();
                         $notif_kehadiran->id_notif = strtotime($now) . uniqid();
@@ -113,7 +110,7 @@ class SendAttendanceNotififcationByClass extends Command
                         \Log::info("Notification Success: Notification attendance sent at " . now());
                     }
 
-                    sleep(rand(5, 20));
+                    sleep(rand(10, 25));
                 }
             }
 
@@ -126,7 +123,6 @@ class SendAttendanceNotififcationByClass extends Command
                 $list_siswa_group = Siswa::with([
                     'kelas',
                     'pengguna.presensi_pengguna',
-                    'wali_murid',
                     'pengguna.shiftPengguna' => function ($q) use ($now) {
                         $q->where('date', $now)->with('shift_master');
                     }
@@ -136,9 +132,6 @@ class SendAttendanceNotififcationByClass extends Command
                     })
                     ->whereHas('pengguna.status_pengguna', function ($q) {
                         $q->where('aktif_status_pengguna', 1)->where('nm_status_pengguna', 'AKTIF');
-                    })
-                    ->whereHas('wali_murid', function ($q) {
-                        $q->whereNotNull('nomor_hp_wali_murid');
                     })
                     ->whereNotNull('id_kelas')
                     ->get()
@@ -168,8 +161,8 @@ class SendAttendanceNotififcationByClass extends Command
 
                     $response_data = $response->json();
 
-                    if ($response_data['response'] == 'Device Bot Logged Out') {
-                        \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                    if ($response_data['response'] == 'Device is logged out') {
+                        \Log::info("Notification Warning: Failed to send notification, device is logged out");
                     } else {
                         $notif_kehadiran = new WaNotifKehadiranSiswa();
                         $notif_kehadiran->id_notif = strtotime($now) . uniqid();
@@ -179,7 +172,7 @@ class SendAttendanceNotififcationByClass extends Command
                         \Log::info("Notification Success: Notification attendance sent at " . now());
                     }
 
-                    sleep(rand(5, 20));
+                    sleep(rand(5, 25));
                 }
             }
         } catch (\Exception $e) {

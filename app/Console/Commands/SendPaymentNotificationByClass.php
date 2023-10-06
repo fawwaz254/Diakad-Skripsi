@@ -52,7 +52,7 @@ class SendPaymentNotificationByClass extends Command
             $kelas[$nm_kelas] = $id_group;
         }
 
-        $list_tagihan_biaya = TagihanBiaya::selectRaw('tagihan_biaya.id_tagihan_biaya, tagihan_biaya.id_siswa, tagihan_biaya.besar_pembayaran, tagihan_biaya.tgl_pelunasan, tagihan_biaya.notification_sent, pengguna.nm_pengguna, wali_murid.nomor_hp_wali_murid, CONCAT("SPP ", bulan.nm_bulan) as bulan_pembayaran')
+        $list_tagihan_biaya = TagihanBiaya::selectRaw('tagihan_biaya.id_tagihan_biaya, tagihan_biaya.id_siswa, tagihan_biaya.besar_pembayaran, tagihan_biaya.tgl_pelunasan, tagihan_biaya.notification_sent, pengguna.nm_pengguna, CONCAT("SPP ", bulan.nm_bulan) as bulan_pembayaran')
             ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
             ->join('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
             ->leftJoin('pembayaran_biaya', function ($q) {
@@ -62,9 +62,7 @@ class SendPaymentNotificationByClass extends Command
             ->join('siswa', 'siswa.id_siswa', '=', 'tagihan_biaya.id_siswa')
             ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-            ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
             ->whereDate('pembayaran_biaya.tgl_pembayaran', $now)
-            ->whereNotNull('nomor_hp_wali_murid')
             ->where('detail_biaya.id_jenis_detail_biaya', 4)
             ->where('tagihan_biaya.is_tagih', 0)
             ->where('tagihan_biaya.notification_sent', 0)
@@ -134,7 +132,7 @@ class SendPaymentNotificationByClass extends Command
                     \Log::info("Notification Success: Notification attendance sent at " . now());
                 }
 
-                sleep(rand(5, 20));
+                sleep(rand(10, 20));
             }
 
             if (!empty($tagihan_to_update)) {

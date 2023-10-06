@@ -1,22 +1,34 @@
 <?php
 
+use Carbon\Carbon;
+use App\Models\Kelas;
+use App\Models\Siswa;
+use App\Models\Sekolah;
+use App\Models\Setting;
+use App\Models\Pengguna;
+use App\Models\TagihanBiaya;
+use App\Models\WhatsappGroup;
+use App\Models\PresensiPengguna;
+use App\Models\ManajemenHariLibur;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use App\Models\WaNotifKehadiranSiswa;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\FeaturemenuController;
 use App\Http\Controllers\Administrator\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Administrator\Device\FingerprintController;
-use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\GuruController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\SiswaController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\TendikController;
+use App\Http\Controllers\Administrator\Notification\NotificationController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\PencarianController;
+use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JurnalPimpinanController;
 use App\Http\Controllers\Administrator\ManajemenMenu\SettingDashboardController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController;
-use App\Http\Controllers\administrator\Notification\NotificationController;
-use App\Http\Controllers\FeaturemenuController;
-use App\Models\Pengguna;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
@@ -32,6 +44,152 @@ Route::middleware(['token_staff'])->group(function () {
                 return 'fail';
             }
         });
+
+        Route::get('/test', function () {
+            try {
+                $url = env('WHATSAPP_API_SEND');
+                if (empty($url)) {
+                    return;
+                }
+
+                $now = '2023-08-18';
+                $hari_libur = ManajemenHariLibur::where('date', $now)->exists();
+
+                if ($hari_libur) {
+                    return;
+                }
+
+                $list_kelas = Kelas::has('whatsapp_group')->with('whatsapp_group')->get();
+                $kelas = [];
+                foreach ($list_kelas as $item) {
+                    $nm_kelas = $item->nm_kelas;
+                    $id_group = $item->whatsapp_group->id_group;
+                    $kelas[$nm_kelas] = $id_group;
+                }
+
+                $nama_sekolah = Sekolah::value('nm_sekolah');
+                $mode = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->value('value');
+
+                if ($mode === 'PRESENT_ONLY' || $mode === 'ALL') {
+                    $list_presensi_pengguna_group = PresensiPengguna::with('pengguna.siswa.wali_murid', 'pengguna.siswa.kelas')
+                        ->whereHas('pengguna.siswa.wali_murid', function ($q) {
+                            $q->whereNotNull('nomor_hp_wali_murid');
+                        })
+                        ->where('status_join_table', 3)
+                        ->where('date', $now)
+                        ->get()
+                        ->groupBy('pengguna.siswa.kelas.nm_kelas');
+
+                    foreach ($list_presensi_pengguna_group as $key => $list_presensi_pengguna) {
+                        if (!isset($kelas[$key])) {
+                            continue;
+                        }
+
+                        $siswa_kelas = [];
+                        foreach ($list_presensi_pengguna as $presensi_pengguna) {
+                            $siswa_kelas[] = $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
+                        };
+
+                        $message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
+                        $message = "*Notifikasi Kehadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan kehadiran putra/putri Anda di sekolah hari ini, " . now()->translatedFormat('l, d F Y') . "\n\n\n" . $message;
+                        $message .= "\n\n\nJika Anda memiliki pertanyaan terkait kesiswaan atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Kesiswaan " . $nama_sekolah . "*";
+
+                        $data = [
+                            'message' => $message,
+                            'group_id' => $kelas[$key],
+                        ];
+
+                        $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                            ->post($url, $data);
+
+                        $response_data = $response->json();
+
+                        if ($response_data['response'] == 'Device Bot Logged Out') {
+                            \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                        } else {
+                            $notif_kehadiran = new WaNotifKehadiranSiswa();
+                            $notif_kehadiran->id_notif = strtotime($now) . uniqid();
+                            $notif_kehadiran->id_siswa = $presensi_pengguna->pengguna->siswa->id_siswa;
+                            // $notif_kehadiran->save();
+
+                            \Log::info("Notification Success: Notification attendance sent at " . now());
+                        }
+
+                        sleep(rand(5, 20));
+                    }
+                }
+
+                if ($mode === 'ABSENT_ONLY' || $mode === 'ALL') {
+                    $id_pengguna_hadir = PresensiPengguna::where('status_join_table', 3)
+                        ->where('date', $now)
+                        ->pluck('id_pengguna')
+                        ->toArray();
+
+                    $list_siswa_group = Siswa::with([
+                        'kelas',
+                        'pengguna.presensi_pengguna',
+                        'wali_murid',
+                        'pengguna.shiftPengguna' => function ($q) use ($now) {
+                            $q->where('date', $now)->with('shift_master');
+                        }
+                    ])
+                        ->whereHas('pengguna', function ($q) use ($id_pengguna_hadir) {
+                            $q->where('status_join_table', 3)->whereNotIn('pengguna.id_pengguna', $id_pengguna_hadir);
+                        })
+                        ->whereHas('pengguna.status_pengguna', function ($q) {
+                            $q->where('aktif_status_pengguna', 1)->where('nm_status_pengguna', 'AKTIF');
+                        })
+                        ->whereHas('wali_murid', function ($q) {
+                            $q->whereNotNull('nomor_hp_wali_murid');
+                        })
+                        ->whereNotNull('id_kelas')
+                        ->get()
+                        ->groupBy('kelas.nm_kelas');
+
+                    foreach ($list_siswa_group as $key => $list_siswa) {
+                        if (!isset($kelas[$key])) {
+                            continue;
+                        }
+
+                        $siswa_kelas = [];
+                        foreach ($list_siswa as $siswa) {
+                            $siswa_kelas[] = $siswa->pengguna->nm_pengguna;
+                        };
+
+                        $message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
+                        $message = "*Notifikasi Ketidakhadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami dengan berat hati memberitahukan ketidakhadiran putra/putri Anda di sekolah hari ini, " . now()->translatedFormat('l, d F Y') . "\n\n\n" . $message;
+                        $message .= "\n\n\nJika Anda memiliki pertanyaan terkait kesiswaan atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Kesiswaan " . $nama_sekolah . "*";
+
+                        $data = [
+                            'message' => $message,
+                            'group_id' => $kelas[$key],
+                        ];
+
+                        $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                            ->post($url, $data);
+
+                        $response_data = $response->json();
+
+                        if ($response_data['response'] == 'Device Bot Logged Out') {
+                            \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                        } else {
+                            $notif_kehadiran = new WaNotifKehadiranSiswa();
+                            $notif_kehadiran->id_notif = strtotime($now) . uniqid();
+                            $notif_kehadiran->id_siswa = $siswa->id_siswa;
+                            // $notif_kehadiran->save();
+
+                            \Log::info("Notification Success: Notification attendance sent at " . now());
+                        }
+
+                        sleep(rand(5, 20));
+                    }
+                }
+            } catch (\Exception $e) {
+                \Log::info("Notification Error: " . $e->getMessage());
+            }
+        });
+
+
 
         Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
         Route::get('/report-wali-kelas', [ReportController::class, 'viewReportWaliKelas'])->name('report.walikelas');
