@@ -27,13 +27,14 @@
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
                                 <div id="pertanyan">
                                     @php
+                                        $x = 1;
                                         $no = 1;
                                     @endphp
                                     @foreach($data_pilihan_pertanyaan as $pilihan_pertanyaan)
                                     <div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                         <h2 class="card-inside-title">Pertanyaan {{$no}}</h2>
                                         <input type="hidden" name="id_pilihan_pertanyaan[]" value="{{$pilihan_pertanyaan->id_pilihan_pertanyaan}}" />
-                                        <textarea class="form-control is-editor" required="" name="pertanyaan_text[]" rows="3">{!! $pilihan_pertanyaan->text !!}</textarea>
+                                        <textarea id="q{{$x}}" class="q{{$x}} form-control is-editor" required="" name="pertanyaan_text[]" rows="3">{!! $pilihan_pertanyaan->text !!}</textarea>
                                         <h2 class="card-inside-title">No Jawaban</h2>
                                         <input type="number" class="form-control" required="" name="pertanyaan_jawaban[]" value="{{$pilihan_pertanyaan->jawaban}}" />
                                     </div>
@@ -41,6 +42,7 @@
                                     <br />
                                     @php
                                         $no++;
+                                        $x++;
                                     @endphp
                                     @endforeach
                                 </div>
@@ -55,12 +57,13 @@
                                     <div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                         <h2 class="card-inside-title">Jawaban {{$no}}</h2>
                                         <input type="hidden" name="id_pilihan_jawaban[]" value="{{$pilihan_jawaban->id_pilihan_jawaban}}" />
-                                        <textarea class="form-control is-editor" required="" name="jawaban_text[]" rows="3">{!! $pilihan_jawaban->text !!}</textarea>
+                                        <textarea id="q{{$x}}" class="q{{$x}} form-control is-editor" required="" name="jawaban_text[]" rows="3">{!! $pilihan_jawaban->text !!}</textarea>
                                     </div>
                                     <br />
                                     <br />
                                     @php
                                         $no++;
+                                        $x++;
                                     @endphp
                                     @endforeach
                                 </div>
@@ -80,13 +83,9 @@
 </div>
 
 
-@include('scriptjs')
 <script src="{{ asset('plugins/ckeditor/ckeditor.js') }}"></script>
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 <script>
-    var jumlah = 1;
-    var jawaban = 1;
-    var pertanyaan = 1;
     var options = {
         filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
         filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
@@ -94,5 +93,75 @@
         filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
     };
 
-    CKEDITOR.replaceAll( 'is-editor', options );
+    for (var i = 1; i < {{$x}}; i++) {
+        id = 'q' + i;
+        var editor = CKEDITOR.replace(id, options);
+        
+    }
+</script>
+
+<script>
+    var primary_table = null;
+    $('#form-validation').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+            'gender': {
+                required: true
+            }
+        },
+        highlight: function(input) {
+            $(input).parents('.form-group').addClass('error');
+        },
+        unhighlight: function(input) {
+            $(input).parents('.form-group').removeClass('error');
+        },
+        errorPlacement: function(error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            for (var i = 1; i < {{$x}}; i++) {
+                id = 'q' + i;
+                CKEDITOR.instances[id].destroy();
+            }
+            
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                processData: false,  // Important!
+                contentType: false,
+                cache: false,
+                url: form.action,
+                type: form.method,
+                data: new FormData($(form)[0]),
+                success: function(response) {
+                    if (response.status == 200) {
+                        vex.dialog.alert(response.message);
+                    } else if (response.status == 201) {
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    } else if (response.status == 202) {
+                        vex.dialog.alert(response.message);
+                        setTimeout(() => {
+                            loadURI(response.path);
+                        }, 2000);
+                    } else if (response.status == 203) {
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    } else if (response.status == 204) {
+                        loadURI(response.path);
+                    } else if (response.status == 205) {
+                        $('#modalMaster').modal('hide');
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    } else if (response.status == 300) {
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled');
+                }
+            });
+        }
+    });
 </script>

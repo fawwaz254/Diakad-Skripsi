@@ -25,9 +25,9 @@
                                     <th>No</th>
                                     {{-- <th>Biaya Sekolah</th> --}}
                                     <th>Nama Biaya</th>
-                                    <th>Besar Biaya</th>
+                                    <th>Total Biaya</th>
                                     <th>Biaya Asli</th>
-                                    <th>Biaya pungutan lainnya</th>
+                                    <th>Termasuk Biaya</th>
                                     <th>Validasi</th>
                                     <th>Action</th>
                                 </tr>
