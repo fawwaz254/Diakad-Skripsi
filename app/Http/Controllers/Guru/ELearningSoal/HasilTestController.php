@@ -197,15 +197,26 @@ class HasilTestController extends Controller
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa', 'test', 'kategori_soal')->first();
         $time = Carbon::parse($paket_soal->waktu_mulai);
-        $kelas = '';
-        $siswa_seharusnya = 0;
-        foreach ($paket_soal->paket_soal_kelas as $paket_soal_kelas) {
-            $kelas =  $kelas . $paket_soal_kelas->kelas->nm_kelas . ', ';
-            $siswa_seharusnya += $paket_soal_kelas->kelas->siswa->count();
-        }
+        // $kelas = '';
+        // $siswa_seharusnya = 0;
+        // foreach ($paket_soal->paket_soal_kelas as $paket_soal_kelas) {
+        //     $kelas =  $kelas . $paket_soal_kelas->kelas->nm_kelas . ', ';
+        //     $siswa_seharusnya += $paket_soal_kelas->kelas->siswa->count();
+        // }
 
-        $siswa_tidak_masuk = $siswa_seharusnya - $paket_soal->test->count();
+        // $siswa_tidak_masuk = $siswa_seharusnya - $paket_soal->test->count();
 
-        return view('guru/e-learning-soal/hasil-test/print-hasil-test', compact('paket_soal', 'auth_data', 'semester_aktif', 'time', 'kelas', 'siswa_seharusnya', 'siswa_tidak_masuk'));
+        return view('guru/e-learning-soal/hasil-test/print-hasil-test', compact('paket_soal', 'auth_data', 'semester_aktif', 'time'));
+    }
+
+    public function printHasilTest2(Request $request, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna', 'test', 'kategori_soal')->first();
+        $time = Carbon::parse($paket_soal->waktu_mulai);
+
+        return view('guru/e-learning-soal/hasil-test/print-daftar-hasil', compact('paket_soal', 'auth_data', 'semester_aktif', 'time'));
     }
 }
