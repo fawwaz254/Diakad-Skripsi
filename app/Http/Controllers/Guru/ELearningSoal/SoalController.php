@@ -971,7 +971,26 @@ class SoalController extends Controller
         return Datatables::of($list_data)
             ->addColumn('time', function ($item) {
                 return $item->created_at->diffForHumans();
+            })->addColumn('gambar', function ($item) {
+                $gambar = false;
+                $text = $item->text;
+                if ($item->text == 'gambar') {
+                    $pattern = '/<img[^>]+src=["\'](https:\/\/[^"\']+)["\']/';
+                    preg_match($pattern, $item->content, $matches);
+                    if (isset($matches[1])) {
+                        $imgSrc = $matches[1];
+                        $text = $imgSrc;
+                        $gambar = true;
+                    }
+                }
+
+                $data = array(
+                    'gambar' => $gambar,
+                    'text' => $text,
+                );
+                return $data;
             })
+
             ->addColumn('kelas', function ($item) {
                 $nm_kelas = [];
                 if ($item->detail_paket_soal) {
