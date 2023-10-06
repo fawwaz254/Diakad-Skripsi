@@ -145,9 +145,17 @@
                 data: 'kategori_soal.nm_kategori_soal'
             },
             {
-                data: 'text',
+                data: 'gambar',
                 name: 'text',
-                orderable: false
+                orderable: false,
+                render: function(data) {
+                    if (data.gambar) {
+                        return '<img width="75" src=' + data.text + '>';
+                    } else {
+                        return data.text;
+                    }
+
+                }
             },
             {
                 data: 'kelas',
@@ -232,9 +240,17 @@
                 data: 'kategori_soal.nm_kategori_soal'
             },
             {
-                data: 'text',
+                data: 'gambar',
                 name: 'text',
-                orderable: false
+                orderable: false,
+                render: function(data) {
+                    if (data.gambar) {
+                        return '<img width="75" src=' + data.text + '>';
+                    } else {
+                        return data.text;
+                    }
+
+                }
             },
             {
                 data: 'kelas',
