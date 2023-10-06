@@ -53,6 +53,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/table';
     var detail_url = role_url + '#' + modul_url + '/' + 'hasil-test';
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/print';
+    var print_url2 = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/print2';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -122,6 +123,10 @@
                         '</a>' +
                         '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
                         print_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">print</i>' +
+                        '</a>' +
+                        '<a target="_blank" class="btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                        print_url2 + '/' + data.id + '">' +
                         '    <i class="material-icons">print</i>' +
                         '</a>';
                 }
