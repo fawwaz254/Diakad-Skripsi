@@ -94,11 +94,7 @@
         filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
     };
 
-
-
     CKEDITOR.replace('q1', options);
-
-    // custom code to key binding ckeditor
     timer = setInterval(updateDiv, 100);
 
     function updateDiv() {
@@ -112,8 +108,6 @@
 
 <script>
     CKEDITOR.replace('a0', options);
-
-    // custom code to key binding ckeditor
     timer = setInterval(updateDiv, 100);
 
     function updateDiv() {
@@ -124,8 +118,6 @@
 
 <script>
     CKEDITOR.replace('a1', options);
-
-    // custom code to key binding ckeditor
     timer = setInterval(updateDiv, 100);
 
     function updateDiv() {
@@ -136,8 +128,6 @@
 
 <script>
     CKEDITOR.replace('a2', options);
-
-    // custom code to key binding ckeditor
     timer = setInterval(updateDiv, 100);
 
     function updateDiv() {
@@ -149,7 +139,6 @@
 <script>
     CKEDITOR.replace('a3', options);
 
-    // custom code to key binding ckeditor
     timer = setInterval(updateDiv, 100);
 
     function updateDiv() {
