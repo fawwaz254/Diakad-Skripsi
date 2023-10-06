@@ -19,7 +19,6 @@
             $(element).parents('.form-group').append(error);
         },
         submitHandler: function(form) {
-            CKEDITOR.replaceAll( 'is-editor', options );
             $('button').attr('disabled', 'disabled');
             $.ajax({
                 processData: false,  // Important!
