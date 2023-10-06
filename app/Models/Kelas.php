@@ -48,5 +48,9 @@ class Kelas extends Model
         return $this->belongsTo(Jurusan::class, 'id_jurusan');
     }
 
+    public function whatsapp_group()
+    {
+        return $this->hasOne(WhatsappGroup::class, 'id_kelas');
+    }
 
 }

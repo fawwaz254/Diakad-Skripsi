@@ -21,7 +21,6 @@ use App\Models\Pengguna;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::view('/whatsapp-notification/scan', 'iframe-whatsapp');
         Route::get('/resetPassword/{username}', function ($username) {
             $pengguna = Pengguna::where('username', $username)->first();
             if ($pengguna) {
@@ -55,6 +54,11 @@ Route::middleware(['token_staff'])->group(function () {
             // Route::get('/', [NotificationController::class, 'indexList']);
             // Route::get('/datatables', [NotificationController::class, 'commonList']);
             Route::get('/send', [NotificationController::class, 'send']);
+
+            Route::get('/whatsapp', [NotificationController::class, 'viewWhatsappGroup']);
+            Route::view('/whatsapp/scan', 'administrator.notification.view-whatsapp-scan');
+            Route::post('/whatsapp/group', [NotificationController::class, 'fetchWhatsappGroup']);
+            Route::post('/whatsapp/group/{mode}', [NotificationController::class, 'actionWhatsappGroup']);
         });
 
 
