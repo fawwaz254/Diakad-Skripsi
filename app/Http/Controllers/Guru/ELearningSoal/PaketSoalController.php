@@ -136,7 +136,26 @@ class PaketSoalController extends Controller
                     // 'edit' => $item->id_pengguna == $id_pengguna ? true : false
                 );
                 return $data;
-            })->addColumn('kelas', function ($item) {
+            })->addColumn('gambar', function ($item) {
+                $gambar = false;
+                $text = $item->text;
+                if ($item->text == 'gambar') {
+                    $pattern = '/<img[^>]+src=["\'](https:\/\/[^"\']+)["\']/';
+                    preg_match($pattern, $item->content, $matches);
+                    if (isset($matches[1])) {
+                        $imgSrc = $matches[1];
+                        $text = $imgSrc;
+                        $gambar = true;
+                    }
+                }
+
+                $data = array(
+                    'gambar' => $gambar,
+                    'text' => $text,
+                );
+                return $data;
+            })
+            ->addColumn('kelas', function ($item) {
                 $nm_kelas = [];
                 if ($item->detail_paket_soal) {
                     foreach ($item->detail_paket_soal as $detail_paket_soal) {
