@@ -844,6 +844,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/test-soal-simple-essay', compact('question'));
         } else if ($question->id_tipe_soal == 6) {
             return view('guru/e-learning-soal/soal/test-soal-match', compact('question'));
+        } else if ($question->id_tipe_soal == 7) {
+            return view('guru/e-learning-soal/soal/test-soal-true-false', compact('question'));
         }
     }
 
