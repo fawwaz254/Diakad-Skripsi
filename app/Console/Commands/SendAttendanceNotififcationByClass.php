@@ -67,6 +67,13 @@ class SendAttendanceNotififcationByClass extends Command
 
             $nama_sekolah = Sekolah::value('nm_sekolah');
             $mode = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->value('value');
+            $base_template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->value('value');
+            $template = $base_template;
+            $message = str_replace(
+                ['{{DATE}}', '\n'],
+                [now()->translatedFormat('l, d F Y'), "\n"],
+                $template
+            );
 
             if ($mode === 'PRESENT_ONLY' || $mode === 'ALL') {
                 $list_presensi_pengguna_group = PresensiPengguna::with('pengguna.siswa.kelas')
@@ -85,8 +92,8 @@ class SendAttendanceNotififcationByClass extends Command
                         $siswa_kelas[] = $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
                     };
 
-                    $message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
-                    $message = "*Notifikasi Kehadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami dengan senang hati memberitahukan kehadiran putra/putri Anda di sekolah hari ini, " . now()->translatedFormat('l, d F Y') . "\n\n\n" . $message;
+                    $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
+                    $message .= $content_message;
                     $message .= "\n\n\nJika Anda memiliki pertanyaan terkait kesiswaan atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Kesiswaan " . $nama_sekolah . "*";
 
                     $data = [
@@ -147,8 +154,8 @@ class SendAttendanceNotififcationByClass extends Command
                         $siswa_kelas[] = $siswa->pengguna->nm_pengguna;
                     };
 
-                    $message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
-                    $message = "*Notifikasi Ketidakhadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami dengan berat hati memberitahukan ketidakhadiran putra/putri Anda di sekolah hari ini, " . now()->translatedFormat('l, d F Y') . "\n\n\n" . $message;
+                    $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
+                    $message .= $content_message;
                     $message .= "\n\n\nJika Anda memiliki pertanyaan terkait kesiswaan atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Kesiswaan " . $nama_sekolah . "*";
 
                     $data = [
@@ -172,7 +179,7 @@ class SendAttendanceNotififcationByClass extends Command
                         \Log::info("Notification Success: Notification attendance sent at " . now());
                     }
 
-                    sleep(rand(5, 25));
+                    sleep(rand(10, 25));
                 }
             }
         } catch (\Exception $e) {

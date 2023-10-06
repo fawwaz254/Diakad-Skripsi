@@ -70,14 +70,19 @@ class SendPaymentNotificationByClass extends Command
             ->get()
             ->groupBy('siswa.kelas.nm_kelas');
 
-        // dd($list_tagihan_biaya); 1
-
         if ($list_tagihan_biaya->isEmpty() || empty($url)) {
-            return 0;
+            return;
         }
 
         try {
             $nama_sekolah = Sekolah::first()->nm_sekolah;
+            $base_template = Setting::where('key_setting', 'template_notif_pembayaran_spp')->value('value');
+            $template = $base_template;
+            $message = str_replace(
+                ['{{DATE}}', '\n'],
+                [now()->translatedFormat('l, d F Y'), "\n"],
+                $template
+            );
 
             $tagihan_to_update = [];
 
@@ -90,18 +95,12 @@ class SendPaymentNotificationByClass extends Command
 
                 $siswa_kelas = [];
 
-                // dd($group_tagihan_biaya); 2
-
                 foreach ($group_tagihan_biaya as $tagihan) {
-
-                    // dd($tagihan); 3
 
                     $nama_pengguna = '';
                     $bulan_pembayaran = '';
 
                     foreach ($tagihan as $t) {
-
-                        // dd($t) 4
 
                         $nama_pengguna = $t->nm_pengguna;
                         $bulan_pembayaran .= $t->bulan_pembayaran . ', ';
@@ -110,8 +109,8 @@ class SendPaymentNotificationByClass extends Command
                     $siswa_kelas[] = $nama_pengguna . " ( " . $bulan_pembayaran . ")";
                 }
 
-                $message = join("\n----------------------------------------------------------------------------------\n", $siswa_kelas);
-                $message = "*Notifikasi Pembayaran SPP*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami ingin menginformasikan pembayaran SPP untuk putra/putri Anda hari ini, " . now()->translatedFormat('l, d F Y') . "\n\n\n" . $message;
+                $content_message = join("\n----------------------------------------------------------------------------------\n", $siswa_kelas);
+                $message .= $content_message;
                 $message .= "\n\n\nJika Anda memiliki pertanyaan terkait pembayaran atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Keuangan " . $nama_sekolah . "*";
 
                 $data = [
@@ -132,7 +131,7 @@ class SendPaymentNotificationByClass extends Command
                     \Log::info("Notification Success: Notification attendance sent at " . now());
                 }
 
-                sleep(rand(10, 20));
+                sleep(rand(10, 25));
             }
 
             if (!empty($tagihan_to_update)) {
