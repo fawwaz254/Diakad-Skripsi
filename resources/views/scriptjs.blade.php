@@ -21,9 +21,12 @@
         submitHandler: function(form) {
             $('button').attr('disabled', 'disabled');
             $.ajax({
+                processData: false,  // Important!
+                contentType: false,
+                cache: false,
                 url: form.action,
                 type: form.method,
-                data: $(form).serialize(),
+                data: new FormData($(form)[0]),
                 success: function(response) {
                     if (response.status == 200) {
                         vex.dialog.alert(response.message);

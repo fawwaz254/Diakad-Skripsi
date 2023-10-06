@@ -178,8 +178,9 @@ class SoalController extends Controller
             } else if ($item->id_tipe_soal == 5) {
                 return view('guru/e-learning-soal/soal/edit-soal-simple-essay2', compact('item', 'kategori'));
             } else if ($item->id_tipe_soal == 6) {
-                $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
-                return view('guru/e-learning-soal/soal/edit-soal-match2', compact('item', 'question_options', 'kategori'));
+                $data_pilihan_pertanyaan = PilihanPertanyaan::where('id_soal', $item->id_soal)->orderBy('nomer')->get();
+                $data_pilihan_jawaban = PilihanJawaban::where('id_soal', $item->id_soal)->orderBy('nomer')->get();
+                return view('guru/e-learning-soal/soal/edit-soal-match2', compact('item', 'data_pilihan_jawaban', 'data_pilihan_pertanyaan', 'kategori'));
             } else if ($item->id_tipe_soal == 7) {
                 $question_options = PilihanPertanyaan::where('id_soal', $item->id_soal)->orderBy('nomer')->get();
                 return view('guru/e-learning-soal/soal/edit-soal-true-false2', compact('item', 'question_options', 'kategori'));
@@ -258,6 +259,19 @@ class SoalController extends Controller
                 $question->alternatif_jawaban3 = $input->jawaban[3];
                 $question->alternatif_jawaban4 = $input->jawaban[4];
                 $question->alternatif_jawaban5 = $input->jawaban[5];
+            } else if ($input->id_tipe_soal == 6) {
+                foreach ($input->id_pilihan_pertanyaan as $no_array => $id_pilihan_pertanyaan) {
+                    $pilihan_pertanyaan = PilihanPertanyaan::find($id_pilihan_pertanyaan);
+                    $pilihan_pertanyaan->text = $input->pertanyaan_text[$no_array];
+                    $pilihan_pertanyaan->jawaban = $input->pertanyaan_jawaban[$no_array];
+                    $pilihan_pertanyaan->save();
+                }
+
+                foreach ($input->id_pilihan_jawaban as $no_array => $id_pilihan_jawaban) {
+                    $pilihan_jawaban = PilihanJawaban::find($id_pilihan_jawaban);
+                    $pilihan_jawaban->text = $input->jawaban_text[$no_array];
+                    $pilihan_jawaban->save();
+                }
             } else if ($input->id_tipe_soal == 7) {
                 foreach ($input->pertanyaan as $no_pertanyaan => $pertanyaan) {
                     $question_option = PilihanPertanyaan::find($input->id_pilihan_pertanyaan[$no_pertanyaan]);

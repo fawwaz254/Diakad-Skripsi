@@ -20,35 +20,54 @@
                         <h2 class="card-inside-title">Penjelasan</h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea id="soal" class="form-control is-editor" required="" name="soal" rows="3">{{$item->content}}</textarea>
+                                <textarea id="soal" class="form-control soal" required="" name="soal" rows="3">{{$item->content}}</textarea>
                             </div>
                         </div>
                         <div class="row clearfix">
-                            @php
-                                $no = 1;
-                            @endphp
-                            @foreach($question_options as $question_option)
-                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
                                 <div id="pertanyan">
+                                    @php
+                                        $x = 1;
+                                        $no = 1;
+                                    @endphp
+                                    @foreach($data_pilihan_pertanyaan as $pilihan_pertanyaan)
                                     <div class="card" style="background-color: #e3e3e3; padding: 10px;">
                                         <h2 class="card-inside-title">Pertanyaan {{$no}}</h2>
-                                        <input type="hidden" name="id_pilihan_pertanyaan[]" value="{{ $question_option->id_pilihan_pertanyaan }}">
-                                        <textarea id="q{{$no}}" class="form-control is-editor" required="" id="inputPertanyaan1" name="pertanyaan[]" rows="3">{{$question_option->text}}</textarea>
-                                        <h2 class="card-inside-title">Jawaban</h2>
-                                        <select class="form-control show-tick" id="noJawaban1" name="noJawaban[]"
-                                            required="">
-                                            <option {{$question_option->jawaban == 1? 'selected' : ''}} value="1">True</option>
-                                            <option {{$question_option->jawaban == 0? 'selected' : ''}} value="0">False</option>
-                                        </select>
+                                        <input type="hidden" name="id_pilihan_pertanyaan[]" value="{{$pilihan_pertanyaan->id_pilihan_pertanyaan}}" />
+                                        <textarea id="q{{$x}}" class="q{{$x}} form-control is-editor" required="" name="pertanyaan_text[]" rows="3">{!! $pilihan_pertanyaan->text !!}</textarea>
+                                        <h2 class="card-inside-title">No Jawaban</h2>
+                                        <input type="number" class="form-control" required="" name="pertanyaan_jawaban[]" value="{{$pilihan_pertanyaan->jawaban}}" />
                                     </div>
-                                    <br>
-                                    <br>
+                                    <br />
+                                    <br />
+                                    @php
+                                        $no++;
+                                        $x++;
+                                    @endphp
+                                    @endforeach
                                 </div>
                             </div>
-                            @php
-                                $no++;
-                            @endphp
-                            @endforeach
+
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                <div id="jawaban">
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach($data_pilihan_jawaban as $pilihan_jawaban)
+                                    <div class="card" style="background-color: #e3e3e3; padding: 10px;">
+                                        <h2 class="card-inside-title">Jawaban {{$no}}</h2>
+                                        <input type="hidden" name="id_pilihan_jawaban[]" value="{{$pilihan_jawaban->id_pilihan_jawaban}}" />
+                                        <textarea id="q{{$x}}" class="q{{$x}} form-control is-editor" required="" name="jawaban_text[]" rows="3">{!! $pilihan_jawaban->text !!}</textarea>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    @php
+                                        $no++;
+                                        $x++;
+                                    @endphp
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
