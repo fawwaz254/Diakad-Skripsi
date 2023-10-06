@@ -117,43 +117,31 @@
                         </tr>
                     @endforeach
 
-                    @if ($nm_kategori == 'K.5.4 Beban Pengembangan Pendidikan')
-                        @if (!empty($data_laporan['danaPembangunan']['4%']))
+                    @if (!empty($subkategori_non_kbm['data_with_subkategori_rapb'][$nm_kategori]))
+                        @foreach ($subkategori_non_kbm['data_with_subkategori_rapb'][$nm_kategori] as $key => $detail_biaya_internal)
                             <tr>
                                 <td>{{ $no++ }}</td>
                                 <td></td>
-                                <td colspan="3">Dana Pembangunan 4%</td>
+                                <td colspan="3">{{ $key }}</td>
                                 <td style="text-align: right;">
-                                    {{ number_format($data_laporan['danaPembangunan']['4%']) }}</td>
+                                    {{ number_format($detail_biaya_internal) }}</td>
                             </tr>
                             @php
-                                $danaPembangunan += $data_laporan['danaPembangunan']['4%'];
+                                $danaPembangunan += $detail_biaya_internal;
                             @endphp
-                        @endif
-
-                        @if (!empty($data_laporan['danaPembangunan']['7%']))
-                            <tr>
-                                <td>{{ $no++ }}</td>
-                                <td></td>
-                                <td colspan="3">Dana Pembangunan 7%</td>
-                                <td style="text-align: right;">
-                                    {{ number_format($data_laporan['danaPembangunan']['7%']) }}</td>
-                                {{ $danaPembangunan += $data_laporan['danaPembangunan']['4%'] }}
-                            </tr>
-                            @php
-                                $danaPembangunan += $data_laporan['danaPembangunan']['7%'];
-                            @endphp
-                        @endif
+                        @endforeach
                     @endif
 
                     <tr>
                         <th colspan="5">TOTAL</th>
-                        <th>{{ number_format($kategori_laporan->sum('dana_realisasi') + $danaPembangunan) }}</th>
+                        <th>{{ number_format($kategori_laporan->sum('dana_realisasi') + $danaPembangunan) }}
+                        </th>
                     </tr>
                     <tr>
                         <td colspan="6"></td>
                     </tr>
                 @endforeach
+
                 @if (isset($subkategori_non_kbm))
                     @if ($subkategori_non_kbm['status'])
                         <tr>
