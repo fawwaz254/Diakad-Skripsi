@@ -61,12 +61,16 @@ class Soal extends Model
 
     public function pengguna()
     {
-        return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
+        return $this->belongsTo('App\Models\Pengguna', 'id_pengguna')->withDefault([
+            'nm_pengguna' => ''
+        ]);
     }
 
     public function kategori_soal()
     {
-        return $this->belongsTo('App\Models\KategoriSoal', 'id_kategori_soal');
+        return $this->belongsTo('App\Models\KategoriSoal', 'id_kategori_soal')->withDefault([
+            'nm_kategori_soal' => ''
+        ]);
     }
 
     public function pilihan_soal()

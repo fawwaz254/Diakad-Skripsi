@@ -176,7 +176,6 @@
             {
                 data: 'gambar',
                 name: 'text',
-                orderable: false,
                 render: function(data) {
                     if (data.gambar) {
                         return '<img width="75" src=' + data.text + '>';
@@ -226,14 +225,21 @@
                     //         '    <i class="material-icons">delete</i>' +
                     //         '</button>';
                     // } else {
-                    return '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
+                    return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" target="_blank" href="' +
+                        detail_url + '/edit/' + data.id + '">' +
+                        '    <i class="material-icons">mode_edit</i>' +
+                        '</a>' +
+                        '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
                         data.id + '" onclick="actionDelete(this)">' +
                         '    <i class="material-icons">delete</i>' +
                         '</button>';
                     // }
                 }
             }
-        ]
+        ],
+        order: [
+            [3, 'asc']
+        ],
     });
 
     secondary_table.on('draw', function() {
