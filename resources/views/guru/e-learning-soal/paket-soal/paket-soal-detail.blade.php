@@ -176,7 +176,6 @@
             {
                 data: 'gambar',
                 name: 'text',
-                orderable: false,
                 render: function(data) {
                     if (data.gambar) {
                         return '<img width="75" src=' + data.text + '>';
@@ -237,7 +236,10 @@
                     // }
                 }
             }
-        ]
+        ],
+        order: [
+            [3, 'asc']
+        ],
     });
 
     secondary_table.on('draw', function() {
