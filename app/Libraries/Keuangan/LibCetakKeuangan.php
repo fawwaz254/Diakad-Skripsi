@@ -831,7 +831,7 @@ class LibCetakKeuangan
         $subkategori_non_kbm = SubkategoriRapb::where('kode_subkategori_rapb', 'K.5.3')->where('nm_subkategori_rapb', 'Beban Pembelajaran Non KBM')->first();
 
         if ($subkategori_non_kbm) {
-            $pembayaran_non_kbm = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
+            $pembayaran_non_kbm = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal.subkategori_rapb')
                 ->whereBetween('tgl_pembayaran', [$start_date, $end_date])
                 ->whereHas('tagihan_biaya.detail_biaya', function ($q) {
                     $q->where('id_jenis_detail_biaya', 4);
@@ -844,6 +844,7 @@ class LibCetakKeuangan
                 $pembayaran_non_kbm = $pembayaran_non_kbm->get();
             }
             $temp_data_bayar_non_kbm = [];
+            $temp_data_subkategori_rapb = [];
             $total_bayar_non_kbm = 0;
 
             foreach ($pembayaran_non_kbm as $data) {
@@ -856,7 +857,13 @@ class LibCetakKeuangan
                     $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
                     foreach ($detailBiayaInternal as $x) {
-                        if ($x->nm_detail_biaya_internal != 'SPP MURNI' && $x->nm_detail_biaya_internal != "Dana Pembangunan 4%" && $x->nm_detail_biaya_internal != "Dana Pembangunan 7%") {
+                        if ($x->subkategori_rapb) {
+                            if (!isset($temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal])) {
+                                $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] = $x->besar_biaya;
+                            } else {
+                                $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] += $x->besar_biaya;
+                            }
+                        } elseif ($x->nm_detail_biaya_internal == 'SPP MURNI') { } else {
                             if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                                 $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                             } else {
@@ -864,10 +871,6 @@ class LibCetakKeuangan
                             }
 
                             $total_bayar_non_kbm += $x->besar_biaya;
-                        } else if ($x->nm_detail_biaya_internal == "Dana Pembangunan 4%") {
-                            $danaPembangunan['4%'] += $x->besar_biaya;
-                        } else if ($x->nm_detail_biaya_internal == "Dana Pembangunan 7%") {
-                            $danaPembangunan['7%'] += $x->besar_biaya;
                         }
                     }
                 }
@@ -877,6 +880,7 @@ class LibCetakKeuangan
                 'status' => true,
                 'total_bayar' => $total_bayar_non_kbm,
                 'data' => $temp_data_bayar_non_kbm,
+                'data_with_subkategori_rapb' => $temp_data_subkategori_rapb,
             ];
         } else {
             $subkategori_non_kbm = [
