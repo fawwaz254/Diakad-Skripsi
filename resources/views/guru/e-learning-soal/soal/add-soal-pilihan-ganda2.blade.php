@@ -129,6 +129,7 @@
         var html = '<table  class="table">';
         for (var i = 1; i <= jumlah; i++) {
             var soal = $(`textarea[id="q${i}"]`).val();
+            var kunci = $(`select[name="jawaban_benar[${i}]"]`).val();
             if (soal) {
                 html += '<tr>';
                 html += '<td style="text-align: center;">';
@@ -154,7 +155,14 @@
                     var jawaban = $(`textarea[id="a${i}${j}"]`).val();
                     html += '<tr>';
                     html += '<td >';
-                    html += '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + jawaban + '</pre>';
+                    if (j == kunci) {
+                        html +=
+                            '<pre style="white-space: pre-wrap; word-wrap: break-word;background-color:#CFE795"">' +
+                            jawaban + '</pre>';
+                    } else {
+                        html += '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + jawaban +
+                            '</pre>';
+                    }
                     html += '</td >';
                     html += '</tr>';
 
