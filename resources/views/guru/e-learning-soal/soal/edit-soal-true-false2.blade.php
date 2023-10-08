@@ -74,7 +74,7 @@
         filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
     };
 
-    for (var i = 1; i < {{$x}}; i++) {
+    for (var i = 1; i < {{$question_options->count()}}; i++) {
         id = 'q' + i;
         var editor = CKEDITOR.replace(id, options);
         timer = setInterval(updateDiv(id), 50);
