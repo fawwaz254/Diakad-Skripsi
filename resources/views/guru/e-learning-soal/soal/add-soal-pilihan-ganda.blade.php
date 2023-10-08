@@ -98,19 +98,111 @@
     <div class="row clearfix" style="margin-top: 10px">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <button class="btn btn-block bg-pink waves-effect" id="btn-submit" type="submit">Save</button>
+            <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button"
+                style="margin-bottom: 20px; margin-top: 20px">Preview</button>
         </div>
     </div>
-
     <br>
     <br>
 </form>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="header bg-pink">
+                <h4 class="modal-title" style="text-align: center">Preview Soal</h4>
+            </div>
+
+            <div id="modal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @include('scriptjs')
 <!-- CKeditor Plugin Js -->
 <script src="{{ asset('plugins/ckeditor/ckeditor.js') }}"></script>
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
+
+<script>
+    $("#btn-view").click(function() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+
+        if (isChecked) {
+            checkbox.checked = !checkbox.checked;
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                CKEDITOR.instances[id].destroy();
+                for (var j = 0; j < 5; j++) {
+                    idjawaban = 'a' + i + j;
+                    CKEDITOR.instances[idjawaban].destroy();
+                }
+            }
+        }
+        $('#modal').html('');
+        var html = '<table  class="table">';
+        for (var i = 1; i <= jumlah; i++) {
+            var soal = $(`textarea[id="q${i}"]`).val();
+            if (soal) {
+                html += '<tr>';
+                html += '<td style="text-align: center;">';
+                html += i + '. Soal';
+                html += '</td >';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td >';
+                html +=
+                    '<pre style="white-space: pre-wrap; word-wrap: break-word;">' +
+                    soal + '</pre>';
+                html += '</td>';
+                html += '</tr>';
+
+                html += '<tr>';
+                html += '<td style="text-align: center">';
+                html += 'Jawaban';
+                html += '</td >';
+                html += '</tr>';
+
+                for (var j = 0; j < 5; j++) {
+                    idjawaban = 'a' + i + j;
+                    var jawaban = $(`textarea[id="a${i}${j}"]`).val();
+                    html += '<tr>';
+                    html += '<td >';
+                    html += '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + jawaban + '</pre>';
+                    html += '</td >';
+                    html += '</tr>';
+
+                }
+                html += '<tr>';
+                html += '<td style="border: 1px solid pink;">';
+
+                html += '</td >';
+            }
+        }
+        html += '</table>';
+        $('#modal').html(html);
+
+
+
+        $('#myModal').modal('show');
+
+
+    });
+</script>
+
+
 <script>
     var jumlah = 1;
+    var priview = false;
     var options = {
         filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
         filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
@@ -241,6 +333,5 @@
                 inputElementSoal.value = $dataSoal[0];
             }
         }
-
     }
 </script>
