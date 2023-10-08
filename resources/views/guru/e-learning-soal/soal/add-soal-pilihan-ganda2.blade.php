@@ -280,34 +280,61 @@
     });
 
     function pasteFunction(el) {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
         var i = el.id;
+
         var clipboardData = event.clipboardData || window.clipboardData;
         var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
         var lines = pastedText.split("\n");
+
+        var id_paste_soal = 'q' + i;
+        if (isChecked) {
+            CKEDITOR.instances[id_paste_soal].destroy();
+        }
+
+        setTimeout(function() {
+            var inputElementSoal = document.getElementById(id_paste_soal);
+            if (inputElementSoal === null) {} else {
+                $dataSoal = lines[0].split("\t");
+                if ($dataSoal.length == '2') {
+                    inputElementSoal.value = $dataSoal[1];
+                } else {
+                    inputElementSoal.value = $dataSoal[0];
+                }
+            }
+
+            if (isChecked) {
+                CKEDITOR.replace(id_paste_soal, options);
+            }
+        }, 1000);
+
+
         for (var j = 0; j < 5; j++) {
             id_paste_jawaban = 'a' + i + j;
-            var inputElementJawaban = document.getElementById(id_paste_jawaban);
-            if (inputElementJawaban === null) {} else {
-                $data = lines[j + 1].split("\t");
-                if ($data.length == '2') {
-                    inputElementJawaban.value = $data[1];
-                } else {
-                    inputElementJawaban.value = $data[0];
+            if (isChecked) {
+                CKEDITOR.instances[id_paste_jawaban].destroy();
+            }
+        }
+
+        setTimeout(function() {
+            for (var j = 0; j < 5; j++) {
+                id_paste_jawaban = 'a' + i + j;
+                var inputElementJawaban = document.getElementById(id_paste_jawaban);
+                if (inputElementJawaban === null) {} else {
+                    $data = lines[j + 1].split("\t");
+                    if ($data.length == '2') {
+                        inputElementJawaban.value = $data[1];
+                    } else {
+                        inputElementJawaban.value = $data[0];
+                    }
+
+                }
+                if (isChecked) {
+                    CKEDITOR.replace(id_paste_jawaban, options);
                 }
 
             }
-
-        }
-        var id_paste_soal = 'q' + i;
-        var inputElementSoal = document.getElementById(id_paste_soal);
-        if (inputElementSoal === null) {} else {
-            $dataSoal = lines[0].split("\t");
-            if ($dataSoal.length == '2') {
-                inputElementSoal.value = $dataSoal[1];
-            } else {
-                inputElementSoal.value = $dataSoal[0];
-            }
-        }
-
+        }, 1000)
     }
 </script>
