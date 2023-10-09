@@ -1,27 +1,27 @@
 <?php
 
+use App\Models\Pengguna;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\FeaturemenuController;
 use App\Http\Controllers\Administrator\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Administrator\Device\FingerprintController;
-use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\GuruController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\SiswaController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\TendikController;
+use App\Http\Controllers\Administrator\Notification\NotificationController;
 use App\Http\Controllers\Administrator\PengelolaanAkun\PencarianController;
+use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JurnalPimpinanController;
 use App\Http\Controllers\Administrator\ManajemenMenu\SettingDashboardController;
 use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController;
-use App\Http\Controllers\administrator\Notification\NotificationController;
-use App\Http\Controllers\FeaturemenuController;
-use App\Models\Pengguna;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::view('/whatsapp-notification/scan', 'iframe-whatsapp');
         Route::get('/resetPassword/{username}', function ($username) {
             $pengguna = Pengguna::where('username', $username)->first();
             if ($pengguna) {
@@ -55,6 +55,12 @@ Route::middleware(['token_staff'])->group(function () {
             // Route::get('/', [NotificationController::class, 'indexList']);
             // Route::get('/datatables', [NotificationController::class, 'commonList']);
             Route::get('/send', [NotificationController::class, 'send']);
+
+            // whatsapp notification
+            Route::get('/whatsapp', [NotificationController::class, 'viewWhatsappGroup']);
+            Route::view('/whatsapp/scan', 'administrator.notification.view-whatsapp-scan');
+            Route::post('/whatsapp/group', [NotificationController::class, 'fetchWhatsappGroup']);
+            Route::post('/whatsapp/group/{mode}', [NotificationController::class, 'actionWhatsappGroup']);
         });
 
 

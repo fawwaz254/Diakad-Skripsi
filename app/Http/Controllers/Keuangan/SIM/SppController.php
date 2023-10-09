@@ -1223,14 +1223,12 @@ class SppController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa')->get()->pluck('thn_masuk_siswa');
-        return view('keuangan/sim/spp/view-menu-tunggakan-alumni', compact('auth_data', 'thn_masuk_siswa'));
+        return view('keuangan/sim/spp/view-menu-tunggakan-alumni', compact('auth_data'));
     }
 
     public function datatablesMenuTunggakanAlumni(Request $request)
     {
         $input = (object) $request->input();
-        $tahun = $input->tahun_akademik_semester;
 
         $list_data = TagihanBiaya::select(
             'pengguna.nm_pengguna',
@@ -1249,9 +1247,6 @@ class SppController extends BaseController
             ->where('tagihan_biaya.is_tagih', '1')
             ->where('detail_biaya.id_jenis_detail_biaya', 4)
             ->where('status_pengguna.nm_status_pengguna', 'LULUS')
-            ->when($tahun != '0', function ($q) use ($tahun) {
-                $q->where('siswa.thn_masuk_siswa', $tahun);
-            })
             ->with('siswa.last_kelas_siswa.kelas', 'siswa.tunggakan_alumni')
             ->get();
 
