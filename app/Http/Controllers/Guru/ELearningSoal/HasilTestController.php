@@ -224,14 +224,18 @@ class HasilTestController extends Controller
 
     public function printHasilTest3(Request $request, $id)
     {
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna', 'test.jawaban_test', 'kategori_soal')->first();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna', 'test.jawaban_test', 'kategori_soal', 'detail_paket_soal')->first();
 
         $nilai_siswa = [];
         $soal_terjawab = [];
 
         foreach ($paket_soal->test as $test) {
             $nilai_siswa[$test->id_pengguna] =  $test->jawaban_test->sum('nilai');
-            $soal_terjawab[$test->id_pengguna] = $test->jawaban_test->count();
+            if ($test->jawaban_test->count() > $paket_soal->detail_paket_soal->count()) {
+                $soal_terjawab[$test->id_pengguna] = $paket_soal->detail_paket_soal->count();
+            } else {
+                $soal_terjawab[$test->id_pengguna] = $test->jawaban_test->count();
+            }
         }
 
         $data['nilai_siswa'] = $nilai_siswa;
