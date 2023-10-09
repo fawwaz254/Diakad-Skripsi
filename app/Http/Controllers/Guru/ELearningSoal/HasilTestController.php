@@ -227,19 +227,12 @@ class HasilTestController extends Controller
         $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna', 'test.jawaban_test', 'kategori_soal', 'detail_paket_soal')->first();
 
         $nilai_siswa = [];
-        $soal_terjawab = [];
 
         foreach ($paket_soal->test as $test) {
             $nilai_siswa[$test->id_pengguna] =  $test->jawaban_test->sum('nilai');
-            if ($test->jawaban_test->count() > $paket_soal->detail_paket_soal->count()) {
-                $soal_terjawab[$test->id_pengguna] = $paket_soal->detail_paket_soal->count();
-            } else {
-                $soal_terjawab[$test->id_pengguna] = $test->jawaban_test->count();
-            }
         }
 
         $data['nilai_siswa'] = $nilai_siswa;
-        $data['soal_terjawab'] = $soal_terjawab;
         $data['paket_soal'] = $paket_soal;
 
         return Excel::download(new RekapNilaiElearning($data), 'Rekap Nilai E-learning' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
