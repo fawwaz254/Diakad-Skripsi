@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Guru\ELearningSoal;
 
+use App\Exports\RekapNilaiElearning;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibDataAkademik;
@@ -9,6 +10,7 @@ use App\Models\JawabanTest;
 use App\Models\PaketSoal;
 use App\Models\Siswa;
 use App\Models\Test;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\Datatables\Datatables;
 use Auth;
 use DB;
@@ -32,7 +34,7 @@ class HasilTestController extends Controller
             $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna);
         }
 
-        $list_data->with('kelas', 'test', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas.siswa');
+        $list_data->with('test', 'kategori_soal', 'paket_soal_kelas.kelas.siswa');
 
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
@@ -218,5 +220,24 @@ class HasilTestController extends Controller
         $time = Carbon::parse($paket_soal->waktu_mulai);
 
         return view('guru/e-learning-soal/hasil-test/print-daftar-hasil', compact('paket_soal', 'auth_data', 'semester_aktif', 'time'));
+    }
+
+    public function printHasilTest3(Request $request, $id)
+    {
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna', 'test.jawaban_test', 'kategori_soal')->first();
+
+        $nilai_siswa = [];
+        $soal_terjawab = [];
+
+        foreach ($paket_soal->test as $test) {
+            $nilai_siswa[$test->id_pengguna] =  $test->jawaban_test->sum('nilai');
+            $soal_terjawab[$test->id_pengguna] = $test->jawaban_test->count();
+        }
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        $data['soal_terjawab'] = $soal_terjawab;
+        $data['paket_soal'] = $paket_soal;
+
+        return Excel::download(new RekapNilaiElearning($data), 'Rekap Nilai E-learning' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
     }
 }
