@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Models\Setting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,28 +14,20 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected $commands = [
-        Commands\SendAttendanceNotification::class,
-        Commands\SendPaymentNotification::class,
+        Commands\SendAttendanceNotififcationByClass::class,
+        Commands\SendPaymentNotificationByClass::class,
     ];
 
     protected function schedule(Schedule $schedule)
     {
-        $timeRange = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->value('value');
-        $timeParts = explode('-', $timeRange);
-        if (count($timeParts) === 2) {
-            $start_time = trim($timeParts[0]);
-            $end_time = trim($timeParts[1]);
-
-            $schedule->command('notification:attendance')
-                ->hourly()
-                ->between($start_time, $end_time)
-                ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
-                ->timezone('Asia/Jakarta')
-                ->withoutOverlapping();
-        }
+        $schedule->command('notification:attendance')
+            ->dailyAt('11:00')
+            ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
 
         $schedule->command('notification:payment')
-            ->twiceDaily(11, 15)
+            ->dailyAt('15:00')
             ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();

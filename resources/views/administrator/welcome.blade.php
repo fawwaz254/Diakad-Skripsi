@@ -40,7 +40,7 @@
                         </div>
                     </a>
                 </div> --}}
-                <div class="col-sm-4 col-xs-12">
+                <div class="col-md-4 col-xs-12">
                     <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}">
                         <div class="card">
                             <div class="body bg-amber" style="text-align: -webkit-center;">
@@ -56,7 +56,7 @@
                 </div>
 
 
-                <div class="col-sm-4 col-xs-12">
+                <div class="col-md-4 col-xs-12">
                     <a href="{{ route('report.walikelas') }}" target="_blank">
                         <div class="card">
                             <div class="body bg-red" style="text-align: -webkit-center;">
@@ -65,7 +65,7 @@
                                 <h5>
                                     Report Wali Kelas
                                 </h5>
-                                <small>Data Menu Wali Kelas
+                                <small>Data Wali Kelas
                                     {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</small>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                 </div>
 
 
-                <div class="col-sm-4 col-xs-12">
+                <div class="col-md-4 col-xs-12">
                     <a href="{{ route('report.guru') }}" target="_blank">
                         <div class="card">
                             <div class="body bg-blue" style="text-align: -webkit-center;">
@@ -89,7 +89,7 @@
                     </a>
                 </div>
 
-                <div class="col-sm-4 col-xs-12">
+                <div class="col-md-4 col-xs-12">
                     <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprintRealTime') }}"
                         target="_blank">
                         <div class="card">
@@ -105,8 +105,8 @@
                     </a>
                 </div>
 
-                <div class="col-sm-4 col-xs-12">
-                    <a href="{{ url(Request::segment(0) . Request::segment(1) . '#whatsapp-notification/scan') }}"
+                <div class="col-md-4 col-xs-12">
+                    <a href="{{ url(Request::segment(0) . Request::segment(1) . '#notification/whatsapp') }}"
                         target="_blank">
                         <div class="card">
                             <div class="body bg-green" style="text-align: -webkit-center;">
