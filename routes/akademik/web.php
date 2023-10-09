@@ -218,6 +218,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('delete/{id}', [HasilTestController::class, 'actionDeleteTest']);
                 Route::get('print/{id}', [HasilTestController::class, 'printHasilTest']);
                 Route::get('print2/{id}', [HasilTestController::class, 'printHasilTest2']);
+                Route::get('print3/{id}', [HasilTestController::class, 'printHasilTest3']);
             });
 
             Route::prefix('pengguna-terkunci')->group(function () {

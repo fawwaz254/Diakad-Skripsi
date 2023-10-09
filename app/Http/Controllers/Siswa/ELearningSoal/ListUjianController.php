@@ -488,12 +488,20 @@ class ListUjianController extends Controller
     {
         $input = (object) $request->input();
         $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($input->paket_soal)['id_test'])->first();
-        $test->status = 1;
-        $test->save();
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'e-learning-soal/list-ujian',
-            'message' => 'Berhasil menyelesaikan Soal'
-        ];
+        if ($test) {
+            $test->status = 1;
+            $test->save();
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'e-learning-soal/list-ujian',
+                'message' => 'Berhasil menyelesaikan Soal'
+            ];
+        } else {
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'e-learning-soal/list-ujian',
+                'message' => 'Berhasil menyelesaikan Soal'
+            ];
+        }
     }
 }
