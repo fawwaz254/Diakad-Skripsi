@@ -4,31 +4,13 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                        TUNGGAKAN Alumni
+                        TUNGGAKAN ALUMNI
                     </h2>
                 </div>
                 @include('keuangan/sim/spp/partials/header-card-menu')
             </div>
             <div class="card">
                 <div class="body">
-                    <div class="row clearfix">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
-                                Tahun Masuk Siswa
-                            </h2>
-                            <select class="form-control show-tick" name="tahun_akademik_semester">
-                                @foreach ($thn_masuk_siswa as $thn)
-                                    <option value="{{ $thn }}">
-                                        {{ $thn }}</option>
-                                @endforeach
-                                <option value="0">Semua</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i
-                                    class="material-icons">save</i><span>Ubah Tahun Masuk</span></button>
-                        </div>
-                    </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display nowrap"
                             id="primary_table">
@@ -83,7 +65,6 @@
             [25, 50, 100, 200, -1],
             [25, 50, 100, 200, "All"]
         ],
-        iDisplayLength: -1,
         responsive: true,
         ajax: {
             url: datatable_url,
@@ -160,14 +141,6 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
-
-
-    function filterAction() {
-        $('tbody').empty();
-        $('#primary_table_info').empty();
-        $('#primary_table_paginate').empty();
-        primary_table.ajax.reload(null, false);
-    }
 
     function deleteTagihan(el) {
         var item = $(el);
