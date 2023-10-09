@@ -21,7 +21,6 @@
             <td style="text-align: center;font-weight: bold;">Kelas</td>
             <td style="text-align: center;font-weight: bold;">NIS</td>
             <td style="text-align: center;font-weight: bold;">Nama Siswa</td>
-            <td style="text-align: center;font-weight: bold;">Soal Terjawab</td>
             <td style="text-align: center;font-weight: bold;">Nilai</td>
         </tr>
     </thead>
@@ -36,8 +35,6 @@
                     <td style="text-align: center">{{ $paket_soal_kelas->kelas->nm_kelas }}</td>
                     <td style="text-align: center">{{ $siswa->nis_siswa }}</td>
                     <td>{{ $siswa->pengguna->nm_pengguna }}</td>
-                    <td style="text-align: center">
-                        {{ $data['soal_terjawab'][$siswa->id_pengguna] ?? '-' }}</td>
                     <td style="text-align: center">
                         {{ $data['nilai_siswa'][$siswa->id_pengguna] ?? '-' }}</td>
                 </tr>
