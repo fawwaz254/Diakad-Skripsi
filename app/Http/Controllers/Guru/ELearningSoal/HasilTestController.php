@@ -226,6 +226,7 @@ class HasilTestController extends Controller
 
     public function printHasilTest3(Request $request, $id)
     {
+        set_time_limit(-1);
         $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal.pilihan_soal', 'detail_paket_soal.soal.pilihan_pertanyaan', 'test.jawaban_test')->first();
         $pilihan_pertanyaan = PilihanPertanyaan::get();
         $pilihan_soal = PilihanSoal::get();

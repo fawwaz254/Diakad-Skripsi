@@ -57,7 +57,8 @@
                     <td style="text-align: center">{{ $siswa->nis_siswa }}</td>
                     <td>{{ $siswa->pengguna->nm_pengguna }}</td>
                     <td style="text-align: center">
-                        {{ $data['nilai_siswa'][$siswa->id_pengguna] ?? '-' }}</td>
+                        {{ isset($data['nilai_siswa'][$siswa->id_pengguna]) ? number_format($data['nilai_siswa'][$siswa->id_pengguna]) : '-' }}
+                    </td>
 
                     <td></td>
                     @foreach ($data['paket_soal']['detail_paket_soal'] as $detail_paket_soal)
