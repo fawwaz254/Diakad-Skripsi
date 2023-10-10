@@ -7,4 +7,4 @@
     }
 </style>
 
-<iframe src="{{ config('app.whatsapp_scan') }}"></iframe>
+<iframe src="{{ config('whatsapp.whatsapp_scan') }}"></iframe>
