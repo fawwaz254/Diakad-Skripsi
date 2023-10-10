@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\JawabanTest;
 use App\Models\PaketSoal;
+use App\Models\PilihanPertanyaan;
+use App\Models\PilihanSoal;
 use App\Models\Siswa;
 use App\Models\Test;
 use Maatwebsite\Excel\Facades\Excel;
@@ -142,7 +144,7 @@ class HasilTestController extends Controller
             // })
             ->addColumn('total_nilai', function ($item) {
                 //pilihan ganda
-                $nilai_pilihan_ganda = $item->jawaban_test->whereIn('id_tipe_soal', [1, 4, 5, 6, 7])->pluck('nilai')->sum();
+                $nilai_pilihan_ganda = number_format($item->jawaban_test->whereIn('id_tipe_soal', [1, 4, 5, 6, 7])->pluck('nilai')->sum());
                 $nilai_paket_soal_pilihan_ganda = $item->paket_soal->nilai;
 
                 //essay
@@ -150,7 +152,7 @@ class HasilTestController extends Controller
                 $jawaban_test = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', 0)->first();
 
                 //total
-                $nilai = $item->jawaban_test->pluck('nilai')->sum();
+                $nilai = number_format($item->jawaban_test->pluck('nilai')->sum());
 
                 $data = array(
                     'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
@@ -224,17 +226,286 @@ class HasilTestController extends Controller
 
     public function printHasilTest3(Request $request, $id)
     {
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna', 'test.jawaban_test', 'kategori_soal', 'detail_paket_soal')->first();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal.pilihan_soal', 'detail_paket_soal.soal.pilihan_pertanyaan', 'test.jawaban_test')->first();
+        $pilihan_pertanyaan = PilihanPertanyaan::get();
+        $pilihan_soal = PilihanSoal::get();
 
         $nilai_siswa = [];
+        $benar = [];
+        $isi = [];
+        $mapping = ['A', 'B', 'C', 'D', 'E'];
+
 
         foreach ($paket_soal->test as $test) {
             $nilai_siswa[$test->id_pengguna] =  $test->jawaban_test->sum('nilai');
         }
 
+
+        foreach ($paket_soal->test as $test) {
+            foreach ($test->jawaban_test as $jawaban_test) {
+                if ($jawaban_test->id_tipe_soal == '1' ||  $jawaban_test->id_tipe_soal == '2' ||  $jawaban_test->id_tipe_soal == '3' ||  $jawaban_test->id_tipe_soal == '4' || $jawaban_test->id_tipe_soal == '5') {
+                    if (!empty($jawaban_test->nilai) && $jawaban_test->nilai != '0') {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal] = true;
+                    }
+
+                    if ($jawaban_test->id_tipe_soal == '1') {
+                        $number_option = $jawaban_test->pilihan_soal->number_option;
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal] = isset($mapping[$number_option]) ? $mapping[$number_option] : '-';
+                    } else if ($jawaban_test->id_tipe_soal == '2') {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal] = substr($jawaban_test->jawaban_essay, 0, 10);
+                    } else if ($jawaban_test->id_tipe_soal == '3') {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal] = null;
+                    } else if ($jawaban_test->id_tipe_soal == '4') {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal] = '';
+                        $complex_ids = [
+                            $jawaban_test->id_pilihan_soal_kompleks1,
+                            $jawaban_test->id_pilihan_soal_kompleks2,
+                            $jawaban_test->id_pilihan_soal_kompleks3,
+                            $jawaban_test->id_pilihan_soal_kompleks4,
+                            $jawaban_test->id_pilihan_soal_kompleks5,
+                        ];
+
+                        foreach ($complex_ids as $complex_id) {
+                            $pilihan = $pilihan_soal->where('id_pilihan_soal', $complex_id)->first();
+                            $pp = $pilihan ? (isset($mapping[$pilihan->number_option]) ? $mapping[$pilihan->number_option] : '') : null;
+                            $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal] .= $pp;
+                        }
+                    } else if ($jawaban_test->id_tipe_soal == '5') {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal] = substr($jawaban_test->jawaban_essay, 0, 10);
+                    }
+                } elseif ($jawaban_test->id_tipe_soal == '6') {
+                    $p1 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '1')->first();
+
+                    if ($p1) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][1] = $jawaban_test->pilihan_jawaban1;
+                    }
+                    if ($p1 && $p1->jawaban == $jawaban_test->pilihan_jawaban1) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][1] = true;
+                    }
+
+                    $p2 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '2')->first();
+                    if ($p2) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][2] = $jawaban_test->pilihan_jawaban2;
+                    }
+                    if ($p2 && $p2->jawaban == $jawaban_test->pilihan_jawaban2) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][2] = true;
+                    }
+
+                    $p3 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '3')->first();
+                    if ($p3) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][3] = $jawaban_test->pilihan_jawaban3;
+                    }
+                    if ($p3 && $p3->jawaban == $jawaban_test->pilihan_jawaban3) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][3] = true;
+                    }
+
+                    $p4 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '4')->first();
+                    if ($p4) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][4] = $jawaban_test->pilihan_jawaban4;
+                    }
+                    if ($p4 && $p4->jawaban == $jawaban_test->pilihan_jawaban4) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][4] = true;
+                    }
+
+                    $p5 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '5')->first();
+                    if ($p5) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][5] = $jawaban_test->pilihan_jawaban5;
+                    }
+                    if ($p5 && $p5->jawaban == $jawaban_test->pilihan_jawaban5) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][5] = true;
+                    }
+                } elseif ($jawaban_test->id_tipe_soal == '7') {
+
+                    $p1 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '0')->first();
+                    if ($p1) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][0] = $jawaban_test->pilihan_jawaban1 == '0' ? 'False' : 'True';
+                    }
+                    if ($p1 && $p1->correct == $jawaban_test->pilihan_jawaban1) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][0] = true;
+                    }
+
+                    $p2 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '1')->first();
+                    if ($p2) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][1] = $jawaban_test->pilihan_jawaban2  == '0' ? 'False' : 'True';
+                    }
+                    if ($p2 && $p2->correct == $jawaban_test->pilihan_jawaban2) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][1] = true;
+                    }
+
+                    $p3 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '2')->first();
+                    if ($p3) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][2] = $jawaban_test->pilihan_jawaban3  == '0' ? 'False' : 'True';
+                    }
+                    if ($p3 && $p3->correct == $jawaban_test->pilihan_jawaban3) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][2] = true;
+                    }
+
+                    $p4 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '3')->first();
+                    if ($p4) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][3] = $jawaban_test->pilihan_jawaban4  == '0' ? 'False' : 'True';
+                    }
+                    if ($p4 && $p4->correct == $jawaban_test->pilihan_jawaban4) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][3] = true;
+                    }
+
+                    $p5 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '4')->first();
+                    if ($p5) {
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][4] = $jawaban_test->pilihan_jawaban5  == '0' ? 'False' : 'True';
+                    }
+                    if ($p5 && $p5->correct == $jawaban_test->pilihan_jawaban5) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][4] = true;
+                    }
+                }
+            }
+        }
+
+
         $data['nilai_siswa'] = $nilai_siswa;
         $data['paket_soal'] = $paket_soal;
+        $data['benar'] = $benar;
+        $data['isi'] = $isi;
 
         return Excel::download(new RekapNilaiElearning($data), 'Rekap Nilai E-learning' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
+    }
+
+    public function koreksiUlang(Request $request)
+    {
+        set_time_limit(-1);
+        $paket_soals = PaketSoal::with('detail_paket_soal.soal.pilihan_pertanyaan', 'test.jawaban_test')->orderBy('paket_soal.created_at', 'desc')->whereHas('test')->get();
+
+        $pilihan_pertanyaan = PilihanPertanyaan::get();
+        $pilihan_soal = PilihanSoal::get();
+
+
+        foreach ($paket_soals as $paket_soal) {
+            $soal_biasa = $paket_soal->detail_paket_soal->whereIn('soal.id_tipe_soal', [1, 2, 3, 4, 5])->count();
+            $soal_cabang = 0;
+            $query_soal_cabang = $paket_soal->detail_paket_soal->whereIn('soal.id_tipe_soal', [6, 7]);
+            foreach ($query_soal_cabang as $soal) {
+                $soal_cabang += $soal->soal->pilihan_pertanyaan->count();
+            }
+
+            if ($soal_biasa == '0' &&  $soal_cabang == '0') {
+                $nilai = 0;
+            } else {
+                $nilai = number_format(100 / ($soal_biasa + $soal_cabang), 1);
+            }
+
+
+            if ($paket_soal->nilai == '0') {
+                foreach ($paket_soal->test as $test) {
+                    foreach ($test->jawaban_test as $jawaban_test) {
+                        if ($jawaban_test->id_tipe_soal == '1' ||  $jawaban_test->id_tipe_soal == '2' ||  $jawaban_test->id_tipe_soal == '3' ||  $jawaban_test->id_tipe_soal == '4' || $jawaban_test->id_tipe_soal == '5') {
+                            if ($jawaban_test->id_tipe_soal == '4') {
+                                $jawaban_benar = true;
+
+                                $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks1)->first();
+                                if ($pilihan_jawaban) {
+                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                        $jawaban_benar = false;
+                                    }
+                                }
+                                $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks2)->first();
+                                if ($pilihan_jawaban) {
+                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                        $jawaban_benar = false;
+                                    }
+                                }
+
+                                $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks3)->first();
+                                if ($pilihan_jawaban) {
+                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                        $jawaban_benar = false;
+                                    }
+                                }
+
+                                $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks4)->first();
+                                if ($pilihan_jawaban) {
+                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                        $jawaban_benar = false;
+                                    }
+                                }
+
+                                $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks5)->first();
+                                if ($pilihan_jawaban) {
+                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                        $jawaban_benar = false;
+                                    }
+                                }
+
+                                $jawaban_test->nilai =  $jawaban_benar ? $nilai : 0;
+                                $jawaban_test->updated_by = 'syahrul';
+                                $jawaban_test->save();
+                            } else {
+                                if (!empty($jawaban_test->nilai) && $jawaban_test->nilai != '0') {
+                                    $jawaban_test->nilai =  $nilai;
+                                    $jawaban_test->updated_by = 'syahrul';
+                                    $jawaban_test->save();
+                                }
+                            }
+                        } elseif ($jawaban_test->id_tipe_soal == '6') {
+                            $total_nilai = 0;
+                            $p1 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '1')->first();
+                            if ($p1 && $p1->jawaban == $jawaban_test->pilihan_jawaban1) {
+                                $total_nilai += $nilai;
+                            }
+
+                            $p2 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '2')->first();
+                            if ($p2 && $p2->jawaban == $jawaban_test->pilihan_jawaban2) {
+                                $total_nilai += $nilai;
+                            }
+
+                            $p3 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '3')->first();
+                            if ($p3 && $p3->jawaban == $jawaban_test->pilihan_jawaban3) {
+                                $total_nilai += $nilai;
+                            }
+
+                            $p4 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '4')->first();
+                            if ($p4 && $p4->jawaban == $jawaban_test->pilihan_jawaban4) {
+                                $total_nilai += $nilai;
+                            }
+
+                            $p5 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '5')->first();
+                            if ($p5 && $p5->jawaban == $jawaban_test->pilihan_jawaban5) {
+                                $total_nilai += $nilai;
+                            }
+                            $jawaban_test->nilai =  $total_nilai;
+                            $jawaban_test->updated_by = 'syahrul';
+                            $jawaban_test->save();
+                        } elseif ($jawaban_test->id_tipe_soal == '7') {
+                            $total_nilai = 0;
+                            $p1 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '0')->first();
+                            if ($p1 && $p1->correct == $jawaban_test->pilihan_jawaban1) {
+                                $total_nilai += $nilai;
+                            }
+
+                            $p2 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '1')->first();
+                            if ($p2 && $p2->correct == $jawaban_test->pilihan_jawaban2) {
+                                $total_nilai += $nilai;
+                            }
+
+                            $p3 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '2')->first();
+                            if ($p3 && $p3->correct == $jawaban_test->pilihan_jawaban3) {
+                                $total_nilai += $nilai;
+                            }
+
+                            $p4 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '3')->first();
+                            if ($p4 && $p4->correct == $jawaban_test->pilihan_jawaban4) {
+                                $total_nilai += $nilai;
+                            }
+
+                            $p5 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '4')->first();
+                            if ($p5 && $p5->correct == $jawaban_test->pilihan_jawaban5) {
+                                $total_nilai += $nilai;
+                            }
+                            $jawaban_test->nilai =  $total_nilai;
+                            $jawaban_test->updated_by = 'syahrul';
+                            $jawaban_test->save();
+                        }
+                    }
+                }
+            }
+        }
+        return 'sukses';
     }
 }
