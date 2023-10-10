@@ -125,16 +125,17 @@
                 data: 'kategori_soal.nm_kategori_soal'
             },
             {
-                data: 'total_question',
-                name: 'total_question',
+                data: 'question',
                 searchable: false,
                 orderable: false,
                 className: 'align-center',
+                render: function(data) {
+                    return data.total_soal;
+                }
 
             },
             {
                 data: 'action',
-                name: 'action',
                 searchable: false,
                 orderable: false,
                 className: 'align-center',
@@ -148,8 +149,13 @@
             },
             // { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
             {
-                data: 'nilai',
-                className: 'align-center'
+                data: 'question',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return data.nilai;
+                }
             }, {
                 data: 'waktu_mulai',
                 className: 'align-center'
@@ -166,7 +172,7 @@
             },
             {
                 data: 'action',
-                name: 'action',
+
                 searchable: false,
                 orderable: false,
                 render: function(data) {

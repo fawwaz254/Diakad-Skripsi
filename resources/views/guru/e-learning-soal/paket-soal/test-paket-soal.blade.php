@@ -57,31 +57,12 @@
                                 @elseif($question->id_tipe_soal == 4)
                                     <div class="demo-radio-button">
                                         @foreach ($question->pilihan_soal as $no_option => $question_option)
-                                            {{-- <input type="hidden" name="{{ $detailPaketSoal->soal_id_tipe_soal }}"> --}}
-                                            @if (empty($jawabanTest))
-                                                <input name="question_option[{{ $no_option }}]" type="checkbox"
-                                                    id="checkbox_{{ $no_option }}"
-                                                    value="{{ $question_option->id_pilihan_soal }}">
-                                                <label for="checkbox_{{ $no_option }}">
-                                                    <pre class="is-answer">{!! $question_option->content !!}</pre>
-                                                </label>
-                                            @else
-                                                @if (in_array($question_option->id_pilihan_soal, $jawabanTest))
-                                                    <input name="question_option[{{ $no_option }}]" type="checkbox"
-                                                        checked="" id="checkbox_{{ $no_option }}"
-                                                        value="{{ $question_option->id_pilihan_soal }}">
-                                                    <label for="checkbox_{{ $no_option }}">
-                                                        <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
-                                                    </label>
-                                                @else
-                                                    <input name="question_option[{{ $no_option }}]" type="checkbox"
-                                                        id="checkbox_{{ $no_option }}"
-                                                        value="{{ $question_option->id_pilihan_soal }}">
-                                                    <label for="checkbox_{{ $no_option }}">
-                                                        <pre class="is-answer">{!! $question_option->content !!}</pre>
-                                                    </label>
-                                                @endif
-                                            @endif
+                                            <input name="question_option[{{ $no_option }}]" type="checkbox"
+                                                id="checkbox_{{ $no_option }}"
+                                                value="{{ $question_option->id_pilihan_soal }}">
+                                            <label for="checkbox_{{ $no_option }}">
+                                                <pre class="is-answer "@if ($question_option->correct == 1) style="background-color: #CFE795;" @endif>{!! $question_option->content !!}</pre>
+                                            </label>
                                             <br>
                                         @endforeach
                                     </div>
@@ -112,7 +93,8 @@
                                                                         Pilih
                                                                     </option>
                                                                     @foreach ($question->pilihan_jawaban as $jawaban)
-                                                                        <option value="{{ $jawaban->nomer }}">
+                                                                        <option value="{{ $jawaban->nomer }}"
+                                                                            @if ($question_option->jawaban == $jawaban->nomer) selected @endif>
                                                                             {{ $jawaban->nomer }}
                                                                         </option>
                                                                     @endforeach

@@ -62,7 +62,7 @@ class PaketSoalController extends Controller
             $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna);
         }
 
-        $list_data->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal', 'kategori_soal', 'paket_soal_kelas.kelas')->orderBy('paket_soal.created_at', 'desc')
+        $list_data->with('kelas', 'detail_paket_soal.soal.pilihan_pertanyaan', 'kategori_soal', 'paket_soal_kelas.kelas')->orderBy('paket_soal.created_at', 'desc')
             ->when($input->status == '0', function ($q) {
                 $q->doesntHave('test');
             })->when($input->status == '1', function ($q) {
@@ -70,19 +70,27 @@ class PaketSoalController extends Controller
             });
 
         return Datatables::of($list_data)
-            ->addColumn('total_question', function ($item) {
-                return  $item->detail_paket_soal->count();
-            })
-            ->addColumn('nilai', function ($item) {
-                if ($item->nilai == '0') {
-                    if ($item->detail_paket_soal->count() == '0') {
-                        return intval(100 / 1);
-                    } else {
-                        return intval(100 / $item->detail_paket_soal->count());
-                    }
+            ->addColumn('question', function ($item) {
+                $soal_biasa = $item->detail_paket_soal->whereIn('soal.id_tipe_soal', [1, 2, 3, 4, 5])->count();
+                $soal_cabang = 0;
+                $query_soal_cabang = $item->detail_paket_soal->whereIn('soal.id_tipe_soal', [6, 7]);
+                foreach ($query_soal_cabang as $soal) {
+                    $soal_cabang += $soal->soal->pilihan_pertanyaan->count();
                 }
-                return  $item->nilai;
+
+                if ($soal_biasa == '0' &&  $soal_cabang == '0') {
+                    $nilai = 0;
+                } else {
+                    $nilai = number_format(100 / ($soal_biasa + $soal_cabang), 1);
+                }
+
+                $data = array(
+                    'total_soal' => $query_soal_cabang->isEmpty() ? $soal_biasa : $soal_biasa . ' + ' . $soal_cabang,
+                    'nilai' => $item->nilai != '0' ? $item->nilai : $nilai,
+                );
+                return $data;
             })
+
             ->editColumn('waktu_mulai', function ($item) {
                 return Carbon::parse($item->waktu_mulai)->format('d-m-Y (H:i)');
             })

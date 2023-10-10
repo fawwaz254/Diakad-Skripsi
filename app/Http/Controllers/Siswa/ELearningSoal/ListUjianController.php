@@ -208,7 +208,18 @@ class ListUjianController extends Controller
 
             $point = $soal->nilai;
             if ($point == '0') {
-                $point =  intval(100 / $question_package_details->count());
+                $soal_biasa = $question_package_details->whereIn('soal.id_tipe_soal', [1, 2, 3, 4, 5])->count();
+                $soal_cabang = 0;
+                $query_soal_cabang = $question_package_details->whereIn('soal.id_tipe_soal', [6, 7]);
+                foreach ($query_soal_cabang as $soal) {
+                    $soal_cabang += $soal->soal->pilihan_pertanyaan->count();
+                }
+
+                if ($soal_biasa == '0' &&  $soal_cabang == '0') {
+                    $point = 0;
+                } else {
+                    $point = number_format(100 / ($soal_biasa + $soal_cabang), 1);
+                }
             }
 
             $all_data = array();
@@ -288,25 +299,20 @@ class ListUjianController extends Controller
             );
             session([$input->paket_soal . '_jawaban' . $input->no => $file]);
         } elseif ($input->id_tipe_soal == 4) {
-            $jawaban_benar = 0;
+            $jawaban_benar = false;
             $jawaban = [];
             if (isset($input->question_option)) {
+                $jawaban_benar = true;
                 foreach ($input->question_option as $question_option) {
                     $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_soal']->where('id_pilihan_soal', $question_option)->first();
-                    if ($pilihan_jawaban->correct == 1) {
-                        $jawaban_benar++;
-                    } else {
-                        $jawaban_benar--;
+                    if ($pilihan_jawaban->correct == 1) { } else {
+                        $jawaban_benar = false;
                     }
                     $jawaban[] = $question_option;
                 }
-
-                if ($jawaban_benar < 0) {
-                    $jawaban_benar = 0;
-                }
             }
 
-            $nilai = (session($input->paket_soal)['point_pilihan_ganda'] * $jawaban_benar) / 5;
+            $nilai =  $jawaban_benar ? session($input->paket_soal)['point_pilihan_ganda'] : 0;
 
             $test_answer = array(
                 'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
@@ -363,7 +369,6 @@ class ListUjianController extends Controller
             );
             session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban_essay]);
         } elseif ($input->id_tipe_soal == 6) {
-
             $jawaban_benar = 0;
             $jawaban = [];
             $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_pertanyaan'];
@@ -371,18 +376,13 @@ class ListUjianController extends Controller
             foreach ($pilihan_jawaban as $jawaban) {
                 if (isset($input->jawaban[$jawaban->nomer])) {
                     if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
-                        $jawaban_benar++;
-                    } else {
-                        $jawaban_benar--;
+                        $jawaban_benar += session($input->paket_soal)['point_pilihan_ganda'];
                     }
                 }
             }
 
-            if ($jawaban_benar < 0) {
-                $jawaban_benar = 0;
-            }
 
-            $nilai = (session($input->paket_soal)['point_pilihan_ganda'] * $jawaban_benar) / $pilihan_jawaban->count();
+            $nilai = $jawaban_benar;
 
             $test_answer = array(
                 'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
@@ -411,18 +411,13 @@ class ListUjianController extends Controller
             foreach ($pilihan_jawaban as $jawaban) {
                 if (isset($input->jawaban[$jawaban->nomer])) {
                     if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
-                        $jawaban_benar++;
-                    } else {
-                        $jawaban_benar--;
+                        $jawaban_benar += session($input->paket_soal)['point_pilihan_ganda'];
                     }
                 }
             }
 
-            if ($jawaban_benar < 0) {
-                $jawaban_benar = 0;
-            }
 
-            $nilai = (session($input->paket_soal)['point_pilihan_ganda'] * $jawaban_benar) / $pilihan_jawaban->count();
+            $nilai = $jawaban_benar;
 
             $test_answer = array(
                 'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
