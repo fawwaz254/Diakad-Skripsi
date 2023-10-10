@@ -13,10 +13,10 @@ class JawabanTest extends Model
 
     protected $primaryKey = 'id_jawaban_test';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_test',
         'id_pengguna',
@@ -32,10 +32,16 @@ class JawabanTest extends Model
 
     protected $guarded = [];  //
 
-    public function test(){
+    public function test()
+    {
         return $this->belongsTo('App\Models\Test', 'id_test');
     }
-    public function soal(){
+    public function soal()
+    {
         return $this->belongsTo('App\Models\Soal', 'id_soal');
+    }
+    public function pilihan_soal()
+    {
+        return $this->belongsTo(PilihanSoal::class, 'id_pilihan_soal');
     }
 }
