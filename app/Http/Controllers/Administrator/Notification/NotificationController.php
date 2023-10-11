@@ -43,6 +43,12 @@ class NotificationController extends Controller
             ->post($url, ['token' => 'DSM_2023;']);
         $data = $response->json();
 
+        if ($data['response'] == "Device is logged out") {
+            return [
+                'message' => 'Perangkat tidak tersambung, silahkan sambungkan terlebih dahulu.'
+            ];
+        }
+
         $list_group = WhatsappGroup::all()->pluck('id_group')->toArray();
 
         foreach ($data['data'] as &$value) {

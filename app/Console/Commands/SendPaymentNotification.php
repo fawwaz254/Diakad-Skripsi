@@ -100,8 +100,8 @@ class SendPaymentNotification extends Command
 
                 $response_data = $response->json();
 
-                if ($response_data['response'] === 'Device Bot Logged Out') {
-                    \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                if ($response_data['response'] === 'Device is logged out') {
+                    \Log::info("Notification Warning: Failed to send notification, Device is logged out");
                 } else {
                     $tagihan_to_update = array_merge($tagihan_to_update, $group_tagihan_biaya->pluck('id_tagihan_biaya')->toArray());
                     \Log::info("Notification Success: Notification payment sent at " . now());
