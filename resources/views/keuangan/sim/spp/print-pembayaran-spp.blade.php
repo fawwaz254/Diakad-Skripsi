@@ -113,8 +113,13 @@
                             <td class="ttd">
                                 Keuangan
                                 <br><br><br><br>
-                                <span style="text-decoration: underline;"> {{ $auth_data->pengguna->nm_pengguna }}
-                                </span>
+                                @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smamaryamsby')
+                                    <span style="text-decoration: underline;"> {{ $auth_data->pengguna->nm_pengguna }}
+                                    </span>
+                                @else
+                                    <span style="text-decoration: underline;"> Bendahara SMA Maryam
+                                    </span>
+                                @endif
                             </td>
                             <td class="ttd">
                                 Penerima
