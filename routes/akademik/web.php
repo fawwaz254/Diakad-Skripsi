@@ -219,6 +219,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('print/{id}', [HasilTestController::class, 'printHasilTest']);
                 Route::get('print2/{id}', [HasilTestController::class, 'printHasilTest2']);
                 Route::get('print3/{id}', [HasilTestController::class, 'printHasilTest3']);
+                Route::get('print4/{id}', [HasilTestController::class, 'printHasilTest4']);
             });
 
             Route::prefix('pengguna-terkunci')->group(function () {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Guru\ELearningSoal;
 
 use App\Exports\RekapNilaiElearning;
+use App\Exports\RekapNilaiElearning2;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibDataAkademik;
@@ -368,6 +369,127 @@ class HasilTestController extends Controller
 
         return Excel::download(new RekapNilaiElearning($data), 'Rekap Nilai E-learning' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
     }
+
+
+    public function printHasilTest4(Request $request, $id)
+    {
+        set_time_limit(-1);
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal.pilihan_soal', 'detail_paket_soal.soal.pilihan_pertanyaan', 'test.jawaban_test')->first();
+        $pilihan_pertanyaan = PilihanPertanyaan::get();
+        $pilihan_soal = PilihanSoal::get();
+
+        $nilai_siswa = [];
+        $benar = [];
+
+
+        foreach ($paket_soal->test as $test) {
+            $nilai_siswa[$test->id_pengguna] =  $test->jawaban_test->sum('nilai');
+        }
+
+
+        foreach ($paket_soal->test as $test) {
+            $type1 = 0;
+            $type2 = 0;
+            foreach ($test->jawaban_test as $jawaban_test) {
+
+                if ($jawaban_test->id_tipe_soal == '1' ||  $jawaban_test->id_tipe_soal == '2' ||  $jawaban_test->id_tipe_soal == '3' ||  $jawaban_test->id_tipe_soal == '4' || $jawaban_test->id_tipe_soal == '5') {
+                    if (!empty($jawaban_test->nilai) && $jawaban_test->nilai != '0') {
+                        $type1++;
+                    }
+                } elseif ($jawaban_test->id_tipe_soal == '6') {
+                    $p1 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '1')->first();
+
+                    if ($p1 && $p1->jawaban == $jawaban_test->pilihan_jawaban1) {
+                        $type2++;
+                    }
+
+                    $p2 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '2')->first();
+
+                    if ($p2 && $p2->jawaban == $jawaban_test->pilihan_jawaban2) {
+                        $type2++;
+                    }
+
+                    $p3 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '3')->first();
+
+                    if ($p3 && $p3->jawaban == $jawaban_test->pilihan_jawaban3) {
+                        $type2++;
+                    }
+
+                    $p4 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '4')->first();
+
+                    if ($p4 && $p4->jawaban == $jawaban_test->pilihan_jawaban4) {
+                        $type2++;
+                    }
+
+                    $p5 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '5')->first();
+
+                    if ($p5 && $p5->jawaban == $jawaban_test->pilihan_jawaban5) {
+                        $type2++;
+                    }
+                } elseif ($jawaban_test->id_tipe_soal == '7') {
+
+                    $p1 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '0')->first();
+
+                    if ($p1 && $p1->correct == $jawaban_test->pilihan_jawaban1) {
+                        $type2++;
+                    }
+
+                    $p2 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '1')->first();
+
+                    if ($p2 && $p2->correct == $jawaban_test->pilihan_jawaban2) {
+                        $type2++;
+                    }
+
+                    $p3 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '2')->first();
+
+                    if ($p3 && $p3->correct == $jawaban_test->pilihan_jawaban3) {
+                        $type2++;
+                    }
+
+                    $p4 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '3')->first();
+
+                    if ($p4 && $p4->correct == $jawaban_test->pilihan_jawaban4) {
+                        $type2++;
+                    }
+
+                    $p5 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '4')->first();
+
+                    if ($p5 && $p5->correct == $jawaban_test->pilihan_jawaban5) {
+                        $type2++;
+                    }
+                }
+            }
+            $benar[$test->id_pengguna]['type1'] = $type1;
+            $benar[$test->id_pengguna]['type2'] = $type2;
+        }
+
+
+
+        $soal_biasa = $paket_soal->detail_paket_soal->whereIn('soal.id_tipe_soal', [1, 2, 3, 4, 5])->count();
+        $soal_cabang = 0;
+        $query_soal_cabang = $paket_soal->detail_paket_soal->whereIn('soal.id_tipe_soal', [6, 7]);
+        foreach ($query_soal_cabang as $soal) {
+            $soal_cabang += $soal->soal->pilihan_pertanyaan->count();
+        }
+
+        if ($soal_biasa == '0' &&  $soal_cabang == '0') {
+            $nilai = 0;
+        } else {
+            $nilai = number_format(100 / ($soal_biasa + $soal_cabang), 1);
+        }
+
+
+
+
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        $data['paket_soal'] = $paket_soal;
+        $data['benar'] = $benar;
+        $data['point'] = $paket_soal->nilai != '0' ? $paket_soal->nilai : $nilai;
+
+        return Excel::download(new RekapNilaiElearning2($data), 'Rekap Nilai E-learning' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
+    }
+
 
     public function koreksiUlang(Request $request)
     {
