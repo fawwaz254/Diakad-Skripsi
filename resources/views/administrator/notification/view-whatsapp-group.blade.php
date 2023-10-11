@@ -71,52 +71,57 @@
             type: "POST",
             url: base_url + '/administrator/notification/whatsapp/group',
             success: function(response) {
-                var primary_table = $('#primary_table').DataTable({
-                    data: response.data,
-                    columns: [{
-                            data: null,
-                            searchable: false,
-                            orderable: false
-                        },
-                        {
-                            data: '0'
-                        },
-                        {
-                            data: '1'
-                        },
-                        {
-                            data: '2'
-                        },
-                        {
-                            data: null,
-                            searchable: false,
-                            orderable: false,
-                            render: function(data, type, row) {
-                                if (data[2] !== 'TERSIMPAN') {
-                                    html = `
-                                    <button class="btn btn-success" data-group-id="${data[1]}" data-group-name="${data[0]}" onclick="showModal(this)"><i class="material-icons">add_box</i><span>Simpan</span></button>
-                                    `;
-                                } else {
-                                    html = `
-                                    <button class="btn btn-danger" data-mode="delete" data-group-id="${data[1]}" data-group-name="${data[0]}" onclick="actionWhatsappGroup(this)"><i class="material-icons">delete</i><span>Hapus</span></button>
-                                    `;
+                if (response.message) {
+                    vex.dialog.alert(response.message);
+                } else {
+                    var primary_table = $('#primary_table').DataTable({
+                        data: response.data,
+                        columns: [{
+                                data: null,
+                                searchable: false,
+                                orderable: false
+                            },
+                            {
+                                data: '0'
+                            },
+                            {
+                                data: '1'
+                            },
+                            {
+                                data: '2'
+                            },
+                            {
+                                data: null,
+                                searchable: false,
+                                orderable: false,
+                                render: function(data, type, row) {
+                                    if (data[2] !== 'TERSIMPAN') {
+                                        html = `
+                                        <button class="btn btn-success" data-group-id="${data[1]}" data-group-name="${data[0]}" onclick="showModal(this)"><i class="material-icons">add_box</i><span>Simpan</span></button>
+                                        `;
+                                    } else {
+                                        html = `
+                                        <button class="btn btn-danger" data-mode="delete" data-group-id="${data[1]}" data-group-name="${data[0]}" onclick="actionWhatsappGroup(this)"><i class="material-icons">delete</i><span>Hapus</span></button>
+                                        `;
+                                    }
+
+                                    return html;
                                 }
-
-                                return html;
                             }
-                        }
-                    ]
-                });
-
-                primary_table.on('draw', function() {
-                    primary_table.column(0, {
-                        search: 'applied',
-                        order: 'applied'
-                    }).nodes().each(function(cell, i) {
-                        var start = this.page.info().page * this.page.info().length;
-                        cell.innerHTML = start + i + 1;
+                        ]
                     });
-                }).draw();
+
+                    primary_table.on('draw', function() {
+                        primary_table.column(0, {
+                            search: 'applied',
+                            order: 'applied'
+                        }).nodes().each(function(cell, i) {
+                            var start = this.page.info().page * this.page.info()
+                                .length;
+                            cell.innerHTML = start + i + 1;
+                        });
+                    }).draw();
+                }
             },
         });
     });
