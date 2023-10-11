@@ -96,8 +96,8 @@ class SendAttendanceNotification extends Command
 
                     $response_data = $response->json();
 
-                    if ($response_data['response'] == 'Device Bot Logged Out') {
-                        \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                    if ($response_data['response'] == 'Device is logged out') {
+                        \Log::info("Notification Warning: Failed to send notification, Device is logged out");
                     } else {
                         $notif_kehadiran = new WaNotifKehadiranSiswa();
                         $notif_kehadiran->id_notif = strtotime($now) . uniqid();
@@ -160,8 +160,8 @@ class SendAttendanceNotification extends Command
 
                     $response_data = $response->json();
 
-                    if ($response_data['response'] == 'Device Bot Logged Out') {
-                        \Log::info("Notification Warning: Failed to send notification, Device bot logged out");
+                    if ($response_data['response'] == 'Device is logged out') {
+                        \Log::info("Notification Warning: Failed to send notification, Device is logged out");
                     } else {
                         $notif_kehadiran = new WaNotifKehadiranSiswa();
                         $notif_kehadiran->id_notif = strtotime($now) . uniqid();
