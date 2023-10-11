@@ -55,6 +55,7 @@
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/print';
     var print_url2 = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/print2';
     var print_url3 = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/print3';
+    var print_url4 = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/print4';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -133,6 +134,10 @@
                         '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
                         print_url3 + '/' + data.id + '">' +
                         '    <i class="material-icons">library_books</i>' +
+                        '</a>' +
+                        '<a target="_blank" class="btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                        print_url4 + '/' + data.id + '">' +
+                        '    <i class="material-icons">print</i>' +
                         '</a>';
                 }
             }
