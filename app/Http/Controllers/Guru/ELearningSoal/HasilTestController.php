@@ -237,14 +237,13 @@ class HasilTestController extends Controller
         $isi = [];
         $mapping = ['A', 'B', 'C', 'D', 'E'];
 
-
-        foreach ($paket_soal->test as $test) {
-            $nilai_siswa[$test->id_pengguna] =  $test->jawaban_test->sum('nilai');
-        }
-
-
         foreach ($paket_soal->test as $test) {
             foreach ($test->jawaban_test as $jawaban_test) {
+                if (isset($nilai_siswa[$test->id_pengguna])) {
+                    $nilai_siswa[$test->id_pengguna] +=  $jawaban_test->nilai;
+                } else {
+                    $nilai_siswa[$test->id_pengguna] =  $jawaban_test->nilai;
+                }
                 if ($jawaban_test->id_tipe_soal == '1' ||  $jawaban_test->id_tipe_soal == '2' ||  $jawaban_test->id_tipe_soal == '3' ||  $jawaban_test->id_tipe_soal == '4' || $jawaban_test->id_tipe_soal == '5') {
                     if (!empty($jawaban_test->nilai) && $jawaban_test->nilai != '0') {
                         $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal] = true;
@@ -383,14 +382,14 @@ class HasilTestController extends Controller
 
 
         foreach ($paket_soal->test as $test) {
-            $nilai_siswa[$test->id_pengguna] =  $test->jawaban_test->sum('nilai');
-        }
-
-
-        foreach ($paket_soal->test as $test) {
             $type1 = 0;
             $type2 = 0;
             foreach ($test->jawaban_test as $jawaban_test) {
+                if (isset($nilai_siswa[$test->id_pengguna])) {
+                    $nilai_siswa[$test->id_pengguna] +=  $jawaban_test->nilai;
+                } else {
+                    $nilai_siswa[$test->id_pengguna] =  $jawaban_test->nilai;
+                }
 
                 if ($jawaban_test->id_tipe_soal == '1' ||  $jawaban_test->id_tipe_soal == '2' ||  $jawaban_test->id_tipe_soal == '3' ||  $jawaban_test->id_tipe_soal == '4' || $jawaban_test->id_tipe_soal == '5') {
                     if (!empty($jawaban_test->nilai) && $jawaban_test->nilai != '0') {
@@ -477,9 +476,6 @@ class HasilTestController extends Controller
         } else {
             $nilai = number_format(100 / ($soal_biasa + $soal_cabang), 1);
         }
-
-
-
 
 
         $data['nilai_siswa'] = $nilai_siswa;
