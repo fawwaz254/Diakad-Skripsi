@@ -34,7 +34,11 @@
                                     <th>Waktu</th>
                                     <th>Total Siswa</th>
                                     <th>Siswa Mengerjakan</th>
-                                    <th>Action</th>
+                                    <th>Detail</th>
+                                    <th>Berita Acara</th>
+                                    <th>Daftar Hadir</th>
+                                    <th>Detail Isian Siswa</th>
+                                    <th>Cetak Nilai</th>
                                 </tr>
                             </thead>
 
@@ -118,30 +122,68 @@
                 name: 'action',
                 searchable: false,
                 orderable: false,
+                className: 'align-center',
                 render: function(data) {
                     return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
                         detail_url + '/detail/' + data.id + '">' +
                         '    <i class="material-icons">remove_red_eye</i>' +
-                        '</a>' +
-                        '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                        '</a>';
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
                         print_url + '/' + data.id + '">' +
                         '    <i class="material-icons">print</i>' +
-                        '</a>' +
-                        '<a target="_blank" class="btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                        '</a>';
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a target="_blank" class="btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
                         print_url2 + '/' + data.id + '">' +
                         '    <i class="material-icons">print</i>' +
-                        '</a>' +
-                        '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                        '</a>';
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="' +
                         print_url3 + '/' + data.id + '">' +
                         '    <i class="material-icons">library_books</i>' +
-                        '</a>' +
-                        '<a target="_blank" class="btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                        '</a>';
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a target="_blank" class="btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
                         print_url4 + '/' + data.id + '">' +
                         '    <i class="material-icons">print</i>' +
                         '</a>';
                 }
             }
         ],
+
         order: [
             [4, 'desc']
         ]
