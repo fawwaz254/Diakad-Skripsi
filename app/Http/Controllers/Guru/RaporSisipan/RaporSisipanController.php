@@ -89,7 +89,7 @@ class RaporSisipanController extends Controller
 
         if ($mode == 'add') {
             $cekDuplicate = RaporSisipan::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $input->id_semester)
-                ->first();
+                ->with('pengguna')->first();
             $validator = Validator::make($request->all(), [
                 'id_mata_pelajaran' => 'required',
                 'id_kelas'              => 'required'
@@ -99,7 +99,7 @@ class RaporSisipanController extends Controller
         if ($cekDuplicate) {
             return [
                 'status' => 300, // FAILED
-                'message' => 'Kelas dan Mapel Sudah ada Guru Lain yang Menggunakan'
+                'message' => 'Kelas dan Mapel Sudah digunakan oleh ' . $cekDuplicate->pengguna->nm_pengguna,
             ];
         }
 

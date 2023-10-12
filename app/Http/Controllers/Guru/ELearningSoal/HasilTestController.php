@@ -7,6 +7,7 @@ use App\Exports\RekapNilaiElearning2;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\DetailPaketSoal;
 use App\Models\JawabanTest;
 use App\Models\PaketSoal;
 use App\Models\PilihanPertanyaan;
@@ -626,5 +627,26 @@ class HasilTestController extends Controller
             }
         }
         return 'sukses';
+    }
+
+    public function hapus()
+    {
+        set_time_limit(-1);
+        $detail_paket_soals = DetailPaketSoal::withTrashed()->whereNotNull('deleted_at')->where('id_paket_soal', 'Qjh121696250712651abb58ecbe9')->get();
+
+        foreach ($detail_paket_soals as $detail_paket_soal) {
+            $tests = Test::where('id_paket_soal', 'Qjh121696250712651abb58ecbe9')->get();
+            foreach ($tests as $test) {
+                $jawaban_test = JawabanTest::where('id_soal', $detail_paket_soal->id_soal)->where('id_test', $test->id_test)->first();
+
+                if ($jawaban_test) {
+                    $jawaban_test->deleted_by = 'syahrul';
+                    $jawaban_test->save();
+                    $jawaban_test->delete();
+                }
+            }
+        }
+
+        return 'berhasil';
     }
 }

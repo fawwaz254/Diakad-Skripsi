@@ -231,6 +231,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('print3/{id}', [HasilTestController::class, 'printHasilTest3']);
                 Route::get('print4/{id}', [HasilTestController::class, 'printHasilTest4']);
                 Route::get('/koreksiUlang', [HasilTestController::class, 'koreksiUlang']);
+                Route::get('/hapus', [HasilTestController::class, 'hapus']);
             });
 
             Route::prefix('pengguna-terkunci')->group(function () {
