@@ -26,7 +26,7 @@ class SendAttendanceNotififcationByClass extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send Attendance Notification via WhatsApp by class';
 
     /**
      * Create a new command instance.
@@ -69,12 +69,6 @@ class SendAttendanceNotififcationByClass extends Command
             $nama_sekolah = Sekolah::value('nm_sekolah');
             $mode = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->value('value');
             $base_template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->value('value');
-            $template = $base_template;
-            $message = str_replace(
-                ['{{DATE}}', '\n'],
-                [now()->translatedFormat('l, d F Y'), "\n"],
-                $template
-            );
 
             if ($mode === 'PRESENT_ONLY' || $mode === 'ALL') {
                 $list_presensi_pengguna_group = PresensiPengguna::with('pengguna.siswa.kelas')
@@ -90,9 +84,15 @@ class SendAttendanceNotififcationByClass extends Command
 
                     $siswa_kelas = [];
                     foreach ($list_presensi_pengguna as $presensi_pengguna) {
-                        $siswa_kelas[] = $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
+                        $siswa_kelas[] = "[" . $presensi_pengguna->pengguna->siswa->nis_siswa . "]" . $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
                     };
 
+                    $template = $base_template;
+                    $message = str_replace(
+                        ['{{CLASS}}', '{{DATE}}', '\n'],
+                        [$key, now()->translatedFormat('l, d F Y'), "\n"],
+                        $template
+                    );
                     $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
                     $message .= $content_message;
                     $message .= "\n\n\nJika Anda memiliki pertanyaan terkait kesiswaan atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Kesiswaan " . $nama_sekolah . "*";
@@ -152,9 +152,15 @@ class SendAttendanceNotififcationByClass extends Command
 
                     $siswa_kelas = [];
                     foreach ($list_siswa as $siswa) {
-                        $siswa_kelas[] = $siswa->pengguna->nm_pengguna;
+                        $siswa_kelas[] = "[" . $siswa->nis_siswa . "]" . $siswa->pengguna->nm_pengguna;
                     };
 
+                    $template = $base_template;
+                    $message = str_replace(
+                        ['{{CLASS}}', '{{DATE}}', '\n'],
+                        [$key, now()->translatedFormat('l, d F Y'), "\n"],
+                        $template
+                    );
                     $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
                     $message .= $content_message;
                     $message .= "\n\n\nJika Anda memiliki pertanyaan terkait kesiswaan atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Kesiswaan " . $nama_sekolah . "*";
