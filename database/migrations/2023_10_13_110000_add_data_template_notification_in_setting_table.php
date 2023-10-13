@@ -17,7 +17,7 @@ class AddDataTemplateNotificationInSettingTable extends Migration
         Setting::updateOrCreate(
             ['key_setting' => 'template_notif_kehadiran_siswa'],
             [
-                'value' => '*Notifikasi Ketidakhadiran Siswa Harian*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami dengan berat hati memberitahukan ketidakhadiran putra/putri Anda di sekolah hari ini, {{DATE}}\n\n\n',
+                'value' => '*Notifikasi Ketidakhadiran Siswa Harian {{CLASS}}*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami dengan berat hati memberitahukan ketidakhadiran putra/putri Anda di sekolah hari ini, {{DATE}}\n\n\n',
                 'keterangan' => 'template pesan notifikasi kehadiran/ketidakhadiran siswa'
             ]
         );
@@ -25,7 +25,7 @@ class AddDataTemplateNotificationInSettingTable extends Migration
         Setting::updateOrCreate(
             ['key_setting' => 'template_notif_pembayaran_spp'],
             [
-                'value' => '*Notifikasi Pembayaran SPP*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami ingin menginformasikan pembayaran SPP untuk putra/putri Anda hari ini, {{DATE}}\n\n\n',
+                'value' => '*Notifikasi Pembayaran SPP {{CLASS}}*\n\n\nAssalamualaikum Wr.Wb. Bapak/Ibu Wali Murid,\n\nKami ingin menginformasikan pembayaran SPP untuk putra/putri Anda hari ini, {{DATE}}\n\n\n',
                 'keterangan' => 'template pesan notifikasi pembayaran SPP siswa'
             ]
         );
