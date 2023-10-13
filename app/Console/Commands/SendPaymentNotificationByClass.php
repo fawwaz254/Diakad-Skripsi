@@ -23,7 +23,7 @@ class SendPaymentNotificationByClass extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send Payment SPP Notification via WhatsApp by class';
 
     /**
      * Create a new command instance.
@@ -78,12 +78,6 @@ class SendPaymentNotificationByClass extends Command
         try {
             $nama_sekolah = Sekolah::first()->nm_sekolah;
             $base_template = Setting::where('key_setting', 'template_notif_pembayaran_spp')->value('value');
-            $template = $base_template;
-            $message = str_replace(
-                ['{{DATE}}', '\n'],
-                [now()->translatedFormat('l, d F Y'), "\n"],
-                $template
-            );
 
             $tagihan_to_update = [];
 
@@ -110,6 +104,12 @@ class SendPaymentNotificationByClass extends Command
                     $siswa_kelas[] = $nama_pengguna . " ( " . $bulan_pembayaran . ")";
                 }
 
+                $template = $base_template;
+                $message = str_replace(
+                    ['{{CLASS}}', '{{DATE}}', '\n'],
+                    [$key, now()->translatedFormat('l, d F Y'), "\n"],
+                    $template
+                );
                 $content_message = join("\n----------------------------------------------------------------------------------\n", $siswa_kelas);
                 $message .= $content_message;
                 $message .= "\n\n\nJika Anda memiliki pertanyaan terkait pembayaran atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Keuangan " . $nama_sekolah . "*";
