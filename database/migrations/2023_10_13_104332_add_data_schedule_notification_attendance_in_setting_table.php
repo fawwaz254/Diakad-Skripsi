@@ -17,8 +17,16 @@ class AddDataScheduleNotificationAttendanceInSettingTable extends Migration
         Setting::updateOrCreate(
             ['key_setting' => 'jadwal_jam_notif_kehadiran_siswa'],
             [
-                'value' => '9:00-15:00',
-                'keterangan' => 'Jadwal rentang waktu notif kehadiran siswa'
+                'value' => '11:00',
+                'keterangan' => 'Jadwal notif kehadiran siswa'
+            ]
+        );
+
+        Setting::updateOrCreate(
+            ['key_setting' => 'jadwal_jam_notif_pembayaran_spp'],
+            [
+                'value' => '15:00',
+                'keterangan' => 'Jadwal notif pembayaran SPP siswa'
             ]
         );
     }
