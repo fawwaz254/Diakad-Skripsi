@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Sekolah;
+use App\Models\Setting;
 use Illuminate\Console\Command;
 use App\Models\PresensiPengguna;
 use App\Models\ManajemenHariLibur;
@@ -117,7 +118,7 @@ class SendAttendanceNotififcationByClass extends Command
                         \Log::info("Notification Success: Notification attendance sent at " . now());
                     }
 
-                    sleep(rand(10, 25));
+                    sleep(rand(19, 29));
                 }
             }
 
@@ -179,7 +180,7 @@ class SendAttendanceNotififcationByClass extends Command
                         \Log::info("Notification Success: Notification attendance sent at " . now());
                     }
 
-                    sleep(rand(10, 25));
+                    sleep(rand(19, 29));
                 }
             }
         } catch (\Exception $e) {

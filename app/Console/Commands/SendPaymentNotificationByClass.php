@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Kelas;
 use App\Models\Sekolah;
+use App\Models\Setting;
 use App\Models\TagihanBiaya;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -131,7 +132,7 @@ class SendPaymentNotificationByClass extends Command
                     \Log::info("Notification Success: Notification attendance sent at " . now());
                 }
 
-                sleep(rand(10, 25));
+                sleep(rand(19, 29));
             }
 
             if (!empty($tagihan_to_update)) {
