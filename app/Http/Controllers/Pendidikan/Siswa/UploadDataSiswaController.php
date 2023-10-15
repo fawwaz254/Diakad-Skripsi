@@ -1348,9 +1348,9 @@ class UploadDataSiswaController extends BaseController
 				// 				'nomor_ijasah_sebelumnya' => $data_siswa['nomor_ijasah_sebelumnya'],
 				// 				'nomor_skhus_sebelumnya' => $data_siswa['nomor_skhus_sebelumnya'],
 
-				// 				'created_at' => $this->now,
+				// 				'created_at' => $now,
 				// 				'created_by' => $data_siswa['created_by'],
-				// 				'updated_at' => $this->now,
+				// 				'updated_at' => $now,
 				// 				'updated_by' => $data_siswa['created_by'],
 				// 			];
 
@@ -1374,9 +1374,9 @@ class UploadDataSiswaController extends BaseController
 				// 				'golongan_darah' => $data_siswa['golongan_darah'],
 				// 				'riwayat_kelainan_jasmani' => $data_siswa['riwayat_kelainan_jasmani'],
 
-				// 				'created_at' => $this->now,
+				// 				'created_at' => $now,
 				// 				'created_by' => $data_siswa['created_by'],
-				// 				'updated_at' => $this->now,
+				// 				'updated_at' => $now,
 				// 				'updated_by' => $data_siswa['created_by'],
 				// 			];
 
@@ -1423,9 +1423,9 @@ class UploadDataSiswaController extends BaseController
 				// 				'nomor_hp_ortu' => $data_siswa['nomor_hp_ortu'],
 				// 				'email_ortu' => $data_siswa['email_ortu'],
 
-				// 				'created_at' => $this->now,
+				// 				'created_at' => $now,
 				// 				'created_by' => $data_siswa['created_by'],
-				// 				'updated_at' => $this->now,
+				// 				'updated_at' => $now,
 				// 				'updated_by' => $data_siswa['created_by'],
 				// 			];
 
@@ -1447,9 +1447,9 @@ class UploadDataSiswaController extends BaseController
 				// 				'nomor_peserta_unas' => $data_siswa['nomor_peserta_unas'],
 				// 				'nisn' => $data_siswa['nisn'],
 
-				// 				'created_at' => $this->now,
+				// 				'created_at' => $now,
 				// 				'created_by' => $data_siswa['created_by'],
-				// 				'updated_at' => $this->now,
+				// 				'updated_at' => $now,
 				// 				'updated_by' => $data_siswa['created_by'],
 				// 			];
 
@@ -1474,7 +1474,7 @@ class UploadDataSiswaController extends BaseController
 				// 						'password' => Hash::make($data_siswa['nis']),
 				// 						'must_change_password' => 1,
 				// 						'status_join_table' => 3,
-				// 						'created_at' => $this->now,
+				// 						'created_at' => $now,
 				// 						'created_by' => $data_siswa['created_by'],
 				// 					]
 				// 				);
@@ -1487,9 +1487,9 @@ class UploadDataSiswaController extends BaseController
 				// 				'is_orang_tua' => $data_siswa['is_orang_tua'],
 
 				// 				'thn_masuk_siswa' => $data_siswa['tahun_masuk'],
-				// 				'created_at' => $this->now,
+				// 				'created_at' => $now,
 				// 				'created_by' => $data_siswa['created_by'],
-				// 				'updated_at' => $this->now,
+				// 				'updated_at' => $now,
 				// 				'updated_by' => $data_siswa['created_by'],
 				// 			];
 
@@ -1513,7 +1513,7 @@ class UploadDataSiswaController extends BaseController
 				// 						'id_semester' => $data_siswa['semester_masuk'],
 				// 						'id_status_pengguna' => $data_siswa['status_siswa'],
 				// 						'id_jalur' => $data_siswa['jalur'],
-				// 						'created_at' => $this->now,
+				// 						'created_at' => $now,
 				// 						'created_by' => $data_siswa['created_by'],
 				// 					]
 				// 				);
@@ -1526,7 +1526,7 @@ class UploadDataSiswaController extends BaseController
 				// 						'id_jalur' => $data_siswa['jalur'],
 				// 						'id_admisi' => $data_siswa['id_admisi'],
 				// 						'is_jalur_aktif' => 1,
-				// 						'created_at' => $this->now,
+				// 						'created_at' => $now,
 				// 						'created_by' => $data_siswa['created_by'],
 				// 					]
 				// 				);
@@ -1537,7 +1537,7 @@ class UploadDataSiswaController extends BaseController
 				// 						'id_role' => 3,
 				// 						'keterangan_role_pengguna' => "Input Pendidikan",
 				// 						'is_aktif' => 1,
-				// 						'created_at' => $this->now,
+				// 						'created_at' => $now,
 				// 						'created_by' => $data_siswa['created_by'],
 				// 					]
 				// 				);
@@ -1547,8 +1547,8 @@ class UploadDataSiswaController extends BaseController
 				// 						'id_log_kelas_siswa' => $data_siswa['id_log_kelas_siswa'],
 				// 						'id_siswa' => $data_siswa['id_siswa'],
 				// 						'id_kelas' => $data_siswa['kelas'],
-				// 						'created_at' => $this->now,
-				// 						'updated_at' => $this->now,
+				// 						'created_at' => $now,
+				// 						'updated_at' => $now,
 				// 						'created_by' => $data_siswa['created_by'],
 				// 					]
 				// 				);
@@ -1668,7 +1668,7 @@ class UploadDataSiswaController extends BaseController
 
 			DB::rollback();
 
-			return (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error';
+			return (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : $e->getMessage();
 		}
 	}
 
@@ -1695,7 +1695,9 @@ class UploadDataSiswaController extends BaseController
 	public function uploadFileExcel(Request $request)
 	{
 		set_time_limit(-1);
-
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
+		$now = Carbon::now(env('APP_TIMEZONE', ''));
 		if ($request->hasFile('file-excel')) {
 			$data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
 			$data = $data[0];
@@ -1749,7 +1751,7 @@ class UploadDataSiswaController extends BaseController
 					$status = $data_status_pengguna->firstWhere('nm_status_pengguna', '=', $value->status_siswa);
 
 					if (empty($status)) {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, status ' . $value->status_siswa . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, status ' . $value->status_siswa . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, status ' . $value->status_siswa . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -1762,7 +1764,7 @@ class UploadDataSiswaController extends BaseController
 				$kelas = $data_kelas->firstWhere('nm_kelas', '=', $value->kelas);
 
 				if (empty($kelas)) {
-					$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kelas ' . $value->kelas . ' tidak ditemukan di dalam sistem';
+					// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kelas ' . $value->kelas . ' tidak ditemukan di dalam sistem';
 					Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, kelas ' . $value->kelas . ' tidak ditemukan di dalam sistem');
 					return [
 						'status'    => 300, // FAILED
@@ -1796,7 +1798,7 @@ class UploadDataSiswaController extends BaseController
 				$semester_masuk = $data_semester_masuk->firstWhere('kode_semester', '=', $value->semester_masuk);
 
 				if (empty($semester_masuk)) {
-					$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, semester masuk ' . $value->semester_masuk . ' tidak ditemukan di dalam sistem';
+					// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, semester masuk ' . $value->semester_masuk . ' tidak ditemukan di dalam sistem';
 					Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, semester masuk ' . $value->semester_masuk . ' tidak ditemukan di dalam sistem');
 					return [
 						'status'    => 300, // FAILED
@@ -1808,7 +1810,7 @@ class UploadDataSiswaController extends BaseController
 				$id_penerimaan = $data_penerimaan->firstWhere('tahun_penerimaan', '=', (int) $value->tahun_masuk);
 
 				if (empty($id_penerimaan)) {
-					$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, tahun masuk ' . $value->tahun_masuk . ' tidak ditemukan di dalam sistem';
+					// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, tahun masuk ' . $value->tahun_masuk . ' tidak ditemukan di dalam sistem';
 					Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, tahun masuk ' . $value->tahun_masuk . ' tidak ditemukan di dalam sistem');
 					return [
 						'status'    => 300, // FAILED
@@ -1831,7 +1833,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_voucher) {
 						$kode_voucher = $find_voucher->id_voucher;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kode voucher ' . $value->kode_voucher . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kode voucher ' . $value->kode_voucher . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, kode voucher ' . $value->kode_voucher . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -1855,7 +1857,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_agama) {
 						$agama = $find_agama->id_agama;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, agama ' . $value->agama . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, agama ' . $value->agama . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, agama ' . $value->agama . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -1872,7 +1874,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_kota) {
 						$kota_lahir = $find_kota->id_kota;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kota lahir ' . $value->kota_lahir . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kota lahir ' . $value->kota_lahir . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, kota lahir ' . $value->kota_lahir . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -1896,7 +1898,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_kota_ksk) {
 						$kota_ksk = $find_kota_ksk->id_kota;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, nama kota ksk ' . $value->nama_kota_ksk . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, nama kota ksk ' . $value->nama_kota_ksk . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, nama kota ksk ' . $value->nama_kota_ksk . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -1951,7 +1953,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_kebutuhan_khusus) {
 						$kebutuhan_khusus = $find_kebutuhan_khusus->id_kebutuhan_khusus;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, Kebutuhan Khusus ' . $value->kebutuhan_khusus . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, Kebutuhan Khusus ' . $value->kebutuhan_khusus . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, Kebutuhan Khusus ' . $value->kebutuhan_khusus . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -2017,7 +2019,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_alamat_kota) {
 						$alamat_kota = $find_alamat_kota->id_kota;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat kota ' . $value->alamat_kota . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat kota ' . $value->alamat_kota . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat kota ' . $value->alamat_kota . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -2034,7 +2036,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_provinsi) {
 						$alamat_provinsi = $find_provinsi->id_provinsi;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat provinsi ' . $value->alamat_provinsi . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat provinsi ' . $value->alamat_provinsi . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat provinsi ' . $value->alamat_provinsi . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -2072,7 +2074,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_tinggal) {
 						$jenis_tinggal = $find_jenis_tinggal->id_jenis_tinggal;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis tinggal ' . $value->jenis_tinggal . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis tinggal ' . $value->jenis_tinggal . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis tinggal ' . $value->jenis_tinggal . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -2124,7 +2126,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_transportasi) {
 						$jenis_transportasi = $find_jenis_transportasi->id_jenis_transportasi;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis transportasi ' . $value->jenis_transportasi . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis transportasi ' . $value->jenis_transportasi . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis transportasi ' . $value->jenis_transportasi . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -2190,7 +2192,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_layak) {
 						$jenis_layak_pip = $find_jenis_layak->id_jenis_layak_pip;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis layak pip ' . $value->jenis_layak_pip . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis layak pip ' . $value->jenis_layak_pip . ' tidak ditemukan di dalam sistem';
 						Debugbar::error('Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis layak pip ' . $value->jenis_layak_pip . ' tidak ditemukan di dalam sistem');
 						return [
 							'status'    => 300, // FAILED
@@ -2214,7 +2216,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_kota_sekolah_asal) {
 						$kota_asal_sekolah_sebelumnya = $find_alamat_kota->id_kota;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kota asal sekolah sebelumnya ' . $value->kota_asal_sekolah_sebelumnya . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kota asal sekolah sebelumnya ' . $value->kota_asal_sekolah_sebelumnya . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kota asal sekolah sebelumnya ' . $value->kota_asal_sekolah_sebelumnya . ' tidak ditemukan di dalam sistem'
 						);
@@ -2303,7 +2305,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_pendidikan) {
 						$jenis_pendidikan_ayah = $find_jenis_pendidikan->id_jenis_pendidikan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan ayah ' . $value->jenis_pendidikan_ayah . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan ayah ' . $value->jenis_pendidikan_ayah . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan ayah ' . $value->jenis_pendidikan_ayah . ' tidak ditemukan di dalam sistem'
 						);
@@ -2322,7 +2324,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_pekerjaan) {
 						$jenis_pekerjaan_ayah = $find_jenis_pekerjaan->id_jenis_pekerjaan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan ayah ' . $value->jenis_pekerjaan_ayah . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan ayah ' . $value->jenis_pekerjaan_ayah . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan ayah ' . $value->jenis_pekerjaan_ayah . ' tidak ditemukan di dalam sistem'
 						);
@@ -2341,7 +2343,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_penghasilan) {
 						$jenis_penghasilan_ayah = $find_jenis_penghasilan->id_jenis_penghasilan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan ayah ' . $value->jenis_penghasilan_ayah . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan ayah ' . $value->jenis_penghasilan_ayah . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan ayah ' . $value->jenis_penghasilan_ayah . ' tidak ditemukan di dalam sistem'
 						);
@@ -2360,7 +2362,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_kebutuhan_khusus) {
 						$kebutuhan_khusus_ayah = $find_kebutuhan_khusus->id_kebutuhan_khusus;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus ayah ' . $value->kebutuhan_khusus_ayah . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus ayah ' . $value->kebutuhan_khusus_ayah . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus ayah ' . $value->kebutuhan_khusus_ayah . ' tidak ditemukan di dalam sistem'
 						);
@@ -2400,7 +2402,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_pendidikan) {
 						$jenis_pendidikan_ibu = $find_jenis_pendidikan->id_jenis_pendidikan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan ibu ' . $value->jenis_pendidikan_ibu . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan ibu ' . $value->jenis_pendidikan_ibu . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan ibu ' . $value->jenis_pendidikan_ibu . ' tidak ditemukan di dalam sistem'
 						);
@@ -2419,7 +2421,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_pekerjaan) {
 						$jenis_pekerjaan_ibu = $find_jenis_pekerjaan->id_jenis_pekerjaan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan ibu ' . $value->jenis_pekerjaan_ibu . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan ibu ' . $value->jenis_pekerjaan_ibu . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan ibu ' . $value->jenis_pekerjaan_ibu . ' tidak ditemukan di dalam sistem'
 						);
@@ -2438,7 +2440,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_penghasilan) {
 						$jenis_penghasilan_ibu = $find_jenis_penghasilan->id_jenis_penghasilan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan ibu ' . $value->jenis_penghasilan_ibu . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan ibu ' . $value->jenis_penghasilan_ibu . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan ibu ' . $value->jenis_penghasilan_ibu . ' tidak ditemukan di dalam sistem'
 						);
@@ -2457,7 +2459,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_kebutuhan_khusus) {
 						$kebutuhan_khusus_ibu = $find_kebutuhan_khusus->id_kebutuhan_khusus;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus ibu ' . $value->kebutuhan_khusus_ibu . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus ibu ' . $value->kebutuhan_khusus_ibu . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus ibu ' . $value->kebutuhan_khusus_ibu . ' tidak ditemukan di dalam sistem'
 						);
@@ -2497,7 +2499,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_pendidikan) {
 						$jenis_pendidikan_wali = $find_jenis_pendidikan->id_jenis_pendidikan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan wali ' . $value->jenis_pendidikan_wali . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan wali ' . $value->jenis_pendidikan_wali . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pendidikan wali ' . $value->jenis_pendidikan_wali . ' tidak ditemukan di dalam sistem'
 						);
@@ -2516,7 +2518,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_pekerjaan) {
 						$jenis_pekerjaan_wali = $find_jenis_pekerjaan->id_jenis_pekerjaan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan wali ' . $value->jenis_pekerjaan_wali . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan wali ' . $value->jenis_pekerjaan_wali . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis pekerjaan wali ' . $value->jenis_pekerjaan_wali . ' tidak ditemukan di dalam sistem'
 						);
@@ -2535,7 +2537,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_jenis_penghasilan) {
 						$jenis_penghasilan_wali = $find_jenis_penghasilan->id_jenis_penghasilan;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan wali ' . $value->jenis_penghasilan_wali . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan wali ' . $value->jenis_penghasilan_wali . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, jenis penghasilan wali ' . $value->jenis_penghasilan_wali . ' tidak ditemukan di dalam sistem'
 						);
@@ -2554,7 +2556,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_kebutuhan_khusus) {
 						$kebutuhan_khusus_wali = $find_kebutuhan_khusus->id_kebutuhan_khusus;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus wali ' . $value->kebutuhan_khusus_wali . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus wali ' . $value->kebutuhan_khusus_wali . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kebutuhan khusus wali ' . $value->kebutuhan_khusus_wali . ' tidak ditemukan di dalam sistem'
 						);
@@ -2622,7 +2624,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_alamat_kota) {
 						$alamat_kota_orang_tua = $find_alamat_kota->id_kota;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat kota orang tua ' . $value->alamat_kota_orang_tua . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat kota orang tua ' . $value->alamat_kota_orang_tua . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat kota orang tua ' . $value->alamat_kota_orang_tua . ' tidak ditemukan di dalam sistem'
 						);
@@ -2641,7 +2643,7 @@ class UploadDataSiswaController extends BaseController
 					if ($find_provinsi) {
 						$alamat_provinsi_orang_tua = $find_provinsi->id_provinsi;
 					} else {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat provinsi orang tua ' . $value->alamat_provinsi_orang_tua . ' tidak ditemukan di dalam sistem';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat provinsi orang tua ' . $value->alamat_provinsi_orang_tua . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, alamat provinsi orang tua ' . $value->alamat_provinsi_orang_tua . ' tidak ditemukan di dalam sistem'
 						);
@@ -2730,7 +2732,7 @@ class UploadDataSiswaController extends BaseController
 				}
 
 				if ($id_penerimaan == null || $semester_masuk == null || $jenis_kelamin == null || $jalur == null || $kelas == null || $status == null) {
-					$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, Data Tidak Valid pada Siswa "' . $value->nama_lengkap . '"';
+					// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, Data Tidak Valid pada Siswa "' . $value->nama_lengkap . '"';
 					Debugbar::error(
 						'Upload Data Siswa ' . (string) $value->nis . ' Gagal, Data Tidak Valid pada Siswa "' . $value->nama_lengkap . '"'
 					);
@@ -2740,12 +2742,12 @@ class UploadDataSiswaController extends BaseController
 					];
 				} else {
 					//generate id
-					$id_siswa = $this->auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
-					$id_pengguna = $this->auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
-					$id_c_siswa = $this->auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
-					$id_admisi = $this->auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
-					$id_jalur_siswa = $this->auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
-					$id_log_kelas_siswa = $this->auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
+					$id_siswa = $auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
+					$id_pengguna = $auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
+					$id_c_siswa = $auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
+					$id_admisi = $auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
+					$id_jalur_siswa = $auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
+					$id_log_kelas_siswa = $auth_data->sekolah_data->prefix . rand(10000000, 99999999) . uniqid();
 					$arr[] = array(
 						'id_log_kelas_siswa' => $id_log_kelas_siswa,
 						'id_siswa' => $id_siswa,
@@ -2763,8 +2765,8 @@ class UploadDataSiswaController extends BaseController
 						'jalur' => $jalur->id_jalur,
 						'jenis_kelamin' => $jenis_kelamin,
 						'semester_masuk' => $semester_masuk['id_semester'],
-						'id_sekolah' => $this->auth_data->pengguna->id_sekolah,
-						'created_by' => $this->auth_data->pengguna->id_pengguna,
+						'id_sekolah' => $auth_data->pengguna->id_sekolah,
+						'created_by' => $auth_data->pengguna->id_pengguna,
 						'is_orang_tua' => $is_orang_tua,
 						'kode_voucher' => $kode_voucher,
 						'nik_siswa' => $nik,
@@ -2876,7 +2878,7 @@ class UploadDataSiswaController extends BaseController
 					}
 
 					if ($jumlah_nis > 1) {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, ditemukan NIS ' . $data_siswa_1['nis'] . ' yang sama di dalam file yang diupload';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, ditemukan NIS ' . $data_siswa_1['nis'] . ' yang sama di dalam file yang diupload';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, ditemukan NIS ' . $data_siswa_1['nis'] . ' yang sama di dalam file yang diupload'
 						);
@@ -2887,7 +2889,7 @@ class UploadDataSiswaController extends BaseController
 					}
 
 					if (!empty($data_siswa_1['nisn']) && $jumlah_nisn > 1) {
-						$this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, ditemukan NISN ' . $data_siswa_1['nisn'] . ' yang sama di dalam file yang diupload';
+						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, ditemukan NISN ' . $data_siswa_1['nisn'] . ' yang sama di dalam file yang diupload';
 						Debugbar::error(
 							'Upload Data Siswa ' . (string) $value->nis . ' Gagal, ditemukan NISN ' . $data_siswa_1['nisn'] . ' yang sama di dalam file yang diupload'
 						);
@@ -2953,9 +2955,9 @@ class UploadDataSiswaController extends BaseController
 							'nomor_ijasah_sebelumnya' => $data_siswa['nomor_ijasah_sebelumnya'],
 							'nomor_skhus_sebelumnya' => $data_siswa['nomor_skhus_sebelumnya'],
 
-							'created_at' => $this->now,
+							'created_at' => $now,
 							'created_by' => $data_siswa['created_by'],
-							'updated_at' => $this->now,
+							'updated_at' => $now,
 							'updated_by' => $data_siswa['created_by'],
 						];
 
@@ -2979,9 +2981,9 @@ class UploadDataSiswaController extends BaseController
 							'golongan_darah' => $data_siswa['golongan_darah'],
 							'riwayat_kelainan_jasmani' => $data_siswa['riwayat_kelainan_jasmani'],
 
-							'created_at' => $this->now,
+							'created_at' => $now,
 							'created_by' => $data_siswa['created_by'],
-							'updated_at' => $this->now,
+							'updated_at' => $now,
 							'updated_by' => $data_siswa['created_by'],
 						];
 
@@ -3028,9 +3030,9 @@ class UploadDataSiswaController extends BaseController
 							'nomor_hp_ortu' => $data_siswa['nomor_hp_ortu'],
 							'email_ortu' => $data_siswa['email_ortu'],
 
-							'created_at' => $this->now,
+							'created_at' => $now,
 							'created_by' => $data_siswa['created_by'],
-							'updated_at' => $this->now,
+							'updated_at' => $now,
 							'updated_by' => $data_siswa['created_by'],
 						];
 
@@ -3052,9 +3054,9 @@ class UploadDataSiswaController extends BaseController
 							'nomor_peserta_unas' => $data_siswa['nomor_peserta_unas'],
 							'nisn' => $data_siswa['nisn'],
 
-							'created_at' => $this->now,
+							'created_at' => $now,
 							'created_by' => $data_siswa['created_by'],
-							'updated_at' => $this->now,
+							'updated_at' => $now,
 							'updated_by' => $data_siswa['created_by'],
 						];
 
@@ -3079,7 +3081,7 @@ class UploadDataSiswaController extends BaseController
 									'password' => Hash::make($data_siswa['nis']),
 									'must_change_password' => 1,
 									'status_join_table' => 3,
-									'created_at' => $this->now,
+									'created_at' => $now,
 									'created_by' => $data_siswa['created_by'],
 								]
 							);
@@ -3092,9 +3094,9 @@ class UploadDataSiswaController extends BaseController
 							'is_orang_tua' => $data_siswa['is_orang_tua'],
 
 							'thn_masuk_siswa' => $data_siswa['tahun_masuk'],
-							'created_at' => $this->now,
+							'created_at' => $now,
 							'created_by' => $data_siswa['created_by'],
-							'updated_at' => $this->now,
+							'updated_at' => $now,
 							'updated_by' => $data_siswa['created_by'],
 						];
 
@@ -3118,7 +3120,7 @@ class UploadDataSiswaController extends BaseController
 									'id_semester' => $data_siswa['semester_masuk'],
 									'id_status_pengguna' => $data_siswa['status_siswa'],
 									'id_jalur' => $data_siswa['jalur'],
-									'created_at' => $this->now,
+									'created_at' => $now,
 									'created_by' => $data_siswa['created_by'],
 								]
 							);
@@ -3131,7 +3133,7 @@ class UploadDataSiswaController extends BaseController
 									'id_jalur' => $data_siswa['jalur'],
 									'id_admisi' => $data_siswa['id_admisi'],
 									'is_jalur_aktif' => 1,
-									'created_at' => $this->now,
+									'created_at' => $now,
 									'created_by' => $data_siswa['created_by'],
 								]
 							);
@@ -3142,7 +3144,7 @@ class UploadDataSiswaController extends BaseController
 									'id_role' => 3,
 									'keterangan_role_pengguna' => "Input Pendidikan",
 									'is_aktif' => 1,
-									'created_at' => $this->now,
+									'created_at' => $now,
 									'created_by' => $data_siswa['created_by'],
 								]
 							);
@@ -3152,8 +3154,8 @@ class UploadDataSiswaController extends BaseController
 									'id_log_kelas_siswa' => $data_siswa['id_log_kelas_siswa'],
 									'id_siswa' => $data_siswa['id_siswa'],
 									'id_kelas' => $data_siswa['kelas'],
-									'created_at' => $this->now,
-									'updated_at' => $this->now,
+									'created_at' => $now,
+									'updated_at' => $now,
 									'created_by' => $data_siswa['created_by'],
 								]
 							);
@@ -3168,7 +3170,7 @@ class UploadDataSiswaController extends BaseController
 
 					LibGlobal::insertUpdateUserInCenter($pengguna_center);
 					DB::commit();
-					$this->message[] = 'Save Siswa Successfully';
+					// $this->message[] = 'Save Siswa Successfully';
 					Debugbar::error('Save Siswa Successfully');
 					return [
 						'status'    => 300, // FAILED
@@ -3179,16 +3181,16 @@ class UploadDataSiswaController extends BaseController
 					DB::rollback();
 					// something went wrong
 					//    Debugbar::error( (env('APP_DEBUG', 'true') == 'true') ? 'tesst' : 'Operation error');
-					$this->message[] = (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error';
+					// $this->message[] = (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : $e->getMessage();
 
-					Debugbar::error((env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error');
+					Debugbar::error((env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : $e->getMessage());
 					return [
 						'status'    => 300, // FAILED
-						'message'   =>  'Operation error'
+						'message'   =>  $e->getMessage()
 					];
 				}
 			} else {
-				$this->message[] = 'File Excel Anda Kosong';
+				// $this->message[] = 'File Excel Anda Kosong';
 				return [
 					'status'    => 300, // FAILED
 					'message'   => "File Excel Anda Kosong"

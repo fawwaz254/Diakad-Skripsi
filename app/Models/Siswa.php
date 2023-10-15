@@ -128,6 +128,11 @@ class Siswa extends Model
         return $this->belongsTo(PelanggaranSiswa::class, 'id_siswa', 'id_siswa');
     }
 
+    public function predikat_kpi()
+    {
+        return $this->hasMany(PredikatKPI::class, 'id_siswa', 'id_siswa');
+    }
+
     public function wa_notif_kehadiran_siswa()
     {
         return $this->hasMany(WaNotifKehadiranSiswa::class, 'id_siswa');

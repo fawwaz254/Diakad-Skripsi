@@ -14,6 +14,7 @@ use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
 use App\Http\Controllers\Akademik\DataAkademik\SetupMapelKurikulumController;
 use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
 use App\Http\Controllers\Akademik\KelasDaring\SettingToleransiController;
+use App\Http\Controllers\Akademik\KPI\KelompokKPIController;
 use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
 use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
 use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiGuruController;
@@ -52,6 +53,16 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('akademik')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+
+        Route::prefix('kpi')->group(function () {
+            Route::prefix('komponen-kpi')->group(function () {
+                Route::get('/', [KelompokKPIController::class, 'viewKelompokKPI']);
+                Route::post('/', [KelompokKPIController::class, 'postKelompokKPI']);
+                Route::get('/detail/{tingkat}/{id_semester}', [KelompokKPIController::class, 'detailKelompokKPI']);
+                Route::get('/detail/datatables', [KelompokKPIController::class, 'datatablesKelompokKPI']);
+            });
+            Route::prefix('cetak-kpi')->group(function () { });
+        });
 
         Route::prefix('mpmp')->group(function () {
             Route::prefix('jenis-mgmp')->group(function () {
