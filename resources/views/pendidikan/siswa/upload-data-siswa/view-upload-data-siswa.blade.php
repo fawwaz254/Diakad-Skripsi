@@ -34,7 +34,7 @@
                             <h2 class="card-inside-title">
                                 Upload File Excel
                             </h2>
-                            <form id="form-upload"
+                            <form id="form-upload2"
                                 action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-file-excel') }}"
                                 method="post" enctype="multipart/form-data">
                                 {{ csrf_field() }}
@@ -54,7 +54,7 @@
                             <h2 class="card-inside-title">
                                 Upload Email Siswa
                             </h2>
-                            <form id="form-upload"
+                            <form id="form-upload3"
                                 action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-file-excel-email') }}"
                                 method="post" enctype="multipart/form-data">
                                 {{ csrf_field() }}
@@ -162,6 +162,107 @@
                     type: form.method,
                     enctype: 'multipart/form-data',
                     data: new FormData($('#form-upload')[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.status == 200) {
+                            vex.dialog.alert(response.message);
+                        } else if (response.status == 201) {
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        } else if (response.status == 202) {
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        } else if (response.status == 203) {
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                        } else if (response.status == 204) {
+                            loadURI(response.path);
+                        } else if (response.status == 300) {
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled');
+                    }
+                });
+
+            }, 1000);
+        }
+    });
+
+    $('#form-upload2').submit(function(e) {
+        e.preventDefault();
+    }).validate({
+        highlight: function(input) {
+            $(input).addClass('is-danger');
+        },
+        unhighlight: function(input) {
+            $(input).removeClass('is-danger');
+        },
+        errorPlacement: function(error, element) {
+            $(element).parents('.control').addClass('help').addClass('is-danger').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+
+            setTimeout(() => {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    enctype: 'multipart/form-data',
+                    data: new FormData($('#form-upload2')[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.status == 200) {
+                            vex.dialog.alert(response.message);
+                        } else if (response.status == 201) {
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        } else if (response.status == 202) {
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        } else if (response.status == 203) {
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                        } else if (response.status == 204) {
+                            loadURI(response.path);
+                        } else if (response.status == 300) {
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled');
+                    }
+                });
+
+            }, 1000);
+        }
+    });
+    $('#form-upload3').submit(function(e) {
+        e.preventDefault();
+    }).validate({
+        highlight: function(input) {
+            $(input).addClass('is-danger');
+        },
+        unhighlight: function(input) {
+            $(input).removeClass('is-danger');
+        },
+        errorPlacement: function(error, element) {
+            $(element).parents('.control').addClass('help').addClass('is-danger').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+
+            setTimeout(() => {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    enctype: 'multipart/form-data',
+                    data: new FormData($('#form-upload3')[0]),
                     cache: false,
                     contentType: false,
                     processData: false,

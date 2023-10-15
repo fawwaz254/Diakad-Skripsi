@@ -76,6 +76,7 @@ use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Guru\Presensi\AbsensiBarcodeController;
 use App\Http\Controllers\Guru\Presensi\PresensiQrCodeController;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
+use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
@@ -738,6 +739,16 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('prestasi-siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewPrestasiSiswa']);
 
                 Route::get('print/{id_siswa}',  [ApprovePrestasiSiswaController::class, 'printSkpi']);
+            });
+
+
+            Route::prefix('input-kpi')->group(function () {
+                Route::get('/', [InputKPIController::class, 'viewInputKPI']);
+                Route::get('/import', [InputKPIController::class, 'viewImportKPI']);
+                Route::post('/import', [InputKPIController::class, 'actionImportKPI']);
+                Route::get('/download', [InputKPIController::class, 'downloadTemplateKPI']);
+                Route::get('/datatables', [InputKPIController::class, 'datatablesInputKPI']);
+                Route::get('/print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
             });
         });
 

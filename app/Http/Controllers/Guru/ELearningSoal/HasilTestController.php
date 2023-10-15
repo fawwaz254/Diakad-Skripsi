@@ -367,7 +367,7 @@ class HasilTestController extends Controller
         $data['benar'] = $benar;
         $data['isi'] = $isi;
 
-        return Excel::download(new RekapNilaiElearning($data), 'Rekap Nilai E-learning' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
+        return Excel::download(new RekapNilaiElearning($data), 'Detail Jawaban Siswa' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
     }
 
 
