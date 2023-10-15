@@ -26,7 +26,7 @@ class SiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_kelas = LibKelas::fetchDataKelas($auth_data, null, true);
 
         return view('administrator/pengelolaan-akun/siswa/view-siswa', compact('auth_data', 'data_kelas', 'id_kelas'));
     }
@@ -59,7 +59,7 @@ class SiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_kelas = LibKelas::fetchDataKelas($auth_data, null, true);
 
         return view('administrator/pengelolaan-akun/siswa/view-siswa', compact('auth_data', 'data_kelas', 'id_kelas'));
     }
@@ -70,8 +70,10 @@ class SiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $pengguna = Pengguna::select('pengguna.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.username', 'pengguna.nm_pengguna', 'kelas.nm_kelas')
+            ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
             ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            ->where('status_pengguna.aktif_status_pengguna', '1')
             ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->where('siswa.id_kelas', '=', $id_kelas)
             ->orderBy('siswa.nis_siswa', 'asc')

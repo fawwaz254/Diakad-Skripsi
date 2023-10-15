@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Setting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -20,14 +21,17 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('notification:attendance')
-            ->dailyAt('11:00')
+        $attendance_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->value('value');
+        $payment_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_pembayaran_spp')->value('value');
+
+        $schedule->command('notification:attendance-class')
+            ->dailyAt($attendance_time_setting)
             ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
-        $schedule->command('notification:payment')
-            ->dailyAt('15:00')
+        $schedule->command('notification:payment-class')
+            ->dailyAt($payment_time_setting)
             ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
