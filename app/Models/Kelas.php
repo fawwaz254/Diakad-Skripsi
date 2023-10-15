@@ -16,10 +16,10 @@ class Kelas extends Model
 
     protected $primaryKey = 'id_kelas';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_jurusan',
         'nm_kelas',
@@ -32,19 +32,23 @@ class Kelas extends Model
 
     protected $guarded = [];
 
-    public function check_siswa(){
+    public function check_siswa()
+    {
         return $this->siswa()->take(1);
     }
 
-    public function siswa(){
+    public function siswa()
+    {
         return $this->hasMany(Siswa::class, 'id_kelas');
     }
 
-    public function tagihan(){
+    public function tagihan()
+    {
         return $this->hasMany(TagihanBiaya::class, 'id_kelas');
     }
 
-    public function jurusan(){
+    public function jurusan()
+    {
         return $this->belongsTo(Jurusan::class, 'id_jurusan');
     }
 
@@ -53,4 +57,8 @@ class Kelas extends Model
         return $this->hasOne(WhatsappGroup::class, 'id_kelas');
     }
 
+    public function point_kpi()
+    {
+        return $this->hasMany(PointKPI::class, 'tingkat_kelas', 'tingkat');
+    }
 }
