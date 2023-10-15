@@ -14,10 +14,11 @@
                     @endif
                 @endforeach
             @endforeach
-            <th style="font-weight: bold;">Sertifikasi</th>
-            <th style="font-weight: bold;">Nilai Sertifikasi</th>
-            <th style="font-weight: bold;">Tingkat/Jilid</th>
-            <th style="font-weight: bold;">Nilai</th>
+
+            @foreach ($data['mengaji']->sortBy('urutan') as $point_kpi_mengaji)
+                <th style="font-weight: bold;">{{ $point_kpi_mengaji->nm_point_kpi }}</th>
+            @endforeach
+
         </tr>
     </thead>
     <tbody>

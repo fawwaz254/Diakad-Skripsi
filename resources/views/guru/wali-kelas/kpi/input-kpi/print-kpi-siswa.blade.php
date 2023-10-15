@@ -61,6 +61,15 @@
             margin: 0mm;
 
         }
+
+        @media print {
+            .break {
+                page-break-after: always;
+
+            }
+        }
+
+        '
     </style>
 </head>
 
@@ -80,34 +89,44 @@
             <tr style="border-style : hidden">
                 <td style="border-style : hidden; width: 10%;">Nama Siswa
                 </td>
-                <td style="border-style : hidden;  width: 60%;"><b> {{ ': ' . $siswa->pengguna->nm_pengguna }}</b></td>
+                <td style="border-style : hidden;  width: 60%;">: <b>{{ $siswa->pengguna->nm_pengguna }}</b></td>
 
                 <td style="border-style : hidden; width: 10%;">Semester
                 </td>
-                <td style="border-style : hidden;  width: 20%;">
-                    <b>
-                        {{ ': ' . $semester->tahun_ajaran . ' ' . $semester->nm_semester }}</b>
+                <td style="border-style : hidden;  width: 20%;">: <b>
+                        {{ $semester->tahun_ajaran . ' ' . $semester->nm_semester }}</b>
                 </td>
             </tr>
             <tr style="border-style : hidden;">
                 <td style="border-style : hidden; width: 10%;">NIS
                 </td>
-                <td style="border-style : hidden;  width: 60%;"><b> {{ ': ' . $siswa->nis_siswa }}</b></td>
+                <td style="border-style : hidden;  width: 60%;">: <b>{{ $siswa->nis_siswa }}</b></td>
 
                 <td style="border-style : hidden; width: 10%;">Kelas
                 </td>
-                <td style="border-style : hidden;  width: 20%;"><b>
-                        {{ ': ' . $siswa->kelas->nm_kelas }}</b>
-
+                <td style="border-style : hidden;  width: 20%;">: <b>{{ $siswa->kelas->nm_kelas }}</b>
                 </td>
             </tr>
         </table>
         <br>
+        <br>
+        <br>
         @php
             $abjad = range('A', 'Z');
+            $last_key = 0;
         @endphp
 
         @foreach ($kelompok_kpi as $key => $unit_kelompok_kpi)
+            @php
+                $last_key = $key;
+            @endphp
+
+            @if ($key == 2)
+                <div class="break"></div>
+                <br>
+                <br>
+                <br>
+            @endif
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
                 <tr>
                     <td> <b>{{ $abjad[$key] . '. ' . $unit_kelompok_kpi->nm_kelompok_kpi }}</b></td>
@@ -176,7 +195,88 @@
         </table>
     @endforeach
 
+    {{-- mengaji --}}
 
+    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+        <tr>
+            <td> <b>{{ $abjad[$last_key + 1] . ". Tingkat Kemampuan Baca Al-Qur'an *)" }}</b></td>
+        </tr>
+    </table>
+
+    <table cellspacing="0" cellpadding="10"
+        style="width: 90%;  margin-top: 0;
+margin-bottom: 30px;
+margin-right: auto;
+margin-left: auto;">
+        <thead class="head">
+            <tr style="background-color: #e3e1e1">
+                <th colspan="2">
+                    Tingkat Al-Qur'an
+                </th>
+                <th colspan="5">Tingkat Pra Al-Qur'an (Sulamut Tilawah)</th>
+            </tr>
+            <tr style="background-color: #e3e1e1">
+                <th>Kategori</th>
+                <th>Nilai</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>Nilai</th>
+            </tr>
+        </thead>
+        <tbody class="body">
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ $dataMengaji['Sertifikasi'] == 'Y' ? '✔ ' : '- ' }} Tersertifikasi
+                </td>
+                <td style="text-align:center">
+                    {{ $dataMengaji['Sertifikasi'] == 'Y' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
+                <td style="text-align:center" rowspan="2">
+                    {{ $dataMengaji['Tingkat/Jilid'] == '1' ? '✔ ' : '- ' }}</td>
+                <td style="text-align:center" rowspan="2">
+                    {{ $dataMengaji['Tingkat/Jilid'] == '2' ? '✔ ' : '- ' }}</td>
+                <td style="text-align:center" rowspan="2">
+                    {{ $dataMengaji['Tingkat/Jilid'] == '3' ? '✔ ' : '- ' }}</td>
+                <td style="text-align:center" rowspan="2">
+                    {{ $dataMengaji['Tingkat/Jilid'] == '4' ? '✔ ' : '- ' }}</td>
+                <td style="text-align:center" rowspan="2">
+                    {{ $dataMengaji['Nilai'] }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ $dataMengaji['Sertifikasi'] == 'T' ? '✔ ' : '- ' }} Belum
+                </td>
+                <td style="text-align:center">
+                    {{ $dataMengaji['Sertifikasi'] == 'T' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
+
+            </tr>
+
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <br>
+
+    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+        <tr>
+            <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali
+                Murid
+                <br><br><br><br><br><br>
+                ____________________
+            </td>
+            <td width="30%" style="border-style : hidden; "></td>
+            <td width="30%" style="border-style : hidden;text-align:center ">Sidoarjo,
+                {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                <br>
+                <br>
+                Wali Kelas
+                <br><br><br><br><br><br><u><b>
+                        {{ $auth_data->pengguna->nm_pengguna }}</b></u>
+            </td>
+
+        </tr>
+    </table>
 
 
 

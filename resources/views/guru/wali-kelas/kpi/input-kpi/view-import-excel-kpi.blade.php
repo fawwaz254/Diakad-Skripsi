@@ -42,7 +42,7 @@
                             <ul>
                                 <li>1. Download Template</li>
                                 <li>2. Isi dengan A / B / C / D</li>
-                                <li>3. Serifikat isi dengan Y atau Kosong</li>
+                                <li>3. Serifikat isi dengan Y / T</li>
                                 <li>4. Nilai Serifikat isi dengan A / B / C / D </li>
                                 <li>5. Tingkat Jidil isi dengan nilai 1 / 2 / 3 / 4 </li>
                                 <li>6. Nilai isi dengan nilai A / B / C / D </li>
