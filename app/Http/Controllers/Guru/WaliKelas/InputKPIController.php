@@ -50,21 +50,19 @@ class InputKPIController extends Controller
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
-        $list_data = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('predikat_kpi', 'pengguna')
-            ->whereHas('predikat_kpi.point_kpi', function ($query) use ($semester_aktif) {
-                $query->where('id_semester', $semester_aktif->id_semester);
-            });
+        $list_data = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('pengguna');
+
+        $predikat_kpi = PredikatKPI::whereIn('id_siswa', $list_data->pluck('id_siswa'))->where('id_kelas', $wali_kelas->id_kelas)->whereHas('point_kpi', function ($query) use ($semester_aktif) {
+            $query->where('id_semester', $semester_aktif->id_semester);
+        })->get();
+
         $kelas = Kelas::find($wali_kelas->id_kelas);
         $jumlah_point = PointKPI::where('tingkat_kelas', $kelas->tingkat)->where('id_semester', $semester_aktif->id_semester)->where('jenis', 1)->count() + PointKPI::where('id_semester', $semester_aktif->id_semester)->where('jenis', 3)->count();
 
         return Datatables::of($list_data)->addColumn('jumlah_point', function () use ($jumlah_point) {
             return $jumlah_point;
-        })->addColumn('jumlah_point_terisi', function ($item) {
-            if ($item->predikat_kpi) {
-                return $item->predikat_kpi->count();
-            } else {
-                return '0';
-            }
+        })->addColumn('jumlah_point_terisi', function ($item) use ($predikat_kpi) {
+            return $predikat_kpi->where('id_siswa', $item->id_siswa)->count();
         })->addColumn('action', function ($item) {
             $data = array(
                 'id' => $item->id_siswa,
@@ -82,9 +80,9 @@ class InputKPIController extends Controller
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
         $kelas = Kelas::find($wali_kelas->id_kelas);
-        $data['kelompok_kpi']  = KelompokKPI::whereHas('point_kpi', function ($query) use ($kelas, $semester_aktif) {
-            $query->where('id_semester',  $semester_aktif->id_semester)->where('tingkat_kelas', $kelas->tingkat);
-        })->get();
+        $data['kelompok_kpi']  = KelompokKPI::with(['point_kpi' => function ($q) use ($kelas, $semester_aktif) {
+            return $q->where('id_semester',  $semester_aktif->id_semester)->where('tingkat_kelas', $kelas->tingkat)->where('jenis', '1');
+        }])->get();
 
         $data['mengaji'] = PointKPI::where('id_semester',  $semester_aktif->id_semester)->where('jenis', '3')->get();
 
@@ -217,11 +215,11 @@ class InputKPIController extends Controller
 
         $siswa = Siswa::where('id_siswa', $id_siswa)->with('kelas')->first();
         $semester = Semester::find($id_semester);
-        $kelompok_kpi  = KelompokKPI::whereHas('point_kpi', function ($query) use ($siswa, $semester) {
-            $query->where('id_semester',  $semester->id_semester)->where('tingkat_kelas', $siswa->kelas->tingkat);
-        })->get();
+        $kelompok_kpi  = KelompokKPI::with(['point_kpi' => function ($q) use ($siswa, $semester) {
+            return $q->where('id_semester',  $semester->id_semester)->where('tingkat_kelas', $siswa->kelas->tingkat);
+        }])->get();
 
-        $point_mengaji = PointKPI::where('id_semester',  $semester->id_semester)->where('jenis', '3')->get();
+        $point_mengaji = PointKPI::where('id_semester',  $semester->id_semester)->whereNull('tingkat_kelas')->where('jenis', '3')->get();
         $predikat_kpi = PredikatKPI::where('id_siswa', $id_siswa)->where('id_kelas', $siswa->id_kelas)->get();
 
         $data = [];

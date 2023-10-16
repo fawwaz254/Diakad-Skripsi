@@ -20,7 +20,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Kelas</th>
-                                    <th>Wali Kelas</th>
+                                    <th>Siswa</th>
                                     <th>Terisi</th>
                                     <th>Action</th>
                                 </tr>

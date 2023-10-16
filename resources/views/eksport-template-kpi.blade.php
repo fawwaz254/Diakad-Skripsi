@@ -1,17 +1,14 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th style="text-align: center;font-weight: bold;">NOMOR</th>
-            <th style="text-align: center;font-weight: bold;">NIS</th>
-            <th style="text-align: center;font-weight: bold;">NAMA SISWA</th>
+            <th style="text-align: center;font-weight: bold;background-color :#e3e1e1">NOMOR</th>
+            <th style="text-align: center;font-weight: bold;background-color :#e3e1e1">NIS</th>
+            <th style="text-align: center;font-weight: bold;background-color :#e3e1e1">NAMA SISWA</th>
             @foreach ($data['kelompok_kpi']->sortBy('urutan') as $key => $kelompok_kpi)
                 @foreach ($kelompok_kpi->point_kpi->sortBy('urutan') as $point_kpi)
-                    @if ($point_kpi->jenis == '1')
-                        <th style="font-weight: bold;background-color : {{ $data['color'][$key] }}">
-                            {{-- {{ preg_match('/\d/', $point_kpi->nm_point_kpi) ? preg_replace('/[0-9\.]/', '', $point_kpi->nm_point_kpi) : $point_kpi->nm_point_kpi }} --}}
-                            {{ $point_kpi->nm_point_kpi }}
-                        </th>
-                    @endif
+                    <th style="font-weight: bold;background-color : {{ $data['color'][$key] }}">
+                        {{ $point_kpi->nm_point_kpi }}
+                    </th>
                 @endforeach
             @endforeach
 
@@ -26,10 +23,31 @@
             $no = 0;
         @endphp
         @foreach ($data['list_siswa']->sortBy('nis_siswa') as $siswa)
+            @php
+                $no++;
+            @endphp
             <tr>
-                <td style="text-align: center">{{ ++$no }}</td>
-                <td style="text-align: center">{{ $siswa->nis_siswa }}</td>
-                <td>{{ $siswa->pengguna->nm_pengguna }}</td>
+                <td
+                    @if ($no % 2 == 0) style="text-align: center;background-color: #e3e1e1"  @else  style="text-align: center" @endif>
+                    {{ $no }}</td>
+                <td
+                    @if ($no % 2 == 0) style="text-align: center;background-color: #e3e1e1" @else style="text-align: center" @endif>
+                    {{ $siswa->nis_siswa }}</td>
+                <td @if ($no % 2 == 0) style="background-color: #e3e1e1" @endif>
+                    {{ $siswa->pengguna->nm_pengguna }} </td>
+
+                @foreach ($data['kelompok_kpi']->sortBy('urutan') as $kelompok_kpi)
+                    @foreach ($kelompok_kpi->point_kpi->sortBy('urutan') as $point_kpi)
+                        <th @if ($no % 2 == 0) style="background-color: #e3e1e1" @endif>
+                        </th>
+                    @endforeach
+                @endforeach
+
+                @foreach ($data['mengaji']->sortBy('urutan') as $point_kpi_mengaji)
+                    <th @if ($no % 2 == 0) style="background-color: #e3e1e1" @endif>
+                    </th>
+                @endforeach
+
 
             </tr>
         @endforeach
