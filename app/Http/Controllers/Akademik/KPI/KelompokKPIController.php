@@ -7,7 +7,6 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Kelas;
 use App\Models\PointKPI;
 use Yajra\Datatables\Datatables;
-use App\Models\Semester;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -59,7 +58,7 @@ class KelompokKPIController extends Controller
     {
         $input = (object) $request->input();
 
-        $point_kpi = PointKPI::where('id_semester', $input->id_semester)->where('tingkat_kelas', $input->tingkat)->with('kelompok_kpi');
+        $point_kpi = PointKPI::where('id_semester', $input->id_semester)->where('tingkat_kelas', $input->tingkat)->orWhereNull('tingkat_kelas')->with('kelompok_kpi');
         return Datatables::of($point_kpi)->editColumn('jenis', function ($item) {
             return $item->jenis == '0' ? 'Header' : 'Point';
         })->editColumn('deskripsi', function ($item) {
