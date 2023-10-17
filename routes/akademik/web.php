@@ -14,6 +14,7 @@ use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
 use App\Http\Controllers\Akademik\DataAkademik\SetupMapelKurikulumController;
 use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
 use App\Http\Controllers\Akademik\KelasDaring\SettingToleransiController;
+use App\Http\Controllers\Akademik\KPI\CetakKPIController;
 use App\Http\Controllers\Akademik\KPI\KelompokKPIController;
 use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
 use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
@@ -38,6 +39,7 @@ use App\Http\Controllers\Guru\ELearningSoal\PenggunaTerkunciController;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
+use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
 // use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 // use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
@@ -61,7 +63,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/detail/{tingkat}/{id_semester}', [KelompokKPIController::class, 'detailKelompokKPI']);
                 Route::get('/detail/datatables', [KelompokKPIController::class, 'datatablesKelompokKPI']);
             });
-            Route::prefix('cetak-kpi')->group(function () { });
+            Route::prefix('cetak-kpi')->group(function () {
+                Route::get('/', [CetakKPIController::class, 'viewCetakKPI']);
+                Route::get('/datatables', [CetakKPIController::class, 'datatablesViewCetakKPI']);
+                Route::get('/detail/{id_kelas}', [CetakKPIController::class, 'detailCetakKPI']);
+                Route::get('/detail/datatables/{id_kelas}', [CetakKPIController::class, 'datatablesKelompokKPI']);
+                Route::get('/print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
+            });
         });
 
         Route::prefix('mpmp')->group(function () {

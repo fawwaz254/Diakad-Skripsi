@@ -38,6 +38,8 @@ class PointKPI extends Model
 
     public function kelompok_kpi()
     {
-        return $this->belongsTo(KelompokKPI::class, 'id_kelompok_kpi');
+        return $this->belongsTo(KelompokKPI::class, 'id_kelompok_kpi')->withDefault([
+            'nm_kelompok_kpi' => '-'
+        ]);;
     }
 }

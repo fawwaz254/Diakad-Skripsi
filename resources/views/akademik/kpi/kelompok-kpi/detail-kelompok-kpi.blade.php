@@ -92,11 +92,6 @@
 <script>
     var modul_url = 'kpi';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'komponen-kpi/detail/datatables';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'jenis-mgmp/action-data-kategori/delete';
-
-    var tingkat = "{{ $tingkat }}";
-    var id_semester = "{{ $id_semester }}";
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
