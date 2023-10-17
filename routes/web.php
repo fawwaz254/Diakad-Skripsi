@@ -27,9 +27,7 @@ use UniSharp\LaravelFilemanager\Controllers\UploadController;
 Route::middleware(['auth'])->group(function () {
     Route::prefix('laravel-filemanager')->group(function () {
         Route::get('/', [LfmController::class, 'show'])->name('unisharp.lfm.show');
-        // display integration error messages
         Route::get('/errors', [LfmController::class, 'getErrors'])->name('unisharp.lfm.getErrors');
-        // upload
         Route::any('/upload', [UploadController::class, 'upload'])->name('unisharp.lfm.upload');
         // list images & files
         Route::get('/jsonitems', [ItemsController::class, 'getItems'])->name('unisharp.lfm.getItems');
