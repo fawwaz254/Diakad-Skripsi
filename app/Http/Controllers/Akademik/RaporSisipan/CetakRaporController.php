@@ -315,11 +315,11 @@ class CetakRaporController extends Controller
             $rapor_sisipans = RaporSisipan::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with('nilai_rapor_sisipan')->get();
             foreach ($rapor_sisipans as $rapor_sisipan) {
                 foreach ($rapor_sisipan->nilai_rapor_sisipan as  $nilai_rapor_sisipan) {
-                    // if ($nilai_rapor_sisipan['nilai'] != '0') {
-                    $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $nilai_rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
-                    // }
+                    $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
                 }
             }
+
+            // return $nilai_siswa;
 
             $kelas_sisipan = KelasSisipan::where('id_kelas', $id_kelas)->get();
             $kelompok_sisipan = KelompokSisipan::with(['mata_pelajaran_sisipan' => function ($q) use ($kelas_sisipan) {
@@ -358,6 +358,8 @@ class CetakRaporController extends Controller
                     }
                 }
             }
+
+            // dd($data);
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen'));
         }
