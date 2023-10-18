@@ -378,7 +378,7 @@ class LibDataKeuangan
                 $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                     ->whereNull('status_pengguna.deleted_at');
             })
-            ->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF')
+            ->where('status_pengguna.kode_status_pengguna', '=', 'AKTIF')
             ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
         if ($id_kelas != "0") {
