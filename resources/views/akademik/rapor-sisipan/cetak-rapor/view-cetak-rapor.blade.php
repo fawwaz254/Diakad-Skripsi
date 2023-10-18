@@ -1,19 +1,17 @@
 <div class="container-fluid">
     <div class="block-header" style=" display: flex;
     justify-content: space-between;">
-        <div>
+        {{-- <div>
             <h2><a class="btn btn-warning waves-effect target-link"
                     href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting') }}"><i
                         class="material-icons">settings</i><span>Setting Urutan</span></a>
-                @if (
-                    $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2' ||
-                        $auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
                     <a class="btn bg-blue waves-effect target-link"
                         href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewDeskripsi') }}"><i
                             class="material-icons">add</i><span>Deskripsi</span></a>
                 @endif
             </h2>
-        </div>
+        </div> --}}
         <div class="dropdown" style="display: inline; margin-right:50px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
@@ -47,12 +45,11 @@
                                     <th>No</th>
                                     <th>Kelas</th>
                                     <th>Jurusan</th>
-                                    <th>Nama</th>
+                                    <th>Wali Kelas</th>
                                     <th>Semester</th>
-                                    <th>Jumlah Mapel yang sudah terisi</th>
-                                    {{-- <th>Semester</th> --}}
+                                    <th>Total Mapel</th>
+                                    <th>Mapel terinput</th>
                                     <th>UTS</th>
-                                    <th>UAS</th>
                                 </tr>
                             </thead>
                         </table>
@@ -101,28 +98,20 @@
             },
             {
                 data: 'semester',
-                name: 'semester'
+                name: 'semester',
+                className: 'align-center'
+            },
+            {
+                data: 'kelas_sisipan',
+                name: 'kelas_sisipan',
+                className: 'align-center'
             },
             {
                 data: 'rapor_sisipan',
                 name: 'rapor_sisipan',
                 className: 'align-center'
             },
-            // {
-            //     data: 'jumlah',
-            //     name: 'jumlah',
-            //     className: 'align-center',
-            //     searchable: false,
-            //     orderable: false,
-            //     className: 'align-center',
-            //     render: function(data) {
-            //         return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`  ;
-            //     }},
-            //     {
-            //     data: 'semester',
-            //     name: 'semester',
-            //     className: 'align-center'
-            // },
+
             {
                 data: 'action',
                 name: 'action',
@@ -143,27 +132,28 @@
                     }
 
                 }
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    if (data.jumlah != '0') {
-                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            uas_url + '/' + data.id_semester + '/' + data.id_kelas + '" >' +
-                            '    <i class="material-icons">group</i>' +
-                            '</a> ';
-                    } else {
-                        return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
-                            '    <i class="material-icons">group</i>' +
-                            '</a> ';
-                    }
-
-                }
             }
+            // ,
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         if (data.jumlah != '0') {
+            //             return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //                 uas_url + '/' + data.id_semester + '/' + data.id_kelas + '" >' +
+            //                 '    <i class="material-icons">group</i>' +
+            //                 '</a> ';
+            //         } else {
+            //             return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
+            //                 '    <i class="material-icons">group</i>' +
+            //                 '</a> ';
+            //         }
+
+            //     }
+            // }
             // {
             //     data: 'pengguna.nm_pengguna',
             //     name: 'pengguna.nm_pengguna',

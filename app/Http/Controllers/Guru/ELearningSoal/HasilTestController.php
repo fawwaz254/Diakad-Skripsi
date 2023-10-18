@@ -632,17 +632,18 @@ class HasilTestController extends Controller
     public function hapus()
     {
         set_time_limit(-1);
-        $detail_paket_soals = DetailPaketSoal::withTrashed()->whereNotNull('deleted_at')->where('id_paket_soal', 'Qjh121696250712651abb58ecbe9')->get();
+        $detail_paket_soals = DetailPaketSoal::where('id_paket_soal', 'Qjh121696250100651ab8f45d9be')->get();
 
         foreach ($detail_paket_soals as $detail_paket_soal) {
-            $tests = Test::where('id_paket_soal', 'Qjh121696250712651abb58ecbe9')->get();
+            $tests = Test::where('id_paket_soal', 'Qjh121696250100651ab8f45d9be')->get();
             foreach ($tests as $test) {
                 $jawaban_test = JawabanTest::where('id_soal', $detail_paket_soal->id_soal)->where('id_test', $test->id_test)->first();
 
-                if ($jawaban_test) {
-                    $jawaban_test->deleted_by = 'syahrul';
+                if ($jawaban_test && $jawaban_test->nilai == "3.8") {
+                    $jawaban_test->nilai = '2.9';
+                    $jawaban_test->updated_by = "syahrul rabu";
                     $jawaban_test->save();
-                    $jawaban_test->delete();
+                    // $jawaban_test->delete();
                 }
             }
         }

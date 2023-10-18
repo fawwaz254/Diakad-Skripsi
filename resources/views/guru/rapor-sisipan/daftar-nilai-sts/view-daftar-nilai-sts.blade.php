@@ -120,10 +120,6 @@
                 className: 'align-center',
                 searchable: false,
                 orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`;
-                }
             },
             {
                 data: 'semester',
