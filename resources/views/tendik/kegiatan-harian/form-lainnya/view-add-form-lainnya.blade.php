@@ -30,7 +30,7 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     @foreach($pertanyaan->jawaban->sortBy('show_order')->all() as $jawaban)
                                     <input class="with-gap radio-col-light-green form-control validate" type="radio" name="jawaban_pertanyaan[{{$pertanyaan->id_kegiatan_harian_pertanyaan}}]" value="{{$jawaban->id_kegiatan_harian_jawaban}}"
-                                        id="jb_{{$jawaban->id_kegiatan_harian_jawaban}}" required="required" data-error="Error msg here">
+                                        id="jb_{{$jawaban->id_kegiatan_harian_jawaban}}" data-error="Error msg here">
                                     <label for="jb_{{$jawaban->id_kegiatan_harian_jawaban}}">{{$jawaban->isi_jawaban}}</label>
                                         @if(!empty($jawaban->placeholder))
                                         <input type="text" name="jawaban_text[{{$jawaban->id_kegiatan_harian_jawaban}}]" placeholder="{{$jawaban->placeholder}}">
