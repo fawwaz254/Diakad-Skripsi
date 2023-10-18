@@ -52,44 +52,36 @@ class RaporSisipanController extends Controller
             $id_semester = $input->id_semester;
         }
 
-        $list_data = RaporSisipan::where('id_semester', $id_semester)->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')
-            ->orderBy('created_at', 'desc');
-        $siswa = Siswa::whereHas('pengguna.status_pengguna', function ($query) {
-            $query->where('aktif_status_pengguna', '=', '1');
-        })
-            ->get();
-
-        $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first();
-
-        if ($setting->value == '3') {
-            $komponen = KomponenNilaiRaporSisipan::where('urutan', '1')->first()->id_komponen_nilai;
+        if (empty($input->id_semester)) {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $id_semester = $semester_aktif->id_semester;
         } else {
-            $komponen = KomponenNilaiRaporSisipan::where('type', 'uts')->first();
-            if (!empty($komponen)) {
-                $komponen = $komponen->id_komponen_nilai;
-            }
+            $id_semester = $input->id_semester;
         }
 
-        $nilaiRaporSisipans = NilaiRaporSisipan::where('id_komponen_nilai', $komponen)->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
-            $query->where('id_semester', $id_semester);
+
+        $list_data = RaporSisipan::where('id_semester', $id_semester)->with(['nilai_rapor_sisipan' => function ($q) {
+            $q->where('nilai', '!=', '0');
+        }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester'])->orderBy('created_at', 'desc');
+
+        $siswa = Siswa::whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
         })->get();
 
-        return Datatables::of($list_data)
-            ->addColumn('jumlah', function ($item) use ($siswa, $setting, $nilaiRaporSisipans) {
+        $komponen = KomponenNilaiRaporSisipan::where('type', '!=', 'uas')->first()->count();
 
-                $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
-                if ($setting->value == '3') {
-                    $nilaiSiswaKosong = $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->count();
+        return Datatables::of($list_data)
+            ->addColumn('jumlah', function ($item) use ($siswa, $komponen) {
+                $nilaiLengkap =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count() * $komponen;
+                $nilaiTerisi = $item->nilai_rapor_sisipan->count();
+
+                if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
+                    $hasil = '0%';
                 } else {
-                    $nilaiSiswaKosong = $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->count();
+                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2) . '%';
                 }
 
-                $data = array(
-                    'jumlah_siswa' => $allSiswa,
-                    'terisi_siswa' => $nilaiSiswaKosong,
-                );
-
-                return $data;
+                return $hasil;
             })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
@@ -177,6 +169,25 @@ class RaporSisipanController extends Controller
             })->get();
 
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;
+
+
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
+
+            $nilai_siswa = [];
+            $nilai_siswa['kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
+            if ($list_siswa) {
+                $nilai = $list_nilai->toArray();
+                foreach ($nilai as $nilaiRapor) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa']] = $nilaiRapor['nilai'];
+                }
+            }
+
+
+            return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-maryam', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
+        }
+
+
+
         if ($setting == '0') {
             $nilai_siswa = [];
             if ($list_siswa) {

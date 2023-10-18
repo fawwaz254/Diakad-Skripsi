@@ -26,6 +26,8 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
 
+
+        // dd($rows);
         set_time_limit(-1);
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $id_pengguna = Auth::id();
@@ -38,7 +40,7 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
 
         foreach ($rows as $row) {
             foreach ($list_komponen as $komponen) {
-                if (isset($row[str_replace(" ", "_", strtolower($komponen->nm_nilai))]) && is_numeric($row[str_replace(" ", "_", strtolower($komponen->nm_nilai))])) {
+                if (isset($row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))]) && is_numeric($row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))])) {
                     // $nilai = $nilais->whereHas('siswa', function ($query) use ($row) {
                     //     $query->where('nis_siswa', $row['nis']);
                     // })
@@ -50,7 +52,7 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
                     $nilai = $nilais->where('nis_siswa', $row['nis'])->where('nm_nilai', $komponen->nm_nilai)->first();
 
                     if ($nilai) {
-                        $nilai->nilai =   $row[str_replace(" ", "_", strtolower($komponen->nm_nilai))];
+                        $nilai->nilai =   $row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))];
                         $nilai->updated_by             = $id_pengguna;
                         $nilai->updated_at           = $now;
                         $nilai->save();
