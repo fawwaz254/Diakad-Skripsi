@@ -154,7 +154,7 @@
                     <tr>
                         <td style="text-align: center;font-weight: bold;">NO</td>
                         <td style="text-align: center;font-weight: bold;">KOMPONEN<br></td>
-                        <td style="text-align: center;font-weight: bold;">KKM sssssssssssssssss</td>
+                        <td style="text-align: center;font-weight: bold;">KKM</td>
                         @foreach ($list_komponen as $komponen)
                             <td colspan="2" style="text-align: center;font-weight: bold;">{{ $komponen->nm_nilai }}
                             </td>
