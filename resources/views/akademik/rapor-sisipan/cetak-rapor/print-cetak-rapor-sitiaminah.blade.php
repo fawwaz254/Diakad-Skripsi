@@ -152,13 +152,19 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #C2D69B">
                     <tr>
-                        <td style="text-align: center;font-weight: bold;">NO</td>
-                        <td style="text-align: center;font-weight: bold;">KOMPONEN<br></td>
-                        <td style="text-align: center;font-weight: bold;">KKM</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">KOMPONEN<br></td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">KKM</td>
                         @foreach ($list_komponen as $komponen)
                             <td colspan="2" style="text-align: center;font-weight: bold;">{{ $komponen->nm_nilai }}
                             </td>
                         @endforeach
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;font-weight: bold;">Angka</td>
+                        <td style="text-align: center;font-weight: bold;">Predikat</td>
+                        <td style="text-align: center;font-weight: bold;">Angka</td>
+                        <td style="text-align: center;font-weight: bold;">Predikat</td>
                     </tr>
                 </thead>
                 <br>
@@ -180,8 +186,23 @@
                                     <td style="text-align: center;">{{ $data2['kkm'][0] }}</td>
                                     @foreach ($list_komponen as $komponen)
                                         <td style="text-align: center;font-weight: bold;">
-
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai] : '' }}
+                                            <span @if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai]) &&
+                                                    isset($data2['kkm'][0]) &&
+                                                    $data2['kkm'][0] != '0' &&
+                                                    $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai] <
+                                                        $data2['kkm'][0]
+                                            ) style="color:red" @endif>
+                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai] : '' }}</span>
+                                        </td>
+                                        <td style="text-align: center;font-weight: bold;">
+                                            <span @if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai]) &&
+                                                    isset($data2['kkm'][0]) &&
+                                                    $data2['kkm'][0] != '0' &&
+                                                    $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai] <
+                                                        $data2['kkm'][0]
+                                            ) style="color:red" @endif>
+                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai . 'predikat']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai . 'predikat'] : '' }}
+                                            </span>
                                         </td>
                                     @endforeach
                                 </tr>
@@ -192,7 +213,24 @@
                                         <td style="text-align: center;">{{ $data2['kkm'][$i] }}</td>
                                         @foreach ($list_komponen as $komponen)
                                             <td style="text-align: center;font-weight: bold;">
-                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] : '' }}
+                                                <span @if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) &&
+                                                        isset($data2['kkm'][$i]) &&
+                                                        $data2['kkm'][$i] != '0' &&
+                                                        $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] <
+                                                            $data2['kkm'][$i]
+                                                ) style="color:red" @endif>
+                                                    {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai . 'predikat']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai . 'predikat'] : '' }}
+                                                </span>
+                                            </td>
+                                            <td style="text-align: center;font-weight: bold;">
+                                                <span @if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) &&
+                                                        isset($data2['kkm'][$i]) &&
+                                                        $data2['kkm'][$i] != '0' &&
+                                                        $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] <
+                                                            $data2['kkm'][$i]
+                                                ) style="color:red" @endif>
+                                                    {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai . 'predikat']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai . 'predikat'] : '' }}
+                                                </span>
                                             </td>
                                         @endforeach
                                     </tr>
