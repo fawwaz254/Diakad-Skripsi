@@ -68,7 +68,7 @@ class RaporSisipanController extends Controller
             $query->where('aktif_status_pengguna', '=', '1');
         })->get();
 
-        $komponen = KomponenNilaiRaporSisipan::where('type', '!=', 'uas')->first()->count();
+        $komponen = KomponenNilaiRaporSisipan::where('type', '!=', 'uas')->count();
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($siswa, $komponen) {
