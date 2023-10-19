@@ -369,12 +369,17 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('rekap-lainnya')->group(function () {
                 Route::get('/', [RekapLainnyaController::class, 'viewListKegiatan']);
                 Route::post('datatables', [RekapLainnyaController::class, 'datatablesListKegiatan']);
+                Route::post('datatables/detail', [RekapLainnyaController::class, 'datatablesDetail']);
 
                 Route::get('/rekap-guru-tendik/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
                 Route::get('/rekap-guru-tendik/{id_kegiatan_harian}/{id_bulan}/{tahun}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
 
                 Route::get('/rekap-siswa/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
                 Route::get('/rekap-siswa/{id_kegiatan_harian}/{bulan}/{tahun}/{kelas}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
+
+                Route::get('/user/{id}/{date}', [RekapLainnyaController::class, 'viewRekapDetail']);
+                Route::get('/detail/form/{id}', [RekapLainnyaController::class, 'viewFormDetail']);
+                Route::post('/action/{mode}', [RekapLainnyaController::class, 'actionFormLainnya']);
             });
         });
 
