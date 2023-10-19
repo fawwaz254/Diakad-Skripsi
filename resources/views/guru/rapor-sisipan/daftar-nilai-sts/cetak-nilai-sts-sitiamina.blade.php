@@ -126,11 +126,20 @@
                         </td>
                         @foreach ($list_data as $nilai)
                             <td style="text-align: center;">
-                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa] : null }}
+                                <span @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa]) &&
+                                        isset($nilai_siswa['kkm']) &&
+                                        $nilai_siswa['kkm'] != '0' &&
+                                        $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa] < $nilai_siswa['kkm']
+                                ) style="color:red" @endif>
+                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa] : null }}
+                                </span>
                             </td>
                             <td style="text-align: center;">
-                                <span @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . 'predikat']) &&
-                                        $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . 'predikat'] == 'D') style="color:red" @endif>
+                                <span @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa]) &&
+                                        isset($nilai_siswa['kkm']) &&
+                                        $nilai_siswa['kkm'] != '0' &&
+                                        $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa] < $nilai_siswa['kkm']
+                                ) style="color:red" @endif>
                                     {{ isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . 'predikat']) ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . 'predikat'] : null }}
                                 </span>
 
