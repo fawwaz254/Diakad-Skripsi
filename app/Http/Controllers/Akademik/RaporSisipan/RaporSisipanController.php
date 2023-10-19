@@ -68,7 +68,7 @@ class RaporSisipanController extends Controller
             $query->where('aktif_status_pengguna', '=', '1');
         })->get();
 
-        $komponen = KomponenNilaiRaporSisipan::where('type', '!=', 'uas')->first()->count();
+        $komponen = KomponenNilaiRaporSisipan::where('type', '!=', 'uas')->count();
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($siswa, $komponen) {
@@ -184,8 +184,30 @@ class RaporSisipanController extends Controller
 
 
             return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-maryam', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
-        }
+        } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
+            $nilai_siswa = [];
+            $nilai_siswa['kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
+            if ($list_siswa) {
+                $nilai = $list_nilai->toArray();
+                foreach ($nilai as $nilaiRapor) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa']] = $nilaiRapor['nilai'];
 
+                    if ($nilaiRapor['nilai'] >= 90 && $nilaiRapor['nilai'] <= 100) {
+                        $hasil = 'A';
+                    } elseif ($nilaiRapor['nilai'] >= 80 && $nilaiRapor['nilai'] < 90) {
+                        $hasil = 'B';
+                    } elseif ($nilaiRapor['nilai'] >= 70 && $nilaiRapor['nilai'] < 80) {
+                        $hasil = 'C';
+                    } elseif ($nilaiRapor['nilai'] >= 0 && $nilaiRapor['nilai'] < 70) {
+                        $hasil = 'D';
+                    } else {
+                        $hasil = 'Nilai tidak valid';
+                    }
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . 'predikat'] = $hasil;
+                }
+            }
+            return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-sitiamina', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
+        }
 
 
         if ($setting == '0') {

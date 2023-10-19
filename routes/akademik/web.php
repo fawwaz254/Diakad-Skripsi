@@ -27,6 +27,7 @@ use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanAkhirController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanController;
+use App\Http\Controllers\Guru\RaporSisipan\RaporSisipanController as RaporSisipanGuru;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Akademik\Ujian\TryOutController;
 use App\Http\Controllers\Akademik\Ujian\UjianUASController;
@@ -450,7 +451,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
                 Route::get('/datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
                 Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
-                Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
+                Route::get('pdf/{id}', [RaporSisipanGuru::class, 'pdfDaftarNilaiSTS']);
             });
 
             Route::prefix('daftar-nilai-sas')->group(function () {
