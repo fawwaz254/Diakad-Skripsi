@@ -8,9 +8,23 @@
                     </h2>
                 </div>
                 <div class="body">
+                    @php
+                        if ($pengisian_kegiatan_harian->status_pengisian >= 5) {
+                            $status = 'SANGAT BAIK';
+                        } elseif ($pengisian_kegiatan_harian->status_pengisian = 4) {
+                            $status = 'BAIK';
+                        } elseif ($pengisian_kegiatan_harian->status_pengisian = 3) {
+                            $status = 'CUKUP';
+                        } elseif ($pengisian_kegiatan_harian->status_pengisian <= 2) {
+                            $status = 'KURANG';
+                        } else {
+                            $status = 'BELUM MENGISI';
+                        }
+                    @endphp
                     <h4>
                         <b>Status: </b>
-                            <span class="label" style="background-color: #{{$pengisian_kegiatan_harian->warna_keadaan}};">{{$pengisian_kegiatan_harian->status_to_text()}}</span>
+                        <span class="label"
+                            style="background-color: #{{ $pengisian_kegiatan_harian->warna_keadaan }};">{{ $status }}</span>
                     </h4>
                     @foreach($data_pengisian_jawaban as $pengisian_jawaban)
                     <p>
