@@ -385,6 +385,23 @@ class CetakRaporController extends Controller
                 }
             }
 
+            foreach ($rapor_sisipans as $rapor_sisipan) {
+                foreach ($rapor_sisipan->nilai_rapor_sisipan as  $nilai_rapor_sisipan) {
+                    if ($nilai_rapor_sisipan['nilai'] >= 90 && $nilai_rapor_sisipan['nilai'] <= 100) {
+                        $hasil = 'A';
+                    } elseif ($nilai_rapor_sisipan['nilai'] >= 80 && $nilai_rapor_sisipan['nilai'] < 90) {
+                        $hasil = 'B';
+                    } elseif ($nilai_rapor_sisipan['nilai'] >= 70 && $nilai_rapor_sisipan['nilai'] < 80) {
+                        $hasil = 'C';
+                    } elseif ($nilai_rapor_sisipan['nilai'] >= 0 && $nilai_rapor_sisipan['nilai'] < 70) {
+                        $hasil = 'D';
+                    } else {
+                        $hasil = 'Nilai tidak valid';
+                    }
+                    $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai'] . 'predikat'] = $hasil;
+                }
+            }
+
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
 
