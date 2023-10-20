@@ -773,7 +773,7 @@ class SppController extends BaseController
             ->make(true);
     }
 
-    public function viewMenuPembayaran(Request $request, $tahun_akademik_semester = null, $id_kelas = null, $waktu = null, $nama_siswa = null)
+    public function viewMenuPembayaran(Request $request, $tahun_akademik_semester = null, $id_kelas = null, $waktu = null, $order_by = null)
     {
         if ($waktu == null) {
             $waktu = Carbon::today()->toDateString();
@@ -865,13 +865,12 @@ class SppController extends BaseController
             // $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all()
 
             $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')
-                ->when($nama_siswa, function ($data_siswa) use ($nama_siswa) {
-                    $data_siswa = $data_siswa->whereHas('pengguna', function ($q) use ($nama_siswa) {
-                        $q->where('nm_pengguna', 'like', '%' . $nama_siswa . '%');
-                    });
-                })
                 ->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
-                ->orderBy('nis_siswa')->get();
+                ->get()
+                ->sortBy('nis_siswa')
+                ->when($order_by, function ($query, $order_by) {
+                    return $query->sortBy($order_by == 'nama' ? 'pengguna.nm_pengguna' : 'nis_siswa');
+                });
 
             //semester lain
             // $list_id_semester_lalu = $semester->where('thn_akademik_semester', '<', $tahun_akademik_semester)->pluck('id_semester')->toArray();
