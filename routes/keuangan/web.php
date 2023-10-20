@@ -366,7 +366,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('cari/datatables', [SppController::class, 'datatablesMenuCari']);
 
                 Route::get('pembayaran', [SppController::class, 'viewMenuPembayaran']);
-                Route::get('pembayaran/{tahun_akademik_semester}/{id_kelas}/{waktu}/{nama_siswa?}', [SppController::class, 'viewMenuPembayaran']);
+                Route::get('pembayaran/{tahun_akademik_semester}/{id_kelas}/{waktu}/{order_by?}', [SppController::class, 'viewMenuPembayaran']);
                 Route::post('get-jumlah-tunggakan-pembayaran', [SppController::class, 'getJumlahTunggakanPembayaran']);
                 Route::post('get-data-tungakan-tahun-lalu', [SppController::class, 'getDataTungakanTahunLalu']);
                 Route::get('print-pembayaran/{id}', [SppController::class, 'printPembayaran']);
