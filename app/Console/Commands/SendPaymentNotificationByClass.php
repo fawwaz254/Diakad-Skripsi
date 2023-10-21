@@ -43,6 +43,11 @@ class SendPaymentNotificationByClass extends Command
     public function handle()
     {
         $url = env('WHATSAPP_API_SEND');
+        if (empty($url)) {
+            \Log::info("Notification Warning: Failed to send notification, API URL not found");
+            return;
+        }
+
         $now = now()->toDateString();
 
         $list_kelas = Kelas::has('whatsapp_group')->with('whatsapp_group')->get();
@@ -71,7 +76,8 @@ class SendPaymentNotificationByClass extends Command
             ->get()
             ->groupBy('siswa.kelas.nm_kelas');
 
-        if ($list_tagihan_biaya->isEmpty() || empty($url)) {
+        if ($list_tagihan_biaya->isEmpty()) {
+            \Log::info("Notification Warning: Failed to send notification, there is no payment for today");
             return;
         }
 
@@ -139,7 +145,7 @@ class SendPaymentNotificationByClass extends Command
                 TagihanBiaya::whereIn('id_tagihan_biaya', $tagihan_to_update)->update(['notification_sent' => 1]);
             }
         } catch (\Exception $e) {
-            \Log::info("Notification Error: " . $e->getMessage());
+            \Log::info("Notification Error: " . $e);
         }
     }
 }

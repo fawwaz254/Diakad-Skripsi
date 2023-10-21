@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected $commands = [
-        Commands\SendAttendanceNotififcationByClass::class,
+        Commands\SendAttendanceNotificationByClass::class,
         Commands\SendPaymentNotificationByClass::class,
     ];
 
