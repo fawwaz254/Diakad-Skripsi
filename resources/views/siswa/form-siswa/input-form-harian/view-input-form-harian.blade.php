@@ -33,6 +33,7 @@
     var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-form-harian/datatables';
     var add_url = role_url + '#' + modul_url + '/' + 'input-form-harian/add';
+    var detail_url = role_url + '#' + modul_url + '/' + 'input-form-harian/detail';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -59,27 +60,6 @@
                 searchable: false,
                 orderable: false,
             },
-            // {
-            //     data: 'is_aktif',
-            //     name: 'is_aktif',
-            //     className: 'align-center',
-            //     searchable: false,
-            //     orderable: false,
-            // },
-            // {
-            //     data: 'time',
-            //     name: 'time',
-            //     className: 'align-center',
-            //     searchable: false,
-            //     orderable: false,
-            // },
-            // {
-            //     data: 'jumlah_pertanyaaan',
-            //     name: 'jumlah_pertanyaaan',
-            //     className: 'align-center',
-            //     searchable: false,
-            //     orderable: false,
-            // },
             {
                 data: 'action',
                 searchable: false,
@@ -92,6 +72,33 @@
                         '</a>';
 
                 }
+            },
+            {
+                data: 'jumlah_jawaban',
+                name: 'jumlah_jawaban',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
+            },
+            {
+                data: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        add_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">remove_red_eye</i>' +
+                        '</a>';
+
+                }
+            },
+            {
+                data: 'last_data',
+                name: 'last_data',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
             },
             // {
             //     data: 'action',

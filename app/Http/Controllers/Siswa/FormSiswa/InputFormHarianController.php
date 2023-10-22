@@ -26,10 +26,24 @@ class InputFormHarianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_form = Form::where('id_role', '3')->where('is_harian', '1');
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+        $list_form = Form::with(['jawaban_form' => function ($q) use ($id_pengguna) {
+            $q->where('created_by', $id_pengguna)->orderBy('created_at', 'desc');
+        }])->where('id_role', '3')->where('is_harian', '1');
+
         return Datatables::of($list_form)
             ->addColumn('time', function ($item) {
                 return Carbon::parse($item->start_time)->format('H:i') . ' - ' . Carbon::parse($item->end_time)->format('H:i');
+            })
+            ->addColumn('jumlah_jawaban', function ($item) {
+                return $item->jawaban_form->count();
+            })
+            ->addColumn('last_data', function ($item) {
+                if ($item->jawaban_form->count() > '0') {
+                    return Carbon::parse($item->jawaban_form->first()->created_at)->diffForHumans();
+                } else {
+                    return '';
+                }
             })
             ->addColumn('action', function ($item) {
                 $data = array(

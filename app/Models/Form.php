@@ -40,4 +40,9 @@ class Form extends Model
     {
         return $this->hasMany(PertanyaanForm::class, 'id_form');
     }
+
+    public function jawaban_form()
+    {
+        return $this->hasMany(JawabanForm::class, 'id_form');
+    }
 }
