@@ -18,8 +18,8 @@
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{ CLASS }}</strong> : data kelas dinamis (wajib ada)<br>
-                    <strong>@{{ DATE }}</strong> : data tanggal dinamis (wajib ada)<br>
+                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada)<br>
+                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada)<br>
                     <strong>\n</strong> : kode untuk ENTER text<br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>
@@ -31,6 +31,16 @@
             <input type="time" name="attendance_schedule" class="form-control"
                 value="{{ $attendance_time_setting }}">
             <hr>
+            <div style="margin-top:1rem">
+                <small>
+                    <strong>KODE TEMPLATE:</strong><br>
+                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada)<br>
+                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada)<br>
+                    <strong>\n</strong> : kode untuk ENTER text<br>
+                    <strong>*text*</strong> : kode untuk BOLD text<br>
+                    <strong>_text_</strong> : kode untuk ITALIC text<br>
+                </small>
+            </div>
             <label style="margin-top:1rem">Template Pembayaran SPP Siswa</label>
             <textarea name="payment_template" class="form-control" rows="5">{{ $template_payment_setting }}</textarea>
             <label style="margin-top:1rem">Jadwal Pembayaran SPP Siswa</label>
