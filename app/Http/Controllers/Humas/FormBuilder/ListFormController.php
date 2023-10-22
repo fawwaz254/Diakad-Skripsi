@@ -142,7 +142,16 @@ class ListFormController extends Controller
                 return $data;
             })
             ->editColumn('jenis_pertanyaan', function ($item) {
-                return $item->jenis_pertanyaaan == '1' ? 'Text' : 'Foto';
+                switch ($item->jenis_pertanyaan) {
+                    case 1:
+                        return 'Text';
+                    case 2:
+                        return 'Foto';
+                    case 3:
+                        return 'Satu Opsi';
+                    default:
+                        return 'Banyak Opsi';
+                }
             })
             ->make(true);
     }
