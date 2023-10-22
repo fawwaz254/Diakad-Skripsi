@@ -51,17 +51,6 @@ class InputFormHarianController extends Controller
                 );
                 return $data;
             })
-            // ->editColumn('is_harian', function ($item) {
-            //     return $item->is_harian == '1' ? 'Harian' : 'Bebas';
-            // })
-            // ->editColumn('is_aktif', function ($item) {
-            //     return $item->is_aktif == '1' ? 'Aktif' : 'Tidak Aktif';
-            // })
-            // ->addColumn('time', function ($item) {
-            //     return Carbon::parse($item->start_time)->format('H:i') . ' - ' . Carbon::parse($item->end_time)->format('H:i');
-            // })->addColumn('jumlah_pertanyaaan', function ($item) {
-            //     return $item->pertanyaan_form->count();
-            // })
             ->make(true);
     }
 
@@ -77,7 +66,6 @@ class InputFormHarianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
         switch ($mode) {
             case 'add':
                 $syarat = [
@@ -117,12 +105,20 @@ class InputFormHarianController extends Controller
                     $detail_jawaban_form->id_jawaban_form = $jawaban_form->id_jawaban_form;
                     $detail_jawaban_form->id_pertanyaan_form = $input->id_pertanyaan_form[$key];
                     if ($input->jenis_pertanyaan[$key] == '1') {
-                        $detail_jawaban_form->jawaban = $input->jawaban[$key];
+                        $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
                     } elseif ($input->jenis_pertanyaan[$key] == '2') {
                         $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->jawaban_pertanyaan[$key], 'public');
                         $detail_jawaban_form->jawaban = $file;
-                    } elseif ($input->jenis_pertanyaan[$key] == '3') { } elseif ($input->jenis_pertanyaan[$key] == '4') { }
+                    } elseif ($input->jenis_pertanyaan[$key] == '3') {
+                        $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                    } elseif ($input->jenis_pertanyaan[$key] == '4') {
+                        $jawaban = [];
+                        foreach ($input->jawaban_pertanyaan[$key] as $value) {
+                            $jawaban[] = $value;
+                        }
+                        $detail_jawaban_form->jawaban = json_encode($jawaban);
+                    }
                     $detail_jawaban_form->created_by = $auth_data->sekolah_data->nm_singkat_sekolah;
                     $detail_jawaban_form->save();
                 }
