@@ -52,6 +52,12 @@ class NotificationController extends Controller
         $data = $response->json();
 
         if ($data['response'] == "Device is logged out") {
+            $whatsapp_groups = WhatsappGroup::all();
+
+            if ($whatsapp_groups->isNotEmpty()) {
+                WhatsappGroup::truncate();
+            }
+
             return [
                 'message' => 'Perangkat tidak tersambung, silahkan sambungkan terlebih dahulu.'
             ];
