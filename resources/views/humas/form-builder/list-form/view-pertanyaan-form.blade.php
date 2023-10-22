@@ -84,7 +84,15 @@
             },
             {
                 data: 'options',
-                name: 'options'
+                name: 'options',
+                render: function(data_opsi) {
+                    let html = '';
+                    data_opsi.forEach(element => {
+                        html += '- ' +
+                            element + ` <br>`;
+                    });
+                    return html;
+                }
             },
             {
                 data: 'action',

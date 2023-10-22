@@ -125,6 +125,16 @@ class ListFormController extends Controller
         $list_data = PertanyaanForm::where('id_form', $id_form);
 
         return Datatables::of($list_data)
+            ->editColumn('options', function ($item) {
+                $data_opsi = [];
+                if (!empty($item->options)) {
+                    $options = json_decode($item->options, true);
+                    foreach ($options as $opsi) {
+                        $data_opsi[] = $opsi;
+                    }
+                }
+                return $data_opsi;
+            })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_form
