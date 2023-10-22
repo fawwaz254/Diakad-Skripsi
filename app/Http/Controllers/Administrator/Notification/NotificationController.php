@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Administrator\Notification;
 use Validator;
 use Carbon\Carbon;
 use App\Models\Kelas;
+use App\Models\Setting;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
-use App\Jobs\PushNotification;
 use App\Models\WhatsappGroup;
+use App\Jobs\PushNotification;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class NotificationController extends Controller
@@ -32,7 +34,13 @@ class NotificationController extends Controller
     {
         $list_kelas = Kelas::all();
 
-        return view('administrator.notification.view-whatsapp-group', compact('list_kelas'));
+        $attendance_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->value('value');
+        $payment_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_pembayaran_spp')->value('value');
+        $mode_attendance_setting = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->value('value');
+        $template_attendance_setting = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->value('value');
+        $template_payment_setting = Setting::where('key_setting', 'template_notif_pembayaran_spp')->value('value');
+
+        return view('administrator.notification.view-whatsapp-group', compact('list_kelas', 'attendance_time_setting', 'payment_time_setting', 'mode_attendance_setting', 'template_attendance_setting', 'template_payment_setting'));
     }
 
     public function fetchWhatsappGroup()
@@ -106,6 +114,68 @@ class NotificationController extends Controller
                     'status_code' => 202,
                     'path'    => 'notification/whatsapp',
                     'message'     => 'Delete Data succesfully'
+                ];
+            }
+        }
+    }
+
+    public function actionUpdateTemplate(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'attendance_mode' => 'required',
+            'attendance_template' => 'required',
+            'payment_template' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status_code' => 300,
+                'message'     => $validator->errors()->first()
+            ];
+        } else {
+
+            DB::beginTransaction();
+
+            try {
+                // MODE
+                $mode = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->first();
+                $mode->value = $input->attendance_mode;
+                $mode->save();
+
+                // TEMPLATE
+                $payment_template = Setting::where('key_setting', 'template_notif_pembayaran_spp')->first();
+                $payment_template->value = $input->payment_template;
+                $payment_template->save();
+
+                $attendance_template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->first();
+                $attendance_template->value = $input->attendance_template;
+                $attendance_template->save();
+
+                // SCHEDULE
+                $attendance_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->first();
+                $attendance_time_setting->value = $input->attendance_schedule;
+                $attendance_time_setting->save();
+
+                $payment_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_pembayaran_spp')->first();
+                $payment_time_setting->value = $input->payment_schedule;
+                $payment_time_setting->save();
+
+                DB::commit();
+
+                return [
+                    'status_code'  => 202,
+                    'path'    => 'notification/whatsapp',
+                    'message' => 'Update Data Succesfully'
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return [
+                    'status_code'  => 202,
+                    'path'    => 'notification/whatsapp',
+                    'message' => $e->getMessage()
                 ];
             }
         }
