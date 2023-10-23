@@ -11,6 +11,7 @@ use App\Models\KelasSisipan;
 use App\Models\KelompokSisipan;
 use App\Models\MataPelajaran;
 use App\Models\MataPelajaranSisipan;
+use App\Models\SubKelompokSisipan;
 use Validator;
 
 class KomponenMataPelajaranController extends Controller
@@ -91,7 +92,7 @@ class KomponenMataPelajaranController extends Controller
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', '1')->get();
         $mata_pelajaran = MataPelajaran::get();
-        $kelompok_sisipan = KelompokSisipan::get();
+        $kelompok_sisipan = KelompokSisipan::with('sub_kelompok_sisipan')->get();
         return view('akademik/rapor-sisipan/komponen-mata-pelajaran/add-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'mata_pelajaran', 'kelompok_sisipan', 'id_kelas'));
     }
 
@@ -121,8 +122,17 @@ class KomponenMataPelajaranController extends Controller
                 if (empty($mata_pelajaran_sisipan)) {
                     $mata_pelajaran_sisipan = new MataPelajaranSisipan;
                     $mata_pelajaran_sisipan->id_mata_pelajaran_sisipan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $mata_pelajaran_sisipan->id_kelompok_sisipan = $input->id_kelompok_sisipan;
-                    $mata_pelajaran_sisipan->id_sub_kelompok_sisipan = null;
+
+                    if (KelompokSisipan::find($input->id_kelompok_sisipan)) {
+                        $mata_pelajaran_sisipan->id_kelompok_sisipan = $input->id_kelompok_sisipan;
+                        $mata_pelajaran_sisipan->id_sub_kelompok_sisipan = null;
+                    }
+
+                    if (SubKelompokSisipan::find($input->id_kelompok_sisipan)) {
+                        $mata_pelajaran_sisipan->id_kelompok_sisipan = null;
+                        $mata_pelajaran_sisipan->id_sub_kelompok_sisipan = $input->id_kelompok_sisipan;
+                    }
+
                     $mata_pelajaran_sisipan->id_mata_pelajaran = $input->id_mata_pelajaran;
                     $mata_pelajaran_sisipan->urutan = $input->urutan;
                     $mata_pelajaran_sisipan->jenis = '1';
