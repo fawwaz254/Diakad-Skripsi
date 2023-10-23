@@ -23,6 +23,7 @@ use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
+use App\Http\Controllers\Akademik\RaporSisipan\KomponenMataPelajaranController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanAkhirController;
@@ -488,6 +489,15 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('view-siswa-uas/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'viewSiswaUas']);
                 Route::get('datatables/view-siswa-uas/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'datatablesSiswaUas']);
                 Route::get('printAkhir/{thn_akademik_semester}/{id_siswa}', [CetakRaporController::class, 'printCetakRaporAkhir']);
+            });
+
+            Route::prefix('komponen-mata-pelajaran')->group(function () {
+                Route::get('/', [KomponenMataPelajaranController::class, 'viewKomponenMataPelajaran']);
+                Route::post('/', [KomponenMataPelajaranController::class, 'postKomponenMataPelajaran']);
+                Route::get('/add/{id_kelas}', [KomponenMataPelajaranController::class, 'addKomponenMataPelajaran']);
+                Route::get('/detail/{id_kelas}', [KomponenMataPelajaranController::class, 'viewDetailKomponenMataPelajaran']);
+                Route::get('datatables', [KomponenMataPelajaranController::class, 'datatablesKomponenMataPelajaran']);
+                Route::post('action-komponen-mata-pelajaran/{mode}/{id}', [KomponenMataPelajaranController::class, 'actionKomponenMataPelajaran']);
             });
         });
 

@@ -36,6 +36,15 @@ class MataPelajaranSisipan extends Model
     {
         return $this->belongsTo(MataPelajaran::class, 'id_mata_pelajaran');
     }
+    public function kelompok_sisipan()
+    {
+        return $this->belongsTo(KelompokSisipan::class, 'id_kelompok_sisipan');
+    }
+
+    public function sub_kelompok_sisipan()
+    {
+        return $this->belongsTo(SubKelompokSisipan::class, 'id_sub_kelompok_sisipan');
+    }
 
     public function kelas_sisipan()
     {
