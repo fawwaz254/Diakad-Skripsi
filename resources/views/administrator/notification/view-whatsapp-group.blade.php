@@ -1,14 +1,67 @@
 <div class="container-fluid">
+    <div class="card" style="margin-bottom: 3rem">
+        <div class="header">
+            <h2 style="float:left; font-size:2rem">TEMPLATE PESAN</h2>
+
+            <div style="clear: both;"></div>
+        </div>
+        <div class="body">
+            <label style="margin-top:1rem">Mode Kehadiran/Ketidakhadiran Siswa</label>
+            <select class="form-control show-tick" name="attendance_mode">
+                <option value="ABSENT_ONLY" {{ $mode_attendance_setting == 'ABSENT_ONLY' ? 'selected' : '' }}>Tidak
+                    Hadir Saja</option>
+                <option value="PRESENT_ONLY" {{ $mode_attendance_setting == 'PRESENT_ONLY' ? 'selected' : '' }}>Hadir
+                    Saja
+                </option>
+                <option value="ALL" {{ $mode_attendance_setting == 'ALL' ? 'selected' : '' }}>Semua</option>
+            </select>
+            <div style="margin-top:1rem">
+                <small>
+                    <strong>KODE TEMPLATE:</strong><br>
+                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada)<br>
+                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada)<br>
+                    <strong>\n</strong> : kode untuk ENTER text<br>
+                    <strong>*text*</strong> : kode untuk BOLD text<br>
+                    <strong>_text_</strong> : kode untuk ITALIC text<br>
+                </small>
+            </div>
+            <label>Template Kehadiran/Ketidakhadiran Siswa</label>
+            <textarea name="attendance_template" class="form-control" rows="5">{!! $template_attendance_setting !!}</textarea>
+            <label style="margin-top:1rem">Jadwal Kehadiran/Ketidakhadiran Siswa</label>
+            <input type="time" name="attendance_schedule" class="form-control"
+                value="{{ $attendance_time_setting }}">
+            <hr>
+            <div style="margin-top:1rem">
+                <small>
+                    <strong>KODE TEMPLATE:</strong><br>
+                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada)<br>
+                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada)<br>
+                    <strong>\n</strong> : kode untuk ENTER text<br>
+                    <strong>*text*</strong> : kode untuk BOLD text<br>
+                    <strong>_text_</strong> : kode untuk ITALIC text<br>
+                </small>
+            </div>
+            <label style="margin-top:1rem">Template Pembayaran SPP Siswa</label>
+            <textarea name="payment_template" class="form-control" rows="5">{{ $template_payment_setting }}</textarea>
+            <label style="margin-top:1rem">Jadwal Pembayaran SPP Siswa</label>
+            <input type="time" name="payment_schedule" class="form-control" value="{{ $payment_time_setting }}">
+
+            <button class="btn bg-green waves-effect" style="float:right;margin-top:1rem" onclick="actionUpdate()"><i
+                    class="material-icons">save</i><span>Update</span></button>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="header">
-            <h2 style="float:left; font-size:3rem">LIST GRUP</h2>
-            <a style="float:right; font-size:2rem" class="btn btn-success"
+            <h2 style="float:left; font-size:2rem">LIST GRUP</h2>
+            <a style="float:right; font-size:2rem" class="btn bg-green"
                 href="{{ request()->segment(1) . request()->segment(2) . '#notification/whatsapp/scan' }}"
                 target="_blank">
                 <i class="material-icons">sync</i> SCAN QR CODE
             </a>
 
-            <div class="spacer" style="clear: both;"></div>
+            <div style="clear: both;"></div>
         </div>
         <div class="body">
             <div class="table-responsive">
@@ -59,7 +112,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" onclick="actionWhatsappGroup()">Save changes</button>
+                <button type="button" class="btn bg-green" onclick="actionWhatsappGroup()">Save changes</button>
             </div>
         </div>
     </div>
@@ -97,11 +150,11 @@
                                 render: function(data, type, row) {
                                     if (data[2] !== 'TERSIMPAN') {
                                         html = `
-                                        <button class="btn btn-success" data-group-id="${data[1]}" data-group-name="${data[0]}" onclick="showModal(this)"><i class="material-icons">add_box</i><span>Simpan</span></button>
+                                        <button class="btn bg-green" data-group-id="${data[1]}" data-group-name="${data[0]}" onclick="showModal(this)"><i class="material-icons">add_box</i><span>Simpan</span></button>
                                         `;
                                     } else {
                                         html = `
-                                        <button class="btn btn-danger" data-mode="delete" data-group-id="${data[1]}" data-group-name="${data[0]}" onclick="actionWhatsappGroup(this)"><i class="material-icons">delete</i><span>Hapus</span></button>
+                                        <button class="btn bg-red" data-mode="delete" data-group-id="${data[1]}" data-group-name="${data[0]}" onclick="actionWhatsappGroup(this)"><i class="material-icons">delete</i><span>Hapus</span></button>
                                         `;
                                     }
 
@@ -149,6 +202,44 @@
                 id_kelas: $('select[name=id_kelas]').val(),
                 id_group: mode == 'add' ? $('input[name=id_group]').val() : $(el).data('group-id'),
                 nm_group: $('input[name=nm_group]').val(),
+            },
+            success: function(response) {
+                if (response.status_code == 200) {
+                    vex.dialog.alert(response.message);
+                } else if (response.status_code == 201) {
+                    vex.dialog.alert(response.message);
+                    window.location.href = response.link;
+                } else if (response.status_code == 202) {
+                    vex.dialog.alert(response.message);
+                    setTimeout(function() {
+                        loadURI(response.path);
+                    }, 2000);
+
+                } else if (response.status_code == 203) {
+                    vex.dialog.alert(response.message);
+                    primary_table.ajax.reload(null, false);
+                } else if (response.status_code == 204) {
+                    loadURI(response.path);
+                } else if (response.status_code == 300) {
+                    vex.dialog.alert(response.message);
+                }
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
+    function actionUpdate() {
+        $.ajax({
+            type: 'POST',
+            url: base_url + '/administrator/notification/whatsapp/template/update',
+            data: {
+                attendance_mode: $('select[name=attendance_mode]').val(),
+                attendance_template: $('textarea[name=attendance_template]').val(),
+                attendance_schedule: $('input[name=attendance_schedule]').val(),
+                payment_template: $('textarea[name=payment_template]').val(),
+                payment_schedule: $('input[name=payment_schedule]').val(),
             },
             success: function(response) {
                 if (response.status_code == 200) {
