@@ -23,8 +23,16 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_kelompok_sisipan" required="">
                                     @foreach ($kelompok_sisipan as $kel_sisipan)
-                                        <option value="{{ $kel_sisipan->id_kelompok_sisipan }}">
-                                            {{ $kel_sisipan->nm_kelompok_sisipan }}</option>
+                                        @if ($kel_sisipan->sub_kelompok_sisipan->count() > 0)
+                                            @foreach ($kel_sisipan->sub_kelompok_sisipan as $sub_kelompok_sisipan)
+                                                <option value="{{ $sub_kelompok_sisipan->id_sub_kelompok_sisipan }}">
+                                                    {{ $kel_sisipan->nm_kelompok_sisipan . ' - ' . $sub_kelompok_sisipan->nm_sub_kelompok_sisipan }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            <option value="{{ $kel_sisipan->id_kelompok_sisipan }}">
+                                                {{ $kel_sisipan->nm_kelompok_sisipan }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
