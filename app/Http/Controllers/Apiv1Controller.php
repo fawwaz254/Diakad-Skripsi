@@ -59,6 +59,7 @@ use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\LibGlobal;
 use App\Models\Ekskul;
+use App\Models\Form;
 use App\Models\LowonganKerja;
 use App\Models\ManajemenHariLibur;
 use App\Models\PengambilanEkskul;
@@ -3714,6 +3715,25 @@ class Apiv1Controller extends BaseController
             'message'     => '',
             'data' => array(
                 'presensi_ekskul_peserta' => $PresensiEkskulPeserta
+            )
+        ]);
+    }
+
+    public function actionGetFormHarian(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+        $form_siswa = Form::with(['jawaban_form' => function ($q) use ($id_pengguna) {
+            $q->where('created_by', $id_pengguna)->orderBy('created_at', 'desc');
+        }, 'pertanyaan_form'])->where('id_role', '3')->where('is_harian', '1')->where('is_aktif', '1')->get();
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'form_siswa' => $form_siswa
             )
         ]);
     }

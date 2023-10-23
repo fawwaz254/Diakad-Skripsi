@@ -41,6 +41,7 @@ use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaPondokController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaSholatController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
+use App\Http\Controllers\Humas\FormBuilder\ListFormController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
@@ -52,6 +53,20 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('humas')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+
+
+        Route::prefix('form-builder')->group(function () {
+            Route::prefix('list-form')->group(function () {
+                Route::get('/', [ListFormController::class, 'viewListForm']);
+                Route::get('datatables', [ListFormController::class, 'datatablesListForm']);
+                Route::get('add', [ListFormController::class, 'addListForm']);
+                Route::post('action-list-form/{mode}/{id}', [ListFormController::class, 'actionListForm']);
+                Route::get('pertanyaan/{id_form}', [ListFormController::class, 'viewPertanyaanForm']);
+                Route::get('pertanyaan/datatables/{id_form}', [ListFormController::class, 'datatablesPertanyaanForm']);
+                Route::get('pertanyaan/add/{jenis_pertanyaan}/{id_form}', [ListFormController::class, 'viewAddPertanyaanForm']);
+                Route::post('pertanyaan/action-pertanyaan-form/{mode}/{id}', [ListFormController::class, 'actionPertanyaanForm']);
+            });
+        });
 
         Route::prefix('manajemen-file')->group(function () {
             // MENU Data Kategori

@@ -274,6 +274,11 @@ Route::middleware(['auth.mobile'])->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetEkskul']);
                 Route::post('getPresensi', [Apiv1Controller::class, 'actionGetPresensiEkskul']);
             });
+
+            Route::prefix('form-harian')->group(function () {
+                Route::post('get', [Apiv1Controller::class, 'actionGetFormHarian']);
+                Route::post('{mode}/submit', [Apiv1Controller::class, 'actionFormHarian']);
+            });
         });
     });
 });

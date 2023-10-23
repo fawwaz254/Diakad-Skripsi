@@ -30,6 +30,7 @@ use App\Http\Controllers\Siswa\Akademik\KalenderAkademikController;
 use App\Http\Controllers\Siswa\Akademik\JadwalKelasDaringController;
 use App\Http\Controllers\Siswa\Absensi\HistoriAbsensiSiswaController;
 use App\Http\Controllers\Siswa\Akademik\LihatNilaiController;
+use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Siswa\Pelanggaran\RiwayatPelanggaranController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
@@ -38,6 +39,18 @@ Route::middleware(['token_staff'])->group(function () {
     Route::prefix('siswa')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
         // Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+
+        Route::prefix('form-siswa')->group(function () {
+            Route::prefix('input-form-harian')->group(function () {
+                Route::get('/', [InputFormHarianController::class, 'viewInputFormHarian']);
+                Route::get('/datatables', [InputFormHarianController::class, 'datatablesInputFormHarian']);
+                Route::get('/add/{id_form}', [InputFormHarianController::class, 'addInputFormHarian']);
+                Route::post('action-list-form/{mode}/{id}', [InputFormHarianController::class, 'actionInputFormHarian']);
+            });
+        });
+
+
+
 
         Route::prefix('tracer-alumni')->group(function () {
             Route::get('/', [TracerAlumniSiswaController::class, 'viewTracerAlumni']);
