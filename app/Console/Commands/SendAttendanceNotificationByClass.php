@@ -12,7 +12,7 @@ use App\Models\ManajemenHariLibur;
 use Illuminate\Support\Facades\Http;
 use App\Models\WaNotifKehadiranSiswa;
 
-class SendAttendanceNotififcationByClass extends Command
+class SendAttendanceNotificationByClass extends Command
 {
     /**
      * The name and signature of the console command.
@@ -48,6 +48,7 @@ class SendAttendanceNotififcationByClass extends Command
         try {
             $url = env('WHATSAPP_API_SEND');
             if (empty($url)) {
+                \Log::info("Notification Warning: Failed to send notification, API URL not found");
                 return;
             }
 
@@ -55,6 +56,7 @@ class SendAttendanceNotififcationByClass extends Command
             $hari_libur = ManajemenHariLibur::where('date', $now)->exists();
 
             if ($hari_libur) {
+                \Log::info("Notification Warning: Failed to send notification, today is a day off");
                 return;
             }
 
@@ -84,7 +86,7 @@ class SendAttendanceNotififcationByClass extends Command
 
                     $siswa_kelas = [];
                     foreach ($list_presensi_pengguna as $presensi_pengguna) {
-                        $siswa_kelas[] = "[" . $presensi_pengguna->pengguna->siswa->nis_siswa . "]" . $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
+                        $siswa_kelas[] = "[*" . $presensi_pengguna->pengguna->siswa->nis_siswa . "*] " . $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
                     };
 
                     $template = $base_template;
@@ -152,7 +154,7 @@ class SendAttendanceNotififcationByClass extends Command
 
                     $siswa_kelas = [];
                     foreach ($list_siswa as $siswa) {
-                        $siswa_kelas[] = "[" . $siswa->nis_siswa . "]" . $siswa->pengguna->nm_pengguna;
+                        $siswa_kelas[] = "[*" . $siswa->nis_siswa . "*] " . $siswa->pengguna->nm_pengguna;
                     };
 
                     $template = $base_template;
@@ -190,7 +192,7 @@ class SendAttendanceNotififcationByClass extends Command
                 }
             }
         } catch (\Exception $e) {
-            \Log::info("Notification Error: " . $e->getMessage());
+            \Log::info("Notification Error: " . $e);
         }
     }
 }
