@@ -20,7 +20,7 @@ class CreatePertanyaanFormsTable extends Migration
             $table->string('nm_pertanyaan_form', 128);
             $table->integer('jenis_pertanyaan');
             $table->integer('urutan');
-            $table->json('options')->nullable();
+            $table->string('options')->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
