@@ -34,4 +34,8 @@ class SubKelompokSisipan extends Model
     {
         return $this->hasMany(MataPelajaranSisipan::class, 'id_sub_kelompok_sisipan');
     }
+    public function kelompok_sisipan()
+    {
+        return $this->belongsTo(KelompokSisipan::class, 'id_kelompok_sisipan');
+    }
 }
