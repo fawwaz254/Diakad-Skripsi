@@ -839,6 +839,7 @@ class CetakRaporController extends Controller
             ->addColumn('pribadi_sisipan', function ($item) use ($kelompok_pribadi_sisipan) {
                 $nilai = [];
                 foreach ($kelompok_pribadi_sisipan as $k) {
+
                     foreach ($k->pribadi_sisipan as $pribadi_sisipan) {
                         $cek = $item->nilai_pribadi_sisipan->firstWhere('id_pribadi_sisipan', $pribadi_sisipan->id_pribadi_sisipan);
                         if ($cek) {
@@ -847,9 +848,9 @@ class CetakRaporController extends Controller
                     }
                 }
                 $data = array(
-                    'n1' => $nilai[1],
-                    'n2' => $nilai[2],
-                    'n3' => $nilai[3],
+                    'n1' => isset($nilai[1]) ? $nilai[1] : null,
+                    'n2' => isset($nilai[2]) ? $nilai[2] : null,
+                    'n3' => isset($nilai[3]) ? $nilai[3] : null,
                 );
                 return $data;
             })

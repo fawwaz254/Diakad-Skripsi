@@ -79,12 +79,13 @@
                 data: 'pribadi_sisipan',
                 name: 'pribadi_sisipan',
                 render: function(data) {
-                    console.log(data.n1);
                     let html = '';
-                    data.n1.forEach(element => {
-                        html += '- ' +
-                            element + ` <br>`;
-                    });
+                    if (data.n1 && data.n1.length != 0) {
+                        data.n1.forEach(element => {
+                            html += '- ' +
+                                element + ` <br>`;
+                        });
+                    }
                     return html;
 
                 }
@@ -93,12 +94,13 @@
                 data: 'pribadi_sisipan',
                 name: 'pribadi_sisipan',
                 render: function(data) {
-                    console.log(data.n1);
                     let html = '';
-                    data.n2.forEach(element => {
-                        html += '- ' +
-                            element + ` <br>`;
-                    });
+                    if (data.n2 && data.n2.length != 0) {
+                        data.n2.forEach(element => {
+                            html += '- ' +
+                                element + ` <br>`;
+                        });
+                    }
                     return html;
 
                 }
@@ -107,12 +109,13 @@
                 data: 'pribadi_sisipan',
                 name: 'pribadi_sisipan',
                 render: function(data) {
-                    console.log(data.n1);
                     let html = '';
-                    data.n3.forEach(element => {
-                        html += '- ' +
-                            element + ` <br>`;
-                    });
+                    if (data.n3 && data.n3.length != 0) {
+                        data.n3.forEach(element => {
+                            html += '- ' +
+                                element + ` <br>`;
+                        });
+                    }
                     return html;
 
                 }
