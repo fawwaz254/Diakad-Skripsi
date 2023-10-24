@@ -304,6 +304,7 @@ class CetakRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan')->first();
+        $semester = Semester::find($id_semester);
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
@@ -443,7 +444,7 @@ class CetakRaporController extends Controller
                 }
             }
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smktanada') {
             $nilai_siswa = [];
             $typeuts = KomponenNilaiRaporSisipan::where('type', 'uts')->where('type', '!=', 'uas')->first();
