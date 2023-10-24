@@ -486,8 +486,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('actionDeskripsi/{mode}/{id}', [CetakRaporController::class, 'actionDeskripsi']);
 
                 //cetak rapor semester akhir
-                Route::get('view-siswa-uas/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'viewSiswaUas']);
-                Route::get('datatables/view-siswa-uas/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'datatablesSiswaUas']);
+                Route::get('view-pengembangan-diri/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'viewPengembanganDiri']);
+                Route::get('datatables/view-siswa-pengembangan-diri/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'datatablesSiswaUas']);
                 Route::get('printAkhir/{thn_akademik_semester}/{id_siswa}', [CetakRaporController::class, 'printCetakRaporAkhir']);
             });
 
