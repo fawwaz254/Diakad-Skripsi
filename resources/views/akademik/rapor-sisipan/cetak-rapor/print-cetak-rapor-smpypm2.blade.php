@@ -73,15 +73,14 @@
 <body>
 
     @foreach ($list_siswa as $siswa)
-        <div class="page">
+        <div class="page" style="margin-top: 3rem">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr>
                     <td colspan="10" style="border-style : hidden">
 
                         <h2 align="center" style="margin-top: 3px">
-                            LAPORAN PENILAIAN HASIL BELAJAR<br>
-                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
-                            TENGAH SEMESTER GASAL<br>
+                            RAPOR SISIPAN<br>
+                            CAPAIAN KOMPETENSI SISWA<br>
                             @php
                                 // $nama = $list_nilai->first();
 
@@ -222,22 +221,26 @@
                     <td style="border-style : hidden;width: 33%;">
                         Mengetahui: <br>
                         Orang Tua/Wali,<br><br><br><br><br><br><br><br>
-                        ...................
+                        ...........................
                     </td>
                     <td style="border-style : hidden;width: 33%;">
                         Wali Kelas,<br><br><br><br><br><br><br><br><br>
                         @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
-                            {{ $wali_kelas->guru->pengguna->gelar_depan }}
-                            {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                            {{ $wali_kelas->guru->pengguna->gelar_belakang }}
+                            <strong>
+                                <u>
+                                    {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                                    {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                                    {{ $wali_kelas->guru->pengguna->gelar_belakang }}
+                                </u>
+                            </strong>
                         @else
-                            ...................
+                            ...........................
                         @endif
                     </td>
                     <td style="border-style : hidden;width: 33%;">
                         Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}<br>
                         Kepala Sekolah,<br><br><br><br><br><br><br><br>
-                        {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
+                        <strong><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></strong>
                     </td>
                 </tr>
             </table>
