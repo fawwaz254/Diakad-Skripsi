@@ -27,4 +27,9 @@ class NilaiPribadiSisipan extends Model
         'deleted_by'
     ];
     protected $guarded = [];
+
+    public function component_pribadi_sisipan()
+    {
+        return $this->belongsTo(PribadiSisipan::class, 'id_pribadi_sisipan');
+    }
 }
