@@ -324,6 +324,12 @@ class CetakRaporController extends Controller
         }])->get();
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
+            if ($kelas->tingkat == '3') {
+                $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
+            } else {
+                $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
+            }
+
             foreach ($kelompok_sisipan as $k_sisipan) {
                 $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;
                 foreach ($k_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
