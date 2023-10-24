@@ -50,6 +50,7 @@
                                     <th>Total Mapel</th>
                                     <th>Mapel terinput</th>
                                     <th>UTS</th>
+                                    <th>Pengembangan Diri</th>
                                 </tr>
                             </thead>
                         </table>
@@ -65,6 +66,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print';
     var uas_url = role_url + '#' + modul_url + '/' + 'cetak-rapor/view-siswa-uas';
+    var pengembangan_diri_url = role_url + '#' + modul_url + '/' + 'cetak-rapor/pengembangan_diri_url';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -132,28 +134,21 @@
                     }
 
                 }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        pengembangan_diri_url + '/' + data.id_semester + '/' + data.id_kelas +
+                        '" >' +
+                        '    <i class="material-icons">group</i>' +
+                        '</a> ';
+                }
             }
-            // ,
-            // {
-            //     data: 'action',
-            //     name: 'action',
-            //     searchable: false,
-            //     orderable: false,
-            //     className: 'align-center',
-            //     render: function(data) {
-            //         if (data.jumlah != '0') {
-            //             return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-            //                 uas_url + '/' + data.id_semester + '/' + data.id_kelas + '" >' +
-            //                 '    <i class="material-icons">group</i>' +
-            //                 '</a> ';
-            //         } else {
-            //             return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
-            //                 '    <i class="material-icons">group</i>' +
-            //                 '</a> ';
-            //         }
-
-            //     }
-            // }
             // {
             //     data: 'pengguna.nm_pengguna',
             //     name: 'pengguna.nm_pengguna',

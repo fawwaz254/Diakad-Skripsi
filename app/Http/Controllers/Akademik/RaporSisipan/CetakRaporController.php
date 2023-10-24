@@ -809,4 +809,11 @@ class CetakRaporController extends Controller
         $mata_pelajaran = MataPelajaran::select('nm_mata_pelajaran')->groupBy('nm_mata_pelajaran')->get();
         return view('akademik/rapor-sisipan/cetak-rapor/add-deskripsi-rapor-sisipan', compact('auth_data', 'mata_pelajaran'));
     }
+
+    public function viewPengembanganDiri(Request $request, $id_semester, $id_kelas)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('akademik/rapor-sisipan/cetak-rapor/view-pengembangan-diri', compact('auth_data', 'id_semester', 'id_kelas'));
+    }
 }
