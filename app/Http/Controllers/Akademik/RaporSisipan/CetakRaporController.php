@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Akademik\RaporSisipan;
 
+use App\Exports\PengembanganDiri;
 use App\Http\Controllers\Controller;
+use App\Imports\UploadPengembanganDiri;
 use Illuminate\Http\Request;
 use App\Models\Guru;
 use App\Models\Kelas;
@@ -18,6 +20,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\KelasSisipan;
+use App\Models\KelompokPribadiSisipan;
 use App\Models\KelompokSisipan;
 use App\Models\Kurikulum;
 use App\Models\RaporSisipanDeskripsi;
@@ -815,6 +818,90 @@ class CetakRaporController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('akademik/rapor-sisipan/cetak-rapor/view-pengembangan-diri', compact('auth_data', 'id_semester', 'id_kelas'));
+        $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
+        return view('akademik/rapor-sisipan/cetak-rapor/view-pengembangan-diri', compact('auth_data', 'id_semester', 'id_kelas', 'kelompok_pribadi_sisipan'));
+    }
+
+    public function datatablesPengembanganDiri(Request $request, $id_semester, $id_kelas)
+    {
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->with(
+            [
+                'nilai_pribadi_sisipan' => function ($q) use ($id_semester) {
+                    $q->where('id_semester', $id_semester);
+                },
+                'pengguna'
+            ]
+        );
+
+        $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
+
+        return Datatables::of($list_siswa)
+            ->addColumn('pribadi_sisipan', function ($item) use ($kelompok_pribadi_sisipan) {
+                $nilai = [];
+                foreach ($kelompok_pribadi_sisipan as $k) {
+                    foreach ($k->pribadi_sisipan as $pribadi_sisipan) {
+                        $cek = $item->nilai_pribadi_sisipan->firstWhere('id_pribadi_sisipan', $pribadi_sisipan->id_pribadi_sisipan);
+                        if ($cek) {
+                            $nilai[$k->urutan][] = $pribadi_sisipan->nm_pribadi_sisipan . ' : ' . $cek->nilai;
+                        }
+                    }
+                }
+                $data = array(
+                    'n1' => $nilai[1],
+                    'n2' => $nilai[2],
+                    'n3' => $nilai[3],
+                );
+                return $data;
+            })
+            ->make(true);
+    }
+
+    public function templateExcelPengembanganDiri(Request $request, $id_kelas)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
+
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->orderBy('nis_siswa')->get();
+        $kelas = Kelas::find($id_kelas);
+
+        $data['kelompok_pribadi_sisipan'] = $kelompok_pribadi_sisipan;
+        $data['list_siswa'] = $list_siswa;
+        $data['kelas'] = $kelas;
+        return Excel::download(new PengembanganDiri($data), ' Template Pengembangan Diri (' . $kelas->nm_kelas . ').xlsx');
+    }
+
+    public function imporExcelPengembanganDiri(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('akademik/rapor-sisipan/cetak-rapor/view-import-excel-pengembangan-diri', compact('auth_data'));
+    }
+
+    public function uploadExcelPengembanganDiri(Request $request)
+    {
+
+        if ($request->hasFile('file-excel')) {
+            try {
+                Excel::import(new UploadPengembanganDiri, $request->file('file-excel'));
+            } catch (\Exception $e) {
+                return [
+                    'status'     => 200, // FAILED
+                    'message'     => "Gagal, Cek kembali apakah ada data nilai yang melebihi batas"
+                ];
+            }
+            return [
+                'status'     => 200, // FAILED
+                'message'     => "Upload Sukses"
+            ];
+        } else {
+            return [
+                'status'     => 300, // FAILED
+                'message'     => "File Excel tidak ditemukan"
+            ];
+        }
     }
 }

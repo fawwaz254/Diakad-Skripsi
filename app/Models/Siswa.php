@@ -56,6 +56,13 @@ class Siswa extends Model
         return $this->belongsTo(CalonSiswaBaru::class, 'id_c_siswa');
     }
 
+
+    public function nilai_pribadi_sisipan()
+    {
+        return $this->hasmany(NilaiPribadiSisipan::class, 'id_siswa');
+    }
+
+
     public function kpi()
     {
         return $this->hasMany(Kpi::class, 'id_siswa');

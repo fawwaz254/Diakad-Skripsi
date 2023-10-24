@@ -66,7 +66,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print';
     var uas_url = role_url + '#' + modul_url + '/' + 'cetak-rapor/view-siswa-uas';
-    var pengembangan_diri_url = role_url + '#' + modul_url + '/' + 'cetak-rapor/pengembangan_diri_url';
+    var pengembangan_diri_url = role_url + '#' + modul_url + '/' + 'cetak-rapor/view-pengembangan-diri';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
