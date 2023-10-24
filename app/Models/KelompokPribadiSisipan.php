@@ -26,4 +26,10 @@ class KelompokPribadiSisipan extends Model
     ];
 
     protected $guarded = [];
+
+
+    public function pribadi_sisipan()
+    {
+        return $this->hasMany(PribadiSisipan::class, 'id_kelompok_pribadi_sisipan');
+    }
 }

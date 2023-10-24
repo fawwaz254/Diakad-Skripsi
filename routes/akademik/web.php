@@ -487,7 +487,15 @@ Route::middleware(['token_staff'])->group(function () {
 
                 //cetak rapor semester akhir
                 Route::get('view-pengembangan-diri/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'viewPengembanganDiri']);
-                Route::get('datatables/view-siswa-pengembangan-diri/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'datatablesSiswaUas']);
+                Route::get('datatables/view-pengembangan-diri/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'datatablesPengembanganDiri']);
+                Route::get('template-pengembangan-diri/template-excel-pengembangan-diri/{id_kelas}', [CetakRaporController::class, 'templateExcelPengembanganDiri']);
+
+
+                //import excel
+                Route::get('importExcel', [CetakRaporController::class, 'imporExcelPengembanganDiri']);
+                Route::post('importExcel', [CetakRaporController::class, 'uploadExcelPengembanganDiri']);
+
+
                 Route::get('printAkhir/{thn_akademik_semester}/{id_siswa}', [CetakRaporController::class, 'printCetakRaporAkhir']);
             });
 
