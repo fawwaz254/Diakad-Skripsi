@@ -309,7 +309,9 @@ class CetakRaporController extends Controller
         $semester = Semester::find($id_semester);
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
-        $list_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+        $list_siswa = Siswa::with(['nilai_pribadi_sisipan' => function ($q) use ($id_semester) {
+            $q->where('id_semester', $id_semester);
+        }, 'nilai_pribadi_sisipan.pribadi_sisipan'])->where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
         $nilai_siswa = [];
@@ -876,7 +878,6 @@ class CetakRaporController extends Controller
             ->addColumn('pribadi_sisipan', function ($item) use ($kelompok_pribadi_sisipan) {
                 $nilai = [];
                 foreach ($kelompok_pribadi_sisipan as $k) {
-
                     foreach ($k->pribadi_sisipan as $pribadi_sisipan) {
                         $cek = $item->nilai_pribadi_sisipan->firstWhere('id_pribadi_sisipan', $pribadi_sisipan->id_pribadi_sisipan);
                         if ($cek) {
@@ -885,9 +886,9 @@ class CetakRaporController extends Controller
                     }
                 }
                 $data = array(
-                    'n1' => isset($nilai[1]) ? $nilai[1] : null,
-                    'n2' => isset($nilai[2]) ? $nilai[2] : null,
-                    'n3' => isset($nilai[3]) ? $nilai[3] : null,
+                    'n1' => $nilai[1],
+                    'n2' => $nilai[2],
+                    'n3' => $nilai[3],
                 );
                 return $data;
             })
