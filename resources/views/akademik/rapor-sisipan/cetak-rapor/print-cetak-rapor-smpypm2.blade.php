@@ -72,7 +72,7 @@
 
 <body>
 
-    @foreach ($list_siswa->take(1) as $siswa)
+    @foreach ($list_siswa as $siswa)
         <div class="page" style="margin-top: 3rem">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr>
@@ -94,65 +94,65 @@
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;">Nama Sekolah
+                    <td style="border-style : hidden;width: 20%;">Nama Sekolah
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 34%;">
+                    <td style="border-style : hidden;width: 39%;">
                         {{ $auth_data->sekolah_data->nm_sekolah }}
                     </td>
                     <td style="border-style : hidden;width: 24%;">Kelas
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 25%; ">
+                    <td style="border-style : hidden;width: 30%;">
                         {{ $kelas->nm_kelas }}
                     </td>
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;">Alamat
+                    <td style="border-style : hidden;width: 20%;">Alamat
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 34%;">
+                    <td style="border-style : hidden;width: 39%;">
                         {{ $auth_data->sekolah_data->alamat_jalan }}
                     </td>
-                    <td style="border-style : hidden;width: 24%;">Semester
+                    <td style="border-style : hidden;width: 9%;">Semester
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 25%; ">
+                    <td style="border-style : hidden;width: 30%;">
                         {{ $semester->nm_semester == 'Ganjil' ? '1 (Satu)' : '2 (Dua)' }}
                     </td>
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;">Nama Siswa
+                    <td style="border-style : hidden;width: 20%;">Nama Siswa
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 34%;">
+                    <td style="border-style : hidden;width: 39%;">
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
-                    <td style="border-style : hidden;width: 24%;">Tahun Pelajaran
+                    <td style="border-style : hidden;width: 9%;">Tahun Pelajaran
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 25%; ">
+                    <td style="border-style : hidden;width: 30%;">
                         {{ $semester->tahun_ajaran }}
                     </td>
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;">Nomor Induk/NISN
+                    <td style="border-style : hidden;width: 20%;">Nomor Induk/NISN
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 34%;">
+                    <td style="border-style : hidden;width: 39%;">
                         {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
                     </td>
-                    <td style="border-style : hidden;width: 24%;"></td>
+                    <td style="border-style : hidden;width: 9%;"></td>
                     <td style="border-style : hidden;width: 1%;"></td>
                     <td style="border-style : hidden;width: 25%;"></td>
                 </tr>
@@ -234,12 +234,12 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 4rem auto 0 auto;">
                 <tr style="border-style : hidden;">
                     <td style="border-style : hidden;width: 33%;">
-                        Mengetahui: <br>
+                        <br>Mengetahui: <br>
                         Orang Tua/Wali,<br><br><br><br><br><br><br><br>
                         ...........................
                     </td>
                     <td style="border-style : hidden;width: 33%;">
-                        <br><br>Wali Kelas,<br><br><br><br><br><br><br><br><br>
+                        <br><br>Wali Kelas,<br><br><br><br><br><br><br><br>
                         @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
                             <strong>
                                 <u>
@@ -253,7 +253,7 @@
                         @endif
                     </td>
                     <td style="border-style : hidden;width: 33%;">
-                        Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}<br>
+                        Sidoarjo, 21 Oktober 2023<br><br>
                         Kepala Sekolah,<br><br><br><br><br><br><br><br>
                         <strong><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></strong>
                     </td>
