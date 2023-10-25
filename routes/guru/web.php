@@ -77,6 +77,7 @@ use App\Http\Controllers\Guru\Presensi\AbsensiBarcodeController;
 use App\Http\Controllers\Guru\Presensi\PresensiQrCodeController;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
+use App\Http\Controllers\Guru\WaliKelas\RaporSisipanNonAkademikController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
@@ -749,6 +750,17 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/download', [InputKPIController::class, 'downloadTemplateKPI']);
                 Route::get('/datatables', [InputKPIController::class, 'datatablesInputKPI']);
                 Route::get('/print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
+            });
+
+
+            Route::prefix('rapor-sisipan-input-non-mapel')->group(function () {
+                Route::get('/', [RaporSisipanNonAkademikController::class, 'viewPengembanganDiri']);
+                Route::get('datatables/{thn_akademik_semester}/{id_kelas}', [RaporSisipanNonAkademikController::class, 'datatablesPengembanganDiri']);
+                Route::get('template-excel-pengembangan-diri/{id_kelas}', [CetakRaporController::class, 'templateExcelPengembanganDiri']);
+
+                //import excel
+                Route::get('importExcel', [RaporSisipanNonAkademikController::class, 'imporExcelPengembanganDiri']);
+                Route::post('importExcel', [CetakRaporController::class, 'uploadExcelPengembanganDiri']);
             });
         });
 
