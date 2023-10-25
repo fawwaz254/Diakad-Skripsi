@@ -28,7 +28,7 @@ class NilaiPribadiSisipan extends Model
     ];
     protected $guarded = [];
 
-    public function component_pribadi_sisipan()
+    public function pribadi_sisipan()
     {
         return $this->belongsTo(PribadiSisipan::class, 'id_pribadi_sisipan');
     }

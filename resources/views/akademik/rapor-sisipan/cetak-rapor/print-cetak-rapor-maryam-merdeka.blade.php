@@ -152,21 +152,18 @@
                     </td>
                 </tr>
 
-
             </table>
 
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #C2D69B">
                     <tr>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">KOMPONEN<br></td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">KKM</td>
-                        <td colspan="2" style="text-align: center;font-weight: bold;">KD 3.1</td>
-                        <td colspan="2" style="text-align: center;font-weight: bold;">KD 3.2</td>
-                        <td colspan="2" style="text-align: center;font-weight: bold;">KD 4.1</td>
-                        <td colspan="2" style="text-align: center;font-weight: bold;">KD 4.2</td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">Nilai <br> PHB</td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">SIKAP</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">Mata Pelajaran<br></td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">KKTP</td>
+                        <td colspan="2" style="text-align: center;font-weight: bold;">CP-1</td>
+                        <td colspan="2" style="text-align: center;font-weight: bold;">CP-2</td>
+                        <td colspan="2" style="text-align: center;font-weight: bold;">CP-3</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">PFB</td>
                     </tr>
                     <tr>
                         <td style="text-align: center;font-weight: bold;">1</td>
@@ -175,8 +172,7 @@
                         <td style="text-align: center;font-weight: bold;">2</td>
                         <td style="text-align: center;font-weight: bold;">1</td>
                         <td style="text-align: center;font-weight: bold;">2</td>
-                        <td style="text-align: center;font-weight: bold;">1</td>
-                        <td style="text-align: center;font-weight: bold;">2</td>
+
                     </tr>
                 </thead>
                 <br>
@@ -221,6 +217,7 @@
                     @endforeach
                 </tbody>
             </table>
+
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
                     <th align="center">PENGEMBANGAN DIRI</th>
@@ -320,11 +317,10 @@
                     </td>
                 </tr>
             </table>
+
         </div>
     @endforeach
-    <br><br>
 
-    </div>
 
 </body>
 <script>
