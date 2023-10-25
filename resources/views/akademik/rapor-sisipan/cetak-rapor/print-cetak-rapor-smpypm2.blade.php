@@ -222,7 +222,7 @@
                 @foreach ($siswa->nilai_pribadi_sisipan as $item)
                     <tr>
                         <td style="width: 70%;">
-                            {{ $item->component_pribadi_sisipan->nm_pribadi_sisipan }}
+                            {{ $item->pribadi_sisipan->nm_pribadi_sisipan }}
                         </td>
                         <td style="width: 30%;">
                             {{ $item->nilai }} hari
