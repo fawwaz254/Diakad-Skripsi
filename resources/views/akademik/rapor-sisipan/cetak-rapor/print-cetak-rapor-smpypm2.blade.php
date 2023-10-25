@@ -158,6 +158,7 @@
                 </tr>
             </table>
 
+            <div style="width: 90%; margin: 0 auto;margin-top:3rem;font-weight: bold;">A. Pengetahuan</div>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #C2D69B">
                     <tr>
@@ -216,6 +217,20 @@
                 </tbody>
             </table>
 
+            <div style="width: 90%; margin: 3rem auto 1rem auto;font-weight: bold;">B. Ketidakhadiran</div>
+            <table cellspacing="0" cellpadding="10" style="width: 40%; margin-left:60px">
+                @foreach ($siswa->nilai_pribadi_sisipan as $item)
+                    <tr>
+                        <td style="width: 70%;">
+                            {{ $item->pribadi_sisipan->nm_pribadi_sisipan }}
+                        </td>
+                        <td style="width: 30%;">
+                            {{ $item->nilai }} hari
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
+
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 4rem auto 0 auto;">
                 <tr style="border-style : hidden;">
                     <td style="border-style : hidden;width: 33%;">
@@ -224,7 +239,7 @@
                         ...........................
                     </td>
                     <td style="border-style : hidden;width: 33%;">
-                        Wali Kelas,<br><br><br><br><br><br><br><br><br>
+                        <br><br>Wali Kelas,<br><br><br><br><br><br><br><br><br>
                         @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
                             <strong>
                                 <u>
