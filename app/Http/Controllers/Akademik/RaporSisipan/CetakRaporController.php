@@ -23,6 +23,8 @@ use App\Models\KelasSisipan;
 use App\Models\KelompokPribadiSisipan;
 use App\Models\KelompokSisipan;
 use App\Models\Kurikulum;
+use App\Models\NilaiPribadiSisipan;
+use App\Models\PribadiSisipan;
 use App\Models\RaporSisipanDeskripsi;
 use App\Models\Sekolah;
 use App\Models\Semester;
@@ -363,7 +365,30 @@ class CetakRaporController extends Controller
                     }
                 }
             }
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen'));
+
+            $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+            $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
+            $kelompok_sisipan = KelompokPribadiSisipan::where('nm_kelompok_pribadi_sisipan')->first();
+            $pribadi_sisipan = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                $query->where('nm_kelompok_pribadi_sisipan', 'Ekstra Kurikuler');
+            })->get();
+
+            $nilai_pengembangan_diri = [];
+            $nilai_ekskul = [];
+            foreach ($nilai_pribadi_siswa as $n) {
+                if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan->pluck('id_pribadi_sisipan')->toArray())) {
+                    $nilai_ekskul[$n->id_siswa . 'nm_ekskul'][] = $n->pribadi_sisipan->nm_pribadi_sisipan;
+                    $nilai_ekskul[$n->id_siswa . 'nilai_ekskul'][] = $n->nilai;
+                } else {
+                    $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
+                }
+            }
+
+            if ($kelas->tingkat == '3') {
+                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul'));
+            } else {
+                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen'));
+            }
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
             foreach ($kelompok_sisipan as $k_sisipan) {
                 $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;

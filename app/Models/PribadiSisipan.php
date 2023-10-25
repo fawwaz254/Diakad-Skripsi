@@ -28,4 +28,8 @@ class PribadiSisipan extends Model
     ];
 
     protected $guarded = [];
+    public function kelompok_pribadi_sisipan()
+    {
+        return $this->belongsTo(KelompokPribadiSisipan::class, 'id_kelompok_pribadi_sisipan');
+    }
 }
