@@ -266,9 +266,15 @@
                         <br>
                         Tanpa Keterangan
                     </td>
-                    <td>: ..... hari<br>
-                        : ..... hari<br>
-                        : ..... hari</td>
+                    <td> :
+                        {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '1']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '1'] : '0' }}
+                        hari<br>
+                        :
+                        {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '1']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '2'] : '0' }}
+                        hari<br>
+                        :
+                        {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '1']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '3'] : '0' }}
+                        hari</td>
                     <td style="border-style : hidden;"><br>
                         <p style="width: 300px;
                     border-bottom: 2px dotted  black;"></p><br>

@@ -610,8 +610,22 @@ class CetakRaporController extends Controller
                 }
             }
 
+            $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+            $kelompok_sisipan = KelompokPribadiSisipan::where('nm_kelompok_pribadi_sisipan')->first();
+            $pribadi_sisipan = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                $query->where('nm_kelompok_pribadi_sisipan', 'Ketidak Hadiran');
+            })->get();
+
+            $nilai_pengembangan_diri = [];
+
+            foreach ($nilai_pribadi_siswa as $n) {
+                if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan->pluck('id_pribadi_sisipan')->toArray())) {
+                    $nilai_pengembangan_diri[$n->id_siswa . $n->pribadi_sisipan->urutan] = $n->nilai;
+                }
+            }
+
             $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8])->get();
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm1', compact('auth_data', 'kelas', 'list_siswa', 'data', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'semester'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm1', compact('auth_data', 'pribadi_sisipan', 'nilai_pengembangan_diri', 'kelas', 'list_siswa', 'data', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'semester'));
         }
     }
 
