@@ -14,7 +14,7 @@
 
                     </div>
                     <a style="float:right;" class="btn btn-success btn-circle waves-effect waves-circle float-right"
-                        href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor-siswa/print/' . $semester_aktif->thn_akademik_semester . '/' . $wali_kelas->id_kelas) }}"
+                        href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor-siswa/print/' . $semester_aktif->id_semester . '/' . $wali_kelas->id_kelas) }}"
                         target="_blank">
                         <i class="material-icons">picture_as_pdf</i>
                     </a>

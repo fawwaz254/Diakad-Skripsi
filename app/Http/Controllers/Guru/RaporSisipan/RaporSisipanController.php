@@ -35,7 +35,7 @@ class RaporSisipanController extends Controller
 
     public function updateData(Request $request)
     {
-
+        set_time_limit(-1);
         $kelas = Kelas::whereIn('tingkat', [1, 2])->get();
         $siswa = Siswa::whereIn('id_kelas', $kelas->pluck('id_kelas'))->get();
         $komponen_nilai_rapor_sisipan = KomponenNilaiRaporSisipan::whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->get();
