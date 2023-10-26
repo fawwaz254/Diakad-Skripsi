@@ -277,6 +277,7 @@ Route::middleware(['auth.mobile'])->group(function () {
 
             Route::prefix('form-harian')->group(function () {
                 Route::post('get', [Apiv1Controller::class, 'actionGetFormHarian']);
+                // Route::post('input', [Apiv1Controller::class, 'actionGetDetailFormHarian']);
                 Route::post('{mode}/submit', [Apiv1Controller::class, 'actionFormHarian']);
             });
         });
