@@ -886,9 +886,9 @@ class CetakRaporController extends Controller
                     }
                 }
                 $data = array(
-                    'n1' => $nilai[1],
-                    'n2' => $nilai[2],
-                    'n3' => $nilai[3],
+                    'n1' => isset($nilai[1]) ? $nilai[1] : null,
+                    'n2' => isset($nilai[2]) ? $nilai[2] : null,
+                    'n3' => isset($nilai[3]) ? $nilai[3] : null,
                 );
                 return $data;
             })
