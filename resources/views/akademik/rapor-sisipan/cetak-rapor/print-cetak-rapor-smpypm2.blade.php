@@ -17,7 +17,7 @@
         td,
         th {
             border: 1px solid;
-            padding: 10px 5px 10px 5px;
+            padding: 10px;
         }
 
         table {
@@ -69,9 +69,10 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page" style="margin-top: 3rem">
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;"
+                style="border-style : hidden;padding:2px;">
                 <tr>
-                    <td colspan="10" style="border-style : hidden">
+                    <td colspan="10" style="border-style : hidden;padding:2px;">
 
                         <h2 align="center" style="margin-top: 3px">
                             RAPOR SISIPAN<br>
@@ -88,68 +89,68 @@
                     </td>
                 </tr>
 
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 20%;">Nama Sekolah
+                <tr style="border-style : hidden;padding:2px">
+                    <td style="border-style : hidden;padding:2px;width: 20%;">Nama Sekolah
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 39%;">
+                    <td style="border-style : hidden;padding:2px;width: 39%;">
                         {{ $auth_data->sekolah_data->nm_sekolah }}
                     </td>
-                    <td style="border-style : hidden;width: 24%;">Kelas
+                    <td style="border-style : hidden;padding:2px;width: 24%;">Kelas
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 30%;">
+                    <td style="border-style : hidden;padding:2px;width: 30%;">
                         {{ $kelas->nm_kelas }}
                     </td>
                 </tr>
 
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 20%;">Alamat
+                <tr style="border-style : hidden;padding:2px">
+                    <td style="border-style : hidden;padding:2px;width: 20%;">Alamat
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 39%;">
+                    <td style="border-style : hidden;padding:2px;width: 39%;">
                         {{ $auth_data->sekolah_data->alamat_jalan }}
                     </td>
-                    <td style="border-style : hidden;width: 9%;">Semester
+                    <td style="border-style : hidden;padding:2px;width: 9%;">Semester
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 30%;">
+                    <td style="border-style : hidden;padding:2px;width: 30%;">
                         {{ $semester->nm_semester == 'Ganjil' ? '1 (Satu)' : '2 (Dua)' }}
                     </td>
                 </tr>
 
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 20%;">Nama Siswa
+                <tr style="border-style : hidden;padding:2px">
+                    <td style="border-style : hidden;padding:2px;width: 20%;">Nama Siswa
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 39%;">
+                    <td style="border-style : hidden;padding:2px;width: 39%;">
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
-                    <td style="border-style : hidden;width: 9%;">Tahun Pelajaran
+                    <td style="border-style : hidden;padding:2px;width: 9%;">Tahun Pelajaran
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 30%;">
+                    <td style="border-style : hidden;padding:2px;width: 30%;">
                         {{ $semester->tahun_ajaran }}
                     </td>
                 </tr>
 
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 20%;">Nomor Induk/NISN
+                <tr style="border-style : hidden;padding:2px">
+                    <td style="border-style : hidden;padding:2px;width: 20%;">Nomor Induk/NISN
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 39%;">
+                    <td style="border-style : hidden;padding:2px;width: 39%;">
                         {{ $siswa->nis_siswa . ' / ' . $siswa->nisn_siswa }}
                     </td>
-                    <td style="border-style : hidden;width: 9%;"></td>
-                    <td style="border-style : hidden;width: 1%;"></td>
-                    <td style="border-style : hidden;width: 25%;"></td>
+                    <td style="border-style : hidden;padding:2px;width: 9%;"></td>
+                    <td style="border-style : hidden;padding:2px;width: 1%;"></td>
+                    <td style="border-style : hidden;padding:2px;width: 25%;"></td>
                 </tr>
             </table>
 
