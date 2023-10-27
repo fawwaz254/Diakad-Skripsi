@@ -365,6 +365,16 @@ class RaporSisipanController extends Controller
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
 
         $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
+            if ($rapor_sisipan->kelas->tingkat == '3') {
+                $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
+            } else {
+                $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')
+                    ->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
+            }
+        }
+
+
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })
