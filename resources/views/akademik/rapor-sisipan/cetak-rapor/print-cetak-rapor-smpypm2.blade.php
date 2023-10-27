@@ -30,11 +30,6 @@
             border: 5px double;
         }
 
-        td {
-            /* font-size: 10px; */
-            padding: 2px;
-        }
-
         .page {
             width: 1200px;
         }
@@ -74,9 +69,10 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page" style="margin-top: 3rem">
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;"
+                style="border-style : hidden;padding:2px;">
                 <tr>
-                    <td colspan="10" style="border-style : hidden">
+                    <td colspan="10" style="border-style : hidden;padding:2px;">
 
                         <h2 align="center" style="margin-top: 3px">
                             RAPOR SISIPAN<br>
@@ -93,68 +89,68 @@
                     </td>
                 </tr>
 
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 20%;">Nama Sekolah
+                <tr style="border-style : hidden;padding:2px">
+                    <td style="border-style : hidden;padding:2px;width: 20%;">Nama Sekolah
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 39%;">
+                    <td style="border-style : hidden;padding:2px;width: 39%;">
                         {{ $auth_data->sekolah_data->nm_sekolah }}
                     </td>
-                    <td style="border-style : hidden;width: 24%;">Kelas
+                    <td style="border-style : hidden;padding:2px;width: 24%;">Kelas
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 30%;">
+                    <td style="border-style : hidden;padding:2px;width: 30%;">
                         {{ $kelas->nm_kelas }}
                     </td>
                 </tr>
 
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 20%;">Alamat
+                <tr style="border-style : hidden;padding:2px">
+                    <td style="border-style : hidden;padding:2px;width: 20%;">Alamat
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 39%;">
+                    <td style="border-style : hidden;padding:2px;width: 39%;">
                         {{ $auth_data->sekolah_data->alamat_jalan }}
                     </td>
-                    <td style="border-style : hidden;width: 9%;">Semester
+                    <td style="border-style : hidden;padding:2px;width: 9%;">Semester
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 30%;">
+                    <td style="border-style : hidden;padding:2px;width: 30%;">
                         {{ $semester->nm_semester == 'Ganjil' ? '1 (Satu)' : '2 (Dua)' }}
                     </td>
                 </tr>
 
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 20%;">Nama Siswa
+                <tr style="border-style : hidden;padding:2px">
+                    <td style="border-style : hidden;padding:2px;width: 20%;">Nama Siswa
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 39%;">
+                    <td style="border-style : hidden;padding:2px;width: 39%;">
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
-                    <td style="border-style : hidden;width: 9%;">Tahun Pelajaran
+                    <td style="border-style : hidden;padding:2px;width: 9%;">Tahun Pelajaran
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 30%;">
+                    <td style="border-style : hidden;padding:2px;width: 30%;">
                         {{ $semester->tahun_ajaran }}
                     </td>
                 </tr>
 
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 20%;">Nomor Induk/NISN
+                <tr style="border-style : hidden;padding:2px">
+                    <td style="border-style : hidden;padding:2px;width: 20%;">Nomor Induk/NISN
                     </td>
-                    <td style="border-style : hidden;width: 1%;"> :
+                    <td style="border-style : hidden;padding:2px;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 39%;">
-                        {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
+                    <td style="border-style : hidden;padding:2px;width: 39%;">
+                        {{ $siswa->nis_siswa . ' / ' . $siswa->nisn_siswa }}
                     </td>
-                    <td style="border-style : hidden;width: 9%;"></td>
-                    <td style="border-style : hidden;width: 1%;"></td>
-                    <td style="border-style : hidden;width: 25%;"></td>
+                    <td style="border-style : hidden;padding:2px;width: 9%;"></td>
+                    <td style="border-style : hidden;padding:2px;width: 1%;"></td>
+                    <td style="border-style : hidden;padding:2px;width: 25%;"></td>
                 </tr>
             </table>
 
@@ -235,11 +231,11 @@
                 <tr style="border-style : hidden;">
                     <td style="border-style : hidden;width: 33%;">
                         <br>Mengetahui: <br>
-                        Orang Tua/Wali,<br><br><br><br><br><br><br><br>
+                        Orang Tua/Wali,<br><br><br><br><br><br><br><br><br>
                         ...........................
                     </td>
                     <td style="border-style : hidden;width: 33%;">
-                        <br><br>Wali Kelas,<br><br><br><br><br><br><br><br>
+                        <br><br>Wali Kelas,<br><br><br><br><br><br><br><br><br>
                         @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
                             <strong>
                                 <u>
@@ -254,11 +250,11 @@
                     </td>
                     <td style="border-style : hidden;width: 33%;position: relative;">
                         Sidoarjo, 21 Oktober 2023<br><br>
-                        Kepala Sekolah,<br><br><br><br><br><br><br><br>
+                        Kepala Sekolah,<br><br><br><br><br><br><br><br><br>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                             <img style="position: absolute; top: 5%; margin-left:-20px; margin-top:35px"
-                                src="{{ asset('media/ttd/smpypm22.png') }}" alt="TTD" width="160px"
-                                height="160px" class="ttd">
+                                src="{{ asset('media/ttd/smpypm22.png') }}" alt="TTD" width="200px"
+                                height="200px" class="ttd">
                         @endif
                         <strong><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></strong>
                     </td>
