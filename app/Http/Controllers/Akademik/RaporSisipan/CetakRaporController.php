@@ -895,6 +895,11 @@ class CetakRaporController extends Controller
                     'n3' => isset($nilai[3]) ? $nilai[3] : null,
                 );
                 return $data;
+            })->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa,
+                );
+                return $data;
             })
             ->make(true);
     }
@@ -944,6 +949,26 @@ class CetakRaporController extends Controller
             return [
                 'status'     => 300, // FAILED
                 'message'     => "File Excel tidak ditemukan"
+            ];
+        }
+    }
+    public function actionPengembanganDiri(Request $request, $mode, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if ($mode == 'delete') {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $nilai_pengembangan_diri = NilaiPribadiSisipan::where('id_siswa', $id_siswa)->where('id_semester', $semester_aktif->id_semester)->get();
+            foreach ($nilai_pengembangan_diri as $pengembangan_diri) {
+                $pengembangan_diri->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                $pengembangan_diri->save();
+                $pengembangan_diri->delete();
+            }
+
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Data Pengembangan Diri succesfully'
+
             ];
         }
     }

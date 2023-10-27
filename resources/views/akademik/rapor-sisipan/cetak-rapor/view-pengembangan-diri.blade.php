@@ -32,6 +32,7 @@
                                     @foreach ($kelompok_pribadi_sisipan as $pribadi_sisipan)
                                         <th>{{ $pribadi_sisipan->nm_kelompok_pribadi_sisipan }}</th>
                                     @endforeach
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -50,6 +51,8 @@
         'cetak-rapor/datatables/view-pengembangan-diri/' +
         id_semester + '/' + id_kelas;
     // var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/printAkhir/' + id_semester;
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'cetak-rapor/action-pengembangan-diri/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -120,26 +123,20 @@
 
                 }
             },
-            // {
-            //     data: 'action',
-            //     name: 'action',
-            //     searchable: false,
-            //     orderable: false,
-            //     className: 'align-center',
-            //     render: function(data) {
-            //         if (data.jumlah != '0') {
-            //             return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-            //                 pdf_url + '/' + data.id_siswa + '"  target="_blank">' +
-            //                 '    <i class="material-icons">picture_as_pdf</i>' +
-            //                 '</a> ';
-            //         } else {
-            //             return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
-            //                 '    <i class="material-icons">picture_as_pdf</i>' +
-            //                 '</a> ';
-            //         }
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                        delete_url + '\', this)" data-id="' + data.id + '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
 
-            //     }
-            // },
+                }
+            },
         ]
     });
 
