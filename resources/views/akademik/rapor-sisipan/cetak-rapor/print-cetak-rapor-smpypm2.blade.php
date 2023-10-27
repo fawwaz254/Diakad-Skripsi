@@ -17,7 +17,7 @@
         td,
         th {
             border: 1px solid;
-            padding: 10px;
+            padding: 10px 5px 10px 5px;
         }
 
         table {
@@ -28,11 +28,6 @@
 
         .head {
             border: 5px double;
-        }
-
-        td {
-            /* font-size: 10px; */
-            padding: 2px;
         }
 
         .page {
