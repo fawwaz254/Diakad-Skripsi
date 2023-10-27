@@ -320,7 +320,9 @@ class CetakRaporController extends Controller
         $rapor_sisipans = RaporSisipan::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with('nilai_rapor_sisipan')->get();
         foreach ($rapor_sisipans as $rapor_sisipan) {
             foreach ($rapor_sisipan->nilai_rapor_sisipan as  $nilai_rapor_sisipan) {
-                $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                if ($nilai_rapor_sisipan['nilai'] != '0') {
+                    $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                }
             }
         }
 
@@ -380,7 +382,7 @@ class CetakRaporController extends Controller
                 }
             }
 
-            $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+            $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->where('nilai', '!=', '0')->get();
             $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
             $kelompok_sisipan = KelompokPribadiSisipan::where('nm_kelompok_pribadi_sisipan')->first();
             $pribadi_sisipan = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
