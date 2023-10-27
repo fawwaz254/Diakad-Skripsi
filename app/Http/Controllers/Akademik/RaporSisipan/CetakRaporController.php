@@ -317,7 +317,9 @@ class CetakRaporController extends Controller
         $nilai_siswa = [];
         $data = [];
 
-        $rapor_sisipans = RaporSisipan::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with('nilai_rapor_sisipan')->get();
+        $rapor_sisipans = RaporSisipan::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with(['nilai_rapor_sisipan' => function($q){
+            $q->where('nilai', '>', 0);
+        }])->get();
 
         $komponen_sikap = KomponenNilaiRaporSisipan::where('nm_nilai', 'SIKAP')->first();
         foreach ($rapor_sisipans as $rapor_sisipan) {
