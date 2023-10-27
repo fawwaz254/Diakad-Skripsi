@@ -561,177 +561,72 @@ class CetakRaporController extends Controller
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
+
             $nilai_siswa = [];
-            $nilai_komponen = [];
-            if ($list_siswa) {
-                $nilai = $list_nilai->toArray();
-                foreach ($nilai as $nilaiRapor) {
-                    foreach ($nilaiRapor as $a) {
-                        if (isset($nilaiRapor['id_komponen_nilai']) && isset($nilaiRapor['id_siswa']) && isset($nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'])) {
-                            $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran']] = $nilaiRapor['nilai'];
+            $typeuts = KomponenNilaiRaporSisipan::where('type', 'uts')->first();
+            $sumatif = KomponenNilaiRaporSisipan::where('type', 'sumatif')->get();
+            foreach ($rapor_sisipans as $rapor_sisipan) {
+                foreach ($rapor_sisipan->nilai_rapor_sisipan as  $nilai_rapor_sisipan) {
+                    if ($nilai_rapor_sisipan->id_komponen_nilai == $typeuts->id_komponen_nilai) {
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'sts'] = $nilai_rapor_sisipan['nilai'];
+                    } elseif (in_array($nilai_rapor_sisipan->id_komponen_nilai, $sumatif->pluck('id_komponen_nilai')->toArray())) {
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                        if (isset($nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'total_nilai_sumatif'])) {
+                            $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'total_nilai_sumatif'] = $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'total_nilai_sumatif'] + $nilai_rapor_sisipan['nilai'];
+                            $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'jumlah'] = $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'jumlah']  + 1;
+                        } else {
+                            $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'total_nilai_sumatif'] = $nilai_rapor_sisipan['nilai'];
+                            $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'jumlah'] = 1;
+                        }
+                    } else {
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                    }
+                }
+            }
 
+            foreach ($kelompok_sisipan as $k_sisipan) {
+                $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;
+                foreach ($k_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
+                    if ($mata_pelajaran_sisipan->jenis == '0') {
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->keterangan;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                    } else {
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] =  $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                    }
+                }
 
-                            $nilai_tugas1 = $list_komponen->firstWhere('urutan', '=', '1');
-                            $nilai_tugas2 = $list_komponen->firstWhere('urutan', '=', '2');
-                            $nilai_tugas3 = $list_komponen->firstWhere('urutan', '=', '3');
-                            $nilai_tugas4 = $list_komponen->firstWhere('urutan', '=', '4');
-                            $nilai_sumatif1 = $list_komponen->firstWhere('urutan', '=', '5');
-                            $nilai_sumatif2 = $list_komponen->firstWhere('urutan', '=', '6');
-                            $nilai_sumatif3 = $list_komponen->firstWhere('urutan', '=', '7');
-                            $nilai_sumatif4 = $list_komponen->firstWhere('urutan', '=', '8');
-                            $sts = $list_komponen->firstWhere('urutan', '=', '9');
-
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas1->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '1'] =  $nilaiRapor['nilai'];
-                            }
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas2->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '2'] =  $nilaiRapor['nilai'];
-                            }
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas3->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '3'] =  $nilaiRapor['nilai'];
-                            }
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas4->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '4'] =  $nilaiRapor['nilai'];
-                            }
-
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5'] =  $nilaiRapor['nilai'];
-                                // dd($nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5']);
-                            }
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '6'] =  $nilaiRapor['nilai'];
-                            }
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif3->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '7'] =  $nilaiRapor['nilai'];
-                            }
-                            if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif4->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '8'] =  $nilaiRapor['nilai'];
-                            }
-                            if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                                $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . 'sts'] =  $nilaiRapor['nilai'];
-                            }
+                foreach ($k_sisipan->sub_kelompok_sisipan as $sub_kelompok_sisipan) {
+                    $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['nama'] = $sub_kelompok_sisipan->nm_sub_kelompok_sisipan;
+                    foreach ($sub_kelompok_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
+                        if ($mata_pelajaran_sisipan->jenis == '0') {
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->keterangan;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                        } else {
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
                         }
                     }
                 }
             }
+
+            $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+            $kelompok_sisipan = KelompokPribadiSisipan::where('nm_kelompok_pribadi_sisipan')->first();
+            $pribadi_sisipan = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                $query->where('nm_kelompok_pribadi_sisipan', 'Ketidak Hadiran');
+            })->get();
+
+            $nilai_pengembangan_diri = [];
+
+            foreach ($nilai_pribadi_siswa as $n) {
+                if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan->pluck('id_pribadi_sisipan')->toArray())) {
+                    $nilai_pengembangan_diri[$n->id_siswa . $n->pribadi_sisipan->urutan] = $n->nilai;
+                }
+            }
+
+            $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8])->get();
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm1', compact('auth_data', 'pribadi_sisipan', 'nilai_pengembangan_diri', 'kelas', 'list_siswa', 'data', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'semester'));
         }
-
-
-        // $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai', 'rapor_sisipan.semester', 'rapor_sisipan.mata_pelajaran')
-        //     ->whereHas('siswa', function ($query) use ($id_kelas) {
-        //         $query->where('id_kelas', '=', $id_kelas);
-        //     })->whereHas('komponen_nilai', function ($query) {
-        //         $query->where('status', 1)->where('type', '!=', 'uas');
-        //     })->get();
-
-
-
-        // $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;
-        // if ($setting == '0') {
-        //     return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor', compact('auth_data', 'kelas', 'list_siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'raporSisipanD', 'list_nilai', 'wali_kelas', 'sub'));
-        // } elseif ($setting == '1') {
-        //     $nilai_siswa = [];
-        //     $nilai_komponen = [];
-        //     if ($list_siswa) {
-        //         $nilai = $list_nilai->toArray();
-        //         foreach ($nilai as $nilaiRapor) {
-        //             foreach ($nilaiRapor as $a) {
-        //                 if (isset($nilaiRapor['id_komponen_nilai']) && isset($nilaiRapor['id_siswa']) && isset($nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'])) {
-        //                     $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran']] = $nilaiRapor['nilai'];
-        //                     $nilai_sumatif1 = $list_komponen->firstWhere('urutan', 5);
-        //                     $nilai_sumatif2 = $list_komponen->firstWhere('urutan', 6);
-        //                     $sts = $list_komponen->where('type', 'uts')->where('urutan', 9)->first();
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '6'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '9'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor2', compact('auth_data', 'kelas', 'list_siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'sub', 'list_nilai', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'nilai_komponen'));
-        // } elseif ($setting == '2') {
-        //     $nilai_siswa = [];
-        //     $nilai_komponen = [];
-        //     if ($list_siswa) {
-        //         $nilai = $list_nilai->toArray();
-        //         foreach ($nilai as $nilaiRapor) {
-        //             foreach ($nilaiRapor as $a) {
-        //                 if (isset($nilaiRapor['id_komponen_nilai']) && isset($nilaiRapor['id_siswa']) && isset($nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'])) {
-        //                     $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran']] = $nilaiRapor['nilai'];
-        //                     // $nilai_tugas = $list_komponen->firstWhere('urutan', 1);
-        //                     // $nilai_sumatif1 = $list_komponen->firstWhere('urutan', 5);
-        //                     // $nilai_sumatif2 = $list_komponen->firstWhere('urutan', 6);
-        //                     // $sts = $list_komponen->where('type', 'uts')->where('urutan', 9)->first();
-
-        //                     // if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas->id_komponen_nilai) {
-        //                     //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '1'] =  $nilaiRapor['nilai'];
-        //                     // }
-        //                     // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-        //                     //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5'] =  $nilaiRapor['nilai'];
-        //                     // }
-        //                     // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-        //                     //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '6'] =  $nilaiRapor['nilai'];
-        //                     // }
-        //                     // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-        //                     //     $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '9'] =  $nilaiRapor['nilai'];
-        //                     // }
-
-
-        //                     $nilai_tugas1 = $list_komponen->firstWhere('urutan', '=', '1');
-        //                     $nilai_tugas2 = $list_komponen->firstWhere('urutan', '=', '2');
-        //                     $nilai_tugas3 = $list_komponen->firstWhere('urutan', '=', '3');
-        //                     $nilai_tugas4 = $list_komponen->firstWhere('urutan', '=', '4');
-        //                     $nilai_sumatif1 = $list_komponen->firstWhere('urutan', '=', '5');
-        //                     $nilai_sumatif2 = $list_komponen->firstWhere('urutan', '=', '6');
-        //                     $nilai_sumatif3 = $list_komponen->firstWhere('urutan', '=', '7');
-        //                     $nilai_sumatif4 = $list_komponen->firstWhere('urutan', '=', '8');
-        //                     $sts = $list_komponen->firstWhere('urutan', '=', '9');
-
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas1->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '1'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas2->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '2'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas3->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '3'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas4->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '4'] =  $nilaiRapor['nilai'];
-        //                     }
-
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5'] =  $nilaiRapor['nilai'];
-        //                         // dd($nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '5']);
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '6'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif3->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '7'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif4->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . '8'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                     if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-        //                         $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . 'sts'] =  $nilaiRapor['nilai'];
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor3', compact('auth_data', 'kelas', 'list_siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'sub', 'list_nilai', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'nilai_komponen'));
-        // } elseif ($setting == '3') {
-        //     echo 'maintane';
-        // } else { }
     }
 
     public function viewSiswaUas(Request $request, $id_semester, $id_kelas)

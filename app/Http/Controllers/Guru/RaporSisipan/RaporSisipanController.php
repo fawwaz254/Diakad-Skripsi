@@ -38,64 +38,64 @@ class RaporSisipanController extends Controller
         set_time_limit(-1);
 
 
-        $list_siswa = Siswa::with('calon_siswa')->get();
+        // $list_siswa = Siswa::with('calon_siswa')->get();
 
-        foreach ($list_siswa as $siswa) {
+        // foreach ($list_siswa as $siswa) {
 
-            if (empty($siswa->nisn)) {
-                $siswa->nisn_siswa = $siswa->calon_siswa->nisn_siswa;
-                $siswa->updated_by = 'updatenis';
-                $siswa->save();
-            }
-        }
-
-
-
-        // $kelas = Kelas::whereIn('tingkat', [1, 2])->get();
-        // $siswa = Siswa::whereIn('id_kelas', $kelas->pluck('id_kelas'))->get();
-        // $komponen_nilai_rapor_sisipan = KomponenNilaiRaporSisipan::whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->get();
-        // // $komponen_nilai_rapor_sisipan = KomponenNilaiRaporSisipan::whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->get();
-
-        // $nilai_rapor_sisipan = NilaiRaporSisipan::with('komponen_nilai')->whereIn('id_siswa', $siswa->pluck('id_siswa'))->whereIn('id_komponen_nilai', $komponen_nilai_rapor_sisipan->pluck('id_komponen_nilai'))->get();
-
-
-        // foreach ($nilai_rapor_sisipan as $nilai_rapor) {
-
-        //     if ($nilai_rapor->komponen_nilai->urutan == '1') {
-        //         $nilai_rapor->id_komponen_nilai = "Qjh12169811641765373342382fd";
-        //         $nilai_rapor->save();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '2') {
-        //         $nilai_rapor->id_komponen_nilai = "Qjh1216981164176537334238302";
-        //         $nilai_rapor->save();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '3') {
-        //         $nilai_rapor->id_komponen_nilai = "Qjh1216981164176537334238304";
-        //         $nilai_rapor->save();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '4') {
-        //         $nilai_rapor->id_komponen_nilai = "Qjh1216981164176537334238307";
-        //         $nilai_rapor->save();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '5') {
-        //         $nilai_rapor->id_komponen_nilai = "Qjh1216981164176537334238309";
-        //         $nilai_rapor->save();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '6') {
-        //         $nilai_rapor->id_komponen_nilai = "Qjh121698116417653733423830b";
-        //         $nilai_rapor->save();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '7') {
-        //         $nilai_rapor->deleted_by = "syahrul";
-        //         $nilai_rapor->save();
-        //         $nilai_rapor->delete();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '8') {
-        //         $nilai_rapor->deleted_by = "syahrul";
-        //         $nilai_rapor->save();
-        //         $nilai_rapor->delete();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '9') {
-        //         $nilai_rapor->id_komponen_nilai = "Qjh121698116417653733423830d";
-        //         $nilai_rapor->save();
-        //     } elseif ($nilai_rapor->komponen_nilai->urutan == '10') {
-        //         $nilai_rapor->deleted_by = "syahrul";
-        //         $nilai_rapor->save();
-        //         $nilai_rapor->delete();
+        //     if (empty($siswa->nisn)) {
+        //         $siswa->nisn_siswa = $siswa->calon_siswa->nisn_siswa;
+        //         $siswa->updated_by = 'updatenis';
+        //         $siswa->save();
         //     }
         // }
+
+
+
+        $kelas = Kelas::whereIn('tingkat', [1, 2])->get();
+        $siswa = Siswa::whereIn('id_kelas', $kelas->pluck('id_kelas'))->get();
+        $komponen_nilai_rapor_sisipan = KomponenNilaiRaporSisipan::whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->get();
+        // $komponen_nilai_rapor_sisipan = KomponenNilaiRaporSisipan::whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->get();
+
+        $nilai_rapor_sisipan = NilaiRaporSisipan::with('komponen_nilai')->whereIn('id_siswa', $siswa->pluck('id_siswa'))->whereIn('id_komponen_nilai', $komponen_nilai_rapor_sisipan->pluck('id_komponen_nilai'))->get();
+
+
+        foreach ($nilai_rapor_sisipan as $nilai_rapor) {
+
+            if ($nilai_rapor->komponen_nilai->urutan == '1') {
+                $nilai_rapor->id_komponen_nilai = "Qjh12169811641765373342382fd";
+                $nilai_rapor->save();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '2') {
+                $nilai_rapor->id_komponen_nilai = "Qjh1216981164176537334238302";
+                $nilai_rapor->save();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '3') {
+                $nilai_rapor->id_komponen_nilai = "Qjh1216981164176537334238304";
+                $nilai_rapor->save();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '4') {
+                $nilai_rapor->id_komponen_nilai = "Qjh1216981164176537334238307";
+                $nilai_rapor->save();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '5') {
+                $nilai_rapor->id_komponen_nilai = "Qjh1216981164176537334238309";
+                $nilai_rapor->save();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '6') {
+                $nilai_rapor->id_komponen_nilai = "Qjh121698116417653733423830b";
+                $nilai_rapor->save();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '7') {
+                $nilai_rapor->deleted_by = "syahrul";
+                $nilai_rapor->save();
+                $nilai_rapor->delete();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '8') {
+                $nilai_rapor->deleted_by = "syahrul";
+                $nilai_rapor->save();
+                $nilai_rapor->delete();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '9') {
+                $nilai_rapor->id_komponen_nilai = "Qjh121698116417653733423830d";
+                $nilai_rapor->save();
+            } elseif ($nilai_rapor->komponen_nilai->urutan == '10') {
+                $nilai_rapor->deleted_by = "syahrul";
+                $nilai_rapor->save();
+                $nilai_rapor->delete();
+            }
+        }
 
         return 'done';
         // $nilai_rapor_sisipan = NilaiRaporSisipan::get();
