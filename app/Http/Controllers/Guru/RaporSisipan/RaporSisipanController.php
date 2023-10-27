@@ -369,7 +369,7 @@ class RaporSisipanController extends Controller
             $query->where('aktif_status_pengguna', '=', '1');
         })
             ->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-                $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan)->where('nilai', '!=', '0');
+                $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
             })
             ->orderBy('nis_siswa')->get();
 
