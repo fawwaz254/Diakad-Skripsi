@@ -57,6 +57,11 @@ class RaporSisipanNonAkademikController extends Controller
                     'n3' => isset($nilai[3]) ? $nilai[3] : null,
                 );
                 return $data;
+            })->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa,
+                );
+                return $data;
             })
             ->make(true);
     }

@@ -318,10 +318,29 @@ class CetakRaporController extends Controller
         $data = [];
 
         $rapor_sisipans = RaporSisipan::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with('nilai_rapor_sisipan')->get();
+
+        $komponen_sikap = KomponenNilaiRaporSisipan::where('nm_nilai', 'SIKAP')->first();
         foreach ($rapor_sisipans as $rapor_sisipan) {
             foreach ($rapor_sisipan->nilai_rapor_sisipan as  $nilai_rapor_sisipan) {
                 if ($nilai_rapor_sisipan['nilai'] != '0') {
-                    $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+
+                    if ($komponen_sikap && $komponen_sikap->id_komponen_nilai == $nilai_rapor_sisipan['id_komponen_nilai']) {
+                        if ($nilai_rapor_sisipan['nilai'] >= 90 && $nilai_rapor_sisipan['nilai'] <= 100) {
+                            $hasil = 'A';
+                        } elseif ($nilai_rapor_sisipan['nilai'] >= 80 && $nilai_rapor_sisipan['nilai'] < 90) {
+                            $hasil = 'B';
+                        } elseif ($nilai_rapor_sisipan['nilai'] >= 70 && $nilai_rapor_sisipan['nilai'] < 80) {
+                            $hasil = 'C';
+                        } elseif ($nilai_rapor_sisipan['nilai'] >= 0 && $nilai_rapor_sisipan['nilai'] < 70) {
+                            $hasil = 'D';
+                        } else {
+                            $hasil = 'Nilai tidak valid';
+                        }
+
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $hasil;
+                    } else {
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                    }
                 }
             }
         }
@@ -339,6 +358,8 @@ class CetakRaporController extends Controller
             } else {
                 $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
             }
+
+
 
             foreach ($kelompok_sisipan as $k_sisipan) {
                 $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;
@@ -389,16 +410,48 @@ class CetakRaporController extends Controller
                 $query->where('nm_kelompok_pribadi_sisipan', 'Ekstra Kurikuler');
             })->get();
 
+            $pribadi_sisipan2 = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                $query->where('nm_kelompok_pribadi_sisipan', 'Kepribadian');
+            })->get();
+
             $nilai_pengembangan_diri = [];
             $nilai_ekskul = [];
             foreach ($nilai_pribadi_siswa as $n) {
                 if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan->pluck('id_pribadi_sisipan')->toArray())) {
                     $nilai_ekskul[$n->id_siswa . 'nm_ekskul'][] = $n->pribadi_sisipan->nm_pribadi_sisipan;
-                    $nilai_ekskul[$n->id_siswa . 'nilai_ekskul'][] = $n->nilai;
+                    if ($n->nilai >= 90 && $n->nilai <= 100) {
+                        $hasil = 'A';
+                    } elseif ($n->nilai >= 80 && $n->nilai < 90) {
+                        $hasil = 'B';
+                    } elseif ($n->nilai >= 70 && $n->nilai < 80) {
+                        $hasil = 'C';
+                    } elseif ($n->nilai >= 0 && $n->nilai < 70) {
+                        $hasil = 'D';
+                    } else {
+                        $hasil = 'Nilai tidak valid';
+                    }
+
+                    $nilai_ekskul[$n->id_siswa . 'nilai_ekskul'][] = $hasil;
+                } elseif (in_array($n->id_pribadi_sisipan, $pribadi_sisipan2->pluck('id_pribadi_sisipan')->toArray())) {
+                    if ($n->nilai >= 90 && $n->nilai <= 100) {
+                        $hasil = 'A';
+                    } elseif ($n->nilai >= 80 && $n->nilai < 90) {
+                        $hasil = 'B';
+                    } elseif ($n->nilai >= 70 && $n->nilai < 80) {
+                        $hasil = 'C';
+                    } elseif ($n->nilai >= 0 && $n->nilai < 70) {
+                        $hasil = 'D';
+                    } else {
+                        $hasil = 'Nilai tidak valid';
+                    }
+
+                    $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $hasil;
                 } else {
+
                     $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
                 }
             }
+
 
             if ($kelas->tingkat == '3') {
                 return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas'));
@@ -842,6 +895,11 @@ class CetakRaporController extends Controller
                     'n3' => isset($nilai[3]) ? $nilai[3] : null,
                 );
                 return $data;
+            })->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa,
+                );
+                return $data;
             })
             ->make(true);
     }
@@ -891,6 +949,26 @@ class CetakRaporController extends Controller
             return [
                 'status'     => 300, // FAILED
                 'message'     => "File Excel tidak ditemukan"
+            ];
+        }
+    }
+    public function actionPengembanganDiri(Request $request, $mode, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if ($mode == 'delete') {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $nilai_pengembangan_diri = NilaiPribadiSisipan::where('id_siswa', $id_siswa)->where('id_semester', $semester_aktif->id_semester)->get();
+            foreach ($nilai_pengembangan_diri as $pengembangan_diri) {
+                $pengembangan_diri->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                $pengembangan_diri->save();
+                $pengembangan_diri->delete();
+            }
+
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Data Pengembangan Diri succesfully'
+
             ];
         }
     }

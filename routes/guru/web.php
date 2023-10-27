@@ -757,6 +757,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [RaporSisipanNonAkademikController::class, 'viewPengembanganDiri']);
                 Route::get('datatables/{thn_akademik_semester}/{id_kelas}', [RaporSisipanNonAkademikController::class, 'datatablesPengembanganDiri']);
                 Route::get('template-excel-pengembangan-diri/{id_kelas}', [CetakRaporController::class, 'templateExcelPengembanganDiri']);
+                Route::post('action-pengembangan-diri/{mode}/{id_siswa}', [CetakRaporController::class, 'actionPengembanganDiri']);
+
 
                 //import excel
                 Route::get('importExcel', [RaporSisipanNonAkademikController::class, 'imporExcelPengembanganDiri']);

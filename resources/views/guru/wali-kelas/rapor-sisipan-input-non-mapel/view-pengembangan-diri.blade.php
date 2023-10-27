@@ -28,6 +28,7 @@
                                     @foreach ($kelompok_pribadi_sisipan as $pribadi_sisipan)
                                         <th>{{ $pribadi_sisipan->nm_kelompok_pribadi_sisipan }}</th>
                                     @endforeach
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -45,6 +46,8 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'rapor-sisipan-input-non-mapel/datatables/' +
         id_semester + '/' + id_kelas;
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'rapor-sisipan-input-non-mapel/action-pengembangan-diri/delete';
     // var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/printAkhir/' + id_semester;
 
     var primary_table = $('#primary_table').DataTable({
@@ -113,6 +116,20 @@
                         });
                     }
                     return html;
+
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                        delete_url + '\', this)" data-id="' + data.id + '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
 
                 }
             },
