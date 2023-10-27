@@ -150,7 +150,7 @@
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 39%;">
-                        {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
+                        {{ $siswa->nis_siswa . ' / ' . $siswa->nisn_siswa }}
                     </td>
                     <td style="border-style : hidden;width: 9%;"></td>
                     <td style="border-style : hidden;width: 1%;"></td>
@@ -235,11 +235,11 @@
                 <tr style="border-style : hidden;">
                     <td style="border-style : hidden;width: 33%;">
                         <br>Mengetahui: <br>
-                        Orang Tua/Wali,<br><br><br><br><br><br><br><br>
+                        Orang Tua/Wali,<br><br><br><br><br><br><br><br><br>
                         ...........................
                     </td>
                     <td style="border-style : hidden;width: 33%;">
-                        <br><br>Wali Kelas,<br><br><br><br><br><br><br><br>
+                        <br><br>Wali Kelas,<br><br><br><br><br><br><br><br><br>
                         @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
                             <strong>
                                 <u>
@@ -254,11 +254,11 @@
                     </td>
                     <td style="border-style : hidden;width: 33%;position: relative;">
                         Sidoarjo, 21 Oktober 2023<br><br>
-                        Kepala Sekolah,<br><br><br><br><br><br><br><br>
+                        Kepala Sekolah,<br><br><br><br><br><br><br><br><br>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                             <img style="position: absolute; top: 5%; margin-left:-20px; margin-top:35px"
-                                src="{{ asset('media/ttd/smpypm22.png') }}" alt="TTD" width="160px"
-                                height="160px" class="ttd">
+                                src="{{ asset('media/ttd/smpypm22.png') }}" alt="TTD" width="200px"
+                                height="200px" class="ttd">
                         @endif
                         <strong><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></strong>
                     </td>
