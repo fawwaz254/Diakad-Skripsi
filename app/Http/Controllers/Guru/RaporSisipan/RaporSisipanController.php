@@ -249,7 +249,7 @@ class RaporSisipanController extends Controller
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-            $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
+            $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan)->where('nilai', '!=', '0');
         })->orderBy('nis_siswa')->get();
 
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
@@ -369,7 +369,7 @@ class RaporSisipanController extends Controller
             $query->where('aktif_status_pengguna', '=', '1');
         })
             ->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
-                $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
+                $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan)->where('nilai', '!=', '0');
             })
             ->orderBy('nis_siswa')->get();
 

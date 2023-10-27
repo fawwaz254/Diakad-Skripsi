@@ -209,8 +209,8 @@
                                         <td>{{ $data2['nm_point'][$i] }}</td>
                                         <td style="text-align: center;">{{ $data2['kkm'][$i] }}</td>
                                         @foreach ($list_komponen as $komponen)
-                                            <td style="text-align: center;font-weight: bold;">
-                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] : '' }}
+                                            <td style="text-align: center;">
+                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] != '0' ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] : '-' }}
                                             </td>
                                         @endforeach
                                     </tr>
@@ -243,7 +243,7 @@
                         @endif
                         <td>{{ $pribadi_sisipan->nm_pribadi_sisipan }}</td>
                         <td align="center">
-                            {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . $pribadi_sisipan->id_pribadi_sisipan]) ? $nilai_pengembangan_diri[$siswa->id_siswa . $pribadi_sisipan->id_pribadi_sisipan] : '' }}
+                            {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . $pribadi_sisipan->id_pribadi_sisipan]) && $nilai_pengembangan_diri[$siswa->id_siswa . $pribadi_sisipan->id_pribadi_sisipan] != '0' ? $nilai_pengembangan_diri[$siswa->id_siswa . $pribadi_sisipan->id_pribadi_sisipan] : '' }}
                         </td>
                         @if ($key == '0')
                             <td rowspan="{{ $kelompok_pribadi_sisipan[0]->pribadi_sisipan->count() }}"></td>
