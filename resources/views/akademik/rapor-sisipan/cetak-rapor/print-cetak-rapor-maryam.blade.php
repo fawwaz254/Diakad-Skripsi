@@ -197,9 +197,8 @@
                                     <td>{{ $data2['nm_point'][0] }}</td>
                                     <td style="text-align: center;">{{ $data2['kkm'][0] }}</td>
                                     @foreach ($list_komponen as $komponen)
-                                        <td style="text-align: center;font-weight: bold;">
-
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai] : '' }}
+                                        <td style="text-align: center;">
+                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai] : '-' }}
                                         </td>
                                     @endforeach
                                 </tr>
