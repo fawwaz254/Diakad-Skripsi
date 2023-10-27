@@ -61,18 +61,17 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
                         $nilai->updated_at           = $now;
                         $nilai->save();
                     } else {
-
-                        // $id_siswa  = $siswas->where('nis_siswa', $row['nis'])->first()->nis_siswa;
-                        // if ($id_siswa) {
-                        //     $nilai = new NilaiRaporSisipan;
-                        //     $nilai->id_nilai_rapor_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
-                        //     $nilai->rapor_sisipan = $rows[0]['id'];
-                        //     $nilai->id_komponen_nilai = $komponen->id_komponen_nilai;
-                        //     $nilai->id_siswa = $id_siswa;
-                        //     $nilai->nilai =   $row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))];
-                        //     $nilai->updated_by  = 'new data';
-                        //     $nilai->save();
-                        // }
+                        $id_siswa  = $siswas->where('nis_siswa', $row['nis'])->first()->nis_siswa;
+                        if ($id_siswa) {
+                            $nilai = new NilaiRaporSisipan;
+                            $nilai->id_nilai_rapor_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
+                            $nilai->rapor_sisipan = $rows[0]['id'];
+                            $nilai->id_komponen_nilai = $komponen->id_komponen_nilai;
+                            $nilai->id_siswa = $id_siswa;
+                            $nilai->nilai =   $row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))];
+                            $nilai->updated_by  = 'new data';
+                            $nilai->save();
+                        }
                     }
                 }
             }
