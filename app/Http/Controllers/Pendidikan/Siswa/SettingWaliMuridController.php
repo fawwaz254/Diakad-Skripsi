@@ -262,14 +262,14 @@ class SettingWaliMuridController extends BaseController
 
                 if ($wali_murid != null) {
 
-                    $wali_murid->nm_wali_murid = strtoupper($input->nm_ortu);
+                    $wali_murid->nm_wali_murid = $input->nm_ortu;
                     $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
                     $wali_murid->updated_at = $now;
                     $wali_murid->updated_by = $input->auth_data->pengguna->id_pengguna;
                     $wali_murid->save();
 
                     $pengguna_wali_murid = Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->first();
-                    $pengguna_wali_murid->nm_pengguna = strtoupper($input->nm_ortu);
+                    $pengguna_wali_murid->nm_pengguna = $input->nm_ortu;
                     $pengguna_wali_murid->username = $input->nomor_hp_ortu;
                     $pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
                     $pengguna_wali_murid->save();
