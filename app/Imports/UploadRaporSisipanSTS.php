@@ -8,6 +8,7 @@ namespace App\Imports;
 use App\Models\KomponenNilaiRaporSisipan;
 use App\Models\NilaiRaporSisipan;
 use App\Models\Pengguna;
+use App\Models\Sekolah;
 use App\Models\Siswa;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -31,12 +32,15 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
         set_time_limit(-1);
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $id_pengguna = Auth::id();
+        $sekolah = Sekolah::get();
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
         // $nilais = NilaiRaporSisipan::where('id_rapor_sisipan', $rows[0]['id'])->with('siswa', 'komponen_nilai')->get();
         $nilais = NilaiRaporSisipan::join('siswa', 'siswa.id_siswa', '=', 'nilai_rapor_sisipan.id_siswa')
             ->join('komponen_nilai_rapor_sisipan', 'komponen_nilai_rapor_sisipan.id_komponen_nilai', '=', 'nilai_rapor_sisipan.id_komponen_nilai')
             ->where('nilai_rapor_sisipan.id_rapor_sisipan', $rows[0]['id'])
             ->get();
+
+        $siswas = Siswa::get();
 
         foreach ($rows as $row) {
             foreach ($list_komponen as $komponen) {
@@ -56,6 +60,19 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
                         $nilai->updated_by             = $id_pengguna;
                         $nilai->updated_at           = $now;
                         $nilai->save();
+                    } else {
+
+                        // $id_siswa  = $siswas->where('nis_siswa', $row['nis'])->first()->nis_siswa;
+                        // if ($id_siswa) {
+                        //     $nilai = new NilaiRaporSisipan;
+                        //     $nilai->id_nilai_rapor_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
+                        //     $nilai->rapor_sisipan = $rows[0]['id'];
+                        //     $nilai->id_komponen_nilai = $komponen->id_komponen_nilai;
+                        //     $nilai->id_siswa = $id_siswa;
+                        //     $nilai->nilai =   $row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))];
+                        //     $nilai->updated_by  = 'new data';
+                        //     $nilai->save();
+                        // }
                     }
                 }
             }
