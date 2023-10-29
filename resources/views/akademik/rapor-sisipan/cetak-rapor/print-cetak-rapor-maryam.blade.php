@@ -299,9 +299,9 @@
                         </p>
                         {{-- {{ $auth_data->sekolah_data->nm_kepala_sekolah }} --}}
                     </td>
-                    <td style="width:50%; border-style : hidden"></td>
+                    <td style="width:45%; border-style : hidden"></td>
 
-                    <td style="width:25%" align="left">Surabaya,
+                    <td style="width:30%" align="left">Surabaya,
                         {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                         <br>
                         Wali Kelas
