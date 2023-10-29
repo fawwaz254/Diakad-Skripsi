@@ -58,8 +58,10 @@ use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\LibGlobal;
+use App\Models\DetailJawabanForm;
 use App\Models\Ekskul;
 use App\Models\Form;
+use App\Models\JawabanForm;
 use App\Models\LowonganKerja;
 use App\Models\ManajemenHariLibur;
 use App\Models\PengambilanEkskul;
@@ -3752,4 +3754,86 @@ class Apiv1Controller extends BaseController
     //         )
     //     ]);
     // }
+
+    public function actionFormHarian(Request $request, $mode)
+    {
+
+        // dd($mode);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $validator = Validator::make($request->all(), [
+            'id_form' => 'required',
+            'jawaban' => 'required'
+        ]);
+
+        // dd($input);
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code'     => 300,
+                'status_text'     => 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        } else {
+            DB::beginTransaction();
+            try {
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+                // $siswa = Siswa::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
+                // $id_siswa = $siswa->id_siswa;
+                // $message = 'ga';
+                if ($mode == 'add-form-harian') {
+                    $jawaban_form = new JawabanForm;
+                    $jawaban_form->id_jawaban_form =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $jawaban_form->id_form          = $input->id_form;
+                    $jawaban_form->created_by = $auth_data->pengguna->id_pengguna;
+                    $jawaban_form->save();
+
+                    // $no = 0;
+                    foreach ($input->jawaban as $key => $value) {
+                        // dd($input->jenis_jawaban[$no]);
+                        $detail_jawaban_form = new DetailJawabanForm;
+                        $detail_jawaban_form->id_detail_jawaban_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();;
+                        $detail_jawaban_form->id_jawaban_form = $jawaban_form->id_jawaban_form;
+                        $detail_jawaban_form->id_pertanyaan_form = $key;
+
+                        if ($input->jenis_jawaban[$key] == '1') {
+                            $detail_jawaban_form->jawaban = $input->jawaban[$key];
+                        } elseif ($input->jenis_jawaban[$key] == '2') {
+                            $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
+                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/formharian', request()->jawaban_pertanyaan[$key], 'public');
+                            $detail_jawaban_form->jawaban = $file;
+                        } elseif ($input->jenis_jawaban[$key] == '3') {
+                            $detail_jawaban_form->jawaban = $input->jawaban[$key];
+                        } elseif ($input->jenis_jawaban[$key] == '4') {
+                            $jawaban = [];
+                            foreach ($input->jawaban[$key] as $value) {
+                                $jawaban[] = $value;
+                            }
+                            $detail_jawaban_form->jawaban = json_encode($jawaban);
+                        }
+                        $detail_jawaban_form->created_by = $auth_data->sekolah_data->nm_singkat_sekolah;
+                        $detail_jawaban_form->save();
+                        // $no++;
+                    }
+                    $message = 'Save Form haarian Successfully';
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'status_code'     => 200,
+                    'status_text'     => 'Success',
+                    'message'     => $message
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status_code'     => 300,
+                    'status_text'     => 'Failed',
+                    'message' =>  $e->getMessage()
+                ]);
+            }
+        }
+    }
 }
