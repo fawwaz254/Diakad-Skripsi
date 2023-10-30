@@ -3740,6 +3740,26 @@ class Apiv1Controller extends BaseController
         ]);
     }
 
+
+    public function actionGetFormBebas(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+        $form_siswa = Form::with(['jawaban_form' => function ($q) use ($id_pengguna) {
+            $q->where('created_by', $id_pengguna)->orderBy('created_at', 'desc');
+        }, 'pertanyaan_form'])->where('id_role', '3')->where('is_harian', '0')->where('is_aktif', '1')->get();
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            'message'     => '',
+            'data' => array(
+                'form_siswa' => $form_siswa
+            )
+        ]);
+    }
+
     // public function actionGetDetailFormHarian(Request $request)
     // {
     //     $input = (object) $request->input();
