@@ -308,8 +308,9 @@
                     </td>
                     <td style="width:45%; border-style : hidden"></td>
 
-                    <td style="width:30%" align="left">Surabaya,
-                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                    <td style="width:30%" align="left">Surabaya, 31 Oktober 2023
+                        {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
+
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
