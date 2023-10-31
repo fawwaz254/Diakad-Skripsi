@@ -44,7 +44,9 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_mata_pelajaran" required="">
                                     @foreach ($mata_pelajaran as $m)
-                                        <option value="{{ $m->id_mata_pelajaran }}">{{ $m->nm_mata_pelajaran }}</option>
+                                        <option value="{{ $m->id_mata_pelajaran }}">
+                                            {{ $m->jenis_mata_pelajaran->nm_jenis_mata_pelajaran . ' - ' . $m->nm_mata_pelajaran }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

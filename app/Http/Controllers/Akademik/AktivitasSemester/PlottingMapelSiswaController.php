@@ -125,6 +125,7 @@ class PlottingMapelSiswaController extends BaseController
             ->leftjoin('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->where('kelas_mp.id_semester', '=', $id_semester)
+            ->where('mata_pelajaran.is_aktif', '=', '1')
             ->get();
 
         return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-mapel-plotting-mapel-siswa', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan', 'kelas'));
@@ -148,6 +149,7 @@ class PlottingMapelSiswaController extends BaseController
             ->leftjoin('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->where('kelas_mp.id_semester', '=', $id_semester)
+            ->where('mata_pelajaran.is_aktif', '=', '1')
             ->get();
 
         return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-daftar-plotting-mapel-siswa', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan', 'kelas', 'id_kelas'));
@@ -226,6 +228,7 @@ class PlottingMapelSiswaController extends BaseController
                         ->whereNull('kelas.deleted_at');
                 })
                 ->where('kelas_mp.id_semester', '=', $id)
+                ->where('mata_pelajaran.is_aktif', '=', '1')
                 ->get();
         } else {
             $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
@@ -251,6 +254,7 @@ class PlottingMapelSiswaController extends BaseController
                 })
                 ->where('kelas_mp.id_semester', '=', $id)
                 ->where('kelas.id_kelas', '=', $tingkat)
+                ->where('mata_pelajaran.is_aktif', '=', '1')
                 ->get();
         }
 
@@ -412,6 +416,7 @@ class PlottingMapelSiswaController extends BaseController
             ->leftjoin('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->where('kelas_mp.id_semester', '=', $id_semester)
+            ->where('mata_pelajaran.is_aktif', '=', '1')
             ->get();
 
         return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-ploting-otomatis', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan', 'kelas', 'id_jurusan'));
@@ -480,6 +485,7 @@ class PlottingMapelSiswaController extends BaseController
                 ->where('kelas_mp.id_semester', '=', $input->id_semester)
                 ->where('kelas.id_kelas', '=', $input->id_kelas)
                 ->whereNull('kelas_mp.deleted_at')
+                ->where('mata_pelajaran.is_aktif', '=', '1')
                 ->get();
 
             // dd($list_mapel);

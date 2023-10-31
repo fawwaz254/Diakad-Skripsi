@@ -33,6 +33,7 @@ class MataPelajaran extends Model
         'kredit_prak_lapangan',
         'kredit_simulasi',
         'tingkat_semester',
+        'is_aktif',
         'nilai_kkm',
         'ada_sap',
         'ada_silabus',
@@ -64,5 +65,10 @@ class MataPelajaran extends Model
     public function sub_rapor_sisipan_mp()
     {
         return $this->belongsTo(SubRaporSisipanMP::class, 'id_mata_pelajaran', 'id_mata_pelajaran');
+    }
+
+    public function scopeIsAktif($query)
+    {
+        return $query->where('mata_pelajaran.is_aktif', '1');
     }
 }

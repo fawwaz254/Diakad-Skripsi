@@ -280,6 +280,12 @@ Route::middleware(['auth.mobile'])->group(function () {
                 // Route::post('input', [Apiv1Controller::class, 'actionGetDetailFormHarian']);
                 Route::post('{mode}/submit', [Apiv1Controller::class, 'actionFormHarian']);
             });
+
+            Route::prefix('form-bebas')->group(function () {
+                Route::post('get', [Apiv1Controller::class, 'actionGetFormBebas']);
+                // // Route::post('input', [Apiv1Controller::class, 'actionGetDetailFormHarian']);
+                // Route::post('{mode}/submit', [Apiv1Controller::class, 'actionFormHarian']);
+            });
         });
     });
 });

@@ -55,7 +55,7 @@ class KomponenMataPelajaranController extends Controller
     public function datatablesKomponenMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
-        $list_kelas_sisipan = KelasSisipan::with('mata_pelajaran_sisipan.mata_pelajaran', 'kelas')->where('id_kelas', $input->id_kelas)
+        $list_kelas_sisipan = KelasSisipan::with('mata_pelajaran_sisipan.mata_pelajaran.jenis_mata_pelajaran', 'kelas')->where('id_kelas', $input->id_kelas)
             ->whereHas('mata_pelajaran_sisipan', function ($q) {
                 $q->where('jenis', '1');
             });
@@ -63,7 +63,7 @@ class KomponenMataPelajaranController extends Controller
         return Datatables::of($list_kelas_sisipan)
             ->addColumn('nm_mata_pelajaran', function ($item) {
                 if (isset($item->mata_pelajaran_sisipan->mata_pelajaran)) {
-                    return $item->mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
+                    return  $item->mata_pelajaran_sisipan->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran . ' - ' . $item->mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
                 } else {
                     return 'Mapel DIhapus';
                 }
@@ -91,7 +91,7 @@ class KomponenMataPelajaranController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', '1')->get();
-        $mata_pelajaran = MataPelajaran::get();
+        $mata_pelajaran = MataPelajaran::with('jenis_mata_pelajaran')->isAktif()->get();
         $kelompok_sisipan = KelompokSisipan::with('sub_kelompok_sisipan')->get();
         return view('akademik/rapor-sisipan/komponen-mata-pelajaran/add-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'mata_pelajaran', 'kelompok_sisipan', 'id_kelas'));
     }

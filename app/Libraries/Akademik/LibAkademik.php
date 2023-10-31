@@ -71,7 +71,7 @@ class LibAkademik
 
         // get mode view
         if ($id == null) {
-            $mataPelajaran = MataPelajaran::select('mata_pelajaran.id_mata_pelajaran', 'jurusan.nm_jurusan', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.kredit_tatap_muka', 'mata_pelajaran.kredit_praktikum', 'mata_pelajaran.kredit_tutor', 'mata_pelajaran.kredit_prak_lapangan', 'mata_pelajaran.kredit_simulasi', 'mata_pelajaran.tingkat_semester', 'mata_pelajaran.nilai_kkm', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran')
+            $mataPelajaran = MataPelajaran::select('mata_pelajaran.id_mata_pelajaran', 'jurusan.nm_jurusan', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.kredit_tatap_muka', 'mata_pelajaran.kredit_praktikum', 'mata_pelajaran.kredit_tutor', 'mata_pelajaran.kredit_prak_lapangan', 'mata_pelajaran.kredit_simulasi', 'mata_pelajaran.tingkat_semester', 'mata_pelajaran.is_aktif', 'mata_pelajaran.nilai_kkm', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran')
                 ->leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
                 ->leftJoin('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran');
             // ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
