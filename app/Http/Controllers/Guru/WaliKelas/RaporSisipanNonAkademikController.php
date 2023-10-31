@@ -47,7 +47,11 @@ class RaporSisipanNonAkademikController extends Controller
                     foreach ($k->pribadi_sisipan as $pribadi_sisipan) {
                         $cek = $item->nilai_pribadi_sisipan->firstWhere('id_pribadi_sisipan', $pribadi_sisipan->id_pribadi_sisipan);
                         if ($cek) {
-                            $nilai[$k->urutan][] = $pribadi_sisipan->nm_pribadi_sisipan . ' : ' . $cek->nilai;
+                            if ($k->nm_kelompok_pribadi_sisipan == 'Catatan Untuk Orang Tua') {
+                                $nilai[$k->urutan][] =  $cek->nilai;
+                            } else {
+                                $nilai[$k->urutan][] = $pribadi_sisipan->nm_pribadi_sisipan . ' : ' . $cek->nilai;
+                            }
                         }
                     }
                 }
@@ -55,6 +59,7 @@ class RaporSisipanNonAkademikController extends Controller
                     'n1' => isset($nilai[1]) ? $nilai[1] : null,
                     'n2' => isset($nilai[2]) ? $nilai[2] : null,
                     'n3' => isset($nilai[3]) ? $nilai[3] : null,
+                    'n4' => isset($nilai[4]) ? $nilai[4] : null,
                 );
                 return $data;
             })->addColumn('action', function ($item) {

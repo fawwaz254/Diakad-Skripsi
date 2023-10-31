@@ -124,6 +124,21 @@
                 }
             },
             {
+                data: 'pribadi_sisipan',
+                name: 'pribadi_sisipan',
+                render: function(data) {
+                    let html = '';
+                    if (data.n4 && data.n4.length != 0) {
+                        data.n4.forEach(element => {
+                            html += '- ' +
+                                element + ` <br>`;
+                        });
+                    }
+                    return html;
+
+                }
+            },
+            {
                 data: 'action',
                 name: 'action',
                 searchable: false,

@@ -23,18 +23,20 @@ use DB;
 use Session;
 use Validator;
 
-class MataPelajaranController extends BaseController{
+class MataPelajaranController extends BaseController
+{
 
-    public function viewMataPelajaran(Request $request){
+    public function viewMataPelajaran(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('akademik/data-akademik/mata-pelajaran/view-mata-pelajaran',compact('auth_data'));
-
+        return view('akademik/data-akademik/mata-pelajaran/view-mata-pelajaran', compact('auth_data'));
     }
 
-    public function addMataPelajaran(Request $request){
+    public function addMataPelajaran(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -43,46 +45,49 @@ class MataPelajaranController extends BaseController{
 
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-        $jenis_mapel = JenisMataPelajaran::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
+        $jenis_mapel = JenisMataPelajaran::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
-        $id_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_mata_pelajaran = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('akademik/data-akademik/mata-pelajaran/add-mata-pelajaran',compact('auth_data','data_jurusan','id_mata_pelajaran','jenis_mapel'));
-
+        return view('akademik/data-akademik/mata-pelajaran/add-mata-pelajaran', compact('auth_data', 'data_jurusan', 'id_mata_pelajaran', 'jenis_mapel'));
     }
 
-    public function editMataPelajaran($id, Request $request){
+    public function editMataPelajaran($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
-        $jenis_mapel = JenisMataPelajaran::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
+        $jenis_mapel = JenisMataPelajaran::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         $data_mata_pelajaran = LibAkademik::fetchDataMataPelajaran($auth_data, $id);
 
-        return view('akademik/data-akademik/mata-pelajaran/edit-mata-pelajaran',compact('auth_data','data_jurusan','data_mata_pelajaran','jenis_mapel'));
-
-
+        return view('akademik/data-akademik/mata-pelajaran/edit-mata-pelajaran', compact('auth_data', 'data_jurusan', 'data_mata_pelajaran', 'jenis_mapel'));
     }
 
-    public function datatablesMataPelajaran(Request $request){
+    public function datatablesMataPelajaran(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibAkademik::fetchDataMataPelajaran($auth_data, null, "1");
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_mata_pelajaran
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('status', function ($item) {
+                return $item->is_aktif == '1' ? 'Aktif' : 'Tidak Aktif';
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_mata_pelajaran
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionMataPelajaran(Request $request, $mode, $id = null){
+    public function actionMataPelajaran(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -107,28 +112,27 @@ class MataPelajaranController extends BaseController{
             // 'ada_diktat'            => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             // ACTION ADD
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                 $mataPelajaran                          = new MataPelajaran;
                 $mataPelajaran->id_mata_pelajaran       = $id;
-                if($input->id_jurusan==1) $mataPelajaran->id_jurusan = null;
+                if ($input->id_jurusan == 1) $mataPelajaran->id_jurusan = null;
                 else $mataPelajaran->id_jurusan = $input->id_jurusan;
                 $mataPelajaran->kd_mata_pelajaran       = $input->kd_mata_pelajaran;
                 $mataPelajaran->id_jenis_mata_pelajaran = $input->id_jenis_mata_pelajaran;
                 $mataPelajaran->nm_mata_pelajaran       = $input->nm_mata_pelajaran;
-                if(isset($input->nm_mata_pelajaran_en)){
+                if (isset($input->nm_mata_pelajaran_en)) {
                     $mataPelajaran->nm_mata_pelajaran_en    = $input->nm_mata_pelajaran_en;
                 }
                 // $mataPelajaran->kredit_semester         = $input->kredit_semester;
@@ -139,6 +143,7 @@ class MataPelajaranController extends BaseController{
                 // $mataPelajaran->kredit_simulasi         = $input->kredit_simulasi;
                 // $mataPelajaran->tingkat_semester        = $input->tingkat_semester;
                 $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
+                $mataPelajaran->nilai_kkm               = '1';
                 // $mataPelajaran->ada_sap                 = $input->ada_sap;
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;
@@ -151,16 +156,15 @@ class MataPelajaranController extends BaseController{
                     'path' => 'data-akademik/mata-pelajaran',
                     'message' => 'Save Mata Pelajaran Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $mataPelajaran                          = MataPelajaran::find($id);
-                if($input->id_jurusan==1) $mataPelajaran->id_jurusan = null;
+                if ($input->id_jurusan == 1) $mataPelajaran->id_jurusan = null;
                 else $mataPelajaran->id_jurusan = $input->id_jurusan;
                 $mataPelajaran->kd_mata_pelajaran       = $input->kd_mata_pelajaran;
                 $mataPelajaran->id_jenis_mata_pelajaran = $input->id_jenis_mata_pelajaran;
                 $mataPelajaran->nm_mata_pelajaran       = $input->nm_mata_pelajaran;
-                if(isset($input->nm_mata_pelajaran_en)){
+                if (isset($input->nm_mata_pelajaran_en)) {
                     $mataPelajaran->nm_mata_pelajaran_en    = $input->nm_mata_pelajaran_en;
                 }
                 // $mataPelajaran->kredit_semester         = $input->kredit_semester;
@@ -171,6 +175,7 @@ class MataPelajaranController extends BaseController{
                 // $mataPelajaran->kredit_simulasi         = $input->kredit_simulasi;
                 // $mataPelajaran->tingkat_semester        = $input->tingkat_semester;
                 $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
+                $mataPelajaran->is_aktif               = $input->is_aktif;
                 // $mataPelajaran->ada_sap                 = $input->ada_sap;
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;
@@ -184,15 +189,13 @@ class MataPelajaranController extends BaseController{
                     'path' => 'data-akademik/mata-pelajaran',
                     'message' => 'Update Mata Pelajaran Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($kurikulumMp = KurikulumMp::where('id_mata_pelajaran',$id)->first() or $kelasMp = KelasMp::where('id_mata_pelajaran',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($kurikulumMp = KurikulumMp::where('id_mata_pelajaran', $id)->first() or $kelasMp = KelasMp::where('id_mata_pelajaran', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Mata Pelajaran because already use in KurikulumMp and KelasMp'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $mataPelajaran               = MataPelajaran::find($id);
                     $mataPelajaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -208,6 +211,4 @@ class MataPelajaranController extends BaseController{
             }
         }
     }
-
-
 }

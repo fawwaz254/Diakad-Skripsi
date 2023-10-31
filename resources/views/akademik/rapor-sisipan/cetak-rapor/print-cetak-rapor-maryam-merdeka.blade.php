@@ -263,7 +263,7 @@
                     <th align="left">Ketidak Hadiran</th>
                     <th align="center">Jumlah</th>
                     <th>4</th>
-                    <th align="left" colspan="2">Catatan untuk Orang Tuaa</th>
+                    <th align="left" colspan="2">Catatan untuk Orang Tua</th>
                 </tr>
                 @foreach ($kelompok_pribadi_sisipan[1]->pribadi_sisipan as $key => $pribadi_sisipan)
                     <tr>
@@ -274,6 +274,15 @@
                         <td align="center">
                             {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . $pribadi_sisipan->id_pribadi_sisipan]) ? $nilai_pengembangan_diri[$siswa->id_siswa . $pribadi_sisipan->id_pribadi_sisipan] . ' Hari' : 0 . ' Hari' }}
                         </td>
+                        @if ($key == '0')
+                            <td rowspan="{{ $kelompok_pribadi_sisipan[1]->pribadi_sisipan->count() }}"></td>
+                            <td rowspan="{{ $kelompok_pribadi_sisipan[1]->pribadi_sisipan->count() }}"
+                                colspan="2">
+                                {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . $kelompok_pribadi_sisipan[3]->pribadi_sisipan[0]->id_pribadi_sisipan]) ? $nilai_pengembangan_diri[$siswa->id_siswa . $kelompok_pribadi_sisipan[3]->pribadi_sisipan[0]->id_pribadi_sisipan] : '' }}
+
+                            </td>
+                        @endif
+
 
                     </tr>
                 @endforeach
@@ -299,8 +308,8 @@
                     </td>
                     <td style="width:50%; border-style : hidden"></td>
 
-                    <td style="width:25%" align="left">Surabaya,
-                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                    <td style="width:25%" align="left">Surabaya, 31 Oktober 2023
+                        {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>

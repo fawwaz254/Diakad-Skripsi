@@ -33,6 +33,6 @@ class JenisMataPelajaran extends Model
 
     public function mapel()
     {
-        return $this->hasMany(MataPelajaran::class, 'id_jenis_mata_pelajaran');
+        return $this->hasMany(MataPelajaran::class, 'id_jenis_mata_pelajaran')->where('is_aktif', 1);
     }
 }
