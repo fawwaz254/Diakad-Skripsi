@@ -91,7 +91,7 @@ class KomponenMataPelajaranController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', '1')->get();
-        $mata_pelajaran = MataPelajaran::get();
+        $mata_pelajaran = MataPelajaran::isAktif()->get();
         $kelompok_sisipan = KelompokSisipan::with('sub_kelompok_sisipan')->get();
         return view('akademik/rapor-sisipan/komponen-mata-pelajaran/add-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'mata_pelajaran', 'kelompok_sisipan', 'id_kelas'));
     }

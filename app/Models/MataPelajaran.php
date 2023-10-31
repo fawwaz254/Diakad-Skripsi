@@ -66,4 +66,9 @@ class MataPelajaran extends Model
     {
         return $this->belongsTo(SubRaporSisipanMP::class, 'id_mata_pelajaran', 'id_mata_pelajaran');
     }
+
+    public function scopeIsAktif($query)
+    {
+        return $query->where('mata_pelajaran.is_aktif', '1');
+    }
 }
