@@ -33,6 +33,7 @@ class MataPelajaran extends Model
         'kredit_prak_lapangan',
         'kredit_simulasi',
         'tingkat_semester',
+        'is_aktif',
         'nilai_kkm',
         'ada_sap',
         'ada_silabus',
