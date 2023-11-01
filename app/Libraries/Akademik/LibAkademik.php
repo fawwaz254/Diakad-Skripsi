@@ -77,7 +77,7 @@ class LibAkademik
             // ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
             if ($is_datatable == null) {
-                $mataPelajaran = $mataPelajaran->get();
+                $mataPelajaran = $mataPelajaran->where('mata_pelajaran.is_aktif', '=', '1')->get();
             }
         }
         // get mode edit

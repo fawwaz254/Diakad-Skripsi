@@ -38,6 +38,6 @@ class Jurusan extends Model
 
     public function mapel()
     {
-        return $this->hasMany(MataPelajaran::class, 'id_jurusan');
+        return $this->hasMany(MataPelajaran::class, 'id_jurusan')->where('is_aktif', 1);
     }
 }

@@ -39,7 +39,7 @@ class ManajemenMateriAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data['list_mapel'] = MataPelajaran::all();
+        $data['list_mapel'] = MataPelajaran::isAktif()->get();
         $data['list_jurusan'] = Jurusan::all();
         $data['list_kelas'] = Kelas::where('is_aktif', 1)->get();
 
@@ -52,7 +52,7 @@ class ManajemenMateriAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data['list_mapel'] = MataPelajaran::all();
+        $data['list_mapel'] = MataPelajaran::isAktif()->get();
         $data['list_jurusan'] = Jurusan::all();
 
         $materi_ajar = MateriAjar::with('materi_ajar_file')->find($id);
