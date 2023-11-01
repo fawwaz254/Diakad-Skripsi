@@ -159,14 +159,12 @@ class ListFormController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $form = Form::with('pertanyaan_form')->find($id_form);
-        $urutan = $form->pertanyaan_form->count() + 1;
         $pertanyaan_form = PertanyaanForm::findOrFail($id_pertanyaan_form);
 
         if ($jenis_pertanyaan == '1' || $jenis_pertanyaan == '2') {
-            return view('humas/form-builder/list-form/edit-pertanyaan-form', compact('auth_data', 'id_form', 'jenis_pertanyaan', 'urutan', 'pertanyaan_form'));
+            return view('humas/form-builder/list-form/edit-pertanyaan-form', compact('auth_data', 'pertanyaan_form'));
         } else {
-            return view('humas/form-builder/list-form/edit-pertanyaan-form-opsi', compact('auth_data', 'id_form', 'jenis_pertanyaan', 'urutan', 'pertanyaan_form'));
+            return view('humas/form-builder/list-form/edit-pertanyaan-form-opsi', compact('auth_data', 'pertanyaan_form'));
         }
     }
 
