@@ -69,32 +69,34 @@ class SettingPengampuController extends BaseController
 
         $id_guru = $input->id;
 
-        if(!empty($input->status) && $input->status == 1){
-            $list_data = MataPelajaran::select('mata_pelajaran.id_mata_pelajaran', 
-                                                'mata_pelajaran.kd_mata_pelajaran',
-                                                'mata_pelajaran.nm_mata_pelajaran',
-                                                'mata_pelajaran.tingkat_semester',
-                                                'mata_pelajaran.id_jenis_mata_pelajaran',
-                                                'mata_pelajaran.id_jurusan'
-                                                )
-                                        ->with('jenis_mata_pelajaran', 'jurusan')
-                                        ->join('pengampu_mapel', function($q){
-                                            $q->on('pengampu_mapel.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-                                                ->whereNull('pengampu_mapel.deleted_at');
-                                        })->where('id_guru', $id_guru);
-        }else{
-            $list_data = MataPelajaran::select('mata_pelajaran.id_mata_pelajaran', 
-                                        'mata_pelajaran.kd_mata_pelajaran',
-                                        'mata_pelajaran.nm_mata_pelajaran',
-                                        'mata_pelajaran.tingkat_semester',
-                                        'mata_pelajaran.id_jenis_mata_pelajaran',
-                                        'mata_pelajaran.id_jurusan'
-                                        )->with('jenis_mata_pelajaran', 'jurusan')
-                                        ->leftJoin('pengampu_mapel', function($q) use ($id_guru){
-                                            $q->on('pengampu_mapel.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-                                                ->where('id_guru', $id_guru)
-                                                ->whereNull('pengampu_mapel.deleted_at');
-                                        })->whereNull('pengampu_mapel.id_pengampu_mapel');
+        if (!empty($input->status) && $input->status == 1) {
+            $list_data = MataPelajaran::select(
+                'mata_pelajaran.id_mata_pelajaran',
+                'mata_pelajaran.kd_mata_pelajaran',
+                'mata_pelajaran.nm_mata_pelajaran',
+                'mata_pelajaran.tingkat_semester',
+                'mata_pelajaran.id_jenis_mata_pelajaran',
+                'mata_pelajaran.id_jurusan'
+            )
+                ->with('jenis_mata_pelajaran', 'jurusan')
+                ->join('pengampu_mapel', function ($q) {
+                    $q->on('pengampu_mapel.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
+                        ->whereNull('pengampu_mapel.deleted_at');
+                })->where('id_guru', $id_guru);
+        } else {
+            $list_data = MataPelajaran::select(
+                'mata_pelajaran.id_mata_pelajaran',
+                'mata_pelajaran.kd_mata_pelajaran',
+                'mata_pelajaran.nm_mata_pelajaran',
+                'mata_pelajaran.tingkat_semester',
+                'mata_pelajaran.id_jenis_mata_pelajaran',
+                'mata_pelajaran.id_jurusan'
+            )->with('jenis_mata_pelajaran', 'jurusan')
+                ->leftJoin('pengampu_mapel', function ($q) use ($id_guru) {
+                    $q->on('pengampu_mapel.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
+                        ->where('id_guru', $id_guru)
+                        ->whereNull('pengampu_mapel.deleted_at');
+                })->whereNull('pengampu_mapel.id_pengampu_mapel');
         }
 
         return Datatables::of($list_data)
@@ -115,36 +117,35 @@ class SettingPengampuController extends BaseController
             'id_mata_pelajaran' => 'required',
             'id'                => 'required',
         ]);
-        
-        if($validator->fails()) {
+
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
-            if($mode == 'set'){
+        } else {
+            if ($mode == 'set') {
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
                 $auth_data = $input->auth_data;
-        
+
                 $pengampu_mapel                     = new PengampuMapel;
-                $pengampu_mapel->id_pengampu_mapel  = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $pengampu_mapel->id_pengampu_mapel  = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $pengampu_mapel->id_mata_pelajaran  = $input->id_mata_pelajaran;
                 $pengampu_mapel->id_guru            = $input->id;
                 $pengampu_mapel->created_by         = $auth_data->pengguna->id_pengguna;
                 $pengampu_mapel->save();
-        
+
                 return [
                     'status' => 200, // SUCCESS
                     'message' => 'Save Pengampu Mapel'
                 ];
-            }else{
+            } else {
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
                 $auth_data = $input->auth_data;
-        
+
                 $pengampu_mapel = PengampuMapel::where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_guru', $input->id)->first();
                 $pengampu_mapel->forceDelete();
-        
+
                 return [
                     'status' => 200, // SUCCESS
                     'message' => 'Delete Pengampu Mapel'
