@@ -52,7 +52,7 @@ class MateriAjarController extends BaseController
             $viewMAteriAjar->time = $now;
             $viewMAteriAjar->save();
         }
-        $data['list_mapel'] = MataPelajaran::all();
+        $data['list_mapel'] = MataPelajaran::isAktif()->get();
         $data['list_jurusan'] = Jurusan::all();
         $data['list_kelas'] = Kelas::where('is_aktif', 1)->get();
 

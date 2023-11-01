@@ -16,10 +16,10 @@ class KurikulumMp extends Model
 
     protected $primaryKey = 'id_kurikulum_mp';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_kurikulum',
         'id_mata_pelajaran',
@@ -35,7 +35,4 @@ class KurikulumMp extends Model
     {
         return $this->belongsTo(MataPelajaran::class, 'id_mata_pelajaran');
     }
-
-
-
 }
