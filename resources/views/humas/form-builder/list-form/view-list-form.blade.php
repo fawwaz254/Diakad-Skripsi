@@ -45,7 +45,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-form/datatables';
     var edit_url = role_url + '#' + modul_url + '/' + 'list-form/edit';
     var pertanyaan_url = role_url + '#' + modul_url + '/' + 'list-form';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-form/action/delete';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-form/action-list-form/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
