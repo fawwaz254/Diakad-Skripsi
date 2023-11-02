@@ -153,10 +153,14 @@ class KomponenMataPelajaranController extends Controller
                     'message' => 'Save Data List Form Succesfully'
                 ];
             } elseif ($mode == 'delete') {
-                $kelas_sisipan                       = KelasSisipan::find($id);
-                $kelas_sisipan->deleted_by           = $input->auth_data->pengguna->id_pengguna;
-                $kelas_sisipan->save();
-                $kelas_sisipan->delete();
+                $list_id_komponen = $input->list_id_komponen;
+
+                KelasSisipan::whereIn('id_kelas_sisipan', $list_id_komponen)
+                    ->update([
+                        'deleted_by' => $input->auth_data->pengguna->id_pengguna,
+                    ]);
+
+                KelasSisipan::whereIn('id_kelas_sisipan', $list_id_komponen)->delete();
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE

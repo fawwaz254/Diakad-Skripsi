@@ -31,7 +31,7 @@
                                 <h2 class="card-inside-title">
                                     <br>
                                 </h2>
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                <button class="btn btn-block bg-primary waves-effect" type="submit"><i
                                         class="material-icons">save</i><span>Tampilkan</span></button>
                             </div>
                         </div>
@@ -53,23 +53,33 @@
             </div>
             <div class="card">
                 <div class="body">
-                    <div class="table-responsive">
-                        <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                            id="primary_table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kelompok</th>
-                                    <th>Mata Pelajaran</th>
-                                    <th>Urutan</th>
+                    <form form id="form-checkbox" method="POST"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/komponen-mata-pelajaran/action-komponen-mata-pelajaran/delete/0') }}">
+                        {{ csrf_field() }}
+                        <div class="table-responsive">
+                            <table
+                                class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                                id="primary_table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kelompok</th>
+                                        <th>Mata Pelajaran</th>
+                                        <th>Urutan</th>
+                                        <th>Kelas</th>
+                                        <th>
+                                            <input id="checkbox_select_all" type="checkbox" name="select_all"
+                                                class="filled-in">
+                                            <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
 
-                                    <th>Kelas</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                        <button class="btn btn-block bg-red waves-effect" style="margin-top: 1rem" type="submit"><i
+                                class="material-icons">delete_forever</i><span>Delete</span></button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -122,15 +132,13 @@
                 name: 'action',
                 searchable: false,
                 orderable: false,
-                render: function(data) {
-                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                        delete_url + '\', this)" data-id="' + data.id + '">' +
-                        '    <i class="material-icons">delete_forever</i>' +
-                        '</button>';
-
+                render: function(data, type, full, meta) {
+                    return `
+                        <input id="checkbox-${data.id}" type="checkbox" name="list_id_komponen[]" class="filled-in" value="${data.id}">
+                        <label for="checkbox-${data.id}"></label>
+                    `;
                 }
-            }
-
+            },
         ]
     });
 
@@ -143,4 +151,78 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+
+    $(document).ready(function() {
+        /* Select All Checkbox */
+        $('input[name="select_all"]').change(function() {
+            var select_all_checked = this.checked;
+            var rows = primary_table.rows({
+                'search': 'applied'
+            }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+    });
+
+    $('#form-checkbox').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+        },
+        highlight: function(input) {
+            $(input).parents('.form-line').addClass('error');
+        },
+        unhighlight: function(input) {
+            $(input).parents('.form-line').removeClass('error');
+        },
+        errorPlacement: function(error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            swal({
+                title: "Are you sure?",
+                text: "You won't be able to delete this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function(result) {
+                if (result) {
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: $(form).serialize(),
+                        success: function(response) {
+                            if (response.status == 200) {
+                                vex.dialog.alert(response.message);
+                            } else if (response.status == 201) {
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            } else if (response.status == 202) {
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            } else if (response.status == 203) {
+                                vex.dialog.alert(response.message);
+                                primary_table.ajax.reload(null, false);
+                            } else if (response.status == 204) {
+                                loadURI(response.path);
+                            } else if (response.status == 300) {
+                                vex.dialog.alert(response.message);
+                            }
+                        },
+                        complete: function() {
+                            $('button').removeAttr('disabled', 'disabled');
+                        }
+                    });
+                } else {
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+            });
+        }
+    });
 </script>
