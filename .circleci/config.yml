@@ -88,7 +88,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin syahrul_baru && php artisan migrate --force"
+            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin latest-release && php artisan migrate --force"
 
   deploy-to-ytpnu:
     machine:
@@ -145,11 +145,4 @@ workflows:
       # - deploy-to-smk-pemuda
       - deploy-to-smk-siti-aminah
       - deploy-to-smk-ypm-3
-      # - deploy-to-sma-maryam
-
-  to-maryam-only:
-    when:
-      or:
-        - equal: [syahrul_baru, << pipeline.git.branch >>]
-    jobs:
       - deploy-to-sma-maryam
