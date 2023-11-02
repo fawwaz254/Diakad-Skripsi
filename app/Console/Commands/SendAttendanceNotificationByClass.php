@@ -86,7 +86,7 @@ class SendAttendanceNotificationByClass extends Command
 
                     $siswa_kelas = [];
                     foreach ($list_presensi_pengguna as $presensi_pengguna) {
-                        $siswa_kelas[] = "[*" . $presensi_pengguna->pengguna->siswa->nis_siswa . "*] " . $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
+                        $siswa_kelas[] = "[" . $presensi_pengguna->pengguna->siswa->nis_siswa . "] " . $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
                     };
 
                     $template = $base_template;
@@ -154,7 +154,7 @@ class SendAttendanceNotificationByClass extends Command
 
                     $siswa_kelas = [];
                     foreach ($list_siswa as $siswa) {
-                        $siswa_kelas[] = "[*" . $siswa->nis_siswa . "*] " . $siswa->pengguna->nm_pengguna;
+                        $siswa_kelas[] = "[" . $siswa->nis_siswa . "] " . $siswa->pengguna->nm_pengguna;
                     };
 
                     $template = $base_template;
