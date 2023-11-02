@@ -55,7 +55,8 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-form/pertanyaan/datatables/' +
         id_form;
     var edit_url = role_url + '#' + modul_url + '/' + 'list-form/pertanyaan/edit';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-form/pertanyaan/action/delete';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'list-form/pertanyaan/action-pertanyaan-form/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -100,14 +101,14 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
-                        edit_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">edit</i>' +
-                        '</a> ' +
-                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                        delete_url + '\', this)" data-id="' + data.id + '">' +
-                        '    <i class="material-icons">delete_forever</i>' +
-                        '</button> ';
+                    return `
+                        <a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="${edit_url}/${data.jenis_pertanyaan}/${data.id_form}/${data.id_pertanyaan_form}">
+                            <i class="material-icons">edit</i>
+                        </a>
+                        <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction('${delete_url}', this)" data-id="${data.id_pertanyaan_form}">
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                    `;
                 }
             }
         ]

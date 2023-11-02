@@ -60,10 +60,12 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [ListFormController::class, 'viewListForm']);
                 Route::get('datatables', [ListFormController::class, 'datatablesListForm']);
                 Route::get('add', [ListFormController::class, 'addListForm']);
+                Route::get('edit/{id}', [ListFormController::class, 'editListForm']);
                 Route::post('action-list-form/{mode}/{id}', [ListFormController::class, 'actionListForm']);
                 Route::get('pertanyaan/{id_form}', [ListFormController::class, 'viewPertanyaanForm']);
                 Route::get('pertanyaan/datatables/{id_form}', [ListFormController::class, 'datatablesPertanyaanForm']);
                 Route::get('pertanyaan/add/{jenis_pertanyaan}/{id_form}', [ListFormController::class, 'viewAddPertanyaanForm']);
+                Route::get('pertanyaan/edit/{jenis_pertanyaan}/{id_form}/{id_pertanyaan_form}', [ListFormController::class, 'viewEditPertanyaanForm']);
                 Route::post('pertanyaan/action-pertanyaan-form/{mode}/{id}', [ListFormController::class, 'actionPertanyaanForm']);
             });
         });

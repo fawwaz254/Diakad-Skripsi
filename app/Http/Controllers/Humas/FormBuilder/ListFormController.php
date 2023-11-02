@@ -32,6 +32,16 @@ class ListFormController extends Controller
         return view('humas/form-builder/list-form/add-list-form', compact('auth_data', 'roles'));
     }
 
+    public function editListForm(Request $request, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $roles = Role::whereIn('id_role', [2, 3, 15])->get();
+        $form = Form::findOrFail($id);
+
+        return view('humas/form-builder/list-form/edit-list-form', compact('auth_data', 'roles', 'form'));
+    }
+
     public function actionListForm(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
@@ -71,6 +81,31 @@ class ListFormController extends Controller
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'form-builder/list-form',
                     'message' => 'Save Data List Form Succesfully'
+                ];
+            } elseif ($mode == "edit") {
+                $form         = Form::findOrFail($id);
+                $form->id_role                      = $input->id_role;
+                $form->nm_form                      = $input->nm_form;
+                $form->is_harian                    = $input->is_harian;
+                $form->is_aktif                     = '1';
+                $form->start_time                   = $input->start_time;
+                $form->end_time                     = $input->end_time;
+                $form->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $form->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'form-builder/list-form',
+                    'message' => 'Update Form Data Succesfully'
+                ];
+            } elseif ($mode == "delete") {
+                $form = Form::with('pertanyaan_form')->findOrFail($id);
+                $form->pertanyaan_form()->delete();
+                $form->delete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Form Data Succesfully'
                 ];
             }
         }
@@ -120,6 +155,19 @@ class ListFormController extends Controller
         }
     }
 
+    public function viewEditPertanyaanForm(Request $request, $jenis_pertanyaan, $id_form, $id_pertanyaan_form)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $pertanyaan_form = PertanyaanForm::findOrFail($id_pertanyaan_form);
+
+        if ($jenis_pertanyaan == '1' || $jenis_pertanyaan == '2') {
+            return view('humas/form-builder/list-form/edit-pertanyaan-form', compact('auth_data', 'pertanyaan_form'));
+        } else {
+            return view('humas/form-builder/list-form/edit-pertanyaan-form-opsi', compact('auth_data', 'pertanyaan_form'));
+        }
+    }
+
     public function datatablesPertanyaanForm(Request $request, $id_form)
     {
         $list_data = PertanyaanForm::where('id_form', $id_form);
@@ -137,7 +185,9 @@ class ListFormController extends Controller
             })
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->id_form
+                    'id_form' => $item->id_form,
+                    'id_pertanyaan_form' => $item->id_pertanyaan_form,
+                    'jenis_pertanyaan' => $item->jenis_pertanyaan
                 );
                 return $data;
             })
@@ -202,6 +252,38 @@ class ListFormController extends Controller
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'form-builder/list-form/pertanyaan/' . $input->id_form,
                     'message' => 'Save Data Pertanyaan Form Succesfully'
+                ];
+            } elseif ($mode == "edit") {
+                $pertanyaan_form                               = PertanyaanForm::findOrFail($id);
+                $pertanyaan_form->id_form                      = $input->id_form;
+                $pertanyaan_form->nm_pertanyaan_form           = $input->nm_pertanyaan_form;
+                $pertanyaan_form->jenis_pertanyaan             = $input->jenis_pertanyaan;
+                $pertanyaan_form->urutan                       = $input->urutan;
+                $pertanyaan_form->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+
+                if ($input->jenis_pertanyaan == '3' || $input->jenis_pertanyaan == '4') {
+                    $opsi = [];
+                    foreach ($input->options as $options) {
+                        $opsi[] = $options;
+                    }
+                    $pertanyaan_form->options   = json_encode($opsi);
+                } else {
+                    $pertanyaan_form->options   = null;
+                }
+                $pertanyaan_form->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'form-builder/list-form/pertanyaan/' . $input->id_form,
+                    'message' => 'Update Data Pertanyaan Form Succesfully'
+                ];
+            } elseif ($mode == "delete") {
+                $form = PertanyaanForm::findOrFail($id);
+                $form->delete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Data Pertanyaan Form Succesfully'
                 ];
             }
         }
