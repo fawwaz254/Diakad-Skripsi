@@ -39,7 +39,7 @@
                             <h5>Format susunan file excel, sebagai berikut :</h5>
                             <ul>
                                 {{-- <li>
-                                    Download EXCEL dari menu SPP > EXCEL {{ env('APP_NAME', 'dsmart edu') }} Aplikasi
+                                    Download EXCEL dari menu SPP > EXCEL {{ env('APP_NAME', 'diakad') }} Aplikasi
                                     Keuangan
                                 </li> --}}
                                 <li>
