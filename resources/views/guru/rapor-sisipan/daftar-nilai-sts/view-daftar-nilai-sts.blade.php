@@ -79,6 +79,10 @@
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var primary_table = $('#primary_table').DataTable({
+        lengthMenu: [
+            [5, 10, 25, 50, -1],
+            [5, 10, 25, 50, 'All'],
+        ],
         processing: true,
         serverSide: true,
         responsive: true,
