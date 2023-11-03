@@ -90,6 +90,14 @@ jobs:
           command: |
             ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin latest-release && php artisan migrate --force"
 
+deploy-to-midah:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SERVER_SMPYPM1 "cd /var/www/midah/diakademik && git pull origin latest-release && php artisan migrate --force"
+
   deploy-to-ytpnu:
     machine:
       enabled: true
@@ -146,3 +154,4 @@ workflows:
       - deploy-to-smk-siti-aminah
       - deploy-to-smk-ypm-3
       - deploy-to-sma-maryam
+      - deploy-to-midah
