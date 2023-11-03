@@ -90,7 +90,7 @@ jobs:
           command: |
             ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin latest-release && php artisan migrate --force"
 
-deploy-to-midah:
+  deploy-to-midah:
     machine:
       enabled: true
     steps:
