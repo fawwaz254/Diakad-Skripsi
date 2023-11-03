@@ -216,6 +216,19 @@ class PembayaranSiswaController extends BaseController
                 $tagihan_belum_terbayar_non_spp = $tagihan_belum_terbayar_non_spp['total_tagihan'];
             }
 
+            if ($data_pembayaran_siswa->where('id_jenis_detail_biaya', '4')->count() > '4') {
+                $data_pembayaran_siswa1 =  $data_pembayaran_siswa->where('id_jenis_detail_biaya', '!=', '4');
+                $data_pembayaran_siswa2 = new PembayaranBiaya();
+                $data_pembayaran_siswa2->nm_biaya = 'SPP';
+                $data_pembayaran_siswa2->id_bulan = '99';
+                $data_pembayaran_siswa2->nm_bulan =  ' x ' . $data_pembayaran_siswa->where('id_jenis_detail_biaya', '4')->count();
+                $data_pembayaran_siswa2->besar_pembayaran = $data_pembayaran_siswa->where('id_jenis_detail_biaya', '4')->sum('besar_pembayaran');
+                $data_pembayaran_siswa2->besar_biaya = $data_pembayaran_siswa->where('id_jenis_detail_biaya', '4')->sum('besar_biaya');
+                $data_pembayaran_siswa2->id_jenis_detail_biaya = '4';
+
+                $data_pembayaran_siswa = $data_pembayaran_siswa1->concat([$data_pembayaran_siswa2]);
+            }
+
             if ($type == 'struk') {
 
                 if ($lebar == null) {
