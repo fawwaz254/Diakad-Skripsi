@@ -18,8 +18,8 @@
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada)<br>
-                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada)<br>
+                    <strong>@{{ CLASS }}</strong> : data kelas dinamis (wajib ada)<br>
+                    <strong>@{{ DATE }}</strong> : data tanggal dinamis (wajib ada)<br>
                     <strong>\n</strong> : kode untuk ENTER text<br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>
@@ -34,8 +34,8 @@
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada)<br>
-                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada)<br>
+                    <strong>@{{ CLASS }}</strong> : data kelas dinamis (wajib ada)<br>
+                    <strong>@{{ DATE }}</strong> : data tanggal dinamis (wajib ada)<br>
                     <strong>\n</strong> : kode untuk ENTER text<br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" style="margin-bottom: 3rem">
         <div class="header">
             <h2 style="float:left; font-size:2rem">LIST GRUP</h2>
             <a style="float:right; font-size:2rem" class="btn bg-green"
