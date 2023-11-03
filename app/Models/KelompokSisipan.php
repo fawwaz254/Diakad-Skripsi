@@ -37,6 +37,6 @@ class KelompokSisipan extends Model
 
     public function mata_pelajaran_sisipan()
     {
-        return $this->hasMany(MataPelajaranSisipan::class, 'id_kelompok_sisipan');
+        return $this->hasMany(MataPelajaranSisipan::class, 'id_kelompok_sisipan')->orderBy('urutan', 'asc');
     }
 }
