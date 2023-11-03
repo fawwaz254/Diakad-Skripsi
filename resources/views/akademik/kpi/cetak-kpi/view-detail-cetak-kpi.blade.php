@@ -21,6 +21,7 @@
                                     <th>No</th>
                                     <th>Kelas</th>
                                     <th>Siswa</th>
+                                    <th>Jumlah Point</th>
                                     <th>Terisi</th>
                                     <th>Action</th>
                                 </tr>
@@ -53,6 +54,10 @@
                 data: null,
                 searchable: false,
                 orderable: false
+            },
+            {
+                data: 'kelas.nm_kelas',
+                name: 'kelas.nm_kelas'
             },
             {
                 data: 'pengguna.nm_pengguna',
