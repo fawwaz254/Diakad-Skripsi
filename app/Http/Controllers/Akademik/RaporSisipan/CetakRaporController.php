@@ -310,17 +310,15 @@ class CetakRaporController extends Controller
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
         $list_siswa = Siswa::with(['nilai_pribadi_sisipan' => function ($q) use ($id_semester) {
-            $q->where('id_semester', $id_semester);
+            $q->where('id_semester', $id_semester)->where('nilai', '!=', 0);
         }, 'nilai_pribadi_sisipan.pribadi_sisipan'])->where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
         $nilai_siswa = [];
         $data = [];
 
-
-        $komponen_sikap = KomponenNilaiRaporSisipan::where('nm_nilai', 'SIKAP')->first();
-
         if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smpypm1') {
+            $komponen_sikap = KomponenNilaiRaporSisipan::where('nm_nilai', 'SIKAP')->first();
             $rapor_sisipans = RaporSisipan::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with(['nilai_rapor_sisipan' => function ($q) {
                 $q->where('nilai', '>', 0);
             }])->get();
