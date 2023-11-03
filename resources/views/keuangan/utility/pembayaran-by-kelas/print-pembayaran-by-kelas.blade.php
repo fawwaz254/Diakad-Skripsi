@@ -184,10 +184,10 @@
                                 @endphp
                                 <td style="vertical-align:middle;text-align: center;"></td>
                             @elseif($tagihan->is_tagih == 0)
-                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}"
+                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
                                     style="vertical-align:middle;text-align: center;">
                                     <b
-                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b>
+                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b>
                                 </td>
                             @endif
                         @else
@@ -208,10 +208,10 @@
                                 @endphp
                                 <td style="vertical-align:middle;text-align: center;"></td>
                             @elseif($tagihan->is_tagih == 0)
-                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}"
+                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
                                     style="vertical-align:middle;text-align: center;">
                                     <b
-                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b>
+                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b>
                                 </td>
                             @endif
                         @else
