@@ -30,7 +30,7 @@ class CetakKPIController extends Controller
         $point_kpi = PointKPI::where('id_semester', $data_semester_aktif->id_semester)->where('jenis', '1')->get();
         $point_mengaji_kpi = PointKPI::where('id_semester', $data_semester_aktif->id_semester)->where('jenis', '3')->get()->count();
         $predikat_kpi = PredikatKPI::whereIn('id_point_kpi', $point_kpi->pluck('id_point_kpi'))->get();
-        $list_wali_kelas = WaliKelas::where('id_semester', $data_semester_aktif->id_semester)->where('is_aktif', '1')->with('kelas.siswa', 'guru.pengguna');
+        $list_wali_kelas = WaliKelas::where('id_semester', $data_semester_aktif->id_semester)->where('is_aktif', '1')->with('kelas.siswa', 'guru.pengguna')->whereHas('kelas');
 
         return Datatables::of($list_wali_kelas)->addColumn('terisi', function ($item) use ($point_kpi, $predikat_kpi, $point_mengaji_kpi) {
             $totalPointKPI = ($point_kpi->where('tingkat_kelas', $item->kelas->tingkat)->count() + $point_mengaji_kpi) * $item->kelas->siswa->count();
@@ -62,7 +62,7 @@ class CetakKPIController extends Controller
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $list_data = Siswa::where('id_kelas', $id_kelas)->with('pengguna');
+        $list_data = Siswa::where('id_kelas', $id_kelas)->with('pengguna', 'kelas');
 
         $predikat_kpi = PredikatKPI::whereIn('id_siswa', $list_data->pluck('id_siswa'))->where('id_kelas', $id_kelas)->whereHas('point_kpi', function ($query) use ($semester_aktif) {
             $query->where('id_semester', $semester_aktif->id_semester);
