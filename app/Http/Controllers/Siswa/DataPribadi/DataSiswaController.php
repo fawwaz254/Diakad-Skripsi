@@ -69,7 +69,7 @@ class DataSiswaController extends BaseController
 		$jenisPekerjaan = JenisPekerjaan::get();
 		$tingkatPrestasi = TingkatPrestasiSiswa::get();
 		$kota = Kota::get();
-		$kotaTinggal = Kota::get();
+		$kotaTinggal = Kota::orderBy('nm_kota')->get();
 		$provinsi = Provinsi::get();
 
 		$kotaLahir = Kota::where('id_kota', '=', $siswa->id_kota_lahir)->first();
