@@ -245,10 +245,6 @@ class HistoriAbsensiSiswaSholatController extends Controller
 
             $hasil[$key]['id_presensi_pengguna'] = "";
             $attendances =  $allPresensiPengguna->where('username', $value->username);
-            // if ($value->username == '4266') {
-            //     // dd($value->username);
-            //     dd($attendances);
-            // }
 
             foreach ($attendances as $attendance) {
                 $fpDate =  Carbon::parse($attendance->fp_date);
