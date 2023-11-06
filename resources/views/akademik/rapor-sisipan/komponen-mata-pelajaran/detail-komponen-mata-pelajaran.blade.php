@@ -49,7 +49,10 @@
             <div class="block-header">
                 <h2><a class="btn bg-blue waves-effect target-link"
                         href="{{ url(Request::segment(1) . '#rapor-sisipan/komponen-mata-pelajaran/add/' . $id_kelas) }}"><i
-                            class="material-icons">add</i><span>Tambah Komponen Mata Pelajaran</span></a></h2>
+                            class="material-icons">add</i><span>Tambah Komponen Mata Pelajaran</span></a><a
+                        class="btn bg-blue waves-effect target-link" style="margin-left:10px"
+                        href="{{ url(Request::segment(1) . '#rapor-sisipan/komponen-mata-pelajaran/copy/' . $id_kelas) }}"><i
+                            class="material-icons">content_copy</i><span>Copy Komponen Mata Pelajaran</span></a></h2>
             </div>
             <div class="card">
                 <div class="body">
