@@ -371,7 +371,7 @@ class RekapAbsensiController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_kelas = Kelas::where('is_aktif', 1)->all();
+        $list_kelas = Kelas::where('is_aktif', 1)->get();
         $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
         $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
 
