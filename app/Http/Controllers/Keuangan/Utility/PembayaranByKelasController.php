@@ -135,7 +135,6 @@ class PembayaranByKelasController extends BaseController
 
     public function printPembayaranByKelas(Request $request, $tahun_akademik_semester, $id_kelas)
     {
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
