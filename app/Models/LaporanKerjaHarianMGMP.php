@@ -13,10 +13,10 @@ class LaporanKerjaHarianMGMP extends Model
 
     protected $primaryKey = 'id_laporan_kerja_harian_mgmp';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $guarded = [];
 
     public function role()
@@ -25,9 +25,12 @@ class LaporanKerjaHarianMGMP extends Model
     }
     public function mapel()
     {
-        return  $this->belongsTo(CategoriFileMGMP::class,'mapel', 'category_file_mgmp_id');
+        return  $this->belongsTo(CategoriFileMGMP::class, 'mapel', 'category_file_mgmp_id')->withDefault([
+            'category_file_name' => 'Lainnya',
+        ]);
     }
-    public function pengguna(){
-        return  $this->belongsTo(Pengguna::class,'id_pengguna');
+    public function pengguna()
+    {
+        return  $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
 }

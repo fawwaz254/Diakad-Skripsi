@@ -2214,7 +2214,7 @@ class UploadDataSiswaController extends BaseController
 				} else {
 					$find_kota_sekolah_asal = $data_kota->firstWhere('nm_kota', $value->kota_asal_sekolah_sebelumnya);
 					if ($find_kota_sekolah_asal) {
-						$kota_asal_sekolah_sebelumnya = $find_alamat_kota->id_kota;
+						$kota_asal_sekolah_sebelumnya = $find_kota_sekolah_asal->id_kota;
 					} else {
 						// $this->message[] = 'Upload Data Siswa ' . (string) $value->nis . ' Gagal, kota asal sekolah sebelumnya ' . $value->kota_asal_sekolah_sebelumnya . ' tidak ditemukan di dalam sistem';
 						Debugbar::error(

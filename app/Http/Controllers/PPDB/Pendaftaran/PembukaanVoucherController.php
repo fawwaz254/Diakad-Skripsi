@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PPDB\Pendaftaran;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 
 use App\Libraries\Ppdb\LibPenerimaan as LibPenerimaan;
 use App\Libraries\Ppdb\LibVoucherTarif as LibVoucherTarif;
@@ -37,8 +38,7 @@ class PembukaanVoucherController extends Controller
         /** groupping by year and semester */
         $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
             return $item->groupBy('nm_semester_penerimaan');
-        });
-        ;
+        });;
 
         return view('ppdb/pendaftaran/pembukaan-voucher/view-pembukaan-voucher', compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun'));
     }
@@ -65,7 +65,7 @@ class PembukaanVoucherController extends Controller
         } else {
             return [
                 'status'    => 204, // SUCCESS AND LOAD CONTENT
-                'path'      => 'pendaftaran/pembukaan-voucher/'.$input->id_penerimaan
+                'path'      => 'pendaftaran/pembukaan-voucher/' . $input->id_penerimaan
             ];
         }
     }
@@ -93,9 +93,9 @@ class PembukaanVoucherController extends Controller
 
         /** retrieve voucher by id_penerimaan */
         $vouchers = Voucher::select('voucher.id_voucher', 'voucher.id_penerimaan', 'voucher_tarif.tarif', 'kode_voucher', 'pin_password', 'tgl_ambil', 'tgl_bayar')
-                        ->where('voucher.id_penerimaan', $penerimaan->id_penerimaan)
-                        ->leftJoin('voucher_tarif', 'voucher.id_voucher_tarif', 'voucher_tarif.id_voucher_tarif')
-                        ->get();
+            ->where('voucher.id_penerimaan', $penerimaan->id_penerimaan)
+            ->leftJoin('voucher_tarif', 'voucher.id_voucher_tarif', 'voucher_tarif.id_voucher_tarif')
+            ->get();
 
         return view('ppdb/pendaftaran/pembukaan-voucher/pembukaan-voucher', compact('auth_data', 'penerimaan', 'voucher_tarif', 'vouchers'));
     }
@@ -120,11 +120,11 @@ class PembukaanVoucherController extends Controller
 
         /** get all data jurusan */
         $jurusan = Jurusan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->orderBy('nm_jurusan', 'asc')->get();
+            ->orderBy('nm_jurusan', 'asc')->get();
 
         return view('ppdb/pendaftaran/pembukaan-voucher/add-pembukaan-voucher', compact('auth_data', 'penerimaan', 'jurusan'));
     }
-    
+
     /**
      * action for add pembukaan voucher (add)
      * @param String id_penerimaan
@@ -158,9 +158,9 @@ class PembukaanVoucherController extends Controller
             /** data (id_penerimaan) tidak ditemukan */
             if (!$penerimaan) {
                 return [
-                'status'    => 300, // FAILED
-                'message'   => 'Id data penerimaan tidak valid'
-            ];
+                    'status'    => 300, // FAILED
+                    'message'   => 'Id data penerimaan tidak valid'
+                ];
             }
 
             /** get semester by id semester */
@@ -168,27 +168,27 @@ class PembukaanVoucherController extends Controller
 
             if (!$semester) {
                 return [
-                'status'    => 300, // FAILED
-                'message'   => 'Id semester tidak valid'
-            ];
+                    'status'    => 300, // FAILED
+                    'message'   => 'Id semester tidak valid'
+                ];
             }
 
             /** generate id voucher tarif */
-            $id_voucher_tarif = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            $id_voucher_tarif = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
             $VoucherTarif                   = new VoucherTarif;
             $VoucherTarif->id_voucher_tarif = $id_voucher_tarif;
             $VoucherTarif->id_semester      = $penerimaan->id_semester;
-            $VoucherTarif->id_jurusan       = ($input->status_tarif == "2"? $input->id_jurusan:0); // general
+            $VoucherTarif->id_jurusan       = ($input->status_tarif == "2" ? $input->id_jurusan : 0); // general
             $VoucherTarif->tarif            = $input->tarif;
             $VoucherTarif->deskripsi        = $input->deskripsi;
             $VoucherTarif->created_by       = $input->auth_data->pengguna->id_pengguna;
             $VoucherTarif->save();
-            
+
             /** send return result */
             return [
                 'status'    => 202, // SUCCESS AND LOAD CONTENT
-                'path'      => 'pendaftaran/pembukaan-voucher/'.$input->id_penerimaan ,
+                'path'      => 'pendaftaran/pembukaan-voucher/' . $input->id_penerimaan,
                 'message'   => 'Add Tarif Voucher Successfully'
             ];
         }
@@ -213,10 +213,10 @@ class PembukaanVoucherController extends Controller
         }
 
         $kode_voucher_exist = Voucher::select('id_voucher')
-                                    ->where('id_voucher_tarif', '=', $id_voucher_tarif)
-                                    ->where('deleted_at', '=', null)
-                                    ->first();
-        
+            ->where('id_voucher_tarif', '=', $id_voucher_tarif)
+            ->where('deleted_at', '=', null)
+            ->first();
+
         if ($kode_voucher_exist != null) {
             return [
                 'status' => 300,
@@ -231,7 +231,7 @@ class PembukaanVoucherController extends Controller
 
         return [
             'status'  => 202, // SUCCESS AND LOAD CONTENT
-            'path'    => 'pendaftaran/pembukaan-voucher/'.$id_penerimaan,
+            'path'    => 'pendaftaran/pembukaan-voucher/' . $id_penerimaan,
             'message' => 'Delete Voucher Tarif Successfully'
         ];
     }
@@ -253,7 +253,7 @@ class PembukaanVoucherController extends Controller
         if (!$penerimaan) {
             abort(404);
         }
-        
+
         /** retrieve voucher tarif by id_semester */
         $voucher_tarif = LibVoucherTarif::getVoucherTarifBySemester($penerimaan->id_semester);
 
@@ -294,9 +294,9 @@ class PembukaanVoucherController extends Controller
         $n_digit    = (int) $input->n_digit;
 
         $vouchers = [];
-        
+
         // generate voucher
-        for ($i=0; $i < $n_voucher; $i++) {
+        for ($i = 0; $i < $n_voucher; $i++) {
             $no_seri = $seri_awal + $i;
 
             /** take time now attribute */
@@ -307,8 +307,8 @@ class PembukaanVoucherController extends Controller
 
             /** cek kode voucher is available */
             $kode_voucher_exist = Voucher::select('id_voucher', 'kode_voucher')
-                                    ->where('kode_voucher', '=', $kode_voucher)
-                                    ->first();
+                ->where('kode_voucher', '=', $kode_voucher)
+                ->first();
 
             if ($kode_voucher_exist) {
                 return [
@@ -318,22 +318,22 @@ class PembukaanVoucherController extends Controller
             }
 
             $vouchers[] = [
-                'id_voucher'        => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                'id_voucher'        => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                 'id_voucher_tarif'  => $input->id_voucher_tarif,
                 'id_penerimaan'     => $input->id_penerimaan,
                 'kode_voucher'      => $kode_voucher,
-                'pin_password'      => strtoupper(str_random(6)), // uppercase string random
+                'pin_password'      => strtoupper(Str::random(6)), // uppercase string random
                 'is_aktif'          => 1,
                 'created_at'        => new \DateTime(),
                 'created_by'        => $input->auth_data->pengguna->id_pengguna
             ];
         }
-        
+
         Voucher::insert($vouchers);
 
         return [
             'status'  => 202, // SUCCESS AND LOAD CONTENT
-            'path'    => 'pendaftaran/pembukaan-voucher/'.$id_penerimaan,
+            'path'    => 'pendaftaran/pembukaan-voucher/' . $id_penerimaan,
             'message' => 'Generate Voucher Successfully'
         ];
     }
@@ -366,7 +366,7 @@ class PembukaanVoucherController extends Controller
 
         return [
             'status'  => 202, // SUCCESS AND LOAD CONTENT
-            'path'    => 'pendaftaran/pembukaan-voucher/'.$id_penerimaan,
+            'path'    => 'pendaftaran/pembukaan-voucher/' . $id_penerimaan,
             'message' => 'Delete Voucher Successfully'
         ];
     }
