@@ -105,6 +105,8 @@
                                 @if ($pembayaran_siswa->id_jenis_detail_biaya == 4)
                                     @if ($pembayaran_siswa->id_bulan <= 6)
                                         @php $tahun = $pembayaran_siswa->thn_akademik_semester + 1; @endphp
+                                    @elseif($pembayaran_siswa->id_bulan == '99')
+                                        @php $tahun = null @endphp
                                     @else
                                         @php $tahun = $pembayaran_siswa->thn_akademik_semester; @endphp
                                     @endif
@@ -133,7 +135,8 @@
                         <tr>
                             <td colspan="4" style="text-align:center;"><b>TOTAL PEMBAYARAN</b></td>
                             <td align="center">
-                                <b>{{ 'Rp ' . number_format($data_pembayaran_siswa->sum('besar_pembayaran')) }}</b></td>
+                                <b>{{ 'Rp ' . number_format($data_pembayaran_siswa->sum('besar_pembayaran')) }}</b>
+                            </td>
                         </tr>
                     </table>
                 </td>
