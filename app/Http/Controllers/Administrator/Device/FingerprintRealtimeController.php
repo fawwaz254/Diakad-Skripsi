@@ -52,6 +52,7 @@ class FingerprintRealtimeController extends Controller
                     if ($item->notes) {
                         $data = $item->notes;
                     } elseif ($item->shiftPengguna && $item->shiftPengguna->shift_master) {
+                        $data = '';
                         if ($item->check_in) {
                             $data = "Masuk";
                         }

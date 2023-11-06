@@ -283,7 +283,7 @@ class DataKategoriMGMPController extends BaseController
         $input = (object) $request->input();
         // $auth_data = $input->auth_data;
 
-        $list_data = LaporanKerjaHarianMGMP::with('mapel', 'pengguna')->get();
+        $list_data = LaporanKerjaHarianMGMP::with('mapel', 'pengguna')->orderBy('created_at', 'desc');
 
         return Datatables::of($list_data)
             ->editColumn('tanggal', function ($item) {
