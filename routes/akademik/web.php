@@ -508,6 +508,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [KomponenMataPelajaranController::class, 'viewKomponenMataPelajaran']);
                 Route::post('/', [KomponenMataPelajaranController::class, 'postKomponenMataPelajaran']);
                 Route::get('/add/{id_kelas}', [KomponenMataPelajaranController::class, 'addKomponenMataPelajaran']);
+                Route::get('/copy/{id_kelas}', [KomponenMataPelajaranController::class, 'copyKomponenMataPelajaran']);
                 Route::get('/detail/{id_kelas}', [KomponenMataPelajaranController::class, 'viewDetailKomponenMataPelajaran']);
                 Route::get('datatables', [KomponenMataPelajaranController::class, 'datatablesKomponenMataPelajaran']);
                 Route::post('action-komponen-mata-pelajaran/{mode}/{id}', [KomponenMataPelajaranController::class, 'actionKomponenMataPelajaran']);
