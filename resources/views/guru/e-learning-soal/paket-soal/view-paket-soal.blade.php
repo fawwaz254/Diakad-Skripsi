@@ -140,10 +140,14 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        detail_url + '/detail/' + data.id + '">' +
-                        '    <i class="material-icons">add</i>' +
-                        '</a>';
+                    if (data.status == 0) {
+                        return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            detail_url + '/detail/' + data.id + '">' +
+                            '    <i class="material-icons">add</i>' +
+                            '</a>';
+                    } else {
+                        return '';
+                    }
 
                 }
             },
