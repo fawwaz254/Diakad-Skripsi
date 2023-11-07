@@ -23,4 +23,9 @@ class JawabanForm extends Model
         'updated_by',
         'deleted_by'
     ];
+
+    public function detail_jawaban_form()
+    {
+        return $this->hasMany(DetailJawabanForm::class, 'id_jawaban_form');
+    }
 }
