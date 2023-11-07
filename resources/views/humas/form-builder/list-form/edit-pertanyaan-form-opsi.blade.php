@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        EDIT PERTANYAAN @if ($jenis_pertanyaan == '1')
+                        EDIT PERTANYAAN @if ($jenis_pertanyaan == '3')
                             SATU OPSI
                         @else
                             BANYAK OPSI
