@@ -70,6 +70,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('pertanyaan/action-pertanyaan-form/{mode}/{id}', [ListFormController::class, 'actionPertanyaanForm']);
             });
 
+            //test
+
             Route::prefix('rekap-form-harian')->group(function () {
                 Route::get('/', [RekapFormHarianController::class, 'viewListRekapFormHarian']);
                 Route::get('datatables', [RekapFormHarianController::class, 'datatablesListRekapFormHarian']);
