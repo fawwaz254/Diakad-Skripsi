@@ -242,9 +242,13 @@ class TagihanSiswaController extends BaseController
                                     $tagihan_set->keterangan        = $detail_biaya->keterangan_biaya;
                                     $tagihan_set->besar_biaya       = $detail_biaya->besar_biaya;
                                     $tagihan_set->updated_by        = $input->auth_data->pengguna->id_pengguna;
-                                    if (!empty($detail_biaya->deleted_at)) {
+                                    if (!empty($detail_biaya->deleted_at)) { //jika detail biaya telah dihapus
                                         $tagihan_set->deleted_at        = $now;
                                         $tagihan_set->deleted_by        = $input->auth_data->pengguna->id_pengguna;
+                                        if (!empty($pembayaran)) { // kalau pembayaran ditemukan maka update
+                                            $pembayaran->deleted_at = $now;
+                                            $pembayaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                                        }
                                     }
 
                                     if (!empty($pembayaran)) { // kalau pembayaran ditemukan maka update
