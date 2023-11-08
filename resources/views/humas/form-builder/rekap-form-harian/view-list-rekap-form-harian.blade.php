@@ -4,7 +4,7 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data List Rekap Form Harian</h2>
+                    <h2>Data List Rekap Form</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -15,6 +15,7 @@
                                     <th>No</th>
                                     <th>Nama Form</th>
                                     <th>Role</th>
+                                    <th>Jenis</th>
                                     <th>Status</th>
                                     <th>Rekap Harian</th>
                                     <th>Rekap Bulanan</th>
@@ -32,9 +33,9 @@
 @include('scriptjs')
 <script>
     var modul_url = '{{ Request::segment(2) }}';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rekap-form-harian/datatables';
-    var rekap_jawaban_harian_url = role_url + '#' + modul_url + '/' + 'rekap-form-harian/rekap-harian-form-harian';
-    var rekap_jawaban_bulanan_url = role_url + '#' + modul_url + '/' + 'rekap-form-harian/rekap-bulanan-form-harian';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rekap-form/datatables';
+    var rekap_jawaban_harian_url = role_url + '#' + modul_url + '/' + 'rekap-form/rekap-harian-form-harian';
+    var rekap_jawaban_bulanan_url = role_url + '#' + modul_url + '/' + 'rekap-form/rekap-bulanan-form-harian';
     // var edit_url = role_url + '#' + modul_url + '/' + 'list-form/edit';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-form/action-list-form/delete';
 
@@ -62,6 +63,13 @@
                 className: 'align-center',
             },
             {
+                data: 'is_harian',
+                name: 'is_harian',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
+            },
+            {
                 data: 'is_aktif',
                 name: 'is_aktif',
                 className: 'align-center',
@@ -74,11 +82,14 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        rekap_jawaban_harian_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">remove_red_eye</i>' +
-                        '</a>';
-
+                    if (data.is_harian) {
+                        return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            rekap_jawaban_harian_url + '/' + data.id + '">' +
+                            '    <i class="material-icons">remove_red_eye</i>' +
+                            '</a>';
+                    } else {
+                        return '';
+                    }
                 }
             },
             {

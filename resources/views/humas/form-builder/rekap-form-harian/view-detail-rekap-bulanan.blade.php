@@ -6,12 +6,18 @@
     }
 </style>
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
+
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                        FILTER BULAN dan KELAS
+                        Filter {{ $form->nm_form }}
                     </h2>
                 </div>
                 <div class="body">
@@ -88,7 +94,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        REKAP FORM HARIAN SISWA {{ $bulan->nm_bulan }}
+                        Rekap Bulan {{ $bulan->nm_bulan }}
                         {{-- <a target="_blank"
                             href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/' . $bulan->id_bulan . '/' . $tahun . '/download') }}"
                             class="btn btn-success waves-effect"><i class="material-icons">print</i><span>Download
@@ -131,10 +137,11 @@
                                         @foreach ($dates as $date)
                                             @if (isset($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')]))
                                                 @if ($id_pertanyaan == '0')
-                                                    <td
-                                                        style="text-align:center; vertical-align:middle !important; background-color:#d4ffdf">
-                                                        <a class="target-link"
-                                                            href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/user/' . $pengguna->id_pengguna . '/' . $date->format('Y-m-d')) }}">Detail</a>
+                                                    <td style="text-align:center; vertical-align:middle !important; ">
+                                                        <button onclick="cekJawaban(this)"
+                                                            class="btn btn-success btn-circle waves-effect waves-circle waves-float"
+                                                            data-id=" {{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')] }}"><i
+                                                                class="material-icons">remove_red_eye</i></button>
                                                     </td>
                                                 @else
                                                     @if (is_array($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')]) &&
@@ -167,20 +174,70 @@
     </div>
 </div>
 
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+                <h4 class="modal-title" style="text-align: center">Detail Jawaban</h4>
+            </div>
+            <div id="place">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
-            '{{ $id_form }}' + '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]')
+            '{{ $form->id_form }}' + '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]')
             .val() + '/' + $('select[name=id_kelas]').val() + '/' + $('select[name=id_pertanyaan]').val());
     }
 
     var primary_table = $('#primary_table').DataTable({
         ordering: false,
-        // scrollX: true,
-        fixedColumns: {
-            leftColumns: 2
-        },
-        // scrollCollapse: true,
+
         paging: false
     });
+
+    function cekJawaban(el) {
+        var item = $(el);
+
+        $('button').attr('disabled', 'disabled');
+        $.ajax({
+            type: "POST",
+            url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/get-detail-jawaban`,
+            data: {
+                id_jawaban_form: item.attr('data-id'),
+            },
+            success: function(response) {
+                $('#place').html('');
+                var html = '<table  class="table">';
+                html += '<tr>';
+                html += '<th>No</th>';
+                html += '<th>Pertanyaan</th>';
+                html += '<th>Jawaban</th>';
+                html += '</tr>';
+                $.each(response.detail_jawaban_form, function(key, item) {
+                    html += '<tr >';
+                    html += '<td>' + (key + 1) + '</td>';
+                    html += '<td>' + item.pertanyaan_form.nm_pertanyaan_form + '</td>';
+                    html += '<td>' + item.jawaban + '</td>';
+                    html += '</tr>';
+                });
+                html += '</table>';
+                $('#place').html(html);
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+                $('#myModal').modal('show');
+            }
+        });
+
+    };
 </script>
