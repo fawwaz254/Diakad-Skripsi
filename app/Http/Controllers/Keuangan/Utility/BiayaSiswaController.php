@@ -10,8 +10,12 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Libraries\Keuangan\LibDataKeuangan;
+use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibKelas;
-
+use App\Models\DetailBiaya;
+use App\Models\PemasukanBiaya;
+use App\Models\PembayaranBiaya;
+use App\Models\TagihanBiaya;
 use Auth;
 use DB;
 use Session;
@@ -265,6 +269,65 @@ class BiayaSiswaController extends BaseController
             } elseif ($mode == 'edit') {
                 // make object to find id
                 $siswa                          = Siswa::find($id);
+                isset($input->ganti_kelompok_biaya);
+                if (isset($input->ganti_kelompok_biaya) && $input->ganti_kelompok_biaya == '1') {
+                    $auth_data = $input->auth_data;
+                    $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+                    //hapus tagihan lama
+                    $tagihan_biaya_lama = TagihanBiaya::where('id_siswa', $siswa->id_siswa)->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($siswa, $semester_aktif) {
+                        $query->where('id_kelompok_biaya', '=', $siswa->id_kelompok_biaya)->whereHas('semester', function ($query) use ($semester_aktif) {
+                            $query->where('thn_akademik_semester', '=', $semester_aktif->thn_akademik_semester);
+                        });
+                    })->get();
+
+                    $pembayaran_biaya = PembayaranBiaya::whereIn('id_tagihan_biaya', $tagihan_biaya_lama->pluck('id_tagihan_biaya'))->get();
+                    foreach ($pembayaran_biaya as $p) {
+                        $p->deleted_by = 'Update Kelompok Biaya';
+                        $p->save();
+                        $p->delete();
+                    }
+
+                    foreach ($tagihan_biaya_lama  as $t) {
+                        $t->forceDelete();
+                    }
+
+                    //generate tagihan baru
+                    $detail_biaya_set = DetailBiaya::withTrashed()
+                        ->select('detail_biaya.id_detail_biaya', 'detail_biaya.besar_biaya', 'detail_biaya.keterangan_biaya', 'detail_biaya.deleted_at')
+                        ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
+                        ->join('semester', 'semester.id_semester', '=', 'biaya_sekolah.id_semester')
+                        ->where('biaya_sekolah.id_kelompok_biaya', '=', $input->id_kelompok_biaya)
+                        ->where('semester.thn_akademik_semester', '=', $semester_aktif->thn_akademik_semester)
+                        ->get();
+
+                    foreach ($detail_biaya_set as $detail_biaya) {
+                        //validasi
+                        $tagihan_set = TagihanBiaya::withTrashed()->select('id_tagihan_biaya')
+                            ->where('id_siswa', '=', $siswa->id_siswa)
+                            ->where('id_detail_biaya', '=', $detail_biaya->id_detail_biaya)
+                            ->first();
+
+                        if ($tagihan_set) {
+                            continue;
+                        }
+
+                        if (empty($detail_biaya->deleted_at)) {
+                            $tagihanBiaya                       = new TagihanBiaya;
+                            $tagihanBiaya->id_tagihan_biaya     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $tagihanBiaya->id_siswa             = $siswa->id_siswa;
+                            $tagihanBiaya->id_kelas             = $siswa->id_kelas;
+                            $tagihanBiaya->id_detail_biaya      = $detail_biaya->id_detail_biaya;
+                            $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
+                            $tagihanBiaya->denda_biaya          = 0;
+                            $tagihanBiaya->is_tagih             = 1;
+                            $tagihanBiaya->keterangan           = $detail_biaya->keterangan_biaya;
+                            $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
+                            $tagihanBiaya->save();
+                        }
+                    }
+                }
+
+
                 $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
                 $siswa->save();
 
