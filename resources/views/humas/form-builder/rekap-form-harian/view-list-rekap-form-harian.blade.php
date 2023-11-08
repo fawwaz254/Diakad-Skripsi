@@ -32,9 +32,9 @@
 @include('scriptjs')
 <script>
     var modul_url = '{{ Request::segment(2) }}';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rekap-form-harian/datatables';
-    var rekap_jawaban_harian_url = role_url + '#' + modul_url + '/' + 'rekap-form-harian/rekap-harian-form-harian';
-    var rekap_jawaban_bulanan_url = role_url + '#' + modul_url + '/' + 'rekap-form-harian/rekap-bulanan-form-harian';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rekap-form/datatables';
+    var rekap_jawaban_harian_url = role_url + '#' + modul_url + '/' + 'rekap-form/rekap-harian-form-harian';
+    var rekap_jawaban_bulanan_url = role_url + '#' + modul_url + '/' + 'rekap-form/rekap-bulanan-form-harian';
     // var edit_url = role_url + '#' + modul_url + '/' + 'list-form/edit';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-form/action-list-form/delete';
 

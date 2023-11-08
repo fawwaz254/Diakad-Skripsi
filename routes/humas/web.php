@@ -72,7 +72,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             //test
 
-            Route::prefix('rekap-form-harian')->group(function () {
+            Route::prefix('rekap-form')->group(function () {
                 Route::get('/', [RekapFormHarianController::class, 'viewListRekapFormHarian']);
                 Route::get('datatables', [RekapFormHarianController::class, 'datatablesListRekapFormHarian']);
                 // Route::get('rekap-harian-form-harian/{id_form}', [RekapFormHarianController::class, 'viewJawabanForm']);
