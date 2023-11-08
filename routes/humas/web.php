@@ -75,8 +75,9 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('rekap-form')->group(function () {
                 Route::get('/', [RekapFormHarianController::class, 'viewListRekapFormHarian']);
                 Route::get('datatables', [RekapFormHarianController::class, 'datatablesListRekapFormHarian']);
-                // Route::get('rekap-harian-form-harian/{id_form}', [RekapFormHarianController::class, 'viewJawabanForm']);
-                // Route::get('rekap-harian-form-harian/{id_form}/{id_kelas}/{tahun}/{bulan}', [RekapFormHarianController::class, 'viewJawabanForm']);
+
+                Route::get('rekap-harian-form-harian/{id_form}', [RekapFormHarianController::class, 'viewHarianFormHarian']);
+                Route::get('rekap-harian-form-harian/{id_form}/{date}/{id_kelas}', [RekapFormHarianController::class, 'viewHarianFormHarian']);
 
                 Route::get('rekap-bulanan-form-harian/{id_form}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);
                 Route::get('rekap-bulanan-form-harian/{id_form}/{bulan}/{tahun}/{id_kelas}/{id_pertanyaan}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);

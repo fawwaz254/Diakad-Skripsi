@@ -4,7 +4,7 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data List Rekap Form Harian</h2>
+                    <h2>Data List Rekap Form</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -15,6 +15,7 @@
                                     <th>No</th>
                                     <th>Nama Form</th>
                                     <th>Role</th>
+                                    <th>Jenis</th>
                                     <th>Status</th>
                                     <th>Rekap Harian</th>
                                     <th>Rekap Bulanan</th>
@@ -62,6 +63,13 @@
                 className: 'align-center',
             },
             {
+                data: 'is_harian',
+                name: 'is_harian',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
+            },
+            {
                 data: 'is_aktif',
                 name: 'is_aktif',
                 className: 'align-center',
@@ -74,11 +82,14 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        rekap_jawaban_harian_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">remove_red_eye</i>' +
-                        '</a>';
-
+                    if (data.is_harian) {
+                        return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            rekap_jawaban_harian_url + '/' + data.id + '">' +
+                            '    <i class="material-icons">remove_red_eye</i>' +
+                            '</a>';
+                    } else {
+                        return '';
+                    }
                 }
             },
             {
