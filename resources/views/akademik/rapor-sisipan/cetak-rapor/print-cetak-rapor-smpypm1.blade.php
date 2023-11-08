@@ -313,9 +313,12 @@
                     <td align="center" style="border-style : hidden; position: relative;">Mengetahui<br>Kepala
                         Sekolah,
                         <img style="position: absolute; margin-left:-140px "
-                            src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="160px" height="160px"
+                            src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="200px" height="200px"
                             class="ttd">
                         <br><br><br><br><br>
+                        <br>
+                        <br>
+                        <br>
                         <u><b>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</b></u>
                     </td>
