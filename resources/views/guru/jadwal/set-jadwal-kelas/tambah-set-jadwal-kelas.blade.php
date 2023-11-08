@@ -148,7 +148,7 @@
                                                 </table>
                                             @else
                                                 <button type="button" class="btn bg-green waves-effect passingID"
-                                                    data-toggle="modal" data-jam="{{ $r->jam_ke }}}"
+                                                    data-toggle="modal" data-jam="{{ $r->jam_ke }}"
                                                     data-hari="{{ $hari->id_jadwal_hari }}" id="open">
                                                     <i class="material-icons">add</i>
                                                 </button>

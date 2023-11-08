@@ -80,6 +80,7 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('rekap-bulanan-form-harian/{id_form}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);
                 Route::get('rekap-bulanan-form-harian/{id_form}/{bulan}/{tahun}/{id_kelas}/{id_pertanyaan}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);
+                Route::post('get-detail-jawaban', [RekapFormHarianController::class, 'getDetailJawaban']);
                 Route::get('detail-jawaban/{id_form}', [RekapFormHarianController::class, 'viewDetailJawaban']);
             });
         });
