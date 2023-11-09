@@ -100,6 +100,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('edit/{id}', [LaporanKerjaHarianController::class, 'editKerjaHarian']);
                 Route::get('preview-file/{id}/{no}', [LaporanKerjaHarianController::class, 'previewFile']);
                 Route::get('download-file/{id}', [LaporanKerjaHarianController::class, 'downloadFile']);
+                Route::get('cetak', [LaporanKerjaHarianController::class, 'print']);
             });
             Route::prefix('laporan-kelompok-mgmp')->group(function () {
                 Route::get('/', [LaporanKerjaHarianController::class, 'viewLaporanKelompokMGMP']);
