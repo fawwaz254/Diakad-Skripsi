@@ -323,4 +323,16 @@ class LaporanKerjaHarianController extends Controller
             })
             ->make(true);
     }
+
+    public function print(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = LaporanKerjaHarianMGMP::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
+        ->orderBy('tanggal', 'DESC')
+        ->get();
+
+        return view('guru/mgmp/laporan-harian-mgmp/print-laporan-harian-mgmp', compact('list_data'));
+    }
 }
