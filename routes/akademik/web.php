@@ -471,6 +471,8 @@ Route::middleware(['token_staff'])->group(function () {
             });
 
             Route::prefix('cetak-rapor')->group(function () {
+                Route::get('update', [CetakRaporController::class, 'updateCetakRapor']);
+
                 Route::get('/', [CetakRaporController::class, 'viewCetakRapor']);
                 Route::get('datatables/', [CetakRaporController::class, 'datatablesCetakRapor']);
                 Route::get('print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
