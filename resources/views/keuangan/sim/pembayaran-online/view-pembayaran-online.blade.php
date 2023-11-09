@@ -1,7 +1,9 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}"><i class="material-icons">note_add</i><span>Request kode bayar</span></a>
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/add') }}"><i
+                    class="material-icons">note_add</i><span>Request kode bayar</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -16,7 +18,8 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Tanggal Mulai</label>
-                                    <input type="text" class="datepicker form-control" name="start_date" value="{{\Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->startOfMonth()->format('Y-m-d')}}">
+                                        <input type="text" class="datepicker form-control" name="start_date"
+                                            value="{{ \Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->startOfMonth()->format('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
@@ -24,7 +27,8 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Tanggal Selesai</label>
-                                    <input type="text" class="datepicker form-control" name="end_date" value="{{\Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->endOfMonth()->format('Y-m-d')}}">
+                                        <input type="text" class="datepicker form-control" name="end_date"
+                                            value="{{ \Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->endOfMonth()->format('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
@@ -34,12 +38,16 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Kelas</label>
-                                    <select class="form-control show-tick" {{(!empty($id_kelas))? 'disabled' : ''}} name="kelas" onchange="changeKelas()">
-                                        <option value="">Semua Kelas</option>
-                                        @foreach($data_kelas as $data)
-                                        <option value="{{$data->id_kelas}}" {{(!empty($id_kelas) && $id_kelas == $data->id_kelas)? 'selected' : ''}}>{{$data->nm_kelas}}</option>
-                                        @endforeach
-                                    </select>
+                                        <select class="form-control show-tick"
+                                            {{ !empty($id_kelas) ? 'disabled' : '' }} name="kelas"
+                                            onchange="changeKelas()">
+                                            <option value="">Semua Kelas</option>
+                                            @foreach ($data_kelas as $data)
+                                                <option value="{{ $data->id_kelas }}"
+                                                    {{ !empty($id_kelas) && $id_kelas == $data->id_kelas ? 'selected' : '' }}>
+                                                    {{ $data->nm_kelas }}</option>
+                                            @endforeach
+                                        </select>
                                 </div>
                             </div>
                         </div>
@@ -47,9 +55,9 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Siswa</label>
-                                    <select class="form-control show-tick" name="siswa">
-                                        <option value="">Semua Siswa</option>
-                                    </select>
+                                        <select class="form-control show-tick" name="siswa">
+                                            <option value="">Semua Siswa</option>
+                                        </select>
                                 </div>
                             </div>
                         </div>
@@ -57,23 +65,26 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Status</label>
-                                    <select class="form-control show-tick" name="status">
-                                        <option value="">Semua Status</option>
-                                        <option value="1">Sudah dibayar</option>
-                                        <option value="2">Waiting for payment</option>
-                                        <option value="10">Expired</option>
-                                    </select>
+                                        <select class="form-control show-tick" name="status">
+                                            <option value="">Semua Status</option>
+                                            <option value="1">Sudah dibayar</option>
+                                            <option value="2">Waiting for payment</option>
+                                            <option value="10">Expired</option>
+                                        </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
+                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i
+                                    class="material-icons">save</i><span>Filter</span></button>
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                            id="primary_table">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -104,24 +115,26 @@
             </div>
             <div class="modal-body">
 
-                    
-                    <div>
 
-                    <a id="button_wa" href="#" target="_blank" ><button type="button" class="btn bg-green btn-block waves-effect">
-                        <i class="material-icons">whatsapp</i> <span>Share Lewat Whatsapp</span>
-                    </button></a>
+                <div>
 
-                    </div>
+                    <a id="button_wa" href="#" target="_blank"><button type="button"
+                            class="btn bg-green btn-block waves-effect">
+                            <i class="material-icons">whatsapp</i> <span>Share Lewat Whatsapp</span>
+                        </button></a>
 
-                    <div>
+                </div>
 
-                    <a id="button_telegram" href="#" target="_blank" ><button type="button" style="margin-top: 10px;" class="btn bg-primary btn-block waves-effect">
-                        <i class="material-icons">telegram</i> <span>Share Lewat Telegram</span>
-                    </button></a>
+                <div>
 
-                    </div>
+                    <a id="button_telegram" href="#" target="_blank"><button type="button"
+                            style="margin-top: 10px;" class="btn bg-primary btn-block waves-effect">
+                            <i class="material-icons">telegram</i> <span>Share Lewat Telegram</span>
+                        </button></a>
 
-                    <div id="copy"></div>
+                </div>
+
+                <div id="copy"></div>
 
             </div>
             <div class="modal-footer">
@@ -132,7 +145,7 @@
 </div>
 
 <script>
-    $(function(){    
+    $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
             //lang : 'id',
@@ -141,14 +154,14 @@
             time: false
         });
 
-        @if(!empty($id_kelas))
+        @if (!empty($id_kelas))
             changeKelas();
         @endif
     });
 
-    function changeKelas(){
+    function changeKelas() {
         $.ajax({
-            url: "{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/siswa-bykelas')}}",
+            url: "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/siswa-bykelas') }}",
             type: 'POST',
             data: {
                 kelas: $('select[name=kelas]').val()
@@ -156,8 +169,10 @@
             success: function(result) {
                 $('select[name=siswa]').html('');
                 var html = '<option value="">Semua Siswa</option>';
-                $.each(result, function( key, item ) {
-                    html += '<option value="'+item.id_siswa+'" data-nis="'+item.nis_siswa+'" data-id="'+item.id_pengguna+'">'+item.nm_pengguna+' ('+item.nis_siswa+')</option>'
+                $.each(result, function(key, item) {
+                    html += '<option value="' + item.id_siswa + '" data-nis="' + item.nis_siswa +
+                        '" data-id="' + item.id_pengguna + '">' + item.nm_pengguna + ' (' + item
+                        .nis_siswa + ')</option>'
                 });
                 $('select[name=siswa]').html(html);
             }
@@ -165,16 +180,16 @@
     }
 </script>
 <script>
-    var modul_url               = '/{{Request::segment(2)}}/pembayaran-online/';
+    var modul_url = '/{{ Request::segment(2) }}/pembayaran-online/';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: base_url + '/' + role_url + modul_url + 'datatables',
             type: 'POST',
-            data: function(params){
+            data: function(params) {
                 params.start_date = encodeURIComponent($('input[name=start_date]').val());
                 params.end_date = encodeURIComponent($('input[name=end_date]').val());
                 params.kelas = encodeURIComponent($('select[name=kelas]').val());
@@ -182,25 +197,55 @@
                 params.status = encodeURIComponent($('select[name=status]').val());
             },
         },
-        columns: [
-            { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
-            { data: 'nomor_transaksi' },
-            { data: 'siswa.nis_siswa' },
-            { data: 'siswa.pengguna.nm_pengguna' },
-            { data: 'keterangan', searchable: false, orderable: false },
-            { data: 'besar_pembayaran', searchable: false, orderable: false,
-                render: function(data){
-                    return 'Rp' +numeral(data).format('0,0');
+        columns: [{
+                data: 'index_table',
+                defaultContent: '',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'nomor_transaksi'
+            },
+            {
+                data: 'siswa.nis_siswa'
+            },
+            {
+                data: 'siswa.pengguna.nm_pengguna'
+            },
+            {
+                data: 'keterangan',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'besar_pembayaran',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return 'Rp' + numeral(data).format('0,0');
                 }
             },
-            { data: 'payment_code' },
-            { data: 'status', searchable: false, orderable: false },
-            { data: 'tanggal_bayar', searchable: false, orderable: false },
-            { data: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    if(!data.status){
+            {
+                data: 'payment_code'
+            },
+            {
+                data: 'status',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'tanggal_bayar',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    if (!data.status) {
                         return '';
-                    }else{
+                    } else {
                         // return '<a class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="copyToClipboard(\'' +data+ '\')">'+
                         //     '    <i class="material-icons">info_outline</i>'+
                         //     '</a> '+
@@ -209,50 +254,55 @@
                         //     '</a> ';
 
                         return ` 
-                        <button class="btn btn-warning button_open_modal" data-nama="`+data.nama+`" data-link="`+data.link+`" data-keterangan="`+data.keterangan+`" type="button" waves-effect><i class="material-icons">share</i>
+                        <button class="btn btn-warning button_open_modal" data-nama="` + data.nama + `" data-link="` +
+                            data.link + `" data-keterangan="` + data.keterangan + `" type="button" waves-effect><i class="material-icons">share</i>
                         <span>Share Link Pembayaran</span></button>
-                        <a target="_blank" href="`+data.link+`"><button class="btn btn-success waves-effect"><i class="material-icons">attach_money</i>
+                        <a target="_blank" href="` + data.link + `"><button class="btn btn-success waves-effect"><i class="material-icons">attach_money</i>
                         <span>Bayar Sekarang</span></button></a>
                         `;
                     }
                 }
             },
         ],
-        
+
     });
 
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
             primary_table.cell(cell).invalidate('dom');
-        } );
-    } ).draw();
+        });
+    }).draw();
 
 
-    function filterAction(){
+    function filterAction() {
         primary_table.ajax.reload(null, false);
     }
 
     $(document).ready(function() {
-        
-        $('#primary_table').on('click','.button_open_modal',function(){
+
+        $('#primary_table').on('click', '.button_open_modal', function() {
 
             var keterangan = $(this).data('keterangan');
             var link = $(this).data('link');
             var nama = $(this).data('nama');
-            $('#modal_share_link').modal('show');   
+            $('#modal_share_link').modal('show');
 
-            link = `berikut ini merupakan link untuk melakukan pembayaran `+keterangan+` atas nama `+nama+` `+link+` `;
+            link = `berikut ini merupakan link untuk melakukan pembayaran ` + keterangan +
+                ` atas nama ` + nama + ` ` + link + ` `;
 
             $('#copy').html(`
-                <button type="button" onclick="copyToClipboard('`+link+`')" style="margin-top: 10px;" class="btn bg-blue-grey btn-block waves-effect">
+                <button type="button" onclick="copyToClipboard('` + link + `')" style="margin-top: 10px;" class="btn bg-blue-grey btn-block waves-effect">
                     <i class="material-icons">content_copy</i> <span> Just Copy Link Pembayaran</span>
                 </button>
             `);
 
-            $("#button_wa").attr("href", "https://wa.me/?text="+link);
-            $("#button_telegram").attr("href", "https://telegram.me/share/url?url="+link);
+            $("#button_wa").attr("href", "https://wa.me/?text=" + link);
+            $("#button_telegram").attr("href", "https://telegram.me/share/url?url=" + link);
 
         })
 

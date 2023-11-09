@@ -254,7 +254,7 @@
              [25, 50, 100, 200, "All"]
          ],
          iDisplayLength: -1,
-         responsive: true,
+         responsive: false,
          ajax: {
              url: datatable_url,
              type: 'GET'

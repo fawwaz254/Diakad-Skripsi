@@ -52,12 +52,16 @@
                                     <textarea rows="10" class="form-control" name="id_siswa" required></textarea> --}}
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                    <table
+                                        class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                                        id="primary_table">
                                         <thead>
                                             <tr>
                                                 <th class="col-2">
-                                                    <input id="checkbox_select_all" type="checkbox" name="select_all" class="filled-in">
-                                                    <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
+                                                    <input id="checkbox_select_all" type="checkbox" name="select_all"
+                                                        class="filled-in">
+                                                    <label for="checkbox_select_all"
+                                                        style="margin-bottom: -10px;"></label>
                                                 </th>
                                                 <th>NIS</th>
                                                 <th>Nama Siswa</th>
@@ -113,14 +117,13 @@
         </div>
         @include('scriptjs')
         <script>
-            
-            var modul_url       = 'ijazah';
-            var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengambilan-ijazah/datatables-siswa';
+            var modul_url = 'ijazah';
+            var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengambilan-ijazah/datatables-siswa';
 
             var primary_table = $('#primary_table').DataTable({
                 processing: true,
                 // serverSide: true,
-                responsive: true,
+                responsive: false,
                 ajax: {
                     url: datatable_url,
                     type: 'GET'
@@ -129,18 +132,29 @@
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
                 ],
-                columns: [
-                { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
-                render: function (data, type, full, meta){
-                    return '<input id="checkbox-' + data.nis_siswa + '" type="checkbox" name="nis_siswa[]" class="filled-in" value="' + data.nis_siswa + '">'+
-                    '<label for="checkbox-' + data.nis_siswa + '"></label>'; 
+                columns: [{
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        searchable: false,
+                        orderable: false,
+                        render: function(data, type, full, meta) {
+                            return '<input id="checkbox-' + data.nis_siswa +
+                                '" type="checkbox" name="nis_siswa[]" class="filled-in" value="' + data
+                                .nis_siswa + '">' +
+                                '<label for="checkbox-' + data.nis_siswa + '"></label>';
 
-                }
-                },
-                { data: 'nis_siswa', name: 'nis_siswa' },
-                { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' }
+                        }
+                    },
+                    {
+                        data: 'nis_siswa',
+                        name: 'nis_siswa'
+                    },
+                    {
+                        data: 'nm_pengguna',
+                        name: 'pengguna.nm_pengguna'
+                    }
 
-            ]
+                ]
             });
 
 
@@ -162,13 +176,15 @@
                 weekStart: 1,
             });
 
-            $(document).ready(function() {        
-            /* Select All Checkbox */
-            $('input[name="select_all"]').change(function() {
-                var select_all_checked = this.checked;
-                var rows = primary_table.rows({ 'search': 'applied' }).nodes();
+            $(document).ready(function() {
+                /* Select All Checkbox */
+                $('input[name="select_all"]').change(function() {
+                    var select_all_checked = this.checked;
+                    var rows = primary_table.rows({
+                        'search': 'applied'
+                    }).nodes();
 
-                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                    $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                });
             });
-    });
         </script>

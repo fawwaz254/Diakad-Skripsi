@@ -65,7 +65,7 @@
             [25, 50, 100, 200, -1],
             [25, 50, 100, 200, "All"]
         ],
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'POST',

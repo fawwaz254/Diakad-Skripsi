@@ -2,110 +2,132 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                    {{csrf_field()}}
-                    <div class="header">
-                        @if($id == '0')
-                            <h2>Daftar Ujian Tengah Semester (UTS) - {{$semester->tahun_ajaran}} {{$semester->nm_semester}}</h2>
-                        @elseif($id == '1')
-                            <h2>Daftar Ujian Akhir Semester (UAS) -{{$semester->tahun_ajaran}} {{$semester->nm_semester}}</h2>
-                        @else
-                            <h2>Daftar Try Out - {{$semester->tahun_ajaran}} {{$semester->nm_semester}}</h2>
-                        @endif
-                    </div>
-                    <div class="body">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active">
-                                <a href="#ujian-reguler" data-toggle="tab" aria-expanded="true">
-                                    <i class="material-icons">create</i> Ujian Reguler
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#ujian-online" data-toggle="tab">
-                                    <i class="material-icons">computer</i> Ujian Online
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane fade active in" id="ujian-reguler">
-                                @if($id == '0')
-                                    <div class="block-header">
-                                        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ujian/ujian-uas-reguler-online/add/0')}}"><i class="material-icons">note_add</i><span>Tambah UTS Reguler</span></a></h2>
-                                    </div>
-                                @elseif($id == '1')
-                                    <div class="block-header">
-                                        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ujian/ujian-uas-reguler-online/add/0')}}"><i class="material-icons">note_add</i><span>Tambah UAS Reguler</span></a></h2>
-                                    </div>
-                                @else
-                                    <div class="block-header">
-                                        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ujian/try-out-reguler-online/add/0')}}"><i class="material-icons">note_add</i><span>Tambah TryOut Reguler</span></a></h2>
-                                    </div>
-                                @endif
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_reguler">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Nama Ujian</th>
-                                                <th>Jenis Ujian</th>
-                                                <th>Kode  -  Nama Mata Ajar</th>
-                                                <th>Kelas</th>
-                                                <th>Guru</th>
-                                                <th>Semester</th>
-                                                <th>Tanggal Ujian</th>
-                                                <th>Jam Mulai</th>
-                                                <th>Jam Selesai</th>
-                                                <th>Ruangan</th>
-                                                <th>Kapasitas</th>
-                                                <th>Keterangan</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                {{ csrf_field() }}
+                <div class="header">
+                    @if ($id == '0')
+                        <h2>Daftar Ujian Tengah Semester (UTS) - {{ $semester->tahun_ajaran }}
+                            {{ $semester->nm_semester }}</h2>
+                    @elseif($id == '1')
+                        <h2>Daftar Ujian Akhir Semester (UAS) -{{ $semester->tahun_ajaran }}
+                            {{ $semester->nm_semester }}</h2>
+                    @else
+                        <h2>Daftar Try Out - {{ $semester->tahun_ajaran }} {{ $semester->nm_semester }}</h2>
+                    @endif
+                </div>
+                <div class="body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#ujian-reguler" data-toggle="tab" aria-expanded="true">
+                                <i class="material-icons">create</i> Ujian Reguler
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#ujian-online" data-toggle="tab">
+                                <i class="material-icons">computer</i> Ujian Online
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="ujian-reguler">
+                            @if ($id == '0')
+                                <div class="block-header">
+                                    <h2><a class="btn bg-blue waves-effect target-link"
+                                            href="{{ url(Request::segment(1) . '#ujian/ujian-uas-reguler-online/add/0') }}"><i
+                                                class="material-icons">note_add</i><span>Tambah UTS Reguler</span></a>
+                                    </h2>
                                 </div>
+                            @elseif($id == '1')
+                                <div class="block-header">
+                                    <h2><a class="btn bg-blue waves-effect target-link"
+                                            href="{{ url(Request::segment(1) . '#ujian/ujian-uas-reguler-online/add/0') }}"><i
+                                                class="material-icons">note_add</i><span>Tambah UAS Reguler</span></a>
+                                    </h2>
+                                </div>
+                            @else
+                                <div class="block-header">
+                                    <h2><a class="btn bg-blue waves-effect target-link"
+                                            href="{{ url(Request::segment(1) . '#ujian/try-out-reguler-online/add/0') }}"><i
+                                                class="material-icons">note_add</i><span>Tambah TryOut
+                                                Reguler</span></a></h2>
+                                </div>
+                            @endif
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable display"
+                                    id="primary_table_reguler">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Ujian</th>
+                                            <th>Jenis Ujian</th>
+                                            <th>Kode - Nama Mata Ajar</th>
+                                            <th>Kelas</th>
+                                            <th>Guru</th>
+                                            <th>Semester</th>
+                                            <th>Tanggal Ujian</th>
+                                            <th>Jam Mulai</th>
+                                            <th>Jam Selesai</th>
+                                            <th>Ruangan</th>
+                                            <th>Kapasitas</th>
+                                            <th>Keterangan</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
-                            <div role="tabpanel" class="tab-pane fade" id="ujian-online">
-                                @if($id == '0')
-                                    <div class="block-header">
-                                        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ujian/ujian-uas-reguler-online/add/1')}}"><i class="material-icons">note_add</i><span>Tambah UTS Online</span></a></h2>
-                                    </div>
-                                @elseif($id == '1')
-                                    <div class="block-header">
-                                        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ujian/ujian-uas-reguler-online/add/1')}}"><i class="material-icons">note_add</i><span>Tambah UAS Online</span></a></h2>
-                                    </div>
-                                @else
-                                    <div class="block-header">
-                                        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ujian/try-out-reguler-online/add/1')}}"><i class="material-icons">note_add</i><span>Tambah TryOut Online</span></a></h2>
-                                    </div>
-                                @endif
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_online">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Nama Ujian</th>
-                                                <th>Jenis Ujian</th>
-                                                <th>Kode  -  Nama Mata Ajar</th>
-                                                <th>Kelas</th>
-                                                <th>Guru</th>
-                                                <th>Semester</th>
-                                                <th>Tanggal Ujian</th>
-                                                <th>Jam Mulai</th>
-                                                <th>Jam Selesai</th>
-                                                <th>Ruangan</th>
-                                                <th>Kapasitas</th>
-                                                <th>Keterangan</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="ujian-online">
+                            @if ($id == '0')
+                                <div class="block-header">
+                                    <h2><a class="btn bg-blue waves-effect target-link"
+                                            href="{{ url(Request::segment(1) . '#ujian/ujian-uas-reguler-online/add/1') }}"><i
+                                                class="material-icons">note_add</i><span>Tambah UTS Online</span></a>
+                                    </h2>
                                 </div>
-                            </div>         
+                            @elseif($id == '1')
+                                <div class="block-header">
+                                    <h2><a class="btn bg-blue waves-effect target-link"
+                                            href="{{ url(Request::segment(1) . '#ujian/ujian-uas-reguler-online/add/1') }}"><i
+                                                class="material-icons">note_add</i><span>Tambah UAS Online</span></a>
+                                    </h2>
+                                </div>
+                            @else
+                                <div class="block-header">
+                                    <h2><a class="btn bg-blue waves-effect target-link"
+                                            href="{{ url(Request::segment(1) . '#ujian/try-out-reguler-online/add/1') }}"><i
+                                                class="material-icons">note_add</i><span>Tambah TryOut Online</span></a>
+                                    </h2>
+                                </div>
+                            @endif
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable display"
+                                    id="primary_table_online">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Ujian</th>
+                                            <th>Jenis Ujian</th>
+                                            <th>Kode - Nama Mata Ajar</th>
+                                            <th>Kelas</th>
+                                            <th>Guru</th>
+                                            <th>Semester</th>
+                                            <th>Tanggal Ujian</th>
+                                            <th>Jam Mulai</th>
+                                            <th>Jam Selesai</th>
+                                            <th>Ruangan</th>
+                                            <th>Kapasitas</th>
+                                            <th>Keterangan</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 @include('scriptjs')
 <script>
@@ -126,7 +148,7 @@
     var primary_table_online = $('#primary_table_online').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_online_url,
             type: 'GET'
@@ -221,7 +243,7 @@
     var primary_table_reguler = $('#primary_table_reguler').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_reguler_url,
             type: 'GET'

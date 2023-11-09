@@ -85,7 +85,7 @@
         ],
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'GET',

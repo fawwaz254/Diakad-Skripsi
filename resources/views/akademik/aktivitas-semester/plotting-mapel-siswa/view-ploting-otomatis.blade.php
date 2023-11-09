@@ -134,7 +134,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         "pageLength": 100,
         ajax: {
             url: datatable_url,
