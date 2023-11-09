@@ -282,7 +282,7 @@ class ManajemenMateriAjarController extends BaseController
 
         return Datatables::of($list_data)
             ->addColumn('mapel', function ($item) {
-                return $item->mapel->nm_mata_pelajaran;
+                return $item->mata_pelajaran->nm_mata_pelajaran;
             })
             ->addColumn('jumlah', function ($item) {
                 $data = array(
@@ -292,7 +292,7 @@ class ManajemenMateriAjarController extends BaseController
                 );
                 return $data;
                 // $jumlah = MateriAjarView::where('id_materi_ajar')->
-                // return $item->mapel->nm_mata_pelajaran;
+                // return $item->mata_pelajaran->nm_mata_pelajaran;
             })
             ->addColumn('action', function ($item) {
 

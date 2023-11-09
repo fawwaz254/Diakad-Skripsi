@@ -105,7 +105,7 @@ class MateriAjarController extends BaseController
 
         return Datatables::of($list_data)
             ->addColumn('mapel', function ($item) {
-                return $item->mapel->nm_mata_pelajaran;
+                return $item->mata_pelajaran->nm_mata_pelajaran;
             })
             ->addColumn('guru', function ($item) {
                 return $item->guru->pengguna->nm_pengguna;
