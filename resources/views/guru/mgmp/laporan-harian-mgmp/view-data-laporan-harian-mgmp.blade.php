@@ -11,7 +11,15 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>Data Laporan Kerja Harian</h2>
+                    <div style="float:left;">
+                        <h2>Data Laporan Kerja Harian</h2>
+                    </div>
+                    <a style="float:right;" class="btn btn-success btn-circle waves-effect waves-circle float-right"
+                        href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/cetak') }}" target="_blank">
+                        <i class="material-icons">picture_as_pdf</i>
+                    </a>
+
+                    <div class="spacer" style="clear: both;"></div>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
