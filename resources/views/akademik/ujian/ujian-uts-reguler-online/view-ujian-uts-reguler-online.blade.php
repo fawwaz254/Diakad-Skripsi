@@ -148,7 +148,7 @@
     var primary_table_online = $('#primary_table_online').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_online_url,
             type: 'GET'
@@ -243,7 +243,7 @@
     var primary_table_reguler = $('#primary_table_reguler').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_reguler_url,
             type: 'GET'

@@ -57,7 +57,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        // responsive: true,
+        // responsive: false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,

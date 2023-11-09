@@ -7,8 +7,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -16,8 +15,8 @@
                                     <th>Nama Kegiatan</th>
                                     <th>Aktif/Non-Aktif</th>
                                     <th>Jumlah Data</th>
-                                    <th  style="text-align: center;">Guru/Tendik</th>
-                                    <th  style="text-align: center;">Siswa</th>
+                                    <th style="text-align: center;">Guru/Tendik</th>
+                                    <th style="text-align: center;">Siswa</th>
                                 </tr>
                             </thead>
                         </table>
@@ -28,49 +27,71 @@
     </div>
 </div>
 <script>
-    var modul_url       = '{{Request::segment(2)}}';
-    var menu_url       = '{{Request::segment(3)}}';
+    var modul_url = '{{ Request::segment(2) }}';
+    var menu_url = '{{ Request::segment(3) }}';
 
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
     // var edit_url        = role_url + '#' + modul_url + '/' + menu_url + '/edit';
-    var gurutendik_url      = role_url + '#' + modul_url + '/' + menu_url + '/rekap-guru-tendik';
-    var siswa_url           = role_url + '#' + modul_url + '/' + menu_url + '/rekap-siswa'
+    var gurutendik_url = role_url + '#' + modul_url + '/' + menu_url + '/rekap-guru-tendik';
+    var siswa_url = role_url + '#' + modul_url + '/' + menu_url + '/rekap-siswa'
     // var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
-// alert(gurutendik_url);
+    // alert(gurutendik_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'POST'
         },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'nm_kegiatan_harian' },
-            { data: 'is_aktif' },
-           {data: 'jumlah'},
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return '<center><a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ gurutendik_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">visibility</i>'+
-                    '</a> </center>';
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'nm_kegiatan_harian'
+            },
+            {
+                data: 'is_aktif'
+            },
+            {
+                data: 'jumlah'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<center><a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        gurutendik_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">visibility</i>' +
+                        '</a> </center>';
                 }
             },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return '<center><a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ siswa_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">visibility</i>'+
-                    '</a></center> ';
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<center><a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        siswa_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">visibility</i>' +
+                        '</a></center> ';
                 }
             }
         ]
     });
 
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
+        });
+    }).draw();
 </script>

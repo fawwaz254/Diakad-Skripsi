@@ -1,8 +1,15 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa')}}"><span>Pembayaran by tanggal</span></a>
-        <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa/bulanan')}}"><span>Pembayaran bulanan</span></a>
-        <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa/tahunan')}}"><span>Pembayaran Tahunan</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#laporan-keuangan/pembayaran-siswa') }}"><span>Pembayaran by
+                    tanggal</span></a>
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#laporan-keuangan/pembayaran-siswa/bulanan') }}"><span>Pembayaran
+                    bulanan</span></a>
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#laporan-keuangan/pembayaran-siswa/tahunan') }}"><span>Pembayaran
+                    Tahunan</span></a>
+        </h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -18,7 +25,8 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Tanggal Mulai</label>
-                                    <input type="text" class="datepicker form-control" name="start_date" value="{{\Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->format('Y-m-d')}}">
+                                        <input type="text" class="datepicker form-control" name="start_date"
+                                            value="{{ \Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->format('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
@@ -26,20 +34,24 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Tanggal Selesai</label>
-                                    <input type="text" class="datepicker form-control" name="end_date" value="{{\Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->format('Y-m-d')}}">
+                                        <input type="text" class="datepicker form-control" name="end_date"
+                                            value="{{ \Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->format('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
+                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i
+                                    class="material-icons">save</i><span>Filter</span></button>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-orange waves-effect" onclick="printSimpleAction()"><i class="material-icons">print</i><span>Print Data Pembayaran (simple)</span></button>
+                            <button class="btn btn-block bg-orange waves-effect" onclick="printSimpleAction()"><i
+                                    class="material-icons">print</i><span>Print Data Pembayaran (simple)</span></button>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-red waves-effect" onclick="printDetailAction()"><i class="material-icons">print</i><span>Print Data Pembayaran (detail)</span></button>
+                            <button class="btn btn-block bg-red waves-effect" onclick="printDetailAction()"><i
+                                    class="material-icons">print</i><span>Print Data Pembayaran (detail)</span></button>
                         </div>
                     </div>
                 </div>
@@ -54,7 +66,9 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                            id="primary_table">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -83,7 +97,7 @@
     </div>
 </div>
 <script>
-    $(function(){    
+    $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
             //lang : 'id',
@@ -94,67 +108,87 @@
     });
 </script>
 <script>
-    var modul_url               = 'laporan-keuangan';
-    var datatable_url_belum     = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/datatables';
+    var modul_url = 'laporan-keuangan';
+    var datatable_url_belum = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/datatables';
     var print_simple_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/print-simple';
     var print_detail_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/print-detail';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url_belum,
             type: 'GET',
-            data: function(params){
+            data: function(params) {
                 params.start_date = encodeURIComponent($('input[name=start_date]').val());
                 params.end_date = encodeURIComponent($('input[name=end_date]').val());
             },
         },
-        columns: [
-            { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
-            { data: 'tanggal_bayar', name:'tgl_pembayaran', searchable: false },
-            { data: 'tagihan_biaya.siswa.nis_siswa' },
-            { data: 'tagihan_biaya.siswa.pengguna.nm_pengguna' },
-            { data: 'keterangan_bayar', searchable: false, orderable: false },
-            { data: 'besar_pembayaran',
-                render: function(data){
-                    return 'Rp' +numeral(data).format('0,0');
+        columns: [{
+                data: 'index_table',
+                defaultContent: '',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'tanggal_bayar',
+                name: 'tgl_pembayaran',
+                searchable: false
+            },
+            {
+                data: 'tagihan_biaya.siswa.nis_siswa'
+            },
+            {
+                data: 'tagihan_biaya.siswa.pengguna.nm_pengguna'
+            },
+            {
+                data: 'keterangan_bayar',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'besar_pembayaran',
+                render: function(data) {
+                    return 'Rp' + numeral(data).format('0,0');
                 }
             },
         ],
-        fnDrawCallback: function ( row, data, start, end, display ) {
+        fnDrawCallback: function(row, data, start, end, display) {
             var api = this.api();
             var json = api.ajax.json();
-            $( api.column( 4 ).footer() ).html(
+            $(api.column(4).footer()).html(
                 'Total Pembayaran'
             );
-            $( api.column( 5 ).footer() ).html(
-                'Rp'+numeral(json.total).format('0,0')
+            $(api.column(5).footer()).html(
+                'Rp' + numeral(json.total).format('0,0')
             );
         }
     });
 
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
             primary_table.cell(cell).invalidate('dom');
-        } );
-    } ).draw();
+        });
+    }).draw();
 
 
-    function filterAction(){
+    function filterAction() {
         primary_table.ajax.reload(null, false);
     }
 
-    function printSimpleAction(){
+    function printSimpleAction() {
         $('button').attr('disabled', 'disabled');
         var start_date = $('input[name=start_date]').val();
         var end_date = $('input[name=end_date]').val();
         console.log(start_date, end_date);
-        
-        if(start_date == null || end_date == null || start_date == '' || end_date == ''){
+
+        if (start_date == null || end_date == null || start_date == '' || end_date == '') {
             vex.dialog.alert("Tanggal Mulai atau Tanggal Selesai yang dipilih tidak valid");
             $('button').removeAttr('disabled', 'disabled');
         } else {
@@ -162,14 +196,14 @@
             window.open(print_simple_url + '/' + start_date + '/' + end_date, "_blank");
         }
     }
-    
-    function printDetailAction(){
+
+    function printDetailAction() {
         $('button').attr('disabled', 'disabled');
         var start_date = $('input[name=start_date]').val();
         var end_date = $('input[name=end_date]').val();
         console.log(start_date, end_date);
-        
-        if(start_date == null || end_date == null || start_date == '' || end_date == ''){
+
+        if (start_date == null || end_date == null || start_date == '' || end_date == '') {
             vex.dialog.alert("Tanggal Mulai atau Tanggal Selesai yang dipilih tidak valid");
             $('button').removeAttr('disabled', 'disabled');
         } else {

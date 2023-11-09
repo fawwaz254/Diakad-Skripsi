@@ -76,14 +76,14 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        // responsive: true,
+        // responsive: false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET',
-            data:function(d){
+            data: function(d) {
                 d.alumni = $('#alumni').val()
             }
         },

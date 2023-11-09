@@ -97,7 +97,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url_prestasi,
             type: 'GET'
@@ -229,7 +229,7 @@
     var primary_table2 = $('#primary_table2').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url_kegiatan,
             type: 'GET'
