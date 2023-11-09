@@ -57,17 +57,35 @@
             
             </thead>
             <tbody>
-            @foreach ($list_data as $item)
-            <tr>
-                <th scope="row">{{ $loop->iteration }}</th>
-                <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
-                <td>{!! nl2br($item->keterangan_progres) !!}</td>
-                <td>{{ $item->jenis }}</td>
-                <td>{{ $item->mata_pelajaran->category_file_name }}</td>
-                <td>{{ $item->status == 1 ? 'Tuntas' : 'Belum Tuntas' }}</td>
-            </tr>
-            @endforeach
-            </tbody>
+                @foreach ($list_data as $item)
+                    <tr>
+                        <th scope="row">{{ $loop->iteration }}</th>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
+                        <td>{!! nl2br($item->keterangan_progres) !!}</td>
+                        <td>{{ $item->jenis }}</td>
+                        
+                        @php
+                            $foundCategory = false;
+                        @endphp
+            
+                        @foreach ($category_file_mgmp as $category)
+                            @if ($category->category_file_mgmp_id == $item->mapel)
+                                <td>{{ $category->category_file_name }}</td>
+                                @php
+                                    $foundCategory = true;
+                                @endphp
+                                @break
+                            @endif
+                        @endforeach
+
+                        @if (!$foundCategory)
+                            <td>{{ $item->mapel }}</td>
+                        @endif
+            
+                        <td>{{ $item->status == 1 ? 'Tuntas' : 'Belum Tuntas' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>            
         </table>
     </div>
 
