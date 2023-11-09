@@ -34,12 +34,23 @@
                              </div>
                              <div class="col-md-6 col-sm-12 col-xs-12">
                                  <h2 class="card-inside-title">
-                                     Semester
+                                     Tahun Ajaran
                                  </h2>
-                                 <select class="form-control show-tick" name="id_semester">
-                                     <option value="" disabled selected>-- Pilih Semester --</option>
+                                 <select class="form-control show-tick" name="thn_akademik_semester">
+                                     {{-- <option value="" disabled selected>-- Pilih Semester --</option> --}}
                                      @foreach ($data_semester as $data)
-                                         @if ($data->id_semester == $id_semester)
+                                         <option value="{{ $data->thn_akademik_semester }}"
+                                             @if ($data->thn_akademik_semester == $thn_akademik_semester) selected @endif>
+                                             {{ $data->tahun_ajaran }}
+                                             @if ($data->thn_akademik_semester == $data_semester_aktif->thn_akademik_semester)
+                                                 (Aktif)
+                                             @endif
+                                         </option>
+                                         {{-- @else --}}
+                                         {{-- <option value="{{ $data->tahun_ajaran }}">{{ $data->tahun_ajaran }}
+                                             </option> --}}
+
+                                         {{-- @if ($data->id_semester == $id_semester)
                                              @if ($data->is_aktif_semester == 1)
                                                  <option value="{{ $data->id_semester }}" selected>
                                                      {{ $data->tahun_ajaran }} {{ $data->nm_semester }} (Aktif)
@@ -56,7 +67,7 @@
                                                  <option value="{{ $data->id_semester }}">{{ $data->tahun_ajaran }}
                                                      {{ $data->nm_semester }}</option>
                                              @endif
-                                         @endif
+                                         @endif --}}
                                      @endforeach
                                  </select>
                              </div>
@@ -129,24 +140,29 @@
                          <div class="row clearfix"> --}}
                              <div class="col-md-6 col-sm-12 col-xs-12">
                                  <h2 class="card-inside-title">
-                                     Insert/Replace Tagihan <small>* REPLACE digunakan untuk menghapus Tagihan Lama dan
+                                     Insert / Sync Tagihan
+                                     {{-- <small>* REPLACE digunakan untuk menghapus Tagihan Lama dan
                                          mengganti dengan Tagihan Baru <br>
-                                         * UPDATE digunakan untuk memperbarui tagihan yg belum terbayar</small>
+                                         * UPDATE digunakan untuk memperbarui tagihan yg belum terbayar</small> --}}
                                  </h2>
                                  <select class="form-control show-tick" name="is_insert_replace">
-                                     @if ($is_insert_replace == '1')
-                                         <option value="1" selected>Insert Tagihan</option>
-                                         <!-- <option value="2">Replace Tagihan</option> -->
-                                         <option value="3">Update Tagihan</option>
-                                     @elseif($is_insert_replace == '2')
-                                         <option value="1">Insert Tagihan</option>
-                                         <!-- <option value="2" selected >Replace Tagihan</option> -->
-                                         <option value="3">Update Tagihan</option>
-                                     @elseif($is_insert_replace == '3')
-                                         <option value="1">Insert Tagihan</option>
-                                         <!-- <option value="2" >Replace Tagihan</option> -->
-                                         <option value="3" selected>Update Tagihan</option>
-                                     @endif
+                                     {{-- @if ($is_insert_replace == '1') --}}
+                                     <option value="1" @if ($is_insert_replace == '1') selected @endif>Insert
+                                         Tagihan</option>
+                                     <option value="4" @if ($is_insert_replace == '4') selected @endif>Sync
+                                         Tagihan</option>
+
+                                     <!-- <option value="2">Replace Tagihan</option> -->
+                                     {{-- <option value="3">Update Tagihan</option>
+                                     @elseif($is_insert_replace == '2') --}}
+                                     {{-- <option value="1">Insert Tagihan</option> --}}
+                                     <!-- <option value="2" selected >Replace Tagihan</option> -->
+                                     {{-- <option value="3">Update Tagihan</option> --}}
+                                     {{-- @elseif($is_insert_replace == '3') --}}
+                                     {{-- <option value="1">Insert Tagihan</option> --}}
+                                     <!-- <option value="2" >Replace Tagihan</option> -->
+                                     {{-- <option value="3" selected>Update Tagihan</option> --}}
+                                     {{-- @endif --}}
                                  </select>
                              </div>
                          </div>
@@ -198,8 +214,8 @@
                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                  <input type="hidden" class="form-control" name="id_kelas" required=""
                                      aria-required="true" aria-invalid="true" value="{{ $id_kelas }}">
-                                 <input type="hidden" class="form-control" name="id_semester" required=""
-                                     aria-required="true" aria-invalid="true" value="{{ $id_semester }}">
+                                 <input type="hidden" class="form-control" name="thn_akademik_semester" required=""
+                                     aria-required="true" aria-invalid="true" value="{{ $thn_akademik_semester }}">
                                  <input type="hidden" class="form-control" name="id_kelompok_biaya" required=""
                                      aria-required="true" aria-invalid="true" value="{{ $id_kelompok_biaya }}">
                                  <input type="hidden" class="form-control" name="id_jalur" required=""
@@ -221,14 +237,14 @@
      // var modul_url = location.hash.replace('#','').split('/')[0];
 
      var id_kelas = {!! json_encode($id_kelas) !!};
-     var id_semester = {!! json_encode($id_semester) !!};
+     var thn_akademik_semester = {!! json_encode($thn_akademik_semester) !!};
      var id_kelompok_biaya = {!! json_encode($id_kelompok_biaya) !!};
      var id_jalur = {!! json_encode($id_jalur) !!};
      var is_insert_replace = {!! json_encode($is_insert_replace) !!};
 
      var modul_url = 'utility';
      var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tagihan-siswa/datatables/' +
-         id_kelas + '/' + id_semester + '/' + id_kelompok_biaya + '/' + id_jalur + '/' + is_insert_replace;
+         id_kelas + '/' + thn_akademik_semester + '/' + id_kelompok_biaya + '/' + id_jalur + '/' + is_insert_replace;
 
      var primary_table = $('#primary_table').DataTable({
          processing: true,
