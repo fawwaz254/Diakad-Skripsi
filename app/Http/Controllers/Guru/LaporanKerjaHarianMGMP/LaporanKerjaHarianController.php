@@ -200,7 +200,7 @@ class LaporanKerjaHarianController extends Controller
                 return Carbon::parse($item->tanggal)->format('d M Y');
             })
             ->addColumn('mapel', function ($item) {
-                return isset($item->mapel->category_file_name) ? $item->mapel->category_file_name : '-';
+                return isset($item->mata_pelajaran->category_file_name) ? $item->mata_pelajaran->category_file_name : '-';
             })
             ->addColumn('action', function ($item) {
                 if ($item->path_file) {
@@ -329,7 +329,7 @@ class LaporanKerjaHarianController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LaporanKerjaHarianMGMP::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
+        $list_data = LaporanKerjaHarianMGMP::with('mata_pelajaran')->where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
         ->orderBy('tanggal', 'DESC')
         ->get();
 

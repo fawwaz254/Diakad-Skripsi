@@ -47,12 +47,12 @@
                 <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">No.</th>
                 <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">Tanggal</th>
                 <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">Urian Kegiatan</th>
-                <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">Status</th>
                 <th scope="col" colspan="2" style="vertical-align:middle;text-align:center;">Kategori</th>
+                <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">Status</th>
             </tr>
             <tr>
                 <th scope="col" style="vertical-align:middle;text-align:center;">Jenis</th>
-                <th scope="col" style="vertical-align:middle;text-align:center;">Mapel</th>
+                <th scope="col" style="vertical-align:middle;text-align:center;">Mata Pelajaran</th>
             </tr>
             
             </thead>
@@ -62,9 +62,9 @@
                 <th scope="row">{{ $loop->iteration }}</th>
                 <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
                 <td>{!! nl2br($item->keterangan_progres) !!}</td>
-                <td>{{ $item->status == 1 ? 'Tuntas' : 'Belum Tuntas' }}</td>
                 <td>{{ $item->jenis }}</td>
-                <td>{{ $item->mapel }}</td>
+                <td>{{ $item->mata_pelajaran->category_file_name }}</td>
+                <td>{{ $item->status == 1 ? 'Tuntas' : 'Belum Tuntas' }}</td>
             </tr>
             @endforeach
             </tbody>
