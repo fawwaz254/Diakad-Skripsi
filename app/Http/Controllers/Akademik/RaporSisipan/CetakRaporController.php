@@ -23,6 +23,7 @@ use App\Models\KelasSisipan;
 use App\Models\KelompokPribadiSisipan;
 use App\Models\KelompokSisipan;
 use App\Models\Kurikulum;
+use App\Models\MataPelajaranSisipan;
 use App\Models\NilaiPribadiSisipan;
 use App\Models\PribadiSisipan;
 use App\Models\RaporSisipanDeskripsi;
@@ -42,6 +43,46 @@ use Validator;
 class CetakRaporController extends Controller
 {
 
+
+    public function updateCetakRapor(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $kelas = Kelas::where('is_aktif', '1')->get();
+
+
+        foreach ($kelas as $k) {
+
+            $kelas_sisipan = KelasSisipan::with('mata_pelajaran_sisipan')->where('id_kelas', $k->id_kelas)->get();
+
+            $rapor_sisipan = RaporSisipan::where('id_semester', $semester_aktif->id_semester)->where('id_kelas', $k->id_kelas)->get();
+
+            $mata_pelajaran_sisipan = MataPelajaranSisipan::whereIn('id_mata_pelajaran_sisipan', $kelas_sisipan->pluck('id_mata_pelajaran_sisipan'))->get();
+
+            foreach ($rapor_sisipan as $r) {
+                $cek = $kelas_sisipan->where('id_kelas', $r->id_kelas)->where('mata_pelajaran_sisipan.id_mata_pelajaran', $r->id_mata_pelajaran)->first();
+                if ($cek) { } else {
+                    $mata_pelajaran = MataPelajaran::where('id_mata_pelajaran', $r->id_mata_pelajaran)->first();
+                    if ($mata_pelajaran) {
+                        $mapel =  MataPelajaran::whereIn('id_mata_pelajaran', $mata_pelajaran_sisipan->pluck('id_mata_pelajaran'))->where('nm_mata_pelajaran',  $mata_pelajaran->nm_mata_pelajaran)->first();
+                        if ($mapel) {
+                            $r->id_mata_pelajaran = $mapel->id_mata_pelajaran;
+                            $r->updated_by = 'syahrul update';
+                            $r->save();
+                        } else {
+                            // return $r->id_rapor_sisipan;
+                        }
+                    }
+                    // return $r->id_rapor_sisipan;
+                }
+            }
+        }
+
+
+        return 'sukses';
+    }
     public function viewCetakRapor(Request $request)
     {
         $input = (object) $request->input();
