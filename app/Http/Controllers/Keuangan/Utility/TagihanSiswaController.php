@@ -251,6 +251,10 @@ class TagihanSiswaController extends BaseController
                                         }
                                     }
 
+                                    if ($tagihan_set->is_tagih == '0') {
+                                        $tagihan_set->besar_pembayaran = $detail_biaya->besar_biaya;
+                                    }
+
                                     if (!empty($pembayaran)) { // kalau pembayaran ditemukan maka update
                                         $pembayaran->besar_pembayaran = $detail_biaya->besar_biaya;
                                         $pembayaran->save();
