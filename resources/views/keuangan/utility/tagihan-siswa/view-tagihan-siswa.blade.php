@@ -28,17 +28,19 @@
                             </div>
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Semester
+                                    Tahun Ajaran
                                 </h2>
-                                <select class="form-control show-tick" name="id_semester">
-                                    <option value="" disabled selected>-- Pilih Semester --</option>
+                                <select class="form-control show-tick" name="thn_akademik_semester">
+                                    {{-- <option value="" disabled selected>-- Tahun Ajaran --</option> --}}
                                     @foreach ($data_semester as $data)
-                                        @if ($data->is_aktif_semester == 1)
-                                            <option value="{{ $data->id_semester }}" selected>{{ $data->tahun_ajaran }}
-                                                {{ $data->nm_semester }} (Aktif)</option>
+                                        @if ($data->thn_akademik_semester == $data_semester_aktif->thn_akademik_semester)
+                                            <option value="{{ $data->thn_akademik_semester }}" selected>
+                                                {{ $data->tahun_ajaran }}
+                                                (Aktif)
+                                            </option>
                                         @else
-                                            <option value="{{ $data->id_semester }}">{{ $data->tahun_ajaran }}
-                                                {{ $data->nm_semester }}</option>
+                                            <option value="{{ $data->thn_akademik_semester }}">{{ $data->tahun_ajaran }}
+                                            </option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -77,15 +79,16 @@
                         <div class="row clearfix"> --}}
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Insert/Replace Tagihan
-                                    <small>* REPLACE digunakan untuk menghapus Tagihan Lama dan mengganti dengan Tagihan
+                                    Insert / Sync Tagihan
+                                    {{-- <small>* REPLACE digunakan untuk menghapus Tagihan Lama dan mengganti dengan Tagihan
                                         Baru <br>
-                                        * UPDATE digunakan untuk memperbarui Tagihan yang BELUM TERBAYAR</small>
+                                        * Sync digunakan untuk memperbarui Nilai Tagihan</small> --}}
                                 </h2>
                                 <select class="form-control show-tick" name="is_insert_replace">
                                     <option value="1">Insert Tagihan</option>
                                     <!-- <option value="2">Replace Tagihan</option> -->
-                                    <option value="3">Update Tagihan</option>
+                                    {{-- <option value="3">Update Tagihan</option> --}}
+                                    <option value="4">Sync Tagihan</option>
                                 </select>
                             </div>
                         </div>
