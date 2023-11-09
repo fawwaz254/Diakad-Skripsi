@@ -96,6 +96,15 @@ class KomponenMataPelajaranController extends Controller
         return view('akademik/rapor-sisipan/komponen-mata-pelajaran/add-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'mata_pelajaran', 'kelompok_sisipan', 'id_kelas'));
     }
 
+    public function copyKomponenMataPelajaran(Request $request, $id_kelas)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelas = Kelas::where('is_aktif', '1')->get();
+        $kelas_sisipan = KelasSisipan::get();
+        return view('akademik/rapor-sisipan/komponen-mata-pelajaran/copy-komponen-mata-pelajaran', compact('auth_data', 'kelas',  'id_kelas', 'kelas_sisipan'));
+    }
+
     public function actionKomponenMataPelajaran(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
@@ -109,7 +118,7 @@ class KomponenMataPelajaranController extends Controller
 
         $validator = Validator::make($request->all(), $list_validator);
 
-        if ($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete' && $mode != 'copy') {
 
             return [
                 'status' => 300, // FAILED
@@ -166,6 +175,22 @@ class KomponenMataPelajaranController extends Controller
                     'status' => 203, // SUCCESS AND LOAD TABLE
                     'message' => 'Delete Data Jenis succesfully'
 
+                ];
+            } elseif ($mode == 'copy') {
+                $kelas_sisipans = KelasSisipan::where('id_kelas', $input->id_kelas)->get();
+                foreach ($kelas_sisipans as $kelas_sisipan) {
+                    $k = new KelasSisipan;
+                    $k->id_kelas_sisipan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $k->id_kelas = $input->kelas;
+                    $k->id_mata_pelajaran_sisipan = $kelas_sisipan->id_mata_pelajaran_sisipan;
+                    $k->created_by =  $input->auth_data->pengguna->id_pengguna;
+                    $k->save();
+                }
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'rapor-sisipan/komponen-mata-pelajaran/detail/' . $input->kelas,
+                    'message' => 'Save Data List Form Succesfully'
                 ];
             }
         }

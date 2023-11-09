@@ -59,22 +59,30 @@ class RaporSisipanController extends Controller
             $id_semester = $input->id_semester;
         }
 
-
-        $list_data = RaporSisipan::where('id_semester', $id_semester)->with(['nilai_rapor_sisipan' => function ($q) {
-            $q->where('nilai', '!=', '0');
-        }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester'])->orderBy('created_at', 'desc');
-
         $siswa = Siswa::whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->get();
 
+
+
+        $list_data = RaporSisipan::where('id_semester', $id_semester)
+            // ->with(['nilai_rapor_sisipan' => function ($q) {
+            //     $q->where('nilai', '!=', '0');
+            // }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester'])
+            ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
+            ->withCount(['nilai_rapor_sisipan' => function ($q) {
+                $q->where('nilai', '!=', 0);
+            }])
+            ->orderBy('created_at', 'desc');
+
+
+
         $komponen = KomponenNilaiRaporSisipan::where('type', '!=', 'uas')->count();
 
         return Datatables::of($list_data)
-            ->addColumn('jumlah', function ($item) use ($siswa, $komponen) {
-                $nilaiLengkap =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count() * $komponen;
-                $nilaiTerisi = $item->nilai_rapor_sisipan->count();
-
+            ->addColumn('jumlah', function ($item) use ($komponen) {
+                $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
+                $nilaiTerisi = $item->nilai_rapor_sisipan_count;
                 if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
                     $hasil = '0%';
                 } else {

@@ -42,6 +42,7 @@ use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaPondokController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaSholatController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\FormBuilder\ListFormController;
+use App\Http\Controllers\Humas\FormBuilder\RekapFormHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
@@ -67,6 +68,21 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('pertanyaan/add/{jenis_pertanyaan}/{id_form}', [ListFormController::class, 'viewAddPertanyaanForm']);
                 Route::get('pertanyaan/edit/{jenis_pertanyaan}/{id_form}/{id_pertanyaan_form}', [ListFormController::class, 'viewEditPertanyaanForm']);
                 Route::post('pertanyaan/action-pertanyaan-form/{mode}/{id}', [ListFormController::class, 'actionPertanyaanForm']);
+            });
+
+            //test
+
+            Route::prefix('rekap-form')->group(function () {
+                Route::get('/', [RekapFormHarianController::class, 'viewListRekapFormHarian']);
+                Route::get('datatables', [RekapFormHarianController::class, 'datatablesListRekapFormHarian']);
+
+                Route::get('rekap-harian-form-harian/{id_form}', [RekapFormHarianController::class, 'viewHarianFormHarian']);
+                Route::get('rekap-harian-form-harian/{id_form}/{date}/{id_kelas}', [RekapFormHarianController::class, 'viewHarianFormHarian']);
+
+                Route::get('rekap-bulanan-form-harian/{id_form}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);
+                Route::get('rekap-bulanan-form-harian/{id_form}/{bulan}/{tahun}/{id_kelas}/{id_pertanyaan}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);
+                Route::post('get-detail-jawaban', [RekapFormHarianController::class, 'getDetailJawaban']);
+                Route::get('detail-jawaban/{id_form}', [RekapFormHarianController::class, 'viewDetailJawaban']);
             });
         });
 

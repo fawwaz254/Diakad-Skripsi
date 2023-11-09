@@ -343,8 +343,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('absensi-siswa/view-kbm-barcode/{id_kelas_mp}/{pertemuan_ke}', [PresensiQrCodeController::class, 'viewKBMAbsensiSiswaBarcode']);
             Route::post('post-kbm-absensi-siswa-barcode', [PresensiQrCodeController::class, 'actionKBMAbsensiSiswaBarcode']);
 
-
-
             Route::post('post-uts-absensi-siswa', [AbsensiSiswaController::class, 'actionViewUTSAbsensiSiswa']);
             Route::get('absensi-siswa/view-uts/{id_ujian_mp}', [AbsensiSiswaController::class, 'viewUTSAbsensiSiswa']);
             Route::get('absensi-siswa/datatables-uts/{id_ujian_mp}', [AbsensiSiswaController::class, 'datatablesUTSAbsensiSiswa']);
@@ -382,8 +380,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', [RekapAbsenTanpaJadwalController::class, 'printKBMRekapAbsenTanpaJadwal']);
 
             //Presensi Qrcode
-            Route::get('absensi-kode-qr', [PresensiQrCodeController::class, 'viewPresensiQr']);
-            Route::post('absensi-kode-qr/result', [PresensiQrCodeController::class, 'resultPresensiQr']);
+            // Route::get('absensi-kode-qr', [PresensiQrCodeController::class, 'viewPresensiQr']);
+            // Route::post('absensi-kode-qr/result', [PresensiQrCodeController::class, 'resultPresensiQr']);
 
 
             // Presensi Barcode

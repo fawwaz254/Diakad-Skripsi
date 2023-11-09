@@ -119,7 +119,7 @@ class InputFormHarianController extends Controller
                         }
                         $detail_jawaban_form->jawaban = json_encode($jawaban);
                     }
-                    $detail_jawaban_form->created_by = $auth_data->sekolah_data->nm_singkat_sekolah;
+                    $detail_jawaban_form->created_by = $auth_data->pengguna->id_pengguna;
                     $detail_jawaban_form->save();
                 }
 

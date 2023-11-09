@@ -231,7 +231,7 @@
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah'] != '0' ? number_format($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah']) : '' }}
                                         </td>
                                         <td style="text-align: center;font-weight: bold;">
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts'] }}
+                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts'] : '' }}
 
                                         </td>
                                         <td style="text-align: center;font-weight: bold;">
@@ -270,10 +270,10 @@
                         {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '1']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '1'] : '0' }}
                         hari<br>
                         :
-                        {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '1']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '2'] : '0' }}
+                        {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '2']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '2'] : '0' }}
                         hari<br>
                         :
-                        {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '1']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '3'] : '0' }}
+                        {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '3']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '3'] : '0' }}
                         hari</td>
                     <td style="border-style : hidden;"><br>
                         <p style="width: 300px;
@@ -313,9 +313,12 @@
                     <td align="center" style="border-style : hidden; position: relative;">Mengetahui<br>Kepala
                         Sekolah,
                         <img style="position: absolute; margin-left:-140px "
-                            src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="160px" height="160px"
+                            src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="200px" height="200px"
                             class="ttd">
                         <br><br><br><br><br>
+                        <br>
+                        <br>
+                        <br>
                         <u><b>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</b></u>
                     </td>

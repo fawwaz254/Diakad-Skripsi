@@ -38,7 +38,7 @@ class Form extends Model
 
     public function pertanyaan_form()
     {
-        return $this->hasMany(PertanyaanForm::class, 'id_form');
+        return $this->hasMany(PertanyaanForm::class, 'id_form')->orderBy('urutan', 'asc');
     }
 
     public function jawaban_form()

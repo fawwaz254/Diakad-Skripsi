@@ -137,8 +137,11 @@
                     </th>
                     @if (count($data_ket_tagihan) > 0)
                         <th class="text-center" colspan="{{ count($data_ket_tagihan) }}">
-                            {{ $data_ket_tagihan[0]->nm_biaya }}</th>
+                            Non-SPP</th>
                     @endif
+                    <th rowspan="2" style="vertical-align:middle;text-align: center;color:black">
+                        Total Tagihan</th>
+
                 </tr>
                 <tr>
                     @foreach ($data_bulan_tagihan as $bulan)
@@ -149,7 +152,7 @@
                         @endif
                     @endforeach
                     @foreach ($data_ket_tagihan as $ket)
-                        <td style="width:67px; text-align: center; " class="tdbg">{!! $ket->title_biaya !!}</td>
+                        <td style="width:67px; text-align: center; " class="tdbg">{!! $ket->keterangan !!}</td>
                     @endforeach
                 </tr>
             </thead>
@@ -182,7 +185,7 @@
                                 @php
                                     $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
                                 @endphp
-                                <td style="vertical-align:middle;text-align: center;"></td>
+                                <td style="vertical-align:middle;text-align: center;">{{ $tagihan_bulanan }}</td>
                             @elseif($tagihan->is_tagih == 0)
                                 <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
                                     style="vertical-align:middle;text-align: center;">
@@ -198,7 +201,10 @@
                         @php
                             $tagihan = $data_tagihan_non_bulanan
                                 ->where('id_siswa', $siswa->id_siswa)
-                                ->where('id_detail_biaya', $ket->id_detail_biaya)
+                                // ->where('id_detail_biaya', $ket->id_detail_biaya)
+                                // ->where('title_biaya', $ket->title_biaya)
+                                ->where('keterangan', $ket->keterangan)
+
                                 ->first();
                         @endphp
                         @if (!empty($tagihan) > 0)
@@ -206,7 +212,7 @@
                                 @php
                                     $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
                                 @endphp
-                                <td style="vertical-align:middle;text-align: center;"></td>
+                                <td style="vertical-align:middle;text-align: center;">{{ $tagihan_bulanan }}</td>
                             @elseif($tagihan->is_tagih == 0)
                                 <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
                                     style="vertical-align:middle;text-align: center;">
@@ -218,6 +224,21 @@
                             <td></td>
                         @endif
                     @endforeach
+                    @php
+                        $total_tagihan_spp = $data_tagihan->where('id_siswa', $siswa->id_siswa);
+
+                        $total_tagihan = 0;
+                        foreach ($total_tagihan_spp as $tagihan) {
+                            $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                        }
+
+                        $total_tagihan_non_spp = $data_tagihan_non_bulanan->where('id_siswa', $siswa->id_siswa);
+                        foreach ($total_tagihan_non_spp as $tagihan) {
+                            $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                        }
+
+                    @endphp
+                    <td style="width:67px;vertical-align:middle;text-align: center;">{{ $total_tagihan }}</td>
                     </tr>
                 @endforeach
             </tbody>

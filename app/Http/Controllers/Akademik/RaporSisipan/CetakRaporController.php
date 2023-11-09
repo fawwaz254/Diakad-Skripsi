@@ -490,9 +490,9 @@ class CetakRaporController extends Controller
 
 
             if ($kelas->tingkat == '3') {
-                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas'));
+                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas'));
             } else {
-                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas'));
+                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas'));
             }
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
             foreach ($kelompok_sisipan as $k_sisipan) {
@@ -542,7 +542,7 @@ class CetakRaporController extends Controller
                 }
             }
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             foreach ($kelompok_sisipan as $k_sisipan) {
                 $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;
@@ -574,7 +574,7 @@ class CetakRaporController extends Controller
                 }
             }
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smktanada') {
             $nilai_siswa = [];
             $typeuts = KomponenNilaiRaporSisipan::where('type', 'uts')->where('type', '!=', 'uas')->first();
@@ -650,7 +650,7 @@ class CetakRaporController extends Controller
 
             $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uts')->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'data', 'kelas', 'list_komponen'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
 
 

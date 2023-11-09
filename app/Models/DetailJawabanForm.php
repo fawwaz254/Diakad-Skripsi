@@ -25,4 +25,9 @@ class DetailJawabanForm extends Model
         'updated_by',
         'deleted_by'
     ];
+
+    public function pertanyaan_form()
+    {
+        return $this->belongsTo(PertanyaanForm::class, 'id_pertanyaan_form');
+    }
 }

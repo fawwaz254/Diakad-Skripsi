@@ -60,7 +60,7 @@ class MataPelajaran extends Model
     {
         return $this->belongsTo('App\Models\UrutanRaporSisipan', 'id_mata_pelajaran', 'id_mata_pelajaran')->withDefault([
             'urutan' => 99,
-        ]);;
+        ]);
     }
     public function sub_rapor_sisipan_mp()
     {
