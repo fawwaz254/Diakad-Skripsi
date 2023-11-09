@@ -72,9 +72,10 @@
                                                 <th>Nama</th>
                                                 <th>Kelas</th>
                                                 <th>Tahun Lulus</th>
-                                                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
-                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ||
-                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                                                @if (
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
+                                                        $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ||
+                                                        $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                                                     <th> Nama Sekolah</th>
                                                 @else
                                                     <th>Status</th>
@@ -109,7 +110,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'GET'

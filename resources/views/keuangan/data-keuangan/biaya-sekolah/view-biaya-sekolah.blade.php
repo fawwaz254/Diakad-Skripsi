@@ -92,7 +92,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         aLengthMenu: [
             [25, 50, 100, 200, -1],
             [25, 50, 100, 200, "All"]

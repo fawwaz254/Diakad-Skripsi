@@ -33,17 +33,17 @@
 </div>
 
 <script type="text/javascript">
-
-  var id_materi_ajar = $('input[name="data"]').val();
-    // var id_materi_ajar ="{{$id}}";
+    var id_materi_ajar = $('input[name="data"]').val();
+    // var id_materi_ajar ="{{ $id }}";
     // alert(id_materi_ajar);
     var modul_url = 'e-learning';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/view/datatables/'+id_materi_ajar;
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/view/datatables/' +
+        id_materi_ajar;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'GET'
@@ -64,7 +64,7 @@
                 name: 'time',
                 className: 'align-center'
             }
-            
+
         ]
     });
 

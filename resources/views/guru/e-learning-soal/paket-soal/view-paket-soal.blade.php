@@ -89,7 +89,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         // serverSide: true,
         ajax: {
             url: datatable_url,

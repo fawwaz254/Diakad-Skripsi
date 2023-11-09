@@ -39,12 +39,13 @@
     var modul_url = 'jurnal-harian';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'jenis-jurnal-harian/datatables';
     // var edit_url = role_url + '#' + modul_url + '/' + 'data-kategori-mapel/edit';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'jenis-jurnal-harian/action-data-kategori/delete';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'jenis-jurnal-harian/action-data-kategori/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'GET'

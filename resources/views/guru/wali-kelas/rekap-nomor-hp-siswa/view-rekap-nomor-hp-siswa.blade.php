@@ -35,7 +35,7 @@
         processing: true,
         serverSide: true,
         "aLengthMenu": [100],
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'GET'

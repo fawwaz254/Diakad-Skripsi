@@ -25,10 +25,11 @@
                         </li>
                     @endforeach --}}
                     @foreach ($kelas as $data)
-                    <li> <a target="_blank" href="/kesiswaan/skpi/approve-prestasi-siswa/printkelas/skpi/{{$data->id_kelas}}">
-                        {{$data->nm_kelas}}
-                    </a>
-                </li>
+                        <li> <a target="_blank"
+                                href="/kesiswaan/skpi/approve-prestasi-siswa/printkelas/skpi/{{ $data->id_kelas }}">
+                                {{ $data->nm_kelas }}
+                            </a>
+                        </li>
                     @endforeach
                 </ul>
             </div>
@@ -125,7 +126,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'GET',
@@ -202,13 +203,14 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
-    
 
 
-    function changeKelas(value){
-    $.ajax({
-        url: base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/print/skpi/Fh2L416105258805ffeacb94b700',
-        type: 'GET',
-    });
-}
+
+    function changeKelas(value) {
+        $.ajax({
+            url: base_url + '/' + role_url + '/' + modul_url + '/' +
+                'approve-prestasi-siswa/print/skpi/Fh2L416105258805ffeacb94b700',
+            type: 'GET',
+        });
+    }
 </script>

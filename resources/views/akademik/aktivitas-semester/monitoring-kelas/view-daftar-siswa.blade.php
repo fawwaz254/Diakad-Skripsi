@@ -2,7 +2,7 @@
     <div class="block-header">
         <h2>
             <a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) .'#aktivitas-semester/monitoring-kelas/view-semester-monitoring-kelas/' .$semester->id_semester) }}">
+                href="{{ url(Request::segment(1) . '#aktivitas-semester/monitoring-kelas/view-semester-monitoring-kelas/' . $semester->id_semester) }}">
                 <i class="material-icons">backspace</i><span>kembali</span>
             </a>
         </h2>
@@ -48,7 +48,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'GET'

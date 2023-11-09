@@ -64,7 +64,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: '{{ route('tracerAlumni.datatables') }}',
             type: 'GET'

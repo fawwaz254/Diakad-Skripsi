@@ -46,13 +46,12 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'POST'
         },
-        columns: [
-            {
+        columns: [{
                 data: null,
                 searchable: false,
                 orderable: false
@@ -82,14 +81,15 @@
                 searchable: false,
                 orderable: true,
                 render: function(data, type, row) {
-                    return moment(data).format('dddd, DD MMM YYYY HH:mm') + ' - ' + moment(row.waktu_selesai).format('HH:mm');
+                    return moment(data).format('dddd, DD MMM YYYY HH:mm') + ' - ' + moment(row
+                        .waktu_selesai).format('HH:mm');
                 }
             },
             {
                 data: 'waktu_pengerjaan',
                 searchable: false,
                 orderable: false,
-            }, 
+            },
             {
                 data: 'status',
                 searchable: false,

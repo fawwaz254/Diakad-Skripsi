@@ -1,17 +1,20 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/hasil-test') }}">
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/hasil-test') }}">
                 <span>Hasil Test</span>
             </a>
-            <a class="btn bg-teal waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/pengguna-terkunci') }}">
+            <a class="btn bg-teal waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/pengguna-terkunci') }}">
                 <span>UnLock Siswa</span>
             </a>
-            <a class="btn bg-red waves-effect target-link" href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/pengguna-dikunci') }}">
+            <a class="btn bg-red waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/pengguna-dikunci') }}">
                 <span>Lock Siswa</span>
             </a>
-            <br/>
-            <br/>
+            <br />
+            <br />
             <div class="card">
                 <div class="header">
                     <h2>
@@ -25,10 +28,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Unlock All <input id="checkbox_select_all" type="checkbox"
-                                                            name="select_all" class="filled-in">
-                                                        <label for="checkbox_select_all"
-                                                            style="margin-bottom: -10px;"></th>
+                                    <th>Unlock All <input id="checkbox_select_all" type="checkbox" name="select_all"
+                                            class="filled-in">
+                                        <label for="checkbox_select_all" style="margin-bottom: -10px;">
+                                    </th>
                                     <th>NIS</th>
                                     <th>Nama</th>
                                     <th>Kelas</th>
@@ -52,13 +55,12 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: action_url + '/table',
             type: 'POST'
         },
-        columns: [
-            {
+        columns: [{
                 data: null,
                 searchable: false,
                 orderable: false
@@ -66,8 +68,8 @@
             {
                 data: null,
                 searchable: false,
-                orderable: false, 
-                render: function(data, type, row){
+                orderable: false,
+                render: function(data, type, row) {
                     return `<input id="checkbox-${row.id_pengguna}" type="checkbox" value="${row.id_pengguna}" class="el_check filled-in" onclick="elChangeCheck(this)">
                     <label for="checkbox-${row.id_pengguna}"></label>`;
                 }
@@ -131,7 +133,7 @@
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes'
-        }, function (result) {
+        }, function(result) {
             if (result) {
                 var data_checked = [];
                 $(".el_check:checked").each(function() {

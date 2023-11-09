@@ -85,15 +85,15 @@ class LowonganKerjaController extends BaseController
 
             if ($mode == 'add') {
                 // dd($input);
-                foreach($request->input('judul_lowongan_kerja') as $key => $value){
-                    
+                foreach ($request->input('judul_lowongan_kerja') as $key => $value) {
+
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-    
+
                     $lowongan_kerja                             = new LowonganKerja;
                     $lowongan_kerja->id_lowongan_kerja          = $id;
                     $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja[$key];
-                    $lowongan_kerja->deskripsi_lowongan_kerja   = $input->deskripsi_lowongan_kerja[$key];
-    
+                    $lowongan_kerja->deskripsi_lowongan_kerja   = isset($input->deskripsi_lowongan_kerja[$key]) ? $input->deskripsi_lowongan_kerja[$key] : '-';
+
                     if (!empty(request()->file)) {
                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         // $image = request()->file[$key];
@@ -101,7 +101,7 @@ class LowonganKerjaController extends BaseController
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->file[$key], 'public');
                         $lowongan_kerja->poster_lowongan_kerja   = $file;
                     }
-    
+
                     $lowongan_kerja->created_by                 = $input->auth_data->pengguna->id_pengguna;
                     $lowongan_kerja->save();
                 }
@@ -112,19 +112,25 @@ class LowonganKerjaController extends BaseController
                     'message' => 'Save Successfully'
                 ];
             } elseif ($mode == 'edit') {
+                foreach ($request->input('judul_lowongan_kerja') as $key => $value) {
+                    // $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    // $lowongan_kerja                             = new LowonganKerja;
+                    // $lowongan_kerja->id_lowongan_kerja          = $id;
+                    $lowongan_kerja                             = LowonganKerja::find($input->id_lowongan_kerja[$key]);
+                    $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja[$key];
+                    $lowongan_kerja->deskripsi_lowongan_kerja   =  isset($input->deskripsi_lowongan_kerja[$key]) ? $input->deskripsi_lowongan_kerja[$key] : '-';
 
-                $lowongan_kerja                             = LowonganKerja::find($input->id_lowongan_kerja);
-                $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja;
-                $lowongan_kerja->deskripsi_lowongan_kerja   = $input->deskripsi_lowongan_kerja;
+                    if (!empty(request()->file)) {
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        // $image = request()->file[$key];
+                        // $image->storeAs('public/photos', $image->hashName());
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->file[$key], 'public');
+                        $lowongan_kerja->poster_lowongan_kerja   = $file;
+                    }
 
-                if (!empty(request()->file)) {
-                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $input->id_lowongan_kerja, request()->file, 'public');
-                    $lowongan_kerja->poster_lowongan_kerja   = $file;
+                    $lowongan_kerja->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                    $lowongan_kerja->save();
                 }
-
-                $lowongan_kerja->updated_by                 = $input->auth_data->pengguna->id_pengguna;
-                $lowongan_kerja->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -157,7 +163,7 @@ class LowonganKerjaController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LowonganKerja::all();
+        $list_data = LowonganKerja::orderBy('created_at', 'desc');
 
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {

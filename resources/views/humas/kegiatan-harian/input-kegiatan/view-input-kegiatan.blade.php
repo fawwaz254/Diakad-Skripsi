@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}">
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/add') }}">
                 <i class="material-icons">note_add</i><span>Tambah Kegiatan Harian</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -32,50 +32,71 @@
     </div>
 </div>
 <script>
-    var modul_url       = '{{Request::segment(2)}}';
-    var menu_url       = '{{Request::segment(3)}}';
+    var modul_url = '{{ Request::segment(2) }}';
+    var menu_url = '{{ Request::segment(3) }}';
 
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/' + menu_url + '/edit';
-    var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/kategori-pertanyaan/detail';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
+    var edit_url = role_url + '#' + modul_url + '/' + menu_url + '/edit';
+    var detail_url = role_url + '#' + modul_url + '/' + menu_url + '/kategori-pertanyaan/detail';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'POST'
         },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'nm_kegiatan_harian' },
-            { data: 'is_aktif' },
-            { data: 'kategori', name: 'kategori', searchable: false, orderable: false,
-                render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">remove_red_eye</i>'+
-                    '</a> ' + data.count + ' Kategori Pertanyaan';
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'nm_kegiatan_harian'
+            },
+            {
+                data: 'is_aktif'
+            },
+            {
+                data: 'kategori',
+                name: 'kategori',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        detail_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">remove_red_eye</i>' +
+                        '</a> ' + data.count + ' Kategori Pertanyaan';
                 }
             },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        edit_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">edit</i>' +
+                        '</a> ' +
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                        delete_url + '\', this)" data-id="' + data.id + '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
                 }
             }
         ]
     });
 
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
+        });
+    }).draw();
 </script>

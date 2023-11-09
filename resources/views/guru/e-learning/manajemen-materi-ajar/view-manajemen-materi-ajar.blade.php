@@ -45,7 +45,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        responsive: false,
         ajax: {
             url: datatable_url,
             type: 'GET'
@@ -79,11 +79,12 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return  '<a href="' +
+                    return '<a href="' +
                         view_url + '/' + data.id + '">' +
                         `<p>` + data.jumlah_view + '/' + data.jumlah_siswa + `</p>` +
-                        '</a> ' ;
-                }},
+                        '</a> ';
+                }
+            },
             {
                 data: 'action',
                 name: 'action',
