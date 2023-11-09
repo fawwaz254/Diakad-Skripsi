@@ -13,12 +13,15 @@
                         Wali Kelas {{ $data_wali_kelas->nm_wali_kelas }}
 
                     </div>
-                    <a style="float:right;" class="btn btn-success btn-circle waves-effect waves-circle float-right"
-                        href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor-siswa/print/' . $semester_aktif->id_semester . '/' . $wali_kelas->id_kelas) }}"
-                        target="_blank">
-                        <i class="material-icons">picture_as_pdf</i>
-                    </a>
-
+                    @if ($jumlah_kelas_sisipan == '0')
+                        <p>Kelas Sisipan belum diSet</p>
+                    @else
+                        <a style="float:right;" class="btn btn-success btn-circle waves-effect waves-circle float-right"
+                            href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor-siswa/print/' . $semester_aktif->id_semester . '/' . $wali_kelas->id_kelas) }}"
+                            target="_blank">
+                            <i class="material-icons">picture_as_pdf</i>
+                        </a>
+                    @endif
                     <div class="spacer" style="clear: both;"></div>
                 </div>
             </div>

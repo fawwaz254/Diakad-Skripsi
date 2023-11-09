@@ -162,6 +162,14 @@ class KomponenMataPelajaranController extends Controller
                     'message' => 'Save Data List Form Succesfully'
                 ];
             } elseif ($mode == 'delete') {
+                if (!isset($input->list_id_komponen)) {
+                    return [
+                        'status' => 203, // SUCCESS AND LOAD TABLE
+                        'message' => 'Data Kosong'
+
+                    ];
+                }
+
                 $list_id_komponen = $input->list_id_komponen;
 
                 KelasSisipan::whereIn('id_kelas_sisipan', $list_id_komponen)
