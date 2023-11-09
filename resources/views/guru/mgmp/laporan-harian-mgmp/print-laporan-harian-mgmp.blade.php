@@ -47,27 +47,45 @@
                 <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">No.</th>
                 <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">Tanggal</th>
                 <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">Urian Kegiatan</th>
-                <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">Status</th>
                 <th scope="col" colspan="2" style="vertical-align:middle;text-align:center;">Kategori</th>
+                <th scope="col" rowspan="2" style="vertical-align:middle;text-align:center;">Status</th>
             </tr>
             <tr>
                 <th scope="col" style="vertical-align:middle;text-align:center;">Jenis</th>
-                <th scope="col" style="vertical-align:middle;text-align:center;">Mapel</th>
+                <th scope="col" style="vertical-align:middle;text-align:center;">Mata Pelajaran</th>
             </tr>
             
             </thead>
             <tbody>
-            @foreach ($list_data as $item)
-            <tr>
-                <th scope="row">{{ $loop->iteration }}</th>
-                <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
-                <td>{!! nl2br($item->keterangan_progres) !!}</td>
-                <td>{{ $item->status == 1 ? 'Tuntas' : 'Belum Tuntas' }}</td>
-                <td>{{ $item->jenis }}</td>
-                <td>{{ $item->mapel }}</td>
-            </tr>
-            @endforeach
-            </tbody>
+                @foreach ($list_data as $item)
+                    <tr>
+                        <th scope="row">{{ $loop->iteration }}</th>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
+                        <td>{!! nl2br($item->keterangan_progres) !!}</td>
+                        <td>{{ $item->jenis }}</td>
+                        
+                        @php
+                            $foundCategory = false;
+                        @endphp
+            
+                        @foreach ($category_file_mgmp as $category)
+                            @if ($category->category_file_mgmp_id == $item->mapel)
+                                <td>{{ $category->category_file_name }}</td>
+                                @php
+                                    $foundCategory = true;
+                                @endphp
+                                @break
+                            @endif
+                        @endforeach
+
+                        @if (!$foundCategory)
+                            <td>{{ $item->mapel }}</td>
+                        @endif
+            
+                        <td>{{ $item->status == 1 ? 'Tuntas' : 'Belum Tuntas' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>            
         </table>
     </div>
 

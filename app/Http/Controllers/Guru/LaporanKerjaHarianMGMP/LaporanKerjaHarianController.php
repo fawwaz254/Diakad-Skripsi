@@ -200,7 +200,7 @@ class LaporanKerjaHarianController extends Controller
                 return Carbon::parse($item->tanggal)->format('d M Y');
             })
             ->addColumn('mapel', function ($item) {
-                return isset($item->mapel->category_file_name) ? $item->mapel->category_file_name : '-';
+                return isset($item->mata_pelajaran->category_file_name) ? $item->mata_pelajaran->category_file_name : '-';
             })
             ->addColumn('action', function ($item) {
                 if ($item->path_file) {
@@ -333,6 +333,8 @@ class LaporanKerjaHarianController extends Controller
         ->orderBy('tanggal', 'DESC')
         ->get();
 
-        return view('guru/mgmp/laporan-harian-mgmp/print-laporan-harian-mgmp', compact('list_data'));
+        $category_file_mgmp = CategoriFileMGMP::all();
+
+        return view('guru/mgmp/laporan-harian-mgmp/print-laporan-harian-mgmp', compact('list_data', 'category_file_mgmp'));
     }
 }
