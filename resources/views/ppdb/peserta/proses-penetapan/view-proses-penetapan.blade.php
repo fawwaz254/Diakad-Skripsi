@@ -58,16 +58,16 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>
+                                            {{-- <th>
                                                 <input id="checkbox_select_all" type="checkbox" name="select_all"
                                                     class="filled-in">
                                                 <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
-                                            </th>
+                                            </th> --}}
                                             <th>Nomor Pendaftaran</th>
                                             <th>Nama</th>
                                             <th>No HP</th>
                                             <th>Asal Sekolah</th>
-                                            <th>Pilihan 1</th>
+                                            {{-- <th>Pilihan 1</th> --}}
                                         </tr>
                                     </thead>
                                 </table>
@@ -141,10 +141,10 @@
                     data: 'nm_sekolah_asal',
                     name: 'calon_siswa_sekolah.nm_sekolah_asal'
                 },
-                {
-                    data: 'nm_jurusan',
-                    name: 'jurusan.nm_jurusan'
-                }
+                // {
+                //     data: 'nm_jurusan',
+                //     name: 'jurusan.nm_jurusan'
+                // }
             ]
         });
 
