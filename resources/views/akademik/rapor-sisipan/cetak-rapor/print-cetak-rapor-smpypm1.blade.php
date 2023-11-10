@@ -51,6 +51,10 @@
             -ms-text-underline-position: below;
             text-underline-position: under;
         }
+
+        .capitalize {
+            text-transform: capitalize;
+        }
     </style>
 
     <style type="text/css" media="print">
@@ -137,7 +141,7 @@
                 <tr style="border-style : hidden">
                     <td style="border-style : hidden;width: 15%;">Nama Pst. Didik
                     </td>
-                    <td style="border-style : hidden;width: 35%;"> :
+                    <td class="capitalize" style="border-style : hidden;width: 35%;"> :
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
                     <td style="border-style : hidden;width: 25%;">Semester

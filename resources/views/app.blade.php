@@ -119,6 +119,10 @@
             background-color: #235789;
             color: #fff !important;
         }
+
+        .capitalize {
+            text-transform: capitalize;
+        }
     </style>
 </head>
 
