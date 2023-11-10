@@ -170,7 +170,8 @@
                                         @endif
                                     @endforeach
                                     @foreach ($data_ket_tagihan as $ket)
-                                        <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->keterangan }}
+                                        <td class="tdbg-13" style="vertical-align: bottom;">
+                                            {{ $ket->nm_biaya . ' ' . $ket->keterangan }}
                                         </td>
                                     @endforeach
                                 </tr>
@@ -248,6 +249,7 @@
                                                 $tagihan = $data_tagihan_non_bulanan
                                                     ->where('id_siswa', $siswa->id_siswa)
                                                     ->where('keterangan', $ket->keterangan)
+                                                    // ->where('nm_biaya', $ket->nm_biaya)
                                                     ->first();
                                             @endphp
                                             @if (!empty($tagihan) > 0)
