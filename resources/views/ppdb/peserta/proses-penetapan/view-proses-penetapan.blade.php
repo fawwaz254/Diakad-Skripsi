@@ -71,14 +71,14 @@
                                         </tr>
                                     </thead>
                                 </table>
-                                <div class="row clearfix">
+                                {{-- <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <input type="hidden" name="id_penerimaan"
                                             value="{{ $penerimaan->id_penerimaan }}"></input>
                                         <button class="btn btn-block bg-red waves-effect" type="submit"><i
                                                 class="material-icons">save</i><span>Save</span></button>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </form>
                     </div>
@@ -112,19 +112,19 @@
                     searchable: false,
                     orderable: false
                 },
-                {
-                    data: 'checkbox',
-                    name: 'checkbox',
-                    searchable: false,
-                    orderable: false,
-                    render: function(data, type, full, meta) {
-                        return '<input id="checkbox-' + data.id +
-                            '" type="checkbox" name="id_c_siswa[]" class="filled-in" value="' + data.id +
-                            '">' +
-                            '<label for="checkbox-' + data.id + '"></label>';
+                // {
+                //     data: 'checkbox',
+                //     name: 'checkbox',
+                //     searchable: false,
+                //     orderable: false,
+                //     render: function(data, type, full, meta) {
+                //         return '<input id="checkbox-' + data.id +
+                //             '" type="checkbox" name="id_c_siswa[]" class="filled-in" value="' + data.id +
+                //             '">' +
+                //             '<label for="checkbox-' + data.id + '"></label>';
 
-                    }
-                },
+                //     }
+                // },
                 {
                     data: 'kode_voucher',
                     name: 'calon_siswa_baru.kode_voucher'
@@ -158,7 +158,7 @@
             });
         }).draw();
     </script>
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         $(document).ready(function() {
             /* Select All Checkbox */
             $('input[name="select_all"]').change(function() {
@@ -170,10 +170,10 @@
                 $('input[type="checkbox"]', rows).prop('checked', this.checked);
             });
         });
-    </script>
+    </script> --}}
 @endif
 
-<script>
+{{-- <script>
     $('#form-validation1').validate({
         rules: {
             'checkbox': {
@@ -222,4 +222,4 @@
             });
         }
     });
-</script>
+</script> --}}
