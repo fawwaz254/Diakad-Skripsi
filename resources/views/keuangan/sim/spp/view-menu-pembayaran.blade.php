@@ -158,10 +158,12 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th><button class="btn btn-primary btn-sm"
-                                            onclick="filterAction('nis')">Urutkan</button><br>NIS</th>
-                                    <th><button class="btn btn-primary btn-sm"
-                                            onclick="filterAction('nama')">Urutkan</button><br>Nama</th>
+                                    <th onclick="filterAction('nis')" style="cursor:pointer">
+                                        NIS&nbsp;<i class="small material-icons" style="display: inline;cursor:pointer">sort
+                                        </i></th>
+                                    <th onclick="filterAction('nama')" style="cursor:pointer">
+                                        Nama&nbsp;<i class="small material-icons" style="display: inline;cursor:pointer">sort
+                                        </i></th>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @if (!empty($bulan->id_bulan))
                                             <th class="tdbg-{{ $bulan->id_bulan }}">{{ $bulan->nm_bulan }}</th>
@@ -346,6 +348,15 @@
 
     $(document).ready(function() {
         getTagihanAndTotal();
+
+        // var hash = window.location.hash;
+        // var segments = hash.split('/');
+
+        // if (segments.length >= 5 && segments[6] === 'nis') {
+        //     $('i.small').addClass('text-dark');
+        // } else if(segments.length >= 5 && segments[6] === 'nama') {
+        //     $('i.small').addClass('text-dark');
+        // }
     });
 
 
