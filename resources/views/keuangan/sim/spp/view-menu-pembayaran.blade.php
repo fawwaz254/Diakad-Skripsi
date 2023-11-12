@@ -159,10 +159,12 @@
                                 <tr>
                                     <th>No</th>
                                     <th onclick="filterAction('nis')" style="cursor:pointer">
-                                        NIS&nbsp;<i class="small material-icons" style="display: inline;cursor:pointer">sort
+                                        NIS&nbsp;<i class="small material-icons"
+                                            style="display: inline;cursor:pointer">sort
                                         </i></th>
                                     <th onclick="filterAction('nama')" style="cursor:pointer">
-                                        Nama&nbsp;<i class="small material-icons" style="display: inline;cursor:pointer">sort
+                                        Nama&nbsp;<i class="small material-icons"
+                                            style="display: inline;cursor:pointer">sort
                                         </i></th>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @if (!empty($bulan->id_bulan))
@@ -212,6 +214,8 @@
                                                 <td>
                                                     @if ($tagihan->is_request == 0)
                                                         <button class="btn btn-block bg-black waves-effect"
+                                                            data-toggle="tooltip" data-html="true"
+                                                            title="{{ $bulan->nm_bulan }}" data-placement="top"
                                                             onclick="takeAction(this)"
                                                             data-id="{{ $tagihan->id_tagihan_biaya }}"
                                                             data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
@@ -262,7 +266,9 @@
                                                     <td>
                                                         @if ($tagihan->is_request == 0)
                                                             <button class="btn btn-block bg-black waves-effect"
-                                                                onclick="takeAction(this)"
+                                                                data-toggle="tooltip" data-html="true"
+                                                                title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $ket->nm_biaya . ' || ' . $ket->keterangan }}"
+                                                                data-placement="top" onclick="takeAction(this)"
                                                                 data-id="{{ $tagihan->id_tagihan_biaya }}"
                                                                 data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
                                                         @else
