@@ -158,10 +158,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th onclick="filterAction('nis')" style="cursor:pointer">
+                                    <th onclick="filterAction('nis')" style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="Urutkan berdasarkan nis">
                                         NIS&nbsp;<i class="small material-icons btn-sort-nis" style="color:darkgrey;display:inline;cursor:pointer;">sort
                                         </i></th>
-                                    <th onclick="filterAction('nama')" style="cursor:pointer">
+                                    <th onclick="filterAction('nama')" style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="Urutkan berdasarkan nama">
                                         Nama&nbsp;<i class="small material-icons btn-sort-nama" style="color:darkgrey;display:inline;cursor:pointer;">sort
                                         </i></th>
                                     @foreach ($data_bulan_tagihan as $bulan)
