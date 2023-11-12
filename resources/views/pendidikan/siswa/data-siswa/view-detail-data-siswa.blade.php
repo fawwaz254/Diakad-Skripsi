@@ -1,38 +1,44 @@
  <div class="container-fluid">
+     @if ($id_jurusan != '0')
+         <div class="block-header">
+             <h2>
+                 <div class="dropdown">
+                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Cetak
+                         Bidodata Siswa Per-kelas
+                         <span class="caret"></span></button>
+                     <ul class="dropdown-menu">
+                         @foreach ($kelas as $data)
+                             <li> <a target="_blank"
+                                     href="/kesiswaan/siswa/insert-update-siswa/view-print-siswa-kelas/{{ $data->id_kelas }}">
+                                     {{ $data->nm_kelas }}
+                                 </a>
+                             </li>
+                         @endforeach
+                     </ul>
+
+                     <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Cetak
+                         Bidodata Excel Siswa Per-kelas
+                         <span class="caret"></span></button>
+                     <ul class="dropdown-menu">
+                         @foreach ($kelas as $data)
+                             <li> <a target="_blank"
+                                     href="/kesiswaan/siswa/insert-update-siswa/view-print-siswa-kelas-excel/{{ $data->id_kelas }}">
+                                     {{ $data->nm_kelas }}
+                                 </a>
+                             </li>
+                         @endforeach
+                     </ul>
+                 </div>
+             </h2>
+         </div>
+     @endif
      <div class="row clearfix">
          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
              <div class="card">
                  {{ csrf_field() }}
                  <div class="header row">
                      <h2 class="col-lg-6">Data Siswa</h2>
-                     <div class="dropdown col-lg-3">
-                         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Cetak
-                             Bidodata Siswa Per-kelas
-                             <span class="caret"></span></button>
-                         <ul class="dropdown-menu">
-                             @foreach ($kelas as $data)
-                                 <li> <a target="_blank"
-                                         href="/kesiswaan/siswa/insert-update-siswa/view-print-siswa-kelas/{{ $data->id_kelas }}">
-                                         {{ $data->nm_kelas }}
-                                     </a>
-                                 </li>
-                             @endforeach
-                         </ul>
-                     </div>
-                     <div class="dropdown col-lg-3">
-                         <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Cetak
-                             Bidodata Excel Siswa Per-kelas
-                             <span class="caret"></span></button>
-                         <ul class="dropdown-menu">
-                             @foreach ($kelas as $data)
-                                 <li> <a target="_blank"
-                                         href="/kesiswaan/siswa/insert-update-siswa/view-print-siswa-kelas-excel/{{ $data->id_kelas }}">
-                                         {{ $data->nm_kelas }}
-                                     </a>
-                                 </li>
-                             @endforeach
-                         </ul>
-                     </div>
+
                  </div>
                  <div class="body">
                      <form id="form-validation" method="POST"
@@ -210,7 +216,7 @@
                                      {{-- <th>Telp. Siswa</th>
                                      <th>Telp. Orang Tua</th> --}}
                                      <th>Print Biodata</th>
-
+                                     <th>Detail</th>
                                  </tr>
                              </thead>
                          </table>
@@ -235,6 +241,8 @@
      var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-siswa/datatables/' + id_jurusan +
          '/' + id_kelas + '/' + thn_masuk_siswa + '/' + id_jalur + '/' + id_status_pengguna;
      var print_url = base_url + '/' + role_url + '/' + modul_url + '/insert-update-siswa/view-print-siswa';
+     var detail_url = base_url + '/' + role_url + '#' + modul_url + '/data-siswa/view-detail-siswa';
+
 
      var primary_table = $('#primary_table').DataTable({
          processing: true,
@@ -357,6 +365,17 @@
                      ;
                  }
              },
+             {
+                 data: 'action',
+                 searchable: false,
+                 orderable: false,
+                 render: function(data) {
+                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                         detail_url + '/' + data.id + '">' +
+                         '    <i class="material-icons">remove_red_eye</i>' +
+                         '</a> ';
+                 }
+             }
 
          ]
      });
