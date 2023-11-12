@@ -134,7 +134,7 @@
                                         Reguler</a></li>
                                 <li><a style="cursor: pointer;" onclick="printKas('detail-internal')">Rekap Detail
                                         (Sesuai biaya internal)</a></li>
-                                @if ($is_ypm == '1')
+                                @if ($is_ypm->value == '1')
                                     <li><a style="cursor: pointer;" onclick="printBulanan('full')">Laporan Bulanan
                                             dengan
                                             Tunggakan</a></li>
