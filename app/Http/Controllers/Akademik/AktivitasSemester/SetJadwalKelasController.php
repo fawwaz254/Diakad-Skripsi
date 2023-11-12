@@ -329,6 +329,13 @@ class SetJadwalKelasController extends Controller
             $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
             $mapel = MataPelajaran::find($input->mapel);
+
+            if (empty($mapel)) {
+                return [
+                    'status_code' => 300, // SUCCESS AND LOAD TABLE
+                    'message' => 'Mapel tidak ditemukan, Coba Refresh'
+                ];
+            }
             $kelas = Kelas::find($input->id_kelas);
 
             $kelas_mp                           = new KelasMp;
