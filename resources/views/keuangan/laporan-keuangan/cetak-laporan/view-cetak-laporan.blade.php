@@ -134,10 +134,14 @@
                                         Reguler</a></li>
                                 <li><a style="cursor: pointer;" onclick="printKas('detail-internal')">Rekap Detail
                                         (Sesuai biaya internal)</a></li>
-                                <li><a style="cursor: pointer;" onclick="printBulanan('full')">Laporan Bulanan dengan
-                                        Tunggakan</a></li>
-                                <li><a style="cursor: pointer;" onclick="printBulanan('harian')">Laporan Bulanan per
-                                        Hari per Kategori</a></li>
+                                @if ($is_ypm == '1')
+                                    <li><a style="cursor: pointer;" onclick="printBulanan('full')">Laporan Bulanan
+                                            dengan
+                                            Tunggakan</a></li>
+                                    <li><a style="cursor: pointer;" onclick="printBulanan('harian')">Laporan Bulanan
+                                            per
+                                            Hari per Kategori</a></li>
+                                @endif
                             </ul>
                         </div>
                     </div>
