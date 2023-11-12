@@ -2,7 +2,11 @@
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#tendik/input-tendik/add') }}"><i
-                    class="material-icons">note_add</i><span>Input Tendik Baru</span></a></h2>
+                    class="material-icons">note_add</i><span>Input Tendik Baru</span></a>
+            <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
+                href="{{ url(Request::segment(1) . '#tendik/upload-data-tendik') }}"><i
+                    class="material-icons">note_add</i><span>Upload Data Tendik</span></a>
+        </h2>
     </div>
 
     <div class="row clearfix">
