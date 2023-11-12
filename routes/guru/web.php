@@ -62,6 +62,7 @@ use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaDikunciController;
+use App\Http\Controllers\Guru\ELearningSoal\PenggunaTerkunciController;
 use App\Http\Controllers\Guru\Faq\FaqController;
 use App\Http\Controllers\Guru\GuruKpi\GuruKpiController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController;
