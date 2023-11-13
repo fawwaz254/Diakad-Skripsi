@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PPDB\Peserta;
 
 use App\Exports\ExportPenetapan;
+use App\Http\Controllers\SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -14,10 +15,20 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\Ppdb\LibPenerimaan as LibPenerimaan;
+use App\Models\Kelas;
 use App\Models\Penerimaan;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
-
+use App\Imports\DataImportExcel;
+use App\Models\Admisi;
+use App\Models\Jalur;
+use App\Models\JalurSiswa;
+use App\Models\Pengguna;
+use App\Models\RolePengguna;
+use App\Models\Sekolah;
+use App\Models\Semester;
+use App\Models\Siswa;
+use App\Models\StatusPengguna;
 use Auth;
 use DB;
 use Session;
@@ -171,5 +182,133 @@ class ProsesPenetapanController extends BaseController
 
         $nm_penerimaan = str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", $penerimaan->nm_penerimaan);
         return Excel::download(new ExportPenetapan($data), 'Data Siswa Penetapan (' . $nm_penerimaan . ' - ' . $penerimaan->gelombang_penerimaan . ').xlsx');
+    }
+
+    public function uploadPenetapan(Request $request, $id_penerimaan)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelas_paling_rendah = Kelas::orderBy('tingkat')->first();
+        $kelas = Kelas::where('tingkat', $kelas_paling_rendah->tingkat)->get();
+        return view('ppdb/peserta/proses-penetapan/view-upload-penetapan', compact('auth_data', 'id_penerimaan', 'kelas'));
+    }
+
+    public function postUploadPenetapan(Request $request)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        if ($request->hasFile('file-excel')) {
+            $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+            $data = $data[0];
+
+            if (count($data)) {
+                $status_join_table = StatusPengguna::where('status_join_table', '3')->where('nm_status_pengguna', 'AKTIF')->first();
+                $sekolah = Sekolah::first();
+                $semester = Semester::where('is_aktif_semester', '1')->first();
+                $jalur = Jalur::where('nm_jalur', 'REGULER')->first();
+
+                foreach ($data as  $data_row) {
+                    $calon_siswa_baru = CalonSiswaBaru::where('kode_voucher', $data_row['kode_voucher'])->first();
+                    if (empty($calon_siswa_baru)) {
+                        return [
+                            'status'    => 300, // FAILED
+                            'message'   => 'Upload Data Siswa Gagal' . $data_row['kode_voucher'] . ' tidak ditemukan di dalam sistem'
+                        ];
+                    }
+
+                    if (empty($data_row['nis']) || $data_row['nis'] == '(isi manual)') {
+                        return [
+                            'status'    => 300, // FAILED
+                            'message'   => 'Upload Data Siswa Gagal, Harap Isi NIS terlebih dahulu'
+                        ];
+                    }
+
+                    if (empty($data_row['nama_kelas']) || $data_row['nama_kelas'] == '(isi manual)') {
+                        return [
+                            'status'    => 300, // FAILED
+                            'message'   => 'Upload Data Siswa Gagal, Harap Isi Nama Kelas terlebih dahulu'
+                        ];
+                    }
+
+                    $kelas = Kelas::where('nm_kelas', $data_row['nama_kelas'])->first();
+                    if (empty($kelas)) {
+                        return [
+                            'status'    => 300, // FAILED
+                            'message'   => 'Upload Data Siswa Gagal,' . $data_row['nama_kelas'] . 'tidak ditemukan'
+                        ];
+                    }
+                    $siswa = Siswa::where('nis_siswa', $data_row['nis'])->first();
+                    if ($siswa) {
+                        continue;
+                    }
+                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    //buat pengguna
+                    $pengguna = new Pengguna;
+                    $pengguna->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $pengguna->id_status_pengguna = $status_join_table->id_status_pengguna;
+                    $pengguna->id_sekolah = $sekolah->id_sekolah;
+                    $pengguna->nm_pengguna = $calon_siswa_baru->nm_c_siswa;
+                    $pengguna->username = $data_row['nis'];
+                    $pengguna->password = Hash::make($data_row['nis']);
+                    $pengguna->must_change_password = '1';
+                    $pengguna->status_join_table = '3';
+                    $pengguna->created_by = 'Penetapan';
+                    $pengguna->save();
+
+                    //buat siswa
+                    $siswa = new Siswa;
+                    $siswa->id_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $siswa->id_pengguna =  $pengguna->id_pengguna;
+                    $siswa->id_c_siswa = $calon_siswa_baru->id_c_siswa;
+                    $siswa->id_kelompok_biaya = null;
+                    $siswa->id_kelas = $kelas->id_kelas;
+                    $siswa->id_wali_murid = null;
+                    $siswa->is_aktif_wali_murid = '1';
+                    $siswa->is_orang_tua = null;
+                    $siswa->nis_siswa = $data_row['nis'];
+                    $siswa->nisn_siswa = null;
+                    $siswa->thn_masuk_siswa = $semester->thn_akademik_semester;
+                    $siswa->created_by = 'Penetapan';
+                    $siswa->save();
+
+                    //buat role pengguna
+                    $role_pengguna = new RolePengguna;
+                    // $role_pengguna->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $role_pengguna->id_role = '3';
+                    $role_pengguna->id_pengguna = $pengguna->id_pengguna;
+                    $role_pengguna->keterangan_role_pengguna = 'Input Pendidikan';
+                    $role_pengguna->is_aktif = '1';
+                    $role_pengguna->created_by = "Penetapan";
+                    $role_pengguna->save();
+
+                    //buat admisi
+                    $admisi = new Admisi;
+                    $admisi->id_admisi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $admisi->id_siswa  =  $siswa->id_siswa;
+                    $admisi->id_semester = $semester->id_semester;
+                    $admisi->id_status_pengguna = $status_join_table->id_status_pengguna;
+                    $admisi->id_jalur = $jalur->id_jalur;
+                    $admisi->created_by = 'Penetapan';
+                    $admisi->save();
+
+                    //buat jalur_siswa
+                    $jalur_siswa = new JalurSiswa;
+                    $jalur_siswa->id_jalur_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $jalur_siswa->id_siswa = $siswa->id_siswa;
+                    $jalur_siswa->id_jalur = $jalur->id_jalur;
+                    $jalur_siswa->id_semester = $semester->id_semester;
+                    $jalur_siswa->is_jalur_aktif = '1';
+                    $jalur_siswa->id_admisi = $admisi->id_admisi;
+                    $jalur_siswa->created_by = 'Penetapan';
+                    $jalur_siswa->save();
+                }
+                return [
+                    'status'    => 300, // FAILED
+                    'message'   =>  'Save Siswa Successfully'
+                ];
+            }
+        }
     }
 }

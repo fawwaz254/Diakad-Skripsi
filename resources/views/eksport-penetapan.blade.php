@@ -4,6 +4,7 @@
             <td style="text-align: center;font-weight: bold;">NOMOR</td>
             <th style="text-align: center;font-weight: bold;">KODE VOUCHER</th>
             <td style="text-align: center;font-weight: bold;">NIS</td>
+            <td style="text-align: center;font-weight: bold;">NAMA KELAS</td>
             <td style="text-align: center;font-weight: bold;">NAMA SISWA</td>
             <td style="text-align: center;font-weight: bold;">JENIS KELAMIN</td>
             <td style="text-align: center;font-weight: bold;">NOMOR HP</td>
@@ -51,6 +52,7 @@
             <tr>
                 <td style="text-align: center">{{ ++$no }}</td>
                 <td style="text-align: center">{{ $calon_siswa_baru->kode_voucher }} </td>
+                <td style="color: red;text-align: center">(isi manual)</td>
                 <td style="color: red;text-align: center">(isi manual)</td>
                 <td>{{ $calon_siswa_baru->nm_c_siswa }}</td>
                 <th>{{ $calon_siswa_baru->jenis_kelamin == '1' ? 'Laki-laki' : 'Perempuan' }}</th>
