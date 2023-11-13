@@ -67,6 +67,34 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-batch-upload-foto', [UpdateFotoUnitKerjaController::class, 'actionBatchUploadFoto']);
 
 
+            //merombak menu baru
+            Route::get('input-guru', [InputGuruController::class, 'viewInputGuru']);
+            Route::get('input-guru/datatables', [InputGuruController::class, 'datatablesInputGuru']);
+            Route::get('input-guru/add', [InputGuruController::class, 'addInputGuru']);
+            Route::get('input-guru/edit/{id}', [InputGuruController::class, 'editInputGuru']);
+
+            Route::post('action-input-guru/{mode}/{id}', [InputGuruController::class, 'actionInputGuru']);
+
+            Route::get('input-guru/get-kota/{id}', [InputGuruController::class, 'getKota']);
+
+            //MENU Upload Guru
+            Route::get('upload-data-guru', [UploadDataGuruController::class, 'viewUploadDataGuru']);
+            Route::get('/download-file-excel', [UploadDataGuruController::class, 'downloadFileExcel'])->name('guru/download-file-excel');
+            Route::post('post-file-excel', [UploadDataGuruController::class, 'uploadFileExcel']);
+
+            //merombak menu baru 2
+            Route::get('input-tendik', [InputTendikController::class, 'viewInputTendik']);
+            Route::get('input-tendik/datatables', [InputTendikController::class, 'datatablesInputTendik']);
+            Route::get('input-tendik/add', [InputTendikController::class, 'addInputTendik']);
+            Route::get('input-tendik/edit/{id}', [InputTendikController::class, 'editInputTendik']);
+
+            Route::post('action-input-tendik/{mode}/{id}', [InputTendikController::class, 'actionInputTendik']);
+
+            Route::get('upload-data-tendik', [UploadDataTendikController::class, 'viewUploadDataTendik']);
+            Route::get('/download-file-excel', [UploadDataTendikController::class, 'downloadFileExcel'])->name('tendik/download-file-excel');
+            Route::post('post-file-excel', [UploadDataTendikController::class, 'uploadFileExcel']);
+
+
             // MENU Data Jabatan Pegawai
             // TABEL DIHAPUS
             /*Route::get('jabatan-pegawai', [JabatanPegawaiController::class, 'viewJabatanPegawai']);
@@ -129,7 +157,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-guru-piket/datatablesGuru', [SettingGuruPiketController::class, 'datatablesAddGuruPiket']);
 
             Route::post('action-setting-guru-piket/{mode}/{id}', [SettingGuruPiketController::class, 'actionSettingGuruPiket']);
-        
+
             //MENU Setting Guru KPI
             Route::get('setting-guru-kpi', [SettingGuruKpiController::class, 'viewSettingGuruKpi']);
             Route::get('setting-guru-kpi/datatables', [SettingGuruKpiController::class, 'datatablesSettingGuruKpi']);
@@ -138,10 +166,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-guru-kpi/edit/{id}', [SettingGuruKpiController::class, 'editSettingGuruKpi']);
 
             Route::post('action-setting-guru-kpi/{mode}/{id}', [SettingGuruKpiController::class, 'actionSettingGuruKpi']);
-
-
-
-
         });
 
         Route::prefix('tendik')->group(function () {

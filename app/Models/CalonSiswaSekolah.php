@@ -16,10 +16,10 @@ class CalonSiswaSekolah extends Model
 
     protected $primaryKey = 'id_c_siswa';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_c_siswa',
         'nm_sekolah_asal',
@@ -38,8 +38,8 @@ class CalonSiswaSekolah extends Model
     protected $guarded = [];
 
 
-
-
-
-
+    public function kota_asal_sekolah()
+    {
+        return $this->belongsTo(Kota::class, 'id_kota_sekolah_asal');
+    }
 }

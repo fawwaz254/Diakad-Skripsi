@@ -7,11 +7,11 @@
                     target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
             @else
                 <a class="btn bg-blue waves-effect target-link"
-                    href="{{ url(Request::segment(1) . '#skpi/approve-prestasi-siswa') }}"><i
+                    href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/approve-prestasi-siswa') }}"><i
                         class="material-icons">backspace</i><span>Kembali</span></a>
 
                 <a class="btn bg-blue waves-effect"
-                    href="{{ url(Request::segment(1) . '/skpi/approve-prestasi-siswa/print/skpi/' . Request::segment(4)) }}"
+                    href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/approve-prestasi-siswa/print/skpi/' . Request::segment(4)) }}"
                     target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
             @endif
         </h2>

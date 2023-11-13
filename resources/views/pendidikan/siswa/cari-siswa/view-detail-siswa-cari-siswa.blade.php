@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#siswa/cari-siswa/view-detail/' . $nis_nama_siswa_asli) }}"><i
+                href="{{ url(Request::segment(1) . '#siswa/data-siswa') }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a>
             <a href="{{ url(Request::segment(1) . '/siswa/insert-update-siswa/view-print-siswa/' . $siswa->nis_siswa) }}"
                 target="_blank" class="btn bg-red waves-effect">
