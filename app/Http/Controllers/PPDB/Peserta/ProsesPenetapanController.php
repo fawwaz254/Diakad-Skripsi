@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PPDB\Peserta;
 
+use App\Exports\ExportPenetapan;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -13,8 +14,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\Ppdb\LibPenerimaan as LibPenerimaan;
-
+use App\Models\Penerimaan;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 use Auth;
 use DB;
@@ -68,7 +70,7 @@ class ProsesPenetapanController extends BaseController
         } else {
             return [
                 'status'    => 204, // SUCCESS AND LOAD CONTENT
-                'path'      => 'peserta/proses-penetapan/'.$input->id_penerimaan
+                'path'      => 'peserta/proses-penetapan/' . $input->id_penerimaan
             ];
         }
     }
@@ -101,24 +103,24 @@ class ProsesPenetapanController extends BaseController
 
         $mode = 'show';
 
-        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'grup_penerimaan_tahun', 'penerimaan', 'mode'));
+        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'grup_penerimaan_tahun', 'penerimaan', 'mode', 'id'));
     }
 
     public function datatablesProsesPenetapan($id, Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         $list_data = LibPenerimaan::fetchDataCalonSiswaPenetapan($auth_data, $id);
 
         return Datatables::of($list_data)
-                ->addColumn('checkbox', function ($item) {
-                    $data = array(
-                        'id' => $item->id_c_siswa
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'id' => $item->id_c_siswa
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function actionPenetapan(Request $request)
@@ -127,9 +129,7 @@ class ProsesPenetapanController extends BaseController
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $validator = Validator::make($request->all(), [
-            
-        ]);
+        $validator = Validator::make($request->all(), []);
 
         if ($validator->fails() && $mode != 'delete') {
             return [
@@ -142,26 +142,34 @@ class ProsesPenetapanController extends BaseController
             try {
                 foreach ($input->id_c_siswa as $id_c_siswa) {
                     $c_siswa                = CalonSiswaBaru::find($id_c_siswa);
-                    $c_siswa->nomor_ujian   = 'U-'.$c_siswa->kode_voucher;
+                    $c_siswa->nomor_ujian   = 'U-' . $c_siswa->kode_voucher;
                     $c_siswa->updated_at    = $now;
                     $c_siswa->updated_by    = $input->auth_data->pengguna->id_pengguna;
                     $c_siswa->save();
                 }
                 DB::commit();
                 return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'message' => 'Penetapan Berhasil',
-                        'path' => 'peserta/proses-penetapan/'.$input->id_penerimaan
+                    'status' => 204, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Penetapan Berhasil',
+                    'path' => 'peserta/proses-penetapan/' . $input->id_penerimaan
                 ];
             } catch (\Exception $e) {
                 DB::rollback();
                 // something went wrong
 
                 return [
-                            'status' => 203, // GAGAL
-                            'message' => 'Proses Penetapan Gagal'
-                        ];
+                    'status' => 203, // GAGAL
+                    'message' => 'Proses Penetapan Gagal'
+                ];
             }
         }
+    }
+    public function excelPenetapan(Request $request, $id_penerimaan)
+    {
+        $penerimaan = Penerimaan::find($id_penerimaan);
+        $data = CalonSiswaBaru::where('id_penerimaan', $id_penerimaan)->with('calon_siswa_ortu.jenis_pendidikan_ayah', 'calon_siswa_ortu.jenis_pekerjaan_ayah', 'calon_siswa_ortu.jenis_penghasilan_ayah', 'calon_siswa_ortu.jenis_pendidikan_ibu', 'calon_siswa_ortu.jenis_pekerjaan_ibu', 'calon_siswa_ortu.jenis_penghasilan_ibu', 'calon_siswa_ortu.jenis_pekerjaan_wali', 'kota_lahir', 'agama', 'provinsi', 'kota', 'calon_siswa_sekolah.kota_asal_sekolah')->get();
+
+        $nm_penerimaan = str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", $penerimaan->nm_penerimaan);
+        return Excel::download(new ExportPenetapan($data), 'Data Siswa Penetapan (' . $nm_penerimaan . ' - ' . $penerimaan->gelombang_penerimaan . ').xlsx');
     }
 }
