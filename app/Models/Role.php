@@ -35,6 +35,6 @@ class Role extends Model
 
     public function modul()
     {
-        return $this->hasMany(Modul::class, 'id_role');
+        return $this->hasMany(Modul::class, 'id_role')->where('akses', 1);
     }
 }

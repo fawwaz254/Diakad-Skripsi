@@ -791,9 +791,6 @@ class SppController extends BaseController
 
         $data_kelas = Kelas::select('id_kelas', 'nm_kelas')->where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
 
-
-
-
         if (!empty($id_kelas) && !empty($tahun_akademik_semester)) {
             $semester_mulai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '1');
             $semester_selesai = $semester->firstWhere('kode_semester', $tahun_akademik_semester . '2');
@@ -827,8 +824,6 @@ class SppController extends BaseController
                 ->whereIn('biaya_sekolah.id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester])
                 ->where('tagihan_biaya.id_kelas', $id_kelas);
 
-
-
             $clone_query_tagihan = clone $query_tagihan;
             $data_tagihan = $query_tagihan->where('detail_biaya.id_jenis_detail_biaya', 4)->get();
 
@@ -836,9 +831,6 @@ class SppController extends BaseController
             $data_tagihan_non_bulanan = $clone_query_tagihan->get();
 
             $data_bulan_tagihan = $data_tagihan->unique('nm_bulan')->sortBy('id_bulan')->sortBy('kode_semester')->values()->all();
-
-
-
 
             $total_pembayaran =  'Rp ' . number_format($data_tagihan->where('is_tagih', '0')->sum('besar_pembayaran'));
             $total_tunggakan = 'Rp ' . number_format($data_tagihan->where('is_tagih', '1')->sum('besar_biaya'));

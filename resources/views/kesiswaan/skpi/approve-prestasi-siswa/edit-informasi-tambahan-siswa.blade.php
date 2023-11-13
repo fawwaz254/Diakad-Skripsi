@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#skpi/approve-prestasi-siswa') }}"><i
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/approve-prestasi-siswa') }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -24,9 +25,12 @@
                                 </h2>
 
                                 <select class="form-control show-tick" name="jenis_informasi_tambahan" required="">
-                                    <option value="ekstrakurikuler"{{ $informasi_tambahan->jenis_informasi_tambahan == 'ekstrakurikuler' ? 'selected' : '' }}>
+                                    <option
+                                        value="ekstrakurikuler"{{ $informasi_tambahan->jenis_informasi_tambahan == 'ekstrakurikuler' ? 'selected' : '' }}>
                                         Ekstrakurikuler</option>
-                                    <option value="produk_lomba"{{ $informasi_tambahan->jenis_informasi_tambahan == 'produk_lomba' ? 'selected' : '' }}>Produk Lomba
+                                    <option
+                                        value="produk_lomba"{{ $informasi_tambahan->jenis_informasi_tambahan == 'produk_lomba' ? 'selected' : '' }}>
+                                        Produk Lomba
                                     </option>
                                 </select>
                             </div>
@@ -37,7 +41,8 @@
                                 <h2 class="card-inside-title">
                                     Nama
                                 </h2>
-                                <input type="text" class="form-control" name="nm_informasi_tambahan" required="" aria-required="true" aria-invalid="true"
+                                <input type="text" class="form-control" name="nm_informasi_tambahan" required=""
+                                    aria-required="true" aria-invalid="true"
                                     value="{{ $informasi_tambahan->nm_informasi_tambahan }}">
                             </div>
 
@@ -45,14 +50,16 @@
                                 <h2 class="card-inside-title">
                                     Name (tulis dalam bahasa inggris)
                                 </h2>
-                                <input type="text" class="form-control" name="nm_informasi_tambahan_eng" required="" aria-required="true" aria-invalid="true"
+                                <input type="text" class="form-control" name="nm_informasi_tambahan_eng"
+                                    required="" aria-required="true" aria-invalid="true"
                                     value="{{ $informasi_tambahan->nm_informasi_tambahan_eng }}">
                             </div>
                         </div>
 
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </form>
