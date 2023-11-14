@@ -2863,7 +2863,6 @@ class UploadDataSiswaController extends BaseController
 				}
 			}
 
-
 			if (count($arr) != 0) {
 				foreach ($arr as $data_siswa_1) {
 					$jumlah_nis = 0;
