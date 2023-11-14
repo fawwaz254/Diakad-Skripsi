@@ -40,10 +40,10 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">Soal</h2>
+                        <h2 class="card-inside-title">Soal test</h2>
                         <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <textarea id="q1" class="form-control" name="soal" data-sample-short>{!! $item->content !!}</textarea>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea id="question" class="form-control" name="soal" data-sample-short>{!! $item->content !!}</textarea>
                             </div>
                         </div>
                         <h2 class="card-inside-title">Alternatif Jawaban 1</h2>
@@ -90,3 +90,23 @@
 
 
 @include('scriptjs')
+
+<script src="{{ asset('plugins/ckeditor/ckeditor.js') }}"></script>
+<script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
+<script>
+    var options = {
+        filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+        filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+        filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+        filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
+    };
+
+        id = 'question';
+        var editor = CKEDITOR.replace(id, options);
+        timer = setInterval(updateDiv(id), 50);
+
+    function updateDiv(id) {
+        let editorText = CKEDITOR.instances[id].getData();
+        $('#'+id).val(editorText);
+    }
+</script>
