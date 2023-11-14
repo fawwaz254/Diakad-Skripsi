@@ -2,9 +2,9 @@
      @if ($id_jurusan != '0')
          <div class="block-header">
              <h2>
-                 <div class="dropdown">
-                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Cetak
-                         Bidodata Siswa Per-kelas
+                 <div class="dropdown" style="display: inline-block;">
+                     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Cetak PDF
+                         Biodata Siswa Per-kelas
                          <span class="caret"></span></button>
                      <ul class="dropdown-menu">
                          @foreach ($kelas as $data)
@@ -15,9 +15,10 @@
                              </li>
                          @endforeach
                      </ul>
-
-                     <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Cetak
-                         Bidodata Excel Siswa Per-kelas
+                 </div>
+                 <div class="dropdown" style="display: inline-block;">
+                     <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Cetak Excel
+                         Biodata Siswa Per-kelas
                          <span class="caret"></span></button>
                      <ul class="dropdown-menu">
                          @foreach ($kelas as $data)
