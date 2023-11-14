@@ -24,64 +24,37 @@
 
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top: 10px">
-                {{-- <form action='' method='post'> --}}
-                <button type='submit'
-                    style="background-color: transparent; border: none; font-weight: bold; cursor: pointer; margin-top:10px ;cursor: not-allowed">
-                    Role </button>
-                {{-- </form> --}}
                 <div class="card">
-                    <div class="body " style="text-align: -webkit-center;">
-
-                        @foreach ($role_pengguna as $role)
-                            {{-- <h5>
-                                {{ $modul->nm_modul }}
-                            </h5> --}}
-                            {{-- @foreach ($modul->menus as $menu) --}}
-                            <a href="" style=" display: inline-block;pointer-events: none;">
-                                <div class="card" style="margin-top: 5px">
-                                    <div class="body bg-green" style="text-align: -webkit-center;">
-                                        <h5>
-                                            {{ $role->role->nm_role }}
-                                        </h5>
-                                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="table-responsive">
+                                    <table
+                                        class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
+                                        <tr>
+                                            @foreach ($role_pengguna as $role)
+                                                <th style="text-align:center"> {{ $role->role->nm_role }}</th>
+                                            @endforeach
+                                        </tr>
+                                        <tr>
+                                            @foreach ($role_pengguna as $role)
+                                                <td>
+                                                    @foreach ($role->role->modul->sortBy('urutan') as $modul)
+                                                        <b> {{ $modul->nm_modul }} </b><br>
+                                                        @foreach ($modul->menus->sortBy('urutan') as $menu)
+                                                            {{ ' -' . $menu->nm_menu }} <br>
+                                                        @endforeach
+                                                    @endforeach
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                    </table>
                                 </div>
-                            </a>
-                            {{-- @endforeach --}}
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            @foreach ($role_pengguna as $role)
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top: 10px">
-                    {{-- <form action='' method='post'> --}}
-                    <button type='submit'
-                        style="background-color: transparent; border: none; font-weight: bold; cursor: pointer; margin-top:10px ;cursor: not-allowed;
-                            ">
-                        Role : {{ $role->role->nm_role }}</button>
-                    {{-- </form> --}}
-                    <div class="card">
-                        <div class="body " style="text-align: -webkit-center;">
-                            @foreach ($role->role->modul as $modul)
-                                <h5>
-                                    {{ $modul->nm_modul }}
-                                </h5>
-                                @foreach ($modul->menus as $menu)
-                                    <a href="" style=" display: inline-block;pointer-events: none;">
-                                        <div class="card" style="margin-top: 5px">
-                                            <div class="body bg-green" style="text-align: -webkit-center;">
-                                                <h5>
-                                                    {{ $menu->nm_menu }}
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </a>
-                                @endforeach
-                            @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
-            @endforeach
+            </div>
         </div>
         <br>
     </div>

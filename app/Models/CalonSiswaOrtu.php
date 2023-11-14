@@ -16,10 +16,10 @@ class CalonSiswaOrtu extends Model
 
     protected $primaryKey = 'id_c_siswa';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_c_siswa',
         'nm_ayah',
@@ -62,9 +62,37 @@ class CalonSiswaOrtu extends Model
 
     protected $guarded = [];
 
+    public function jenis_pendidikan_ayah()
+    {
+        return $this->belongsTo(JenisPendidikan::class, 'id_jenis_pendidikan_ayah');
+    }
 
+    public function jenis_pekerjaan_ayah()
+    {
+        return $this->belongsTo(JenisPekerjaan::class, 'id_jenis_pekerjaan_ayah');
+    }
 
+    public function jenis_penghasilan_ayah()
+    {
+        return $this->belongsTo(JenisPenghasilan::class, 'id_jenis_penghasilan_ayah');
+    }
 
+    public function jenis_pendidikan_ibu()
+    {
+        return $this->belongsTo(JenisPendidikan::class, 'id_jenis_pendidikan_ibu');
+    }
 
+    public function jenis_pekerjaan_ibu()
+    {
+        return $this->belongsTo(JenisPekerjaan::class, 'id_jenis_pekerjaan_ibu');
+    }
 
+    public function jenis_penghasilan_ibu()
+    {
+        return $this->belongsTo(JenisPenghasilan::class, 'id_jenis_penghasilan_ibu');
+    }
+    public function jenis_pekerjaan_wali()
+    {
+        return $this->belongsTo(JenisPekerjaan::class, 'id_jenis_pekerjaan_wali');
+    }
 }

@@ -18,10 +18,10 @@ class CalonSiswaBaru extends Model
 
     protected $primaryKey = 'id_c_siswa';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_c_siswa',
         'id_penerimaan',
@@ -113,11 +113,29 @@ class CalonSiswaBaru extends Model
         return $this->hasOne(CalonSiswaOrtu::class, 'id_c_siswa');
     }
 
+    public function calon_siswa_sekolah()
+    {
+        return $this->belongsTo(CalonSiswaSekolah::class, 'id_c_siswa');
+    }
+
+
     public function kota_lahir()
     {
         return $this->belongsTo(Kota::class, 'id_kota_lahir');
     }
 
+    public function agama()
+    {
+        return $this->belongsTo(Agama::class, 'id_agama');
+    }
 
+    public function provinsi()
+    {
+        return $this->belongsTo(Provinsi::class, 'alamat_provinsi', 'id_provinsi');
+    }
 
+    public function kota()
+    {
+        return $this->belongsTo(Kota::class, 'alamat_kota', 'id_kota');
+    }
 }

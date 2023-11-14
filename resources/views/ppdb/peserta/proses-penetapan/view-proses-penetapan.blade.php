@@ -6,7 +6,7 @@
                     <h2>PROSES PENETAPAN</h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation1" method="POST"
+                    <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/post-view-proses-penetapan') }}">
                         {{ csrf_field() }}
                         <div class="form-group">
@@ -44,7 +44,18 @@
                     </form>
                 </div>
             </div>
+            <br>
+            @if (isset($id))
+                <a href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/proses-penetapan/excel/' . $id) }}"
+                    target="_blank" class="btn bg-green waves-effect">
+                    <i class="material-icons" style="font-size: 15px;">print</i> Download</a>
 
+                <a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/proses-penetapan/upload/' . $id) }}"
+                    class="btn bg-green waves-effect">
+                    <i class="material-icons" style="font-size: 15px;">print</i> Upload Siswa</a>
+                <br>
+            @endif
+            <br>
             @if ($mode == 'show')
                 <div class="card">
                     <div class="body">
@@ -71,14 +82,14 @@
                                         </tr>
                                     </thead>
                                 </table>
-                                {{-- <div class="row clearfix">
+                                <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <input type="hidden" name="id_penerimaan"
                                             value="{{ $penerimaan->id_penerimaan }}"></input>
-                                        <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                                class="material-icons">save</i><span>Save</span></button>
+                                        {{-- <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                                class="material-icons">save</i><span>Save</span></button> --}}
                                     </div>
-                                </div> --}}
+                                </div>
                             </div>
                         </form>
                     </div>

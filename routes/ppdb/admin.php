@@ -28,7 +28,7 @@ use App\Http\Controllers\PPDB\WelcomeController;
 Route::middleware(['token_staff'])->group(function () {
 	Route::prefix('ppdb')->group(function () {
 		Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-		Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+		Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
 		Route::prefix('manajemen-file')->group(function () {
 
@@ -106,6 +106,7 @@ Route::middleware(['token_staff'])->group(function () {
 			Route::post('petugas-penerimaan/{id_penerimaan}/add', [PetugasPenerimaanController::class, 'actionAddPetugasPenerimaan']);
 			Route::post('petugas-penerimaan/{id_penerimaan}/delete/{id_penerimaan_petugas}', [PetugasPenerimaanController::class, 'actionDeletePetugasPenerimaan']);
 
+
 			// MENU data informasi
 			Route::get('data-informasi', [DataInformasiController::class, 'dataInformasi']);
 			Route::post('data-informasi', [DataInformasiController::class, 'actionPostDataInformasi']);
@@ -125,6 +126,11 @@ Route::middleware(['token_staff'])->group(function () {
 			Route::get('proses-penetapan/{id_penerimaan}', [ProsesPenetapanController::class, 'showPeserta']);
 			Route::get('proses-penetapan/datatables/{id_penerimaan}', [ProsesPenetapanController::class, 'datatablesProsesPenetapan']);
 			Route::post('proses-penetapan/penetapan', [ProsesPenetapanController::class, 'actionPenetapan']);
+			Route::get('proses-penetapan/excel/{id_penerimaan}', [ProsesPenetapanController::class, 'excelPenetapan']);
+			Route::get('proses-penetapan/upload/{id_penerimaan}', [ProsesPenetapanController::class, 'uploadPenetapan']);
+			Route::post('proses-penetapan/post-file-excel', [ProsesPenetapanController::class, 'postUploadPenetapan']);
+
+
 
 			// MENU pindah penerimaan
 			Route::get('pindah-penerimaan', [PindahPenerimaanController::class, 'viewPindahPenerimaan']);
@@ -156,6 +162,8 @@ Route::middleware(['token_staff'])->group(function () {
 			Route::get('data-penetapan/add-penetapan-penerimaan/{id}', [PenetapanController::class, 'addPenetapanPenerimaan']);
 			Route::get('data-penetapan/edit-penetapan-penerimaan/{id}', [PenetapanController::class, 'editPenetapanPenerimaan']);
 			Route::post('action-penetapan-penerimaan/{mode}/{id}', [PenetapanController::class, 'actionPenetapanPenerimaan']);
+			Route::get('data-penetapan/excel/{id}', [PenetapanController::class, 'excelPenetapan']);
+
 
 			// MENU PERSIDANGAN
 			Route::get('persidangan', [PersidanganController::class, 'viewPersidangan']);

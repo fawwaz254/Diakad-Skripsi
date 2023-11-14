@@ -158,11 +158,15 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th onclick="filterAction('nis')" style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="Urutkan berdasarkan nis">
-                                        NIS&nbsp;<i class="small material-icons btn-sort-nis" style="color:darkgrey;display:inline;cursor:pointer;">sort
+                                    <th onclick="filterAction('nis')" style="cursor:pointer" data-toggle="tooltip"
+                                        data-placement="top" title="Urutkan berdasarkan nis">
+                                        NIS&nbsp;<i class="small material-icons btn-sort-nis"
+                                            style="color:darkgrey;display:inline;cursor:pointer;">sort
                                         </i></th>
-                                    <th onclick="filterAction('nama')" style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="Urutkan berdasarkan nama">
-                                        Nama&nbsp;<i class="small material-icons btn-sort-nama" style="color:darkgrey;display:inline;cursor:pointer;">sort
+                                    <th onclick="filterAction('nama')" style="cursor:pointer" data-toggle="tooltip"
+                                        data-placement="top" title="Urutkan berdasarkan nama">
+                                        Nama&nbsp;<i class="small material-icons btn-sort-nama"
+                                            style="color:darkgrey;display:inline;cursor:pointer;">sort
                                         </i></th>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @if (!empty($bulan->id_bulan))
@@ -172,7 +176,8 @@
                                         @endif
                                     @endforeach
                                     @foreach ($data_ket_tagihan as $ket)
-                                        <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->keterangan }}
+                                        <td class="tdbg-13" style="vertical-align: bottom;">
+                                            {{ $ket->nm_biaya . ' ' . $ket->keterangan }}
                                         </td>
                                     @endforeach
                                 </tr>
@@ -211,6 +216,8 @@
                                                 <td>
                                                     @if ($tagihan->is_request == 0)
                                                         <button class="btn btn-block bg-black waves-effect"
+                                                            data-toggle="tooltip" data-html="true"
+                                                            title="{{ $bulan->nm_bulan }}" data-placement="top"
                                                             onclick="takeAction(this)"
                                                             data-id="{{ $tagihan->id_tagihan_biaya }}"
                                                             data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
@@ -250,6 +257,7 @@
                                                 $tagihan = $data_tagihan_non_bulanan
                                                     ->where('id_siswa', $siswa->id_siswa)
                                                     ->where('keterangan', $ket->keterangan)
+                                                    // ->where('nm_biaya', $ket->nm_biaya)
                                                     ->first();
                                             @endphp
                                             @if (!empty($tagihan) > 0)
@@ -260,7 +268,9 @@
                                                     <td>
                                                         @if ($tagihan->is_request == 0)
                                                             <button class="btn btn-block bg-black waves-effect"
-                                                                onclick="takeAction(this)"
+                                                                data-toggle="tooltip" data-html="true"
+                                                                title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $ket->nm_biaya . ' || ' . $ket->keterangan }}"
+                                                                data-placement="top" onclick="takeAction(this)"
                                                                 data-id="{{ $tagihan->id_tagihan_biaya }}"
                                                                 data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
                                                         @else
@@ -356,7 +366,7 @@
 
         if (segments.length >= 5 && segments[6] === 'nis') {
             $('.btn-sort-nis').css('color', 'black');
-        } else if(segments.length >= 5 && segments[6] === 'nama') {
+        } else if (segments.length >= 5 && segments[6] === 'nama') {
             $('.btn-sort-nama').css('color', 'black');
         }
     });

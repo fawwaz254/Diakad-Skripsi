@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Keuangan\LaporanKeuangan;
 use App\Libraries\Keuangan\LibCetakKeuangan;
 use App\Models\Bulan;
 use App\Models\Semester;
+use App\Models\Setting;
 use App\Models\TutupBukuBulananKas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,7 +30,9 @@ class CetakLaporanController extends BaseController
             session(['setting_print_keuangan2' => 'semua']);
         }
 
-        return view('keuangan/laporan-keuangan/cetak-laporan/view-cetak-laporan', compact('auth_data', 'nis_nama_siswa', 'bulan'));
+        $is_ypm = Setting::where('key_setting', 'is_ypm')->first();
+
+        return view('keuangan/laporan-keuangan/cetak-laporan/view-cetak-laporan', compact('auth_data', 'nis_nama_siswa', 'bulan', 'is_ypm'));
     }
 
     public function actionSetSettingCetak(Request $request)
