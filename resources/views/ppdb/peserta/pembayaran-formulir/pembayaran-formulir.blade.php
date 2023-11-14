@@ -83,7 +83,7 @@
                                                     <td>{{ $voucher->pin_password }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>UANG MUKA (DP)</td>
+                                                    <td>Uang Muka (DP)</td>
                                                     <td class="tarif">{{ $voucher->tarif }}</td>
                                                 </tr>
                                                 <tr>
