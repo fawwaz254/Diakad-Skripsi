@@ -127,6 +127,9 @@ Route::middleware(['token_staff'])->group(function () {
 			Route::get('proses-penetapan/datatables/{id_penerimaan}', [ProsesPenetapanController::class, 'datatablesProsesPenetapan']);
 			Route::post('proses-penetapan/penetapan', [ProsesPenetapanController::class, 'actionPenetapan']);
 			Route::get('proses-penetapan/excel/{id_penerimaan}', [ProsesPenetapanController::class, 'excelPenetapan']);
+			Route::get('proses-penetapan/upload/{id_penerimaan}', [ProsesPenetapanController::class, 'uploadPenetapan']);
+			Route::post('proses-penetapan/post-file-excel', [ProsesPenetapanController::class, 'postUploadPenetapan']);
+
 
 
 			// MENU pindah penerimaan

@@ -45,14 +45,16 @@
                 </div>
             </div>
             <br>
-            <a href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/proses-penetapan/excel/' . $id) }}"
-                target="_blank" class="btn bg-green waves-effect">
-                <i class="material-icons" style="font-size: 15px;">print</i> Download</a>
+            @if (isset($id))
+                <a href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/proses-penetapan/excel/' . $id) }}"
+                    target="_blank" class="btn bg-green waves-effect">
+                    <i class="material-icons" style="font-size: 15px;">print</i> Download</a>
 
-            <a href="humas/absensi/histori-absensi/export-laravel-week" target="_blank"
-                class="btn bg-green waves-effect">
-                <i class="material-icons" style="font-size: 15px;">print</i> Upload Siswa</a>
-            <br>
+                <a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/proses-penetapan/upload/' . $id) }}"
+                    class="btn bg-green waves-effect">
+                    <i class="material-icons" style="font-size: 15px;">print</i> Upload Siswa</a>
+                <br>
+            @endif
             <br>
             @if ($mode == 'show')
                 <div class="card">
