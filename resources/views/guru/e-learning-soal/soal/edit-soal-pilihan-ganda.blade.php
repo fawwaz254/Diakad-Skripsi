@@ -43,7 +43,7 @@
                         </div>
                         <h2 class="card-inside-title">Soal</h2>
                         <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <textarea id="q1" class="form-control" name="soal" data-sample-short>{!! $item->content !!}</textarea>
                             </div>
                         </div>
