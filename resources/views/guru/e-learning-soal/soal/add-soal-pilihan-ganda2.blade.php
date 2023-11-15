@@ -15,7 +15,7 @@
         <input type="text" name="jumlah" style="padding:7px; background-color:white;border: 1px solid black;"
             value="Jumlah Soal = 1" disabled>
         <span style="background-color: white;padding:7px;border: 1px solid black;">
-            <input type="checkbox" id="wuswug" class="checkbox">
+            <input type="checkbox" id="wuswug" class="checkbox" checked>
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
         </span>
     </h2>
@@ -110,9 +110,44 @@
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
+    var jumlah = 1;
+    $(document).ready(function() {
+        $('#btn-submit').attr('disabled', 'disabled');
+        changeCkedior();
+    })
+
+    function changeCkedior() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        if (isChecked) // if changed state is "CHECKED"
+        {
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                var editor = CKEDITOR.replace(id, options);
+                for (var j = 0; j < 5; j++) {
+                    idjawaban = 'a' + i + j;
+                    var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                }
+            }
+
+        } else {
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                CKEDITOR.instances[id].destroy();
+                for (var j = 0; j < 5; j++) {
+                    idjawaban = 'a' + i + j;
+                    CKEDITOR.instances[idjawaban].destroy();
+                }
+            }
+
+        }
+    }
+
+
     $("#btn-view").click(function() {
         var checkbox = document.getElementById("wuswug");
         var isChecked = checkbox.checked;
+        $('#btn-submit').removeAttr('disabled', 'disabled');
 
         if (isChecked) {
             checkbox.checked = !checkbox.checked;
@@ -182,10 +217,8 @@
 
 
     });
-</script>
 
-<script>
-    var jumlah = 1;
+
     var options = {
         filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
         filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
@@ -270,8 +303,8 @@
         </div>
         </div>
         `);
-
         }
+        changeCkedior();
     });
 
     $('#remove').click(function() {

@@ -5,7 +5,7 @@
             <span>Kembali</span>
         </a>
         <span style="background-color: white;padding:7px;border: 1px solid black;">
-            <input type="checkbox" id="wuswug" class="checkbox">
+            <input type="checkbox" id="wuswug" class="checkbox" checked>
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
         </span>
     </h2>
@@ -97,14 +97,36 @@
     </div>
 
     <div class="row clearfix" style="margin-top: 10px">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <button class="btn btn-block bg-pink waves-effect" id="btn-submit" type="submit">Save</button>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button">Preview</button>
         </div>
     </div>
 
     <br>
     <br>
 </form>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="header bg-pink">
+                <h4 class="modal-title" style="text-align: center">Preview Soal</h4>
+            </div>
+
+            <div id="modal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @include('scriptjs')
 <script src="{{ asset('plugins/ckeditor/ckeditor.js') }}"></script>
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
@@ -119,6 +141,133 @@
         filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
         filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
     };
+
+
+    $(document).ready(function() {
+        $('#btn-submit').attr('disabled', 'disabled');
+        changeCkedior();
+    })
+
+    function changeCkedior() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        if (isChecked) // if changed state is "CHECKED"
+        {
+            for (var i = 1; i <= pertanyaan; i++) {
+                id = 'inputPertanyaan' + i;
+                var editor = CKEDITOR.replace(id, options);
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                // }
+            }
+
+            for (var i = 1; i <= jawaban; i++) {
+                id = 'inputJawaban' + i;
+                var editor = CKEDITOR.replace(id, options);
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                // }
+            }
+
+        } else {
+            for (var i = 1; i <= pertanyaan; i++) {
+                id = 'inputPertanyaan' + i;
+                CKEDITOR.instances[id].destroy();
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     CKEDITOR.instances[idjawaban].destroy();
+                // }
+            }
+
+            for (var i = 1; i <= jawaban; i++) {
+                id = 'inputJawaban' + i;
+                CKEDITOR.instances[id].destroy();
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     CKEDITOR.instances[idjawaban].destroy();
+                // }
+            }
+
+        }
+    }
+
+
+    $("#btn-view").click(function() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        $('#btn-submit').removeAttr('disabled', 'disabled');
+
+        if (isChecked) {
+            for (var i = 1; i <= pertanyaan; i++) {
+                id = 'inputPertanyaan' + i;
+                CKEDITOR.instances[id].destroy();
+            }
+
+            for (var i = 1; i <= jawaban; i++) {
+                id = 'inputJawaban' + i;
+                CKEDITOR.instances[id].destroy();
+
+            }
+        }
+        $('#modal').html('');
+        var html = '<table  class="table">';
+        $('select[name=id_bulan]').val()
+
+        for (var i = 1; i <= pertanyaan; i++) {
+            var soal = $(`textarea[id="inputPertanyaan${i}"]`).val();
+            if (soal) {
+                html += '<tr>';
+                html += '<td style="text-align: center;">';
+                html += i + '. Soal';
+                html += '</td >';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td >';
+                html +=
+                    '<pre style="white-space: pre-wrap; word-wrap: break-word;">' +
+                    soal + '</pre>';
+                html += '</td>';
+                html += '</tr>';
+
+                var jawaban = $(`select[id= noJawaban${i}]`).val()
+
+
+                if (jawaban) {
+
+                    if (jawaban == '1') {
+                        jawaban = 'True';
+                    } else {
+                        jawaban = 'False';
+                    }
+
+                    html += '<tr>';
+                    html += '<td style="text-align: center">';
+                    html += 'Jawaban';
+                    html += '</td >';
+                    html += '</tr>';
+                    html += '<tr>';
+                    html += '<td >';
+                    html += '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + jawaban +
+                        '</pre>';
+                    html += '</td >';
+                    html += '</tr>';
+
+                    html += '<tr>';
+                    html += '<td style="border: 1px solid pink;">';
+                    html += '</td >';
+                    html += '</tr>';
+                }
+
+            }
+        }
+        // }
+        html += '</table>';
+        $('#modal').html(html);
+        $('#myModal').modal('show');
+    });
+
 
     $('.checkbox').on('change', function() { // on change of state
         if (this.checked) // if changed state is "CHECKED"
@@ -179,6 +328,7 @@
                                     </select>
                             </div>
 							<br><br></div>`);
+            changeCkedior();
         }
     });
 

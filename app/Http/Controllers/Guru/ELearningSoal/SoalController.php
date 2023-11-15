@@ -199,6 +199,8 @@ class SoalController extends Controller
             ];
         } else {
             $question = Soal::find($input->id_soal);
+            $question->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+            $question->save();
             $question->delete();
             return [
                 // 'status' => 202, // SUCCESS AND LOAD CONTENT

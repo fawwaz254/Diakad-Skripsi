@@ -15,7 +15,7 @@
         <input type="text" name="jumlah" style="padding:7px; background-color:white;border: 1px solid black;"
             value="Jumlah Soal = 1" disabled>
         <span style="background-color: white;padding:7px;border: 1px solid black;">
-            <input type="checkbox" id="wuswug" class="checkbox">
+            <input type="checkbox" id="wuswug" class="checkbox" checked>
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
         </span>
     </h2>
@@ -46,7 +46,7 @@
                     <h2 class="card-inside-title">Kunci Jawaban (akan di tampilkan ketika koreksi jawaban)</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q1" class="form-control q1" required="" name="jawaban[1]" rows="3"></textarea>
+                            <textarea class="form-control q1" required="" name="jawaban[1]" rows="3">-</textarea>
                         </div>
                     </div>
                 </div>
@@ -61,8 +61,31 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <button class="btn btn-block bg-pink waves-effect" id="btn-submit" type="submit">Save</button>
         </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button">Preview</button>
+        </div>
     </div>
 </form>
+<br>
+<br>
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="header bg-pink">
+                <h4 class="modal-title" style="text-align: center">Preview Soal</h4>
+            </div>
+
+            <div id="modal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 @include('scriptjs')
@@ -72,6 +95,7 @@
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
+    var jumlah = 1;
     var options = {
         filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
         filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
@@ -80,6 +104,82 @@
     };
 </script>
 <script>
+    $(document).ready(function() {
+        $('#btn-submit').attr('disabled', 'disabled');
+        changeCkedior();
+    })
+
+    function changeCkedior() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        if (isChecked) // if changed state is "CHECKED"
+        {
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                var editor = CKEDITOR.replace(id, options);
+
+            }
+
+        } else {
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                CKEDITOR.instances[id].destroy();
+            }
+        }
+    }
+
+
+    $("#btn-view").click(function() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        $('#btn-submit').removeAttr('disabled', 'disabled');
+
+        if (isChecked) {
+            checkbox.checked = !checkbox.checked;
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                CKEDITOR.instances[id].destroy();
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     CKEDITOR.instances[idjawaban].destroy();
+                // }
+            }
+        }
+        $('#modal').html('');
+        var html = '<table  class="table">';
+        for (var i = 1; i <= jumlah; i++) {
+            var soal = $(`textarea[id="q${i}"]`).val();
+
+            if (soal) {
+                html += '<tr>';
+                html += '<td style="text-align: center;">';
+                html += i + '. Soal';
+                html += '</td >';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td >';
+                html +=
+                    '<pre style="white-space: pre-wrap; word-wrap: break-word;">' +
+                    soal + '</pre>';
+                html += '</td>';
+                html += '</tr>';
+
+                html += '<tr>';
+                html += '<td style="border: 1px solid pink;">';
+                html += '</td >';
+            }
+        }
+        html += '</table>';
+        $('#modal').html(html);
+
+        $('#myModal').modal('show');
+
+
+    });
+
+
+
+
     $('.checkbox').on('change', function() { // on change of state
         if (this.checked) // if changed state is "CHECKED"
         {
@@ -98,10 +198,9 @@
 
         }
     });
-</script>
-<script>
+
     //untuk fungsi  add jumlah soal
-    var jumlah = 1;
+
     $('#add').click(function() {
         if (jumlah != 10) {
             jumlah++;
@@ -127,7 +226,7 @@
                     <h2 class="card-inside-title">Kunci Jawaban (akan di tampilkan ketika koreksi jawaban)</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q1" class="form-control q1" required="" name="jawaban[${jumlah}]" rows="3"></textarea>
+                            <textarea id="q1" class="form-control q1" required="" name="jawaban[${jumlah}]" rows="3">-</textarea>
                         </div>
                     </div>
                 </div>
@@ -136,6 +235,7 @@
     </div>
         `);
         }
+        changeCkedior();
     });
 
     $('#remove').click(function() {
