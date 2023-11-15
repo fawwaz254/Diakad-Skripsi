@@ -962,7 +962,7 @@ class PembayaranSiswaController extends BaseController
 
                     if (!empty($siswa->id_wali_murid)) {
                         $wali_murid = WaliMurid::find($siswa->id_wali_murid);
-                        if ($wali_murid) {
+                        if ($wali_murid && isset($wali_murid->pengguna)) {
                             $token_wali_murid = $wali_murid->pengguna->api_token;
                             if (!empty($token_wali_murid)) {
                                 $message = 'Putra/Putri Anda melakukan pembayaran tagihan';

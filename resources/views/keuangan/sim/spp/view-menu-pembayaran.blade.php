@@ -52,6 +52,72 @@
 
     }
 
+    .bbg-1 {
+        padding-left: 10px;
+        background-color: #efee9d
+    }
+
+    .bbg-2 {
+        padding-left: 10px;
+        background-color: #d1eaa3;
+    }
+
+    .bbg-3 {
+        padding-left: 10px;
+        background-color: #dbc6eb;
+    }
+
+    .bbg-4 {
+        padding-left: 10px;
+        background-color: #abc2e8;
+    }
+
+    .bbg-5 {
+        padding-left: 10px;
+        background-color: #ddf3f5;
+    }
+
+    .bbg-6 {
+        padding-left: 10px;
+        background-color: #f2aaaa;
+    }
+
+    .bbg-7 {
+        padding-left: 10px;
+        background-color: #f6def6;
+    }
+
+    .bbg-8 {
+        padding-left: 10px;
+        background-color: #f4ebc1;
+    }
+
+    .bbg-9 {
+        padding-left: 10px;
+        background-color: #a6dcef;
+    }
+
+    .bbg-10 {
+        padding-left: 10px;
+        background-color: #f2aaaa;
+    }
+
+    .bbg-11 {
+        padding-left: 10px;
+        background-color: #ddf3f5;
+    }
+
+    .bbg-12 {
+        padding-left: 10px;
+        background-color: #a0c1b8;
+    }
+
+    .bbg-13 {
+        padding-left: 10px;
+        background-color: #ffffff;
+
+    }
+
     table.is-fixed td {
         height: 75px;
         max-height: 75px;
@@ -215,12 +281,15 @@
                                                 @endphp
                                                 <td>
                                                     @if ($tagihan->is_request == 0)
-                                                        <button class="btn btn-block bg-black waves-effect"
-                                                            data-toggle="tooltip" data-html="true"
-                                                            title="{{ $bulan->nm_bulan }}" data-placement="top"
-                                                            onclick="takeAction(this)"
-                                                            data-id="{{ $tagihan->id_tagihan_biaya }}"
-                                                            data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
+                                                        <div
+                                                            @if (!empty($bulan->id_bulan)) class="bbg-{{ $bulan->id_bulan }}" @endif>
+                                                            <button class="btn btn-block bg-black waves-effect"
+                                                                data-toggle="tooltip" data-html="true"
+                                                                title="{{ $bulan->nm_bulan }}" data-placement="top"
+                                                                onclick="takeAction(this)"
+                                                                data-id="{{ $tagihan->id_tagihan_biaya }}"
+                                                                data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
+                                                        </div>
                                                     @else
                                                         Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
                                                     @endif
@@ -463,7 +532,7 @@
                 },
                 success: function(response) {
                     // vex.dialog.alert(response.message);
-                    item.parent('td').replaceWith(
+                    item.closest('td').replaceWith(
                         '<td class="tdbg-' + response.data.month + '">' + response.data.date +
                         '    <br>' +
                         '<a style="margin-top: 2px; color: #e91e63; cursor: pointer;" onclick="deleteActionKhusus(this)" data-id="' +
