@@ -532,7 +532,7 @@
                 },
                 success: function(response) {
                     // vex.dialog.alert(response.message);
-                    item.parent('td').replaceWith(
+                    item.closest('td').replaceWith(
                         '<td class="tdbg-' + response.data.month + '">' + response.data.date +
                         '    <br>' +
                         '<a style="margin-top: 2px; color: #e91e63; cursor: pointer;" onclick="deleteActionKhusus(this)" data-id="' +
