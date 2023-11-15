@@ -120,7 +120,7 @@
                                         @endforeach
                                     </tr>
                                 @endforeach
-                                <tr style="background-color: #8bc34a;">
+                                <tr>
                                     <td>TOTAL</td>
                                     @foreach ($data_tingkat as $tingkat)
                                         <td style="text-align:center">{{ $total[$tingkat->tingkat] }} Siswa</td>
