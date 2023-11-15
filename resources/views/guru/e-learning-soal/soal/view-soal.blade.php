@@ -6,7 +6,7 @@
                 <i class="material-icons">keyboard_backspace</i>
                 <span>Kembali</span>
             </a>
-            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+            {{-- <a type="button" class="btn btn-success" style="margin-bottom: 15px"
                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/pilihan-ganda') }}">
                 <i class="material-icons">add_box</i>
                 <span>Type Pilihan Ganda</span>
@@ -40,7 +40,7 @@
                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/bank-soal/new/true-false') }}">
                 <i class="material-icons">add_box</i>
                 <span>Type True/False</span>
-            </a>
+            </a> --}}
             {{-- <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/kategori') }}">
                 <i class="material-icons">settings</i>

@@ -19,7 +19,7 @@
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
         </span> --}}
         <span style="background-color: white;padding:7px;border: 1px solid black;">
-            <input type="checkbox" id="wuswug" class="checkbox">
+            <input type="checkbox" id="wuswug" class="checkbox" checked>
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
         </span>
     </h2>
@@ -87,12 +87,32 @@
     <div class="row clearfix" style="margin-top: 10px">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <button class="btn btn-block bg-pink waves-effect" id="btn-submit" type="submit">Save</button>
+            <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button"
+                style="margin-bottom: 20px; margin-top: 20px">Preview</button>
         </div>
     </div>
 
     <br>
     <br>
 </form>
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="header bg-pink">
+                <h4 class="modal-title" style="text-align: center">Preview Soal</h4>
+            </div>
+
+            <div id="modal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @include('scriptjs')
 <!-- CKeditor Plugin Js -->
 <script src="{{ asset('plugins/ckeditor/ckeditor.js') }}"></script>
@@ -107,99 +127,120 @@
         filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
     };
 
-    // $('.checkbox').on('change', function() { // on change of state
-    //     if (this.checked) // if changed state is "CHECKED"
-    //     {
-    //         for (var i = 1; i <= jumlah; i++) {
-    //             id = 'q' + i;
-    //             var editor = CKEDITOR.replace(id, options);
-    //             for (var j = 0; j < 5; j++) {
-    //                 idjawaban = 'a' + i + j;
-    //                 var editorjawaban = CKEDITOR.replace(idjawaban, options);
-    //             }
-    //         }
 
-    //     } else {
-    //         for (var i = 1; i <= jumlah; i++) {
-    //             id = 'q' + i;
-    //             CKEDITOR.instances[id].destroy();
-    //             for (var j = 0; j < 5; j++) {
-    //                 idjawaban = 'a' + i + j;
-    //                 CKEDITOR.instances[idjawaban].destroy();
-    //             }
-    //         }
+    $(document).ready(function() {
+        $('#btn-submit').attr('disabled', 'disabled');
+        changeCkedior();
+    })
 
-    //     }
-    // });
 
-    // $('#add').click(function() {
-    //     if (jumlah != 10) {
 
-    //         jumlah++;
-    //         var value = 'Jumlah Soal = ' + jumlah;
-    //         $("input[name='jumlah']").val(value);
-    //         $('#place').append(`
-    //     <div class="row clearfix" style="margin-top: 10px" id="${jumlah }">
-    //     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    //         <div class="card">
-    //             <div class="header bg-pink">
-    //                 <h2>
-    //                    ${jumlah} . SOAL PILIHAN GANDA
-    //                 </h2>
-    //             </div>
-    //             <div class="body">
-    //                 <h2 class="card-inside-title">Paste Soal dan Jawaban dari file World</h2>
-    //                 <div class="row clearfix">
-    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    //                         <textarea id="${jumlah}" onpaste="pasteFunction(this)" class="form-control " rows="1"></textarea>
-    //                     </div>
-    //                 </div>
-    //                 <h2 class="card-inside-title">Soal</h2>
-    //                 <div class="row clearfix">
-    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    //                         <textarea id="q${jumlah}" class="form-control q${jumlah}" required="" name="soal[${jumlah}]" rows="3"></textarea>
-    //                     </div>
-    //                 </div>
-    //                 @for ($i = 0; $i < 5; $i++)
-    //                     <h2 class="card-inside-title">Jawaban {{ $i + 1 }}</h2>
-    //                     <div class="row clearfix">
-    //                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    //                             <textarea id="a${jumlah}{{ $i }}" class="form-control a${jumlah}{{ $i }}" required="" name="jawaban[${jumlah}][]"></textarea>
-    //                         </div>
-    //                     </div>
-    //                 @endfor
-    //                 <h2 class="card-inside-title">Jawaban Benar</h2>
-    //                 <div class="row clearfix">
-    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    //                         <select class="form-control show-tick" name="jawaban_benar[${jumlah}]" required="">
-    //                             @for ($i = 0; $i < 5; $i++)
-    //                                 <option value="{{ $i }}">Jawaban {{ $i + 1 }}</option>
-    //                             @endfor
-    //                         </select>
+    function changeCkedior() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        if (isChecked) // if changed state is "CHECKED"
+        {
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                var editor = CKEDITOR.replace(id, options);
+                for (var j = 0; j < 5; j++) {
+                    idjawaban = 'a' + i + j;
+                    var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                }
+            }
 
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </div>
-    //     </div>
-    //     `);
+        } else {
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                CKEDITOR.instances[id].destroy();
+                for (var j = 0; j < 5; j++) {
+                    idjawaban = 'a' + i + j;
+                    CKEDITOR.instances[idjawaban].destroy();
+                }
+            }
 
-    //     }
-    // });
+        }
+    }
 
-    // $('#remove').click(function() {
-    //     if (jumlah != 1) {
-    //         var element = document.getElementById(jumlah);
-    //         jumlah--;
-    //         var value = 'Jumlah Soal = ' + jumlah;
-    //         $("input[name='jumlah']").val(value);
-    //         while (element.firstChild) {
-    //             element.removeChild(element.firstChild);
-    //         }
-    //         element.remove();
-    //     }
-    // });
+
+
+    $("#btn-view").click(function() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        $('#btn-submit').removeAttr('disabled', 'disabled');
+
+        if (isChecked) {
+            checkbox.checked = !checkbox.checked;
+            for (var i = 1; i <= jumlah; i++) {
+                id = 'q' + i;
+                CKEDITOR.instances[id].destroy();
+                for (var j = 0; j < 5; j++) {
+                    idjawaban = 'a' + i + j;
+                    CKEDITOR.instances[idjawaban].destroy();
+                }
+            }
+        }
+        $('#modal').html('');
+        var html = '<table  class="table">';
+        for (var i = 1; i <= jumlah; i++) {
+            var soal = $(`textarea[id="q${i}"]`).val();
+            // var kunci = $(`select[name="jawaban_benar[${i}]"]`).val();
+            if (soal) {
+                html += '<tr>';
+                html += '<td style="text-align: center;">';
+                html += i + '. Soal';
+                html += '</td >';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td >';
+                html +=
+                    '<pre style="white-space: pre-wrap; word-wrap: break-word;">' +
+                    soal + '</pre>';
+                html += '</td>';
+                html += '</tr>';
+
+                html += '<tr>';
+                html += '<td style="text-align: center">';
+                html += 'Jawaban';
+                html += '</td >';
+                html += '</tr>';
+
+                for (var j = 0; j < 5; j++) {
+                    var checkbox = document.getElementById(`jawaban_benar[1][${j}]`);
+                    var isChecked = checkbox.checked;
+                    // idjawaban = 'a' + i + j;
+                    var jawaban = $(`textarea[id="a${i}${j}"]`).val();
+                    html += '<tr>';
+                    html += '<td >';
+                    if (isChecked) {
+                        html +=
+                            '<pre style="white-space: pre-wrap; word-wrap: break-word;background-color:#CFE795"">' +
+                            jawaban + '</pre>';
+                    } else {
+                        html += '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + jawaban +
+                            '</pre>';
+                    }
+                    html += '</td >';
+                    html += '</tr>';
+
+                }
+                html += '<tr>';
+                html += '<td style="border: 1px solid pink;">';
+
+                html += '</td >';
+            }
+        }
+        html += '</table>';
+        $('#modal').html(html);
+
+
+
+        $('#myModal').modal('show');
+
+
+    });
+
+
     $('.checkbox').on('change', function() { // on change of state
         if (this.checked) // if changed state is "CHECKED"
         {
