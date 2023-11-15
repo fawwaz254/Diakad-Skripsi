@@ -72,7 +72,10 @@
             },
             {
                 data: 'gelombang_penerimaan',
-                name: 'gelombang_penerimaan'
+                name: 'gelombang_penerimaan',
+                render: function(data) {
+                    return data == 0 ? 'Inden' : data;
+                }
             },
             {
                 data: 'nm_semester_penerimaan',
