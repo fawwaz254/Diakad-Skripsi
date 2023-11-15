@@ -90,7 +90,7 @@
                                                     <td>Gelombang Penerimaan</td>
                                                     @if (!empty($voucher->nm_penerimaan))
                                                         <td>{{ $voucher->nm_penerimaan }} Gelombang
-                                                            {{ $voucher->gelombang_penerimaan }}</td>
+                                                            {{ $voucher->gelombang_penerimaan == 0 ? 'Inden' : $voucher->gelombang_penerimaan }}</td>
                                                     @else
                                                         <td></td>
                                                     @endif
