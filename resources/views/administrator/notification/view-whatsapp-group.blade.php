@@ -26,7 +26,7 @@
                 </small>
             </div>
             <label>Template Kehadiran/Ketidakhadiran Siswa</label>
-            <textarea name="attendance_template" class="form-control" rows="5">{!! $template_attendance_setting !!}</textarea>
+            <textarea name="attendance_template" class="form-control" rows="20">{!! $template_attendance_setting !!}</textarea>
             <label style="margin-top:1rem">Jadwal Kehadiran/Ketidakhadiran Siswa</label>
             <input type="time" name="attendance_schedule" class="form-control"
                 value="{{ $attendance_time_setting }}">
@@ -42,7 +42,7 @@
                 </small>
             </div>
             <label style="margin-top:1rem">Template Pembayaran SPP Siswa</label>
-            <textarea name="payment_template" class="form-control" rows="5">{{ $template_payment_setting }}</textarea>
+            <textarea name="payment_template" class="form-control" rows="20">{{ $template_payment_setting }}</textarea>
             <label style="margin-top:1rem">Jadwal Pembayaran SPP Siswa</label>
             <input type="time" name="payment_schedule" class="form-control" value="{{ $payment_time_setting }}">
 
