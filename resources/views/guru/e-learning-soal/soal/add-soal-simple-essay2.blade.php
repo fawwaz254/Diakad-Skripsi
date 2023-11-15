@@ -19,7 +19,7 @@
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
         </span> --}}
         <span style="background-color: white;padding:7px;border: 1px solid black;">
-            <input type="checkbox" id="wuswug" class="checkbox">
+            <input type="checkbox" id="wuswug" class="checkbox" checked>
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
         </span>
     </h2>
@@ -51,31 +51,31 @@
                     <h2 class="card-inside-title">Alternatif Jawaban 1</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q1" class="form-control q1" required="" name="jawaban[1]" rows="3"></textarea>
+                            <textarea id="a0" class="form-control q1" required="" name="jawaban[1]" rows="3"></textarea>
                         </div>
                     </div>
                     <h2 class="card-inside-title">Alternatif Jawaban 2</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q2" class="form-control q2" name="jawaban[2]" rows="3"></textarea>
+                            <textarea id="a1" class="form-control q2" name="jawaban[2]" rows="3"></textarea>
                         </div>
                     </div>
                     <h2 class="card-inside-title">Alternatif Jawaban 3</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q3" class="form-control q3" name="jawaban[3]" rows="3"></textarea>
+                            <textarea id="a2" class="form-control q3" name="jawaban[3]" rows="3"></textarea>
                         </div>
                     </div>
                     <h2 class="card-inside-title">Alternatif Jawaban 4</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q4" class="form-control q4" name="jawaban[4]" rows="3"></textarea>
+                            <textarea id="a3" class="form-control q4" name="jawaban[4]" rows="3"></textarea>
                         </div>
                     </div>
                     <h2 class="card-inside-title">Alternatif Jawaban 5</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q5" class="form-control q5" name="jawaban[5]" rows="3"></textarea>
+                            <textarea id="a4" class="form-control q5" name="jawaban[5]" rows="3"></textarea>
                         </div>
                     </div>
 
@@ -91,8 +91,32 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <button class="btn btn-block bg-pink waves-effect" id="btn-submit" type="submit">Save</button>
         </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button">Preview</button>
+        </div>
     </div>
 </form>
+<br>
+<br>
+<br>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="header bg-pink">
+                <h4 class="modal-title" style="text-align: center">Preview Soal</h4>
+            </div>
+
+            <div id="modal">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @include('scriptjs')
@@ -110,92 +134,76 @@
     };
 </script>
 <script>
+    $(document).ready(function() {
+        $('#btn-submit').attr('disabled', 'disabled');
+        changeCkedior();
+    })
+
+
+    function changeCkedior() {
+        var editor = CKEDITOR.replace('q1', options);
+    }
+
     $('.checkbox').on('change', function() { // on change of state
         if (this.checked) // if changed state is "CHECKED"
         {
-            // for (var i = 1; i <= jumlah; i++) {
-            // id = 'q' + i;
             var editor = CKEDITOR.replace('q1', options);
-
-            // }
-
         } else {
-            // for (var i = 1; i <= jumlah; i++) {
-            // id = 'q' + i;
             CKEDITOR.instances['q1'].destroy();
-
-            // }
-
         }
     });
-    // $('.checkbox').on('change', function() { // on change of state
-    //     if (this.checked) // if changed state is "CHECKED"
-    //     {
-    //         for (var i = 1; i <= jumlah; i++) {
-    //             id = 'q' + i;
-    //             var editor = CKEDITOR.replace(id, options);
 
-    //         }
 
-    //     } else {
-    //         for (var i = 1; i <= jumlah; i++) {
-    //             id = 'q' + i;
-    //             CKEDITOR.instances[id].destroy();
+    $("#btn-view").click(function() {
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        $('#btn-submit').removeAttr('disabled', 'disabled');
 
-    //         }
+        if (isChecked) {
+            checkbox.checked = !checkbox.checked;
+            id = 'q' + 1;
+            CKEDITOR.instances[id].destroy();
+        }
+        $('#modal').html('');
+        var html = '<table  class="table">';
+        var soal = $(`textarea[id="q1"]`).val();
+        if (soal) {
+            html += '<tr>';
+            html += '<td style="text-align: center;">';
+            html += 'Soal';
+            html += '</td >';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td >';
+            html +=
+                '<pre style="white-space: pre-wrap; word-wrap: break-word;">' +
+                soal + '</pre>';
+            html += '</td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td style="text-align: center">';
+            html += 'Jawaban';
+            html += '</td >';
+            html += '</tr>';
 
-    //     }
-    // });
-</script>
-<script>
-    //untuk fungsi  add jumlah soal
-    var jumlah = 1;
-    // $('#add').click(function() {
-    //     if (jumlah != 10) {
-    //         jumlah++;
-    //         var value = 'Jumlah Soal = ' + jumlah;
-    //         $("input[name='jumlah']").val(value);
-    //         $('#place').append(`
-    // <div class="row clearfix" style="margin-top: 10px" id="${jumlah }">
-    //     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    //         <div class="card">
-    //             <div class="header bg-pink">
-    //                 <h2>
-    //                     ${jumlah} . SOAL ESSAY
-    //                 </h2>
-    //             </div>
-    //             <div class="body">
+            for (var j = 0; j < 5; j++) {
+                var jawaban = $(`textarea[id="a${j}"]`).val();
+                html += '<tr>';
+                html += '<td >';
+                html += '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + jawaban +
+                    '</pre>';
+                html += '</td >';
+                html += '</tr>';
 
-    //                 <h2 class="card-inside-title">Soal</h2>
-    //                 <div class="row clearfix">
-    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    //                         <textarea id="q${jumlah}" class="form-control q${jumlah}" required="" name="soal[${jumlah}]" rows="3"></textarea>
-    //                     </div>
-    //                 </div>
-    //                 <h2 class="card-inside-title">Kunci Jawaban (akan di tampilkan ketika koreksi jawaban)</h2>
-    //                 <div class="row clearfix">
-    //                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    //                         <textarea id="q1" class="form-control q1" required="" name="jawaban[${jumlah}]" rows="3"></textarea>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </div>
-    // </div>
-    //     `);
-    //     }
-    // });
+            }
+            html += '<tr>';
+            html += '<td style="border: 1px solid pink;">';
 
-    // $('#remove').click(function() {
-    //     if (jumlah != 1) {
-    //         var element = document.getElementById(jumlah);
-    //         jumlah--;
-    //         var value = 'Jumlah Soal = ' + jumlah;
-    //         $("input[name='jumlah']").val(value);
-    //         while (element.firstChild) {
-    //             element.removeChild(element.firstChild);
-    //         }
-    //         element.remove();
-    //     }
-    // });
+            html += '</td >';
+        }
+
+        html += '</table>';
+        $('#modal').html(html);
+        $('#myModal').modal('show');
+    });
 </script>
