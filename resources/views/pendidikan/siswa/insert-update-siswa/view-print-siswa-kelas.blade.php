@@ -95,7 +95,7 @@
                     <td>6.</td>
                     <td>Tempat dan tanggal lahir</td>
                     <td>: {{ $siswa->nm_kota_lahir ? $siswa->nm_kota_lahir : '-' }},
-                        {{ $siswa->tgl_lahir ? date('d F Y', strtotime($siswa->tgl_lahir)) : '-' }}</td>
+                        {{ $siswa->tgl_lahir ? \Carbon\Carbon::parse($siswa->tgl_lahir)->translatedFormat('d F Y') : '-' }}</td>
                 </tr>
                 <tr>
                     <td>7.</td>
