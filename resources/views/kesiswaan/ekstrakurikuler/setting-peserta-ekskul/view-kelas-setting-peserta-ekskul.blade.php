@@ -150,8 +150,8 @@
             search: 'applied',
             order: 'applied'
         }).nodes().each(function(cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = start + i + 1;
+            // var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = i + 1;
         });
     }).draw();
 </script>
