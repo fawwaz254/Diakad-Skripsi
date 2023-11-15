@@ -425,9 +425,16 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a href="' + rekap_url + '/' + data.id +
-                        '"><i class="material-icons">folder_open</i></a> <a href="' + detail_url + '/' +
-                        data.id + '"><i class="material-icons">details</i></a> ';
+                    if (data.sekolah = 'midah') {
+                        return '<a href="' + detail_url + '/' +
+                            data.id + '"><i class="material-icons">details</i></a> ';
+                    } else {
+                        return '<a href="' + rekap_url + '/' + data.id +
+                            '"><i class="material-icons">folder_open</i></a> <a href="' + detail_url +
+                            '/' +
+                            data.id + '"><i class="material-icons">details</i></a> ';
+                    }
+
                 }
             }
         ]

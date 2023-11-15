@@ -11,6 +11,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Libraries\Ppdb\LibPenerimaan as LibPenerimaan;
 use App\Models\CalonSiswaBaru;
+use App\Models\Sekolah;
 
 /** 
  * Report Pendaftaran PPDB Controller
@@ -39,11 +40,13 @@ class ReportPendaftaranController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibPenerimaan::fetchDataReportPendaftaran($auth_data);
+        $sekolah = Sekolah::first();
 
         return Datatables::of($list_data)
-            ->addColumn('action', function ($item) {
+            ->addColumn('action', function ($item) use ($sekolah) {
                 $data = array(
-                    'id' => $item->id_penerimaan
+                    'id' => $item->id_penerimaan,
+                    'sekolah' => $sekolah->nm_singkat_sekolah,
                 );
                 return $data;
             })
