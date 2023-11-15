@@ -203,6 +203,8 @@ class PaketSoalController extends Controller
 
             $paket_soal_kelass = PaketSoalKelas::where('id_paket_soal', $input->id_paket_soal)->get();
             foreach ($paket_soal_kelass as $paket_soal_kelas) {
+                $paket_soal->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                $paket_soal->save();
                 $paket_soal_kelas->delete();
             }
 
@@ -285,6 +287,8 @@ class PaketSoalController extends Controller
             ];
         }
         if ($question_package = PaketSoal::find($input->question_package_id)) {
+            $question_package->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $question_package->save();
             $question_package->delete();
 
             return [
@@ -340,6 +344,8 @@ class PaketSoalController extends Controller
     {
         $input = (object) $request->input();
         if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) {
+            $question_package_detail->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $question_package_detail->save();
             $question_package_detail->delete();
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
