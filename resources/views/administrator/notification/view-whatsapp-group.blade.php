@@ -18,8 +18,8 @@
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{ CLASS }}</strong> : data kelas dinamis (wajib ada)<br>
-                    <strong>@{{ DATE }}</strong> : data tanggal dinamis (wajib ada)<br>
+                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada)<br>
+                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada)<br>
                     <strong>\n</strong> : kode untuk ENTER text<br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>
@@ -34,8 +34,8 @@
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{ CLASS }}</strong> : data kelas dinamis (wajib ada)<br>
-                    <strong>@{{ DATE }}</strong> : data tanggal dinamis (wajib ada)<br>
+                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada)<br>
+                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada)<br>
                     <strong>\n</strong> : kode untuk ENTER text<br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>

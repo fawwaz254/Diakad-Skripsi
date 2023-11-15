@@ -272,31 +272,21 @@
 		</tr>
 		<tr>
 			<td>33.</td>
-			<td>Agama</td>
-			<td>: </td>
-		</tr>
-		<tr>
-			<td>34.</td>
-			<td>Kewarganegaraan</td>
-			<td>: </td>
-		</tr>
-		<tr>
-			<td>35.</td>
 			<td>Pekerjaan</td>
 			<td>: {{$siswa->nm_jenis_pekerjaan_ayah}}</td>
 		</tr>
 		<tr>
-			<td>36.</td>
+			<td>34.</td>
 			<td>Pendidikan</td>
 			<td>: {{$siswa->nm_jenis_pendidikan_ayah}}</td>
 		</tr>
 		<tr>
-			<td>37.</td>
+			<td>35.</td>
 			<td>Penghasilan per bulan</td>
 			<td>: {{$siswa->nm_jenis_penghasilan_ayah}}</td>
 		</tr>
 		<tr>
-			<td>38.</td>
+			<td>36.</td>
 			<td>Alamat rumah / nomor telepon</td>
 			<td>: {{$siswa->alamat_jalan_ayah}} {{$siswa->almat_rt_ayah ? 'RT '. $siswa->almat_rt_ayah : ''}} {{$siswa->alamat_rw_ayah ? 'RW '. $siswa->alamat_rw_ayah : ''}} {{$siswa->alamat_kelurahan_ayah ? $siswa->alamat_kelurahan_ayah : ''}} {{$siswa->alamat_kodepos_ayah ? $siswa->alamat_kodepos_ayah : ''}} {{$siswa->alamat_kecamatan_ayah ? $siswa->alamat_kecamatan_ayah : ''}} {{$siswa->nm_kota_ayah ? $siswa->nm_kota_ayah : ''}}</td>
 		</tr>
@@ -306,7 +296,7 @@
 			<td>Telp. - / Hp. -</td>
 		</tr>
 		<tr>
-			<td>39.</td>
+			<td>37.</td>
 			<td>Masih hidup / meninggal dunia</td>
 			@if($siswa->status_ayah)
 			<td>: {{$siswa->status_ayah == 1 ? 'Masih hidup' : 'Meninggal dunia'}}</td>
@@ -319,42 +309,32 @@
 	<li style="font-weight: 500;margin-top: 30px;">KETERANGAN TENTANG IBU KANDUNG</li>
 	<table style="width: 100%;">
 		<tr>
-			<td>40.</td>
+			<td>38.</td>
 			<td>Nama</td>
 			<td>: {{$siswa->nm_ibu}}</td>
 		</tr>
 		<tr>
-			<td>41.</td>
+			<td>39.</td>
 			<td>Tahun Lahir</td>
 			<td>: {{date("Y", strtotime($siswa->tgl_lahir_ibu))}}</td>
 		</tr>
 		<tr>
-			<td>42.</td>
-			<td>Agama</td>
-			<td>:</td>
-		</tr>
-		<tr>
-			<td>43.</td>
-			<td>Kewarganegaraan</td>
-			<td>:</td>
-		</tr>
-		<tr>
-			<td>44.</td>
+			<td>40.</td>
 			<td>Pekerjaan</td>
 			<td>: {{$siswa->nm_jenis_pekerjaan_ibu}}</td>
 		</tr>
 		<tr>
-			<td>45.</td>
+			<td>41.</td>
 			<td>Pendidikan</td>
 			<td>: {{$siswa->nm_jenis_pendidikan_ibu}}</td>
 		</tr>
 		<tr>
-			<td>46.</td>
+			<td>42.</td>
 			<td>Penghasilan per bulan</td>
 			<td>: {{$siswa->nm_jenis_penghasilan_ibu}}</td>
 		</tr>
 		<tr>
-			<td>47.</td>
+			<td>43.</td>
 			<td>Alamat rumah / nomor telepon</td>
 			<td>: {{$siswa->alamat_jalan_ibu}} {{$siswa->almat_rt_ibu ? 'RT '. $siswa->almat_rt_ibu : ''}} {{$siswa->alamat_rw_ibu ? 'RW '. $siswa->alamat_rw_ibu : ''}} {{$siswa->alamat_kelurahan_ibu ? $siswa->alamat_kelurahan_ibu : ''}} {{$siswa->alamat_kodepos_ibu ? $siswa->alamat_kodepos_ibu : ''}} {{$siswa->alamat_kecamatan_ibu ? $siswa->alamat_kecamatan_ibu : ''}} {{$siswa->nm_kota_ibu ? $siswa->nm_kota_ibu : ''}}</td>
 		</tr>
@@ -364,7 +344,7 @@
 			<td>Telp. - / Hp. -</td>
 		</tr>
 		<tr>
-			<td>48.</td>
+			<td>44.</td>
 			<td>Masih hidup / meninggal dunia</td>
 			@if($siswa->status_ibu)
 			<td>: {{$siswa->status_ibu == 1 ? 'Masih hidup' : 'Meninggal dunia'}}</td>
@@ -377,42 +357,32 @@
 	<li style="font-weight: 500;margin-top: 30px;">KETERANGAN TENTANG AYAH WALI</li>
 	<table style="width: 100%;">
 		<tr>
-			<td>49.</td>
+			<td>45.</td>
 			<td>Nama</td>
 			<td>: {{$siswa->nm_wali}}</td>
 		</tr>
 		<tr>
-			<td>50.</td>
+			<td>46.</td>
 			<td>Tahun Lahir</td>
 			<td>: {{date("Y", strtotime($siswa->tgl_lahir_wali))}}</td>
 		</tr>
 		<tr>
-			<td>51.</td>
-			<td>Agama</td>
-			<td>:</td>
-		</tr>
-		<tr>
-			<td>52.</td>
-			<td>Kewarganegaraan</td>
-			<td>:</td>
-		</tr>
-		<tr>
-			<td>53.</td>
+			<td>47.</td>
 			<td>Pekerjaan</td>
 			<td>: {{$siswa->nm_jenis_pekerjaan_wali}}</td>
 		</tr>
 		<tr>
-			<td>54.</td>
+			<td>48.</td>
 			<td>Pendidikan</td>
 			<td>: {{$siswa->nm_jenis_pendidikan_wali}}</td>
 		</tr>
 		<tr>
-			<td>55.</td>
+			<td>49.</td>
 			<td>Penghasilan per bulan</td>
 			<td>: {{$siswa->nm_jenis_penghasilan_wali}}</td>
 		</tr>
 		<tr>
-			<td>56.</td>
+			<td>50.</td>
 			<td>Alamat rumah / nomor telepon</td>
 			<td>:</td>
 		</tr>
@@ -421,22 +391,22 @@
 	<li style="font-weight: 500;margin-top: 30px;">KEGEMARAN PESERTA DIDIK</li>
 	<table style="width: 100%;">
 		<tr>
-			<td>57.</td>
+			<td>51.</td>
 			<td>Kesenian</td>
 			<td>: {{$siswa->kegemaran_kesenian}}</td>
 		</tr>
 		<tr>
-			<td>58.</td>
+			<td>52.</td>
 			<td>Olahraga</td>
 			<td>: {{$siswa->kegemaran_olahraga}}</td>
 		</tr>
 		<tr>
-			<td>59.</td>
+			<td>53.</td>
 			<td>Kemasyarakatan / Organisasi</td>
 			<td>: {{$siswa->kegemaran_organisasi}}</td>
 		</tr>
 		<tr>
-			<td>60.</td>
+			<td>54.</td>
 			<td>Lain-lain</td>
 			<td>:</td>
 		</tr>
@@ -452,7 +422,7 @@
 		</tr>
 		@endforeach
 		<tr>
-			<td>62.</td>
+			<td>55.</td>
 			<td>Meninggalkan sekolah</td>
 			<td></td>
 		</tr>
@@ -467,7 +437,7 @@
 			<td>:</td>
 		</tr>
 		<tr>
-			<td>63.</td>
+			<td>56.</td>
 			<td>Akhir Pendidikan</td>
 			<td></td>
 		</tr>
@@ -491,12 +461,12 @@
 	<li style="font-weight: 500;margin-top: 30px;">KETERANGAN SETELAH SELESAI PENDIDIKAN</li>
 	<table style="width: 100%;">
 		<tr>
-			<td>64.</td>
+			<td>57.</td>
 			<td>Akan melanjutkan ke-</td>
 			<td>:</td>
 		</tr>
 		<tr>
-			<td>65.</td>
+			<td>58.</td>
 			<td>Bekerja</td>
 			<td></td>
 		</tr>
@@ -521,7 +491,7 @@
 
 	<table style="width: 100%;">
 		<tr>
-			<td>66.</td>
+			<td>59.</td>
 			<td>Catatan yang penting</td>
 			<td>: </td>
 		</tr>
