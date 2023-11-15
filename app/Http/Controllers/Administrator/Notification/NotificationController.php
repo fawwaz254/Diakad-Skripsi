@@ -129,6 +129,8 @@ class NotificationController extends Controller
     {
         $input = (object) $request->input();
 
+        dd($input);
+
         $validator = Validator::make($request->all(), [
             'attendance_mode' => 'required',
             'attendance_template' => 'required',
