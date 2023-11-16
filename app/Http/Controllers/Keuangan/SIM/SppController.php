@@ -857,7 +857,7 @@ class SppController extends BaseController
             // $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all()
 
             $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')
-                ->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
+                ->whereIn('siswa.id_siswa', [$data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all(), $data_tagihan_non_bulanan->unique('id_siswa')->pluck('id_siswa')->values()->all()])
                 ->get()
                 ->sortBy('nis_siswa')
                 ->when($order_by, function ($query, $order_by) {
