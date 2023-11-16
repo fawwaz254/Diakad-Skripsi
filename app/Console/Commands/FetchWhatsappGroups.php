@@ -52,7 +52,7 @@ class FetchWhatsappGroups extends Command
                 \Log::info("Notification Status: CLOSED");
             }
         } catch (\Exception $e) {
-            \Log::error("An error occurred: " . $e->getMessage());
+            \Log::error("Notification Status : " . $e->getMessage());
         }
         return;
     }
