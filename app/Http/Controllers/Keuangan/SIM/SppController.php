@@ -825,6 +825,7 @@ class SppController extends BaseController
                 ->where('tagihan_biaya.id_kelas', $id_kelas);
 
             $clone_query_tagihan = clone $query_tagihan;
+            $siswa = clone $query_tagihan->get();
             $data_tagihan = $query_tagihan->where('detail_biaya.id_jenis_detail_biaya', 4)->get();
 
             $clone_query_tagihan->where('detail_biaya.id_jenis_detail_biaya', '<>', 4);
@@ -836,6 +837,7 @@ class SppController extends BaseController
             $total_tunggakan = 'Rp ' . number_format($data_tagihan->where('is_tagih', '1')->sum('besar_biaya'));
             $jumlah_pembayaran = $data_tagihan->where('is_tagih', '0')->count();
             $jumlah_tunggakan = $data_tagihan->where('is_tagih', '1')->count();
+
 
             // $semesterMulai = $semester_mulai->id_semester;
             // $semesterSelesai = $semester_selesai->id_semester;
@@ -856,23 +858,13 @@ class SppController extends BaseController
 
             // $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all()
 
-            $data_siswa1 = Siswa::with('pengguna', 'pengguna.status_pengguna')
-                ->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
+            $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')
+                ->whereIn('siswa.id_siswa', $siswa->unique('id_siswa')->pluck('id_siswa')->values()->all())
                 ->get()
                 ->sortBy('nis_siswa')
                 ->when($order_by, function ($query, $order_by) {
                     return $query->sortBy($order_by == 'nama' ? 'pengguna.nm_pengguna' : 'nis_siswa');
                 });
-
-            $data_siswa2 = Siswa::with('pengguna', 'pengguna.status_pengguna')
-                ->whereIn('siswa.id_siswa',  $data_tagihan_non_bulanan->unique('id_siswa')->pluck('id_siswa')->values()->all())
-                ->get()
-                ->sortBy('nis_siswa')
-                ->when($order_by, function ($query, $order_by) {
-                    return $query->sortBy($order_by == 'nama' ? 'pengguna.nm_pengguna' : 'nis_siswa');
-                });
-
-            $data_siswa = $data_siswa1->concat($data_siswa2);
 
 
             //semester lain
