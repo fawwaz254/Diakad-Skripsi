@@ -52,8 +52,16 @@
             <tr>
                 <td style="text-align: center">{{ ++$no }}</td>
                 <td style="text-align: center">{{ $calon_siswa_baru->kode_voucher }} </td>
-                <td style="color: red;text-align: center">(isi manual)</td>
-                <td style="color: red;text-align: center">(isi manual)</td>
+                @if ($calon_siswa_baru->siswa)
+                    <td style="text-align: center">{{ $calon_siswa_baru->siswa->nis_siswa }}</td>
+
+                    <td style="text-align: center">
+                        {{ isset($calon_siswa_baru->siswa->kelas) ? $calon_siswa_baru->siswa->kelas->nm_kelas : '(isi manual)' }}
+                    </td>
+                @else
+                    <td style="color: red;text-align: center">(isi manual)</td>
+                    <td style="color: red;text-align: center">(isi manual)</td>
+                @endif
                 <td>{{ $calon_siswa_baru->nm_c_siswa }}</td>
                 <th>{{ $calon_siswa_baru->jenis_kelamin == '1' ? 'Laki-laki' : 'Perempuan' }}</th>
                 <th>{{ $calon_siswa_baru->nomor_hp }}</th>
