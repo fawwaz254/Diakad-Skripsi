@@ -18,9 +18,9 @@
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada) <small style="color: red">*required</small><br>
-                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada) <small style="color: red">*required</small><br>
-                    <strong>@{{STUDENTS}}</strong> : data list siswa <small style="color: red">*required</small><br>
+                    <strong>@{{CLASS}}</strong> : data kelas dinamis <small style="color: red">*wajib ada</small><br>
+                    <strong>@{{DATE}}</strong> : data tanggal dinamis <small style="color: red">*wajib ada</small><br>
+                    <strong>@{{STUDENTS}}</strong> : data list siswa <small style="color: red">*wajib ada</small><br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>
                 </small>
@@ -34,9 +34,9 @@
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{CLASS}}</strong> : data kelas dinamis (wajib ada) <small style="color: red">*required</small><br>
-                    <strong>@{{DATE}}</strong> : data tanggal dinamis (wajib ada) <small style="color: red">*required</small><br>
-                    <strong>@{{STUDENTS}}</strong> : data list siswa <small style="color: red">*required</small><br>
+                    <strong>@{{CLASS}}</strong> : data kelas dinamis <small style="color: red">*wajib ada</small><br>
+                    <strong>@{{DATE}}</strong> : data tanggal dinamis <small style="color: red">*wajib ada</small><br>
+                    <strong>@{{STUDENTS}}</strong> : data list siswa <small style="color: red">*wajib ada</small><br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>
                 </small>
