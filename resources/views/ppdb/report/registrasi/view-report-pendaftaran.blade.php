@@ -159,7 +159,8 @@
                     @if (count($data_jurusan) == 0)
                         <div class="header">
                             <h2>({{ $data_penerimaan->nm_penerimaan }} Gelombang
-                                {{ $data_penerimaan->gelombang_penerimaan }} Tahun
+                                {{ $data_penerimaan->gelombang_penerimaan == '0' ? 'Inden' : $data_penerimaan->gelombang_penerimaan }}
+                                Tahun
                                 {{ $data_penerimaan->tahun_penerimaan }})</h2>
                         </div>
                         <div class="body">
@@ -425,7 +426,7 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    if (data.sekolah = 'midah') {
+                    if (data.sekolah == 'midah') {
                         return '<a href="' + detail_url + '/' +
                             data.id + '"><i class="material-icons">details</i></a> ';
                     } else {
