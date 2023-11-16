@@ -20,16 +20,16 @@
                                                     @if ($mode == 'show')
                                                         @if ($data->id_penerimaan == $penerimaan->id_penerimaan)
                                                             <option value="{{ $data->id_penerimaan }}" selected>
-                                                                {{ 'Gelombang ' . $data->gelombang_penerimaan . ' ' . $data->nm_penerimaan . ' (' . $tahun . ')' }}
+                                                                {{ $data->nm_penerimaan . ' ' . ($data->gelombang_penerimaan == '0' ? 'Inden' : $data->gelombang_penerimaan) }}
                                                             </option>
                                                         @else
                                                             <option value="{{ $data->id_penerimaan }}">
-                                                                {{ 'Gelombang ' . $data->gelombang_penerimaan . ' ' . $data->nm_penerimaan . ' (' . $tahun . ')' }}
+                                                                {{ $data->nm_penerimaan . ' ' . ($data->gelombang_penerimaan == '0' ? 'Inden' : $data->gelombang_penerimaan) }}
                                                             </option>
                                                         @endif
                                                     @else
                                                         <option value="{{ $data->id_penerimaan }}">
-                                                            {{ 'Gelombang ' . $data->gelombang_penerimaan . ' ' . $data->nm_penerimaan . ' (' . $tahun . ')' }}
+                                                            {{ $data->nm_penerimaan . ' ' . ($data->gelombang_penerimaan == '0' ? 'Inden' : $data->gelombang_penerimaan) }}
                                                         </option>
                                                     @endif
                                                 @endforeach
