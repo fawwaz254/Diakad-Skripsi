@@ -39,16 +39,21 @@ class FetchWhatsappGroups extends Command
      */
     public function handle()
     {
-        $url = env('WHATSAPP_API_GROUPS');
-
+        try {
+            $url = env('WHATSAPP_API_GROUPS');
+        
             $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
                 ->post($url, ['token' => 'DSM_2023;']);
             $data = $response->json();
-
+        
             if (isset($data['status'])) {
-                \Log::info("Notification status: connected");
+                \Log::info("Notification Status: CONNECTED");
             } else {
-                \Log::info("Notification status: closed");
+                \Log::info("Notification Status: CLOSED");
             }
+        } catch (\Exception $e) {
+            \Log::error("Notification Status : " . $e->getMessage());
+        }
+        return;
     }
 }
