@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\SendAttendanceNotificationByClass::class,
         Commands\SendPaymentNotificationByClass::class,
+        Commands\FetchWhatsappGroups::class,
     ];
 
     protected function schedule(Schedule $schedule)
@@ -36,7 +37,6 @@ class Kernel extends ConsoleKernel
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
-        // trigger whatsapp notification agar tidak error
         $schedule->command('whatsapp:groups')
             ->everyThreeHours()
             ->timezone('Asia/Jakarta')

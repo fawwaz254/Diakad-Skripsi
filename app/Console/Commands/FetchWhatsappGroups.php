@@ -6,7 +6,7 @@ use App\Models\WhatsappGroup;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
-class fetchWhatsappGroups extends Command
+class FetchWhatsappGroups extends Command
 {
     /**
      * The name and signature of the console command.
@@ -20,7 +20,7 @@ class fetchWhatsappGroups extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Trigger untuk whatsapp notif agar tidak error';
 
     /**
      * Create a new command instance.
