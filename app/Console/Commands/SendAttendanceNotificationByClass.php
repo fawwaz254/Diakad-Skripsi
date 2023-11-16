@@ -89,15 +89,14 @@ class SendAttendanceNotificationByClass extends Command
                         $siswa_kelas[] = "[" . $presensi_pengguna->pengguna->siswa->nis_siswa . "] " . $presensi_pengguna->pengguna->nm_pengguna . ' || Masuk: ' . $presensi_pengguna->check_in;
                     };
 
+                    $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
+                    
                     $template = $base_template;
                     $message = str_replace(
-                        ['{{CLASS}}', '{{DATE}}', '\n'],
-                        [$key, now()->translatedFormat('l, d F Y'), "\n"],
+                        ['{{CLASS}}', '{{DATE}}', '{{SCHOOL}}', '{{STUDENTS}}', '\n'],
+                        [$key, now()->translatedFormat('l, d F Y'), $nama_sekolah, $content_message, "\n"],
                         $template
                     );
-                    $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
-                    $message .= $content_message;
-                    $message .= "\n\n\nJika Anda memiliki pertanyaan terkait kesiswaan atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Kesiswaan " . $nama_sekolah . "*";
 
                     $data = [
                         'message' => $message,
@@ -157,16 +156,15 @@ class SendAttendanceNotificationByClass extends Command
                         $siswa_kelas[] = "[" . $siswa->nis_siswa . "] " . $siswa->pengguna->nm_pengguna;
                     };
 
+                    $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
+
                     $template = $base_template;
                     $message = str_replace(
-                        ['{{CLASS}}', '{{DATE}}', '\n'],
-                        [$key, now()->translatedFormat('l, d F Y'), "\n"],
+                        ['{{CLASS}}', '{{DATE}}', '{{SCHOOL}}', '{{STUDENTS}}', '\n'],
+                        [$key, now()->translatedFormat('l, d F Y'), $nama_sekolah, $content_message, "\n"],
                         $template
                     );
-                    $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
-                    $message .= $content_message;
-                    $message .= "\n\n\nJika Anda memiliki pertanyaan terkait kesiswaan atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Kesiswaan " . $nama_sekolah . "*";
-
+                    
                     $data = [
                         'message' => $message,
                         'group_id' => $kelas[$key],
