@@ -856,13 +856,24 @@ class SppController extends BaseController
 
             // $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all()
 
-            $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')
-                ->whereIn('siswa.id_siswa', [$data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all(), $data_tagihan_non_bulanan->unique('id_siswa')->pluck('id_siswa')->values()->all()])
+            $data_siswa1 = Siswa::with('pengguna', 'pengguna.status_pengguna')
+                ->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
                 ->get()
                 ->sortBy('nis_siswa')
                 ->when($order_by, function ($query, $order_by) {
                     return $query->sortBy($order_by == 'nama' ? 'pengguna.nm_pengguna' : 'nis_siswa');
                 });
+
+            $data_siswa2 = Siswa::with('pengguna', 'pengguna.status_pengguna')
+                ->whereIn('siswa.id_siswa',  $data_tagihan_non_bulanan->unique('id_siswa')->pluck('id_siswa')->values()->all())
+                ->get()
+                ->sortBy('nis_siswa')
+                ->when($order_by, function ($query, $order_by) {
+                    return $query->sortBy($order_by == 'nama' ? 'pengguna.nm_pengguna' : 'nis_siswa');
+                });
+
+            $data_siswa = $data_siswa1->concat($data_siswa2);
+
 
             //semester lain
             // $list_id_semester_lalu = $semester->where('thn_akademik_semester', '<', $tahun_akademik_semester)->pluck('id_semester')->toArray();
