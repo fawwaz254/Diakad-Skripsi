@@ -26,7 +26,9 @@
                         </tr>
                         <tr>
                             <td>Gelombang</td>
-                            <td style="padding-left:5px">: <strong>{{ $penerimaan->gelombang_penerimaan }}</strong></td>
+                            <td style="padding-left:5px">: <strong>
+                                    {{ $penerimaan->gelombang_penerimaan == '0' ? 'Inden' : $penerimaan->gelombang_penerimaan }}
+                                </strong></td>
                         </tr>
                     </table>
 
