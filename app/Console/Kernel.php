@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\SendAttendanceNotificationByClass::class,
         Commands\SendPaymentNotificationByClass::class,
+        Commands\FetchWhatsappGroups::class,
     ];
 
     protected function schedule(Schedule $schedule)
@@ -33,6 +34,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('notification:payment-class')
             ->dailyAt($payment_time_setting)
             ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
+
+        $schedule->command('whatsapp:groups')
+            ->everyThreeHours()
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
     }
