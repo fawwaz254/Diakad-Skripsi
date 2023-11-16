@@ -35,6 +35,12 @@ class Kernel extends ConsoleKernel
             ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
+
+        // trigger whatsapp notification agar tidak error
+        $schedule->command('whatsapp:groups')
+            ->everyThreeHours()
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
     }
 
     /**
