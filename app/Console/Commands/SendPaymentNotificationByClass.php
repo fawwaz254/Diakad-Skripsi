@@ -110,15 +110,14 @@ class SendPaymentNotificationByClass extends Command
                     $siswa_kelas[] = $nama_pengguna . " ( " . $bulan_pembayaran . ")";
                 }
 
+                $content_message = join("\n---------------------------------------------------------------------------------- \n", $siswa_kelas);
+                    
                 $template = $base_template;
                 $message = str_replace(
-                    ['{{CLASS}}', '{{DATE}}', '\n'],
-                    [$key, now()->translatedFormat('l, d F Y'), "\n"],
+                    ['{{CLASS}}', '{{DATE}}', '{{SCHOOL}}', '{{STUDENTS}}', '\n'],
+                    [$key, now()->translatedFormat('l, d F Y'), $nama_sekolah, $content_message, "\n"],
                     $template
                 );
-                $content_message = join("\n----------------------------------------------------------------------------------\n", $siswa_kelas);
-                $message .= $content_message;
-                $message .= "\n\n\nJika Anda memiliki pertanyaan terkait pembayaran atau informasi lainnya, jangan ragu untuk menghubungi kami.\n\nTerima kasih atas perhatian dan kerjasama Anda.\n\n\nSalam,\n*Keuangan " . $nama_sekolah . "*";
 
                 $data = [
                     'message' => $message,
