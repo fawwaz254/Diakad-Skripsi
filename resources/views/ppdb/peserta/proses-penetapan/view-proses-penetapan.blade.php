@@ -69,6 +69,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Status</th>
                                             {{-- <th>
                                                 <input id="checkbox_select_all" type="checkbox" name="select_all"
                                                     class="filled-in">
@@ -136,6 +137,10 @@
 
                 //     }
                 // },
+                {
+                    data: 'is_siswa',
+                    name: 'is_siswa'
+                },
                 {
                     data: 'kode_voucher',
                     name: 'calon_siswa_baru.kode_voucher'

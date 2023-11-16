@@ -125,9 +125,13 @@ class ProsesPenetapanController extends BaseController
         $list_data = LibPenerimaan::fetchDataCalonSiswaPenetapan($auth_data, $id);
 
         return Datatables::of($list_data)
+            ->addColumn('is_siswa', function ($item) {
+                $is_siswa = Siswa::where('id_c_siswa', $item->id_c_siswa)->first();
+                return $is_siswa ? 'Sudah Jadi Siswa' : 'Belum Jadi Siswa';
+            })
             ->addColumn('checkbox', function ($item) {
                 $data = array(
-                    'id' => $item->id_c_siswa
+                    'id' => $item->id_c_siswa,
                 );
                 return $data;
             })
@@ -178,7 +182,8 @@ class ProsesPenetapanController extends BaseController
     public function excelPenetapan(Request $request, $id_penerimaan)
     {
         $penerimaan = Penerimaan::find($id_penerimaan);
-        $data = CalonSiswaBaru::where('id_penerimaan', $id_penerimaan)->with('calon_siswa_ortu.jenis_pendidikan_ayah', 'calon_siswa_ortu.jenis_pekerjaan_ayah', 'calon_siswa_ortu.jenis_penghasilan_ayah', 'calon_siswa_ortu.jenis_pendidikan_ibu', 'calon_siswa_ortu.jenis_pekerjaan_ibu', 'calon_siswa_ortu.jenis_penghasilan_ibu', 'calon_siswa_ortu.jenis_pekerjaan_wali', 'kota_lahir', 'agama', 'provinsi', 'kota', 'calon_siswa_sekolah.kota_asal_sekolah')->get();
+        $data = CalonSiswaBaru::where('id_penerimaan', $id_penerimaan)->whereNotNull('kode_voucher')->doesntHave('siswa')
+            ->with('calon_siswa_ortu.jenis_pendidikan_ayah', 'calon_siswa_ortu.jenis_pekerjaan_ayah', 'calon_siswa_ortu.jenis_penghasilan_ayah', 'calon_siswa_ortu.jenis_pendidikan_ibu', 'calon_siswa_ortu.jenis_pekerjaan_ibu', 'calon_siswa_ortu.jenis_penghasilan_ibu', 'calon_siswa_ortu.jenis_pekerjaan_wali', 'kota_lahir', 'agama', 'provinsi', 'kota', 'calon_siswa_sekolah.kota_asal_sekolah')->get();
 
         $nm_penerimaan = str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", $penerimaan->nm_penerimaan);
         return Excel::download(new ExportPenetapan($data), 'Data Siswa Penetapan (' . $nm_penerimaan . ' - ' . $penerimaan->gelombang_penerimaan . ').xlsx');
@@ -210,6 +215,10 @@ class ProsesPenetapanController extends BaseController
                 $jalur = Jalur::where('nm_jalur', 'REGULER')->first();
 
                 foreach ($data as  $data_row) {
+                    if (empty($data_row['nis'])) {
+                        continue;
+                    }
+
                     $calon_siswa_baru = CalonSiswaBaru::where('kode_voucher', $data_row['kode_voucher'])->first();
                     if (empty($calon_siswa_baru)) {
                         return [
@@ -218,7 +227,7 @@ class ProsesPenetapanController extends BaseController
                         ];
                     }
 
-                    if (empty($data_row['nis']) || $data_row['nis'] == '(isi manual)') {
+                    if ($data_row['nis'] == '(isi manual)') {
                         return [
                             'status'    => 300, // FAILED
                             'message'   => 'Upload Data Siswa Gagal, Harap Isi NIS terlebih dahulu'
