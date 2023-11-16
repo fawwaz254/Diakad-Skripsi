@@ -127,8 +127,16 @@
                                         -
                                     @endif
                                 </td>
-
-                                <td>{{ 'Rp ' . number_format($pembayaran_siswa->besar_pembayaran) }}</td>
+                                @php
+                                    $pemb = \App\Models\PembayaranBiaya::where('id_tagihan_biaya', $pembayaran_siswa->id_tagihan_biaya)->sum('besar_pembayaran');
+                                    $sisa_pembayaran = $pembayaran_siswa->besar_biaya - $pemb;
+                                @endphp
+                                @if ($sisa_pembayaran == '0')
+                                    <td>{{ 'Rp ' . number_format($pembayaran_siswa->besar_pembayaran) }}</td>
+                                @else
+                                    <td>{{ 'Rp ' . number_format($pembayaran_siswa->besar_pembayaran) . ', ( Sisa : Rp ' . number_format($sisa_pembayaran) . ' )' }}
+                                    </td>
+                                @endif
 
                             </tr>
                         @endforeach
