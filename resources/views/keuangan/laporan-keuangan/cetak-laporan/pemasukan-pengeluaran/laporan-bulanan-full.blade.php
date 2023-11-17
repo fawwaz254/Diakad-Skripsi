@@ -79,7 +79,7 @@
     $tutup_buku_kas_bulan_ini = $data_laporan['tutup_buku_kas_bulan_ini'];
     $tutup_buku_kas_bulan_lalu = $data_laporan['tutup_buku_kas_bulan_lalu'];
     $subkategori_non_kbm = $data_laporan['subkategori_non_kbm'];
-    
+
     $data_realisasi_pemasukan = collect($data_realisasi->where('tipe_kategori_rapb', 1)->all());
     $data_realisasi_pengeluaran = collect($data_realisasi->where('tipe_kategori_rapb', 2)->all());
 @endphp
@@ -327,7 +327,7 @@
             <tr style="vertical-align: top;">
                 <td>
                     Kepala Sekolah
-                    <br><br><br><br>
+                    <br><br><br><br><br>
                     <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                 </td>
                 <td>
