@@ -182,7 +182,7 @@ class ProsesPenetapanController extends BaseController
     public function excelPenetapan(Request $request, $id_penerimaan)
     {
         $penerimaan = Penerimaan::find($id_penerimaan);
-        $data = CalonSiswaBaru::where('id_penerimaan', $id_penerimaan)->whereNotNull('kode_voucher')->doesntHave('siswa')
+        $data = CalonSiswaBaru::where('id_penerimaan', $id_penerimaan)->whereNotNull('kode_voucher')->with('siswa.kelas')
             ->with('calon_siswa_ortu.jenis_pendidikan_ayah', 'calon_siswa_ortu.jenis_pekerjaan_ayah', 'calon_siswa_ortu.jenis_penghasilan_ayah', 'calon_siswa_ortu.jenis_pendidikan_ibu', 'calon_siswa_ortu.jenis_pekerjaan_ibu', 'calon_siswa_ortu.jenis_penghasilan_ibu', 'calon_siswa_ortu.jenis_pekerjaan_wali', 'kota_lahir', 'agama', 'provinsi', 'kota', 'calon_siswa_sekolah.kota_asal_sekolah')->get();
 
         $nm_penerimaan = str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", $penerimaan->nm_penerimaan);
@@ -249,13 +249,24 @@ class ProsesPenetapanController extends BaseController
                         ];
                     }
                     $siswa = Siswa::where('nis_siswa', $data_row['nis'])->first();
+
                     if ($siswa) {
-                        continue;
+                        // continue;
+                        $pengguna = Pengguna::where('id_pengguna', $siswa->id_pengguna)->first();
+                    } else {
+                        $pengguna = null;
                     }
                     $now = Carbon::now(env('APP_TIMEZONE', ''));
-                    //buat pengguna
-                    $pengguna = new Pengguna;
-                    $pengguna->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                    if (empty($pengguna)) {
+                        //buat pengguna
+                        $pengguna = new Pengguna;
+                        $pengguna->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $updateData = false;
+                    } else {
+                        $updateData = true;
+                    }
+
                     $pengguna->id_status_pengguna = $status_join_table->id_status_pengguna;
                     $pengguna->id_sekolah = $sekolah->id_sekolah;
                     $pengguna->nm_pengguna = $calon_siswa_baru->nm_c_siswa;
@@ -266,9 +277,11 @@ class ProsesPenetapanController extends BaseController
                     $pengguna->created_by = 'Penetapan';
                     $pengguna->save();
 
+                    if (empty($siswa)) {
+                        $siswa = new Siswa;
+                        $siswa->id_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    }
                     //buat siswa
-                    $siswa = new Siswa;
-                    $siswa->id_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $siswa->id_pengguna =  $pengguna->id_pengguna;
                     $siswa->id_c_siswa = $calon_siswa_baru->id_c_siswa;
                     $siswa->id_kelompok_biaya = null;
@@ -282,36 +295,39 @@ class ProsesPenetapanController extends BaseController
                     $siswa->created_by = 'Penetapan';
                     $siswa->save();
 
+                    if ($updateData) { } else {
+                        $role_pengguna = new RolePengguna;
+                        // $role_pengguna->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $role_pengguna->id_role = '3';
+                        $role_pengguna->id_pengguna = $pengguna->id_pengguna;
+                        $role_pengguna->keterangan_role_pengguna = 'Input Pendidikan';
+                        $role_pengguna->is_aktif = '1';
+                        $role_pengguna->created_by = "Penetapan";
+                        $role_pengguna->save();
+
+                        //buat admisi
+                        $admisi = new Admisi;
+                        $admisi->id_admisi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $admisi->id_siswa  =  $siswa->id_siswa;
+                        $admisi->id_semester = $semester->id_semester;
+                        $admisi->id_status_pengguna = $status_join_table->id_status_pengguna;
+                        $admisi->id_jalur = $jalur->id_jalur;
+                        $admisi->created_by = 'Penetapan';
+                        $admisi->save();
+
+                        //buat jalur_siswa
+                        $jalur_siswa = new JalurSiswa;
+                        $jalur_siswa->id_jalur_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $jalur_siswa->id_siswa = $siswa->id_siswa;
+                        $jalur_siswa->id_jalur = $jalur->id_jalur;
+                        $jalur_siswa->id_semester = $semester->id_semester;
+                        $jalur_siswa->is_jalur_aktif = '1';
+                        $jalur_siswa->id_admisi = $admisi->id_admisi;
+                        $jalur_siswa->created_by = 'Penetapan';
+                        $jalur_siswa->save();
+                    }
                     //buat role pengguna
-                    $role_pengguna = new RolePengguna;
-                    // $role_pengguna->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $role_pengguna->id_role = '3';
-                    $role_pengguna->id_pengguna = $pengguna->id_pengguna;
-                    $role_pengguna->keterangan_role_pengguna = 'Input Pendidikan';
-                    $role_pengguna->is_aktif = '1';
-                    $role_pengguna->created_by = "Penetapan";
-                    $role_pengguna->save();
 
-                    //buat admisi
-                    $admisi = new Admisi;
-                    $admisi->id_admisi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $admisi->id_siswa  =  $siswa->id_siswa;
-                    $admisi->id_semester = $semester->id_semester;
-                    $admisi->id_status_pengguna = $status_join_table->id_status_pengguna;
-                    $admisi->id_jalur = $jalur->id_jalur;
-                    $admisi->created_by = 'Penetapan';
-                    $admisi->save();
-
-                    //buat jalur_siswa
-                    $jalur_siswa = new JalurSiswa;
-                    $jalur_siswa->id_jalur_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $jalur_siswa->id_siswa = $siswa->id_siswa;
-                    $jalur_siswa->id_jalur = $jalur->id_jalur;
-                    $jalur_siswa->id_semester = $semester->id_semester;
-                    $jalur_siswa->is_jalur_aktif = '1';
-                    $jalur_siswa->id_admisi = $admisi->id_admisi;
-                    $jalur_siswa->created_by = 'Penetapan';
-                    $jalur_siswa->save();
                 }
                 return [
                     'status'    => 300, // FAILED

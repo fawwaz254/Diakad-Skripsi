@@ -217,19 +217,19 @@ class SetJadwalKelasGuruController extends Controller
             $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $input->guru, '-', $input->id_hari, $input->jamMasuk, $input->jamSelesai);
         }
 
-        if ($mode == 'add') {
-            if ($cek_jadwal['guru'] == 0) {
-                return [
-                    'status_code' => 300, // FAILED
-                    'message' => 'Guru yang bersangkutan sudah mengambil waktu ini di kelas ' . $cek_jadwal['alasan']
-                ];
-            } elseif ($cek_jadwal['ruangan'] == 0) {
-                return [
-                    'status_code' => 300, // FAILED
-                    'message' => 'Sudah Ada Jadwal yang Sama di Waktu dan Tempat yang sama'
-                ];
-            }
-        }
+        // if ($mode == 'add') {
+        //     if ($cek_jadwal['guru'] == 0) {
+        //         return [
+        //             'status_code' => 300, // FAILED
+        //             'message' => 'Guru yang bersangkutan sudah mengambil waktu ini di kelas ' . $cek_jadwal['alasan']
+        //         ];
+        //     } elseif ($cek_jadwal['ruangan'] == 0) {
+        //         return [
+        //             'status_code' => 300, // FAILED
+        //             'message' => 'Sudah Ada Jadwal yang Sama di Waktu dan Tempat yang sama'
+        //         ];
+        //     }
+        // }
 
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
