@@ -254,8 +254,8 @@ class LibPenerimaan
             //         ->whereNull('jurusan.deleted_at');
             // })
             ->where('calon_siswa_baru.id_penerimaan', '=', $id_penerimaan)
-            ->where('calon_siswa_baru.status_verifikasi', '=', 1)
-            ->orWhere('calon_siswa_baru.status_verifikasi', '=', 2)
+            ->whereIn('calon_siswa_baru.status_verifikasi', [1, 2])
+            // ->orWhere('calon_siswa_baru.status_verifikasi', '=', 2)
             // ->whereNotNull('calon_siswa_baru.tgl_verifikasi_dokumen')
             ->whereNull('calon_siswa_baru.nomor_ujian')
             ->orderBy('calon_siswa_baru.kode_voucher', 'asc');
