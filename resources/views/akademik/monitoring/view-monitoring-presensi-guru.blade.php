@@ -108,6 +108,26 @@
                                                 @else
                                                     <td></td>
                                                 @endif
+                                            @elseif (
+                                                $auth_data->sekolah_data->nm_singkat_sekolah == 'manu' ||
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'minu' ||
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'mtsnu' ||
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'sdnu' ||
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'smknu' ||
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'smpnu' ||
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'tkqnu')
+                                                @if (count($all_presensi) > 0)
+                                                    <td style="background: #91d18b; text-align:center;">
+                                                        <b><a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/monitoring-presensi-guru/' . $date->format('d') . '/' . $bulan->id_bulan . '/' . $tahun . '/' . $guru->id_pengguna) }}"
+                                                                class="target-link">{{ count($all_presensi) }}x</a></b>
+                                                    </td>
+                                                @elseif($date->format('l') == 'Friday')
+                                                    <td style="background: #ffffff; text-align:center;">
+                                                        <b><a class="target-link">Libur</a></b>
+                                                    </td>
+                                                @else
+                                                    <td></td>
+                                                @endif
                                             @else
                                                 @if (count($all_presensi) > 0)
                                                     <td style="background: #91d18b; text-align:center;">
