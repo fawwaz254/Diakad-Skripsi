@@ -48,7 +48,7 @@
                                         @endforeach
                                     </div>
                                 @elseif($question->id_tipe_soal == 2)
-                                    <textarea class="form-control" data-sample-short></textarea>
+                                    <textarea class="form-control" data-sample-short>{{ $question->jawaban }}</textarea>
                                 @elseif($question->id_tipe_soal == 3)
                                     <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
                                     <input type="file" class="form-control" name="file[]" required=""

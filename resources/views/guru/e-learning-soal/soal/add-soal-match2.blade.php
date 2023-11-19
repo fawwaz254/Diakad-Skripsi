@@ -186,6 +186,7 @@
         $('#btn-submit').removeAttr('disabled', 'disabled');
 
         if (isChecked) {
+            checkbox.checked = !checkbox.checked;
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 CKEDITOR.instances[id].destroy();

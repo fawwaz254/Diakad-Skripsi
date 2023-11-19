@@ -43,12 +43,12 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [FingerprintController::class, 'indexList']);
                 Route::get('/datatables', [FingerprintController::class, 'commonList']);
             });
-            // Route::prefix('fingerprintRealTime')->group(function () {
-            //     Route::get('/', [FingerprintRealtimeController::class, 'viewFingerprintRealtime']);
-            //     Route::get('/datatables', [FingerprintRealtimeController::class, 'datatableFingerprintRealtime']);
-            //     Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
-            //     Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
-            // });
+            Route::prefix('fingerprintRealTime')->group(function () {
+                Route::get('/', [FingerprintRealtimeController::class, 'viewFingerprintRealtime']);
+                Route::get('/datatables', [FingerprintRealtimeController::class, 'datatableFingerprintRealtime']);
+                Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
+                Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
+            });
         });
 
         Route::prefix('notification')->group(function () {

@@ -43,8 +43,17 @@
                     <td style="text-align: center">{{ $paket_soal_kelas->kelas->nm_kelas }}</td>
                     <td style="text-align: center">{{ $siswa->nis_siswa }}</td>
                     <td>{{ $siswa->pengguna->nm_pengguna }}</td>
+                    @php
+                        $nilai = null;
+                        if (isset($data['nilai_siswa'][$siswa->id_pengguna])) {
+                            $nilai = number_format($data['nilai_siswa'][$siswa->id_pengguna]);
+                            if ($nilai > 100) {
+                                $nilai = 100;
+                            }
+                        }
+                    @endphp
                     <td style="text-align: center">
-                        {{ isset($data['nilai_siswa'][$siswa->id_pengguna]) ? number_format($data['nilai_siswa'][$siswa->id_pengguna]) : '-' }}
+                        {{ $nilai }}
                     </td>
                     <td style="text-align: center">
                         {{ isset($data['benar'][$siswa->id_pengguna]['type1']) ? $data['benar'][$siswa->id_pengguna]['type1'] : '-' }}
