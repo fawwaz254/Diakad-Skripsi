@@ -34,6 +34,7 @@ class ElearningAnswer implements ShouldQueue
         if ($jawaban_test = JawabanTest::where('id_pengguna', $this->test_answer['id_pengguna'])->where('id_test', $this->test_answer['id_test'])->where('id_soal', $this->test_answer['id_soal'])->first()) {
             if ($this->test_answer['id_tipe_soal'] == 1) {
                 $jawaban_test->nilai = $this->test_answer['nilai'];
+                $jawaban_test->correct = $this->test_answer['correct'];
                 $jawaban_test->id_pilihan_soal =  $this->test_answer['id_pilihan_soal'];
                 $jawaban_test->save();
             } elseif ($this->test_answer['id_tipe_soal'] == 2) {
@@ -45,6 +46,7 @@ class ElearningAnswer implements ShouldQueue
                 $jawaban_test->save();
             } elseif ($this->test_answer['id_tipe_soal'] == 4) {
                 $jawaban_test->nilai = $this->test_answer['nilai'];
+                $jawaban_test->correct = $this->test_answer['correct'];
                 $jawaban_test->id_pilihan_soal_kompleks1 =  $this->test_answer['id_pilihan_soal_kompleks1'];
                 $jawaban_test->id_pilihan_soal_kompleks2 =  $this->test_answer['id_pilihan_soal_kompleks2'];
                 $jawaban_test->id_pilihan_soal_kompleks3 =  $this->test_answer['id_pilihan_soal_kompleks3'];
@@ -53,10 +55,12 @@ class ElearningAnswer implements ShouldQueue
                 $jawaban_test->save();
             } elseif ($this->test_answer['id_tipe_soal'] == 5) {
                 $jawaban_test->nilai = $this->test_answer['nilai'];
+                $jawaban_test->correct = $this->test_answer['correct'];
                 $jawaban_test->jawaban_essay =  $this->test_answer['jawaban_essay'];
                 $jawaban_test->save();
             } elseif ($this->test_answer['id_tipe_soal'] == 6) {
                 $jawaban_test->nilai = $this->test_answer['nilai'];
+                $jawaban_test->correct = $this->test_answer['correct'];
                 $jawaban_test->pilihan_jawaban1 =  $this->test_answer['pilihan_jawaban1'];
                 $jawaban_test->pilihan_jawaban2 =  $this->test_answer['pilihan_jawaban2'];
                 $jawaban_test->pilihan_jawaban3 =  $this->test_answer['pilihan_jawaban3'];
@@ -65,6 +69,7 @@ class ElearningAnswer implements ShouldQueue
                 $jawaban_test->save();
             } elseif ($this->test_answer['id_tipe_soal'] == 7) {
                 $jawaban_test->nilai = $this->test_answer['nilai'];
+                $jawaban_test->correct = $this->test_answer['correct'];
                 $jawaban_test->pilihan_jawaban1 =  $this->test_answer['pilihan_jawaban1'];
                 $jawaban_test->pilihan_jawaban2 =  $this->test_answer['pilihan_jawaban2'];
                 $jawaban_test->pilihan_jawaban3 =  $this->test_answer['pilihan_jawaban3'];

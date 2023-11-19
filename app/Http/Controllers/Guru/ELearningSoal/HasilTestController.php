@@ -120,6 +120,7 @@ class HasilTestController extends Controller
         foreach ($input->id_jawaban_test as $id_jawaban_test) {
             $jawaban_test = JawabanTest::where('id_jawaban_test', $id_jawaban_test)->first();
             $jawaban_test->nilai = $input->nilai[$id_jawaban_test];
+            $jawaban_test->correct = (empty($input->nilai[$id_jawaban_test]) ||  $input->nilai[$id_jawaban_test] == '0' ? '0' : '1');
             $jawaban_test->tangapan = $input->tangapan[$id_jawaban_test];
             $jawaban_test->status_koreksi = 1;
             $jawaban_test->save();
@@ -155,6 +156,10 @@ class HasilTestController extends Controller
 
                 //total
                 $nilai = number_format($item->jawaban_test->pluck('nilai')->sum());
+                if ($nilai > 100) {
+                    $nilai = 100;
+                }
+
 
                 $data = array(
                     'nilai_pilihan_ganda' => $nilai_pilihan_ganda,

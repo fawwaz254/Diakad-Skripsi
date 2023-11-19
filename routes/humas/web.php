@@ -41,6 +41,7 @@ use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaPondokController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaSholatController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
+use App\Http\Controllers\Humas\Absensi\RekapPertanggalController;
 use App\Http\Controllers\Humas\FormBuilder\ListFormController;
 use App\Http\Controllers\Humas\FormBuilder\RekapFormHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
@@ -336,6 +337,9 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/chart/siswa/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'chartRekapAbsensiSiswa']);
                 Route::get('/allDataChart/siswa/{tingkat}/{id_jurusan}/{start_data}/{end_date}', [RekapAbsensiController::class, 'chartAllRekapAbsensiSiswa']);
                 Route::get('/print-mingguan/siswa/{tingkat}/{id_jurusan}', [RekapAbsensiController::class, 'printRekapMingguan']);
+            });
+            Route::prefix('rekap-pertanggal')->group(function () {
+                Route::get('/', [RekapPertanggalController::class, 'viewRekapPertanggal']);
             });
         });
 

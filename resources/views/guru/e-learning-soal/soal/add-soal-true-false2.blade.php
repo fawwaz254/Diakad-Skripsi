@@ -162,14 +162,14 @@
                 // }
             }
 
-            for (var i = 1; i <= jawaban; i++) {
-                id = 'inputJawaban' + i;
-                var editor = CKEDITOR.replace(id, options);
-                // for (var j = 0; j < 5; j++) {
-                //     idjawaban = 'a' + i + j;
-                //     var editorjawaban = CKEDITOR.replace(idjawaban, options);
-                // }
-            }
+            // for (var i = 1; i <= jawaban; i++) {
+            //     id = 'inputJawaban' + i;
+            //     var editor = CKEDITOR.replace(id, options);
+            // for (var j = 0; j < 5; j++) {
+            //     idjawaban = 'a' + i + j;
+            //     var editorjawaban = CKEDITOR.replace(idjawaban, options);
+            // }
+            // }
 
         } else {
             for (var i = 1; i <= pertanyaan; i++) {
@@ -181,14 +181,14 @@
                 // }
             }
 
-            for (var i = 1; i <= jawaban; i++) {
-                id = 'inputJawaban' + i;
-                CKEDITOR.instances[id].destroy();
-                // for (var j = 0; j < 5; j++) {
-                //     idjawaban = 'a' + i + j;
-                //     CKEDITOR.instances[idjawaban].destroy();
-                // }
-            }
+            // for (var i = 1; i <= jawaban; i++) {
+            //     id = 'inputJawaban' + i;
+            //     CKEDITOR.instances[id].destroy();
+            // for (var j = 0; j < 5; j++) {
+            //     idjawaban = 'a' + i + j;
+            //     CKEDITOR.instances[idjawaban].destroy();
+            // }
+            // }
 
         }
     }
@@ -200,16 +200,17 @@
         $('#btn-submit').removeAttr('disabled', 'disabled');
 
         if (isChecked) {
+            checkbox.checked = !checkbox.checked;
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 CKEDITOR.instances[id].destroy();
             }
 
-            for (var i = 1; i <= jawaban; i++) {
-                id = 'inputJawaban' + i;
-                CKEDITOR.instances[id].destroy();
+            // for (var i = 1; i <= jawaban; i++) {
+            //     id = 'inputJawaban' + i;
+            //     CKEDITOR.instances[id].destroy();
 
-            }
+            // }
         }
         $('#modal').html('');
         var html = '<table  class="table">';

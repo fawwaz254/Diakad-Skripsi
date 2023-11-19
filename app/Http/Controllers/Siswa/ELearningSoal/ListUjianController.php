@@ -237,10 +237,12 @@ class ListUjianController extends Controller
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $test_answer = array();
         $nilai = 0;
+        $correct = 0;
         if ($input->id_tipe_soal == 1) {
             $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_soal']->where('id_pilihan_soal', $input->question_option)->first();
             if ($pilihan_jawaban->correct == 1) {
                 $nilai = session($input->paket_soal)['point_pilihan_ganda'];
+                $correct = 1;
             }
 
             $test_answer = array(
@@ -250,6 +252,7 @@ class ListUjianController extends Controller
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
                 'nilai' => $nilai,
+                'correct' => $correct,
                 'id_pilihan_soal' => $input->question_option,
                 'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
@@ -267,6 +270,7 @@ class ListUjianController extends Controller
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
                 'nilai' => $nilai,
+                'correct' => null,
                 'jawaban_essay' => $input->jawaban_essay,
                 'status_koreksi' => 0,
                 'id_tipe_soal' => $input->id_tipe_soal,
@@ -285,6 +289,7 @@ class ListUjianController extends Controller
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
                 'nilai' => $nilai,
+                'correct' => null,
                 'link_file' => $file,
                 'type_file' => pathinfo(request()->file->getClientOriginalName(), PATHINFO_EXTENSION),
                 'status_koreksi' => 0,
@@ -299,10 +304,12 @@ class ListUjianController extends Controller
             $jawaban = [];
             if (isset($input->question_option)) {
                 $jawaban_benar = true;
+                $correct = 1;
                 foreach ($input->question_option as $question_option) {
                     $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_soal']->where('id_pilihan_soal', $question_option)->first();
                     if ($pilihan_jawaban->correct == 1) { } else {
                         $jawaban_benar = false;
+                        $correct = 0;
                     }
                     $jawaban[] = $question_option;
                 }
@@ -317,6 +324,7 @@ class ListUjianController extends Controller
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
                 'nilai' => $nilai,
+                'correct' => $correct,
                 'id_pilihan_soal' => null,
                 'id_pilihan_soal_kompleks1' => isset($jawaban[0]) ? $jawaban[0] : null,
                 'id_pilihan_soal_kompleks2' => isset($jawaban[1]) ? $jawaban[1] : null,
@@ -345,6 +353,7 @@ class ListUjianController extends Controller
                 strtolower($alternatif_jawaban5)  == strtolower($input->jawaban_essay)
             ) {
                 $nilai =  session($input->paket_soal)['point_pilihan_ganda'];
+                $correct = 1;
             } else {
                 $nilai = 0;
             }
@@ -356,6 +365,7 @@ class ListUjianController extends Controller
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
                 'nilai' => $nilai,
+                'correct' => $correct,
                 'jawaban_essay' => $input->jawaban_essay,
                 'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
@@ -373,6 +383,7 @@ class ListUjianController extends Controller
                 if (isset($input->jawaban[$jawaban->nomer])) {
                     if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
                         $jawaban_benar += session($input->paket_soal)['point_pilihan_ganda'];
+                        $correct++;
                     }
                 }
             }
@@ -387,6 +398,7 @@ class ListUjianController extends Controller
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
                 'nilai' => $nilai,
+                'correct' => $correct,
                 'pilihan_jawaban1' => isset($input->jawaban[1]) ? $input->jawaban[1] : null,
                 'pilihan_jawaban2' => isset($input->jawaban[2]) ? $input->jawaban[2] : null,
                 'pilihan_jawaban3' => isset($input->jawaban[3]) ? $input->jawaban[3] : null,
@@ -408,6 +420,7 @@ class ListUjianController extends Controller
                 if (isset($input->jawaban[$jawaban->nomer])) {
                     if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
                         $jawaban_benar += session($input->paket_soal)['point_pilihan_ganda'];
+                        $correct++;
                     }
                 }
             }
@@ -422,6 +435,7 @@ class ListUjianController extends Controller
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
                 'nilai' => $nilai,
+                'correct' => $correct,
                 'pilihan_jawaban1' => isset($input->jawaban[1]) ? $input->jawaban[1] : null,
                 'pilihan_jawaban2' => isset($input->jawaban[2]) ? $input->jawaban[2] : null,
                 'pilihan_jawaban3' => isset($input->jawaban[3]) ? $input->jawaban[3] : null,

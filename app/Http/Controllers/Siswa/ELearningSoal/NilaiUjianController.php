@@ -34,6 +34,9 @@ class NilaiUjianController extends Controller
                 $nilai_pilihan_essay_submit = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
                 $validasi_pilihan_essay_submit =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->first();
                 $belum_dikoreksi =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', '0')->first();
+                if ($nilai > 100) {
+                    $nilai = 100;
+                }
 
                 $data = array(
                     'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
