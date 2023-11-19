@@ -49,7 +49,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
     var get_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/getData';
     var sync_url = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/syncData';
-    var loops = 0;
+    // var loops = 0;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -116,8 +116,9 @@
     }).draw();
 
     function getData() {
-        loops++;
-        $('#status').html('Status : Get Data (' + loops + ')');
+        // loops++;
+        // $('#status').html('Status : Get Data (' + loops + ')');
+        $('#status').html('Proses : Get Data -> Sync Data -> Done');
         $.ajax({
             type: "POST",
             url: get_url,
@@ -129,14 +130,17 @@
     }
 
     function syncData() {
-        loops++;
-        $('#status').html('Status : Sync Data (' + loops + ')');
+        // loops++;
+        // $('#status').html('Status : Sync Data');
+        $('#status').html('Proses : Sync Data -> Done');
         $.ajax({
             type: "POST",
             url: sync_url,
             success: function(response) {
+                $('#status').html('Proses : Done');
                 primary_table.ajax.reload(null, false);
-                getData();
+                // getData();
+
             }
         });
     }
