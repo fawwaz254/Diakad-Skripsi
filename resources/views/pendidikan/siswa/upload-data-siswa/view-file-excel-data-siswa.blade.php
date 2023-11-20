@@ -30,6 +30,9 @@
                         </thead>
                         <tbody>
                             @foreach ($datas as $data2)
+                                @if (!isset($data2['nis']))
+                                    @continue
+                                @endif
                                 <tr>
                                     <td id="{{ $data2['nis'] }}status"></td>
                                     <td id="{{ $data2['nis'] }}keterangan"></td>
