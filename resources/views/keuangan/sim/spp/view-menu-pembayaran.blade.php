@@ -223,17 +223,27 @@
                             id="primary_table">
                             <thead>
                                 <tr>
-                                    <th>No</th>
+                                    <th rowspan="2">No</th>
                                     <th onclick="filterAction('nis')" style="cursor:pointer" data-toggle="tooltip"
-                                        data-placement="top" title="Urutkan berdasarkan nis">
+                                        data-placement="top" title="Urutkan berdasarkan nis" rowspan="2">
                                         NIS&nbsp;<i class="small material-icons btn-sort-nis"
                                             style="color:darkgrey;display:inline;cursor:pointer;">sort
                                         </i></th>
                                     <th onclick="filterAction('nama')" style="cursor:pointer" data-toggle="tooltip"
-                                        data-placement="top" title="Urutkan berdasarkan nama">
+                                        data-placement="top" title="Urutkan berdasarkan nama" rowspan="2">
                                         Nama&nbsp;<i class="small material-icons btn-sort-nama"
                                             style="color:darkgrey;display:inline;cursor:pointer;">sort
                                         </i></th>
+                                    @if (count($data_bulan_tagihan) > 0)
+                                        <th class="text-center" colspan="{{ count($data_bulan_tagihan) }}">
+                                            {{ $data_bulan_tagihan[0]->nm_biaya }}</th>
+                                    @endif
+                                    @if (count($data_ket_tagihan) > 0)
+                                        <th class="text-center" colspan="{{ count($data_ket_tagihan) }}">
+                                            {{ $data_ket_tagihan[0]->nm_biaya }}</th>
+                                    @endif
+                                </tr>
+                                <tr>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @if (!empty($bulan->id_bulan))
                                             <th class="tdbg-{{ $bulan->id_bulan }}">{{ $bulan->nm_bulan }}</th>
@@ -243,7 +253,7 @@
                                     @endforeach
                                     @foreach ($data_ket_tagihan as $ket)
                                         <td class="tdbg-13" style="vertical-align: bottom;">
-                                            {{ $ket->nm_biaya . ' ' . $ket->keterangan }}
+                                            {{ $ket->keterangan }}
                                         </td>
                                     @endforeach
                                 </tr>
@@ -285,8 +295,8 @@
                                                             @if (!empty($bulan->id_bulan)) class="bbg-{{ $bulan->id_bulan }}" @endif>
                                                             <button class="btn btn-block bg-black waves-effect"
                                                                 data-toggle="tooltip" data-html="true"
-                                                                title="{{ $bulan->nm_bulan }}" data-placement="top"
-                                                                onclick="takeAction(this)"
+                                                                title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $bulan->nm_bulan }}"
+                                                                data-placement="top" onclick="takeAction(this)"
                                                                 data-id="{{ $tagihan->id_tagihan_biaya }}"
                                                                 data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
                                                         </div>
