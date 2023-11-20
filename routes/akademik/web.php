@@ -19,6 +19,7 @@ use App\Http\Controllers\Akademik\KPI\KelompokKPIController;
 use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
 use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
 use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiGuruController;
+use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiSiswaController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
@@ -523,7 +524,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('monitoring-presensi-guru/{bulan}/{tahun}', [MonitoringPresensiGuruController::class, 'viewMonitoringPresensiGuru']);
             Route::get('monitoring-presensi-guru/print/{bulan}/{tahun}', [MonitoringPresensiGuruController::class, 'printViewMonitoringPresensiGuru']);
             Route::get('monitoring-presensi-guru/{day}/{bulan}/{tahun}/{id_pengguna}', [MonitoringPresensiGuruController::class, 'viewDetailPresensiGuru']);
-            Route::get('monitoring-presensi', [AbsensiHarianSiswaController::class, 'viewAbsensiHarianSiswa']);
+            Route::get('monitoring-presensi', [MonitoringPresensiSiswaController::class, 'viewMonitoringPresensiSiswa']);
+            Route::get('monitoring-presensi/{id_kelas}/{bulan}/{tahun}', [MonitoringPresensiSiswaController::class, 'viewMonitoringPresensiSiswa']);
             Route::get('monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
             Route::get('rekap-monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewRekapMonitoringKelasKosong']);
         });
