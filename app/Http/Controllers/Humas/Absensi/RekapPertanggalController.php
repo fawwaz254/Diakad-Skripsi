@@ -13,30 +13,30 @@ use Carbon\CarbonPeriod;
 
 class RekapPertanggalController extends Controller
 {
-    public function viewRekapPertanggal(Request $request, $date = null, $unit_kerja = null, $status = null, $bulan = null, $tahun = null)
+    public function viewRekapPertanggal(Request $request, $bulan = null, $tahun = null)
     {
-        set_time_limit(1800);
+        // set_time_limit(1800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $hasil = [];
-        $jumlah_hadir = 0;
-        $jumlah_sakit = 0;
-        $jumlah_izin = 0;
-        $jumlah_telat = 0;
-        $jumlah_pulangcepat = 0;
-        $jumlah_alpha = 0;
-        $tidak_checkout = 0;
-        $belum_absent = 0;
+        // $hasil = [];
+        // $jumlah_hadir = 0;
+        // $jumlah_sakit = 0;
+        // $jumlah_izin = 0;
+        // $jumlah_telat = 0;
+        // $jumlah_pulangcepat = 0;
+        // $jumlah_alpha = 0;
+        // $tidak_checkout = 0;
+        // $belum_absent = 0;
 
         // if (empty($date)) {
         //     $date = Carbon::now()->format('Y-m-d');
         // }
-        if (empty($unit_kerja)) {
-            $unit_kerja = "0";
-        }
-        if (empty($status)) {
-            $status = "0";
-        }
+        // if (empty($unit_kerja)) {
+        //     $unit_kerja = "0";
+        // }
+        // if (empty($status)) {
+        //     $status = "0";
+        // }
 
 
         if (empty($tahun)) {
@@ -45,6 +45,7 @@ class RekapPertanggalController extends Controller
         if (empty($bulan)) {
             $bulan = Carbon::now()->month;
         }
+        $date = Carbon::now()->format('Y-m-d');
 
         $start_month = Carbon::create($tahun, $bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun, $bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
@@ -79,9 +80,9 @@ class RekapPertanggalController extends Controller
         // }
 
         $pengguna = $query->get();
-        $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-        $year = Carbon::parse($date)->format('Y');
-        $mount = Carbon::parse($date)->format('M');
+        // $cek_libur = ManajemenHariLibur::where('date', $date)->first();
+        // $year = Carbon::parse($date)->format('Y');
+        // $mount = Carbon::parse($date)->format('M');
 
         foreach ($pengguna as $key1 => $value) {
             $hasil[$value->id_pengguna]['nm_pengguna'] = $value->gelar_depan . ' ' . $value->nm_pengguna . ' ' . $value->gelar_belakang;
@@ -130,9 +131,9 @@ class RekapPertanggalController extends Controller
                 }
             }
         }
-        // dd($hasil);
+
         $list_unit_kerja = UnitKerja::all();
 
-        return view('humas/absensi/rekap-pertanggal/view-rekap-pertanggal', compact('auth_data', 'list_unit_kerja', 'date', 'hasil', 'jumlah_hadir', 'belum_absent', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur', 'unit_kerja', 'status', 'dates', 'start_month', 'end_month', 'pengguna'));
+        return view('humas/absensi/rekap-pertanggal/view-rekap-pertanggal', compact('auth_data', 'list_unit_kerja', 'dates', 'hasil', 'start_month', 'end_month', 'pengguna'));
     }
 }

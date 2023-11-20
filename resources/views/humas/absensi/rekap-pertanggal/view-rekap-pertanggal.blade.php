@@ -227,7 +227,7 @@
                                 <tr>
                                     @foreach ($dates as $date)
                                         <th>
-                                            {{ substr($date->format('l'), 0, 3) }}
+                                            {{ substr(\Carbon\Carbon::create($date)->isoFormat('dddd'), 0, 3) }}
                                             <br>
                                             {{ $date->format('d') }}
                                         </th>
