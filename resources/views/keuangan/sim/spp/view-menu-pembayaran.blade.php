@@ -246,7 +246,20 @@
                                 <tr>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @if (!empty($bulan->id_bulan))
-                                            <th class="tdbg-{{ $bulan->id_bulan }}">{{ $bulan->nm_bulan }}</th>
+                                            @php
+
+                                                if ($first_siswa = $data_siswa->first()) {
+                                                    $col_span = $data_tagihan
+                                                        ->where('id_siswa', $first_siswa->id_siswa)
+                                                        ->where('id_bulan', $bulan->id_bulan)
+                                                        ->count();
+                                                } else {
+                                                    $col_span = 1;
+                                                }
+                                            @endphp
+                                            <th class="tdbg-{{ $bulan->id_bulan }}" colspan="{{ $col_span }}"
+                                                style="text-align: center">
+                                                {{ $bulan->nm_bulan }}</th>
                                         @else
                                             <th class="tdbg">{{ $bulan->nm_biaya }}</th>
                                         @endif
@@ -279,56 +292,60 @@
                                     </td>
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @php
-                                            $tagihan = $data_tagihan
+                                            $tagihan_bulanan = $data_tagihan
                                                 ->where('id_siswa', $siswa->id_siswa)
                                                 ->where('id_bulan', $bulan->id_bulan)
-                                                ->first();
+                                                ->values();
+
                                         @endphp
-                                        @if (!empty($tagihan) > 0)
-                                            @if ($tagihan->is_tagih == 1)
-                                                @php
-                                                    $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                                                @endphp
-                                                <td>
-                                                    @if ($tagihan->is_request == 0)
-                                                        <div
-                                                            @if (!empty($bulan->id_bulan)) class="bbg-{{ $bulan->id_bulan }}" @endif>
-                                                            <button class="btn btn-block bg-black waves-effect"
-                                                                data-toggle="tooltip" data-html="true"
-                                                                title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $bulan->nm_bulan }}"
-                                                                data-placement="top" onclick="takeAction(this)"
-                                                                data-id="{{ $tagihan->id_tagihan_biaya }}"
-                                                                data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
-                                                        </div>
-                                                    @else
-                                                        Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
-                                                    @endif
-                                                </td>
-                                            @elseif($tagihan->is_tagih == 0)
-                                                <td
-                                                    class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}">
-                                                    <a target="_blank"
-                                                        href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b
-                                                            style="color: #4caf50;">Print
-                                                            {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
-                                                    @if (
-                                                        $tagihan->is_request == 0 &&
-                                                            \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->updated_at)
-                                                        <br>
-                                                        <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
-                                                            onclick="deleteActionKhusus(this)"
-                                                            data-id="{{ $tagihan->id_tagihan_biaya }}">
-                                                            Batal
-                                                        </a>
-                                                    @endif
-                                                    @if ($tagihan->is_request == 1)
-                                                        <br> <b>Online</b>
-                                                    @endif
-                                                </td>
+
+                                        @foreach ($tagihan_bulanan as $tagihan)
+                                            @if (!empty($tagihan) > 0)
+                                                @if ($tagihan->is_tagih == 1)
+                                                    @php
+                                                        $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                                    @endphp
+                                                    <td>
+                                                        @if ($tagihan->is_request == 0)
+                                                            <div
+                                                                @if (!empty($bulan->id_bulan)) class="bbg-{{ $bulan->id_bulan }}" @endif>
+                                                                <button class="btn btn-block bg-black waves-effect"
+                                                                    data-toggle="tooltip" data-html="true"
+                                                                    title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $bulan->nm_bulan }}"
+                                                                    data-placement="top" onclick="takeAction(this)"
+                                                                    data-id="{{ $tagihan->id_tagihan_biaya }}"
+                                                                    data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
+                                                            </div>
+                                                        @else
+                                                            Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
+                                                        @endif
+                                                    </td>
+                                                @elseif($tagihan->is_tagih == 0)
+                                                    <td
+                                                        class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}">
+                                                        <a target="_blank"
+                                                            href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b
+                                                                style="color: #4caf50;">Print
+                                                                {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
+                                                        @if (
+                                                            $tagihan->is_request == 0 &&
+                                                                \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->updated_at)
+                                                            <br>
+                                                            <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
+                                                                onclick="deleteActionKhusus(this)"
+                                                                data-id="{{ $tagihan->id_tagihan_biaya }}">
+                                                                Batal
+                                                            </a>
+                                                        @endif
+                                                        @if ($tagihan->is_request == 1)
+                                                            <br> <b>Online</b>
+                                                        @endif
+                                                    </td>
+                                                @endif
+                                            @else
+                                                <td></td>
                                             @endif
-                                        @else
-                                            <td></td>
-                                        @endif
+                                        @endforeach
                                     @endforeach
                                     @if (!empty($data_tagihan_non_bulanan))
                                         @foreach ($data_ket_tagihan as $ket)
@@ -385,6 +402,8 @@
                                             @endif
                                         @endforeach
                                     @endif
+
+
                                     </tr>
                                 @endforeach
                                 <tr>
