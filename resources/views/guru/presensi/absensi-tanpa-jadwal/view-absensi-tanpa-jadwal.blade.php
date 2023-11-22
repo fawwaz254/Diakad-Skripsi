@@ -40,8 +40,10 @@
                                         <select class="form-control show-tick" name="id_mata_pelajaran">
                                             <option value="" disabled selected>-- Pilih Mata Pelajaran --</option>
                                             @foreach ($pengampu_mapel as $mapel)
-                                                <option value="{{ $mapel->id_mata_pelajaran }}">
-                                                    {{ $mapel->nm_mata_pelajaran }}</option>
+                                                @if (!empty($mapel))
+                                                    <option value="{{ $mapel->id_mata_pelajaran }}">
+                                                        {{ $mapel->nm_mata_pelajaran }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
