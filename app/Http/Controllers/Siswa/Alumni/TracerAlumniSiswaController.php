@@ -92,11 +92,11 @@ class TracerAlumniSiswaController extends Controller
         return Datatables::of($alumnis)
             ->addColumn('info', function ($item) {
 
-                if ($item->nm_instansi) {
+                if (isset($item->nm_instansi)) {
                     return $item->nm_instansi;
-                } else if ($item->nm_perguruan) {
+                } else if (isset($item->nm_perguruan)) {
                     return $item->nm_perguruan;
-                } else if ($item->mencari_kerja) {
+                } else if (isset($item->mencari_kerja)) {
                     return $item->mencari_kerja;
                 } else {
                     return '-';
