@@ -257,6 +257,12 @@ class SoalController extends Controller
                     $question_option->save();
                 }
                 $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
+            } else if ($input->id_tipe_soal == 2) {
+                $question->content = $input->soal;
+                $question->text = strip_tags($input->soal);
+                $question->id_kategori_soal = $input->kategori;
+                $question->jawaban = $input->jawaban;
+                $question->save();
             } else if ($input->id_tipe_soal == 5) {
                 $question->alternatif_jawaban1 = $input->jawaban[1];
                 $question->alternatif_jawaban2 = $input->jawaban[2];

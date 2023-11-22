@@ -205,9 +205,14 @@
             </div>
             <div class="row clearfix" style="margin-top:20px">
                 <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
-                    <button class="btn btn-block bg-blue waves-effect" id="btn-reset-password"
-                        onclick="resetPasswordSiswa('{{ $wali_murid->id_pengguna }}')"><i
-                            class="material-icons">update</i><span>Reset Password Wali Murid</span></button>
+                    @if ($wali_murid)
+                        <button class="btn btn-block bg-blue waves-effect" id="btn-reset-password"
+                            onclick="resetPasswordSiswa('{{ $wali_murid->id_pengguna }}')"><i
+                                class="material-icons">update</i><span>Reset Password Wali Murid</span></button>
+                    @else
+                        <button class="btn btn-block bg-blue waves-effect" id="btn-reset-password" disabled><i
+                                class="material-icons">update</i><span>Reset Password Wali Murid</span></button>
+                    @endif
                 </div>
             </div>
         </div>
