@@ -9,7 +9,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
-class AddDataStafInAdminYayasan extends Migration
+class AddDataStafInAdminYayasan2 extends Migration
 {
     /**
      * Run the migrations.
@@ -18,14 +18,13 @@ class AddDataStafInAdminYayasan extends Migration
      */
     public function up()
     {
-
         $yayasan = Pengguna::where('username', 'yayasan')->first();
         if ($yayasan) {
             $staf = Staff::where('id_pengguna', $yayasan->id_pengguna)->first();
             if ($staf) { } else {
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
                 $sekolah = Sekolah::first();
-                $unit_kerja = UnitKerja::where('nm_unit_kerja', 'Tenaga Kependidikan')->first();
+                $unit_kerja = UnitKerja::where('nm_unit_kerja', 'Tata Usaha')->first();
                 $id = $sekolah->prefix . strtotime($now) . uniqid();
                 $staff = new Staff;
                 $staff->id_staff                 = $id;
