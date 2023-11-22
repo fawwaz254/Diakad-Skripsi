@@ -35,6 +35,11 @@
                                 <span>Type Pilihan Ganda</span>
                             </a>
                             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/input-soal/new/pilihan-ganda-batch/' . $question_package->id_paket_soal) }}">
+                                <i class="material-icons">add_box</i>
+                                <span>Type Pilihan Ganda Batch</span>
+                            </a>
+                            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
                                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/input-soal/new/essay/' . $question_package->id_paket_soal) }}">
                                 <i class="material-icons">add_box</i>
                                 <span>Type Essay</span>

@@ -62,6 +62,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/add-soal-match2', compact('paket_soal'));
         } elseif ($tipe_soal == "true-false") {
             return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('paket_soal'));
+        } elseif ($tipe_soal == "pilihan-ganda-batch") {
+            return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda2-batch', compact('paket_soal'));
         }
         return abort(404);
     }
