@@ -140,10 +140,12 @@ class DataSiswaController extends BaseController
 				$wali_murid->save();
 
 				$pengguna_wali_murid = Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->first();
-				$pengguna_wali_murid->nm_pengguna = strtoupper($input->nm_ayah);
-				$pengguna_wali_murid->username = $input->nomor_hp_ortu;
-				$pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
-				$pengguna_wali_murid->save();
+				if ($pengguna_wali_murid && !empty($input->nm_ayah)) {
+					$pengguna_wali_murid->nm_pengguna = strtoupper($input->nm_ayah);
+					$pengguna_wali_murid->username = $input->nomor_hp_ortu;
+					$pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
+					$pengguna_wali_murid->save();
+				}
 			}
 
 			if ($siswa != null || $calonSiswa != null) {
@@ -214,8 +216,8 @@ class DataSiswaController extends BaseController
 						'alasan_mutasi'			=> $input->alasan_mutasi,
 						'nomor_sttb'			=> $input->nomor_sttb,
 						'tanggal_sttb'			=> date('Y-m-d', strtotime($input->tanggal_sttb)),
-						'nomor_skhus_sebelumnya'=> $input->nomor_skhus_sebelumnya,
-						'tanggal_skhus_sebelumnya'=> date('Y-m-d', strtotime($input->tanggal_skhus_sebelumnya)),
+						'nomor_skhus_sebelumnya' => $input->nomor_skhus_sebelumnya,
+						'tanggal_skhus_sebelumnya' => date('Y-m-d', strtotime($input->tanggal_skhus_sebelumnya)),
 						'kegemaran_kesenian'	=> $input->kegemaran_kesenian,
 						'kegemaran_olahraga'	=> $input->kegemaran_olahraga,
 						'kegemaran_organisasi'	=> $input->kegemaran_organisasi,
