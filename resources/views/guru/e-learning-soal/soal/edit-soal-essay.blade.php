@@ -51,6 +51,12 @@
                                 <textarea id="q1" class="form-control q1" name="soal" data-sample-short>{!! $item->content !!}</textarea>
                             </div>
                         </div>
+                        <h2 class="card-inside-title">Kunci Jawaban (akan di tampilkan ketika koreksi jawaban)</h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea class="form-control q1" required="" name="jawaban" rows="3">{!! $item->jawaban !!}</textarea>
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-pink waves-effect" id="btn-submit"
