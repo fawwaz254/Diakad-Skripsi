@@ -33,12 +33,13 @@
                                         <div class="form-line">
                                             <select class="form-control show-tick" name="kategori" required="">
                                                 @if ($item)
-                                                    <option disabled>-- Pilih Mata Pelajaran --</option>
+                                                    {{-- <option disabled>-- Pilih Mata Pelajaran --</option> --}}
                                                     @foreach ($kategori as $r)
-                                                        <option value="{{ $r->id_kategori_soal }}"
-                                                            @if ($r->id_kategori_soal == $item->id_kategori_soal) selected @else disabled @endif>
-                                                            {{ $r->nm_kategori_soal }}
-                                                        </option>
+                                                        @if ($r->id_kategori_soal == $item->id_kategori_soal)
+                                                            <option value="{{ $r->id_kategori_soal }}" selected>
+                                                                {{ $r->nm_kategori_soal }}
+                                                            </option>
+                                                        @endif
                                                     @endforeach
                                                 @else
                                                     <option selected disabled>-- Pilih Mata Pelajaran --</option>
