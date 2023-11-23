@@ -113,7 +113,8 @@
                 src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
                 alt="Logo Sekolah" style="height:50px; width:45px" />
             <h2 style="margin-top:-2px">{{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h2>
-            <h3 style="margin-top:-2px">Laporan Pembayaran Kelas {{ $data_kelas->nm_kelas }} Tahun
+            <h3 style="margin-top:-2px">Laporan Pembayaran Kelas
+                {{ isset($data_kelas->nm_kelas) ? $data_kelas->nm_kelas : '' }} Tahun
                 {{ $tahun_akademik_semester }}</h3>
         </center>
         </td>
