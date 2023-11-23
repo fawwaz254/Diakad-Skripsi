@@ -299,6 +299,10 @@
 
                                         @endphp
 
+                                        @if ($tagihan_bulanan->isEmpty())
+                                            <td></td>
+                                        @endif
+
                                         @foreach ($tagihan_bulanan as $tagihan)
                                             @if (!empty($tagihan) > 0)
                                                 @if ($tagihan->is_tagih == 1)
