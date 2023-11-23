@@ -73,7 +73,7 @@ class PaketSoalController extends Controller
             ->addColumn('question', function ($item) {
                 $soal_biasa = $item->detail_paket_soal->whereIn('soal.id_tipe_soal', [1, 2, 3, 4, 5])->count();
                 $soal_cabang = 0;
-                $query_soal_cabang = $item->detail_paket_soal->whereIn('soal.id_tipe_soal', [6, 7]);
+                $query_soal_cabang = $item->detail_paket_soal->whereIn('soal.id_tipe_soal', [6, 7, 8]);
                 foreach ($query_soal_cabang as $soal) {
                     $soal_cabang += $soal->soal->pilihan_pertanyaan->count();
                 }
@@ -85,7 +85,7 @@ class PaketSoalController extends Controller
                 }
 
                 $data = array(
-                    'total_soal' => $query_soal_cabang->isEmpty() ? $soal_biasa : $soal_biasa . ' + ' . $soal_cabang,
+                    'total_soal' => $query_soal_cabang->isEmpty() ? $soal_biasa : $soal_biasa . ' + ' . $soal_cabang . ' (sub soal)',
                     'nilai' => $item->nilai != '0' ? $item->nilai : $nilai,
                 );
                 return $data;
@@ -191,6 +191,8 @@ class PaketSoalController extends Controller
                     return "Menjodohkan";
                 } else if ($item->id_tipe_soal == 7) {
                     return "True/False";
+                } else if ($item->id_tipe_soal == 8) {
+                    return "Pilihan Ganda Cerita";
                 }
             })
             ->make(true);

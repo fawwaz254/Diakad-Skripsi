@@ -12,6 +12,7 @@ use App\Models\PilihanPertanyaan;
 use App\Models\PilihanSoal;
 use App\Models\Soal;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Str;
 use Auth;
 use DB;
 use Validator;
@@ -64,6 +65,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/add-soal-true-false2', compact('paket_soal'));
         } elseif ($tipe_soal == "pilihan-ganda-batch") {
             return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda2-batch', compact('paket_soal'));
+        } elseif ($tipe_soal == "pilihan-ganda-cerita") {
+            return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda-cerita2', compact('paket_soal'));
         }
         return abort(404);
     }
@@ -923,6 +926,61 @@ class SoalController extends Controller
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
+                } else if ($input->id_tipe_soal == 8) {
+                    $jumlahKata = str_word_count($input->soal);
+                    if ($jumlahKata > 50) {
+                        $stringHasil = Str::limit($input->soal, 200);
+                    } else {
+                        $stringHasil = $input->soal;
+                    }
+
+                    $question = new Soal;
+                    $question->id_kategori_soal = $input->id_kategori_soal;
+                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_tipe_soal = $input->id_tipe_soal;
+                    $question->content = $input->soal;
+                    $question->text = $stringHasil;
+                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    if (empty($input->soal)) {
+                        DB::rollback();
+                        return [
+                            'status' => 300,
+                            'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
+                        ];
+                    }
+                    $question->save();
+
+                    for ($i = 1; $i <= count($input->pertanyaan); $i++) {
+                        $pertanyaan = new PilihanPertanyaan;
+                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_soal =  $question->id_soal;
+                        $pertanyaan->nomer = $i;
+                        $pertanyaan->text = $input->pertanyaan[$i];
+                        $pertanyaan->jawaban = $input->jawaban_benar[$i];
+                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $opsi = [];
+                        foreach ($input->jawaban[$i] as $key => $options) {
+                            $opsi[$key] = $options;
+                        }
+                        $pertanyaan->options                      = json_encode($opsi);
+
+                        if (empty($input->pertanyaan[$i])) {
+                            DB::rollback();
+                            return [
+                                'status' => 300,
+                                'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
+                            ];
+                        }
+                        $pertanyaan->save();
+                    }
+
+
+                    $detail_paket_soal = new DetailPaketSoal;
+                    $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
+                    $detail_paket_soal->id_soal = $question->id_soal;
+                    $detail_paket_soal->save();
                 }
 
                 DB::commit();
@@ -962,6 +1020,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/test-soal-match', compact('question'));
         } else if ($question->id_tipe_soal == 7) {
             return view('guru/e-learning-soal/soal/test-soal-true-false', compact('question'));
+        } else if ($question->id_tipe_soal == 8) {
+            return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda-cerita', compact('question'));
         }
     }
 
@@ -1032,7 +1092,10 @@ class SoalController extends Controller
                     return "Menjodohkan";
                 } else if ($item->id_tipe_soal == 7) {
                     return "True/False";
+                } else if ($item->id_tipe_soal == 8) {
+                    return "Pilihan Ganda Cerita";
                 }
+
                 return $item->tipe_soal_to_text();
             })
             ->make(true);
