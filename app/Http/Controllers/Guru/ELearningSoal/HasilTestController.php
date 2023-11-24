@@ -362,6 +362,152 @@ class HasilTestController extends Controller
                     if ($p5 && $p5->correct == $jawaban_test->pilihan_jawaban5) {
                         $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][4] = true;
                     }
+                } elseif ($jawaban_test->id_tipe_soal == '8') {
+                    $p1 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '1')->first();
+
+                    if ($p1) {
+                        switch ($jawaban_test->pilihan_jawaban1) {
+                            case 0:
+                                $hasil = "A";
+                                break;
+                            case 1:
+                                $hasil = "B";
+                                break;
+                            case 2:
+                                $hasil = "C";
+                                break;
+                            case 3:
+                                $hasil = "D";
+                                break;
+
+                            case 4:
+                                $hasil = "E";
+                                break;
+
+                            default:
+                                $hasil = "-";
+                        }
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][1] =  $hasil;
+                    }
+                    if ($p1 && $p1->jawaban == $jawaban_test->pilihan_jawaban1) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][1] = true;
+                    }
+
+                    $p2 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '2')->first();
+                    if ($p2) {
+                        switch ($jawaban_test->pilihan_jawaban2) {
+                            case 0:
+                                $hasil = "A";
+                                break;
+                            case 1:
+                                $hasil = "B";
+                                break;
+                            case 2:
+                                $hasil = "C";
+                                break;
+                            case 3:
+                                $hasil = "D";
+                                break;
+
+                            case 4:
+                                $hasil = "E";
+                                break;
+
+                            default:
+                                $hasil = "-";
+                        }
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][2] =  $hasil;
+                    }
+                    if ($p2 && $p2->jawaban == $jawaban_test->pilihan_jawaban2) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][2] = true;
+                    }
+
+                    $p3 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '3')->first();
+                    if ($p3) {
+                        switch ($jawaban_test->pilihan_jawaban3) {
+                            case 0:
+                                $hasil = "A";
+                                break;
+                            case 1:
+                                $hasil = "B";
+                                break;
+                            case 2:
+                                $hasil = "C";
+                                break;
+                            case 3:
+                                $hasil = "D";
+                                break;
+
+                            case 4:
+                                $hasil = "E";
+                                break;
+
+                            default:
+                                $hasil = "-";
+                        }
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][3] = $hasil;
+                    }
+                    if ($p3 && $p3->jawaban == $jawaban_test->pilihan_jawaban3) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][3] = true;
+                    }
+
+                    $p4 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '4')->first();
+                    if ($p4) {
+                        switch ($jawaban_test->pilihan_jawaban4) {
+                            case 0:
+                                $hasil = "A";
+                                break;
+                            case 1:
+                                $hasil = "B";
+                                break;
+                            case 2:
+                                $hasil = "C";
+                                break;
+                            case 3:
+                                $hasil = "D";
+                                break;
+
+                            case 4:
+                                $hasil = "E";
+                                break;
+
+                            default:
+                                $hasil = "-";
+                        }
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][4] = $hasil;
+                    }
+                    if ($p4 && $p4->jawaban == $jawaban_test->pilihan_jawaban4) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][4] = true;
+                    }
+
+                    $p5 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '5')->first();
+                    if ($p5) {
+                        switch ($jawaban_test->pilihan_jawaban5) {
+                            case 0:
+                                $hasil = "A";
+                                break;
+                            case 1:
+                                $hasil = "B";
+                                break;
+                            case 2:
+                                $hasil = "C";
+                                break;
+                            case 3:
+                                $hasil = "D";
+                                break;
+
+                            case 4:
+                                $hasil = "E";
+                                break;
+
+                            default:
+                                $hasil = "-";
+                        }
+                        $isi[$jawaban_test->id_pengguna][$jawaban_test->id_soal][5] = $hasil;
+                    }
+                    if ($p5 && $p5->jawaban == $jawaban_test->pilihan_jawaban5) {
+                        $benar[$jawaban_test->id_pengguna][$jawaban_test->id_soal][5] = true;
+                    }
                 }
             }
         }
@@ -460,6 +606,36 @@ class HasilTestController extends Controller
                     $p5 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '4')->first();
 
                     if ($p5 && $p5->correct == $jawaban_test->pilihan_jawaban5) {
+                        $type2++;
+                    }
+                } elseif ($jawaban_test->id_tipe_soal == '8') {
+                    $p1 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '1')->first();
+
+                    if ($p1 && $p1->jawaban == $jawaban_test->pilihan_jawaban1) {
+                        $type2++;
+                    }
+
+                    $p2 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '2')->first();
+
+                    if ($p2 && $p2->jawaban == $jawaban_test->pilihan_jawaban2) {
+                        $type2++;
+                    }
+
+                    $p3 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '3')->first();
+
+                    if ($p3 && $p3->jawaban == $jawaban_test->pilihan_jawaban3) {
+                        $type2++;
+                    }
+
+                    $p4 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '4')->first();
+
+                    if ($p4 && $p4->jawaban == $jawaban_test->pilihan_jawaban4) {
+                        $type2++;
+                    }
+
+                    $p5 =  $pilihan_pertanyaan->where('id_soal', $jawaban_test->id_soal)->where('nomer', '5')->first();
+
+                    if ($p5 && $p5->jawaban == $jawaban_test->pilihan_jawaban5) {
                         $type2++;
                     }
                 }
