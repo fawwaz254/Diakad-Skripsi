@@ -88,6 +88,16 @@
                             @endforeach
                         @endif
                     @endforeach
+                    @foreach ($data['paket_soal']['detail_paket_soal'] as $detail_paket_soal)
+                        @if ($detail_paket_soal->soal->id_tipe_soal == '8')
+                            @foreach ($detail_paket_soal->soal->pilihan_pertanyaan as $pilihan_pertanyaan)
+                                <td
+                                    @if (isset($data['benar'][$siswa->id_pengguna][$detail_paket_soal->id_soal][$pilihan_pertanyaan->nomer])) style="background-color: #91ff87; text-align: center" @else  style="text-align: center" @endif>
+                                    {{ isset($data['isi'][$siswa->id_pengguna][$detail_paket_soal->id_soal][$pilihan_pertanyaan->nomer]) ? $data['isi'][$siswa->id_pengguna][$detail_paket_soal->id_soal][$pilihan_pertanyaan->nomer] : '' }}
+                                </td>
+                            @endforeach
+                        @endif
+                    @endforeach
                 </tr>
             @endforeach
         @endforeach

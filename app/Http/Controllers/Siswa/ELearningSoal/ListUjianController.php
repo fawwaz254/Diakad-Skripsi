@@ -196,6 +196,8 @@ class ListUjianController extends Controller
                             session([$id_paket_soal . '_jawaban' . $key => [1 => $jawaban->pilihan_jawaban1, 2 => $jawaban->pilihan_jawaban2, 3 => $jawaban->pilihan_jawaban3, 4 => $jawaban->pilihan_jawaban4, 5 => $jawaban->pilihan_jawaban5]]);
                         } elseif ($jawaban->id_tipe_soal == '7') {
                             session([$id_paket_soal . '_jawaban' . $key => [1 => $jawaban->pilihan_jawaban1, 2 => $jawaban->pilihan_jawaban2, 3 => $jawaban->pilihan_jawaban3, 4 => $jawaban->pilihan_jawaban4, 5 => $jawaban->pilihan_jawaban5]]);
+                        } elseif ($jawaban->id_tipe_soal == '8') {
+                            session([$id_paket_soal . '_jawaban' . $key => [1 => $jawaban->pilihan_jawaban1, 2 => $jawaban->pilihan_jawaban2, 3 => $jawaban->pilihan_jawaban3, 4 => $jawaban->pilihan_jawaban4, 5 => $jawaban->pilihan_jawaban5]]);
                         }
                     }
                 }
@@ -206,7 +208,7 @@ class ListUjianController extends Controller
             if ($point == '0') {
                 $soal_biasa = $question_package_details->whereIn('soal.id_tipe_soal', [1, 2, 3, 4, 5])->count();
                 $soal_cabang = 0;
-                $query_soal_cabang = $question_package_details->whereIn('soal.id_tipe_soal', [6, 7]);
+                $query_soal_cabang = $question_package_details->whereIn('soal.id_tipe_soal', [6, 7, 8]);
                 foreach ($query_soal_cabang as $soal) {
                     $soal_cabang += $soal->soal->pilihan_pertanyaan->count();
                 }
@@ -426,6 +428,40 @@ class ListUjianController extends Controller
             }
 
 
+            $nilai = $jawaban_benar;
+
+            $test_answer = array(
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
+                'id_test' => session($input->paket_soal)['id_test'],
+                'nomer' => $input->no,
+                'id_soal' => $input->question,
+                'nilai' => $nilai,
+                'correct' => $correct,
+                'pilihan_jawaban1' => isset($input->jawaban[1]) ? $input->jawaban[1] : null,
+                'pilihan_jawaban2' => isset($input->jawaban[2]) ? $input->jawaban[2] : null,
+                'pilihan_jawaban3' => isset($input->jawaban[3]) ? $input->jawaban[3] : null,
+                'pilihan_jawaban4' => isset($input->jawaban[4]) ? $input->jawaban[4] : null,
+                'pilihan_jawaban5' => isset($input->jawaban[5]) ? $input->jawaban[5] : null,
+                'status_koreksi' => 1,
+                'id_tipe_soal' => $input->id_tipe_soal,
+                'created_at' => Carbon::now('Asia/Jakarta'),
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
+                'updated_at' => Carbon::now('Asia/Jakarta')
+            );
+            session([$input->paket_soal . '_jawaban' . $input->no => isset($input->jawaban) ? $input->jawaban : null]);
+        } elseif ($input->id_tipe_soal == 8) {
+            $jawaban_benar = 0;
+            $jawaban = [];
+            $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_pertanyaan'];
+            foreach ($pilihan_jawaban as $jawaban) {
+                if (isset($input->jawaban[$jawaban->nomer])) {
+                    if ($input->jawaban[$jawaban->nomer] == $jawaban->jawaban) {
+                        $jawaban_benar += session($input->paket_soal)['point_pilihan_ganda'];
+                        $correct++;
+                    }
+                }
+            }
             $nilai = $jawaban_benar;
 
             $test_answer = array(

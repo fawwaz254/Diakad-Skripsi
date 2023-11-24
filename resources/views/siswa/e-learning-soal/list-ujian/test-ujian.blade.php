@@ -227,6 +227,137 @@
                                             </div>
                                         </div>
                                     </div>
+                                @elseif($detailPaketSoal->soal->id_tipe_soal == 8)
+                                    <br><br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div id="pertanyan">
+                                                @foreach ($detailPaketSoal->soal->pilihan_pertanyaan as $no_option => $question_option)
+                                                    {{-- <div class="card"
+                                                        style="background-color: #e3e3e3; padding: 10px; box-shadow:none"> --}}
+                                                    <div class="row clearfix">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <h2 class="card-inside-title">Pertanyaan
+                                                                {{ $no_option + 1 }}
+                                                            </h2>
+                                                            <pre
+                                                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px;white-space: pre-wrap;
+                        word-wrap: break-word;">{!! $question_option->text !!}</pre>
+                                                        </div>
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <h2 class="card-inside-title">Jawaban {{ $no_option + 1 }}
+                                                            </h2>
+                                                            <div class="demo-radio-button">
+                                                                @foreach (json_decode($question_option->options) as $no_option => $option)
+                                                                    <input
+                                                                        name="jawaban[{{ $question_option->nomer }}]"
+                                                                        type="radio"
+                                                                        id="radio_{{ $question_option->nomer . $no_option }}"
+                                                                        value="{{ $no_option }}"
+                                                                        @if (isset($jawabanTest[$question_option->nomer]) && $jawabanTest[$question_option->nomer] == $no_option) checked @endif>
+                                                                    <label
+                                                                        for="radio_{{ $question_option->nomer . $no_option }}">
+                                                                        <pre @if (isset($jawabanTest[$question_option->nomer]) && $jawabanTest[$question_option->nomer] == $no_option) style="background-color: #CFE795;" @endif>{!! $option !!}</pre>
+                                                                    </label>
+                                                                    <br>
+                                                                @endforeach
+                                                            </div>
+
+                                                        </div>
+
+
+
+
+
+                                                        {{-- 
+
+                                                        @if (empty($jawabanTest))
+                                                            <input name="question_option" type="radio"
+                                                                id="radio_{{ $no_option }}"
+                                                                value="{{ $question_option->id_pilihan_soal }}"
+                                                                required>
+                                                            <label for="radio_{{ $no_option }}">
+                                                                <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                            </label>
+                                                        @else
+                                                            @if ($jawabanTest == $question_option->id_pilihan_soal)
+                                                                <input name="question_option" type="radio"
+                                                                    checked="" id="radio_{{ $no_option }}"
+                                                                    value="{{ $question_option->id_pilihan_soal }}">
+                                                                <label for="radio_{{ $no_option }}">
+                                                                    <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
+                                                                </label>
+                                                            @else
+                                                                <input name="question_option" type="radio"
+                                                                    id="radio_{{ $no_option }}"
+                                                                    value="{{ $question_option->id_pilihan_soal }}">
+                                                                <label for="radio_{{ $no_option }}">
+                                                                    <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                                </label>
+                                                            @endif
+                                                        @endif --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                        {{-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                            <h2 class="card-inside-title">Jawaban</h2>
+                                                            <select class="form-control show-tick"
+                                                                @if ($jawabanTest) style="background-color: #CFE795" @endif
+                                                                name="jawaban[{{ $question_option->nomer }}]"
+                                                                required>
+
+                                                                @if (empty($jawabanTest))
+                                                                    <option value="99" disabled selected>
+                                                                        Pilih
+                                                                    </option>
+                                                                    <option value="1">
+                                                                        True
+                                                                    </option>
+                                                                    <option value="0">
+                                                                        False
+                                                                    </option>
+                                                                @else
+                                                                    <option value="1"
+                                                                        @if (isset($jawabanTest[$no_option + 1]) && $jawabanTest[$no_option + 1] == '1') selected @endif>
+                                                                        True
+                                                                    </option>
+                                                                    <option value="0"
+                                                                        @if (isset($jawabanTest[$no_option + 1]) && $jawabanTest[$no_option + 1] == '0') selected @endif>
+                                                                        False
+                                                                    </option>
+                                                                @endif
+                                                            </select>
+                                                        </div> --}}
+                                                    </div>
+                                                    {{-- </div> --}}
+                                                    <br>
+                                                    <br>
+                                                @endforeach
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 @else
                                 @endif
                             </div>
