@@ -247,12 +247,20 @@
                                     @foreach ($data_bulan_tagihan as $bulan)
                                         @if (!empty($bulan->id_bulan))
                                             @php
+                                                $groupedData = $data_tagihan
+                                                    ->where('id_bulan', $bulan->id_bulan)
+                                                    ->groupBy('id_siswa')
+                                                    ->map(function ($item, $key) {
+                                                        return [
+                                                            'id_siswa' => $key,
+                                                            'totalTagihan' => $item->count(),
+                                                        ];
+                                                    });
 
-                                                if ($first_siswa = $data_siswa->first()) {
-                                                    $col_span = $data_tagihan
-                                                        ->where('id_siswa', $first_siswa->id_siswa)
-                                                        ->where('id_bulan', $bulan->id_bulan)
-                                                        ->count();
+                                                $siswaWithMaxCount = $groupedData->max('totalTagihan');
+
+                                                if ($siswaWithMaxCount) {
+                                                    $col_span = $siswaWithMaxCount;
                                                 } else {
                                                     $col_span = 1;
                                                 }
@@ -296,11 +304,16 @@
                                                 ->where('id_siswa', $siswa->id_siswa)
                                                 ->where('id_bulan', $bulan->id_bulan)
                                                 ->values();
-
                                         @endphp
 
+                                        @if ($tagihan_bulanan->count() < $col_span)
+                                            @for ($i = 0; $i < $col_span - $tagihan_bulanan->count(); $i++)
+                                                <td></td>
+                                            @endfor
+                                        @endif
+
                                         @foreach ($tagihan_bulanan as $tagihan)
-                                            @if (!empty($tagihan) > 0)
+                                            @if (!empty($tagihan))
                                                 @if ($tagihan->is_tagih == 1)
                                                     @php
                                                         $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
