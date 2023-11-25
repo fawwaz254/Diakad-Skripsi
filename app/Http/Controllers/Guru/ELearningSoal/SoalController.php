@@ -189,6 +189,10 @@ class SoalController extends Controller
             } else if ($item->id_tipe_soal == 7) {
                 $question_options = PilihanPertanyaan::where('id_soal', $item->id_soal)->orderBy('nomer')->get();
                 return view('guru/e-learning-soal/soal/edit-soal-true-false2', compact('item', 'question_options', 'kategori'));
+            } else if ($item->id_tipe_soal == 8) {
+                $data_pilihan_pertanyaan = PilihanPertanyaan::where('id_soal', $item->id_soal)->orderBy('nomer')->get();
+                $data_pilihan_jawaban = PilihanJawaban::where('id_soal', $item->id_soal)->orderBy('nomer')->get();
+                return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda-cerita2', compact('item', 'data_pilihan_jawaban', 'data_pilihan_pertanyaan', 'kategori'));
             }
         }
     }
@@ -291,6 +295,73 @@ class SoalController extends Controller
                     $question_option->text = $pertanyaan;
                     $question_option->jawaban = $input->noJawaban[$no_pertanyaan];
                     $question_option->save();
+                }
+            } elseif ($input->id_tipe_soal == 8) {
+                $jumlahKata = str_word_count($input->soal);
+                if ($jumlahKata > 50) {
+                    $stringHasil = Str::limit($input->soal, 200);
+                } else {
+                    $stringHasil = $input->soal;
+                }
+
+                $question->text = $stringHasil;
+                if (empty($input->soal)) {
+                    DB::rollback();
+                    return [
+                        'status' => 300,
+                        'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
+                    ];
+                }
+                $question->save();
+
+                foreach ($input->id_pilihan_pertanyaan as $no_array => $id_pilihan_pertanyaan) {
+                    $pilihan_pertanyaan = PilihanPertanyaan::find($id_pilihan_pertanyaan);
+                    if (empty($pilihan_pertanyaan)) {
+                        $now = Carbon::now(env('APP_TIMEZONE', ''));
+                        $pertanyaan = new PilihanPertanyaan;
+                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_soal =  $question->id_soal;
+                        $pertanyaan->nomer = $no_array;
+                        $pertanyaan->text = $input->pertanyaan[$no_array];
+                        $pertanyaan->jawaban = $input->jawaban_benar[$no_array];
+                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $opsi = [];
+                        foreach ($input->jawaban[$no_array] as $key => $options) {
+                            $opsi[$key] = $options;
+                        }
+                        $pertanyaan->options                      = json_encode($opsi);
+                        if (empty($input->pertanyaan[$no_array])) {
+                            DB::rollback();
+                            return [
+                                'status' => 300,
+                                'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
+                            ];
+                        }
+                        $pertanyaan->save();
+                        continue;
+                    }
+                    if (!isset($input->pertanyaan[$no_array])) {
+                        $pilihan_pertanyaan->delete();
+                        continue;
+                    }
+
+
+
+                    $pilihan_pertanyaan->text = $input->pertanyaan[$no_array];
+                    $pilihan_pertanyaan->jawaban = $input->jawaban_benar[$no_array];
+                    $opsi = [];
+                    foreach ($input->jawaban[$no_array] as $key => $options) {
+                        $opsi[$key] = $options;
+                    }
+                    $pilihan_pertanyaan->options                      = json_encode($opsi);
+                    if (empty($input->pertanyaan[$no_array])) {
+                        DB::rollback();
+                        return [
+                            'status' => 300,
+                            'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
+                        ];
+                    }
+                    $pilihan_pertanyaan->save();
                 }
             }
             $question->save();
