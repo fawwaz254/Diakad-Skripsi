@@ -286,7 +286,7 @@
                 <tr valign=top>
                     <td>{{ $no++ }}.</td>
                     <td>Lainnya :</td>
-                    <td>K.5.4 Beban Pengembangan Pendidikan/td>
+                    <td>K.5.4 Beban Pengembangan Pendidikan</td>
                     <td class="text-right">{{ number_format($realisasi->dana_perkiraan_rapb) }}</td>
                     <td class="text-right">
                         {{ number_format($subkategori_pengembangan_pendidikan['total_bayar'] + $realisasi->total_realisasi) }}
