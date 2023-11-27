@@ -79,6 +79,7 @@
     $tutup_buku_kas_bulan_ini = $data_laporan['tutup_buku_kas_bulan_ini'];
     $tutup_buku_kas_bulan_lalu = $data_laporan['tutup_buku_kas_bulan_lalu'];
     $subkategori_non_kbm = $data_laporan['subkategori_non_kbm'];
+    $subkategori_pengembangan_pendidikan = $data_laporan['subkategori_pengembangan_pendidikan'];
 
     $data_realisasi_pemasukan = collect($data_realisasi->where('tipe_kategori_rapb', 1)->all());
     $data_realisasi_pengeluaran = collect($data_realisasi->where('tipe_kategori_rapb', 2)->all());
@@ -274,6 +275,27 @@
                     @else
                         <td class="text-right">
                             {{ round(($subkategori_non_kbm['total_bayar'] / $realisasi->dana_perkiraan_rapb) * 100, 2) }}%
+                        </td>
+                    @endif
+                    <td></td>
+                </tr>
+            @elseif(
+                $subkategori_pengembangan_pendidikan['status'] &&
+                    $realisasi->kode_subkategori_rapb == 'K.5.4' &&
+                    $realisasi->nm_subkategori_rapb == 'Beban Pengembangan Pendidikan')
+                <tr valign=top>
+                    <td>{{ $no++ }}.</td>
+                    <td>Lainnya :</td>
+                    <td>K.5.4 Beban Pengembangan Pendidikan/td>
+                    <td class="text-right">{{ number_format($realisasi->dana_perkiraan_rapb) }}</td>
+                    <td class="text-right">
+                        {{ number_format($subkategori_pengembangan_pendidikan['total_bayar'] + $realisasi->total_realisasi) }}
+                    </td>
+                    @if ($realisasi->dana_perkiraan_rapb == 0)
+                        <td class="text-right">0%</td>
+                    @else
+                        <td class="text-right">
+                            {{ round(($subkategori_pengembangan_pendidikan['total_bayar'] / $realisasi->dana_perkiraan_rapb) * 100, 2) }}%
                         </td>
                     @endif
                     <td></td>
