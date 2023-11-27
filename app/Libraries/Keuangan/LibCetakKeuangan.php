@@ -406,7 +406,7 @@ class LibCetakKeuangan
                         $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
                         foreach ($detailBiayaInternal as $x) {
-                            if ($x->nm_detail_biaya_internal != 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
+                            if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') { } else {
                                 if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                                     $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                                 } else {
@@ -690,7 +690,7 @@ class LibCetakKeuangan
                 $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
                 foreach ($detailBiayaInternal as $x) {
-                    if ($x->nm_detail_biaya_internal != 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
+                    if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') { } else {
                         if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                             $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                         } else {
