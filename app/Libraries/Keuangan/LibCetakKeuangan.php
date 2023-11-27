@@ -380,8 +380,9 @@ class LibCetakKeuangan
 
             // START SHOW Beban Non-KBM
             $subkategori_non_kbm = SubkategoriRapb::where('kode_subkategori_rapb', 'K.5.3')->where('nm_subkategori_rapb', 'Beban Pembelajaran Non KBM')->first();
+            $subkategori_pengembangan_pendidikan = SubkategoriRapb::where('kode_subkategori_rapb', 'K.5.4')->where('nm_subkategori_rapb', 'Beban Pengembangan Pendidikan')->first();
 
-            if ($subkategori_non_kbm) {
+            if ($subkategori_non_kbm && $subkategori_pengembangan_pendidikan) {
                 $pembayaran_non_kbm = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
                     ->whereMonth('tgl_pembayaran', $id_bulan)
                     ->whereYear('tgl_pembayaran', $tahun)
@@ -396,6 +397,11 @@ class LibCetakKeuangan
                 $temp_data_bayar_non_kbm = [];
                 $total_bayar_non_kbm = 0;
 
+                //--
+                $temp_data_pengembangan_pendidikan = [];
+                $total_bayar_pengembangan_pendidikan = 0;
+
+
                 foreach ($pembayaran_non_kbm as $data) {
                     // Get Biaya Internal (kelompok_biaya_internal)
                     $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
@@ -406,7 +412,14 @@ class LibCetakKeuangan
                         $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
                         foreach ($detailBiayaInternal as $x) {
-                            if ($x->nm_detail_biaya_internal != 'SPP MURNI') {
+                            if ($x->subkategori_rapb) {
+                                if (!isset($temp_data_pengembangan_pendidikan[$x->nm_detail_biaya_internal][$tingkat])) {
+                                    $temp_data_pengembangan_pendidikan[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
+                                } else {
+                                    $temp_data_pengembangan_pendidikan[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
+                                }
+                                $total_bayar_pengembangan_pendidikan += $x->besar_biaya;
+                            } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') { } else {
                                 if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                                     $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                                 } else {
@@ -424,12 +437,21 @@ class LibCetakKeuangan
                     'total_bayar' => $total_bayar_non_kbm,
                     'data' => $temp_data_bayar_non_kbm,
                 ];
+
+                $subkategori_pengembangan_pendidikan = [
+                    'status' => true,
+                    'total_bayar' => $total_bayar_pengembangan_pendidikan,
+                    'data' => $temp_data_pengembangan_pendidikan,
+                ];
                 // Penambahan Pengeluaran post Beban non-KBM
                 $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran += $total_bayar_non_kbm;
                 $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
                 $tutup_buku_bulanan_kas_now->save();
             } else {
                 $subkategori_non_kbm = [
+                    'status' => false,
+                ];
+                $subkategori_pengembangan_pendidikan = [
                     'status' => false,
                 ];
             }
@@ -500,6 +522,7 @@ class LibCetakKeuangan
             'tutup_buku_kas_bulan_ini' => $tutup_buku_kas_bulan_ini,
             'tutup_buku_kas_bulan_lalu' => $tutup_buku_kas_bulan_lalu,
             'subkategori_non_kbm' => $subkategori_non_kbm,
+            'subkategori_pengembangan_pendidikan' => $subkategori_pengembangan_pendidikan,
         ];
 
         return $data;
@@ -679,6 +702,7 @@ class LibCetakKeuangan
 
         $temp_data_bayar_non_kbm = [];
         $total_bayar_non_kbm = 0;
+        $temp_data_subkategori_rapb = [];
 
         foreach ($pembayaran_non_kbm as $data) {
             // Get Biaya Internal (kelompok_biaya_internal)
@@ -690,7 +714,13 @@ class LibCetakKeuangan
                 $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
                 foreach ($detailBiayaInternal as $x) {
-                    if ($x->nm_detail_biaya_internal != 'SPP MURNI') {
+                    if ($x->subkategori_rapb) {
+                        if (!isset($temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal])) {
+                            $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] = $x->besar_biaya;
+                        } else {
+                            $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] += $x->besar_biaya;
+                        }
+                    } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') { } else {
                         if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                             $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                         } else {
@@ -806,8 +836,8 @@ class LibCetakKeuangan
 
         $dataLaporan = []; // tgl, keterangan, tipe (debit/kredit), nominal
         $tempDataLaporan = [];
-        $danaPembangunan['4%'] = null;
-        $danaPembangunan['7%'] = null;
+        // $danaPembangunan['4%'] = null;
+        // $danaPembangunan['7%'] = null;
 
         $allBiaya = Biaya::get();
 
@@ -859,8 +889,6 @@ class LibCetakKeuangan
                     $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
                     foreach ($detailBiayaInternal as $x) {
-
-
                         if ($x->subkategori_rapb) {
                             if (!isset($temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal])) {
                                 $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] = $x->besar_biaya;
@@ -901,7 +929,7 @@ class LibCetakKeuangan
             'total_data' => $totalLaporan,
             'subkategori_non_kbm' => $subkategori_non_kbm,
             'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat'),
-            'danaPembangunan' => $danaPembangunan,
+            // 'danaPembangunan' => $danaPembangunan,
         ];
 
         return $data;
