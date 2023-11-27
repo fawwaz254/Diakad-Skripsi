@@ -209,6 +209,38 @@
                 </div>
 
                 <div class="body">
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label>Bulan</label>
+                                    <select class="form-control show-tick" name="id_bulan">
+                                        @foreach ($data_bulan as $data)
+                                            <option {{ $bulan->id_bulan == $data->id_bulan ? 'selected' : '' }}
+                                                value="{{ $data->id_bulan }}">{{ $data->nm_bulan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label>Tahun</label>
+                                    <select class="form-control show-tick" name="tahun">
+                                        @for ($i = 2015; $i <= 2025; $i++)
+                                            <option {{ $tahun == $i ? 'selected' : '' }} value="{{ $i }}">
+                                                {{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i
+                                    class="material-icons">save</i><span>Filter</span></button>
+                        </div>
+                    </div>
                     <div class="table-responsive ">
                         <table class="table table-bordered table-striped table-hover dataTable display  nowrap">
                             <thead style="background:#4e4e4e;color:white">
@@ -341,8 +373,8 @@
     }
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '/' + $(
-            'select[name=unit_kerja]').val() + '/' + $('select[name=status]').val());
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/' + $('select[name=id_bulan]').val() + '/' + $(
+            'select[name=tahun]').val());
     }
 
     function addAbsensi(id_pengguna) {
