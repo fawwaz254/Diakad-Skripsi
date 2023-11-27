@@ -340,6 +340,7 @@ Route::middleware(['token_staff'])->group(function () {
             });
             Route::prefix('rekap-pertanggal')->group(function () {
                 Route::get('/', [RekapPertanggalController::class, 'viewRekapPertanggal']);
+                Route::get('/detail/{id_bulan}/{tahun}', [RekapPertanggalController::class, 'viewRekapPertanggal']);
             });
         });
 

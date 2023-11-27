@@ -132,8 +132,14 @@ class RekapPertanggalController extends Controller
             }
         }
 
-        $list_unit_kerja = UnitKerja::all();
+        $start_month = Carbon::create($tahun, $bulan, 1, 0, 0, 0, 'Asia/Jakarta');
+        $end_month = Carbon::create($tahun, $bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
+        $dates = CarbonPeriod::create($start_month, $end_month);
 
-        return view('humas/absensi/rekap-pertanggal/view-rekap-pertanggal', compact('auth_data', 'list_unit_kerja', 'dates', 'hasil', 'start_month', 'end_month', 'pengguna'));
+        $list_unit_kerja = UnitKerja::all();
+        $bulan = Bulan::find($bulan);
+        $data_bulan = Bulan::orderBy('id_bulan')->get();
+
+        return view('humas/absensi/rekap-pertanggal/view-rekap-pertanggal', compact('auth_data', 'list_unit_kerja', 'dates', 'hasil', 'start_month', 'end_month', 'pengguna', 'bulan', 'data_bulan', 'tahun'));
     }
 }
