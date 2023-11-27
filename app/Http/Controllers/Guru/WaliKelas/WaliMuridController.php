@@ -36,7 +36,7 @@ class WaliMuridController extends Controller
         // dd($list_siswa);
         return Datatables::of($list_siswa)->addColumn('action', function ($item) {
             $data = array(
-                'id' => $item->wali_murid->pengguna->id_pengguna
+                'id' => isset($item->wali_murid->pengguna) ? $item->wali_murid->pengguna->id_pengguna : null,
             );
             return $data;
         })->addColumn('nm_wali_murid', function ($item) {
