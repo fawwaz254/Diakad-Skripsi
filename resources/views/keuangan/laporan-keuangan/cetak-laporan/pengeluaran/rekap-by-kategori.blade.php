@@ -89,6 +89,7 @@
         <table border="1" cellspacing="0" cellpadding="10" style="width: 100%;">
             @php
                 $danaPembangunan = 0;
+                $isDanaPembangunan = true;
             @endphp
             @if (isset($data_laporan['data']))
                 @foreach ($data_laporan['data'] as $nm_kategori => $kategori_laporan)
@@ -118,6 +119,9 @@
                     @endforeach
 
                     @if (!empty($subkategori_non_kbm['data_with_subkategori_rapb'][$nm_kategori]))
+                        @php
+                            $isDanaPembangunan = false;
+                        @endphp
                         @foreach ($subkategori_non_kbm['data_with_subkategori_rapb'][$nm_kategori] as $key => $detail_biaya_internal)
                             <tr>
                                 <td>{{ $no++ }}</td>
@@ -141,6 +145,75 @@
                         <td colspan="6"></td>
                     </tr>
                 @endforeach
+                {{-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// --}}
+
+                @if ($isDanaPembangunan && !empty($subkategori_non_kbm['data_with_subkategori_rapb']))
+                    @foreach ($subkategori_non_kbm['data_with_subkategori_rapb'] as $key => $data_with_subkategori_rapb)
+                        <tr>
+                            <th colspan="6" style="text-align: left; background:lightyellow">
+                                {{ $key }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width: 10px;">No.</th>
+                            {{-- <th>Tanggal Pengeluaran</th> --}}
+                            <th colspan="4">Keterangan</th>
+                            <th>Nominal</th>
+                        </tr>
+                        @php
+                            $no = 1;
+                        @endphp
+                        @foreach ($data_with_subkategori_rapb as $key2 => $item)
+                            <tr>
+                                <td>{{ $no++ }}</td>
+                                {{-- <td></td> --}}
+                                <td colspan="4">{{ $key2 }}</td>
+                                <td style="text-align: right;">
+                                    {{ number_format($item) }}</td>
+                            </tr>
+                            @php
+                                $danaPembangunan += $item;
+                            @endphp
+                        @endforeach
+
+
+                        <tr>
+                            <th colspan="5">TOTAL</th>
+                            <th>{{ number_format($danaPembangunan) }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                        </tr>
+
+                        {{-- <ul>
+                            @foreach ($data_with_subkategori_rapb as $subKey => $value)
+                                <li>{{ $subKey }}: {{ $value }}</li>
+                            @endforeach
+                        </ul> --}}
+                    @endforeach
+
+
+                @endif
+
+
+
+                {{-- @php
+                    dd($subkategori_non_kbm['data_with_subkategori_rapb']);
+                @endphp --}}
+                {{-- @foreach ($subkategori_non_kbm['data_with_subkategori_rapb'] as $data_with_subkategori_rapb)
+                    <tr>
+                        <td>{{ $no++ }}</td>
+                        <td></td>
+                        <td colspan="3">{{ $key }}</td>
+                        <td style="text-align: right;">
+                            {{ number_format($detail_biaya_internal) }}</td>
+                    </tr>
+                    @php
+                        $danaPembangunan += $detail_biaya_internal;
+                    @endphp
+                @endforeach --}}
+
 
                 @if (isset($subkategori_non_kbm))
                     @if ($subkategori_non_kbm['status'])
