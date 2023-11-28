@@ -646,8 +646,8 @@
             // clearButton: true,
             weekStart: 1,
             time: false,
-            minDate: '{{ $minDate }}',
-            maxDate: '{{ $maxDate }}',
+            // minDate: '{{ $minDate }}',
+            // maxDate: '{{ $maxDate }}',
         });
     });
 
