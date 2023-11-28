@@ -22,7 +22,7 @@
             <tr>
                 <td style="text-align: center">{{ ++$no }}</td>
                 <td style="text-align: center">{{ $data['id_rapor_sisipan'] }} </td>
-                <td style="text-align: center">{{ $siswa->nis_siswa }}</td>
+                <td style="text-align: center">'{{ $siswa->nis_siswa }}</td>
                 <td>{{ $siswa->pengguna->nm_pengguna }}</td>
                 @foreach ($data['list_data'] as $nilai)
                     <td style="text-align: center">
