@@ -128,7 +128,7 @@
                         @endforeach
 
                         <td style="text-align: center;">
-                            {{ $nilai_siswa[$siswa->id_siswa] != '0' ? intval($nilai_siswa[$siswa->id_siswa] / 3) : null }}
+                            {{ $nilai_siswa[$siswa->id_siswa] != '0' ? intval($nilai_siswa[$siswa->id_siswa] / 4) : null }}
                         </td>
 
                     </tr>
