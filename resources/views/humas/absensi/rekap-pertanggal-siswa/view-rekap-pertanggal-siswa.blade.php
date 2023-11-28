@@ -31,13 +31,14 @@
 </style>
 
 {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
-<div class="container-fluid">
-    <div class="row clearfix">
+{{-- <div class="container-fluid"> --}}
+
+{{-- <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-default" onclick="viewGuru()">
                 Data Rekap Absensi Guru dan Pegawai
             </button>
-            <button type="button" onclick="viewSiswa()" class="btn btn-default">
+            <button type="button" class="btn btn-primary">
                 Data Rekap Absensi Siswa
             </button>
             <div class="card" style="margin-top: 10px">
@@ -46,6 +47,96 @@
                 </div>
                 <div class="body">
                     <div class="row clearfix">
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label>
+                                Kelas
+                            </label>
+                            <select class="form-control show-tick" name="kelas">
+                                <option selected disabled value="">Pilih Kelas</option>
+                                {{-- <option value="0">--Semua--</option> --}}
+{{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+                                    <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
+                                    <option value="2">-- Madrasah Aliyah (MA) --</option>
+                                @endif --}}
+{{-- @foreach ($list_kelas as $lk)
+                                    <option value="{{ $lk->id_kelas }}">{{ $lk->nm_kelas }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label>
+                                Bulan
+                            </label>
+                            <select class="form-control show-tick" name="id_bulan">
+                                @foreach ($data_bulan as $data)
+                                    <option 
+                                    {{ $bulan->id_bulan == $data->id_bulan ? 'selected' : '' }} 
+                                    value="{{ $data->id_bulan }}">{{ $data->nm_bulan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label>
+                                Tahun
+                            </label>
+                            <select class="form-control show-tick" name="tahun">
+                                @for ($i = 2015; $i <= 2025; $i++)
+                                    <option {{ $tahun == $i ? 'selected' : '' }} value="{{ $i }}">
+                                        {{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
+                                onclick="filterAction()">Tampilkan</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div> --}}
+{{-- </div> --}}
+
+{{-- </div> --}}
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <button type="button" class="btn btn-default" onclick="viewGuru()">
+                Data Rekap Absensi Guru dan Pegawai
+            </button>
+            <button type="button" class="btn btn-primary">
+                Data Rekap Absensi Siswa
+            </button>
+            <div class="card" style="margin-top: 10px">
+                <div class="header">
+                    <h2>Filter Data</h2>
+                </div>
+                <div class="body">
+                    <div class="row clearfix">
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label>
+                                Kelas
+                            </label>
+                            <select class="form-control show-tick" name="kelas">
+                                <option selected disabled value="">Pilih Kelas</option>
+                                {{-- <option value="0">--Semua--</option>
+                                {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+                                    <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
+                                    <option value="2">-- Madrasah Aliyah (MA) --</option>
+                                @endif --}}
+                                @foreach ($list_kelas as $lk)
+                                    <option @if ($id_kelas == $lk->id_kelas) selected @endif
+                                        value="{{ $lk->id_kelas }}">{{ $lk->nm_kelas }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <label>
                                 Bulan
@@ -82,7 +173,135 @@
         </div>
     </div>
 
-    {{-- <div class="row clearfix">
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card" style="margin-top: 10px">
+                <div class="header">
+                    <h2>Rekap Absensi </h2>
+                </div>
+
+                <div class="body">
+                    <div class="table-responsive ">
+                        <table class="table table-bordered table-striped table-hover dataTable display  nowrap">
+                            <thead style="background:#4e4e4e;color:white">
+                                <tr>
+                                    <th rowspan="2" style="text-align: center;vertical-align:middle">#</th>
+                                    <th rowspan="2" style="text-align: center;vertical-align:middle">Nama</th>
+                                    {{-- <th rowspan="2" style="text-align: center;vertical-align:middle">Unit Kerja
+                                    </th> --}}
+                                    <th colspan="{{ $dates->count() }}" style="text-align: center;">Tanggal</th>
+
+                                    {{-- <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Status</th>
+                                    <th style="text-align: center;">Action</th> --}}
+                                </tr>
+                                <tr>
+                                    @foreach ($dates as $date)
+                                        <th>
+                                            {{ substr(\Carbon\Carbon::create($date)->isoFormat('dddd'), 0, 3) }}
+                                            <br>
+                                            {{ $date->format('d') }}
+                                        </th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $no = 1;
+                                @endphp
+                                @foreach ($pengguna as $p)
+                                    <tr>
+                                        <td>{{ $no++ }}</td>
+                                        <td>{{ isset($hasil[$p->id_pengguna]['nm_pengguna']) ? $hasil[$p->id_pengguna]['nm_pengguna'] : '' }}
+                                        </td>
+                                        @foreach ($dates as $date)
+                                            @php
+                                                $status = '';
+                                                if (isset($hasil[$p->id_pengguna][$date->format('Y-m-d')])) {
+                                                    $status = $hasil[$p->id_pengguna][$date->format('Y-m-d')];
+                                                }
+                                            @endphp
+                                            <td
+                                                @if ($status == 'M') style="text-align: center;background: #b5ffe0" @elseif($status == 'A') style="text-align: center;background: #ff9494" @else style="text-align: center;" @endif>
+                                                {{ $status }}
+                                            </td>
+                                        @endforeach
+
+                                    </tr>
+                                @endforeach
+                                {{-- @endif --}}
+
+                                {{-- @foreach ($hasil as $r)
+                                    @if ($no % 2 == 1)
+                                        <tr style="background: #DDA0DD">
+                                        @else
+                                        <tr>
+                                    @endif
+                                    @if ($r['status'] == $status || $status == '0')
+                                        <td style="text-align: center;">{{ $no++ }}</td>
+                                        <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
+
+                                        <td>{{ $r['check_in'] }}</td>
+                                        <td>{{ $r['check_out'] }}</td>
+                                        <td
+                                            @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494"  @elseif($r['status'] == 'Belum Absent') style="background: #ffffff" @else style="background: #fffdb5" @endif>
+                                            {{ $r['status'] }}</td>
+                                        <td style="text-align: center;display:flex;justify-content:center">
+                                            @if ($r['id_presensi_pengguna'] == '')
+                                                <button type="button" class="btn bg-teal waves-effect"
+                                                    onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                            @else
+                                                <button type="button" class="btn bg-teal waves-effect"
+                                                    onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button data-id="{{ $r['id_presensi_pengguna'] }}"
+                                                    style="margin-left:3px;"
+                                                    class="btn bg-red waves-effect delete-record">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            @endif
+
+                                        </td>
+                                        </tr>
+                                    @else
+                                    @endif
+                                @endforeach --}}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- <div class="row clearfix" style="margin-top: 10px">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Histori Absensi Siswa Kelas {{ $nama_kelas->nm_kelas }}</h2>
+
+                    {{-- <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $id_kelas }}/{{ $start_date }}/{{ $end_date }}"
+                        target="_blank" class="btn bg-blue waves-effect" style=" margin-top: 20px !important;">
+                        <i class="material-icons" style="font-size: 15px;">print</i> Print Kelas
+                        {{ $nama_kelas->nm_kelas }}</a> --}}
+    {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+                        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/1/{{ $start_date }}/{{ $end_date }}"
+                            target="_blank" class="btn bg-purple waves-effect">
+                            <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Tsanawiyah (MTs)</a>
+                        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/2/{{ $start_date }}/{{ $end_date }}"
+                            target="_blank" class="btn bg-purple waves-effect">
+                            <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Aliyah (MA)</a>
+                    @endif --}}
+</div>
+
+{{-- </div> --}}
+
+{{-- <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
             @if ($cek_libur)
@@ -192,8 +411,8 @@
         </div>
     </div> --}}
 
-    {{-- <br> --}}
-    {{-- <div class="row">
+{{-- <br> --}}
+{{-- <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="card">
 
@@ -208,18 +427,18 @@
                                 <tr>
                                     <th style="text-align: center;">Masuk</th>
                                     <th style="text-align: center;">Alpha</th> --}}
-    {{-- <th style="text-align: center;">Belum Hadir</th> --}}
-    {{-- <th style="text-align: center;">Hadir Terlambat</th> --}}
+{{-- <th style="text-align: center;">Belum Hadir</th> --}}
+{{-- <th style="text-align: center;">Hadir Terlambat</th> --}}
 
-    {{-- <th style="text-align: center;">Izin</th>
+{{-- <th style="text-align: center;">Izin</th>
                                     <th style="text-align: center;">Sakit</th> --}}
 
-    {{-- <th style="text-align: center;">Tidak Checkout</th> --}}
-    {{-- <th style="text-align: center;">Hadir Pulang Lebih Awal</th> --}}
-    {{-- </tr>
+{{-- <th style="text-align: center;">Tidak Checkout</th> --}}
+{{-- <th style="text-align: center;">Hadir Pulang Lebih Awal</th> --}}
+{{-- </tr>
                             </thead>
                             <tr> --}}
-    {{-- <td style="text-align: center;">{{ $jumlah_hadir }}</td>
+{{-- <td style="text-align: center;">{{ $jumlah_hadir }}</td>
                                 <td style="text-align: center;">{{ $jumlah_alpha }}</td>
                                 <td style="text-align: center;">{{ $belum_absent }}</td>
                                 <td style="text-align: center;">{{ $jumlah_telat }}</td>
@@ -228,7 +447,7 @@
                                 <td style="text-align: center;">{{ $tidak_checkout }}</td>
                                 <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td> --}}
 
-    {{-- </tr>
+{{-- </tr>
                         </table>
                     </div>
                 </div>
@@ -236,8 +455,8 @@
         </div>
     </div> --}}
 
-    {{-- <br> --}}
-    {{-- <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}/{{ $unit_kerja }}" target="_blank"
+{{-- <br> --}}
+{{-- <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}/{{ $unit_kerja }}" target="_blank"
         class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
 
@@ -250,9 +469,9 @@
         target="_blank" class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
     <br> --}}
-    <div class="row clearfix">
+{{-- <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card" style="margin-top: 10px">
+            <div class="card">
                 <div class="header">
                     <h2>Rekap Absensi </h2>
                 </div>
@@ -266,14 +485,14 @@
                                     <th rowspan="2" style="text-align: center;vertical-align:middle">Nama</th>
                                     {{-- <th rowspan="2" style="text-align: center;vertical-align:middle">Unit Kerja
                                     </th> --}}
-                                    <th colspan="{{ $dates->count() }}" style="text-align: center;">Tanggal</th>
+{{-- <th colspan="{{ $dates->count() }}" style="text-align: center;">Tanggal</th> --}}
 
-                                    {{-- <th>Check In</th>
+{{-- <th>Check In</th>
                                     <th>Check Out</th>
                                     <th>Status</th>
                                     <th style="text-align: center;">Action</th> --}}
-                                </tr>
-                                <tr>
+{{-- </tr> --}}
+{{-- <tr>
                                     @foreach ($dates as $date)
                                         <th>
                                             {{ substr(\Carbon\Carbon::create($date)->isoFormat('dddd'), 0, 3) }}
@@ -306,10 +525,10 @@
                                         @endforeach
 
                                     </tr>
-                                @endforeach
-                                {{-- @endif --}}
+                                @endforeach --}}
+{{-- @endif --}}
 
-                                {{-- @foreach ($hasil as $r)
+{{-- @foreach ($hasil as $r)
                                     @if ($no % 2 == 1)
                                         <tr style="background: #DDA0DD">
                                         @else
@@ -348,13 +567,13 @@
                                     @endif
                                 @endforeach --}}
 
-                            </tbody>
+{{-- </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script> --}}
@@ -376,6 +595,10 @@
         )
     }).trigger("change")
 
+    function viewSiswa() {
+        window.location = '/humas#absensi/histori-absensi-siswa'
+    }
+
     function viewSiswaPondok() {
         window.location = '/humas#absensi/histori-absensi-siswa-pondok'
     }
@@ -385,13 +608,23 @@
 
     }
 
-    function viewSiswa() {
-        window.location = '/humas#absensi/rekap-pertanggal/siswa'
+    function viewGuru() {
+        window.location = '/humas#absensi/rekap-pertanggal/'
     }
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail'+
-            '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
+        var id_kelas = $('select[name="kelas"]').val();
+        if(!id_kelas){
+            swal({
+                title: "Pilih Kelas dahulu",
+                text: "Kelas tidak boleh kosong",
+                type: "warning",
+                confirmButtonColor: "#DD6B55",
+                timer: 2000,
+            });
+        } else {
+            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]').val() + '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
+        }
     }
 
     function addAbsensi(id_pengguna) {
