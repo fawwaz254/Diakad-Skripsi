@@ -40,57 +40,26 @@ class RaporSisipanAkhirController extends Controller
             $id_semester = $input->id_semester;
         }
 
+        $list_data = RaporSisipan::where('id_semester', $id_semester)
+            ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
+            ->withCount(['nilai_rapor_sisipan' => function ($q) {
+                $q->where('nilai', '!=', 0);
+            }])
+            ->orderBy('created_at', 'desc');
 
-        $list_data = RaporSisipan::where('id_semester', $id_semester)->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas', 'semester')->orderBy('created_at', 'desc');
-        $siswa = Siswa::whereHas('pengguna.status_pengguna', function ($query) {
-            $query->where('aktif_status_pengguna', '=', '1');
-        })->get();
-        $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first();
-        if ($setting->value == '3') {
-            $komponen1 = KomponenNilaiRaporSisipan::where('urutan', '1')->first()->id_komponen_nilai;
-            $komponen2 = null;
-        } else {
-            $komponen1 = KomponenNilaiRaporSisipan::where('type', 'uts')->value('id_komponen_nilai');
-            $komponen2 = KomponenNilaiRaporSisipan::where('type', 'uas')->value('id_komponen_nilai');
-        }
-
-        $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('rapor_sisipan', function ($query) use ($id_semester) {
-            $query->where('id_semester', $id_semester);
-        })->get();
+        $komponen = KomponenNilaiRaporSisipan::where('status', '1')->count();
 
         return Datatables::of($list_data)
-            ->addColumn('jumlah', function ($item) use ($komponen1, $komponen2, $siswa, $setting, $nilaiRaporSisipans) {
-                $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
-                if ($setting->value == '3') {
-                    $nilaiSiswa  =  $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->where('id_komponen_nilai', $komponen1)
-                        // ->whereHas('siswa', function ($query) use ($item) {
-                        //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                        // })
-                        ->count();
-                    $data = array(
-                        'jumlah_siswa' => $allSiswa,
-                        'terisi_siswa' => $nilaiSiswa,
-                        'setting'           => $setting->value,
-                    );
+            ->addColumn('jumlah', function ($item) use ($komponen) {
+                $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
+                $nilaiTerisi = $item->nilai_rapor_sisipan_count;
+                if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
+                    $hasil = '0%';
                 } else {
-                    // $nilaiRaporSisipan =  NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')
-                    // ->whereHas('siswa', function ($query) use ($item) {
-                    //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                    // })
-                    // ->get();
-
-                    $nilaiUTSSiswa = $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->where('id_komponen_nilai', $komponen1)->count();
-                    $nilaiUASSiswa = $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->where('id_komponen_nilai', $komponen2)->count();
-
-                    $data = array(
-                        'jumlah_siswa' => $allSiswa,
-                        'terisi_siswa_sts' => $nilaiUTSSiswa,
-                        'terisi_siswa_sas' => $nilaiUASSiswa,
-                        'setting'           => $setting->value,
-                    );
+                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2) . '%';
                 }
 
-                return $data;
+                return $hasil;
             })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;

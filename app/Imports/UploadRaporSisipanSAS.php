@@ -8,6 +8,7 @@ namespace App\Imports;
 use App\Models\KomponenNilaiRaporSisipan;
 use App\Models\NilaiRaporSisipan;
 use App\Models\Pengguna;
+use App\Models\Sekolah;
 use App\Models\Siswa;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -29,25 +30,37 @@ class UploadRaporSisipanSAS implements ToCollection, WithHeadingRow
         set_time_limit(-1);
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $id_pengguna = Auth::id();
+        $sekolah = Sekolah::first();
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->get();
+
+        $nilais = NilaiRaporSisipan::join('siswa', 'siswa.id_siswa', '=', 'nilai_rapor_sisipan.id_siswa')
+            ->join('komponen_nilai_rapor_sisipan', 'komponen_nilai_rapor_sisipan.id_komponen_nilai', '=', 'nilai_rapor_sisipan.id_komponen_nilai')
+            ->where('nilai_rapor_sisipan.id_rapor_sisipan', $rows[0]['id'])
+            ->get();
+
+        $siswas = Siswa::get();
         foreach ($rows as $row) {
             foreach ($list_komponen as $komponen) {
-                if (isset($row[str_replace(" ", "_", strtolower($komponen->nm_nilai))])) {
-                    $nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $row['id'])
-                        ->with('siswa', 'komponen_nilai')
-                        ->whereHas('siswa', function ($query) use ($row) {
-                            $query->where('nis_siswa', $row['nis']);
-                        })
-                        ->whereHas('komponen_nilai', function ($query) use ($komponen) {
-                            $query->where('nm_nilai', $komponen->nm_nilai);
-                        })
-                        ->first();
-
-                    if (is_numeric($row[str_replace(" ", "_", strtolower($komponen->nm_nilai))])) {
-                        $nilai->nilai =   $row[str_replace(" ", "_", strtolower($komponen->nm_nilai))];
+                if (isset($row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))]) && is_numeric($row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))])) {
+                    $nis = str_replace("'", "", $row['nis']);
+                    $nilai = $nilais->where('nis_siswa', $nis)->where('nm_nilai', $komponen->nm_nilai)->first();
+                    if ($nilai) {
+                        $nilai->nilai =   $row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))];
                         $nilai->updated_by             = $id_pengguna;
                         $nilai->updated_at           = $now;
                         $nilai->save();
+                    } else {
+                        $id_siswa  = $siswas->where('nis_siswa', $nis)->first()->nis_siswa;
+                        if ($id_siswa) {
+                            $nilai = new NilaiRaporSisipan;
+                            $nilai->id_nilai_rapor_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
+                            $nilai->rapor_sisipan = $rows[0]['id'];
+                            $nilai->id_komponen_nilai = $komponen->id_komponen_nilai;
+                            $nilai->id_siswa = $id_siswa;
+                            $nilai->nilai =   $row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))];
+                            $nilai->updated_by  = 'new data';
+                            $nilai->save();
+                        }
                     }
                 }
             }

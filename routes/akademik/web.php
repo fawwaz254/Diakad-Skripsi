@@ -30,6 +30,7 @@ use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiRaporSisipanControll
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanAkhirController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanController;
 use App\Http\Controllers\Guru\RaporSisipan\RaporSisipanController as RaporSisipanGuru;
+use App\Http\Controllers\Guru\RaporSisipan\RaporSisipanAkhirController as RaporSisipanAkhirGuru;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Akademik\Ujian\TryOutController;
 use App\Http\Controllers\Akademik\Ujian\UjianUASController;
@@ -460,7 +461,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('daftar-nilai-sas')->group(function () {
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
                 Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
-                Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
+                Route::get('pdf/{id}', [RaporSisipanAkhirGuru::class, 'pdfDaftarNilaiSAS']);
             });
 
             Route::prefix('komponen-nilai')->group(function () {
@@ -478,6 +479,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewCetakRapor']);
                 Route::get('datatables/', [CetakRaporController::class, 'datatablesCetakRapor']);
                 Route::get('print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+                Route::get('print2/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor2']);
                 Route::get('viewSetting/', [CetakRaporController::class, 'viewSetting']);
                 Route::get('viewDeskripsi', [CetakRaporController::class, 'viewDeskripsi']);
                 Route::get('viewDeskripsi/add', [CetakRaporController::class, 'addDeskripsi']);
