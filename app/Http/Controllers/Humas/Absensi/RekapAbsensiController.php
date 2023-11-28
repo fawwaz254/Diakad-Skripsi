@@ -568,6 +568,7 @@ class RekapAbsensiController extends Controller
         $auth_data = $input->auth_data;
 
         $nama_kelas = Kelas::select('nm_kelas')->where('id_kelas', $id_kelas)->first();
+        // dd($nama_kelas);
 
         if ($id_kelas == "1") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
@@ -610,6 +611,8 @@ class RekapAbsensiController extends Controller
         $jumlah_alpha = 0;
         $jumlah_pulangcepat = 0;
         $tidak_checkout = 0;
+
+        // dd($pengguna);
 
 
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
