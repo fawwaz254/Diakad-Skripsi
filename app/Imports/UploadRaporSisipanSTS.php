@@ -32,7 +32,7 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
         set_time_limit(-1);
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $id_pengguna = Auth::id();
-        $sekolah = Sekolah::get();
+        $sekolah = Sekolah::first();
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
         // $nilais = NilaiRaporSisipan::where('id_rapor_sisipan', $rows[0]['id'])->with('siswa', 'komponen_nilai')->get();
         $nilais = NilaiRaporSisipan::join('siswa', 'siswa.id_siswa', '=', 'nilai_rapor_sisipan.id_siswa')
@@ -53,7 +53,9 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
                     //     })
                     //     ->first();
 
-                    $nilai = $nilais->where('nis_siswa', $row['nis'])->where('nm_nilai', $komponen->nm_nilai)->first();
+                    $nis = str_replace("'", "", $row['nis']);
+
+                    $nilai = $nilais->where('nis_siswa', $nis)->where('nm_nilai', $komponen->nm_nilai)->first();
 
                     if ($nilai) {
                         $nilai->nilai =   $row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_nilai))];
@@ -61,7 +63,7 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
                         $nilai->updated_at           = $now;
                         $nilai->save();
                     } else {
-                        $id_siswa  = $siswas->where('nis_siswa', $row['nis'])->first()->nis_siswa;
+                        $id_siswa  = $siswas->where('nis_siswa', $nis)->first()->nis_siswa;
                         if ($id_siswa) {
                             $nilai = new NilaiRaporSisipan;
                             $nilai->id_nilai_rapor_sisipan = $sekolah->prefix . strtotime($now) . uniqid();

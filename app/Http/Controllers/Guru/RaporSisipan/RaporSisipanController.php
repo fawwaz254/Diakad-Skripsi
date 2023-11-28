@@ -328,7 +328,7 @@ class RaporSisipanController extends Controller
         //     $query->where('aktif_status_pengguna', '=', '1');
         // })->get();
 
-        $komponen = KomponenNilaiRaporSisipan::where('type', '!=', 'uas')->count();
+        $komponen = KomponenNilaiRaporSisipan::where('status', '1')->where('type', '!=', 'uas')->count();
 
         if ($status == '0') {
             $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
@@ -578,6 +578,30 @@ class RaporSisipanController extends Controller
             }
 
             return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-tanada', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'list_nilai2', 'rapor_sisipan'));
+        } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
+            $nilai_siswa = [];
+
+            $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)
+                ->whereHas('komponen_nilai', function ($query) {
+                    $query->where('status', 1)->where('type',  '!=', 'uas');
+                })->get();
+
+
+            if ($list_siswa) {
+                $nilai = $list_nilai->toArray();
+                $rata = 0;
+                foreach ($nilai as $nilaiRapor) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa']] = $nilaiRapor['nilai'];
+
+                    if (isset($nilai_siswa[$nilaiRapor['id_siswa']])) {
+                        $nilai_siswa[$nilaiRapor['id_siswa']] += $nilaiRapor['nilai'];
+                    } else {
+                        $nilai_siswa[$nilaiRapor['id_siswa']] = $nilaiRapor['nilai'];
+                    }
+                }
+            }
+
+            return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-manu', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa',  'rapor_sisipan'));
         }
 
 

@@ -117,16 +117,6 @@
                 searchable: false,
                 orderable: false,
                 className: 'align-center',
-                render: function(data) {
-                    if (data.setting == '3') {
-                        return `<p> Terisi = ` + data.terisi_siswa + ' / ' + data.jumlah_siswa +
-                            '</p>';
-                    } else {
-                        return `<p> STS = ` + data.terisi_siswa_sts + ' / ' + data.jumlah_siswa +
-                            `</p><p> SAS = ` + data.terisi_siswa_sas + ' / ' + data.jumlah_siswa +
-                            `</p>`;
-                    }
-                }
             },
             {
                 data: 'semester',

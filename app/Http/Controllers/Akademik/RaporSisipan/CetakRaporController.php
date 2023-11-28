@@ -695,9 +695,6 @@ class CetakRaporController extends Controller
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
-
-
-
             foreach ($kelompok_sisipan as $k_sisipan) {
                 $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;
                 foreach ($k_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
@@ -740,8 +737,170 @@ class CetakRaporController extends Controller
 
             $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8])->orderBy('urutan', 'asc')->get();
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm1', compact('auth_data', 'pribadi_sisipan', 'nilai_pengembangan_diri', 'kelas', 'list_siswa', 'data', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'semester'));
+        } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
+            $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
+            $nilai_siswa = [];
+
+            foreach ($rapor_sisipans as $rapor_sisipan) {
+
+                foreach ($rapor_sisipan->nilai_rapor_sisipan as  $nilai_rapor_sisipan) {
+                    if (in_array($nilai_rapor_sisipan['id_komponen_nilai'], $list_komponen->pluck('id_komponen_nilai')->toArray())) {
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                        if (isset($nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran']])) {
+                            $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran']] += $nilai_rapor_sisipan['nilai'];
+                        } else {
+                            $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran']] = $nilai_rapor_sisipan['nilai'];
+                        }
+                    }
+                }
+            }
+
+            foreach ($kelompok_sisipan as $k_sisipan) {
+                $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;
+                foreach ($k_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
+                    if ($mata_pelajaran_sisipan->jenis == '0') {
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->keterangan;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = null;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                    } else {
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] =  $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] =  $mata_pelajaran_sisipan->mata_pelajaran->nilai_kkm;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                    }
+                }
+
+                foreach ($k_sisipan->sub_kelompok_sisipan as $sub_kelompok_sisipan) {
+                    $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['nama'] = $sub_kelompok_sisipan->nm_sub_kelompok_sisipan;
+                    foreach ($sub_kelompok_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
+                        if ($mata_pelajaran_sisipan->jenis == '0') {
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->keterangan;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = null;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                        } else {
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = $mata_pelajaran_sisipan->mata_pelajaran->nilai_kkm;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                        }
+                    }
+                }
+            }
+
+
+
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen'));
         }
     }
+
+
+
+    public function printCetakRapor2(Request $request, $id_semester, $id_kelas)
+    {
+        set_time_limit(-1);
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan')->first();
+        $semester = Semester::find($id_semester);
+        $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
+        $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->orderBy('urutan', 'asc')->get();
+        $list_siswa = Siswa::with(['nilai_pribadi_sisipan' => function ($q) use ($id_semester) {
+            $q->where('id_semester', $id_semester)->where('nilai', '!=', 0);
+        }, 'nilai_pribadi_sisipan.pribadi_sisipan'])->where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->orderBy('nis_siswa')->get();
+        $nilai_siswa = [];
+        $data = [];
+
+        $nilai_siswa = [];
+        $typeuts = KomponenNilaiRaporSisipan::where('type', 'uts')->first();
+        $sumatif = KomponenNilaiRaporSisipan::where('type', 'sumatif')->get();
+
+        $rapor_sisipans = RaporSisipan::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)
+            // ->with(['nilai_rapor_sisipan' => function ($q) {
+            //     $q->where('nilai', '>', 0);
+            // }])
+            ->get();
+
+        foreach ($rapor_sisipans as $rapor_sisipan) {
+            //karna server tidak kuat terpaksa menggunakan cara ini
+            $nilai_rapor_sisipans = NilaiRaporSisipan::where('id_rapor_sisipan', $rapor_sisipan->id_rapor_sisipan)->where('nilai', '!=', '0')->get();
+            foreach ($nilai_rapor_sisipans as  $nilai_rapor_sisipan) {
+                if (!empty($typeuts) && $nilai_rapor_sisipan->id_komponen_nilai == $typeuts->id_komponen_nilai) {
+                    $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'sts'] = $nilai_rapor_sisipan['nilai'];
+                } elseif (in_array($nilai_rapor_sisipan->id_komponen_nilai, $sumatif->pluck('id_komponen_nilai')->toArray())) {
+                    $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                    if (isset($nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'total_nilai_sumatif'])) {
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'total_nilai_sumatif'] = $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'total_nilai_sumatif'] + $nilai_rapor_sisipan['nilai'];
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'jumlah'] = $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'jumlah']  + 1;
+                    } else {
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'total_nilai_sumatif'] = $nilai_rapor_sisipan['nilai'];
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . 'jumlah'] = 1;
+                    }
+                } else {
+                    $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                }
+            }
+        }
+
+        $kelas_sisipan = KelasSisipan::where('id_kelas', $id_kelas)->get();
+        $kelompok_sisipan = KelompokSisipan::with(['mata_pelajaran_sisipan' => function ($q) use ($kelas_sisipan) {
+            $q->whereIn('id_mata_pelajaran_sisipan', $kelas_sisipan->pluck('id_mata_pelajaran_sisipan'))->with('mata_pelajaran');
+        }, 'sub_kelompok_sisipan.mata_pelajaran_sisipan' => function ($q) use ($kelas_sisipan) {
+            $q->whereIn('id_mata_pelajaran_sisipan', $kelas_sisipan->pluck('id_mata_pelajaran_sisipan'))->with('mata_pelajaran');
+        }])->get();
+
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
+            $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->orderBy('urutan', 'asc')->get();
+            $nilai_siswa = [];
+
+            foreach ($rapor_sisipans as $rapor_sisipan) {
+
+                foreach ($rapor_sisipan->nilai_rapor_sisipan as  $nilai_rapor_sisipan) {
+                    if (in_array($nilai_rapor_sisipan['id_komponen_nilai'], $list_komponen->pluck('id_komponen_nilai')->toArray())) {
+                        $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran'] . $nilai_rapor_sisipan['id_komponen_nilai']] = $nilai_rapor_sisipan['nilai'];
+                        if (isset($nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran']])) {
+                            $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran']] += $nilai_rapor_sisipan['nilai'];
+                        } else {
+                            $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran']] = $nilai_rapor_sisipan['nilai'];
+                        }
+                    }
+                }
+            }
+
+            foreach ($kelompok_sisipan as $k_sisipan) {
+                $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;
+                foreach ($k_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
+                    if ($mata_pelajaran_sisipan->jenis == '0') {
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->keterangan;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = null;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                    } else {
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] =  $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] =  $mata_pelajaran_sisipan->mata_pelajaran->nilai_kkm;
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                    }
+                }
+
+                foreach ($k_sisipan->sub_kelompok_sisipan as $sub_kelompok_sisipan) {
+                    $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['nama'] = $sub_kelompok_sisipan->nm_sub_kelompok_sisipan;
+                    foreach ($sub_kelompok_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
+                        if ($mata_pelajaran_sisipan->jenis == '0') {
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->keterangan;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = null;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                        } else {
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = $mata_pelajaran_sisipan->mata_pelajaran->nilai_kkm;
+                            $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                        }
+                    }
+                }
+            }
+
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu-akhir', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen'));
+        }
+    }
+
 
     public function viewSiswaUas(Request $request, $id_semester, $id_kelas)
     {
