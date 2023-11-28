@@ -339,8 +339,11 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/print-mingguan/siswa/{tingkat}/{id_jurusan}', [RekapAbsensiController::class, 'printRekapMingguan']);
             });
             Route::prefix('rekap-pertanggal')->group(function () {
-                Route::get('/', [RekapPertanggalController::class, 'viewRekapPertanggal']);
+                Route::get('/', [RekapPertanggalController::class, 'selectRekapPertanggal']);
                 Route::get('/detail/{id_bulan}/{tahun}', [RekapPertanggalController::class, 'viewRekapPertanggal']);
+
+                Route::get('/siswa', [RekapPertanggalController::class, 'selectRekapPertanggalSiswa']);
+                Route::get('/detail/siswa/{id_kelas}/{id_bulan}/{tahun}', [RekapPertanggalController::class, 'viewRekapPertanggalSiswa']);
             });
         });
 

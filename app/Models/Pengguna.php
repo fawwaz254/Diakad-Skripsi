@@ -34,7 +34,7 @@ class Pengguna extends Authenticatable
         'id_pengguna',
         'id_status_pengguna',
         'id_sekolah',
-        'nm_pengguna',
+        'nm_pengguna',  
         'username',
         'password',
         'must_change_password',
