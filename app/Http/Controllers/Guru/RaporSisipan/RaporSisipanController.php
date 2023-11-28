@@ -328,7 +328,7 @@ class RaporSisipanController extends Controller
         //     $query->where('aktif_status_pengguna', '=', '1');
         // })->get();
 
-        $komponen = KomponenNilaiRaporSisipan::where('type', '!=', 'uas')->count();
+        $komponen = KomponenNilaiRaporSisipan::where('status', '1')->where('type', '!=', 'uas')->count();
 
         if ($status == '0') {
             $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);

@@ -95,7 +95,7 @@
                 <tr>
                     <td colspan="2" style="text-align: center;font-weight: bold;">NOMOR</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">NAMA SISWA<br></td>
-                    <td colspan="3" style="text-align: center;font-weight: bold;">Nilai HASIL BELAJAR</td>
+                    <td colspan="4" style="text-align: center;font-weight: bold;">Nilai HASIL BELAJAR</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RATA-RATA<br></td>
 
                 </tr>
@@ -105,6 +105,7 @@
                     <td style="text-align: center;font-weight: bold;">TUGAS</td>
                     <td style="text-align: center;font-weight: bold;">UH</td>
                     <td style="text-align: center;font-weight: bold;">PTS</td>
+                    <td style="text-align: center;font-weight: bold;">PAS</td>
                 </tr>
             </thead>
             <tbody class="body">

@@ -87,10 +87,10 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="block-header">
+                        {{-- <div class="block-header">
                             <button class="btn btn-block bg-red waves-effect" type="submit"><i
                                     class="material-icons">save</i><span>Save</span></button>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

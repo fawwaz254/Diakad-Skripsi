@@ -32,7 +32,7 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
         set_time_limit(-1);
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $id_pengguna = Auth::id();
-        $sekolah = Sekolah::get();
+        $sekolah = Sekolah::first();
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
         // $nilais = NilaiRaporSisipan::where('id_rapor_sisipan', $rows[0]['id'])->with('siswa', 'komponen_nilai')->get();
         $nilais = NilaiRaporSisipan::join('siswa', 'siswa.id_siswa', '=', 'nilai_rapor_sisipan.id_siswa')
