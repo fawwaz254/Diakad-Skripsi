@@ -155,14 +155,15 @@
                         <th rowspan="2"style="text-align: center;font-weight: bold;">No</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">Mata Pelajaran</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">KKM</th>
-                        <th colspan="3" style="text-align: center;font-weight: bold;">Nilai Hasil Belajar</th>
+                        <th colspan="4" style="text-align: center;font-weight: bold;">Nilai Hasil Belajar</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">RATA RATA</th>
-                        <th rowspan="2" style="text-align: center;font-weight: bold;">KETERANGAN</th>
+                        <th rowspan="2" style="text-align: center;font-weight: bold;">KETERANAGAN</th>
                     </tr>
                     <tr>
                         <th style="text-align: center;font-weight: bold;">TUGAS</th>
                         <th style="text-align: center;font-weight: bold;">UH</th>
                         <th style="text-align: center;font-weight: bold;">PTS</th>
+                        <th style="text-align: center;font-weight: bold;">PAS</th>
 
                     </tr>
                 </thead>
@@ -192,8 +193,9 @@
                                         </td>
                                     @endforeach
                                     <td style="text-align: center;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]] / 3) : '' }}
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]] / 4) : '' }}
                                     </td>
+
                                     <td style="text-align: center;">
                                         @php
                                             $keterangan = '-';
@@ -207,6 +209,7 @@
                                         @endphp
                                         {{ $keterangan }}
                                     </td>
+
                                 </tr>
                                 @for ($i = 1; $i < $jumlah; $i++)
                                     <tr>
@@ -214,7 +217,7 @@
                                         <td>{{ $data2['nm_point'][$i] }}</td>
 
                                         @foreach ($list_komponen as $komponen)
-                                            <td style="text-align: center;">
+                                            <td style="text-align: center;font-weight: bold;">
                                                 {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] : '' }}
                                             </td>
                                         @endforeach
