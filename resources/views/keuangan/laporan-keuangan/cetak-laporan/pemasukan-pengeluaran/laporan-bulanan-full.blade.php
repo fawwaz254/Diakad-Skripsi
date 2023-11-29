@@ -274,7 +274,7 @@
                         <td class="text-right">0%</td>
                     @else
                         <td class="text-right">
-                            {{ round(($subkategori_non_kbm['total_bayar'] / $realisasi->dana_perkiraan_rapb) * 100, 2) }}%
+                            {{ round((($subkategori_non_kbm['total_bayar'] + $realisasi->total_realisasi) / $realisasi->dana_perkiraan_rapb) * 100, 2) }}%
                         </td>
                     @endif
                     <td></td>
@@ -295,7 +295,7 @@
                         <td class="text-right">0%</td>
                     @else
                         <td class="text-right">
-                            {{ round(($subkategori_pengembangan_pendidikan['total_bayar'] / $realisasi->dana_perkiraan_rapb) * 100, 2) }}%
+                            {{ round((($subkategori_pengembangan_pendidikan['total_bayar'] + $realisasi->total_realisasi) / $realisasi->dana_perkiraan_rapb) * 100, 2) }}%
                         </td>
                     @endif
                     <td></td>
