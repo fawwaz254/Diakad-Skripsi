@@ -276,21 +276,27 @@
                         <tr style="background-color: #9999cc">
                             <th colspan="2">Absensi</th>
                         </tr>
-                        <tr>
-                            <td>1. Sakit</td>
-                            <td style="text-align: center;">0</td>
-                        </tr>
-                        <tr>
-                            <td>2. izin</td>
-                            <td style="text-align: center;">0</td>
-                        </tr>
-                        <tr>
-                            <td>3. Alpha</td>
-                            <td style="text-align: center;">0</td>
-                        </tr>
+                        @php
+                            $jumlah = 0;
+                        @endphp
+                        @foreach ($pribadi_sisipan_kehadiran as $key => $k)
+                            <tr>
+                                <td>{{ $k->nm_pribadi_sisipan }}</td>
+                                @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
+                                    <td style="text-align: center;">
+                                        @php
+                                            $jumlah += $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan];
+                                        @endphp
+                                        {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] }}</td>
+                                @else
+                                    <td style="text-align: center;">0 </td>
+                                @endif
+                            </tr>
+                        @endforeach
+
                         <tr>
                             <td style="text-align: center; font-weight: bold;">Jumlah</td>
-                            <td style="text-align: center;">0</td>
+                            <td style="text-align: center;">{{ $jumlah }}</td>
                         </tr>
                     </table>
                 </td>
