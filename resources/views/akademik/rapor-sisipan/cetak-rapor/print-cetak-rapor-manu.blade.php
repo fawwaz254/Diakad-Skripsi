@@ -77,80 +77,50 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr>
                     <td colspan="10" style="border-style : hidden">
-
-                        <h2 align="center" style="margin-top: 3px">
-                            LAPORAN PENILAIAN HASIL BELAJAR<br>
-                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
-                            TENGAH SEMESTER GASAL<br>
-                            @php
-                                // $nama = $list_nilai->first();
-
-                                // echo isset($nama->rapor_sisipan->semester->tahun_ajaran) ? 'TAHUN AJARAN ' . $nama->rapor_sisipan->semester->tahun_ajaran : '';
-                            @endphp
-
-                        </h2>
-                        <hr>
+                        <h3 align="center" style="margin-top: 3px">
+                            REKAPITULASI NILAI ASLI<br>
+                            PENILAIAN TENGAH SEMESTER (PTS)
+                            <br>
+                        </h3>
                         <br>
                     </td>
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NAMA SISWA
+                    <td style="border-style : hidden;width: 14%;">NAMA SISWA
                     </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
+                    <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">
+                    <td style="border-style : hidden;width: 35%;">
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
-                    <td style="border-style : hidden;width: 24%;font-weight: bold;">BIDANG KEAHLIAN
+                    <td style="border-style : hidden;width: 14%;">KELAS
                     </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
+                    <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold; ">
-                        {{ $kelas->jurusan->bidang_keahlian }}
-                    </td>
-                </tr>
-
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NO. INDUK
-                    </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
-                    </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">{{ $siswa->nis_siswa }}
-                    </td>
-                    <td style="border-style : hidden;width: 24%;font-weight: bold;">PROGRAM KEAHLIAN
-                    </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
-                    </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;">
-                        {{ $kelas->jurusan->program_keahlian }}
+                    <td style="border-style : hidden;width: 35%;">{{ $kelas->nm_kelas }}
                     </td>
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">KELAS
+                    <td style="border-style : hidden;width: 14%;">NO. INDUK
                     </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
+                    <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">{{ $kelas->nm_kelas }}
+                    <td style="border-style : hidden;width: 35%;">{{ $siswa->nis_siswa }}
                     </td>
-                    <td style="border-style : hidden;width: 24%;font-weight: bold;">
-                        @if ($kelas->tingkat == '1')
-                            KONSENTRASI KEAHLIAN
-                        @else
-                            KOMPETENSI KEAHLIAN
-                        @endif
+                    <td style="border-style : hidden;width: 24%;">Tahun Pelajaran
                     </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
+                    <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;">
-                        {{ $kelas->jurusan->kompetensi_keahlian }}
+                    <td style="border-style : hidden;width: 25%;">
+                        {{ $semester->tahun_ajaran . ' ' . $semester->nm_semester }}
                     </td>
                 </tr>
             </table>
 
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #C2D69B">
+                <thead class="head" style="background-color: #99cccc">
                     <tr>
                         <th rowspan="2"style="text-align: center;font-weight: bold;">No</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">Mata Pelajaran</th>
@@ -171,7 +141,7 @@
 
                     @foreach ($data as $kelompok)
                         <tr>
-                            <td colspan="2" style="font-weight: bold;">
+                            <td colspan="8" style="font-weight: bold; background-color: #ccffff">
                                 {{ isset($kelompok['nama']) ? $kelompok['nama'] : '' }}</td>
                         </tr>
                         @if (isset($kelompok['data']))
@@ -195,7 +165,7 @@
                                     </td>
                                     <td style="text-align: center;">
                                         @php
-                                            $keterangan = '-';
+                                            $keterangan = '';
                                             if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) && isset($data2['kkm'][0])) {
                                                 if (intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]] / 3) >= $data2['kkm'][0]) {
                                                     $keterangan = 'Tuntas';
@@ -224,7 +194,7 @@
                                         </td>
                                         <td style="text-align: center;">
                                             @php
-                                                $keterangan = '-';
+                                                $keterangan = '';
                                                 if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]]) && isset($data2['kkm'][$i])) {
                                                     if (intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]] / 3) >= $data2['kkm'][$i]) {
                                                         $keterangan = 'Tuntas';
@@ -241,11 +211,107 @@
                             @endforeach
                         @endif
                     @endforeach
+                    <tr>
+                        <td style="text-align: center;" colspan="6">
+                            <h3>JUMLAH</h3>
+                        </td>
+                        <td style="text-align: center;" colspan="2">Number</td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align: center;background-color: #99cccc" colspan="2">PERMINATAN KHUSUS</td>
+                        <td style="text-align: center;background-color: #99cccc" colspan="2">NILAI</td>
+                        <td style="text-align: center;" colspan="4" rowspan="2">Peringkat ke : dari Siswa</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;" colspan="2">----</td>
+                        <td style="text-align: center;" colspan="2">----</td>
+                    </tr>
                 </tbody>
             </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
+                <tr style="background-color: #9999cc">
+                    <th colspan="2">Ekstrakurikuler</th>
+                    <th>Predikat</th>
+                    <th>Keterangan</th>
+                    <th colspan="2">Absensi</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>1. Sakit</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>2. izin</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>3. Alpha</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td colspan="4"> </td>
+                    <td>Jumlah</td>
+                    <td>0</td>
+                </tr>
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+                <tr>
+                    <td style="width: 70%; border-style : hidden;"></td>
+                    <td style="border-style : hidden;">Diberikan di : Pasuruan</td>
+                </tr>
+                <tr>
+                    <td style="width: 70%; border-style : hidden;"></td>
+                    <td>Tanggal : {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</td>
+                </tr>
+            </table>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+                <tr>
+                    <td style="border-style : hidden; width:35%;" align="left">
+                        Orang Tua Siswa / Wali
+                        <br><br><br><br><br><br><br>
+                        <p style="width: 250px;
+                                border-bottom: 1px solid   black;">
+                        </p>
+                    </td>
+                    <td style="width:35%; border-style : hidden;" align="left">
+                        Wali Kelas
+                        <br><br><br><br><br><br><br>
+                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                            {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                            {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                            {{ $wali_kelas->guru->pengguna->gelar_belakang }}
+                        @else
+                            <p
+                                style="width: 250px;
+                                        border-bottom: 1px solid   black;">
+                            </p>
+                        @endif
+                    </td>
+                    <td style="width: 30%">
+                        Kepala Madrasah
+                        <br><br><br><br><br><br><br>
+
+                        {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
+
+                    </td>
+                </tr>
+            </table>
+        </div>
     @endforeach
-
-
 </body>
 <script>
     window.print();
