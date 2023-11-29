@@ -753,7 +753,7 @@ class CetakRaporController extends Controller
                             $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran']] = $nilai_rapor_sisipan['nilai'];
                         }
 
-                        if (isset($nilai_siswa[$nilai_rapor_sisipan['id_siswa']])) {
+                        if (isset($total_nilai[$nilai_rapor_sisipan['id_siswa']])) {
                             $total_nilai[$nilai_rapor_sisipan['id_siswa']] += $nilai_rapor_sisipan['nilai'];
                         } else {
                             $total_nilai[$nilai_rapor_sisipan['id_siswa']] = $nilai_rapor_sisipan['nilai'];
@@ -839,6 +839,8 @@ class CetakRaporController extends Controller
 
             arsort($total_nilai);
 
+
+
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri'));
         }
     }
@@ -917,7 +919,7 @@ class CetakRaporController extends Controller
                             $nilai_siswa[$nilai_rapor_sisipan['id_siswa'] . $rapor_sisipan['id_mata_pelajaran']] = $nilai_rapor_sisipan['nilai'];
                         }
 
-                        if (isset($nilai_siswa[$nilai_rapor_sisipan['id_siswa']])) {
+                        if (isset($total_nilai[$nilai_rapor_sisipan['id_siswa']])) {
                             $total_nilai[$nilai_rapor_sisipan['id_siswa']] += $nilai_rapor_sisipan['nilai'];
                         } else {
                             $total_nilai[$nilai_rapor_sisipan['id_siswa']] = $nilai_rapor_sisipan['nilai'];
