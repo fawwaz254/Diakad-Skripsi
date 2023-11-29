@@ -256,6 +256,7 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
     @endforeach
     {{-- <br><br>
         <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
