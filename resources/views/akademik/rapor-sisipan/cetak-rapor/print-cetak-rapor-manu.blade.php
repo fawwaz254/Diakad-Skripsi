@@ -183,7 +183,6 @@
                                     <td style="text-align: center;">{{ $key }}</td>
                                     <td>{{ $data2['nm_point'][0] }}</td>
                                     <td style="text-align: center;">
-
                                         {{ isset($data2['kkm'][0]) ? $data2['kkm'][0] : '' }}
                                     </td>
                                     @foreach ($list_komponen as $komponen)
@@ -212,12 +211,30 @@
                                     <tr>
                                         <td></td>
                                         <td>{{ $data2['nm_point'][$i] }}</td>
-
+                                        <td style="text-align: center;">
+                                            {{ isset($data2['kkm'][$i]) ? $data2['kkm'][$i] : '' }}
+                                        </td>
                                         @foreach ($list_komponen as $komponen)
                                             <td style="text-align: center;">
                                                 {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] : '' }}
                                             </td>
                                         @endforeach
+                                        <td style="text-align: center;">
+                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]]) ? intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]] / 3) : '' }}
+                                        </td>
+                                        <td style="text-align: center;">
+                                            @php
+                                                $keterangan = '-';
+                                                if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]]) && isset($data2['kkm'][$i])) {
+                                                    if (intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]] / 3) >= $data2['kkm'][$i]) {
+                                                        $keterangan = 'Tuntas';
+                                                    } elseif (intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]] / 3) < $data2['kkm'][$i]) {
+                                                        $keterangan = 'Tidak Tuntas';
+                                                    }
+                                                }
+                                            @endphp
+                                            {{ $keterangan }}
+                                        </td>
                                     </tr>
                                 @endfor
                                 </tr>
