@@ -273,6 +273,21 @@ class BiayaSiswaController extends BaseController
                 if (isset($input->ganti_kelompok_biaya) && $input->ganti_kelompok_biaya == '1') {
                     $auth_data = $input->auth_data;
                     $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+                    //validasi 
+                    $validasi_pembayaran = TagihanBiaya::where('is_tagih', '0')->where('id_siswa', $siswa->id_siswa)->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($siswa, $semester_aktif) {
+                        $query->where('id_kelompok_biaya', '=', $siswa->id_kelompok_biaya)->whereHas('semester', function ($query) use ($semester_aktif) {
+                            $query->where('thn_akademik_semester', '=', $semester_aktif->thn_akademik_semester);
+                        });
+                    })->first();
+
+                    if ($validasi_pembayaran) {
+                        return [
+                            'status' => 203, // SUCCESS AND LOAD TABLE
+                            'message' => 'Ada Pembayaran, Hapus terlebih dahulu pembayarannya'
+                        ];
+                    }
+
                     //hapus tagihan lama
                     $tagihan_biaya_lama = TagihanBiaya::where('id_siswa', $siswa->id_siswa)->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($siswa, $semester_aktif) {
                         $query->where('id_kelompok_biaya', '=', $siswa->id_kelompok_biaya)->whereHas('semester', function ($query) use ($semester_aktif) {
