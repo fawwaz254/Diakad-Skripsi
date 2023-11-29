@@ -215,13 +215,19 @@
                         <td style="text-align: center;" colspan="6">
                             <h3>JUMLAH</h3>
                         </td>
-                        <td style="text-align: center;" colspan="2">Number</td>
+                        <td style="text-align: center;" colspan="2">
+                            <h3>{{ isset($total_nilai[$siswa->id_siswa]) ? $total_nilai[$siswa->id_siswa] : '' }}</h3>
+                        </td>
                     </tr>
 
                     <tr>
-                        <td style="text-align: center;background-color: #99cccc" colspan="2">PERMINATAN KHUSUS</td>
-                        <td style="text-align: center;background-color: #99cccc" colspan="2">NILAI</td>
-                        <td style="text-align: center;" colspan="4" rowspan="2">Peringkat ke : dari Siswa</td>
+                        <td style="text-align: center;background-color: #99cccc;font-weight: bold;" colspan="2">
+                            PERMINATAN KHUSUS</td>
+                        <td style="text-align: center;background-color: #99cccc;font-weight: bold;" colspan="2">NILAI
+                        </td>
+                        <td style="text-align: center;font-weight: bold;" colspan="4" rowspan="2">Peringkat ke :
+                            {{ array_search($siswa->id_siswa, array_keys($total_nilai)) + 1 }}
+                            dari Siswa {{ $list_siswa->count() }}</td>
                     </tr>
                     <tr>
                         <td style="text-align: center;" colspan="2">----</td>
@@ -230,6 +236,72 @@
                 </tbody>
             </table>
             <br>
+
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
+                <td style="vertical-align: top;border-style : hidden">
+                    <table>
+                        <tr style="background-color: #9999cc">
+                            <th colspan="2">Ekstrakurikuler</th>
+                            <th>Predikat</th>
+                            <th>Keterangan</th>
+
+                        </tr>
+
+                        @if (isset($nilai_ekskul[$siswa->id_siswa . 'ekskul']))
+                            @foreach ($nilai_ekskul[$siswa->id_siswa . 'ekskul'] as $key => $ekskul)
+                                <tr>
+                                    <td style="text-align: center;">{{ $key + 1 }}</td>
+                                    <td> {{ $ekskul }}</td>
+                                    <td style="text-align: center;">
+                                        {{ $nilai_ekskul[$siswa->id_siswa . 'nilai_ekskul'][$key] }}</td>
+                                    <td>
+                                        {{ $nilai_ekskul[$siswa->id_siswa . 'keterangan_ekskul'][$key] }}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                            </tr>
+                        @endif
+
+
+                    </table>
+                </td>
+
+                <td style="vertical-align: top;border-style : hidden">
+                    <table>
+                        <tr style="background-color: #9999cc">
+                            <th colspan="2">Absensi</th>
+                        </tr>
+                        <tr>
+                            <td>1. Sakit</td>
+                            <td style="text-align: center;">0</td>
+                        </tr>
+                        <tr>
+                            <td>2. izin</td>
+                            <td style="text-align: center;">0</td>
+                        </tr>
+                        <tr>
+                            <td>3. Alpha</td>
+                            <td style="text-align: center;">0</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center; font-weight: bold;">Jumlah</td>
+                            <td style="text-align: center;">0</td>
+                        </tr>
+                    </table>
+                </td>
+                <table></table>
+            </table>
+
+
+
+
+
+            {{-- 
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr style="background-color: #9999cc">
                     <th colspan="2">Ekstrakurikuler</th>
@@ -243,7 +315,7 @@
                     <td></td>
                     <td></td>
                     <td>1. Sakit</td>
-                    <td>0</td>
+                    <td style="text-align: center;">0</td>
                 </tr>
                 <tr>
                     <td>2</td>
@@ -251,7 +323,7 @@
                     <td></td>
                     <td></td>
                     <td>2. izin</td>
-                    <td>0</td>
+                    <td style="text-align: center;">0</td>
                 </tr>
                 <tr>
                     <td>3</td>
@@ -259,14 +331,14 @@
                     <td></td>
                     <td></td>
                     <td>3. Alpha</td>
-                    <td>0</td>
+                    <td style="text-align: center;">0</td>
                 </tr>
                 <tr>
                     <td colspan="4"> </td>
-                    <td>Jumlah</td>
-                    <td>0</td>
+                    <td style="text-align: center; font-weight: bold;">Jumlah</td>
+                    <td style="text-align: center;">0</td>
                 </tr>
-            </table>
+            </table> --}}
             <br>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
@@ -280,15 +352,15 @@
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
-                    <td style="border-style : hidden; width:35%;" align="left">
+                    <td style="border-style : hidden; width:35%;font-weight: bold;" align="left">
                         Orang Tua Siswa / Wali
                         <br><br><br><br><br><br><br>
                         <p style="width: 250px;
                                 border-bottom: 1px solid   black;">
                         </p>
                     </td>
-                    <td style="width:35%; border-style : hidden;" align="left">
-                        Wali Kelas
+                    <td style="width:35%; border-style : hidden;font-weight: bold;" align="left">
+                        Wali Kelas {{ $kelas->nm_kelas }}
                         <br><br><br><br><br><br><br>
                         @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
                             {{ $wali_kelas->guru->pengguna->gelar_depan }}
@@ -301,7 +373,7 @@
                             </p>
                         @endif
                     </td>
-                    <td style="width: 30%">
+                    <td style="width: 30%;font-weight: bold;">
                         Kepala Madrasah
                         <br><br><br><br><br><br><br>
 
