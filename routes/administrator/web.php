@@ -61,7 +61,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::view('/whatsapp/scan', 'administrator.notification.view-whatsapp-scan');
             Route::post('/whatsapp/group', [NotificationController::class, 'fetchWhatsappGroup']);
             Route::post('/whatsapp/group/{mode}', [NotificationController::class, 'actionWhatsappGroup']);
-            Route::post('/whatsapp/template/update', [NotificationController::class, 'actionUpdateTemplate']);
+            Route::post('/whatsapp/setting/update', [NotificationController::class, 'actionUpdateNotificationSetting']);
         });
 
 

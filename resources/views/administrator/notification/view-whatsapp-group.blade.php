@@ -6,6 +6,9 @@
             <div style="clear: both;"></div>
         </div>
         <div class="body">
+            <label style="margin-top:1rem">Jadwal Hari Notifikasi</label>
+            <input type="text" name="day_schedule" class="form-control"
+                placeholder="MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY" value="{{ $day_schedule_setting }}">
             <label style="margin-top:1rem">Mode Kehadiran/Ketidakhadiran Siswa</label>
             <select class="form-control show-tick" name="attendance_mode">
                 <option value="ABSENT_ONLY" {{ $mode_attendance_setting == 'ABSENT_ONLY' ? 'selected' : '' }}>Tidak
@@ -18,10 +21,14 @@
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{CLASS}}</strong> : data kelas dinamis <small style="color: red">*wajib ada</small><br>
-                    <strong>@{{DATE}}</strong> : data tanggal dinamis <small style="color: red">*wajib ada</small><br>
-                    <strong>@{{SCHOOL}}</strong> : data sekolah dinamis <small style="color: red">*wajib ada</small><br>
-                    <strong>@{{STUDENTS}}</strong> : data list siswa dinamis <small style="color: red">*wajib ada</small><br>
+                    <strong>@{{ CLASS }}</strong> : data kelas dinamis <small style="color: red">*wajib
+                        ada</small><br>
+                    <strong>@{{ DATE }}</strong> : data tanggal dinamis <small style="color: red">*wajib
+                        ada</small><br>
+                    <strong>@{{ SCHOOL }}</strong> : data sekolah dinamis <small style="color: red">*wajib
+                        ada</small><br>
+                    <strong>@{{ STUDENTS }}</strong> : data list siswa dinamis <small style="color: red">*wajib
+                        ada</small><br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>
                 </small>
@@ -29,16 +36,20 @@
             <label>Template Kehadiran/Ketidakhadiran Siswa</label>
             <textarea name="attendance_template" class="form-control" rows="20">{!! $template_attendance_setting !!}</textarea>
             <label style="margin-top:1rem">Jadwal Kehadiran/Ketidakhadiran Siswa</label>
-            <input type="time" name="attendance_schedule" class="form-control"
+            <input type="time" name="attendance_time_schedule" class="form-control"
                 value="{{ $attendance_time_setting }}">
             <hr>
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
-                    <strong>@{{CLASS}}</strong> : data kelas dinamis <small style="color: red">*wajib ada</small><br>
-                    <strong>@{{DATE}}</strong> : data tanggal dinamis <small style="color: red">*wajib ada</small><br>
-                    <strong>@{{SCHOOL}}</strong> : data sekolah dinamis <small style="color: red">*wajib ada</small><br>
-                    <strong>@{{STUDENTS}}</strong> : data list siswa dinamis <small style="color: red">*wajib ada</small><br>
+                    <strong>@{{ CLASS }}</strong> : data kelas dinamis <small style="color: red">*wajib
+                        ada</small><br>
+                    <strong>@{{ DATE }}</strong> : data tanggal dinamis <small style="color: red">*wajib
+                        ada</small><br>
+                    <strong>@{{ SCHOOL }}</strong> : data sekolah dinamis <small style="color: red">*wajib
+                        ada</small><br>
+                    <strong>@{{ STUDENTS }}</strong> : data list siswa dinamis <small style="color: red">*wajib
+                        ada</small><br>
                     <strong>*text*</strong> : kode untuk BOLD text<br>
                     <strong>_text_</strong> : kode untuk ITALIC text<br>
                 </small>
@@ -46,7 +57,7 @@
             <label style="margin-top:1rem">Template Pembayaran SPP Siswa</label>
             <textarea name="payment_template" class="form-control" rows="20">{{ $template_payment_setting }}</textarea>
             <label style="margin-top:1rem">Jadwal Pembayaran SPP Siswa</label>
-            <input type="time" name="payment_schedule" class="form-control" value="{{ $payment_time_setting }}">
+            <input type="time" name="payment_time_schedule" class="form-control" value="{{ $payment_time_setting }}">
 
             <button class="btn bg-green waves-effect" style="float:right;margin-top:1rem" onclick="actionUpdate()"><i
                     class="material-icons">save</i><span>Update</span></button>
@@ -235,13 +246,14 @@
     function actionUpdate() {
         $.ajax({
             type: 'POST',
-            url: base_url + '/administrator/notification/whatsapp/template/update',
+            url: base_url + '/administrator/notification/whatsapp/setting/update',
             data: {
                 attendance_mode: $('select[name=attendance_mode]').val(),
                 attendance_template: $('textarea[name=attendance_template]').val(),
-                attendance_schedule: $('input[name=attendance_schedule]').val(),
+                attendance_time_schedule: $('input[name=attendance_time_schedule]').val(),
                 payment_template: $('textarea[name=payment_template]').val(),
-                payment_schedule: $('input[name=payment_schedule]').val(),
+                payment_time_schedule: $('input[name=payment_time_schedule]').val(),
+                day_schedule: $('input[name=day_schedule]').val(),
             },
             success: function(response) {
                 if (response.status_code == 200) {
