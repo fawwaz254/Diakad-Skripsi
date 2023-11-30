@@ -256,7 +256,7 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key1]['kelas'] = $value->siswa->kelas->nm_kelas;
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
-
+                $hasil[$key1][$key2]['check_in'] = '';
                 $hasil[$key1][$key2]['status'] = '';
                 $shiftPengguna = $allShiftPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
                 $attendance =  $allPresensiPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();;

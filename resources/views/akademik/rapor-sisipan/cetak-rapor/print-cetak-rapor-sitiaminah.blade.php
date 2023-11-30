@@ -75,82 +75,97 @@
     @foreach ($list_siswa as $siswa)
         <div class="page">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
-                <tr>
-                    <td colspan="10" style="border-style : hidden">
+                <tr style="border-style : hidden">
+                    <td style="border-style : hidden;width: 14%;font-weight: bold;">Nama Sekolah
+                    </td>
+                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 35%;font-weight: bold;">
+                        {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}
+                    </td>
+                    <td style="border-style : hidden;width: 24%;font-weight: bold;">Kelas
+                    </td>
+                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%;font-weight: bold; ">
+                        {{ $kelas->nm_kelas }}
+                    </td>
+                </tr>
 
-                        <h2 align="center" style="margin-top: 3px">
-                            LAPORAN PENILAIAN HASIL BELAJAR<br>
-                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
-                            TENGAH SEMESTER GASAL<br>
-                            @php
-                                // $nama = $list_nilai->first();
 
-                                // echo isset($nama->rapor_sisipan->semester->tahun_ajaran) ? 'TAHUN AJARAN ' . $nama->rapor_sisipan->semester->tahun_ajaran : '';
-                            @endphp
-
-                        </h2>
-                        <hr>
-                        <br>
+                <tr style="border-style : hidden">
+                    <td style="border-style : hidden;width: 14%;font-weight: bold;vertical-align: top;">Alamat
+                    </td>
+                    <td style="border-style : hidden;width: 1%;font-weight: bold;vertical-align: top;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 35%;font-weight: bold;vertical-align: top;">
+                        Perum Gunung Sari Indah Blok CC, Kedurus Karangpilang Surabaya
+                    </td>
+                    <td style="border-style : hidden;width: 24%;font-weight: bold;vertical-align: top;">Semester
+                    </td>
+                    <td style="border-style : hidden;width: 1%;font-weight: bold;vertical-align: top;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%;font-weight: bold;vertical-align: top; ">
+                        {{ $semester->nm_semester }}
                     </td>
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NAMA SISWA
+                    <td style="border-style : hidden;width: 14%;font-weight: bold;">Nama Siswa
                     </td>
                     <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;font-weight: bold;">
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
-                    <td style="border-style : hidden;width: 24%;font-weight: bold;">BIDANG KEAHLIAN
+                    <td style="border-style : hidden;width: 24%;font-weight: bold;">Tahun Pelajaran
                     </td>
                     <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
                     </td>
                     <td style="border-style : hidden;width: 25%;font-weight: bold; ">
-                        {{ $kelas->jurusan->bidang_keahlian }}
+                        {{ $semester->tahun_ajaran }}
                     </td>
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NO. INDUK
+                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NO Induk
                     </td>
                     <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">{{ $siswa->nis_siswa }}
-                    </td>
-                    <td style="border-style : hidden;width: 24%;font-weight: bold;">PROGRAM KEAHLIAN
-                    </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
-                    </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;">
-                        {{ $kelas->jurusan->program_keahlian }}
-                    </td>
-                </tr>
-
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">KELAS
-                    </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
-                    </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">{{ $kelas->nm_kelas }}
-                    </td>
-                    <td style="border-style : hidden;width: 24%;font-weight: bold;">
-                        @if ($kelas->tingkat == '1')
-                            KONSENTRASI KEAHLIAN
-                        @else
-                            KOMPETENSI KEAHLIAN
-                        @endif
-                    </td>
-                    <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
-                    </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;">
-                        {{ $kelas->jurusan->kompetensi_keahlian }}
+                    <td style="border-style : hidden;width: 35%;font-weight: bold;">
+                        {{ $siswa->nis_siswa }}
                     </td>
                 </tr>
             </table>
 
+            <br>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #C2D69B">
+                <tr style="font-weight: bold;border-style : hidden">
+                    <td>CAPAIAN HASIL BELAJAR</td>
+                </tr>
+                <br>
+                <tr style="font-weight: bold; border-style : hidden">
+                    <td>A. Sikap</td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td style="border-style: solid">Deskripsi :
+                        <br>
+                        Selalu Bersyukur, selalu berdoa sebelum melakukan kegiatan, toleran pada agama yang berbeda dan
+                        perlu meningkatkan ketaatan beribadah serta selalu bersikap sikap santun, peduli, percaya diri,
+                        dan perlu meningkatkan sikap jujur, disiplin dan tanggung jawab.
+                    </td>
+                </tr>
+                <tr></tr>
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
+                <tr style="font-weight: bold;">
+                    <td>B. Pengetahuan dan Ketrampilan</td>
+                </tr>
+            </table>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+                <thead class="head" style="background-color: #ffffcc">
                     <tr>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">KOMPONEN<br></td>
@@ -167,7 +182,7 @@
                         <td style="text-align: center;font-weight: bold;">Predikat</td>
                     </tr>
                 </thead>
-                <br>
+                {{-- <br> --}}
                 <tbody class="body">
 
                     @foreach ($data as $kelompok)
@@ -241,36 +256,122 @@
                     @endforeach
                 </tbody>
             </table>
-    @endforeach
-    {{-- <br><br>
-        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
-            <tr>
-                <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="center">
-                    Mengetahui,
-                    <br>
-                    Kepala Sekolah
-                    <br><br><br><br><br><br><br>
-                    {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
-                </td>
-                <td style="width:50%; border-style : hidden"></td>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
+                <tr style="font-weight: bold;">
+                    <td>C. Kegiatan Tambahan dan Kehadiran</td>
+                </tr>
+            </table>
 
-                <td style="width:25%" align="center">Sidoarjo,
-                    {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
-                    <br>
-                    Wali Kelas
-                    <br><br><br><br><br><br><br>
-                    @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
-                        {{ $wali_kelas->guru->pengguna->gelar_depan }}
-                        {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                        {{ $wali_kelas->guru->pengguna->gelar_belakang }}
-                    @else
-                        <p style="width: 250px;
-								border-bottom: 1px solid   black;"></p>
-                    @endif
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
+                <td style="vertical-align: top;border-style : hidden">
+                    <table>
+                        <tr>
+                            <th>Kegiatan Ekstrakurikuler</th>
+                            <th>Keterangan</th>
+                            {{-- <th>Keterangan</th> --}}
+
+                        </tr>
+
+                        @if (isset($nilai_ekskul[$siswa->id_siswa . 'ekskul']))
+                            @foreach ($nilai_ekskul[$siswa->id_siswa . 'ekskul'] as $key => $ekskul)
+                                <tr>
+                                    {{-- <td style="text-align: center;">{{ $key + 1 }}</td> --}}
+                                    <td> {{ $key + 1 . '. ' . $ekskul }}</td>
+                                    <td style="text-align: center;">
+                                        {{ $nilai_ekskul[$siswa->id_siswa . 'nilai_ekskul'][$key] }}</td>
+                                    {{-- <td>
+                                        {{ $nilai_ekskul[$siswa->id_siswa . 'keterangan_ekskul'][$key] }}</td> --}}
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                            </tr>
+                        @endif
+
+
+                    </table>
                 </td>
-            </tr>
-        </table>
-    </div> --}}
+
+                <td style="vertical-align: top;border-style : hidden">
+                    <table>
+                        <tr>
+                            <th colspan="2">Ketidakhadiran</th>
+                        </tr>
+                        @foreach ($pribadi_sisipan_kehadiran as $key => $k)
+                            <tr>
+                                <td>{{ $k->nm_pribadi_sisipan }}</td>
+                                @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
+                                    <td style="text-align: center;">
+                                        {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] . ' Hari' }}
+                                    </td>
+                                @else
+                                    <td style="text-align: center;">- Hari</td>
+                                @endif
+                            </tr>
+                        @endforeach
+
+                    </table>
+                </td>
+                <table></table>
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+                <tr>
+                    <td style="font-weight: bold;border-style : hidden">D. Catatan Wali Kelas</td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td>Tingkatkan terus semangat dan motivasi belajarmu agar dapat mencapai keberhasilan serta
+                        kesuksesan</td>
+                </tr>
+
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+                <tr>
+                    <td style="border-style : hidden; width:35%;font-weight: bold;" align="left">
+                        <br>
+                        <br>
+                        Orang Tua/Wali
+                        <br><br><br><br><br><br><br>
+                        <p style="width: 250px;
+                                border-bottom: 1px solid   black;">
+                        </p>
+                    </td>
+                    <td style="width:35%; border-style : hidden;font-weight: bold;" align="left">
+                        Mengetahui, <br>
+                        Kepala Madrasah
+                        <br><br><br><br><br><br><br>
+                        <u>
+                            {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u>
+                    </td>
+                    <td style="width: 30%;font-weight: bold;">
+                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        <br>
+                        Wali Kelas
+                        <br><br><br><br><br><br><br>
+                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                            <u> {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                                {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                                {{ $wali_kelas->guru->pengguna->gelar_belakang }}</u>
+                        @else
+                            <p
+                                style="width: 250px;
+                                        border-bottom: 1px solid   black;">
+                            </p>
+                        @endif
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    @endforeach
 
 </body>
 <script>
