@@ -255,11 +255,19 @@
             <div class="card" style="margin-top: 10px">
                 <div class="header">
                     <h2>Rekap Absensi </h2>
+                    {{-- @dd($bulan) --}}
+                    <a href="humas/absensi/rekap-pertanggal/allDataChart/{{ $bulan->kode_bulan }}/{{ $tahun }}"
+                        target="_blank" class="btn bg-blue waves-effect" style=" margin-top: 20px !important;">
+                        <i class="material-icons" style="font-size: 15px;">print</i> Print Absensi
+                        {{-- {{ $nama_kelas->nm_kelas }} --}}
+                    </a>
                 </div>
+
+
 
                 <div class="body">
                     <div class="table-responsive ">
-                        <table class="table table-bordered table-striped table-hover dataTable display  nowrap">
+                        <table class="table table-bordered table-striped table-hover dataTable display nowrap">
                             <thead style="background:#4e4e4e;color:white">
                                 <tr>
                                     <th rowspan="2" style="text-align: center;vertical-align:middle">#</th>
@@ -356,8 +364,8 @@
         </div>
     </div>
 </div>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script> --}}
+{{-- <script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery.dataTables.min.js" type="text/javascript"></script> --}}
 <script type="text/javascript">
     $(document).ready(function() {
         var table = $('.dataTable').DataTable({
@@ -390,7 +398,7 @@
     }
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail'+
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail' +
             '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
     }
 
