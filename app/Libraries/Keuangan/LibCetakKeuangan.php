@@ -445,6 +445,7 @@ class LibCetakKeuangan
                 ];
                 // Penambahan Pengeluaran post Beban non-KBM
                 $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran += $total_bayar_non_kbm;
+                $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran += $total_bayar_pengembangan_pendidikan;
                 $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
                 $tutup_buku_bulanan_kas_now->save();
             } else {
