@@ -39,8 +39,9 @@ class NotificationController extends Controller
         $mode_attendance_setting = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->value('value');
         $template_attendance_setting = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->value('value');
         $template_payment_setting = Setting::where('key_setting', 'template_notif_pembayaran_spp')->value('value');
+        $day_schedule_setting = Setting::where('key_setting', 'jadwal_hari_notifikasi')->value('value');
 
-        return view('administrator.notification.view-whatsapp-group', compact('list_kelas', 'attendance_time_setting', 'payment_time_setting', 'mode_attendance_setting', 'template_attendance_setting', 'template_payment_setting'));
+        return view('administrator.notification.view-whatsapp-group', compact('list_kelas', 'attendance_time_setting', 'payment_time_setting', 'mode_attendance_setting', 'template_attendance_setting', 'template_payment_setting', 'day_schedule_setting'));
     }
 
     public function fetchWhatsappGroup()
@@ -125,14 +126,17 @@ class NotificationController extends Controller
         }
     }
 
-    public function actionUpdateTemplate(Request $request)
+    public function actionUpdateNotificationSetting(Request $request)
     {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
             'attendance_mode' => 'required',
             'attendance_template' => 'required',
+            'attendance_time_schedule' => 'required',
             'payment_template' => 'required',
+            'payment_time_schedule' => 'required',
+            'day_schedule' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -159,14 +163,19 @@ class NotificationController extends Controller
                 $attendance_template->value = $input->attendance_template;
                 $attendance_template->save();
 
-                // SCHEDULE
+                // TIME SCHEDULE
                 $attendance_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->first();
-                $attendance_time_setting->value = $input->attendance_schedule;
+                $attendance_time_setting->value = $input->attendance_time_schedule;
                 $attendance_time_setting->save();
 
                 $payment_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_pembayaran_spp')->first();
-                $payment_time_setting->value = $input->payment_schedule;
+                $payment_time_setting->value = $input->payment_time_schedule;
                 $payment_time_setting->save();
+
+                // DAY SCHEDULE
+                $day_schedule_setting = Setting::where('key_setting', 'jadwal_hari_notifikasi')->first();
+                $day_schedule_setting->value = $input->day_schedule;
+                $day_schedule_setting->save();
 
                 DB::commit();
 

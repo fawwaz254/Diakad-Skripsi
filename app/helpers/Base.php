@@ -316,3 +316,30 @@ if (!function_exists('numberToRomanRepresentation')) {
         return $returnValue;
     }
 }
+
+if (!function_exists('convertDayToNumber')) {
+    /**
+     * Convert day string to number
+     * @return String 
+     */
+    function convertDayToNumber($day)
+    {
+        $days = [
+            "SUNDAY" => 0,
+            "MONDAY" => 1,
+            "TUESDAY" => 2,
+            "WEDNESDAY" => 3,
+            "THURSDAY" => 4,
+            "FRIDAY" => 5,
+            "SATURDAY" => 6
+        ];
+
+        $uppercaseDay = strtoupper($day);
+
+        if (array_key_exists($uppercaseDay, $days)) {
+            return $days[$uppercaseDay];
+        } else {
+            return null;
+        }
+    }
+}

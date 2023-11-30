@@ -24,16 +24,19 @@ class Kernel extends ConsoleKernel
     {
         $attendance_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->value('value');
         $payment_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_pembayaran_spp')->value('value');
+        $schedule_setting = Setting::where('key_setting', 'jadwal_hari_notifikasi')->value('value');
+        $array_schedule = explode('|', $schedule_setting);
+        $schedule_to_number = array_map('convertDayToNumber', $array_schedule);
 
         $schedule->command('notification:attendance-class')
             ->dailyAt($attendance_time_setting)
-            ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
+            ->days($schedule_to_number)
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
         $schedule->command('notification:payment-class')
             ->dailyAt($payment_time_setting)
-            ->days([Schedule::MONDAY, Schedule::TUESDAY, Schedule::WEDNESDAY, Schedule::THURSDAY, Schedule::FRIDAY, Schedule::SATURDAY])
+            ->days($schedule_to_number)
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
