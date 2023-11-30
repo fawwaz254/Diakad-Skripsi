@@ -10,6 +10,7 @@ use App\Models\PresensiPengguna;
 use App\Models\ManajemenHariLibur;
 use App\Models\Pengguna;
 use App\Models\Kelas;
+use App\Models\Siswa;
 use App\Models\UnitKerja;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -282,20 +283,19 @@ class RekapPertanggalController extends Controller
         $pengguna = Pengguna::where('status_join_table', 3)
             ->with([
                 'shiftPengguna' => function ($query) use ($start_month, $end_month) {
-                    $query->whereBetween('date', [$start_month, $end_month]);
+                    $query->whereBetween('date', [$start_month, $end_month])->with('shift_master');
                 },
                 'presensi_pengguna' => function ($query) use ($start_month, $end_month) {
                     $query->whereBetween('date', [$start_month, $end_month]);
                 },
-                'siswa' => function ($query) use ($id_kelas) {
-                    $query->where('id_kelas', $id_kelas);
-                },
-                'shiftPengguna.shift_master',
+                // 'siswa' => function ($query) use ($id_kelas) {
+                //     $query->where('id_kelas', $id_kelas);
+                // },
+                // 'shiftPengguna.shift_master'
             ])
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })
-            ->whereHas('siswa', function ($query) use ($id_kelas) {
+            })->whereHas('siswa', function ($query) use ($id_kelas) {
                 $query->where('id_kelas', $id_kelas);
             })
             ->orderBy('nm_pengguna')
