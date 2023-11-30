@@ -585,7 +585,56 @@ class CetakRaporController extends Controller
                 }
             }
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester'));
+
+
+            $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+            $kelompok_sisipan = KelompokPribadiSisipan::where('nm_kelompok_pribadi_sisipan')->first();
+            $pribadi_sisipan_kehadiran = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                $query->where('nm_kelompok_pribadi_sisipan', 'Ketidak Hadiran');
+            })->get();
+
+            $pribadi_sisipan_ekskul = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                $query->where('nm_kelompok_pribadi_sisipan', 'Ekstra Kurikuler');
+            })->get();
+
+            $nilai_pengembangan_diri = [];
+            $nilai_ekskul = [];
+            foreach ($nilai_pribadi_siswa as $n) {
+
+                if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_kehadiran->pluck('id_pribadi_sisipan')->toArray())) {
+                    $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
+                    // $nilai_pengembangan_diri[$n->id_siswa . 'ketidak_hadiran'][] = $n->pribadi_sisipan->nm_pribadi_sisipan;
+                    // $nilai_pengembangan_diri[$n->id_siswa . 'nilai_ketidak_hadiran'][] = $n->nilai;
+                } elseif (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_ekskul->pluck('id_pribadi_sisipan')->toArray())) {
+                    $nilai_ekskul[$n->id_siswa .  'ekskul'][] = $n->pribadi_sisipan->nm_pribadi_sisipan;
+                    if ($n->nilai >= 90 && $n->nilai <= 100) {
+                        $hasil = 'A';
+                        $keterangan = 'Sangat Aktif Mengikuti Extra Tersebut';
+                    } elseif ($n->nilai >= 80 && $n->nilai < 90) {
+                        $hasil = 'B';
+                        $keterangan = 'Aktif Mengikuti Extra Tersebut';
+                    } elseif ($n->nilai >= 70 && $n->nilai < 80) {
+                        $hasil = 'C';
+                        $keterangan = 'Cukup Aktif Mengikuti Extra Tersebut';
+                    } elseif ($n->nilai >= 0 && $n->nilai < 70) {
+                        $hasil = 'D';
+                        $keterangan = 'Kurang Aktif Mengikuti Extra Tersebut';
+                    } else {
+                        $hasil = '';
+                        $keterangan = '';
+                    }
+                    $nilai_ekskul[$n->id_siswa . 'nilai_ekskul'][] = $hasil;
+                    $nilai_ekskul[$n->id_siswa . 'keterangan_ekskul'][] = $keterangan;
+                } else {
+                    $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
+                }
+            }
+
+
+
+
+
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri', 'nilai_ekskul', 'wali_kelas'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             foreach ($kelompok_sisipan as $k_sisipan) {
                 $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;

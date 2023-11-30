@@ -256,37 +256,122 @@
                     @endforeach
                 </tbody>
             </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
+                <tr style="font-weight: bold;">
+                    <td>C. Kegiatan Tambahan dan Kehadiran</td>
+                </tr>
+            </table>
+
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
+                <td style="vertical-align: top;border-style : hidden">
+                    <table>
+                        <tr>
+                            <th>Kegiatan Ekstrakurikuler</th>
+                            <th>Keterangan</th>
+                            {{-- <th>Keterangan</th> --}}
+
+                        </tr>
+
+                        @if (isset($nilai_ekskul[$siswa->id_siswa . 'ekskul']))
+                            @foreach ($nilai_ekskul[$siswa->id_siswa . 'ekskul'] as $key => $ekskul)
+                                <tr>
+                                    {{-- <td style="text-align: center;">{{ $key + 1 }}</td> --}}
+                                    <td> {{ $key + 1 . '. ' . $ekskul }}</td>
+                                    <td style="text-align: center;">
+                                        {{ $nilai_ekskul[$siswa->id_siswa . 'nilai_ekskul'][$key] }}</td>
+                                    {{-- <td>
+                                        {{ $nilai_ekskul[$siswa->id_siswa . 'keterangan_ekskul'][$key] }}</td> --}}
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                                <td style="text-align: center;">-</td>
+                            </tr>
+                        @endif
+
+
+                    </table>
+                </td>
+
+                <td style="vertical-align: top;border-style : hidden">
+                    <table>
+                        <tr>
+                            <th colspan="2">Ketidakhadiran</th>
+                        </tr>
+                        @foreach ($pribadi_sisipan_kehadiran as $key => $k)
+                            <tr>
+                                <td>{{ $k->nm_pribadi_sisipan }}</td>
+                                @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
+                                    <td style="text-align: center;">
+                                        {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] . ' Hari' }}
+                                    </td>
+                                @else
+                                    <td style="text-align: center;">- Hari</td>
+                                @endif
+                            </tr>
+                        @endforeach
+
+                    </table>
+                </td>
+                <table></table>
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+                <tr>
+                    <td style="font-weight: bold;border-style : hidden">D. Catatan Wali Kelas</td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td>Tingkatkan terus semangat dan motivasi belajarmu agar dapat mencapai keberhasilan serta
+                        kesuksesan</td>
+                </tr>
+
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+                <tr>
+                    <td style="border-style : hidden; width:35%;font-weight: bold;" align="left">
+                        <br>
+                        <br>
+                        Orang Tua/Wali
+                        <br><br><br><br><br><br><br>
+                        <p style="width: 250px;
+                                border-bottom: 1px solid   black;">
+                        </p>
+                    </td>
+                    <td style="width:35%; border-style : hidden;font-weight: bold;" align="left">
+                        Mengetahui, <br>
+                        Kepala Madrasah
+                        <br><br><br><br><br><br><br>
+                        <u>
+                            {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u>
+                    </td>
+                    <td style="width: 30%;font-weight: bold;">
+                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        <br>
+                        Wali Kelas
+                        <br><br><br><br><br><br><br>
+                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                            <u> {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                                {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                                {{ $wali_kelas->guru->pengguna->gelar_belakang }}</u>
+                        @else
+                            <p
+                                style="width: 250px;
+                                        border-bottom: 1px solid   black;">
+                            </p>
+                        @endif
+
+                    </td>
+                </tr>
+            </table>
+
         </div>
     @endforeach
-    {{-- <br><br>
-        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
-            <tr>
-                <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="center">
-                    Mengetahui,
-                    <br>
-                    Kepala Sekolah
-                    <br><br><br><br><br><br><br>
-                    {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
-                </td>
-                <td style="width:50%; border-style : hidden"></td>
-
-                <td style="width:25%" align="center">Sidoarjo,
-                    {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
-                    <br>
-                    Wali Kelas
-                    <br><br><br><br><br><br><br>
-                    @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
-                        {{ $wali_kelas->guru->pengguna->gelar_depan }}
-                        {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                        {{ $wali_kelas->guru->pengguna->gelar_belakang }}
-                    @else
-                        <p style="width: 250px;
-								border-bottom: 1px solid   black;"></p>
-                    @endif
-                </td>
-            </tr>
-        </table>
-    </div> --}}
 
 </body>
 <script>
