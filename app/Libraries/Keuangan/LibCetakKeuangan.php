@@ -1835,4 +1835,48 @@ class LibCetakKeuangan
         return $result;
     }
     /** ========== */
+
+    public function fetchLaporanPembayaranDetail($auth_data, $start_date, $end_date)
+    {
+        if (empty(session('setting_print_keuangan'))) {
+            $print_setting = 'all';
+        } else {
+            $print_setting = session('setting_print_keuangan');
+        }
+
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal', 'tagihan_biaya.detail_biaya.bulan');
+        if (!empty($start_date) && !empty($end_date)) {
+            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+        }
+
+        if ($print_setting == 'self') {
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy(function ($pay) {
+                return Carbon::parse($pay->tgl_pembayaran)->format('Y-m-d');
+            });
+        } else {
+            $allDataPembayaran = $pembayaran->get()->groupBy(function ($pay) {
+                return Carbon::parse($pay->tgl_pembayaran)->format('Y-m-d');
+            });
+        }
+
+        $allDataPembayaran = $allDataPembayaran->sortKeys();
+        $listData = [];
+        foreach ($allDataPembayaran->sortBy('tgl_pembayaran') as $tanggal => $rwytBayar) {
+            $detail = [];
+            foreach ($rwytBayar as $x) {
+                $detail[] = [
+                    'nama_biaya' => $x->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == '4' ? $x->tagihan_biaya->detail_biaya->keterangan_biaya . ' Tahun ' . $x->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran . ' (' .  $x->tagihan_biaya->detail_biaya->bulan->nm_bulan . ')' : $x->tagihan_biaya->detail_biaya->keterangan_biaya . ' Tahun ' . $x->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran,
+                    'siswa' => $x->tagihan_biaya->siswa,
+                    'besar_pembayaran' => $x->besar_pembayaran,
+                ];
+            }
+
+            $listData[] = [
+                'tanggal_pembayaran' => $tanggal,
+                'total_pembayaran' => collect($detail)->sum('besar_pembayaran'),
+                'detail' => $detail,
+            ];
+        }
+        return $listData;
+    }
 }
