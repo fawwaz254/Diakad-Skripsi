@@ -341,6 +341,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('rekap-pertanggal')->group(function () {
                 Route::get('/', [RekapPertanggalController::class, 'selectRekapPertanggal']);
                 Route::get('/detail/{id_bulan}/{tahun}', [RekapPertanggalController::class, 'viewRekapPertanggal']);
+                Route::get('/allDataChart/{id_bulan}/{tahun}', [RekapPertanggalController::class, 'chartAllRekapPertanggal']);
 
                 Route::get('/siswa', [RekapPertanggalController::class, 'selectRekapPertanggalSiswa']);
                 Route::get('/detail/siswa/{id_kelas}/{id_bulan}/{tahun}', [RekapPertanggalController::class, 'viewRekapPertanggalSiswa']);
