@@ -204,6 +204,8 @@ class HistoriAbsensiSiswaController extends Controller
     public function export_excel_mount(Request $request, $id_kelas = null, $date = null)
     {
         set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
         if ($id_kelas == "1") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -242,7 +244,7 @@ class HistoriAbsensiSiswaController extends Controller
 
         $start_date = new Carbon('first day of' . $mount . $year);
         $end_date =  new Carbon('last day of' . $mount . $year);
-
+        //
 
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $dates = CarbonPeriod::create($start_date, $end_date);
@@ -257,6 +259,7 @@ class HistoriAbsensiSiswaController extends Controller
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
                 $hasil[$key1][$key2]['check_in'] = '';
+                $hasil[$key1][$key2]['check_out'] =  ' ';
                 $hasil[$key1][$key2]['status'] = '';
                 $shiftPengguna = $allShiftPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
                 $attendance =  $allPresensiPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();;
@@ -286,6 +289,22 @@ class HistoriAbsensiSiswaController extends Controller
                     if (isset($shiftMaster['start_time'])) {
                         if (!$shiftMaster['start_time'] == null && !$attendance->check_out == null  && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                             $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
+                        }
+                    }
+
+                    if ($auth_data->sekolah_data->nm_singkat_sekolah = "smkypm1taman") {
+
+                        if ($attendance->check_out) {
+                            $hasil[$key1][$key2]['check_out'] = $attendance->check_out;
+                        }
+
+                        if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                            $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
+                        }
+                        if (isset($shiftMaster['start_time'])) {
+                            if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                                $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
+                            }
                         }
                     }
                 } else {
