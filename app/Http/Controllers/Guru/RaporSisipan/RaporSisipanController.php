@@ -369,7 +369,6 @@ class RaporSisipanController extends Controller
 
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
 
-        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
             if ($rapor_sisipan->kelas->tingkat == '3') {
                 $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
@@ -377,6 +376,14 @@ class RaporSisipanController extends Controller
                 $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')
                     ->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
             }
+        } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smknu') {
+            if ($rapor_sisipan->kelas->tingkat == '1') {
+                $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 11])->orderBy('urutan', 'asc')->get();
+            } else {
+                $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])->orderBy('urutan', 'asc')->get();
+            }
+        } else {
+            $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
         }
 
 
@@ -454,7 +461,7 @@ class RaporSisipanController extends Controller
 
     public function pdfDaftarNilaiSTS(Request $request, $id_rapor_sisipan)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;
@@ -602,6 +609,39 @@ class RaporSisipanController extends Controller
             }
 
             return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-manu', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa',  'rapor_sisipan'));
+        } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smknu') {
+            if ($rapor_sisipan->kelas->tingkat == '1') {
+                $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 11])->orderBy('urutan', 'asc')->get();
+                $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->where('nilai', '!=', '0')->get();
+                $nilai_siswa = [];
+                $nilai_siswa['kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
+                if ($list_siswa) {
+                    $nilai = $list_nilai->toArray();
+                    foreach ($nilai as $nilaiRapor) {
+                        $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa']] = $nilaiRapor['nilai'];
+                    }
+                }
+                return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-smknu1', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
+            } else {
+                $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')
+                    ->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])->orderBy('urutan', 'asc')->get();
+
+                $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->where('nilai', '!=', '0')->get();
+                if (empty($list_nilai)) {
+
+                    return 'Harap Hapus Rapor sisipan ini, dan buat ulang';
+                }
+
+                $nilai_siswa = [];
+                $nilai_siswa['kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
+                if ($list_siswa) {
+                    foreach ($list_nilai->toArray() as $nilaiRapor) {
+                        $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa']] = $nilaiRapor['nilai'];
+                    }
+                }
+
+                return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-maryam-merdeka', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
+            }
         }
 
 
