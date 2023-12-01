@@ -55,7 +55,7 @@
                                 {{-- <th>Jurusan</th> --}}
                                 <th>Nilai Siswa Terisi</th>
                                 <th>Semester</th>
-                                <th>Input Nilai</th>
+                                <th>Nilai</th>
                                 <th>Template Excel</th>
                                 <th>Action</th>
                                 <th>Pembuat</th>
