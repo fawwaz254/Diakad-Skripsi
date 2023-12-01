@@ -196,13 +196,6 @@ class LibCetakKeuangan
             [$id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]
         );
 
-        // List data tunggakan
-        $pembayaran_tunggakan_bulan_ini = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)
-            ->where('id_semester_selesai', $semester_selesai->id_semester)
-            ->whereMonth('tgl_pembayaran', $id_bulan)
-            ->isInputByPengguna($auth_data->pengguna->id_pengguna)->sum('besar_pembayaran') + PembayaranBiaya::whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
-                $q->whereNotIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
-            })->whereMonth('tgl_pembayaran', $id_bulan)->whereYear('tgl_pembayaran', $tahun)->isInputByPengguna($auth_data->pengguna->id_pengguna)->sum('besar_pembayaran');
 
         // $list_data_pembayaran_old_years = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya_tahun_lalu
         //                     FROM pembayaran_biaya
@@ -240,6 +233,15 @@ class LibCetakKeuangan
             }
 
             foreach ($list_data_jml_siswa as $i => $data) {
+                if ($i == '0') {
+                    // List data tunggakan
+                    $pembayaran_tunggakan_bulan_ini = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)
+                        ->where('id_semester_selesai', $semester_selesai->id_semester)
+                        ->whereMonth('tgl_pembayaran', $id_bulan)
+                        ->isInputByPengguna($auth_data->pengguna->id_pengguna)->sum('besar_pembayaran') + PembayaranBiaya::whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($q) use ($id_semester_mulai, $id_semester_selesai) {
+                            $q->whereNotIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+                        })->whereMonth('tgl_pembayaran', $id_bulan)->whereYear('tgl_pembayaran', $tahun)->isInputByPengguna($auth_data->pengguna->id_pengguna)->sum('besar_pembayaran');
+                }
                 $tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
                     'id_semester_mulai' => $id_semester_mulai,
                     'id_semester_selesai' => $id_semester_selesai,
