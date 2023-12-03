@@ -39,6 +39,7 @@ use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasController;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\RewardSiswa\InputRewardSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKeuanganKelasController;
+use App\Http\Controllers\Keuangan\Utility\PembayaranByKelasController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
 use App\Http\Controllers\Guru\ELearning\ManajemenMateriAjarController;
 use App\Http\Controllers\Guru\JurnalPimpinan\JurnalPimpinanController;
@@ -621,7 +622,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             // MENU Rekap Keuangan Kelas
             Route::get('rekap-keuangan-kelas', [RekapKeuanganKelasController::class, 'viewRekapKeuanganKelas']);
-            Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [RekapKeuanganKelasController::class, 'printRekapKeuanganKelas']);
+            Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']); // 
             Route::post('rekap-keuangan-kelas/get-data-tungakan-tahun-lalu', [RekapKeuanganKelasController::class, 'getDataTungakanTahunLalu']);
 
             // MENU Rekap Pelanggaran Kelas
