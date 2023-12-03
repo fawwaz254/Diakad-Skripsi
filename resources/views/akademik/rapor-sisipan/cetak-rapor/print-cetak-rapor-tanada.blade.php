@@ -222,7 +222,51 @@
                     @endforeach
                 </tbody>
             </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+                <tr>
+                    <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="left">
+                        Mengetahui,
+                        <br>
+                        Orang Tua/Wali,
+                        <br><br><br><br><br><br><br>
+                        <p style="width: 250px;
+                                border-bottom: 2px solid   black;">
+                        </p>
+                        {{-- {{ $auth_data->sekolah_data->nm_kepala_sekolah }} --}}
+                    </td>
+                    <td style="width:45%; border-style : hidden"></td>
+
+                    <td style="width:30%" align="left">Surabaya,
+                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+
+                        <br>
+                        Wali Kelas,
+                        <br><br><br><br><br><br><br>
+                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                            <u><b> {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                                    {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                                    {{ $wali_kelas->guru->pengguna->gelar_belakang }}<b></u>
+                        @else
+                            <p
+                                style="width: 250px;
+                                        border-bottom: 2px solid   black;">
+                            </p>
+                        @endif
+                    </td>
+                </tr>
+                <td style=" width:25%; border-style : hidden;"></td>
+                <td style="width:45%; border-style : hidden;text-align: center">Mengetahui, <br>
+                    Kepala Madrasah
+                    <br><br><br><br><br><br><br>
+                    <u><b>
+                            {{ $auth_data->sekolah_data->nm_kepala_sekolah }}<b></u>
+                </td>
+                <td style="width:30%; border-style : hidden"> </td>
+            </table>
+        </div>
     @endforeach
+    </div>
 
 
 </body>
