@@ -345,7 +345,6 @@ class CetakRaporController extends Controller
     public function printCetakRapor(Request $request, $id_semester, $id_kelas)
     {
         set_time_limit(-1);
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan')->first();
@@ -892,13 +891,12 @@ class CetakRaporController extends Controller
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smknu') {
+
             if ($kelas->tingkat == '1') {
                 $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 11])->orderBy('urutan', 'asc')->get();
             } else {
                 $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])->orderBy('urutan', 'asc')->get();
             }
-
-
 
             foreach ($kelompok_sisipan as $k_sisipan) {
                 $data[$k_sisipan->urutan]['nama'] = $k_sisipan->nm_kelompok_sisipan;
@@ -909,12 +907,12 @@ class CetakRaporController extends Controller
                         $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
                     } else {
                         $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] =  $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
-                        if ($kelas->tingkat == '3') {
-                            $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = '78';
-                        } else {
+                        // if ($kelas->tingkat == '3') {
+                        //     $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = '78';
+                        // } else {
 
-                            $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = '75';
-                        }
+                        $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = '70';
+                        // }
                         // $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] =  $mata_pelajaran_sisipan->mata_pelajaran->nilai_kkm;
                         $data[$k_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
                     }
@@ -962,7 +960,7 @@ class CetakRaporController extends Controller
             if ($kelas->tingkat == '1') {
                 return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smknu1', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri',  'nilai_ekskul', 'semester', 'wali_kelas', 'pribadi_sisipan_kehadiran'));
             } else {
-                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas'));
+                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smknu2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri',  'nilai_ekskul', 'semester', 'wali_kelas', 'pribadi_sisipan_kehadiran'));
             }
         }
     }
@@ -1128,6 +1126,8 @@ class CetakRaporController extends Controller
             arsort($total_nilai);
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu-akhir', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri'));
+        } else {
+            return 'Sekolah anda belum menyetor Format rapor sisipan Akhir semester';
         }
     }
 
