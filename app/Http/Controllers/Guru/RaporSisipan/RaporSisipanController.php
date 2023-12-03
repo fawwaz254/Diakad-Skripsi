@@ -640,7 +640,7 @@ class RaporSisipanController extends Controller
                     }
                 }
 
-                return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-maryam-merdeka', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
+                return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-smknu2', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
             }
         }
 
