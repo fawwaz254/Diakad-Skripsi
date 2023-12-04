@@ -83,6 +83,7 @@ use App\Http\Controllers\Guru\WaliKelas\RaporSisipanNonAkademikController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
+use App\Http\Controllers\Keuangan\SIM\SppController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Models\WaliMurid;
 
@@ -623,7 +624,9 @@ Route::middleware(['token_staff'])->group(function () {
             // MENU Rekap Keuangan Kelas
             Route::get('rekap-keuangan-kelas', [RekapKeuanganKelasController::class, 'viewRekapKeuanganKelas']);
             Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']); // 
-            Route::post('rekap-keuangan-kelas/get-data-tungakan-tahun-lalu', [RekapKeuanganKelasController::class, 'getDataTungakanTahunLalu']);
+            // Route::post('rekap-keuangan-kelas/get-data-tungakan-tahun-lalu', [RekapKeuanganKelasController::class, 'getDataTungakanTahunLalu']);
+            Route::post('get-jumlah-tunggakan-pembayaran', [SppController::class, 'getJumlahTunggakanPembayaran']);
+            Route::post('get-data-tungakan-tahun-lalu', [SppController::class, 'getDataTungakanTahunLalu']);
 
             // MENU Rekap Pelanggaran Kelas
             Route::get('rekap-pelanggaran-kelas', [RekapPelanggaranKelasController::class, 'viewRekapPelanggaranKelas']);

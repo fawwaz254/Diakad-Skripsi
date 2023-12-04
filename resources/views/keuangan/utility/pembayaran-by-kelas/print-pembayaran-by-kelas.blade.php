@@ -133,21 +133,44 @@
                     </th>
                     <th rowspan="2" style="vertical-align:middle;text-align: center;background: gray;color:black">
                         Nama</th>
-                    <th style="vertical-align:middle;text-align: center;background:gray;color:black"
-                        colspan="{{ count($data_bulan_tagihan) }}">SPP
-                    </th>
-                    @if (count($data_ket_tagihan) > 0)
-                        <th class="text-center" colspan="{{ count($data_ket_tagihan) }}">
-                            Non-SPP</th>
-                    @endif
                     <th rowspan="2" style="vertical-align:middle;text-align: center;color:black">
                         Total Tagihan</th>
+                    @if (count($data_bulan_tagihan) > 0)
+                        <th class="text-center" colspan="{{ count($data_bulan_tagihan) }}">
+                            {{ $data_bulan_tagihan[0]->nm_biaya }}</th>
+                    @endif
+                    @if (count($data_ket_tagihan) > 0)
+                        <th class="text-center" colspan="{{ count($data_ket_tagihan) }}">
+                            {{ $data_ket_tagihan[0]->nm_biaya }}</th>
+                    @endif
+
 
                 </tr>
                 <tr>
                     @foreach ($data_bulan_tagihan as $bulan)
                         @if (!empty($bulan->id_bulan))
-                            <th style="width:67px;" class="tdbg-{{ $bulan->id_bulan }}">{{ $bulan->nm_bulan }}</th>
+                            @php
+                                $groupedData = $data_tagihan
+                                    ->where('id_bulan', $bulan->id_bulan)
+                                    ->groupBy('id_siswa')
+                                    ->map(function ($item, $key) {
+                                        return [
+                                            'id_siswa' => $key,
+                                            'totalTagihan' => $item->count(),
+                                        ];
+                                    });
+
+                                $siswaWithMaxCount = $groupedData->max('totalTagihan');
+
+                                if ($siswaWithMaxCount) {
+                                    $col_span = $siswaWithMaxCount;
+                                } else {
+                                    $col_span = 1;
+                                }
+                            @endphp
+                            <th class="tdbg-{{ $bulan->id_bulan }}" colspan="{{ $col_span }}"
+                                style="text-align: center">
+                                {{ $bulan->nm_bulan }}</th>
                         @else
                             <th class="tdbg">{{ $bulan->nm_biaya }}</th>
                         @endif
@@ -174,29 +197,59 @@
                     @else
                         <td style="width: 200px">{{ $siswa->pengguna->nm_pengguna }}<br>(Mutasi/Keluar)</td>
                     @endif
+                    @php
+                        $total_tagihan_spp = $data_tagihan->where('id_siswa', $siswa->id_siswa);
+
+                        $total_tagihan = 0;
+                        foreach ($total_tagihan_spp as $tagihan) {
+                            $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                        }
+
+                        $total_tagihan_non_spp = $data_tagihan_non_bulanan->where('id_siswa', $siswa->id_siswa);
+                        foreach ($total_tagihan_non_spp as $tagihan) {
+                            $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                        }
+
+                    @endphp
+                    <td style="width:67px;vertical-align:middle;text-align: center;">{{ $total_tagihan }}</td>
+
                     @foreach ($data_bulan_tagihan as $bulan)
                         @php
+                            $tagihan_bulanan = $data_tagihan
+                                ->where('id_siswa', $siswa->id_siswa)
+                                ->where('id_bulan', $bulan->id_bulan)
+                                ->values();
+                        @endphp
+
+                        @if ($tagihan_bulanan->count() < $col_span)
+                            @for ($i = 0; $i < $col_span - $tagihan_bulanan->count(); $i++)
+                                <td></td>
+                            @endfor
+                        @endif
+                        {{-- @php
                             $tagihan = $data_tagihan
                                 ->where('id_siswa', $siswa->id_siswa)
                                 ->where('id_bulan', $bulan->id_bulan)
                                 ->first();
-                        @endphp
-                        @if (!empty($tagihan) > 0)
-                            @if ($tagihan->is_tagih == 1)
-                                @php
-                                    $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                                @endphp
-                                <td style="vertical-align:middle;text-align: center;">{{ $tagihan_bulanan }}</td>
-                            @elseif($tagihan->is_tagih == 0)
-                                <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
-                                    style="vertical-align:middle;text-align: center;">
-                                    <b
-                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b>
-                                </td>
+                        @endphp --}}
+                        @foreach ($tagihan_bulanan as $tagihan)
+                            @if (!empty($tagihan) > 0)
+                                @if ($tagihan->is_tagih == 1)
+                                    @php
+                                        $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                    @endphp
+                                    <td style="vertical-align:middle;text-align: center;">{{ $tagihan_bulanan }}</td>
+                                @elseif($tagihan->is_tagih == 0)
+                                    <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}"
+                                        style="vertical-align:middle;text-align: center;">
+                                        <b
+                                            style="color: black;">{{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b>
+                                    </td>
+                                @endif
+                            @else
+                                <td></td>
                             @endif
-                        @else
-                            <td></td>
-                        @endif
+                        @endforeach
                     @endforeach
                     @foreach ($data_ket_tagihan as $ket)
                         @php
@@ -225,22 +278,6 @@
                             <td></td>
                         @endif
                     @endforeach
-                    @php
-                        $total_tagihan_spp = $data_tagihan->where('id_siswa', $siswa->id_siswa);
-
-                        $total_tagihan = 0;
-                        foreach ($total_tagihan_spp as $tagihan) {
-                            $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                        }
-
-                        $total_tagihan_non_spp = $data_tagihan_non_bulanan->where('id_siswa', $siswa->id_siswa);
-                        foreach ($total_tagihan_non_spp as $tagihan) {
-                            $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                        }
-
-                    @endphp
-                    <td style="width:67px;vertical-align:middle;text-align: center;">{{ $total_tagihan }}</td>
-                    </tr>
                 @endforeach
             </tbody>
         </table>
