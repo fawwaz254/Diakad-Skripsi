@@ -82,17 +82,17 @@
                             LAPORAN PENILAIAN HASIL BELAJAR<br>
                             {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
                             TENGAH SEMESTER GASAL<br>
-                            @php
-                                // $nama = $list_nilai->first();
-
-                                // echo isset($nama->rapor_sisipan->semester->tahun_ajaran) ? 'TAHUN AJARAN ' . $nama->rapor_sisipan->semester->tahun_ajaran : '';
-                            @endphp
+                            {{-- @php
+                                $nama = $list_nilai->first();
+                                // dd($nama->rapor_sisipan->semester->tahun_ajaran);
+                                echo isset($nama->rapor_sisipan->semester->tahun_ajaran) ? 'TAHUN AJARAN ' . $nama->rapor_sisipan->semester->tahun_ajaran : '';
+                            @endphp --}}
 
                         </h2>
                         <hr>
                         <br>
                     </td>
-                </tr>
+                <tr>
 
                 <tr style="border-style : hidden">
                     <td style="border-style : hidden;width: 14%;font-weight: bold;">NAMA SISWA
@@ -110,7 +110,6 @@
                         {{ $kelas->jurusan->bidang_keahlian }}
                     </td>
                 </tr>
-
                 <tr style="border-style : hidden">
                     <td style="border-style : hidden;width: 14%;font-weight: bold;">NO. INDUK
                     </td>
@@ -121,12 +120,11 @@
                     <td style="border-style : hidden;width: 24%;font-weight: bold;">PROGRAM KEAHLIAN
                     </td>
                     <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
-                    </td>
+                    </td>`
                     <td style="border-style : hidden;width: 25%;font-weight: bold;">
                         {{ $kelas->jurusan->program_keahlian }}
                     </td>
                 </tr>
-
                 <tr style="border-style : hidden">
                     <td style="border-style : hidden;width: 14%;font-weight: bold;">KELAS
                     </td>
@@ -152,21 +150,13 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #C2D69B">
                     <tr>
-                        <th rowspan="2"style="text-align: center;font-weight: bold;">No</th>
-                        <th rowspan="2" style="text-align: center;font-weight: bold;">Mata Pelajaran</th>
-                        <th colspan="5" style="text-align: center;font-weight: bold;">Nilai Tugas dan Ulangan</th>
-                        <th rowspan="2" style="text-align: center;font-weight: bold;">UTS</th>
-                        <th colspan="2" style="text-align: center;font-weight: bold;">Nilai Akhir</th>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">MATA PELAJARAN<br></td>
+                        <td colspan="2" style="text-align: center;font-weight: bold;">NILAI UTS</td>
                     </tr>
                     <tr>
-                        <th style="text-align: center;font-weight: bold;">1</th>
-                        <th style="text-align: center;font-weight: bold;">2</th>
-                        <th style="text-align: center;font-weight: bold;">3</th>
-                        <th style="text-align: center;font-weight: bold;">4</th>
-                        <th style="text-align: center;font-weight: bold;">Rata-rata</th>
-                        {{-- <th style="text-align: center;font-weight: bold;">UTS</th> --}}
-                        <th style="text-align: center;font-weight: bold;">Rata-rata</th>
-                        <th style="text-align: center;font-weight: bold;">Kriteria</th>
+                        <td style="text-align: center;font-weight: bold;">KKM</td>
+                        <td style="text-align: center;font-weight: bold;">NILAI</td>
                     </tr>
                 </thead>
                 <br>
@@ -175,7 +165,7 @@
                     @foreach ($data as $kelompok)
                         <tr>
                             <td colspan="2" style="font-weight: bold;">
-                                {{ isset($kelompok['nama']) ? $kelompok['nama'] : '' }}</td>
+                                {{ $kelompok['nama'] }}</td>
                         </tr>
                         @if (isset($kelompok['data']))
                             @foreach ($kelompok['data'] as $key => $data2)
@@ -185,33 +175,21 @@
                                 <tr>
                                     <td style="text-align: center;">{{ $key }}</td>
                                     <td>{{ $data2['nm_point'][0] }}</td>
+                                    <td style="text-align: center;">{{ $data2['kkm'][0] }}</td>
                                     @foreach ($list_komponen as $komponen)
-                                        <td style="text-align: center;font-weight: bold;">
+                                        <td style="text-align: center;">
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_nilai] : '' }}
                                         </td>
                                     @endforeach
-                                    <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? intval($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) : '' }}
-                                    </td>
-
-                                    <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'uts']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'uts'] : '' }}
-                                    </td>
-                                    <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa['rata_rata' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? intval($nilai_siswa['rata_rata' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) : '' }}
-                                    </td>
-                                    <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa['kriteria' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? $nilai_siswa['kriteria' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]] : '' }}
-                                    </td>
                                 </tr>
                                 @for ($i = 1; $i < $jumlah; $i++)
                                     <tr>
                                         <td></td>
                                         <td>{{ $data2['nm_point'][$i] }}</td>
-
+                                        <td style="text-align: center;">{{ $data2['kkm'][$i] }}</td>
                                         @foreach ($list_komponen as $komponen)
-                                            <td style="text-align: center;font-weight: bold;">
-                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] : '' }}
+                                            <td style="text-align: center;">
+                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai]) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] != '0' ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_nilai] : '' }}
                                             </td>
                                         @endforeach
                                     </tr>
@@ -220,55 +198,56 @@
                             @endforeach
                         @endif
                     @endforeach
+
+
                 </tbody>
             </table>
-            <br>
+            {{-- <table style="width: 30%; margin-left:10%; margin-top:20px">
+             <tr>
+                <td colspan="4">
+                    <p align="center" style="display: inline">
+                        RAPOR =
+                    </p>
+                    <p align="center" style="display: inline" class="under-below">
+                        {(2 x RT2 SMT)+(STS)}
+                    </p>
+                </td>
+            </tr> 
+        </table> --}}
+            <br><br>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
-                    <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="left">
+                    <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="center">
                         Mengetahui,
                         <br>
-                        Orang Tua/Wali,
+                        Kepala Sekolah
                         <br><br><br><br><br><br><br>
-                        <p style="width: 250px;
-                                border-bottom: 2px solid   black;">
-                        </p>
-                        {{-- {{ $auth_data->sekolah_data->nm_kepala_sekolah }} --}}
+                        {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
                     </td>
-                    <td style="width:45%; border-style : hidden"></td>
+                    <td style="width:50%; border-style : hidden"></td>
 
-                    <td style="width:30%" align="left">Surabaya,
+                    <td style="width:25%" align="center">Sidoarjo,
                         {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
-
                         <br>
-                        Wali Kelas,
+                        Wali Kelas
                         <br><br><br><br><br><br><br>
                         @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
-                            <u><b> {{ $wali_kelas->guru->pengguna->gelar_depan }}
-                                    {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                                    {{ $wali_kelas->guru->pengguna->gelar_belakang }}<b></u>
+                            {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                            {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                            {{ $wali_kelas->guru->pengguna->gelar_belakang }}
                         @else
-                            <p
-                                style="width: 250px;
-                                        border-bottom: 2px solid   black;">
-                            </p>
+                            <p style="width: 250px;
+                        border-bottom: 1px solid   black;"></p>
                         @endif
+                        {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
                     </td>
+
                 </tr>
-                <td style=" width:25%; border-style : hidden;"></td>
-                <td style="width:45%; border-style : hidden;text-align: center">Mengetahui, <br>
-                    Kepala Madrasah
-                    <br><br><br><br><br><br><br>
-                    <u><b>
-                            {{ $auth_data->sekolah_data->nm_kepala_sekolah }}<b></u>
-                </td>
-                <td style="width:30%; border-style : hidden"> </td>
+
             </table>
+
         </div>
     @endforeach
-    </div>
-
-
 </body>
 <script>
     window.print();

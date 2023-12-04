@@ -640,8 +640,20 @@ class RaporSisipanController extends Controller
                     }
                 }
 
-                return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-maryam-merdeka', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
+                return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-smknu2', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
             }
+        } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'mtsnu') {
+            $list_data = KomponenNilaiRaporSisipan::where('status', 1)->orderBy('urutan', 'asc')->get();
+            $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->where('nilai', '!=', '0')->get();
+            $nilai_siswa = [];
+            $nilai_siswa['kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
+            if ($list_siswa) {
+                $nilai = $list_nilai->toArray();
+                foreach ($nilai as $nilaiRapor) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa']] = $nilaiRapor['nilai'];
+                }
+            }
+            return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-mtsnu', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
         }
 
 
