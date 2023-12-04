@@ -250,20 +250,20 @@
         target="_blank" class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
     <br> --}}
+    <a href="humas/absensi/rekap-pertanggal/cetak/{{ $bulan->kode_bulan }}/{{ $tahun }}" target="_blank"
+        class="btn bg-blue waves-effect" style=" margin-top: 20px !important;">
+        <i class="material-icons" style="font-size: 15px;">print</i> Export PDF
+    </a>
+    <a href="humas/absensi/rekap-pertanggal/export-pertanggal/{{ $bulan->kode_bulan }}/{{ $tahun }}" target="_blank"
+        class="btn bg-green waves-effect" style=" margin-top: 20px !important;">
+        <i class="material-icons" style="font-size: 15px;">print</i> Excel
+    </a>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card" style="margin-top: 10px">
+            <div class="card" style="margin-top: 20px">
                 <div class="header">
                     <h2>Rekap Absensi </h2>
-                    {{-- @dd($bulan) --}}
-                    <a href="humas/absensi/rekap-pertanggal/allDataChart/{{ $bulan->kode_bulan }}/{{ $tahun }}"
-                        target="_blank" class="btn bg-blue waves-effect" style=" margin-top: 20px !important;">
-                        <i class="material-icons" style="font-size: 15px;">print</i> Print Absensi
-                        {{-- {{ $nama_kelas->nm_kelas }} --}}
-                    </a>
                 </div>
-
-
 
                 <div class="body">
                     <div class="table-responsive ">
@@ -315,47 +315,6 @@
 
                                     </tr>
                                 @endforeach
-                                {{-- @endif --}}
-
-                                {{-- @foreach ($hasil as $r)
-                                    @if ($no % 2 == 1)
-                                        <tr style="background: #DDA0DD">
-                                        @else
-                                        <tr>
-                                    @endif
-                                    @if ($r['status'] == $status || $status == '0')
-                                        <td style="text-align: center;">{{ $no++ }}</td>
-                                        <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-
-                                        <td>{{ $r['check_in'] }}</td>
-                                        <td>{{ $r['check_out'] }}</td>
-                                        <td
-                                            @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494"  @elseif($r['status'] == 'Belum Absent') style="background: #ffffff" @else style="background: #fffdb5" @endif>
-                                            {{ $r['status'] }}</td>
-                                        <td style="text-align: center;display:flex;justify-content:center">
-                                            @if ($r['id_presensi_pengguna'] == '')
-                                                <button type="button" class="btn bg-teal waves-effect"
-                                                    onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
-                                                    <i class="material-icons">edit</i>
-                                                </button>
-                                            @else
-                                                <button type="button" class="btn bg-teal waves-effect"
-                                                    onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
-                                                    <i class="material-icons">edit</i>
-                                                </button>
-                                                <button data-id="{{ $r['id_presensi_pengguna'] }}"
-                                                    style="margin-left:3px;"
-                                                    class="btn bg-red waves-effect delete-record">
-                                                    <i class="material-icons">delete</i>
-                                                </button>
-                                            @endif
-
-                                        </td>
-                                        </tr>
-                                    @else
-                                    @endif
-                                @endforeach --}}
-
                             </tbody>
                         </table>
                     </div>
@@ -364,8 +323,6 @@
         </div>
     </div>
 </div>
-{{-- <script src="js/jquery.min.js" type="text/javascript"></script>
-<script src="js/jquery.dataTables.min.js" type="text/javascript"></script> --}}
 <script type="text/javascript">
     $(document).ready(function() {
         var table = $('.dataTable').DataTable({
