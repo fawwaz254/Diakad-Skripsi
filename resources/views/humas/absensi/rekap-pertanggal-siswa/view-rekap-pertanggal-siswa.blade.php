@@ -173,9 +173,18 @@
         </div>
     </div>
 
+    <a href="humas/absensi/rekap-pertanggal/cetak/siswa/{{$id_kelas}}/{{ $bulan->kode_bulan }}/{{ $tahun }}" target="_blank"
+        class="btn bg-blue waves-effect" style=" margin-top: 20px !important;">
+        <i class="material-icons" style="font-size: 15px;">print</i> Export PDF
+    </a>
+    <a href="humas/absensi/rekap-pertanggal/export-pertanggal-siswa/{{$id_kelas}}/{{ $bulan->kode_bulan }}/{{ $tahun }}"
+        target="_blank" class="btn bg-green waves-effect" style=" margin-top: 20px !important;">
+        <i class="material-icons" style="font-size: 15px;">print</i> Excel
+    </a>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card" style="margin-top: 10px">
+            <div class="card" style="margin-top: 20px">
                 <div class="header">
                     <h2>Rekap Absensi </h2>
                 </div>
@@ -614,7 +623,7 @@
 
     function filterAction() {
         var id_kelas = $('select[name="kelas"]').val();
-        if(!id_kelas){
+        if (!id_kelas) {
             swal({
                 title: "Pilih Kelas dahulu",
                 text: "Kelas tidak boleh kosong",
@@ -623,7 +632,8 @@
                 timer: 2000,
             });
         } else {
-            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]').val() + '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
+            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]')
+            .val() + '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
         }
     }
 
