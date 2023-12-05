@@ -61,4 +61,9 @@ class Kelas extends Model
     {
         return $this->hasMany(PointKPI::class, 'tingkat_kelas', 'tingkat');
     }
+
+    public function jenis_rapor()
+    {
+        return $this->belongsTo(JenisRapor::class, 'id_kelas');
+    }
 }
