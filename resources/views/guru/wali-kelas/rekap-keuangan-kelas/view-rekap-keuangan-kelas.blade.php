@@ -542,7 +542,7 @@
                 html += '<th>Kelas</th>';
                 html += '<th>Bulan</th>';
                 html += '<th>Tagihan</th>';
-                html += '<th>Aksi</th>';
+                // html += '<th>Aksi</th>';
                 html += '</tr>';
                 $.each(response, function(key, item) {
                     html += '<tr id="tagihan-tahun-lalu-' + item.id_tagihan_biaya + '">';
@@ -550,11 +550,11 @@
                     html += '<td>' + item.kelas.nm_kelas + '</td>';
                     html += '<td>' + item.detail_biaya.bulan.nm_bulan + '</td>';
                     html += '<td>' + item.besar_biaya + '</td>';
-                    html +=
-                        '<td><button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteTagihan(this)"  data-id="' +
-                        item.id_tagihan_biaya + '">' +
-                        '    <i class="material-icons">delete</i>' +
-                        '</button></td>';
+                    // html +=
+                    //     '<td><button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteTagihan(this)"  data-id="' +
+                    //     item.id_tagihan_biaya + '">' +
+                    //     '    <i class="material-icons">delete</i>' +
+                    //     '</button></td>';
                     html += '<tr>';
                     html += '</tr>';
                 });

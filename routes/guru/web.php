@@ -77,6 +77,7 @@ use App\Http\Controllers\Guru\KetidaksesuaianSOP\KetidaksesuaianSOPController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Guru\Presensi\AbsensiBarcodeController;
 use App\Http\Controllers\Guru\Presensi\PresensiQrCodeController;
+use App\Http\Controllers\Guru\RaporSemester\NilaiRaporSemester;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSisipanNonAkademikController;
@@ -623,7 +624,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             // MENU Rekap Keuangan Kelas
             Route::get('rekap-keuangan-kelas', [RekapKeuanganKelasController::class, 'viewRekapKeuanganKelas']);
-            Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']); // 
+            // Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']); // 
             // Route::post('rekap-keuangan-kelas/get-data-tungakan-tahun-lalu', [RekapKeuanganKelasController::class, 'getDataTungakanTahunLalu']);
             Route::post('get-jumlah-tunggakan-pembayaran', [SppController::class, 'getJumlahTunggakanPembayaran']);
             Route::post('get-data-tungakan-tahun-lalu', [SppController::class, 'getDataTungakanTahunLalu']);
@@ -812,6 +813,13 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
                 // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
 
+            });
+        });
+
+        Route::prefix('rapor-semester')->group(function () {
+            Route::prefix('tambah-nilai-rapor-semester')->group(function () {
+                Route::get('/', [NilaiRaporSemester::class, 'viewNilaiRaporSemester']);
+                Route::get('datatables', [NilaiRaporSemester::class, 'datatablesNilaiRaporSemester']);
             });
         });
 
