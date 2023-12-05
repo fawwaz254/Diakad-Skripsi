@@ -16,10 +16,10 @@ class VoucherTarif extends Model
 
     protected $primaryKey = 'id_voucher_tarif';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_semester',
         'id_jurusan',
@@ -31,10 +31,4 @@ class VoucherTarif extends Model
     ];
 
     protected $guarded = [];
-
-
-
-
-
-
 }

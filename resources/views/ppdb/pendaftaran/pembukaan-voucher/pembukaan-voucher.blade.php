@@ -139,10 +139,13 @@
 </div>
 </div>
 @include('scriptjs')
+<script src="https://cdn.datatables.net/plug-ins/1.13.7/sorting/currency.js"></script>
 <script>
     (function() {
         // run datatables
-        $('#tabel-voucher').DataTable();
+        $('#tabel-voucher').DataTable({
+            "pageLength": 50
+        });
 
         var tarif = document.querySelectorAll('.tarif');
         Array.prototype.forEach.call(tarif, function(elements, index) {
