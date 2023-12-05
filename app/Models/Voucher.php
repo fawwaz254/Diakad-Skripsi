@@ -16,10 +16,10 @@ class Voucher extends Model
 
     protected $primaryKey = 'id_voucher';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_penerimaan',
         'id_voucher_tarif',
@@ -40,10 +40,4 @@ class Voucher extends Model
     ];
 
     protected $guarded = [];
-
-
-
-
-
-
 }
