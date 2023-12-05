@@ -42,8 +42,9 @@ class ListUjianController extends Controller
         )->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return
                 $q->whereNotNull('content');
-        }]);
-
+        }])->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
+            $query->where('id_kelas', $id_kelas);
+        });
         $waktu = Carbon::now('Asia/Jakarta');
         $statusTests = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
 
