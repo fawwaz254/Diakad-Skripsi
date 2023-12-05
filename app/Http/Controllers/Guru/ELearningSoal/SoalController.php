@@ -1057,12 +1057,12 @@ class SoalController extends Controller
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
                 } else if ($input->id_tipe_soal == 8) {
-                    $jumlahKata = str_word_count($input->soal);
-                    if ($jumlahKata > 50) {
-                        $stringHasil = Str::limit($input->soal, 200);
-                    } else {
-                        $stringHasil = $input->soal;
-                    }
+                    // $jumlahKata = str_word_count($input->soal);
+                    // if ($jumlahKata > 50) {
+                    //     $stringHasil = Str::limit($input->soal, 200);
+                    // } else {
+                    //     $stringHasil = $input->soal;
+                    // }
 
                     $question = new Soal;
                     $question->id_kategori_soal = $input->id_kategori_soal;
@@ -1070,7 +1070,7 @@ class SoalController extends Controller
                     $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
                     $question->content = $input->soal;
-                    $question->text = $stringHasil;
+                    $question->text = Str::limit($input->soal, 200);
                     $question->created_by = $input->auth_data->pengguna->id_pengguna;
                     if (empty($input->soal)) {
                         DB::rollback();
