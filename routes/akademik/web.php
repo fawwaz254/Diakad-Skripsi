@@ -23,6 +23,7 @@ use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiSiswaController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\RaporSemester\JenisRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenMataPelajaranController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
@@ -518,6 +519,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/detail/{id_kelas}', [KomponenMataPelajaranController::class, 'viewDetailKomponenMataPelajaran']);
                 Route::get('datatables', [KomponenMataPelajaranController::class, 'datatablesKomponenMataPelajaran']);
                 Route::post('action-komponen-mata-pelajaran/{mode}/{id}', [KomponenMataPelajaranController::class, 'actionKomponenMataPelajaran']);
+            });
+        });
+
+        Route::prefix('rapor-sisipan')->group(function () {
+            Route::prefix('jenis-rapor')->group(function () {
+                Route::get('/', [JenisRaporSemesterController::class, 'viewJenisRaporSemester']);
+                Route::get('/datatables', [RaporSisipanController::class, 'datatablesviewJenisRaporSemester']);
             });
         });
 

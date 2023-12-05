@@ -77,7 +77,7 @@ use App\Http\Controllers\Guru\KetidaksesuaianSOP\KetidaksesuaianSOPController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Guru\Presensi\AbsensiBarcodeController;
 use App\Http\Controllers\Guru\Presensi\PresensiQrCodeController;
-use App\Http\Controllers\Guru\RaporSemester\NilaiRaporSemester;
+use App\Http\Controllers\Guru\RaporSemester\NilaiRaporSemesterController;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSisipanNonAkademikController;
@@ -818,8 +818,8 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('rapor-semester')->group(function () {
             Route::prefix('tambah-nilai-rapor-semester')->group(function () {
-                Route::get('/', [NilaiRaporSemester::class, 'viewNilaiRaporSemester']);
-                Route::get('datatables', [NilaiRaporSemester::class, 'datatablesNilaiRaporSemester']);
+                Route::get('/', [NilaiRaporSemesterController::class, 'viewNilaiRaporSemester']);
+                Route::get('datatables', [NilaiRaporSemesterController::class, 'datatablesNilaiRaporSemester']);
             });
         });
 

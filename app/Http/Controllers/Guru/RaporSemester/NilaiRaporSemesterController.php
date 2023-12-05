@@ -9,7 +9,7 @@ use Yajra\Datatables\Datatables;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\RaporSisipan;
 
-class NilaiRaporSemester extends Controller
+class NilaiRaporSemesterController extends Controller
 {
     public function viewNilaiRaporSemester(Request $request)
     {
