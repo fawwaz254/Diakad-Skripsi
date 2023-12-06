@@ -855,27 +855,28 @@ class PembayaranSiswaController extends BaseController
 
                     if (!empty($siswa->id_wali_murid)) {
                         $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+                        if (isset($wali_murid->pengguna->api_token)) {
+                            $token_wali_murid = $wali_murid->pengguna->api_token;
+                            if (!empty($token_wali_murid)) {
+                                $message = 'Putra/Putri Anda melakukan pembayaran tagihan';
+                                $send_data = array(
+                                    'title' => 'Informasi',
+                                    'body' => $message,
+                                    'priority' => 'high',
+                                    'screen1' => '',
+                                    'screen2' => '',
+                                );
 
-                        $token_wali_murid = $wali_murid->pengguna->api_token;
-                        if (!empty($token_wali_murid)) {
-                            $message = 'Putra/Putri Anda melakukan pembayaran tagihan';
-                            $send_data = array(
-                                'title' => 'Informasi',
-                                'body' => $message,
-                                'priority' => 'high',
-                                'screen1' => '',
-                                'screen2' => '',
-                            );
+                                $notifikasi = array(
+                                    'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                    'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                    'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                    'isi_notifikasi' => $message,
+                                    'created_by' => $input->auth_data->pengguna->id_pengguna,
+                                );
 
-                            $notifikasi = array(
-                                'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
-                                'id_pengguna' => $wali_murid->pengguna->id_pengguna,
-                                'id_sekolah' => $wali_murid->pengguna->id_sekolah,
-                                'isi_notifikasi' => $message,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna,
-                            );
-
-                            LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                                LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                            }
                         }
                     }
                 }
