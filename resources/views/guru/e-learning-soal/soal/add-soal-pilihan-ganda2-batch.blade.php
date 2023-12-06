@@ -137,20 +137,20 @@
         if (isChecked) {
             for (var i = 1; i <= jumlah; i++) {
                 id = 'q' + i;
-                // var editor = CKEDITOR.replace(id, options);
+                var editor = CKEDITOR.replace(id, options);
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
-                    // var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                    var editorjawaban = CKEDITOR.replace(idjawaban, options);
                 }
             }
 
         } else {
             for (var i = 1; i <= jumlah; i++) {
                 id = 'q' + i;
-                // CKEDITOR.instances[id].destroy();
+                CKEDITOR.instances[id].destroy();
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
-                    // CKEDITOR.instances[idjawaban].destroy();
+                    CKEDITOR.instances[idjawaban].destroy();
                 }
             }
 
@@ -167,10 +167,10 @@
             checkbox.checked = !checkbox.checked;
             for (var i = 1; i <= jumlah; i++) {
                 id = 'q' + i;
-                // CKEDITOR.instances[id].destroy();
+                CKEDITOR.instances[id].destroy();
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
-                    // CKEDITOR.instances[idjawaban].destroy();
+                    CKEDITOR.instances[idjawaban].destroy();
                 }
             }
         }
@@ -245,20 +245,20 @@
         {
             for (var i = 1; i <= jumlah; i++) {
                 id = 'q' + i;
-                // var editor = CKEDITOR.replace(id, options);
+                var editor = CKEDITOR.replace(id, options);
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
-                    // var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                    var editorjawaban = CKEDITOR.replace(idjawaban, options);
                 }
             }
 
         } else {
             for (var i = 1; i <= jumlah; i++) {
                 id = 'q' + i;
-                // CKEDITOR.instances[id].destroy();
+                CKEDITOR.instances[id].destroy();
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
-                    // CKEDITOR.instances[idjawaban].destroy();
+                    CKEDITOR.instances[idjawaban].destroy();
                 }
             }
 
@@ -275,12 +275,12 @@
         for (var i = 1; i <= jumlah; i++) {
             var id_paste_soal = 'q' + i;
             if (isChecked) {
-                // CKEDITOR.instances[id_paste_soal].destroy();
+                CKEDITOR.instances[id_paste_soal].destroy();
             }
             for (var j = 0; j < 5; j++) {
                 id_paste_jawaban = 'a' + i + j;
                 if (isChecked) {
-                    // CKEDITOR.instances[id_paste_jawaban].destroy();
+                    CKEDITOR.instances[id_paste_jawaban].destroy();
                 }
             }
         }
@@ -302,7 +302,7 @@
                 }
 
                 if (isChecked) {
-                    // CKEDITOR.replace(id_paste_soal, options);
+                    CKEDITOR.replace(id_paste_soal, options);
                 }
 
                 linesoal += 6;
@@ -325,7 +325,7 @@
 
                     }
                     if (isChecked) {
-                        // CKEDITOR.replace(id_paste_jawaban, options);
+                        CKEDITOR.replace(id_paste_jawaban, options);
                     }
                     lineJawaban++;
                 }
