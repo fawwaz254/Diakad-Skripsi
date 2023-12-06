@@ -140,10 +140,12 @@ class DataSiswaController extends BaseController
 				$wali_murid->save();
 
 				$pengguna_wali_murid = Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->first();
-				$pengguna_wali_murid->nm_pengguna =  isset($input->nm_ayah) ? strtoupper($input->nm_ayah) : isset($input->nm_wali) ?  strtoupper($input->nm_wali) : $input->nomor_hp_ortu;
-				$pengguna_wali_murid->username = $input->nomor_hp_ortu;
-				$pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
-				$pengguna_wali_murid->save();
+				if ($pengguna_wali_murid) {
+					$pengguna_wali_murid->nm_pengguna =  isset($input->nm_ayah) ? strtoupper($input->nm_ayah) : isset($input->nm_wali) ?  strtoupper($input->nm_wali) : $input->nomor_hp_ortu;
+					$pengguna_wali_murid->username = $input->nomor_hp_ortu;
+					$pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
+					$pengguna_wali_murid->save();
+				}
 			}
 
 			if ($siswa != null || $calonSiswa != null) {
