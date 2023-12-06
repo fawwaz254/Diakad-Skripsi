@@ -140,7 +140,9 @@ class ReportController extends BaseController
         $semester_aktif = $semester_aktif->id_semester;
 
         $role = Role::find($id_role);
-
+        $status = '';
+        $jumlah_diisi = 0;
+        $param = array();
         if ($id_role == 1) { // Pendidikan
 
             $data_kelas = Kelas::where('is_aktif', 1)->get()->count();
@@ -503,7 +505,12 @@ class ReportController extends BaseController
         $data['nm_role'] = $role->nm_role;
         $data['status'] = $status;
         $data['catatan'] = $param;
-        $data['progress'] = $jumlah_diisi / count($param) * 100;
+        if (count($param) > 0) {
+            $data['progress'] = $jumlah_diisi / count($param) * 100;
+        } else {
+            $data['progress'] = 0;
+        }
+
 
         return response()->json($data);
     }
