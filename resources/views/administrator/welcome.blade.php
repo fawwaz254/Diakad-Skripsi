@@ -26,20 +26,23 @@
                 @endif
             </div>
             <div class="row">
-                {{-- <div class="col-sm-6 col-xs-12">
-                    <a href="{{ route('report.pimpinan') }}">
-                        <div class="card">
-                            <div class="body bg-red" style="text-align: -webkit-center;">
-                                <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64" height="64">
-                                <h5>
-                                    Report Pimpinan
-                                </h5>
-                                <small>Data Penggunaan Diakad Untuk Setiap Role Semester
-                                    {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</small>
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                    <div class="col-sm-4 col-xs-12">
+                        <a href="{{ route('report.pimpinan') }}">
+                            <div class="card">
+                                <div class="body bg-red" style="text-align: -webkit-center;">
+                                    <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"
+                                        height="64">
+                                    <h5>
+                                        Report Pimpinan
+                                    </h5>
+                                    <small>Data Penggunaan Diakad Untuk Setiap Role Semester
+                                        {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</small>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </div> --}}
+                        </a>
+                    </div>
+                @endif
                 <div class="col-md-4 col-xs-12">
                     <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}">
                         <div class="card">
