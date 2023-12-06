@@ -313,7 +313,7 @@ class WaliKelasSKPIController extends Controller
                 } elseif ($item->peringkat_prestasi_siswa == 6) {
                     return "Juara Harapan 3";
                 } elseif ($item->peringkat_prestasi_siswa == 7) {
-                    return "Peserta";
+                    return "Finalis";
                 }
             })
             ->addColumn('tgl_prestasi_siswa', function ($item) {

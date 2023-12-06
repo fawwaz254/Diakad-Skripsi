@@ -371,7 +371,7 @@ class ApprovePrestasiSiswaController extends BaseController
                 } elseif ($item->peringkat_prestasi_siswa == 6) {
                     return "Juara Harapan 3";
                 } elseif ($item->peringkat_prestasi_siswa == 7) {
-                    return "Lain-Lain";
+                    return "Finalis";
                 }
             })
             ->addColumn('keterangan', function ($item) {
