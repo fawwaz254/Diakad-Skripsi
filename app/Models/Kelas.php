@@ -25,6 +25,8 @@ class Kelas extends Model
         'nm_kelas',
         'tingkat',
         'keterangan_kelas',
+        'is_aktif',
+        'id_jenis_rapor',
         'created_by',
         'updated_by',
         'deleted_by'
@@ -64,6 +66,6 @@ class Kelas extends Model
 
     public function jenis_rapor()
     {
-        return $this->belongsTo(JenisRapor::class, 'id_kelas');
+        return $this->belongsTo(JenisRapor::class, 'id_jenis_rapor');
     }
 }
