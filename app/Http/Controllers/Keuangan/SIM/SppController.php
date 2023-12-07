@@ -1202,8 +1202,29 @@ class SppController extends BaseController
             ->where('id_semester_selesai', $semester_selesai->id_semester)
             ->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
+        $bulanAwal = [7, 8, 9, 10, 11, 12];
+        $pembayaran_semester_mulai = $pembayaran = PembayaranBiaya::whereIn('tgl_pembayaran', function ($query) use ($bulanAwal) {
+            $query->select('tgl_pembayaran')
+                ->from('pembayaran_biaya') // Ganti dengan nama tabel yang benar
+                ->whereIn(DB::raw('MONTH(tgl_pembayaran)'), $bulanAwal);
+        })->whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($q) use ($semester_mulai, $semester_selesai) {
+            $q->whereNotIn('id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester]);
+        })->whereYear('tgl_pembayaran',  $semester_mulai->thn_akademik_semester)->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+
+        $bulanAkhir = [1, 2, 3, 4, 5, 6];
+        $pembayaran_semester_akhir = $pembayaran = PembayaranBiaya::whereIn('tgl_pembayaran', function ($query) use ($bulanAkhir) {
+            $query->select('tgl_pembayaran')
+                ->from('pembayaran_biaya') // Ganti dengan nama tabel yang benar
+                ->whereIn(DB::raw('MONTH(tgl_pembayaran)'), $bulanAkhir);
+        })->whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($q) use ($semester_mulai, $semester_selesai) {
+            $q->whereNotIn('id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester]);
+        })->whereYear('tgl_pembayaran',  $semester_selesai->thn_akademik_semester + 1)->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+
+
         if ($tutup_buku_tahunan) {
             $sisa_tunggakan = $tutup_buku_tahunan->jml_tunggakan_biaya - $data_pembayaran_tunggakan->sum('besar_pembayaran');
+            $sisa_tunggakan -=  $pembayaran_semester_mulai->sum('besar_pembayaran');
+            $sisa_tunggakan -= $pembayaran_semester_akhir->sum('besar_pembayaran');
         } else {
             $sisa_tunggakan = null;
         }
