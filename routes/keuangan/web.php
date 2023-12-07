@@ -204,6 +204,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('post-view-pembayaran-by-kelas', [PembayaranByKelasController::class, 'actionViewPembayaranByKelas']);
             Route::get('pembayaran-by-kelas/view-detail/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'viewDetailPembayaranByKelas']);
             Route::get('pembayaran-by-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']);
+            Route::get('pembayaran-by-kelas/print/{semester}/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelasPerSemester']);
 
             Route::prefix('input-tagihan-siswa')->group(function () {
                 Route::get('/', [InputTagihanSiswaController::class, 'viewInputTagihanSiswa']);
