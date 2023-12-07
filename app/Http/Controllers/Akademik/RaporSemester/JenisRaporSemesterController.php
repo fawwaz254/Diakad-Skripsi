@@ -14,29 +14,31 @@ class JenisRaporSemesterController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('akademik/rapor-sisipan/komponen-nilai/view-komponen-nilai', compact('auth_data'));
+        return view('akademik/rapor-semester/jenis-rapor/view-jenis-rapor', compact('auth_data'));
     }
 
-    public  function datatablesviewJenisRaporSemester(Request $request)
+    public  function datatablesJenisRaporSemester(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = Kelas::with('jenis_rapor.kompomen_jenis_rapor');
+        $list_data = Kelas::where('is_aktif', '1')->orderBy('tingkat')->with('jenis_rapor.komponen_jenis_rapor')->get();
 
         return Datatables::of($list_data)
-            ->editColumn('status', function ($item) {
-                if ($item->status == '1') {
-                    return 'Aktif';
-                } else {
-                    return 'Tidak Aktif';
+            ->addColumn(
+                'komponen_jenis_rapor',
+                function ($item) {
+                    $komponen = [];
+                    foreach ($item->jenis_rapor->komponen_jenis_rapor as $key => $komponen_jenis_rapor) {
+                        if ($komponen_jenis_rapor) {
+                            $komponen[$key] = $komponen_jenis_rapor->nm_komponen_jenis_rapor;
+                        } else {
+                            $komponen[$key] = '';
+                        }
+                    }
+
+                    return $komponen;
                 }
-            })
-            ->addColumn('action', function ($item) {
-                $data = array(
-                    'id'     => $item->id_komponen_nilai
-                );
-                return $data;
-            })
+            )
             ->make(true);
     }
 }

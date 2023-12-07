@@ -18,7 +18,6 @@ class JenisRapor extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id_kelas',
         'nm_jenis_rapor',
         'created_by',
         'updated_by',

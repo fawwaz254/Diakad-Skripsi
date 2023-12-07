@@ -24,6 +24,7 @@ use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
 use App\Http\Controllers\Akademik\RaporSemester\JenisRaporSemesterController;
+use App\Http\Controllers\Akademik\RaporSemester\MataPelajaranRaporController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenMataPelajaranController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
@@ -522,10 +523,19 @@ Route::middleware(['token_staff'])->group(function () {
             });
         });
 
-        Route::prefix('rapor-sisipan')->group(function () {
+        Route::prefix('rapor-semester')->group(function () {
             Route::prefix('jenis-rapor')->group(function () {
                 Route::get('/', [JenisRaporSemesterController::class, 'viewJenisRaporSemester']);
-                Route::get('/datatables', [RaporSisipanController::class, 'datatablesviewJenisRaporSemester']);
+                Route::get('/datatables', [JenisRaporSemesterController::class, 'datatablesJenisRaporSemester']);
+            });
+            Route::prefix('komponen-mata-pelajaran')->group(function () {
+                Route::get('/', [MataPelajaranRaporController::class, 'viewKomponenMataPelajaran']);
+                Route::post('/', [MataPelajaranRaporController::class, 'postKomponenMataPelajaran']);
+                Route::get('/add/{id_kelas}', [MataPelajaranRaporController::class, 'addKomponenMataPelajaran']);
+                Route::get('/copy/{id_kelas}', [MataPelajaranRaporController::class, 'copyKomponenMataPelajaran']);
+                Route::get('/detail/{id_kelas}', [MataPelajaranRaporController::class, 'viewDetailKomponenMataPelajaran']);
+                Route::get('datatables', [MataPelajaranRaporController::class, 'datatablesKomponenMataPelajaran']);
+                Route::post('action-komponen-mata-pelajaran/{mode}/{id}', [MataPelajaranRaporController::class, 'actionKomponenMataPelajaran']);
             });
         });
 
