@@ -72,12 +72,12 @@
                                     @php
                                         $id_bulan = $date->format('n');
                                         $periode_bulan_sekolah = collect([7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6]);
-                                        
+
                                         if ($id_bulan < 7) {
                                             $index_splice = $id_bulan + 5;
                                             $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
                                             $index_periode_bulan_ini->all();
-                                        
+
                                             $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
                                             $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
                                         } elseif ($id_bulan == 7) {
@@ -87,7 +87,7 @@
                                             $index_splice = $id_bulan - 7;
                                             $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
                                             $index_periode_bulan_ini->all();
-                                        
+
                                             $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
                                             $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
                                         }
@@ -165,12 +165,12 @@
                                 @php
                                     $id_bulan = $date->format('n');
                                     $periode_bulan_sekolah = collect([7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6]);
-                                    
+
                                     if ($id_bulan < 7) {
                                         $index_splice = $id_bulan + 5;
                                         $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
                                         $index_periode_bulan_ini->all();
-                                    
+
                                         $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
                                         $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
                                     } elseif ($id_bulan == 7) {
@@ -180,7 +180,7 @@
                                         $index_splice = $id_bulan - 7;
                                         $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
                                         $index_periode_bulan_ini->all();
-                                    
+
                                         $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
                                         $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
                                     }
@@ -206,9 +206,11 @@
                                         </td>
                                     @endforeach
                                     <td>
-                                        <div id="{{ 'total-jumlah' }}">
-                                            Loading
-                                        </div>
+                                        <b>
+                                            <div id="{{ 'total-jumlah' }}">
+                                                Loading
+                                            </div>
+                                        </b>
                                         {{-- Rp
                                         {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->sum('besar_pembayaran')) }} --}}
                                     </td>
