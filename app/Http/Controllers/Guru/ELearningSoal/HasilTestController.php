@@ -134,28 +134,41 @@ class HasilTestController extends Controller
 
     public function detailList($question_package_id = 0)
     {
-        $test = Test::where('test.id_paket_soal', $question_package_id)->with('pengguna.siswa.kelas', 'paket_soal', 'detail_paket_soal', 'jawaban_test');
-
+        $test = Test::where('test.id_paket_soal', $question_package_id)->with('pengguna.siswa.kelas', 'paket_soal', 'detail_paket_soal')->get();
+        $jawaban_test = JawabanTest::whereIn('id_test', $test->pluck('id_test'))->get();
         return Datatables::of($test)
             ->editColumn('detail_paket_soal', function ($item) {
                 return $item->detail_paket_soal->count();
-            })->addColumn('soal_terisi', function ($item) {
-                return $item->jawaban_test->count();
+            })->addColumn('soal_terisi', function ($item) use ($jawaban_test) {
+                return $jawaban_test->where('id_test', $item->id_test)->count();
             })
             // ->addColumn('essay', function ($item) {
             //     return $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->count();
             // })
-            ->addColumn('total_nilai', function ($item) {
+            ->addColumn('total_nilai', function ($item) use ($jawaban_test) {
                 //pilihan ganda
-                $nilai_pilihan_ganda = number_format($item->jawaban_test->whereIn('id_tipe_soal', [1, 4, 5, 6, 7])->pluck('nilai')->sum());
+
+                //total
+
+
+                $nilai_pilihan_ganda = number_format($jawaban_test->where('id_test', $item->id_test)->whereIn('id_tipe_soal', [1, 4, 5, 6, 7])->sum('nilai'));
                 $nilai_paket_soal_pilihan_ganda = $item->paket_soal->nilai;
 
                 //essay
-                $nilai_pilihan_essay_submit = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
-                $jawaban_test = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', 0)->first();
+                $nilai_pilihan_essay_submit = $jawaban_test->where('id_test', $item->id_test)->whereIn('id_tipe_soal', [2, 3])->sum('nilai');
+                $jawaban_test = $jawaban_test->where('id_test', $item->id_test)->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', 0)->first();
 
-                //total
-                $nilai = number_format($item->jawaban_test->pluck('nilai')->sum());
+
+
+                if ($nilai_pilihan_ganda > 100) {
+                    $nilai_pilihan_ganda  = 100;
+                }
+
+                if ($nilai_pilihan_essay_submit) {
+                    $nilai_pilihan_essay_submit = 100;
+                }
+
+                $nilai = $nilai_pilihan_ganda + $nilai_pilihan_essay_submit;
                 if ($nilai > 100) {
                     $nilai = 100;
                 }
@@ -234,9 +247,10 @@ class HasilTestController extends Controller
     public function printHasilTest3(Request $request, $id)
     {
         set_time_limit(-1);
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal.pilihan_soal', 'detail_paket_soal.soal.pilihan_pertanyaan', 'test.jawaban_test')->first();
-        $pilihan_pertanyaan = PilihanPertanyaan::get();
-        $pilihan_soal = PilihanSoal::get();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal',  'test.jawaban_test')->first();
+        $pilihan_pertanyaan = PilihanPertanyaan::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
+        $pilihan_soal = PilihanSoal::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
+
 
         $nilai_siswa = [];
         $benar = [];
@@ -525,9 +539,9 @@ class HasilTestController extends Controller
     public function printHasilTest4(Request $request, $id)
     {
         set_time_limit(-1);
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal.pilihan_soal', 'detail_paket_soal.soal.pilihan_pertanyaan', 'test.jawaban_test')->first();
-        $pilihan_pertanyaan = PilihanPertanyaan::get();
-        $pilihan_soal = PilihanSoal::get();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal', 'test.jawaban_test')->first();
+        $pilihan_pertanyaan = PilihanPertanyaan::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
+        $pilihan_soal = PilihanSoal::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
 
         $nilai_siswa = [];
         $benar = [];
