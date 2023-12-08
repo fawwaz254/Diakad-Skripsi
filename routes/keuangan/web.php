@@ -374,7 +374,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('delete-data-tungakan-tahun-lalu/{id}', [SppController::class, 'deleteDataTungakanTahunLalu']);
 
                 Route::get('pemasukan', [SppController::class, 'viewMenuPemasukan']);
-                Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', [SppController::class, 'viewMenuPemasukan']);
+                Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/{print_setting}', [SppController::class, 'viewMenuPemasukan']);
                 Route::post('get-pemasukan', [SppController::class, 'getPemasukanData']);
 
 
