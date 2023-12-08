@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="body">
                     <div class="row clearfix">
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 Tahun
                             </h2>
@@ -24,7 +24,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 Bulan
                             </h2>
@@ -34,6 +34,17 @@
                                         @if ($bulan->id_bulan == $id_bulan) selected @endif>{{ $bulan->nm_bulan }}
                                     </option>
                                 @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Dari
+                            </h2>
+                            <select class="form-control show-tick" name="print_setting">
+                                <option value="semua" @if ($print_setting == 'all') selected @endif>Semua</option>
+                                <option value="self" @if ($print_setting == 'self') selected @endif>Pengguna
+                                    Sendiri
+                                </option>
                             </select>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -206,11 +217,9 @@
                                         </td>
                                     @endforeach
                                     <td>
-                                        <b>
-                                            <div id="{{ 'total-jumlah' }}">
-                                                Loading
-                                            </div>
-                                        </b>
+                                        <div id="{{ 'total-jumlah' }}">
+                                            Loading
+                                        </div>
                                         {{-- Rp
                                         {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->sum('besar_pembayaran')) }} --}}
                                     </td>
@@ -242,23 +251,26 @@
     function filterAction() {
         var bulan = $('select[name=bulan]').val();
         var tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
-        loadURI('sim/spp/pemasukan/' + tahun_akademik_semester + '/' + bulan);
+        var print_setting = $('select[name=print_setting]').val();
+        // alert(print_setting);
+        // var print_setting = 'all';
+        loadURI('sim/spp/pemasukan/' + tahun_akademik_semester + '/' + bulan + '/' + print_setting);
     }
 
-    function refreshAction(element) {
-        var item = $(element);
-        $('button').attr('disabled', 'disabled');
-        $.ajax({
-            type: "GET",
-            url: "{{ url('keuangan/sim/spp/pemasukan/' . $tahun_akademik_semester . '/' . $id_bulan . '/refresh') }}",
-            success: function(response) {
-                vex.dialog.alert(response.message);
-            },
-            complete: function() {
-                $('button').removeAttr('disabled', 'disabled');
-            }
-        });
-    }
+    // function refreshAction(element) {
+    //     var item = $(element);
+    //     $('button').attr('disabled', 'disabled');
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "{{ url('keuangan/sim/spp/pemasukan/' . $tahun_akademik_semester . '/' . $id_bulan . '/refresh') }}",
+    //         success: function(response) {
+    //             vex.dialog.alert(response.message);
+    //         },
+    //         complete: function() {
+    //             $('button').removeAttr('disabled', 'disabled');
+    //         }
+    //     });
+    // }
 
     $(document).ready(function() {
         getBulanIni();
