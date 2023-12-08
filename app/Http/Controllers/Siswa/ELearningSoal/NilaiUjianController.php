@@ -19,36 +19,36 @@ class NilaiUjianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $test = Test::where('test.id_pengguna', $auth_data->pengguna->id_pengguna)->where('test.status', 1)->with('detail_paket_soal', 'paket_soal.kategori_soal', 'jawaban_test');
+        $test = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('status', 1)->with('paket_soal.kategori_soal')->withCount('jawaban_test', 'detail_paket_soal')->get();
 
         return Datatables::of($test)
             ->editColumn('jawaban_test', function ($item) {
-                return $item->jawaban_test->count();
+                return $item->jawaban_test_count;
             })
             ->editColumn('detail_paket_soal', function ($item) {
-                return $item->detail_paket_soal->count();
+                return $item->detail_paket_soal_count;
             })
-            ->addColumn('total_nilai', function ($item) {
-                $nilai = $item->jawaban_test->pluck('nilai')->sum();
-                $nilai_pilihan_ganda = $item->jawaban_test->whereIn('id_tipe_soal', [1, 4, 5, 6, 7])->pluck('nilai')->sum();
-                $nilai_pilihan_essay_submit = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
-                $validasi_pilihan_essay_submit =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->first();
-                $belum_dikoreksi =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', '0')->first();
-                if ($nilai > 100) {
-                    $nilai = 100;
-                }
+            // ->addColumn('total_nilai', function ($item) {
+            //     $nilai = $item->jawaban_test->pluck('nilai')->sum();
+            //     $nilai_pilihan_ganda = $item->jawaban_test->whereIn('id_tipe_soal', [1, 4, 5, 6, 7])->pluck('nilai')->sum();
+            //     $nilai_pilihan_essay_submit = $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
+            //     $validasi_pilihan_essay_submit =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->first();
+            //     $belum_dikoreksi =  $item->jawaban_test->whereIn('id_tipe_soal', [2, 3])->where('status_koreksi', '0')->first();
+            //     if ($nilai > 100) {
+            //         $nilai = 100;
+            //     }
 
-                $data = array(
-                    'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
-                    'nilai_pilihan_essay_submit' => $nilai_pilihan_essay_submit,
-                    'nilai' => $nilai,
-                    'status_koreksi' => 1,
-                    'belum_dikoreksi' => $belum_dikoreksi ? true : false,
-                    'validasi_pilihan_essay_submit' =>  $validasi_pilihan_essay_submit ? true : false,
-                    'id_test' => $item->id_test
-                );
-                return $data;
-            })
+            //     $data = array(
+            //         'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
+            //         'nilai_pilihan_essay_submit' => $nilai_pilihan_essay_submit,
+            //         'nilai' => $nilai,
+            //         'status_koreksi' => 1,
+            //         'belum_dikoreksi' => $belum_dikoreksi ? true : false,
+            //         'validasi_pilihan_essay_submit' =>  $validasi_pilihan_essay_submit ? true : false,
+            //         'id_test' => $item->id_test
+            //     );
+            //     return $data;
+            // })
             ->make(true);
     }
     public function indexPenilaian(Request $request, $id_test = null)
