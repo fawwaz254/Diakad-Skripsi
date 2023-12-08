@@ -34,6 +34,7 @@ class ListUjianController extends Controller
         $auth_data = $input->auth_data;
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $id_kelas =  $siswa->id_kelas;
+        $statusTests = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
         $list_data = PaketSoal::with(
             'kelas',
             'detail_paket_soal',
@@ -44,9 +45,9 @@ class ListUjianController extends Controller
                 $q->whereNotNull('content');
         }])->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
             $query->where('id_kelas', $id_kelas);
-        });
+        })->whereNotIn('id_paket_soal', $statusTests->where('status', '1')->pluck('id_paket_soal'));
         $waktu = Carbon::now('Asia/Jakarta');
-        $statusTests = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
+
 
         return Datatables::of($list_data)
             ->addColumn('total_question', function ($item) {
@@ -531,8 +532,16 @@ class ListUjianController extends Controller
         $input = (object) $request->input();
         $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($input->paket_soal)['id_test'])->first();
         if ($test) {
+            $no = 1;
+            session()->forget($test->id_paket_soal);
+            while ($no <= 50) {
+                session()->has($test->id_paket_soal . '_jawaban' . $no) ? session()->forget($test->id_paket_soal . '_jawaban' . $no) : null;
+                $no++;
+            }
+
             $test->status = 1;
             $test->save();
+
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'e-learning-soal/list-ujian',
