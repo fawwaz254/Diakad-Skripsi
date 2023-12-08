@@ -452,7 +452,7 @@
     }, 1000);
 
     function endAction(item) {
-        clearInterval(x);
+
         var item = $(item);
         vex.dialog.confirm({
             message: 'Apakah yakin sudah selesai mengerjakan.??',
@@ -465,6 +465,7 @@
                             paket_soal: id_paket_soal
                         },
                         success: function(response) {
+                            clearInterval(x);
                             vex.dialog.alert(response.message);
                             setTimeout(() => {
                                 loadURI(response.path);
