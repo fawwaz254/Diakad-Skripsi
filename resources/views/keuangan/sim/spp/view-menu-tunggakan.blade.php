@@ -46,7 +46,8 @@
                                 <thead>
                                     <tr>
                                         <th>SISA TUNGGAKAN </th>
-                                        <th>Jumlah Pemasukan</th>
+                                        <th>Pemasukan Pembayaran Tunggakan</th>
+                                        <th>Pemasukan Input Tunggakan</th>
                                         <th>KETERANGAN</th>
                                     </tr>
                                 </thead>
@@ -54,6 +55,13 @@
                                     @foreach ($data_bulan as $bulan)
                                         <tr>
                                             <td>Bulan {{ $bulan->nm_bulan }}</td>
+                                            <td>Rp
+                                                {{ number_format(
+                                                    $pembayaran_tagihan->filter(function ($item) use ($bulan) {
+                                                            return false !== stristr(date_format(date_create($item->tgl_pembayaran), 'm'), $bulan->kode_bulan);
+                                                        })->sum('besar_pembayaran'),
+                                                ) }}
+                                            </td>
                                             <td>Rp
                                                 {{ $jumlah_pemasukan = number_format(
                                                     $data_pembayaran_tunggakan->filter(function ($item) use ($bulan) {

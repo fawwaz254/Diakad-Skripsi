@@ -903,7 +903,7 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'waktu', 'data_tagihan_non_bulanan', 'data_ket_tagihan', 'minDate', 'maxDate', 'total_pembayaran', 'total_tunggakan', 'jumlah_pembayaran', 'jumlah_tunggakan'));
     }
 
-    public function viewMenuPemasukan(Request $request, $tahun_akademik_semester = null, $id_bulan = null)
+    public function viewMenuPemasukan(Request $request, $tahun_akademik_semester = null, $id_bulan = null, $print_setting = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -915,9 +915,15 @@ class SppController extends BaseController
 
         if (empty($id_bulan)) {
             $now = Carbon::today();
-
             $id_bulan = $now->month;
         }
+
+        if (empty($print_setting)) {
+            $print_setting = 'all';
+        }
+
+        session(['setting_print_keuangan' => $print_setting]);
+
 
         $start_month = Carbon::create($tahun_akademik_semester, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun_akademik_semester, $id_bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
@@ -950,7 +956,7 @@ class SppController extends BaseController
 
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        return view('keuangan/sim/spp/view-menu-pemasukan', compact('auth_data', 'data_laporan', 'start_date', 'end_date', 'data_semester', 'tahun_akademik_semester', 'data_bulan', 'id_bulan'));
+        return view('keuangan/sim/spp/view-menu-pemasukan', compact('auth_data', 'data_laporan', 'start_date', 'end_date', 'data_semester', 'tahun_akademik_semester', 'data_bulan', 'id_bulan', 'print_setting'));
     }
 
 
@@ -1056,7 +1062,8 @@ class SppController extends BaseController
                     number_format(
                         $data_laporan['data_tunggakan']->filter(function ($item) use ($date) {
                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
-                        })->sum('besar_pembayaran') +
+                        })->sum('besar_pembayaran')
+                            +
                             $data_laporan['data']->where(
                                 'tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran',
                                 '!=',
@@ -1203,7 +1210,7 @@ class SppController extends BaseController
             ->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
         $bulanAwal = [7, 8, 9, 10, 11, 12];
-        $pembayaran_semester_mulai = $pembayaran = PembayaranBiaya::whereIn('tgl_pembayaran', function ($query) use ($bulanAwal) {
+        $pembayaran_tagihan_semester_mulai  = PembayaranBiaya::whereIn('tgl_pembayaran', function ($query) use ($bulanAwal) {
             $query->select('tgl_pembayaran')
                 ->from('pembayaran_biaya') // Ganti dengan nama tabel yang benar
                 ->whereIn(DB::raw('MONTH(tgl_pembayaran)'), $bulanAwal);
@@ -1212,7 +1219,7 @@ class SppController extends BaseController
         })->whereYear('tgl_pembayaran',  $semester_mulai->thn_akademik_semester)->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
         $bulanAkhir = [1, 2, 3, 4, 5, 6];
-        $pembayaran_semester_akhir = $pembayaran = PembayaranBiaya::whereIn('tgl_pembayaran', function ($query) use ($bulanAkhir) {
+        $pembayaran_tagihan_semester_akhir  = PembayaranBiaya::whereIn('tgl_pembayaran', function ($query) use ($bulanAkhir) {
             $query->select('tgl_pembayaran')
                 ->from('pembayaran_biaya') // Ganti dengan nama tabel yang benar
                 ->whereIn(DB::raw('MONTH(tgl_pembayaran)'), $bulanAkhir);
@@ -1220,18 +1227,18 @@ class SppController extends BaseController
             $q->whereNotIn('id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester]);
         })->whereYear('tgl_pembayaran',  $semester_selesai->thn_akademik_semester + 1)->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
+        $pembayaran_tagihan = $pembayaran_tagihan_semester_mulai->merge($pembayaran_tagihan_semester_akhir);
 
         if ($tutup_buku_tahunan) {
             $sisa_tunggakan = $tutup_buku_tahunan->jml_tunggakan_biaya - $data_pembayaran_tunggakan->sum('besar_pembayaran');
-            $sisa_tunggakan -=  $pembayaran_semester_mulai->sum('besar_pembayaran');
-            $sisa_tunggakan -= $pembayaran_semester_akhir->sum('besar_pembayaran');
+            $sisa_tunggakan -=  $pembayaran_tagihan->sum('besar_pembayaran');
         } else {
             $sisa_tunggakan = null;
         }
 
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        return view('keuangan/sim/spp/view-menu-tunggakan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'tutup_buku_tahunan', 'data_pembayaran_tunggakan', 'sisa_tunggakan', 'data_bulan'));
+        return view('keuangan/sim/spp/view-menu-tunggakan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'tutup_buku_tahunan', 'data_pembayaran_tunggakan', 'sisa_tunggakan', 'data_bulan', 'pembayaran_tagihan'));
     }
 
     public function viewMenuTunggakanAlumni(Request $request)
