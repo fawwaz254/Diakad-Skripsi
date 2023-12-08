@@ -18,7 +18,9 @@ class PenggunaDikunciController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-        $list_data = Pengguna::with('siswa', 'siswa.kelas')->where('status_join_table', 3)->whereNull('terkunci_hingga');
+        $list_data = Pengguna::with('siswa', 'siswa.kelas')->where('status_join_table', 3)->where(function($q){
+            $q->whereNull('terkunci_hingga')->orWhere('terkunci_hingga', '<', now());
+        });
 
         return Datatables::of($list_data)
             ->make(true);
