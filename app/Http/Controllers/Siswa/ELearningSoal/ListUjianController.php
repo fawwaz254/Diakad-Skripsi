@@ -45,7 +45,9 @@ class ListUjianController extends Controller
                 $q->whereNotNull('content');
         }])->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
             $query->where('id_kelas', $id_kelas);
-        })->whereNotIn('id_paket_soal', $statusTests->where('status', '1')->pluck('id_paket_soal'));
+        });
+        //     ->whereNotIn('id_paket_soal', $statusTests->where('status', '1')->pluck('id_paket_soal')
+        // );
         $waktu = Carbon::now('Asia/Jakarta');
 
 
