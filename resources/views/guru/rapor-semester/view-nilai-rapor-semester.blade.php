@@ -4,7 +4,7 @@
         <div>
             <h2>
                 <a class="btn bg-green waves-effect target-link"
-                    href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
+                    href="{{ url(Request::segment(1) . '#rapor-semester/tambah-nilai-rapor-semester/add') }}"><i
                         class="material-icons">add</i><span>Tambah Nilai</span></a>
                 <a class="btn bg-green waves-effect target-link"
                     href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/importExcel/') }}"><i
@@ -50,7 +50,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Mata Pelajaran</th>
-                                <th>Jenis Mata Pelajaran</th>
+                                {{-- <th>Jenis Mata Pelajaran</th> --}}
                                 <th>Kelas</th>
                                 {{-- <th>Jurusan</th> --}}
                                 <th>Nilai Siswa Terisi</th>
@@ -70,8 +70,8 @@
 </div>
 
 <script type="text/javascript">
-    var modul_url = 'rapor-sisipan';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables';
+    var modul_url = 'rapor-semester';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/datatables';
     var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'daftar-nilai-sts/action-daftar-nilai-sts/delete';
@@ -106,12 +106,12 @@
                 className: 'align-center',
                 orderable: false,
             },
-            {
-                data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
-                name: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
-                className: 'align-center',
-                orderable: false,
-            },
+            // {
+            //     data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+            //     name: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+            //     className: 'align-center',
+            //     orderable: false,
+            // },
             {
                 data: 'kelas.nm_kelas',
                 name: 'kelas.nm_kelas',
