@@ -38,7 +38,8 @@ class HasilTestController extends Controller
             $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna);
         }
 
-        $list_data->with('test', 'kategori_soal', 'paket_soal_kelas.kelas.siswa');
+        $list_data->withCount('test')
+            ->with('kategori_soal', 'paket_soal_kelas.kelas.siswa');
 
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
@@ -50,9 +51,9 @@ class HasilTestController extends Controller
                 }
                 return $total;
             })
-            ->addColumn('total_mengerjakan', function ($item) {
-                return $item->test->count();
-            })
+            // ->addColumn('total_mengerjakan', function ($item) {
+            //     return $item->test->count();
+            // })
             ->addColumn('action', function ($item) {
                 $nm_kelas = [];
                 foreach ($item->paket_soal_kelas as $key => $kelas) {
