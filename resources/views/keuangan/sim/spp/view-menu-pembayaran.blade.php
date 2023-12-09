@@ -185,12 +185,24 @@
                     </h2>
                 </div>
                 <div class="body">
+                @php
+                    $now = Carbon\Carbon::now();
+                    $currentYear = $now->format('Y');
+                    $cutoff = new DateTime($now->format('Y') . '/07/31 23:59:59');
+
+                    $ganjil = false;
+                    if ($now > $cutoff) {
+                        $ganjil = true;
+                    }
+                @endphp
                     <a href="/keuangan/utility/pembayaran-by-kelas/print/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
                         target="_blank" class="btn btn-success">Print Pembayaran Siswa</a>
                     <a href="/keuangan/utility/pembayaran-by-kelas/print/0/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
                         target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Ini</a>
+                    @if ($ganjil)
                     <a href="/keuangan/utility/pembayaran-by-kelas/print/1/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
-                        target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Depan</a>
+                    target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Depan</a>
+                    @endif
 
                     <h2 class="card-inside-title">
                         Tanggal Pembayaran
