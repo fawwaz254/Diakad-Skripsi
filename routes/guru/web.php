@@ -819,7 +819,10 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('rapor-semester')->group(function () {
             Route::prefix('tambah-nilai-rapor-semester')->group(function () {
                 Route::get('/', [NilaiRaporSemesterController::class, 'viewNilaiRaporSemester']);
+                Route::get('/add', [NilaiRaporSemesterController::class, 'addNilaiRaporSemester']);
+                Route::post('getMataPelajaran', [NilaiRaporSemesterController::class, 'getMataPelajaran']);
                 Route::get('datatables', [NilaiRaporSemesterController::class, 'datatablesNilaiRaporSemester']);
+                Route::post('action/{mode}/{id}', [NilaiRaporSemesterController::class, 'actionsNilaiRaporSemester']);
             });
         });
 
