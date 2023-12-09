@@ -17,7 +17,7 @@
                                     <th>Nama Ujian</th>
                                     {{-- <th>Kelas</th> --}}
                                     <th>Mapel</th>
-                                    <th>Jumlah Soal</th>
+                                    {{-- <th>Jumlah Soal</th> --}}
                                     {{-- <th>Nilai Tiap Soal</th> --}}
                                     <th>Waktu</th>
                                     <th>Durasi Pengerjaan</th>
@@ -65,13 +65,13 @@
             {
                 data: 'kategori_soal.nm_kategori_soal'
             },
-            {
-                data: 'total_question',
-                name: 'total_question',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-            },
+            // {
+            //     data: 'total_question',
+            //     name: 'total_question',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            // },
             // {
             //     data: 'nilai',
             //     className: 'align-center',

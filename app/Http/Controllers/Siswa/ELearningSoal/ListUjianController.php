@@ -34,55 +34,30 @@ class ListUjianController extends Controller
         $auth_data = $input->auth_data;
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $id_kelas =  $siswa->id_kelas;
-        $statusTests = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
         $list_data = PaketSoal::with(
-            'kelas',
-            'detail_paket_soal',
-            'detail_paket_soal.soal',
-            'kategori_soal',
-        )->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
-            return
-                $q->whereNotNull('content');
-        }])->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
+            [
+                'testSiswa' => function ($query) use ($auth_data) {
+                    $query->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+                }, 'kategori_soal',
+            ]
+        )->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
             $query->where('id_kelas', $id_kelas);
-        });
-        //     ->whereNotIn('id_paket_soal', $statusTests->where('status', '1')->pluck('id_paket_soal')
-        // );
+        })->orderBy('created_at', 'desc');
         $waktu = Carbon::now('Asia/Jakarta');
-
-
         return Datatables::of($list_data)
-            ->addColumn('total_question', function ($item) {
-                return $item->detail_paket_soal->count();
-            })
-            // ->editColumn('nilai', function ($item) {
-            //     if ($item->nilai == '0') {
-            //         return intval(100 / $item->detail_paket_soal->count());
-            //     } else {
-            //         return $item->nilai;
-            //     }
-            // })
             ->editColumn('waktu_pengerjaan', '{{$waktu_pengerjaan}} Menit')
-            // ->addColumn('total_answer', function ($item) {
-            //     $value = 0;
-            //     foreach ($item->detail_paket_soal as $data) {
-            //         $value += $data->soal->pilihan_soal->count();
-            //     }
-            //     return $value;
-            // })
-            ->addColumn('status', function ($item) use ($statusTests, $waktu) {
-                $statusTest = $statusTests->where('id_paket_soal', $item->id_paket_soal)->first();
+            ->addColumn('status', function ($item) use ($waktu) {
                 $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_mulai);
                 $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_selesai);
 
-                if (!$statusTest && strtotime($waktu) > strtotime($end_date)) {
+                if (!$item->testSiswa && strtotime($waktu) > strtotime($end_date)) {
                     $status = "Waktu Berakhir";
                 } else {
-                    if (strtotime($start_date) > strtotime($waktu) || $item->detail_paket_soal->count() == 0) {
+                    if (strtotime($start_date) > strtotime($waktu)) {
                         $status = "Test Belum dimulai";
                     } else {
-                        if ($statusTest) {
-                            if ($statusTest->status == 1) {
+                        if ($item->testSiswa) {
+                            if ($item->testSiswa->status == 1) {
                                 $status = "Sudah Mengerjakan";
                             } else {
                                 $status = "Sedang dikerjakan";
@@ -94,19 +69,18 @@ class ListUjianController extends Controller
                 }
                 return $status;
             })
-            ->addColumn('action', function ($item) use ($statusTests, $waktu) {
-                $statusTest = $statusTests->where('id_paket_soal', $item->id_paket_soal)->first();
+            ->addColumn('action', function ($item) use ($waktu) {
                 $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_mulai);
                 $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_selesai);
 
-                if (!$statusTest && strtotime($waktu) > strtotime($end_date)) {
+                if (!$item->testSiswa && strtotime($waktu) > strtotime($end_date)) {
                     $status = "98";
                 } else {
-                    if (strtotime($start_date) > strtotime($waktu) || $item->detail_paket_soal->count() == 0) {
+                    if (strtotime($start_date) > strtotime($waktu)) {
                         $status = "99";
                     } else {
-                        if ($statusTest) {
-                            if ($statusTest->status == 1) {
+                        if ($item->testSiswa) {
+                            if ($item->testSiswa->status == 1) {
                                 $status = "1";
                             } else {
                                 $status = "2";
