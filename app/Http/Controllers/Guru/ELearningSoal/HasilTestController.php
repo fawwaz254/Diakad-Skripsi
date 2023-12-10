@@ -39,15 +39,14 @@ class HasilTestController extends Controller
         }
 
         $list_data->withCount('test')
-            ->with('kategori_soal', 'paket_soal_kelas.kelas.siswa');
+            ->with('kategori_soal', 'paket_soal_kelas.kelas');
 
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
                 $total = 0;
-                foreach ($item->paket_soal_kelas as $kelas) {
-                    if (!empty($kelas->kelas)) {
-                        $total += $kelas->kelas->siswa->count();
-                    }
+                foreach ($item->paket_soal_kelas as $paket_soal_kelas) {
+                    $jumlah_siswa =  $paket_soal_kelas->kelas->loadCount('siswa');
+                    $total += $jumlah_siswa->siswa_count;
                 }
                 return $total;
             })
