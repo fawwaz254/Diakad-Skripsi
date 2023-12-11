@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Guru\RaporSemester;
 
+use App\Exports\RekapRapor;
 use App\Exports\TemplateNilaiRapor;
 use App\Http\Controllers\Controller;
 use App\Imports\UploadNilaiRaporSemester;
@@ -13,6 +14,7 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Kelas;
 use App\Models\KelasRapor;
 use App\Models\KomponenJenisRapor;
+use App\Models\NilaiRapor;
 use App\Models\Rapor;
 use App\Models\RaporSisipan;
 use Maatwebsite\Excel\Facades\Excel;
@@ -63,14 +65,15 @@ class NilaiRaporSemesterController extends Controller
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) {
-                // $nilaiLengkap =  $item->kelas->siswa->count();
-                // $nilaiTerisi = $item->nilai_rapor_sisipan_count;
-                // if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
-                //     $hasil = '0%';
-                // } else {
-                //     $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2) . '%';
-                // }
-                $hasil = 0;
+                $nilaiLengkap =  $item->kelas->loadCount('siswa');
+
+                $nilaiTerisi = $item->nilai_rapor_count;
+                if ($nilaiLengkap->siswa_count == '0' || $nilaiTerisi == '0') {
+                    $hasil = '0%';
+                } else {
+                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap->siswa_count) * 100, 2) . '%';
+                }
+
                 return $hasil;
             })
             ->editColumn('semester', function ($item) {
@@ -112,24 +115,24 @@ class NilaiRaporSemesterController extends Controller
         if ($mode == 'delete') {
             DB::beginTransaction();
             try {
-                DB::table('nilai_rapor_sisipan')->where('id_rapor_sisipan', $id)->delete();
-                $raporSisipan = RaporSisipan::where('id_rapor_sisipan', $id)->first();
-                if ($raporSisipan) {
-                    $raporSisipan->delete();
+                DB::table('nilai_rapor')->where('id_rapor', $id)->delete();
+                $rapor = Rapor::where('id_rapor', $id)->first();
+                if ($rapor) {
+                    $rapor->delete();
                 }
 
                 DB::Commit();
                 return [
                     'status' => 202,
-                    'path' => 'rapor-sisipan/daftar-nilai-sts',
-                    'message' => 'Delete Rapor Sisipan Successfully'
+                    'path' => 'rapor-semester/tambah-nilai-rapor-semester',
+                    'message' => 'Delete Rapor Semester Successfully'
                 ];
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
                 DB::rollback();
                 return [
                     'status' => 202,
-                    'path' => 'rapor-sisipan/daftar-nilai-sts',
-                    'message' => 'Delete Rapor Sisipan Gagal, Silahkan coba lagi'
+                    'path' => 'rapor-semester/tambah-nilai-rapor-semester',
+                    'message' => 'Delete Rapor Semester Gagal, Silahkan coba lagi'
                 ];
             }
         }
@@ -282,5 +285,51 @@ class NilaiRaporSemesterController extends Controller
                 'message'     => "File Excel tidak ditemukan"
             ];
         }
+    }
+    public function printRekap(Request $request, $id_rapor)
+    {
+        // set_time_limit(1800);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
+
+        $list_data = KomponenJenisRapor::where('id_jenis_rapor', $rapor->kelas->id_jenis_rapor)->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->orderBy('nis_siswa')->get();
+
+        $list_nilai = NilaiRapor::where('id_rapor', $id_rapor)->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->get();
+
+        $nilai_siswa = [];
+        $list_kd_aktif = [];
+        // $nilai_komponen = [];
+        if ($list_siswa) {
+            $nilai = $list_nilai->toArray();
+            foreach ($nilai as $nilaiRapor) {
+                foreach ($nilaiRapor as $a) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'nilai'] = $nilaiRapor['nilai'];
+                    $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'keterangan'] = $nilaiRapor['keterangan'];
+                }
+            }
+        }
+        // foreach ($list_data as $key => $data) {
+        //     $data1 = $list_nilai->where('id_komponen_jenis_rapor', $data->id_komponen_jenis_rapor)->where('nilai', '!=', 0)->first();
+        //     if (!empty($data1)) {
+        //         $list_kd_aktif[$key]['id_komponen_jenis_rapor'] =   $data->id_komponen_jenis_rapor;
+        //         $list_kd_aktif[$key]['nm_nilai'] =   $data->nm_nilai;
+        //     }
+        // }
+
+
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        // $data['nilai_komponen'] = $nilai_komponen;
+        $data['rapor'] = $rapor;
+        $data['list_siswa'] = $list_siswa;;
+        $data['list_data'] = $list_data;
+        $data['id_rapor'] = $id_rapor;
+
+        return Excel::download(new RekapRapor($data), 'Rekap Rapor (' . $rapor->kelas->nm_kelas . ' - ' . $rapor->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
     }
 }
