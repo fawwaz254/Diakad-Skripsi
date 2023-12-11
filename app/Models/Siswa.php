@@ -115,6 +115,11 @@ class Siswa extends Model
         return $this->hasMany(NilaiRaporSisipan::class, 'id_siswa');
     }
 
+    public function nilai_rapor()
+    {
+        return $this->hasMany(NilaiRapor::class, 'id_siswa');
+    }
+
     public function nilai_komponen_kpi()
     {
         return $this->hasMany(NilaiKomponenKpi::class, 'id_siswa');
