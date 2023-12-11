@@ -85,7 +85,9 @@ class PaketSoalController extends Controller
                 }
 
                 $data = array(
-                    'total_soal' => $query_soal_cabang->isEmpty() ? $soal_biasa : $soal_biasa . ' + ' . $soal_cabang . ' (sub soal)',
+                    'soal' => $soal_biasa,
+                    'soalsub' =>  $query_soal_cabang->isEmpty() ? '' : $query_soal_cabang->count() . '  (' . $soal_cabang . ')',
+                    // 'total_soal' => $query_soal_cabang->isEmpty() ? $soal_biasa : $soal_biasa . ' + ' . $soal_cabang . ' (sub soal)',
                     'nilai' => $item->nilai != '0' ? $item->nilai : $nilai,
                 );
                 return $data;

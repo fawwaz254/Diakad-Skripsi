@@ -38,21 +38,21 @@ class HasilTestController extends Controller
             $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna);
         }
 
-        $list_data->with('test', 'kategori_soal', 'paket_soal_kelas.kelas.siswa');
+        $list_data->withCount('test')
+            ->with('kategori_soal', 'paket_soal_kelas.kelas');
 
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
                 $total = 0;
-                foreach ($item->paket_soal_kelas as $kelas) {
-                    if (!empty($kelas->kelas)) {
-                        $total += $kelas->kelas->siswa->count();
-                    }
+                foreach ($item->paket_soal_kelas as $paket_soal_kelas) {
+                    $jumlah_siswa =  $paket_soal_kelas->kelas->loadCount('siswa');
+                    $total += $jumlah_siswa->siswa_count;
                 }
                 return $total;
             })
-            ->addColumn('total_mengerjakan', function ($item) {
-                return $item->test->count();
-            })
+            // ->addColumn('total_mengerjakan', function ($item) {
+            //     return $item->test->count();
+            // })
             ->addColumn('action', function ($item) {
                 $nm_kelas = [];
                 foreach ($item->paket_soal_kelas as $key => $kelas) {
@@ -539,15 +539,18 @@ class HasilTestController extends Controller
     public function printHasilTest4(Request $request, $id)
     {
         set_time_limit(-1);
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal', 'test.jawaban_test')->first();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal')->first();
         $pilihan_pertanyaan = PilihanPertanyaan::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
         $pilihan_soal = PilihanSoal::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
+
+        $test = Test::where('id_paket_soal', $paket_soal->id_paket_soal)->with('jawaban_test')->get();
+
 
         $nilai_siswa = [];
         $benar = [];
 
 
-        foreach ($paket_soal->test as $test) {
+        foreach ($test as $test) {
             $type1 = 0;
             $type2 = 0;
             foreach ($test->jawaban_test as $jawaban_test) {

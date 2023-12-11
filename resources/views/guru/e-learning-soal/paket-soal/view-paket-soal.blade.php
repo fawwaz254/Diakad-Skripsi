@@ -49,7 +49,8 @@
                                     <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Mapel</th>
-                                    <th>Total Soal</th>
+                                    <th>Soal</th>
+                                    <th>Soal type Sub</th>
                                     <th>Tambah Soal</th>
                                     {{-- <th>Total Answer</th> --}}
                                     <th>Poin Soal</th>
@@ -130,7 +131,17 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return data.total_soal;
+                    return data.soal;
+                }
+
+            },
+            {
+                data: 'question',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return data.soalsub;
                 }
 
             },
