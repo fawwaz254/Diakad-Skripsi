@@ -553,7 +553,7 @@ class HasilTestController extends Controller
         foreach ($tests as $test) {
             $type1 = 0;
             $type2 = 0;
-            $jawaban_tests = JawabanTest::where('id_test' . $test->id_test)->get();
+            $jawaban_tests = JawabanTest::where('id_test', $test->id_test)->get();
             foreach ($jawaban_tests as $jawaban_test) {
                 if (isset($nilai_siswa[$test->id_pengguna])) {
                     $nilai_siswa[$test->id_pengguna] +=  $jawaban_test->nilai;
