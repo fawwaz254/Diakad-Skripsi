@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers\Guru\RaporSemester;
 
+use App\Exports\TemplateNilaiRapor;
 use App\Http\Controllers\Controller;
+use App\Imports\UploadNilaiRaporSemester;
+use App\Jobs\CreateNilaiRapor;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Kelas;
 use App\Models\KelasRapor;
+use App\Models\KomponenJenisRapor;
 use App\Models\Rapor;
 use App\Models\RaporSisipan;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Siswa;
 use DB;
+use Validator;
 
 class NilaiRaporSemesterController extends Controller
 {
@@ -49,6 +56,10 @@ class NilaiRaporSemesterController extends Controller
             ])
             ->orderBy('created_at', 'desc');
 
+        if ($status == '0') {
+            $list_data = $list_data->where('created_by', $auth_data->pengguna->id_pengguna);
+        }
+
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) {
@@ -79,10 +90,7 @@ class NilaiRaporSemesterController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // $data['list_mapel'] = MataPelajaran::with('jenis_mata_pelajaran')->get();
         $data['list_kelas'] = Kelas::where('is_aktif', 1)->get();
-        // $data['list_jurusan'] = Jurusan::all();
-        // $data['jenis_mapel'] = JenisMataPelajaran::all();
         $data['semester_aktif'] = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data['data_semester'] = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -156,40 +164,44 @@ class NilaiRaporSemesterController extends Controller
                 try {
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $rapor                      = new Rapor;
-                    $rapor->id_rapor    = $id;
+                    $rapor->id_rapor            = $id;
                     $rapor->id_semester         = $input->id_semester;
                     $rapor->id_mata_pelajaran   = $input->id_mata_pelajaran;
                     $rapor->id_kelas            = $input->id_kelas;
                     $rapor->created_by          = $input->auth_data->pengguna->id_pengguna;
                     $rapor->save();
 
-                    $siswa = Siswa::where('id_kelas', $input->id_kelas)->with('pengguna.status_pengguna')
+                    $siswa = Siswa::where('id_kelas', $input->id_kelas)
                         ->whereHas('pengguna.status_pengguna', function ($query) {
                             $query->where('aktif_status_pengguna', '=', '1');
                         })
                         ->get();
 
-                    $komponen_nilai = KomponenNilaiRaporSisipan::where('status', 1)->get();
+                    $kelas = Kelas::find($input->id_kelas);
+                    $komponen_jenis_rapor = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->get();
+
                     foreach ($siswa as $s) {
-                        foreach ($komponen_nilai as $komponen) {
+                        foreach ($komponen_jenis_rapor as $komponen) {
                             $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
                             $list_data[] = [
-                                'id_nilai_rapor_sisipan' =>  $id,
-                                // 'id_rapor_sisipan' => $rapor_sisipan->id_rapor_sisipan,
-                                'id_komponen_nilai' => $komponen->id_komponen_nilai,
+                                'id_nilai_rapor' =>  $id,
+                                'id_rapor' => $rapor->id_rapor,
+                                'id_komponen_jenis_rapor' => $komponen->id_komponen_jenis_rapor,
                                 'id_siswa' => $s->id_siswa,
                                 'nilai' => 0,
+                                'keterangan' => null,
+                                'created_at' => Carbon::now(env('APP_TIMEZONE', '')),
                                 'created_by' => $input->auth_data->pengguna->id_pengguna,
                             ];
                         }
                     }
-                    CreateRaporSisipan::dispatch($list_data);
+                    CreateNilaiRapor::dispatch($list_data);
 
                     DB::Commit();
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'rapor-sisipan/daftar-nilai-sts',
+                        'path' => 'rapor-semester/tambah-nilai-rapor-semester',
                         'message' => 'Save Tambah Nilai Successfully'
                     ];
                 } catch (\Exception $e) {
@@ -202,6 +214,73 @@ class NilaiRaporSemesterController extends Controller
                     ];
                 }
             }
+        }
+    }
+
+    public function templateExcel(Request $request, $id_rapor)
+    {
+
+        set_time_limit(-1);
+
+        $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
+        $list_data = KomponenJenisRapor::where('id_jenis_rapor', $rapor->kelas->id_jenis_rapor)->get();
+
+        $list_siswa = Siswa::where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->whereHas('nilai_rapor', function ($query) use ($rapor) {
+            $query->where('id_rapor', '=', $rapor->id_rapor);
+        })->with(['nilai_rapor' => function ($query) use ($rapor) {
+            $query->where('id_rapor', $rapor->id_rapor);
+        }])->orderBy('nis_siswa')->get();
+
+        $nilai_siswa = [];
+        // if ($list_siswa->nilai_rapor) {
+
+        foreach ($list_siswa as $siswa) {
+            $nilai = $siswa->nilai_rapor->toArray();
+            foreach ($nilai as $nilaiRapor) {
+                foreach ($nilaiRapor as $a) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'nilai'] = $nilaiRapor['nilai'];
+                    $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'keterangan'] = $nilaiRapor['keterangan'];
+                }
+            }
+        }
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        $data['rapor'] = $rapor;
+        $data['list_siswa'] = $list_siswa;;
+        $data['list_data'] = $list_data;
+        $data['id_rapor'] = $id_rapor;
+        $nm_mata_pelajaran = str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", $rapor->mata_pelajaran->nm_mata_pelajaran);
+        return Excel::download(new TemplateNilaiRapor($data), 'Template Excel Rapor (' . $rapor->kelas->nm_kelas . ' - ' . $nm_mata_pelajaran . ').xlsx');
+    }
+    public function imporExcel(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('guru/rapor-semester/view-upload-nilai-rapor-semester', compact('auth_data'));
+    }
+
+    public function uploadNilaiRapor(Request $request)
+    {
+        if ($request->hasFile('file-excel')) {
+            try {
+                Excel::import(new UploadNilaiRaporSemester, $request->file('file-excel'));
+            } catch (\Exception $e) {
+                return [
+                    'status'     => 200, // FAILED
+                    'message'     => "Gagal, Cek kembali apakah ada data nilai yang melebihi batas"
+                ];
+            }
+            return [
+                'status'     => 200, // FAILED
+                'message'     => "Upload Sukses"
+            ];
+        } else {
+            return [
+                'status'     => 300, // FAILED
+                'message'     => "File Excel tidak ditemukan"
+            ];
         }
     }
 }

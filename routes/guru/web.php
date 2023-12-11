@@ -823,6 +823,9 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('getMataPelajaran', [NilaiRaporSemesterController::class, 'getMataPelajaran']);
                 Route::get('datatables', [NilaiRaporSemesterController::class, 'datatablesNilaiRaporSemester']);
                 Route::post('action/{mode}/{id}', [NilaiRaporSemesterController::class, 'actionsNilaiRaporSemester']);
+                Route::get('templateExcel/{id}', [NilaiRaporSemesterController::class, 'templateExcel']);
+                Route::get('importExcel', [NilaiRaporSemesterController::class, 'imporExcel']);
+                Route::post('importExcel', [NilaiRaporSemesterController::class, 'uploadNilaiRapor']);
             });
         });
 
