@@ -61,17 +61,18 @@ class NilaiRaporSemesterController extends Controller
         if ($status == '0') {
             $list_data = $list_data->where('created_by', $auth_data->pengguna->id_pengguna);
         }
-
+        $komponen_jenis_rapor = KomponenJenisRapor::get();
 
         return Datatables::of($list_data)
-            ->addColumn('jumlah', function ($item) {
+            ->addColumn('jumlah', function ($item) use ($komponen_jenis_rapor) {
                 $nilaiLengkap =  $item->kelas->loadCount('siswa');
 
                 $nilaiTerisi = $item->nilai_rapor_count;
-                if ($nilaiLengkap->siswa_count == '0' || $nilaiTerisi == '0') {
+                $jumlahSiswaKomponen = $nilaiLengkap->siswa_count * $komponen_jenis_rapor->where('id_jenis_rapor', $item->kelas->id_jenis_rapor)->count();
+                if ($jumlahSiswaKomponen == '0' || $nilaiTerisi == '0') {
                     $hasil = '0%';
                 } else {
-                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap->siswa_count) * 100, 2) . '%';
+                    $hasil = number_format(($nilaiTerisi / $jumlahSiswaKomponen) * 100, 2) . '%';
                 }
 
                 return $hasil;
