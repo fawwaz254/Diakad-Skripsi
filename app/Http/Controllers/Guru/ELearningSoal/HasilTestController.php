@@ -164,7 +164,7 @@ class HasilTestController extends Controller
                     $nilai_pilihan_ganda  = 100;
                 }
 
-                if ($nilai_pilihan_essay_submit) {
+                if ($nilai_pilihan_essay_submit  > 100) {
                     $nilai_pilihan_essay_submit = 100;
                 }
 
