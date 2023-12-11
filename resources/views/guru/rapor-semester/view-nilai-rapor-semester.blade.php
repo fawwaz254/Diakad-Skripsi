@@ -78,7 +78,7 @@
     var template_excel_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'tambah-nilai-rapor-semester/templateExcel';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
-    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
+    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/print';
     var primary_table = $('#primary_table').DataTable({
         lengthMenu: [
             [5, 10, 25, 50, -1],
@@ -180,10 +180,10 @@
                             print_url + '/' + data.id + '"  target="_blank">' +
                             '    <i class="material-icons">print</i>' +
                             '</a> ' +
-                            '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            pdf_url + '/' + data.id + '"  target="_blank">' +
-                            '    <i class="material-icons">picture_as_pdf</i>' +
-                            '</a> ' +
+                            // '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            // pdf_url + '/' + data.id + '"  target="_blank">' +
+                            // '    <i class="material-icons">picture_as_pdf</i>' +
+                            // '</a> ' +
                             '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
                             delete_url + '\', this)" data-id="' + data.id + '">' +
                             '    <i class="material-icons">delete_forever</i>' +
