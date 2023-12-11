@@ -115,24 +115,24 @@ class NilaiRaporSemesterController extends Controller
         if ($mode == 'delete') {
             DB::beginTransaction();
             try {
-                DB::table('nilai_rapor_sisipan')->where('id_rapor_sisipan', $id)->delete();
-                $raporSisipan = RaporSisipan::where('id_rapor_sisipan', $id)->first();
-                if ($raporSisipan) {
-                    $raporSisipan->delete();
+                DB::table('nilai_rapor')->where('id_rapor', $id)->delete();
+                $rapor = Rapor::where('id_rapor', $id)->first();
+                if ($rapor) {
+                    $rapor->delete();
                 }
 
                 DB::Commit();
                 return [
                     'status' => 202,
-                    'path' => 'rapor-sisipan/daftar-nilai-sts',
-                    'message' => 'Delete Rapor Sisipan Successfully'
+                    'path' => 'rapor-semester/tambah-nilai-rapor-semester',
+                    'message' => 'Delete Rapor Semester Successfully'
                 ];
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
                 DB::rollback();
                 return [
                     'status' => 202,
-                    'path' => 'rapor-sisipan/daftar-nilai-sts',
-                    'message' => 'Delete Rapor Sisipan Gagal, Silahkan coba lagi'
+                    'path' => 'rapor-semester/tambah-nilai-rapor-semester',
+                    'message' => 'Delete Rapor Semester Gagal, Silahkan coba lagi'
                 ];
             }
         }

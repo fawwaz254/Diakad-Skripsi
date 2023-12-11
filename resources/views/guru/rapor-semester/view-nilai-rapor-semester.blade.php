@@ -74,7 +74,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/datatables';
     var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'daftar-nilai-sts/action-daftar-nilai-sts/delete';
+        'tambah-nilai-rapor-semester/action/delete';
     var template_excel_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'tambah-nilai-rapor-semester/templateExcel';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
