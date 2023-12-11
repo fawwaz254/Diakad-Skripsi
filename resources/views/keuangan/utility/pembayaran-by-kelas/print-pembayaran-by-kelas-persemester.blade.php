@@ -202,21 +202,21 @@
 
                         $total_tagihan = 0;
                         if ($tipe_semester) {
-                            foreach ($total_tagihan_spp->take(6) as $tagihan) {
-                                $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                            }
-
-                            $total_tagihan_non_spp = $data_tagihan_non_bulanan->where('id_siswa', $siswa->id_siswa);
-                            foreach ($total_tagihan_non_spp->take(6) as $tagihan) {
-                                $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                            }
-                        } else {
                             foreach ($total_tagihan_spp->skip(6) as $tagihan) {
                                 $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
                             }
 
                             $total_tagihan_non_spp = $data_tagihan_non_bulanan->where('id_siswa', $siswa->id_siswa);
                             foreach ($total_tagihan_non_spp->skip(6) as $tagihan) {
+                                $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                            }
+                        } else {
+                            foreach ($total_tagihan_spp->take(6) as $tagihan) {
+                                $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                            }
+
+                            $total_tagihan_non_spp = $data_tagihan_non_bulanan->where('id_siswa', $siswa->id_siswa);
+                            foreach ($total_tagihan_non_spp->take(6) as $tagihan) {
                                 $total_tagihan += $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
                             }
                         }
