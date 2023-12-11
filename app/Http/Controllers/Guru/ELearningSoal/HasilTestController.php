@@ -543,17 +543,18 @@ class HasilTestController extends Controller
         $pilihan_pertanyaan = PilihanPertanyaan::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
         $pilihan_soal = PilihanSoal::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
 
-        $test = Test::where('id_paket_soal', $paket_soal->id_paket_soal)->with('jawaban_test')->get();
+        $tests = Test::where('id_paket_soal', $paket_soal->id_paket_soal)->get();
 
 
         $nilai_siswa = [];
         $benar = [];
 
 
-        foreach ($test as $test) {
+        foreach ($tests as $test) {
             $type1 = 0;
             $type2 = 0;
-            foreach ($test->jawaban_test as $jawaban_test) {
+            $jawaban_tests = JawabanTest::where($test->id_test)->get();
+            foreach ($jawaban_tests as $jawaban_test) {
                 if (isset($nilai_siswa[$test->id_pengguna])) {
                     $nilai_siswa[$test->id_pengguna] +=  $jawaban_test->nilai;
                 } else {
