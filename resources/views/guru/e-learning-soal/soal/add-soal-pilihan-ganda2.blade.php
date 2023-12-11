@@ -12,8 +12,6 @@
             <i class="material-icons">indeterminate_check_box</i>
             <span>Hapus Jumlah Soal</span>
         </button>
-        <input type="text" name="jumlah" style="padding:7px; background-color:white;border: 1px solid black;"
-            value="Jumlah Soal = 1" disabled>
         <span style="background-color: white;padding:7px;border: 1px solid black;">
             <input type="checkbox" id="wuswug" class="checkbox" checked>
             <label for="wuswug">Aktifkan Input Gambar / Rumus</label>
@@ -31,57 +29,83 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-pink">
-                    <h2>
-                        1. SOAL PILIHAN GANDA
-                    </h2>
-                </div>
                 <div class="body">
-                    <h2 class="card-inside-title">Paste Soal dan Jawaban dari file Word</h2>
+                    <h2 class="card-inside-title">Paste 10 Soal dan Jawaban dari file Word</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="1" class="form-control " onpaste="pasteFunction(this)" rows="5"></textarea>
-                        </div>
-                    </div>
-                    <h2 class="card-inside-title">Soal</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q1" class="form-control q1" required="" name="soal[1]" rows="3"></textarea>
-                        </div>
-                    </div>
-                    @for ($i = 0; $i < 5; $i++)
-                        <h2 class="card-inside-title">Jawaban {{ $i + 1 }}</h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea id="a1{{ $i }}" class="form-control a1{{ $i }}" required="" name="jawaban[1][]"></textarea>
-                            </div>
-                        </div>
-                    @endfor
-                    <h2 class="card-inside-title">Jawaban Benar</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <select class="form-control show-tick" name="jawaban_benar[1]" required="">
-                                @for ($i = 0; $i < 5; $i++)
-                                    <option value="{{ $i }}">Jawaban {{ $i + 1 }}</option>
-                                @endfor
-                            </select>
+                            <textarea id="1" class="form-control " onpaste="pasteFunction()" rows="10"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
+            <br>
+
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header bg-pink">
+                                <h2>
+                                    SOAL PILIHAN GANDA
+                                </h2>
+                            </div>
+                            <div class="body">
+                                <div id="pertanyan">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <pre>1. Pertanyaan</pre>
+                                            <textarea class="form-control q1" required="" id="q1"
+                                                name="soal[1]" rows="10"></textarea>
+                                            <br>
+                                            <pre>Kunci Jawaban</pre>
+                                            <select class="form-control show-tick" name="jawaban_benar[1]"
+                                                required="">
+                                                @for ($i = 0; $i < 5; $i++)
+                                                    <option value="{{ $i }}">Jawaban {{ $i + 1 }}
+                                                    </option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <pre>1. Jawaban</pre>
+                                            @for ($i = 0; $i < 5; $i++)
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="row clearfix">
+                                                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                                            <b> {{ $i + 1 }}:</b>
+                                                        </div>
+                                                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-12" style="margin-bottom: 17px">
+                                                            <textarea id="{{ 'a1' . $i }}" class="form-control {{ 'a1' . $i }}" required=""
+                                                                name="jawaban[1][]" rows="1"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                                <div id="place">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+            <div id="place">
+            </div>
         </div>
-    </div>
-    <div id="place">
     </div>
 
     <div class="row clearfix" style="margin-top: 10px">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <button class="btn btn-block bg-pink waves-effect" id="btn-submit" type="submit">Save</button>
-            <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button"
-                style="margin-bottom: 20px; margin-top: 20px">Preview</button>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button">Preview</button>
         </div>
     </div>
-
     <br>
     <br>
 </form>
@@ -110,39 +134,40 @@
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
-    var jumlah = 1;
+    var pertanyaan = 1;
+
     $(document).ready(function() {
         $('#btn-submit').attr('disabled', 'disabled');
         changeCkedior();
     })
 
+
     function changeCkedior() {
         var checkbox = document.getElementById("wuswug");
         var isChecked = checkbox.checked;
-        if (isChecked) // if changed state is "CHECKED"
-        {
-            for (var i = 1; i <= jumlah; i++) {
+        if (isChecked) {
+            for (var i = 1; i <= pertanyaan; i++) {
                 id = 'q' + i;
+                console.log(id);
                 var editor = CKEDITOR.replace(id, options);
-                for (var j = 0; j < 5; j++) {
+                for (var j = 0; j <= 5; j++) {
                     idjawaban = 'a' + i + j;
                     var editorjawaban = CKEDITOR.replace(idjawaban, options);
                 }
+
             }
 
         } else {
-            for (var i = 1; i <= jumlah; i++) {
+            for (var i = 1; i <= pertanyaan; i++) {
                 id = 'q' + i;
                 CKEDITOR.instances[id].destroy();
-                for (var j = 0; j < 5; j++) {
+                for (idjawaban in CKEDITOR.instances) {
                     idjawaban = 'a' + i + j;
                     CKEDITOR.instances[idjawaban].destroy();
                 }
             }
-
         }
     }
-
 
     $("#btn-view").click(function() {
         var checkbox = document.getElementById("wuswug");
@@ -151,7 +176,7 @@
 
         if (isChecked) {
             checkbox.checked = !checkbox.checked;
-            for (var i = 1; i <= jumlah; i++) {
+            for (var i = 1; i <= pertanyaan; i++) {
                 id = 'q' + i;
                 CKEDITOR.instances[id].destroy();
                 for (var j = 0; j < 5; j++) {
@@ -160,9 +185,10 @@
                 }
             }
         }
+
         $('#modal').html('');
         var html = '<table  class="table">';
-        for (var i = 1; i <= jumlah; i++) {
+        for (var i = 1; i <= pertanyaan; i++) {
             var soal = $(`textarea[id="q${i}"]`).val();
             var kunci = $(`select[name="jawaban_benar[${i}]"]`).val();
             if (soal) {
@@ -210,36 +236,36 @@
         }
         html += '</table>';
         $('#modal').html(html);
-
-
-
         $('#myModal').modal('show');
-
-
     });
-
 
     var options = {
         filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
         filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
         filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
-        filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
+        filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token=',
     };
 
+    var dynamic_input = [];
+
+
     $('.checkbox').on('change', function() { // on change of state
-        if (this.checked) // if changed state is "CHECKED"
+        var checkbox = document.getElementById("wuswug");
+        var isChecked = checkbox.checked;
+        
+        if (isChecked) // if changed state is "CHECKED"
         {
-            for (var i = 1; i <= jumlah; i++) {
+            for (var i = 1; i <= pertanyaan; i++) {
                 id = 'q' + i;
                 var editor = CKEDITOR.replace(id, options);
-                for (var j = 0; j < 5; j++) {
+                for (var j = 0; j <= 5; j++) {
                     idjawaban = 'a' + i + j;
                     var editorjawaban = CKEDITOR.replace(idjawaban, options);
                 }
             }
 
         } else {
-            for (var i = 1; i <= jumlah; i++) {
+            for (var i = 1; i <= pertanyaan; i++) {
                 id = 'q' + i;
                 CKEDITOR.instances[id].destroy();
                 for (var j = 0; j < 5; j++) {
@@ -247,135 +273,136 @@
                     CKEDITOR.instances[idjawaban].destroy();
                 }
             }
-
         }
+
     });
 
-    $('#add').click(function() {
-        if (jumlah != 10) {
-
-            jumlah++;
-            var value = 'Jumlah Soal = ' + jumlah;
-            $("input[name='jumlah']").val(value);
-            $('#place').append(`
-        <div class="row clearfix" style="margin-top: 10px" id="${jumlah }">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
-                <div class="header bg-pink">
-                    <h2>
-                       ${jumlah} . SOAL PILIHAN GANDA
-                    </h2>
-                </div>
-                <div class="body">
-                    <h2 class="card-inside-title">Paste Soal dan Jawaban dari file World</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="${jumlah}" onpaste="pasteFunction(this)" class="form-control " rows="1"></textarea>
-                        </div>
-                    </div>
-                    <h2 class="card-inside-title">Soal</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="q${jumlah}" class="form-control q${jumlah}" required="" name="soal[${jumlah}]" rows="3"></textarea>
-                        </div>
-                    </div>
-                    @for ($i = 0; $i < 5; $i++)
-                        <h2 class="card-inside-title">Jawaban {{ $i + 1 }}</h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea id="a${jumlah}{{ $i }}" class="form-control a${jumlah}{{ $i }}" required="" name="jawaban[${jumlah}][]"></textarea>
-                            </div>
-                        </div>
-                    @endfor
-                    <h2 class="card-inside-title">Jawaban Benar</h2>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <select class="form-control show-tick" name="jawaban_benar[${jumlah}]" required="">
-                                @for ($i = 0; $i < 5; $i++)
-                                    <option value="{{ $i }}">Jawaban {{ $i + 1 }}</option>
-                                @endfor
-                            </select>
-                           
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-        `);
-        }
-        changeCkedior();
-    });
-
-    $('#remove').click(function() {
-        if (jumlah != 1) {
-            var element = document.getElementById(jumlah);
-            jumlah--;
-            var value = 'Jumlah Soal = ' + jumlah;
-            $("input[name='jumlah']").val(value);
-            while (element.firstChild) {
-                element.removeChild(element.firstChild);
-            }
-            element.remove();
-        }
-    });
-
-    function pasteFunction(el) {
+    function pasteFunction() {
         var checkbox = document.getElementById("wuswug");
         var isChecked = checkbox.checked;
-        var i = el.id;
 
         var clipboardData = event.clipboardData || window.clipboardData;
         var pastedText = clipboardData.getData("text") || window.clipboardData.getData("Text");
         var lines = pastedText.split("\n");
-
-        var id_paste_soal = 'q' + i;
-        if (isChecked) {
-            CKEDITOR.instances[id_paste_soal].destroy();
+        for (var i = 1; i <= pertanyaan; i++) {
+            var id_paste_soal = 'q' + i;
+            if (isChecked) {
+                CKEDITOR.instances[id_paste_soal].destroy();
+                for (var j = 0; j < 5; j++) {
+                    id_paste_jawaban = 'a' + i + j;
+                    if (isChecked) {
+                        CKEDITOR.instances[id_paste_jawaban].destroy();
+                    }
+                }
+            }
         }
 
         setTimeout(function() {
-            var inputElementSoal = document.getElementById(id_paste_soal);
-            if (inputElementSoal === null) {} else {
-                $dataSoal = lines[0].split("\t");
-                if ($dataSoal.length == '2') {
-                    inputElementSoal.value = $dataSoal[1];
-                } else {
-                    inputElementSoal.value = $dataSoal[0];
+            var linesoal = 0;
+            for (var i = 1; i <= pertanyaan; i++) {
+                var id_paste_soal = 'q' + i;
+                var inputElementSoal = document.getElementById(id_paste_soal);
+                if (inputElementSoal === null) {} else {
+                    $dataSoal = lines[linesoal].split("\t");
+                    if ($dataSoal.length == '2') {
+                        inputElementSoal.value = $dataSoal[1];
+                    } else {
+                        inputElementSoal.value = $dataSoal[0];
+                    }
                 }
-            }
 
-            if (isChecked) {
-                CKEDITOR.replace(id_paste_soal, options);
+                if (isChecked) {
+                    CKEDITOR.replace(id_paste_soal, options);
+                }
+
+                linesoal += 6;
             }
         }, 1000);
 
-
-        for (var j = 0; j < 5; j++) {
-            id_paste_jawaban = 'a' + i + j;
-            if (isChecked) {
-                CKEDITOR.instances[id_paste_jawaban].destroy();
-            }
-        }
-
         setTimeout(function() {
-            for (var j = 0; j < 5; j++) {
-                id_paste_jawaban = 'a' + i + j;
-                var inputElementJawaban = document.getElementById(id_paste_jawaban);
-                if (inputElementJawaban === null) {} else {
-                    $data = lines[j + 1].split("\t");
-                    if ($data.length == '2') {
-                        inputElementJawaban.value = $data[1];
-                    } else {
-                        inputElementJawaban.value = $data[0];
+            var lineJawaban = 1;
+            for (var i = 1; i <= pertanyaan; i++) {
+                for (var j = 0; j < 5; j++) {
+                    id_paste_jawaban = 'a' + i + j;
+                    var inputElementJawaban = document.getElementById(id_paste_jawaban);
+                    if (inputElementJawaban === null) {} else {
+                        $data = lines[lineJawaban].split("\t");
+                        if ($data.length == '2') {
+                            inputElementJawaban.value = $data[1];
+                        } else {
+                            inputElementJawaban.value = $data[0];
+                        }
+
                     }
-
+                    if (isChecked) {
+                        CKEDITOR.replace(id_paste_jawaban, options);
+                    }
+                    lineJawaban++;
                 }
-                if (isChecked) {
-                    CKEDITOR.replace(id_paste_jawaban, options);
-                }
-
+                lineJawaban++;
             }
         }, 1000)
+
+
     }
+
+    $('#add').click(function() {
+        if (pertanyaan != 10) {
+
+            pertanyaan++;
+
+            var html = `
+                <div id="pertanyaan${pertanyaan}">
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <pre>${pertanyaan}. Pertanyaan</pre>
+                            <textarea class="form-control q${pertanyaan}" required="" id="q${pertanyaan}"
+                                    name="soal[${pertanyaan}]" rows="3"></textarea>
+                            <br>
+                            <pre>Kunci Jawaban</pre>
+                            <select class="form-control show-tick" name="jawaban_benar[${pertanyaan}]" required="">
+                                @for ($i = 0; $i < 5; $i++)
+                                    <option value="{{ $i }}">Jawaban {{ $i + 1 }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <pre>${pertanyaan}. Jawaban</pre>`
+
+                            for (let i = 0; i < 5; i++) {
+                                html += `<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                            <b> ${i + 1}:</b>
+                                        </div>
+                                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-12">
+                                            <textarea id="a${pertanyaan}${i}" class="form-control" required=""
+                                                name="jawaban[${pertanyaan}][${i}]" rows="1"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>`
+                            }
+
+                    html +=  ` </div>
+                    </div>
+                    <hr>
+                </div>
+                        `;
+            $('#place').append(html);
+            setTimeout(function() {
+                changeCkedior();
+            }, 1000);
+        }
+    });
+    $('#remove').click(function() {
+        if (pertanyaan != 1) {
+
+            var element = document.getElementById('pertanyaan' + pertanyaan);
+            element.remove();
+            pertanyaan--;
+
+        }
+    });
 </script>
