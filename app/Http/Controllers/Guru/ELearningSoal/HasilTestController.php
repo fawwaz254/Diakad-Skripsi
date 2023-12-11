@@ -539,15 +539,18 @@ class HasilTestController extends Controller
     public function printHasilTest4(Request $request, $id)
     {
         set_time_limit(-1);
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal', 'test.jawaban_test')->first();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal')->first();
         $pilihan_pertanyaan = PilihanPertanyaan::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
         $pilihan_soal = PilihanSoal::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
+
+        $test = Test::where('id_paket_soal', $paket_soal->id_paket_soal)->with('jawaban_test')->get();
+
 
         $nilai_siswa = [];
         $benar = [];
 
 
-        foreach ($paket_soal->test as $test) {
+        foreach ($test as $test) {
             $type1 = 0;
             $type2 = 0;
             foreach ($test->jawaban_test as $jawaban_test) {
