@@ -23,6 +23,7 @@ use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiSiswaController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\JenisRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\MataPelajaranRaporController;
 use App\Http\Controllers\Akademik\RaporSemester\NilaiRaporSemesterController;
@@ -544,7 +545,11 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [NilaiRaporSemesterController::class, 'viewNilaiRaporSemester']);
                 Route::get('/datatables', [NilaiRaporSemesterController::class, 'datatablesNilaiRaporSemester']);
                 Route::get('print/{id}', [NilaiRaporSemesterController2::class, 'printRekap']);
-                // Route::get('pdf/{id}', [NilaiRaporSemesterController::class, 'pdfDaftarNilaiSTS']);
+            });
+
+            Route::prefix('cetak-rapor')->group(function () {
+                Route::get('/', [CetakRaporSemesterController::class, 'viewCetakRaporSemester']);
+                Route::get('datatables/', [CetakRaporSemesterController::class, 'datatablesCetakRaporSemester']);
             });
         });
 
