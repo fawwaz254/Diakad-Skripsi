@@ -23,8 +23,12 @@ use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiSiswaController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\JenisRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\MataPelajaranRaporController;
+use App\Http\Controllers\Akademik\RaporSemester\NilaiRaporSemesterController;
+use App\Http\Controllers\Guru\RaporSemester\NilaiRaporSemesterController as NilaiRaporSemesterController2;
+
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenMataPelajaranController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
@@ -536,6 +540,16 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/detail/{id_kelas}', [MataPelajaranRaporController::class, 'viewDetailKomponenMataPelajaran']);
                 Route::get('datatables', [MataPelajaranRaporController::class, 'datatablesKomponenMataPelajaran']);
                 Route::post('action-komponen-mata-pelajaran/{mode}/{id}', [MataPelajaranRaporController::class, 'actionKomponenMataPelajaran']);
+            });
+            Route::prefix('nilai-rapor')->group(function () {
+                Route::get('/', [NilaiRaporSemesterController::class, 'viewNilaiRaporSemester']);
+                Route::get('/datatables', [NilaiRaporSemesterController::class, 'datatablesNilaiRaporSemester']);
+                Route::get('print/{id}', [NilaiRaporSemesterController2::class, 'printRekap']);
+            });
+
+            Route::prefix('cetak-rapor')->group(function () {
+                Route::get('/', [CetakRaporSemesterController::class, 'viewCetakRaporSemester']);
+                Route::get('datatables/', [CetakRaporSemesterController::class, 'datatablesCetakRaporSemester']);
             });
         });
 
