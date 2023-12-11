@@ -1,6 +1,5 @@
 <div class="block-header">
-    <h2><a type="button" class="btn bg-grey waves-effect"
-            href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/detail/' . $paket_soal->id_paket_soal) }}">
+    <h2><a type="button" class="btn bg-grey waves-effect" href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal/detail/' . $paket_soal->id_paket_soal) }}">
             <i class="material-icons">keyboard_backspace</i>
             <span>Kembali</span>
         </a>
@@ -12,8 +11,7 @@
     </h2>
 </div>
 
-<form class="form-validation" id="form-validation" method="POST"
-    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/paket-soal/input-soal/new') }}">
+<form class="form-validation" id="form-validation" method="POST" action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/paket-soal/input-soal/new') }}">
     {{ csrf_field() }}
     <input type="hidden" name="id_tipe_soal" value="1">
     <input type="hidden" name="id_kategori_soal" value="{{ $paket_soal->id_kategori_soal }}">
@@ -26,74 +24,81 @@
                     <h2 class="card-inside-title">Paste 10 Soal dan Jawaban dari file Word</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <textarea id="1" class="form-control " onpaste="pasteFunction()" rows="60"></textarea>
+                            <textarea id="1" class="form-control " onpaste="pasteFunction()" rows="60" style="resize:vertical"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             <br>
             @foreach (range(1, 10) as $j)
-                @if ($j % 2 == 0)
-                    <div class="card" style="background-color: rgb(241, 241, 241)">
-                        <div class="header bg-pink">
-                        @else
-                            <div class="card">
-                                <div class="header bg-blue">
-                @endif
+            @if ($j % 2 == 0)
+            <div class="card" style="background-color: rgb(241, 241, 241)">
+                <div class="header bg-pink">
+                    @else
+                    <div class="card">
+                        <div class="header bg-blue">
+                            @endif
 
-                <h2>
-                    {{ $j . '. SOAL PILIHAN GANDA' }}
-                </h2>
-        </div>
-        <div class="body">
+                            <h2>
+                                {{ $j . '. SOAL PILIHAN GANDA' }}
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <pre>{{ $j }}. Pertanyaan</pre>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <textarea id="{{ 'q' . $j }}" class="form-control {{ 'q' . $j }}" required="" name="soal[{{ $j }}]" rows="14" style="resize:vertical"></textarea>
+                                        </div>
+                                    </div>
+                                    <pre>Kunci Jawaban</pre>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <select class="form-control show-tick" name="jawaban_benar[{{ $j }}]" required="">
+                                                @for ($i = 0; $i < 5; $i++) <option value="{{ $i }}">Jawaban {{ $i + 1 }}</option>
+                                                    @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <pre>{{$j}}. Jawaban</pre>
+                                    @for ($i = 0; $i < 5; $i++) <div class="row">
+                                        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="row m-0">
+                                                <label for="{{ 'a' . $j . $i }}" class="col-sm-2 col-form-label text-center"><pre>{{$i+1}}</pre></label>
+                                                <div class="col-sm-10">
+                                                    <textarea id="{{ 'a' . $j . $i }}" class="form-control {{ 'a' . $j . $i }}" required="" rows="1" name="jawaban[{{ $j }}][]" style="resize:vertical"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                                @endfor
+                            </div>
 
-            <h2 class="card-inside-title">Soal</h2>
-            <div class="row clearfix">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <textarea id="{{ 'q' . $j }}" class="form-control {{ 'q' . $j }}" required=""
-                        name="soal[{{ $j }}]" rows="3"></textarea>
-                </div>
-            </div>
-            @for ($i = 0; $i < 5; $i++)
-                <h2 class="card-inside-title">Jawaban {{ $i + 1 }}</h2>
-                <div class="row clearfix">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <textarea id="{{ 'a' . $j . $i }}" class="form-control {{ 'a' . $j . $i }}" required=""
-                            name="jawaban[{{ $j }}][]"></textarea>
+
+                        </div>
                     </div>
                 </div>
-            @endfor
-            <h2 class="card-inside-title">Jawaban Benar</h2>
-            <div class="row clearfix">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <select class="form-control show-tick" name="jawaban_benar[{{ $j }}]" required="">
-                        @for ($i = 0; $i < 5; $i++)
-                            <option value="{{ $i }}">Jawaban {{ $i + 1 }}</option>
-                        @endfor
-                    </select>
-                </div>
+                <br>
+                @endforeach
             </div>
         </div>
-    </div>
-    <br>
-    @endforeach
-    </div>
-    </div>
 
 
-    <div id="place">
-    </div>
-
-    <div class="row clearfix" style="margin-top: 10px">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <button class="btn btn-block bg-pink waves-effect" id="btn-submit" type="submit">Save</button>
-            <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button"
-                style="margin-bottom: 20px; margin-top: 20px">Preview</button>
+        <div id="place">
         </div>
-    </div>
 
-    <br>
-    <br>
+        <div class="row clearfix" style="margin-top: 10px">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <button class="btn btn-block bg-pink waves-effect" id="btn-submit" type="submit">Save</button>
+                <button class="btn btn-block bg-blue waves-effect" id="btn-view" type="button" style="margin-bottom: 20px; margin-top: 20px">Preview</button>
+            </div>
+        </div>
+
+        <br>
+        <br>
 </form>
 
 
