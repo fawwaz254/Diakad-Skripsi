@@ -29,6 +29,12 @@ class LibCetakKeuangan
             $print_setting = session('setting_print_keuangan');
         }
 
+        if (empty(session('kunci_keuangan'))) {
+            $kunci = 'iya';
+        } else {
+            $kunci = session('kunci_keuangan');
+        }
+
         // if (empty(session('setting_print_keuangan2'))) {
         //     $print_setting2 = 'semua';
         // } else {
@@ -362,6 +368,7 @@ class LibCetakKeuangan
 
             $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
 
+
             if ($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->first()) {
                 $tutup_buku_bulanan_kas_now->updated_by = $auth_data->pengguna->id_pengguna;
             } else {
@@ -377,7 +384,9 @@ class LibCetakKeuangan
             $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
             $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
             $tutup_buku_bulanan_kas_now->sisa_tunggakan_biaya = ($tutup_buku_bulanan_kas_old->sisa_tunggakan_biaya ?? 0) - $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
-            $tutup_buku_bulanan_kas_now->save();
+            if ($kunci == 'tidak') {
+                $tutup_buku_bulanan_kas_now->save();
+            }
             /* END INSERT TUTUP BUKU BULANAN KAS */
 
             // START SHOW Beban Non-KBM
@@ -449,7 +458,9 @@ class LibCetakKeuangan
                 $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran += $total_bayar_non_kbm;
                 $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran += $total_bayar_pengembangan_pendidikan;
                 $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
-                $tutup_buku_bulanan_kas_now->save();
+                if ($kunci == 'tidak') {
+                    $tutup_buku_bulanan_kas_now->save();
+                }
             } else {
                 $subkategori_non_kbm = [
                     'status' => false,
