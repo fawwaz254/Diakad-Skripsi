@@ -42,7 +42,7 @@
                                 {{-- <h2 class="card-inside-title">Paste Soal dan Jawaban dari file Word</h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <textarea id="1" class="form-control " onpaste="pasteFunction(id)" rows="3"></textarea>
+                                        <textarea id="1" class="form-control " onpaste="pasteFunction(this)" rows="3"></textarea>
                                     </div>
                                 </div> --}}
                                 <div id="">
@@ -52,13 +52,29 @@
                                             <textarea class="form-control q1" required="" id="q1" name="soal[1]" rows="10"></textarea>
                                             <br>
                                             <pre>Kunci Jawaban</pre>
+                                            @for ($i = 0; $i < 5; $i++)
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="jawaban_benar[1][{{ $i }}]"
+                                                        value="{{ $i }}"
+                                                        id="jawaban_benar[1][{{ $i }}]">
+                                                    <label class="form-check-label"
+                                                        for="jawaban_benar[1][{{ $i }}]">
+                                                        Jawaban {{ $i + 1 }}
+                                                    </label>
+                                                </div>
+                                            @endfor
+
+
+
+                                            {{-- <pre>Kunci Jawaban</pre>
                                             <select class="form-control show-tick" name="jawaban_benar[1]"
                                                 required="">
                                                 @for ($i = 0; $i < 5; $i++)
                                                     <option value="{{ $i }}">Jawaban {{ $i + 1 }}
                                                     </option>
                                                 @endfor
-                                            </select>
+                                            </select> --}}
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                             <pre>1. Jawaban</pre>
@@ -343,11 +359,13 @@
                 html += '</tr>';
 
                 for (var j = 0; j < 5; j++) {
-                    idjawaban = 'a' + i + j;
+                    var checkbox = document.getElementById(`jawaban_benar[${i}][${j}]`);
+                    var isChecked = checkbox.checked;
+                    // idjawaban = 'a' + i + j;
                     var jawaban = $(`textarea[id="a${i}${j}"]`).val();
                     html += '<tr>';
                     html += '<td >';
-                    if (j == kunci) {
+                    if (isChecked) {
                         html +=
                             '<pre style="white-space: pre-wrap; word-wrap: break-word;background-color:#CFE795"">' +
                             jawaban + '</pre>';
@@ -359,6 +377,25 @@
                     html += '</tr>';
 
                 }
+
+
+                // for (var j = 0; j < 5; j++) {
+                //     idjawaban = 'a' + i + j;
+                //     var jawaban = $(`textarea[id="a${i}${j}"]`).val();
+                //     html += '<tr>';
+                //     html += '<td >';
+                //     if (j == kunci) {
+                //         html +=
+                //             '<pre style="white-space: pre-wrap; word-wrap: break-word;background-color:#CFE795"">' +
+                //             jawaban + '</pre>';
+                //     } else {
+                //         html += '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + jawaban +
+                //             '</pre>';
+                //     }
+                //     html += '</td >';
+                //     html += '</tr>';
+
+                // }
                 html += '<tr>';
                 html += '<td style="border: 1px solid pink;">';
 
@@ -376,10 +413,21 @@
         {
             for (var i = 1; i <= jumlah; i++) {
                 id = 'q' + i;
-                var editor = CKEDITOR.replace(id, options);
+                var editor = CKEDITOR.replace(id);
+                if (editor) {
+                    editor.on('instanceReady', function(event) {
+                        event.editor.config.removePlugins = 'toolbar';
+                        var toolbar = event.editor.ui.space('top');
+                        toolbar && toolbar.remove();
+                    });
+                }
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
-                    var editorjawaban = CKEDITOR.replace(idjawaban, options);
+                    var editorjawaban = CKEDITOR.replace(idjawaban, {
+                        toolbarCanCollapse: true,
+                        toolbarStartupExpanded: false,
+                        height: "175px"
+                    });
                 }
             }
 
@@ -448,16 +496,19 @@
                             <textarea class="form-control q${jumlah}" required="" id="q${jumlah}"
                                     name="soal[${jumlah}]" rows="10"></textarea>
                             <br>
-                            <pre>Kunci Jawaban</pre>
-                            <select class="form-control show-tick" name="jawaban_benar[${jumlah}]" required="">
-                                @for ($i = 0; $i < 5; $i++)
-                                    <option value="{{ $i }}">Jawaban {{ $i + 1 }}
-                                    </option>
-                                @endfor
-                            </select>
-                        </div>
+                            <pre>Kunci Jawaban</pre>`;
+
+            for (let i = 0; i < 5; i++) {
+                html += `<div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                    name="jawaban_benar[${jumlah}][${i}]"value="${i}"
+                                    id="jawaban_benar[${jumlah}][${i}]">
+                                    <label class="form-check-label"for="jawaban_benar[${jumlah}][${i}]">Jawaban ${i +1}</label>
+                                </div>`;
+            }
+            html += `</div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <pre>${jumlah}. Jawaban</pre>`
+                        <pre>${jumlah}. Jawaban</pre>`;
 
             for (let i = 0; i < 5; i++) {
                 html += `<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -534,7 +585,15 @@
     //             }
 
     //             if (isChecked) {
-    //                 CKEDITOR.replace(id_paste_soal, options);
+    //                 // CKEDITOR.replace(id_paste_soal, options);
+    //                 var editor = CKEDITOR.replace(id_paste_soal);
+    //                 if (editor) {
+    //                     editor.on('instanceReady', function(event) {
+    //                         event.editor.config.removePlugins = 'toolbar';
+    //                         var toolbar = event.editor.ui.space('top');
+    //                         toolbar && toolbar.remove();
+    //                     });
+    //                 }
     //             }
 
     //             linesoal += 6;
@@ -557,7 +616,16 @@
 
     //                 }
     //                 if (isChecked) {
-    //                     CKEDITOR.replace(id_paste_jawaban, options);
+    //                     // CKEDITOR.replace(id_paste_jawaban, options);
+    //                     var editor = CKEDITOR.replace(id_paste_jawaban);
+    //                     if (editor) {
+    //                         editor.on('instanceReady', function(event) {
+    //                             event.editor.config.removePlugins = 'toolbar';
+    //                             var toolbar = event.editor.ui.space('top');
+    //                             toolbar && toolbar.remove();
+    //                         });
+    //                     }
+
     //                 }
     //                 lineJawaban++;
     //             }
