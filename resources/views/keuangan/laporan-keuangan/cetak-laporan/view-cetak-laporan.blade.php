@@ -196,7 +196,7 @@
     var modul_url = 'laporan-keuangan';
     var setting_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/setting';
     var setting_url2 = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/setting2';
-    var setting_url2 = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/setting3';
+    var setting_url3 = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/setting3';
     var print_laporan_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan';
 </script>
 
