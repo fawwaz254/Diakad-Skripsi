@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Akademik\RaporSemester;
 
+use App\Exports\TambahanRapor;
 use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Kelas;
 use App\Models\KelasRapor;
 use App\Models\KelompokMapelRapor;
 use App\Models\KelompokPribadiSisipan;
+use App\Models\KelompokTambahanRapor;
 use App\Models\KomponenJenisRapor;
 use App\Models\NilaiPribadiSisipan;
 use App\Models\PribadiSisipan;
@@ -17,6 +19,7 @@ use App\Models\Siswa;
 use App\Models\WaliKelas;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CetakRaporSemesterController extends Controller
 {
@@ -115,7 +118,7 @@ class CetakRaporSemesterController extends Controller
             // , 'sub_kelompok_mapel_rapor.mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
             //     $q->whereIn('id_mata_pelajaran_rapor', $kelas_rapor->pluck('id_mata_pelajaran_rapor'))->with('mata_pelajaran');
             // }
-        ])->get();
+        ])->orderBy('urutan')->get();
         // $kelompok_mapel_rapor = KelompokMapelRapor::with(['mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
         //     $q->whereIn('id_kelompok_mapel_rapor', $kelas_rapor->pluck('id_kelompok_mata_pelajaran_rapor'))->with('mata_pelajaran');
         // }, 'sub_kelompok_mapel_rapor.mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
@@ -217,11 +220,76 @@ class CetakRaporSemesterController extends Controller
                 }
             }
 
-
-
-            // dd($nilai_siswa);
-
             return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri', 'nilai_ekskul', 'wali_kelas'));
         }
+    }
+
+    public function viewDataTambahan(Request $request, $id_semester, $id_kelas)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
+        return view('akademik/rapor-semester/cetak-rapor/view-data-tambahan', compact('auth_data', 'id_semester', 'id_kelas', 'kelompok_tambahan_rapor'));
+    }
+    public function datatablesDataTambahan(Request $request, $id_semester, $id_kelas)
+    {
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->with(
+            [
+                'nilai_tambahan_rapor' => function ($q) use ($id_semester) {
+                    $q->where('id_semester', $id_semester);
+                },
+                'pengguna'
+            ]
+        );
+
+        $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
+
+        return Datatables::of($list_siswa)
+            ->addColumn('tambahan_rapor', function ($item) use ($kelompok_tambahan_rapor) {
+                $nilai = [];
+                foreach ($kelompok_tambahan_rapor as $k) {
+                    foreach ($k->tambahan_rapor as $tambahan_rapor) {
+                        $cek = $item->nilai_tambahan_rapor->firstWhere('id_tambahan_rapor', $tambahan_rapor->id_tambahan_rapor);
+                        if ($cek) {
+                            if ($k->nm_kelompok_tambahan_rapor == 'Catatan Untuk Orang Tua') {
+                                $nilai[$k->urutan][] =  $cek->nilai;
+                            } else {
+                                $nilai[$k->urutan][] = $tambahan_rapor->nm_tambahan_rapor . ' : ' . $cek->nilai;
+                            }
+                        }
+                    }
+                }
+                $data = array(
+                    'n1' => isset($nilai[1]) ? $nilai[1] : null,
+                    'n2' => isset($nilai[2]) ? $nilai[2] : null,
+                    'n3' => isset($nilai[3]) ? $nilai[3] : null,
+                    'n4' => isset($nilai[4]) ? $nilai[4] : null,
+                );
+                return $data;
+            })->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa,
+                );
+                return $data;
+            })
+            ->make(true);
+    }
+    public function templateExcelDataTambahan(Request $request, $id_kelas)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
+
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->orderBy('nis_siswa')->get();
+
+        $kelas = Kelas::find($id_kelas);
+
+        $data['kelompok_tambahan_rapor'] = $kelompok_tambahan_rapor;
+        $data['list_siswa'] = $list_siswa;
+        $data['kelas'] = $kelas;
+        return Excel::download(new TambahanRapor($data), ' Template Tambahan Rapor (' . $kelas->nm_kelas . ').xlsx');
     }
 }

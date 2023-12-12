@@ -500,10 +500,7 @@ Route::middleware(['token_staff'])->group(function () {
                 //cetak rapor semester akhir
 
                 Route::post('action-pengembangan-diri/{mode}/{id_siswa}', [CetakRaporController::class, 'actionPengembanganDiri']);
-
                 Route::get('view-pengembangan-diri/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'viewPengembanganDiri']);
-                Route::get('view-pengembangan-diri/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'viewPengembanganDiri']);
-
                 Route::get('datatables/view-pengembangan-diri/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'datatablesPengembanganDiri']);
                 Route::get('template-pengembangan-diri/template-excel-pengembangan-diri/{id_kelas}', [CetakRaporController::class, 'templateExcelPengembanganDiri']);
 
@@ -549,8 +546,20 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('cetak-rapor')->group(function () {
                 Route::get('/', [CetakRaporSemesterController::class, 'viewCetakRaporSemester']);
-                Route::get('/print/{thn_akademik_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
+                Route::get('/print/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
                 Route::get('datatables/', [CetakRaporSemesterController::class, 'datatablesCetakRaporSemester']);
+
+                //pengembangan diri
+                Route::prefix('view-data-tambahan')->group(function () {
+                    Route::get('template-excel-data-tambahan/{id_kelas}', [CetakRaporSemesterController::class, 'templateExcelDataTambahan']);
+                    Route::get('{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'viewDataTambahan']);
+                    Route::get('datatables/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'datatablesDataTambahan']);
+                });
+                // Route::post('action-pengembangan-diri/{mode}/{id_siswa}', [CetakRaporController::class, 'actionPengembanganDiri']);
+
+                // //import excel
+                // Route::get('importExcel', [CetakRaporController::class, 'imporExcelPengembanganDiri']);
+                // Route::post('importExcel', [CetakRaporController::class, 'uploadExcelPengembanganDiri']);
             });
         });
 
