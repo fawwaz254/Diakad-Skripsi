@@ -152,9 +152,10 @@
                 <tr>
                     <td style="border-style: solid">Deskripsi :
                         <br>
-                        Selalu Bersyukur, selalu berdoa sebelum melakukan kegiatan, toleran pada agama yang berbeda dan
+                        {{ isset($tambahan['sikap'][$siswa->id_siswa]) ? $tambahan['sikap'][$siswa->id_siswa] : '-' }}
+                        {{-- Selalu Bersyukur, selalu berdoa sebelum melakukan kegiatan, toleran pada agama yang berbeda dan
                         perlu meningkatkan ketaatan beribadah serta selalu bersikap sikap santun, peduli, percaya diri,
-                        dan perlu meningkatkan sikap jujur, disiplin dan tanggung jawab.
+                        dan perlu meningkatkan sikap jujur, disiplin dan tanggung jawab. --}}
                     </td>
                 </tr>
                 <tr></tr>
@@ -459,12 +460,12 @@
     </table>
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
 
-        @foreach ($pribadi_sisipan_kehadiran as $key => $k)
+        @foreach ($kehadiran_tambahan_rapor as $key => $k)
             <tr>
-                <td>{{ $k->nm_pribadi_sisipan }}</td>
-                @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
+                <td>{{ $k->nm_tambahan_rapor }}</td>
+                @if (isset($tambahan['ketidakhadiran'][$siswa->id_siswa][$k->id_tambahan_rapor]))
                     <td style="text-align: center;">
-                        {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] . ' Hari' }}
+                        {{ $tambahan['ketidakhadiran'][$siswa->id_siswa][$k->id_tambahan_rapor] . ' Hari' }}
                     </td>
                 @else
                     <td style="text-align: center;">- Hari</td>
@@ -484,8 +485,11 @@
         </tr>
         <tr></tr>
         <tr>
-            <td>Tingkatkan terus semangat dan motivasi belajarmu agar dapat mencapai keberhasilan serta
-                kesuksesan</td>
+            <td>
+                {{ isset($tambahan['catatan_wali_kelas'][$siswa->id_siswa]) ? $tambahan['catatan_wali_kelas'][$siswa->id_siswa] : '-' }}
+                {{-- Tingkatkan terus semangat dan motivasi belajarmu agar dapat mencapai keberhasilan serta
+                kesuksesan --}}
+            </td>
         </tr>
 
     </table>
@@ -496,7 +500,9 @@
         </tr>
         <tr></tr>
         <tr>
-            <td>LULUS</td>
+            <td> {{ isset($tambahan['kelulusan'][$siswa->id_siswa]) ? $tambahan['kelulusan'][$siswa->id_siswa] : '-' }}
+                {{-- LULUS --}}
+            </td>
         </tr>
 
     </table>
