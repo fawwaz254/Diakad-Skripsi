@@ -554,12 +554,10 @@ Route::middleware(['token_staff'])->group(function () {
                     Route::get('template-excel-data-tambahan/{id_kelas}', [CetakRaporSemesterController::class, 'templateExcelDataTambahan']);
                     Route::get('{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'viewDataTambahan']);
                     Route::get('datatables/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'datatablesDataTambahan']);
+                    Route::post('action-pengembangan-diri/{mode}/{id_siswa}', [CetakRaporSemesterController::class, 'actionDataTambahan']);
+                    Route::get('importExcel', [CetakRaporSemesterController::class, 'imporExcelDataTambahan']);
+                    Route::post('importExcel', [CetakRaporSemesterController::class, 'uploadExcelDataTambahan']);
                 });
-                // Route::post('action-pengembangan-diri/{mode}/{id_siswa}', [CetakRaporController::class, 'actionPengembanganDiri']);
-
-                // //import excel
-                // Route::get('importExcel', [CetakRaporController::class, 'imporExcelPengembanganDiri']);
-                // Route::post('importExcel', [CetakRaporController::class, 'uploadExcelPengembanganDiri']);
             });
         });
 

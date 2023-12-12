@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Akademik\RaporSemester;
 
 use App\Exports\TambahanRapor;
 use App\Http\Controllers\Controller;
+use App\Imports\UploadTambahanRapor;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Kelas;
 use App\Models\KelasRapor;
@@ -12,6 +13,7 @@ use App\Models\KelompokPribadiSisipan;
 use App\Models\KelompokTambahanRapor;
 use App\Models\KomponenJenisRapor;
 use App\Models\NilaiPribadiSisipan;
+use App\Models\NilaiTambahanRapor;
 use App\Models\PribadiSisipan;
 use App\Models\Rapor;
 use App\Models\Semester;
@@ -291,5 +293,56 @@ class CetakRaporSemesterController extends Controller
         $data['list_siswa'] = $list_siswa;
         $data['kelas'] = $kelas;
         return Excel::download(new TambahanRapor($data), ' Template Tambahan Rapor (' . $kelas->nm_kelas . ').xlsx');
+    }
+
+    public function actionDataTambahan(Request $request, $mode, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if ($mode == 'delete') {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $nilai_tambahan_rapor = NilaiTambahanRapor::where('id_siswa', $id_siswa)->where('id_semester', $semester_aktif->id_semester)->get();
+            foreach ($nilai_tambahan_rapor as $n) {
+                $n->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                $n->save();
+                $n->delete();
+            }
+
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Data Tambahan RApor succesfully'
+
+            ];
+        }
+    }
+
+    public function  imporExcelDataTambahan(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('akademik/rapor-semester/cetak-rapor/view-import-excel-tambahan-data', compact('auth_data'));
+    }
+
+    public function uploadExcelDataTambahan(Request $request)
+    {
+        if ($request->hasFile('file-excel')) {
+            try {
+                Excel::import(new UploadTambahanRapor, $request->file('file-excel'));
+            } catch (\Exception $e) {
+                return [
+                    'status'     => 200, // FAILED
+                    'message'     => "Gagal, Cek kembali apakah ada data nilai yang melebihi batas"
+                ];
+            }
+            return [
+                'status'     => 200, // FAILED
+                'message'     => "Upload Sukses"
+            ];
+        } else {
+            return [
+                'status'     => 300, // FAILED
+                'message'     => "File Excel tidak ditemukan"
+            ];
+        }
     }
 }

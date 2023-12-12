@@ -9,7 +9,7 @@
                 target="_blank"><i class="material-icons">cloud_download</i><span>Template Excel</span></a>
 
             <a class="btn bg-green waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-semester/cetak-rapor/importExcel') }}"><i
+                href="{{ url(Request::segment(1) . '#rapor-semester/cetak-rapor/view-data-tambahan/importExcel') }}"><i
                     class="material-icons">cloud_upload</i><span>Import Ekcel</span></a>
         </h2>
     </div>
