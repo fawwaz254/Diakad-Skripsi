@@ -62,6 +62,11 @@ class Siswa extends Model
         return $this->hasmany(NilaiPribadiSisipan::class, 'id_siswa');
     }
 
+    public function nilai_tambahan_rapor()
+    {
+        return $this->hasmany(NilaiTambahanRapor::class, 'id_siswa');
+    }
+
 
     public function kpi()
     {

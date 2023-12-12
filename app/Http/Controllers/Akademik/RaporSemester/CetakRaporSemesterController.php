@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers\Akademik\RaporSemester;
 
+use App\Exports\TambahanRapor as ExcelTambahanRApor;
 use App\Http\Controllers\Controller;
+use App\Imports\UploadTambahanRapor;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Kelas;
 use App\Models\KelasRapor;
 use App\Models\KelompokMapelRapor;
 use App\Models\KelompokPribadiSisipan;
+use App\Models\KelompokTambahanRapor;
 use App\Models\KomponenJenisRapor;
 use App\Models\NilaiPribadiSisipan;
+use App\Models\NilaiTambahanRapor;
 use App\Models\PribadiSisipan;
 use App\Models\Rapor;
 use App\Models\Semester;
 use App\Models\Siswa;
+use App\Models\TambahanRapor;
 use App\Models\WaliKelas;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CetakRaporSemesterController extends Controller
 {
@@ -86,11 +92,7 @@ class CetakRaporSemesterController extends Controller
         $semester = Semester::find($id_semester);
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
         $list_komponen = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->get();
-        $list_siswa = Siswa::with(['nilai_pribadi_sisipan' => function ($q) use ($id_semester) {
-            $q->where('id_semester', $id_semester)->where('nilai', '!=', 0);
-        }, 'nilai_pribadi_sisipan.pribadi_sisipan'])->where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
-            $query->where('aktif_status_pengguna', '=', '1');
-        })->orderBy('nis_siswa')->get();
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->orderBy('nis_siswa')->get();
         $nilai_siswa = [];
         $data = [];
 
@@ -115,7 +117,7 @@ class CetakRaporSemesterController extends Controller
             // , 'sub_kelompok_mapel_rapor.mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
             //     $q->whereIn('id_mata_pelajaran_rapor', $kelas_rapor->pluck('id_mata_pelajaran_rapor'))->with('mata_pelajaran');
             // }
-        ])->get();
+        ])->orderBy('urutan')->get();
         // $kelompok_mapel_rapor = KelompokMapelRapor::with(['mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
         //     $q->whereIn('id_kelompok_mapel_rapor', $kelas_rapor->pluck('id_kelompok_mata_pelajaran_rapor'))->with('mata_pelajaran');
         // }, 'sub_kelompok_mapel_rapor.mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
@@ -174,54 +176,160 @@ class CetakRaporSemesterController extends Controller
 
 
 
-            $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
-            $kelompok_sisipan = KelompokPribadiSisipan::where('nm_kelompok_pribadi_sisipan')->first();
-            $pribadi_sisipan_kehadiran = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
-                $query->where('nm_kelompok_pribadi_sisipan', 'Ketidak Hadiran');
+            $nilai_tambahan_rapor = NilaiTambahanRapor::with('tambahan_rapor')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+            // $kelompok_tambahan_rapor = KelompokTambahanRapor::where('nm_kelompok_tambahan_rapor')->first();
+
+
+
+            $kehadiran_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
+                $query->where('nm_kelompok_tambahan_rapor', 'Ketidak Hadiran');
             })->get();
+            $sikap_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Sikap')->first();
+            $catatan_wali_kelas_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Catatan Wali Kelas')->first();
+            $kelulusan_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Kelulusan')->first();
 
-            $pribadi_sisipan_ekskul = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
-                $query->where('nm_kelompok_pribadi_sisipan', 'Ekstra Kurikuler');
-            })->get();
 
-            $nilai_pengembangan_diri = [];
-            $nilai_ekskul = [];
-            foreach ($nilai_pribadi_siswa as $n) {
 
-                if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_kehadiran->pluck('id_pribadi_sisipan')->toArray())) {
-                    $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
-                    // $nilai_pengembangan_diri[$n->id_siswa . 'ketidak_hadiran'][] = $n->pribadi_sisipan->nm_pribadi_sisipan;
-                    // $nilai_pengembangan_diri[$n->id_siswa . 'nilai_ketidak_hadiran'][] = $n->nilai;
-                } elseif (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_ekskul->pluck('id_pribadi_sisipan')->toArray())) {
-                    $nilai_ekskul[$n->id_siswa .  'ekskul'][] = $n->pribadi_sisipan->nm_pribadi_sisipan;
-                    if ($n->nilai >= 90 && $n->nilai <= 100) {
-                        $hasil = 'A';
-                        $keterangan = 'Sangat Aktif Mengikuti Extra Tersebut';
-                    } elseif ($n->nilai >= 80 && $n->nilai < 90) {
-                        $hasil = 'B';
-                        $keterangan = 'Aktif Mengikuti Extra Tersebut';
-                    } elseif ($n->nilai >= 70 && $n->nilai < 80) {
-                        $hasil = 'C';
-                        $keterangan = 'Cukup Aktif Mengikuti Extra Tersebut';
-                    } elseif ($n->nilai >= 0 && $n->nilai < 70) {
-                        $hasil = 'D';
-                        $keterangan = 'Kurang Aktif Mengikuti Extra Tersebut';
-                    } else {
-                        $hasil = '';
-                        $keterangan = '';
-                    }
-                    $nilai_ekskul[$n->id_siswa . 'nilai_ekskul'][] = $hasil;
-                    $nilai_ekskul[$n->id_siswa . 'keterangan_ekskul'][] = $keterangan;
-                } else {
-                    $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
+            $tambahan = array();
+
+            $tambahan['ketidakhadiran'] = null;
+            $tambahan['sikap'] = null;
+            $tambahan['catatan_wali_kelas'] = null;
+            $tambahan['kelulusan'] = null;
+
+            foreach ($nilai_tambahan_rapor as $n) {
+                if (in_array($n->id_tambahan_rapor, $kehadiran_tambahan_rapor->pluck('id_tambahan_rapor')->toArray())) {
+                    $tambahan['ketidakhadiran'][$n->id_siswa][$n->id_tambahan_rapor] = $n->nilai;
+                } elseif ($sikap_tambahan_rapor->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                    $tambahan['sikap'][$n->id_siswa] = $n->nilai;
+                } elseif ($catatan_wali_kelas_tambahan_rapor->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                    $tambahan['catatan_wali_kelas'][$n->id_siswa] = $n->nilai;
+                } elseif ($kelulusan_tambahan_rapor->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                    $tambahan['kelulusan'][$n->id_siswa] = $n->nilai;
                 }
             }
 
+            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'kehadiran_tambahan_rapor', 'tambahan',  'wali_kelas'));
+        }
+    }
 
+    public function viewDataTambahan(Request $request, $id_semester, $id_kelas)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
+        return view('akademik/rapor-semester/cetak-rapor/view-data-tambahan', compact('auth_data', 'id_semester', 'id_kelas', 'kelompok_tambahan_rapor'));
+    }
+    public function datatablesDataTambahan(Request $request, $id_semester, $id_kelas)
+    {
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->with(
+            [
+                'nilai_tambahan_rapor' => function ($q) use ($id_semester) {
+                    $q->where('id_semester', $id_semester);
+                },
+                'pengguna'
+            ]
+        );
 
-            // dd($nilai_siswa);
+        $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
 
-            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri', 'nilai_ekskul', 'wali_kelas'));
+        return Datatables::of($list_siswa)
+            ->addColumn('tambahan_rapor', function ($item) use ($kelompok_tambahan_rapor) {
+                $nilai = [];
+                foreach ($kelompok_tambahan_rapor as $k) {
+                    foreach ($k->tambahan_rapor as $tambahan_rapor) {
+                        $cek = $item->nilai_tambahan_rapor->firstWhere('id_tambahan_rapor', $tambahan_rapor->id_tambahan_rapor);
+                        if ($cek) {
+                            if ($k->nm_kelompok_tambahan_rapor == 'Catatan Untuk Orang Tua') {
+                                $nilai[$k->urutan][] =  $cek->nilai;
+                            } else {
+                                $nilai[$k->urutan][] = $tambahan_rapor->nm_tambahan_rapor . ' : ' . $cek->nilai;
+                            }
+                        }
+                    }
+                }
+                $data = array(
+                    'n1' => isset($nilai[1]) ? $nilai[1] : null,
+                    'n2' => isset($nilai[2]) ? $nilai[2] : null,
+                    'n3' => isset($nilai[3]) ? $nilai[3] : null,
+                    'n4' => isset($nilai[4]) ? $nilai[4] : null,
+                );
+                return $data;
+            })->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa,
+                );
+                return $data;
+            })
+            ->make(true);
+    }
+    public function templateExcelDataTambahan(Request $request, $id_kelas)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
+
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->orderBy('nis_siswa')->get();
+
+        $kelas = Kelas::find($id_kelas);
+
+        $data['kelompok_tambahan_rapor'] = $kelompok_tambahan_rapor;
+        $data['list_siswa'] = $list_siswa;
+        $data['kelas'] = $kelas;
+        return Excel::download(new ExcelTambahanRApor($data), ' Template Tambahan Rapor (' . $kelas->nm_kelas . ').xlsx');
+    }
+
+    public function actionDataTambahan(Request $request, $mode, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if ($mode == 'delete') {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $nilai_tambahan_rapor = NilaiTambahanRapor::where('id_siswa', $id_siswa)->where('id_semester', $semester_aktif->id_semester)->get();
+            foreach ($nilai_tambahan_rapor as $n) {
+                $n->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                $n->save();
+                $n->delete();
+            }
+
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Data Tambahan RApor succesfully'
+
+            ];
+        }
+    }
+
+    public function  imporExcelDataTambahan(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('akademik/rapor-semester/cetak-rapor/view-import-excel-tambahan-data', compact('auth_data'));
+    }
+
+    public function uploadExcelDataTambahan(Request $request)
+    {
+        if ($request->hasFile('file-excel')) {
+            try {
+                Excel::import(new UploadTambahanRapor, $request->file('file-excel'));
+            } catch (\Exception $e) {
+                return [
+                    'status'     => 200, // FAILED
+                    'message'     => "Gagal, Cek kembali apakah ada data nilai yang melebihi batas"
+                ];
+            }
+            return [
+                'status'     => 200, // FAILED
+                'message'     => "Upload Sukses"
+            ];
+        } else {
+            return [
+                'status'     => 300, // FAILED
+                'message'     => "File Excel tidak ditemukan"
+            ];
         }
     }
 }
