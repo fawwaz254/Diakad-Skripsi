@@ -307,7 +307,9 @@ class LibCetakKeuangan
                 $pembayaran_tunggakan_bulan_ini = 0;
 
                 $tutup_buku_bulanan_biaya->updated_by = $auth_data->pengguna->id_pengguna;
-                $tutup_buku_bulanan_biaya->save();
+                if ($kunci == 'tidak') {
+                    $tutup_buku_bulanan_biaya->save();
+                }
             }
 
             $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
