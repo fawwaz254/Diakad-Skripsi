@@ -808,53 +808,69 @@ class SoalController extends Controller
                     $detail_paket_soal->save();
                 } else if ($input->id_tipe_soal == 4) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        $question = new Soal;
-                        $question->id_kategori_soal = $input->id_kategori_soal;
-                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
-                        $question->id_tipe_soal = $input->id_tipe_soal;
-                        $question->content = $input->soal[$i];
-                        $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i]) : 'gambar';
-                        if (empty($input->soal[$i])) {
-                            DB::rollback();
-                            return [
-                                'status' => 300,
-                                'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
-                            ];
-                        }
-                        $question->save();
-                        $detail_paket_soal = new DetailPaketSoal;
-                        $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
-                        $detail_paket_soal->id_soal = $question->id_soal;
-                        $detail_paket_soal->save();
-                        foreach ($input->jawaban[$i] as $no_answer => $answer) {
-                            $now = Carbon::now(env('APP_TIMEZONE', ''));
-                            $question_option = new PilihanSoal;
-                            $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $question_option->number_option = $no_answer;
-                            $question_option->id_soal = $question->id_soal;
-                            $question_option->content = $answer;
-                            $question_option->text = strip_tags($answer) ?  strip_tags($answer) : 'gambar';
-                            if (empty($answer)) {
+                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                            $question = new Soal;
+                            $question->id_kategori_soal = $input->id_kategori_soal;
+                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_tipe_soal = $input->id_tipe_soal;
+                            $question->content = $input->soal[$i];
+                            $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i]) : 'gambar';
+                            if (empty($input->soal[$i])) {
                                 DB::rollback();
                                 return [
                                     'status' => 300,
                                     'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
                                 ];
                             }
-                            if ($input->jawaban_benar[$i] == $no_answer) {
-                                $question_option->correct = 1;
-                            } else {
-                                $question_option->correct = 0;
+                            $question->save();
+                            $detail_paket_soal = new DetailPaketSoal;
+                            $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
+                            $detail_paket_soal->id_soal = $question->id_soal;
+                            $detail_paket_soal->save();
+                            foreach ($input->jawaban[$i] as $no_answer => $answer) {
+                                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                                $question_option = new PilihanSoal;
+                                $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $question_option->number_option = $no_answer;
+                                $question_option->id_soal = $question->id_soal;
+                                $question_option->content = $answer;
+                                $question_option->text = strip_tags($answer) ?  strip_tags($answer) : 'gambar';
+                                $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
+                                if (empty($answer)) {
+                                    DB::rollback();
+                                    return [
+                                        'status' => 300,
+                                        'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
+                                    ];
+                                }
+
+                                if (in_array($no_answer, $input->jawaban_benar[$i])) {
+                                    $question_option->correct = 1;
+                                } else {
+                                    $question_option->correct = 0;
+                                }
+                                $question_option->save();
+
+
+                                // if ($input->jawaban_benar[$i] == $no_answer) {
+                                //     $question_option->correct = 1;
+                                // } else {
+                                //     $question_option->correct = 0;
+                                // }
+                                // $question_option->save();
+                                // if ($input->jawaban_benar[$i] == $no_answer) {
+                                //     $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
+                                // }
                             }
-                            $question_option->save();
-                            if ($input->jawaban_benar[$i] == $no_answer) {
-                                $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
-                            }
+                            $question->save();
+                            $detail_paket_soal = new DetailPaketSoal;
+                            $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
+                            $detail_paket_soal->id_soal = $question->id_soal;
+                            $detail_paket_soal->save();
                         }
-                        $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
-                        $question->save();
                     }
                 } else if ($input->id_tipe_soal == 5) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
@@ -1059,7 +1075,8 @@ class SoalController extends Controller
                 // something went wrong
                 return [
                     'status' => 300,
-                    'message' => $e->getMessage()
+                    // 'message' => $e->getMessage()
+                    'message' => 'Erorr Ada Kolom yg kosong atau save sekali lagi karena masih proses upload'
                 ];
             }
         }
