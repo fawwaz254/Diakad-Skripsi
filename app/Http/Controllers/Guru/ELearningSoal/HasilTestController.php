@@ -259,8 +259,8 @@ class HasilTestController extends Controller
         $mapping = ['A', 'B', 'C', 'D', 'E'];
 
         foreach ($tests as $test) {
-            $jawaban_test = JawabanTest::where('id_test', $test->id_test)->get();
-            foreach ($jawaban_test as $jawaban_test) {
+            $jawaban_tests = JawabanTest::where('id_test', $test->id_test)->get();
+            foreach ($jawaban_tests as $jawaban_test) {
                 if (isset($nilai_siswa[$test->id_pengguna])) {
                     $nilai_siswa[$test->id_pengguna] +=  $jawaban_test->nilai;
                 } else {
