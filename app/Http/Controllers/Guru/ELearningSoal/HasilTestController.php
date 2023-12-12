@@ -247,18 +247,20 @@ class HasilTestController extends Controller
     public function printHasilTest3(Request $request, $id)
     {
         set_time_limit(-1);
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal',  'test.jawaban_test')->first();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal')->first();
         $pilihan_pertanyaan = PilihanPertanyaan::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
         $pilihan_soal = PilihanSoal::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
 
-
+        $tests = Test::where('id_paket_soal', $paket_soal->id_paket_soal)->get();
+        // 'test.jawaban_test'
         $nilai_siswa = [];
         $benar = [];
         $isi = [];
         $mapping = ['A', 'B', 'C', 'D', 'E'];
 
-        foreach ($paket_soal->test as $test) {
-            foreach ($test->jawaban_test as $jawaban_test) {
+        foreach ($tests as $test) {
+            $jawaban_tests = JawabanTest::where('id_test', $test->id_test)->get();
+            foreach ($jawaban_tests as $jawaban_test) {
                 if (isset($nilai_siswa[$test->id_pengguna])) {
                     $nilai_siswa[$test->id_pengguna] +=  $jawaban_test->nilai;
                 } else {
