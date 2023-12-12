@@ -84,7 +84,7 @@ class CetakLaporanController extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'print_setting' => 'required|in:semua,spp,lain',
+            'print_setting' => 'required|in:semua,spp,lain,iya,tidak',
         ]);
 
         if ($validator->fails()) {
