@@ -238,10 +238,16 @@ class CetakRaporSemesterController extends Controller
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
                 foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
-                    $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] =  $mata_pelajaran_rapor->mata_pelajaran->nm_mata_pelajaran;
-                    $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
+                    if ($mata_pelajaran_rapor->jenis == '0') {
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] =  $mata_pelajaran_rapor->keterangan;
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
+                    } else {
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] =  $mata_pelajaran_rapor->mata_pelajaran->nm_mata_pelajaran;
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
+                    }
                 }
             }
+
 
             $nilai_tambahan_rapor = NilaiTambahanRapor::with('tambahan_rapor')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
             $kehadiran_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
