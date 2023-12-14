@@ -79,7 +79,8 @@
                     <td colspan="10" style="border-style : hidden">
                         <h3 align="center" style="margin-top: 3px">
                             REKAPITULASI NILAI ASLI<br>
-                            PENILAIAN TENGAH SEMESTER (PTS)
+                            {{-- PENILAIAN TENGAH SEMESTER (PTS) --}}
+                            SUMATIF TENGAH SEMESTER (STS)
                             <br>
                         </h3>
                         <br>

@@ -79,7 +79,7 @@
                     <td colspan="10" style="border-style : hidden">
                         <h3 align="center" style="margin-top: 3px">
                             REKAPITULASI NILAI ASLI<br>
-                            PENILAIAN AKHIR SEMESTER (PAS)
+                            SUMATIF AKHIR SEMESTER (SAS)
                             <br>
                         </h3>
                         <br>
