@@ -35,7 +35,10 @@
                         {{ isset($data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'nilai']) && $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'nilai'] != '0' ? $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'nilai'] : null }}
                     </td>
                     <td style="text-align: center">
-                        {{ isset($data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan']) && $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan'] != '0' ? $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan'] : null }}
+                        {{ isset($data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan']) ? $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan'] : null }}
+                    </td>
+                    <td style="text-align: center">
+                        {{ isset($data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan2']) ? $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan2'] : null }}
                     </td>
                 @endforeach
             </tr>

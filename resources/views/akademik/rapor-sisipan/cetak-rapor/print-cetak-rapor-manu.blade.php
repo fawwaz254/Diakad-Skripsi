@@ -79,7 +79,8 @@
                     <td colspan="10" style="border-style : hidden">
                         <h3 align="center" style="margin-top: 3px">
                             REKAPITULASI NILAI ASLI<br>
-                            PENILAIAN TENGAH SEMESTER (PTS)
+                            {{-- PENILAIAN TENGAH SEMESTER (PTS) --}}
+                            SUMATIF TENGAH SEMESTER (STS)
                             <br>
                         </h3>
                         <br>
@@ -353,7 +354,7 @@
                 </tr>
                 <tr>
                     <td style="width: 70%; border-style : hidden;"></td>
-                    <td>Tanggal : {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</td>
+                    <td>Tanggal : 23 Desember 2023</td>
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
