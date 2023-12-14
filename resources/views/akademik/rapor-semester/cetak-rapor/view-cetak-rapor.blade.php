@@ -39,7 +39,7 @@
                                     <th>Total Mapel</th>
                                     <th>Mapel terinput</th>
                                     <th>Cetak</th>
-                                    <th>Data Tambahan</th>
+                                    <th>Data Siswa</th>
                                 </tr>
                             </thead>
                         </table>

@@ -172,6 +172,9 @@ class NilaiRaporSemesterController extends Controller
                     $rapor->id_semester         = $input->id_semester;
                     $rapor->id_mata_pelajaran   = $input->id_mata_pelajaran;
                     $rapor->id_kelas            = $input->id_kelas;
+                    $rapor->keterangan          = $input->keterangan;
+                    $rapor->keterangan2         = $input->keterangan2;
+
                     $rapor->created_by          = $input->auth_data->pengguna->id_pengguna;
                     $rapor->save();
 
@@ -245,8 +248,17 @@ class NilaiRaporSemesterController extends Controller
             foreach ($nilai as $nilaiRapor) {
                 foreach ($nilaiRapor as $a) {
                     $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'nilai'] = $nilaiRapor['nilai'];
-                    $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'keterangan'] = $nilaiRapor['keterangan'];
-                    $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'keterangan2'] = $nilaiRapor['keterangan2'];
+                    if (!empty($rapor->keterangan)) {
+                        $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'keterangan'] = $rapor->keterangan;
+                    } else {
+                        $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'keterangan'] = $nilaiRapor['keterangan'];
+                    }
+
+                    if (!empty($rapor->keterangan2)) {
+                        $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'keterangan2'] = $rapor->keterangan2;
+                    } else {
+                        $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'keterangan2'] = $nilaiRapor['keterangan2'];
+                    }
                 }
             }
         }

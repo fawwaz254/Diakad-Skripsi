@@ -552,6 +552,7 @@ Route::middleware(['token_staff'])->group(function () {
                 //pengembangan diri
                 Route::prefix('view-data-tambahan')->group(function () {
                     Route::get('template-excel-data-tambahan/{id_kelas}', [CetakRaporSemesterController::class, 'templateExcelDataTambahan']);
+                    Route::get('print/{id_siswa}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
                     Route::get('{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'viewDataTambahan']);
                     Route::get('datatables/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'datatablesDataTambahan']);
                     Route::post('action-pengembangan-diri/{mode}/{id_siswa}', [CetakRaporSemesterController::class, 'actionDataTambahan']);

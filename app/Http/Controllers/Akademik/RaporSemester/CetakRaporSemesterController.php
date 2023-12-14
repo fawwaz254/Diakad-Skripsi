@@ -83,16 +83,25 @@ class CetakRaporSemesterController extends Controller
             ->make(true);
     }
 
-    public function printCetakRaporSemester(Request $request, $id_semester, $id_kelas)
+    public function printCetakRaporSemester(Request $request, $id_semester, $id_kelas = null)
     {
         set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->orderBy('nis_siswa')->get();
+        $siswa = Siswa::find($id_semester);
+        if (!empty($siswa)) {
+            $list_siswa = Siswa::where('id_siswa', $id_semester)->orderBy('nis_siswa')->get();
+            $semester = Semester::where('is_aktif_semester', '1')->first();
+            $id_kelas = $siswa->id_kelas;
+            $id_semester = $semester->id_semester;
+        }
+
         $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan', 'jenis_rapor')->first();
         $semester = Semester::find($id_semester);
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
         $list_komponen = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->get();
-        $list_siswa = Siswa::where('id_kelas', $id_kelas)->orderBy('nis_siswa')->get();
+
         $nilai_siswa = [];
         $data = [];
 
