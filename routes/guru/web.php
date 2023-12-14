@@ -61,6 +61,7 @@ use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
 use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
+use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaDikunciController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaTerkunciController;
@@ -80,9 +81,11 @@ use App\Http\Controllers\Guru\Presensi\PresensiQrCodeController;
 use App\Http\Controllers\Guru\RaporSemester\NilaiRaporSemesterController;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
+use App\Http\Controllers\Guru\WaliKelas\RaporSemesterController as AppRaporSemesterController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSisipanNonAkademikController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
+use App\Http\Controllers\Guru\WaliMurid\RaporSemesterController;
 use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
 use App\Http\Controllers\Keuangan\SIM\SppController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
@@ -768,6 +771,18 @@ Route::middleware(['token_staff'])->group(function () {
                 //import excel
                 Route::get('importExcel', [RaporSisipanNonAkademikController::class, 'imporExcelPengembanganDiri']);
                 Route::post('importExcel', [CetakRaporController::class, 'uploadExcelPengembanganDiri']);
+            });
+
+            Route::prefix('rapor-semester')->group(function () {
+                Route::get('/', [AppRaporSemesterController::class, 'viewRaporSemester']);
+                Route::get('datatables/{thn_akademik_semester}/{id_kelas}', [AppRaporSemesterController::class, 'datatablesRaporSemester']);
+                Route::get('/print/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
+                Route::get('template-excel-data-tambahan/{id_kelas}', [CetakRaporSemesterController::class, 'templateExcelDataTambahan']);
+                Route::post('action-pengembangan-diri/{mode}/{id_siswa}', [CetakRaporSemesterController::class, 'actionDataTambahan']);
+
+
+                Route::get('importExcel', [AppRaporSemesterController::class, 'imporExcelDataTambahan']);
+                Route::post('importExcel', [CetakRaporSemesterController::class, 'uploadExcelDataTambahan']);
             });
         });
 
