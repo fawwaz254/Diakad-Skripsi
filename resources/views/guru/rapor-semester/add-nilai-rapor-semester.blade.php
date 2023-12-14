@@ -36,8 +36,6 @@
                                 <select class="form-control show-tick" name="id_mata_pelajaran" required>
                                 </select>
                             </div>
-
-
                             <div class="col-md-12">
                                 <label>Semester (Otomatis)</label>
                                 <select class="form-control show-tick" name="id_semester" required="">
@@ -55,6 +53,18 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-12">
+                            <label>Keterangan1</label>
+                            <textarea rows="1" cols="50" class="form-control" name="keterangan" aria-required="true" aria-invalid="true"></textarea>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label>Keterangan2</label>
+                            <textarea rows="1" cols="50" class="form-control" name="keterangan2" aria-required="true"
+                                aria-invalid="true"></textarea>
+                        </div>
+
 
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
