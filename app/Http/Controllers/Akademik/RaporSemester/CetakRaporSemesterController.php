@@ -105,6 +105,7 @@ class CetakRaporSemesterController extends Controller
                 if ($nilai_rapor['nilai'] != '0') {
                     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'nilai'] = $nilai_rapor['nilai'];
                     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = $nilai_rapor['keterangan'];
+                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan2'] = $nilai_rapor['keterangan2'];
                 }
             }
         }

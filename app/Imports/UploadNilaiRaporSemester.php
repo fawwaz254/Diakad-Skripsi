@@ -49,6 +49,7 @@ class UploadNilaiRaporSemester implements ToCollection, WithHeadingRow
 
 						$nilai->nilai =   $row[str_replace([".", " "], ["", "_"], strtolower($komponen->nm_komponen_jenis_rapor))];
 						$nilai->keterangan = $row[str_replace([".", " "], ["", "_"], strtolower('keterangan_' . $komponen->nm_komponen_jenis_rapor))];
+						$nilai->keterangan2 = $row[str_replace([".", " "], ["", "_"], strtolower('keterangan2_' . $komponen->nm_komponen_jenis_rapor))];
 						$nilai->updated_by             = $id_pengguna;
 						$nilai->updated_at           = $now;
 						$nilai->save();
