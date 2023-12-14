@@ -17,7 +17,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header bg-cyan">
-                    <h2>View Nilai Pengembangan Diri</h2>
+                    <h2>View Data Siswa</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -29,10 +29,11 @@
                                     <th>No</th>
                                     <th>NIS</th>
                                     <th>Nama</th>
+                                    <th>Action</th>
                                     @foreach ($kelompok_tambahan_rapor as $k)
                                         <th>{{ $k->nm_kelompok_tambahan_rapor }}</th>
                                     @endforeach
-                                    <th>Action</th>
+
                                 </tr>
                             </thead>
                         </table>
@@ -50,7 +51,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'cetak-rapor/view-data-tambahan/datatables/' +
         id_semester + '/' + id_kelas;
-    // var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/printAkhir/' + id_semester;
+    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/view-data-tambahan/print';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'cetak-rapor/action-pengembangan-diri/delete';
 
@@ -77,6 +78,25 @@
                 data: 'pengguna.nm_pengguna',
                 name: 'pengguna.nm_pengguna',
                 className: 'align-center'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        pdf_url + '/' + data.id +
+                        '"  target="_blank">' +
+                        '    <i class="material-icons">picture_as_pdf</i>' +
+                        '</a> ' +
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                        delete_url + '\', this)" data-id="' + data.id + '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
+
+                }
             },
             {
                 data: 'tambahan_rapor',
@@ -138,20 +158,7 @@
 
                 }
             },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                        delete_url + '\', this)" data-id="' + data.id + '">' +
-                        '    <i class="material-icons">delete_forever</i>' +
-                        '</button>';
 
-                }
-            },
         ]
     });
 
