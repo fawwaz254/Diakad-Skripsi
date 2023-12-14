@@ -158,10 +158,16 @@ class CetakRaporSemesterController extends Controller
             $catatan_wali_kelas_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Catatan Wali Kelas')->first();
             $kelulusan_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Kelulusan')->first();
 
+            $ekskul_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
+                $query->where('nm_kelompok_tambahan_rapor', 'Ekstrakurikuler');
+            })->get();
+
             $tambahan = array();
 
             $tambahan['ketidakhadiran'] = null;
             $tambahan['sikap'] = null;
+            $tambahan['ekskul'] = null;
+
             $tambahan['catatan_wali_kelas'] = null;
             $tambahan['kelulusan'] = null;
 
@@ -172,12 +178,14 @@ class CetakRaporSemesterController extends Controller
                     $tambahan['sikap'][$n->id_siswa] = $n->nilai;
                 } elseif ($catatan_wali_kelas_tambahan_rapor->id_tambahan_rapor == $n->id_tambahan_rapor) {
                     $tambahan['catatan_wali_kelas'][$n->id_siswa] = $n->nilai;
+                } elseif (in_array($n->id_tambahan_rapor, $ekskul_tambahan_rapor->pluck('id_tambahan_rapor')->toArray())) {
+                    $tambahan['ekskul'][$n->id_siswa][$n->id_tambahan_rapor] = $n->nilai;
                 } elseif ($kelulusan_tambahan_rapor->id_tambahan_rapor == $n->id_tambahan_rapor) {
                     $tambahan['kelulusan'][$n->id_siswa] = $n->nilai;
                 }
             }
 
-            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'kehadiran_tambahan_rapor', 'tambahan',  'wali_kelas'));
+            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'ekskul_tambahan_rapor', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'kehadiran_tambahan_rapor', 'tambahan',  'wali_kelas'));
         } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
