@@ -257,6 +257,7 @@
         </tr>
         @php
             $no = 1;
+            $total_realisasi = 0;
         @endphp
         @foreach ($data_realisasi_pengeluaran as $realisasi)
             @if (
@@ -279,6 +280,9 @@
                     @endif
                     <td></td>
                 </tr>
+                @php
+                    $total_realisasi += $subkategori_non_kbm['total_bayar'] + $realisasi->total_realisasi;
+                @endphp
             @elseif(
                 $subkategori_pengembangan_pendidikan['status'] &&
                     $realisasi->kode_subkategori_rapb == 'K.5.4' &&
@@ -300,6 +304,9 @@
                     @endif
                     <td></td>
                 </tr>
+                @php
+                    $total_realisasi += $subkategori_pengembangan_pendidikan['total_bayar'] + $realisasi->total_realisasi;
+                @endphp
             @else
                 <tr valign=top>
                     <td>{{ $no++ }}.</td>
@@ -315,12 +322,15 @@
                     @endif
                     <td></td>
                 </tr>
+            @php
+                $total_realisasi += $realisasi->total_realisasi;
+            @endphp
             @endif
         @endforeach
         <tr valign=top>
             <td colspan=3>JUMLAH</td>
             <td class="text-right">{{ number_format($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb')) }}</td>
-            <td class="text-right">{{ number_format($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran) }}</td>
+            <td class="text-right">{{ number_format($total_realisasi) }}</td>
             @if ($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb') == 0)
                 <td class="text-right">0%</td>
             @else
