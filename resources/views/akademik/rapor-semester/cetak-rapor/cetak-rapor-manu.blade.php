@@ -178,28 +178,38 @@
                                     $jumlah = count($data2['nm_point']);
                                 @endphp
                                 <tr>
-                                    <td style="text-align: center;">{{ $key }}</td>
-                                    <td>{{ $data2['nm_point'][0] }}</td>
+                                    <td style="text-align: center;" rowspan="2">{{ $key }}</td>
+                                    <td rowspan="2">{{ $data2['nm_point'][0] }}</td>
 
                                     @php
                                         $komponen = $list_komponen->first();
                                     @endphp
-                                    <td style="text-align: center;font-weight: bold;">
+                                    <td style="text-align: center;font-weight: bold;" rowspan="2">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai'] : '' }}
                                     </td>
                                     <td>
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'keterangan']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'keterangan'] : '' }}
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'keterangan2']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'keterangan2'] : '' }}
+                                    </td>
+                                </tr>
                                 @for ($i = 1; $i < $jumlah; $i++)
                                     <tr>
-                                        <td></td>
-                                        <td>{{ $data2['nm_point'][$i] }}</td>
-                                        <td style="text-align: center;font-weight: bold;">
+                                        <td rowspan="2"></td>
+                                        <td rowspan="2">{{ $data2['nm_point'][$i] }}</td>
+                                        <td style="text-align: center;font-weight: bold;" rowspan="2">
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor . 'nilai']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor . 'nilai'] : '' }}
                                         </td>
                                         <td>
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor . 'keterangan']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor . 'keterangan'] : '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor . 'keterangan2']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor . 'keterangan2'] : '' }}
                                         </td>
 
                                         </td>
