@@ -324,6 +324,24 @@ class CetakRaporSemesterController extends Controller
                 return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'pengembangan_karakter_tambahan_rapor'));
             } else {
 
+                foreach ($rapors as $rapor) {
+                    foreach ($rapor->nilai_rapor as  $nilai_rapor) {
+                        if ($nilai_rapor['nilai'] >= 90 && $nilai_rapor['nilai'] <= 100) {
+                            $hasil = 'A';
+                        } elseif ($nilai_rapor['nilai'] >= 80 && $nilai_rapor['nilai'] < 90) {
+                            $hasil = 'B';
+                        } elseif ($nilai_rapor['nilai'] >= 70 && $nilai_rapor['nilai'] < 80) {
+                            $hasil = 'C';
+                        } elseif ($nilai_rapor['nilai'] >= 0 && $nilai_rapor['nilai'] < 70) {
+                            $hasil = 'D';
+                        } else {
+                            $hasil = 'Nilai tidak valid';
+                        }
+                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = $hasil;
+                    }
+                }
+
+
                 $nilai_tambahan_rapor = NilaiTambahanRapor::with('tambahan_rapor')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
                 $kehadiran_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
                     $query->where('nm_kelompok_tambahan_rapor', 'Ketidak Hadiran');
@@ -382,7 +400,7 @@ class CetakRaporSemesterController extends Controller
                 },
                 'pengguna'
             ]
-        );
+        )->orderBy('nis_siswa');
 
         $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
 

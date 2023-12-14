@@ -153,22 +153,31 @@
             <br>
 
             @foreach ($data as $kelompok)
+                @php
+                    if ($kelompok['nama'] == 'A. Muatan Nasional') {
+                        $title = 'Mata Pelajaran Umum';
+                    } elseif ($kelompok['nama'] == 'B. Muatan Kewilayahan') {
+                        $title = 'Muatan Lokal';
+                    } elseif ($kelompok['nama'] == 'C. Muatan Peminatan Kejuruan') {
+                        $title = 'Mata Pelajaran Kejuruan';
+                    }
+                @endphp
                 <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                     <thead class="head" style="background-color: #d4d4d4">
                         <tr>
-                            <th>No</th>
-                            <th>Mata Pelajaran</th>
-                            <th>Nilai Akhir</th>
-                            <th>Predikat</th>
-                            <th>Capaian Kompetensi</th>
+                            <th style="width: 5%">No</th>
+                            <th style="width: 15%">{{ $title }}</th>
+                            <th style="width: 10%">Nilai Akhir</th>
+                            <th style="width: 10%">Predikat</th>
+                            <th style="width: 60%">Capaian Kompetensi</th>
                         </tr>
                     </thead>
                     <tbody class="body">
                         @if (isset($kelompok['data']))
-                            <tr>
+                            {{-- <tr>
                                 <td colspan="2" style="font-weight: bold;">
                                     {{ isset($kelompok['nama']) ? $kelompok['nama'] : '' }}</td>
-                            </tr>
+                            </tr> --}}
                             @foreach ($kelompok['data'] as $key => $data2)
                                 @php
                                     $jumlah = count($data2['nm_point']);
@@ -184,6 +193,9 @@
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai'] : '' }}
                                     </td>
                                     <td style="text-align: center;">
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'predikat']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'predikat'] : '' }}
+                                    </td>
+                                    <td>
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'keterangan']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'keterangan'] : '' }}
                                     </td>
                                 </tr>
@@ -255,7 +267,7 @@
             <br>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; ">
                 <tr>
-                    <td colspan="2"></td>
+                    <th colspan="2">Ketidakhadiran</th>
                 </tr>
                 @foreach ($kehadiran_tambahan_rapor as $k)
                     <tr>
@@ -322,7 +334,7 @@
                 </tr>
             </table>
             <br>
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+            {{-- <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
                     <td style="border-style : hidden; width:35%;" align="left">
                         Mengetahui, <br>
@@ -368,7 +380,7 @@
                     <td style="width: 30%;">
                     </td>
                 </tr>
-            </table>
+            </table> --}}
 
         </div>
     @endforeach
