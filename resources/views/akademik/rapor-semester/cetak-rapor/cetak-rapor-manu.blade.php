@@ -308,7 +308,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        Pasuruan, 23 Desember 2023
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
