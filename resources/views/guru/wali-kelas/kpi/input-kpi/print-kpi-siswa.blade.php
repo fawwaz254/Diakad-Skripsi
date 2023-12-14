@@ -266,7 +266,7 @@ margin-left: auto;">
                 <br>
                 Wali Kelas
                 <br><br><br><br><br><br><u><b>
-                        {{ $auth_data->pengguna->nm_pengguna }}</b></u>
+                        {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</b></u>
             </td>
 
         </tr>
