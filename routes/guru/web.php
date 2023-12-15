@@ -836,13 +836,14 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('tambah-nilai-rapor-semester')->group(function () {
                 Route::get('/', [NilaiRaporSemesterController::class, 'viewNilaiRaporSemester']);
                 Route::get('/add', [NilaiRaporSemesterController::class, 'addNilaiRaporSemester']);
+                Route::get('/edit/{id}', [NilaiRaporSemesterController::class, 'editNilaiRaporSemester']);
                 Route::post('getMataPelajaran', [NilaiRaporSemesterController::class, 'getMataPelajaran']);
                 Route::get('datatables', [NilaiRaporSemesterController::class, 'datatablesNilaiRaporSemester']);
                 Route::post('action/{mode}/{id}', [NilaiRaporSemesterController::class, 'actionsNilaiRaporSemester']);
                 Route::get('templateExcel/{id}', [NilaiRaporSemesterController::class, 'templateExcel']);
                 Route::get('importExcel', [NilaiRaporSemesterController::class, 'imporExcel']);
                 Route::post('importExcel', [NilaiRaporSemesterController::class, 'uploadNilaiRapor']);
-                // Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
+                Route::get('pdf/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
                 Route::get('print/{id}', [NilaiRaporSemesterController::class, 'printRekap']);
             });
         });

@@ -85,6 +85,8 @@ class NilaiRaporSemesterController extends Controller
                 $data = array(
                     'id'     => $item->id_rapor,
                     'status' => $status,
+                    'id_kelas' => $item->id_kelas,
+                    'id_semester' => $item->id_semester,
                 );
                 return $data;
             })
@@ -101,6 +103,18 @@ class NilaiRaporSemesterController extends Controller
 
         return view('guru/rapor-semester/add-nilai-rapor-semester', compact('auth_data'), $data);
     }
+
+    public function editNilaiRaporSemester(Request $request, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $rapor = Rapor::with('keterangan_rapor.komponen_jenis_rapor', 'kelas', 'semester', 'mata_pelajaran')->find($id);
+
+
+        return view('guru/rapor-semester/edit-nilai-rapor-semester', compact('auth_data', 'rapor'));
+    }
+
     public function getMataPelajaran(Request $request)
     {
         $input = (object) $request->input();

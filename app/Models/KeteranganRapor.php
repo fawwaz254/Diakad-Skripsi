@@ -30,4 +30,9 @@ class KeteranganRapor extends Model
     ];
 
     protected $guarded = [];
+
+    public function komponen_jenis_rapor()
+    {
+        return $this->belongsTo(KomponenJenisRapor::class, 'id_komponen_jenis_rapor');
+    }
 }
