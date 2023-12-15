@@ -260,7 +260,7 @@ margin-left: auto;">
                 ____________________
             </td>
             <td width="30%" style="border-style : hidden; "></td>
-            <td width="30%" style="border-style : hidden;text-align:center ">Sidoarjo, 21 Desember 2023
+            <td width="30%" style="border-style : hidden;text-align:center ">Sidoarjo, 19 Desember 2023
                 {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
                 <br>
                 <br>
