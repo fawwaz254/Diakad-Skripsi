@@ -132,6 +132,7 @@ class CetakRaporSemesterController extends Controller
                             } else {
                                 $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = '';
                             }
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan2'] = $keterangan_rapor->keterangan_d;
                         } else {
                             $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = '';
                         }
@@ -150,6 +151,15 @@ class CetakRaporSemesterController extends Controller
             }
         ])->orderBy('urutan')->get();
 
+        $kkm = 0;
+        if ($kelas->tingkat == 1) {
+            $kkm =  78;
+        } elseif ($kelas->tingkat == 2) {
+            $kkm =  79;
+        } else {
+            $kkm = 80;
+        }
+
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
@@ -160,7 +170,7 @@ class CetakRaporSemesterController extends Controller
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
                     } else {
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] =  $mata_pelajaran_rapor->mata_pelajaran->nm_mata_pelajaran;
-                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] =  $mata_pelajaran_rapor->mata_pelajaran->nilai_kkm;
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] =  $kkm;
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
                     }
                 }
