@@ -39,4 +39,9 @@ class Rapor extends Model
     {
         return $this->hasMany(NilaiRapor::class, 'id_rapor', 'id_rapor');
     }
+
+    public function keterangan_rapor()
+    {
+        return $this->hasMany(KeteranganRapor::class, 'id_rapor');
+    }
 }

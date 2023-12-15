@@ -72,7 +72,7 @@
 <script type="text/javascript">
     var modul_url = 'rapor-semester';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/datatables';
-    var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
+    var edit_url = role_url + '#' + modul_url + '/' + 'tambah-nilai-rapor-semester/edit';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'tambah-nilai-rapor-semester/action/delete';
     var template_excel_url = base_url + '/' + role_url + '/' + modul_url + '/' +
@@ -184,6 +184,10 @@
                             pdf_url + '/' + data.id_semester + '/' + data
                             .id_kelas + '"  target="_blank">' +
                             '    <i class="material-icons">picture_as_pdf</i>' +
+                            '</a> ' +
+                            '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            edit_url + '/' + data.id + '">' +
+                            '    <i class="material-icons">edit</i>' +
                             '</a> ' +
                             '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
                             delete_url + '\', this)" data-id="' + data.id + '">' +
