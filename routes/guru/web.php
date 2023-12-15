@@ -777,6 +777,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [AppRaporSemesterController::class, 'viewRaporSemester']);
                 Route::get('datatables/{thn_akademik_semester}/{id_kelas}', [AppRaporSemesterController::class, 'datatablesRaporSemester']);
                 Route::get('/print/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
+                Route::get('/printPerSiswa/{id_siswa}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
                 Route::get('template-excel-data-tambahan/{id_kelas}', [CetakRaporSemesterController::class, 'templateExcelDataTambahan']);
                 Route::post('action-pengembangan-diri/{mode}/{id_siswa}', [CetakRaporSemesterController::class, 'actionDataTambahan']);
 
