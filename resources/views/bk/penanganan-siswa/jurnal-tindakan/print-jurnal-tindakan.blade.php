@@ -213,7 +213,7 @@
             <div class="col-md-4" style="margin-top:50px;">
                 Sidoarjo,
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                    24 Juni 2023
+                    19 Desember 2023
                 @else
                     {{ now('Asia/Jakarta')->format('d M Y') }}
                 @endif
