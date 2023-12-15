@@ -41,6 +41,11 @@
                         {{ isset($data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan2']) ? $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan2'] : null }}
                     </td> --}}
                 @endforeach
+                @foreach ($data['list_data'] as $nilai)
+                    <td style="text-align: center">
+                        {{ isset($data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan']) && !empty($data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan']) ? $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor'] . 'keterangan'] : null }}
+                    </td>
+                @endforeach
             </tr>
         @endforeach
     </tbody>
