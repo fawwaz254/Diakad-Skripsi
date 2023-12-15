@@ -274,7 +274,7 @@
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
@@ -521,7 +521,7 @@
                         {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
             </td>
             <td style="width: 30%;">
-                {{ 'Surabaya, 21 DESEMBER 2023' }}
+                {{ 'Surabaya, 21 Desember 2023' }}
                 <br>
                 Wali Kelas
                 <br><br><br><br><br><br><br>
