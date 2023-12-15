@@ -38,7 +38,13 @@ class JenisRaporSemesterController extends Controller
 
                     return $komponen;
                 }
+            )->addColumn(
+                'jenis_keterangan',
+                function ($item) {
+                    return $item->jenis_keterangan();
+                }
             )
+
             ->make(true);
     }
 }

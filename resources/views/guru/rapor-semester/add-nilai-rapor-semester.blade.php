@@ -54,16 +54,9 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
-                            <label>Keterangan1</label>
-                            <textarea rows="1" cols="50" class="form-control" name="keterangan" aria-required="true" aria-invalid="true"></textarea>
+                        <div id="place">
                         </div>
 
-                        <div class="col-md-12">
-                            <label>Keterangan2</label>
-                            <textarea rows="1" cols="50" class="form-control" name="keterangan2" aria-required="true"
-                                aria-invalid="true"></textarea>
-                        </div>
 
 
                         <div class="row clearfix">
@@ -85,6 +78,8 @@
 
 <script>
     function changeKelas(el) {
+        $('select[name=id_mata_pelajaran]').html('');
+        $('#place').html('');
         $.ajax({
             url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getMataPelajaran') }}',
             type: 'POST',
@@ -95,7 +90,7 @@
             success: function(result) {
                 $('select[name=id_mata_pelajaran]').html('');
                 var html = '<option value="">-- Pilih Mata Pelajaran --</option>';
-                $.each(result, function(key, item) {
+                $.each(result['mapel'], function(key, item) {
                     if (item.mata_pelajaran_rapor.mata_pelajaran)
                         html += '<option value="' + item.mata_pelajaran_rapor.id_mata_pelajaran +
                         '">' +
@@ -104,6 +99,62 @@
                         '</option>'
                 });
                 $('select[name=id_mata_pelajaran]').html(html);
+                $('#place').html('');
+
+                if (result['kelas'].type_rapor == '1') {
+                    var html = '';
+                    $.each(result['kelas'].jenis_rapor.komponen_jenis_rapor, function(key, item) {
+                        html += '<div class="col-md-12">' +
+                            '<label>Keterangan ' + item.nm_komponen_jenis_rapor +
+                            '</label>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<pre>' +
+                            ' nilai A</pre>' +
+                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
+                            item
+                            .id_komponen_jenis_rapor +
+                            '][keterangan_a]" aria-required="true" aria-invalid="true"></textarea>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<pre>' +
+                            ' nilai B</pre>' +
+                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
+                            item
+                            .id_komponen_jenis_rapor +
+                            '][keterangan_b]" aria-required="true" aria-invalid="true "></textarea>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<pre>' +
+                            ' nilai C</pre>' +
+                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
+                            item
+                            .id_komponen_jenis_rapor +
+                            '][keterangan_c]" aria-required="true" aria-invalid="true"></textarea>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<pre>' +
+                            ' nilai D</pre>' +
+                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
+                            item
+                            .id_komponen_jenis_rapor +
+                            '][keterangan_d]" aria-required="true" aria-invalid="true"></textarea>' +
+                            '</div>';
+                    });
+                    $('#place').html(html);
+                } else if (result['kelas'].type_rapor == '2') {
+                    $('#place').append(`<div class="col-md-12">
+                            <label>Keterangan1</label>
+                            <textarea rows="1" cols="50" class="form-control" name="keterangan" aria-required="true" aria-invalid="true"></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Keterangan2</label>
+                            <textarea rows="1" cols="50" class="form-control" name="keterangan2" aria-required="true"
+                                aria-invalid="true"></textarea>
+                        </div>`);
+                }
+
+
             }
         });
     }

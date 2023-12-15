@@ -15,6 +15,7 @@
                                     <th>Kelas</th>
                                     <th>Jenis Rapor</th>
                                     <th>Komponen</th>
+                                    <th>Jenis Keterangan</th>
                                 </tr>
                             </thead>
                         </table>
@@ -65,6 +66,11 @@
                     return html;
 
                 }
+            },
+            {
+                data: 'jenis_keterangan',
+                name: 'jenis_keterangan',
+                className: 'align-center'
             },
 
 
