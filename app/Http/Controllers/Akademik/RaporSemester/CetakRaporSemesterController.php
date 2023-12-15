@@ -151,18 +151,31 @@ class CetakRaporSemesterController extends Controller
             }
         ])->orderBy('urutan')->get();
 
-        $kkm = 0;
-        if ($kelas->tingkat == 1) {
-            $kkm =  78;
-        } elseif ($kelas->tingkat == 2) {
-            $kkm =  79;
-        } else {
-            $kkm = 80;
-        }
-
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
+
+            $kkm = 0;
+            if ($kelas->tingkat == 1) {
+                $kkm =  78;
+            } elseif ($kelas->tingkat == 2) {
+                $kkm =  79;
+            } else {
+                $kkm = 80;
+            }
+
             foreach ($kelompok_mapel_rapor as $k) {
-                $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
+                if ($kelas->tingkat == '1') {
+                    if ($k->nm_kelompok_mapel_rapor == 'Muatan Nasional') {
+                        $data[$k->urutan]['nama'] = 'A. Mata Pelajaran Umum';
+                    } elseif ($k->nm_kelompok_mapel_rapor == 'Muatan Kewilayahan') {
+                        $data[$k->urutan]['nama'] = 'B. Mata Pelajaran Kejuruan';
+                    } else {
+                        continue;
+                    }
+                } else {
+                    $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
+                }
+
+
                 foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
                     if ($mata_pelajaran_rapor->jenis == '0') {
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] = $mata_pelajaran_rapor->keterangan;

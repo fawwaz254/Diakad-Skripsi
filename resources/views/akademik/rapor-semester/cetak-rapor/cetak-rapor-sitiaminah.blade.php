@@ -515,13 +515,13 @@
             </td>
             <td style="width:35%; border-style : hidden;" align="left">
                 Mengetahui, <br>
-                Kepala Madrasah
+                Kepala Sekolah
                 <br><br><br><br><br><br><br>
                 <b><u>
                         {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
             </td>
             <td style="width: 30%;">
-                {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                {{ 'Surabaya, 21 DESEMBER 2023' }}
                 <br>
                 Wali Kelas
                 <br><br><br><br><br><br><br>
