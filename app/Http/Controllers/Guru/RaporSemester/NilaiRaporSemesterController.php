@@ -85,6 +85,8 @@ class NilaiRaporSemesterController extends Controller
                 $data = array(
                     'id'     => $item->id_rapor,
                     'status' => $status,
+                    'id_kelas' => $item->id_kelas,
+                    'id_semester' => $item->id_semester,
                 );
                 return $data;
             })

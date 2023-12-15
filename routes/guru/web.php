@@ -842,7 +842,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('templateExcel/{id}', [NilaiRaporSemesterController::class, 'templateExcel']);
                 Route::get('importExcel', [NilaiRaporSemesterController::class, 'imporExcel']);
                 Route::post('importExcel', [NilaiRaporSemesterController::class, 'uploadNilaiRapor']);
-                // Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
+                Route::get('pdf/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
                 Route::get('print/{id}', [NilaiRaporSemesterController::class, 'printRekap']);
             });
         });
