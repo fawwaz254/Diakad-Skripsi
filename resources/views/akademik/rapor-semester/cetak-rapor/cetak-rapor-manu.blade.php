@@ -308,7 +308,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        Pasuruan, 21 Desember 2023
+                        Pasuruan, 23 Desember 2023
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
