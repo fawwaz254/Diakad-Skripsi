@@ -129,12 +129,12 @@
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;">NO Induk
+                    <td style="border-style : hidden;width: 14%;">No Induk/NISN
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
-                        {{ $siswa->nis_siswa }}
+                        {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
                     </td>
                 </tr>
             </table>
