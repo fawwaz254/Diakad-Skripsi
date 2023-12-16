@@ -171,7 +171,7 @@
                     <tr>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">MATA PELAJARAN<br></td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">KKM</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">KKTP</td>
                         @foreach ($list_komponen as $komponen)
                             <td colspan="2" style="text-align: center;font-weight: bold;">
                                 {{ $komponen->nm_komponen_jenis_rapor }}
