@@ -320,17 +320,17 @@ class CetakRaporSemesterController extends Controller
                             if ($nilaiMin) {
                                 $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor->id_rapor)->where('id_komponen_jenis_rapor', $nilaiMin->id_komponen_jenis_rapor)->first();
                                 if ($keterangan_rapor) {
-                                    if ($nilaiMin->nilai >= 90 && $nilaiMin->nilai <= 100) {
-                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_a;
-                                    } elseif ($nilaiMin->nilai >= 80 && $nilaiMin->nilai < 90) {
-                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_b;
-                                    } elseif ($nilaiMin->nilai >= 70 && $nilaiMin->nilai < 80) {
-                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_c;
-                                    } elseif ($nilaiMin->nilai >= 0 && $nilaiMin->nilai < 70) {
-                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_d;
-                                    } else {
-                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = '';
-                                    }
+                                    // if ($nilaiMin->nilai >= 90 && $nilaiMin->nilai <= 100) {
+                                    //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_a;
+                                    // } elseif ($nilaiMin->nilai >= 80 && $nilaiMin->nilai < 90) {
+                                    //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_b;
+                                    // } elseif ($nilaiMin->nilai >= 70 && $nilaiMin->nilai < 80) {
+                                    //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_c;
+                                    // } elseif ($nilaiMin->nilai >= 0 && $nilaiMin->nilai < 70) {
+                                    //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_d;
+                                    // } else {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan2;
+                                    // }
                                 }
                             }
                         }

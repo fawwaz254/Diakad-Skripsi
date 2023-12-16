@@ -177,9 +177,6 @@ class NilaiRaporSemesterController extends Controller
         }
 
 
-
-
-
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         if ($mode == 'add') {
             DB::beginTransaction();
@@ -210,6 +207,21 @@ class NilaiRaporSemesterController extends Controller
                     } elseif ($kelas->type_rapor == '2') {
                         $rapor->keterangan          = $input->keterangan;
                         $rapor->keterangan2         = $input->keterangan2;
+                    } elseif ($kelas->type_rapor == '3') {
+                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
+                        foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
+                            $keterangan_rapor = new KeteranganRapor;
+                            $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $keterangan_rapor->id_rapor = $rapor->id_rapor;
+                            $keterangan_rapor->id_komponen_jenis_rapor = $komponen_jenis_rapor->id_komponen_jenis_rapor;
+
+                            $keterangan_rapor->keterangan_a = 'Menunjukkan penguasaan yang Sangat baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
+                            $keterangan_rapor->keterangan_b = 'Menunjukkan penguasaan yang baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
+                            $keterangan_rapor->keterangan_c = 'Menunjukkan penguasaan yang Cukup baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
+                            $keterangan_rapor->keterangan_d = 'Menunjukkan penguasaan yang Kurang baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
+                            $keterangan_rapor->keterangan2 = 'Perlu meningkatkan penguasaan dalam  ' . $input->keterangan2[$komponen_jenis_rapor->id_komponen_jenis_rapor];
+                            $keterangan_rapor->save();
+                        }
                     }
                 }
 
@@ -276,6 +288,22 @@ class NilaiRaporSemesterController extends Controller
                             $keterangan_rapor->keterangan_b =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_b'];
                             $keterangan_rapor->keterangan_c =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_c'];
                             $keterangan_rapor->keterangan_d =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_d'];
+                            $keterangan_rapor->save();
+                        }
+                    } elseif ($kelas->type_rapor == '3') {
+                        $keterangan_rapor = KeteranganRapor::where('id_rapor', $rapor->id_rapor)->delete();
+                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
+                        foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
+                            $keterangan_rapor = new KeteranganRapor;
+                            $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $keterangan_rapor->id_rapor = $rapor->id_rapor;
+                            $keterangan_rapor->id_komponen_jenis_rapor = $komponen_jenis_rapor->id_komponen_jenis_rapor;
+
+                            $keterangan_rapor->keterangan_a =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_a'];
+                            $keterangan_rapor->keterangan_b =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_b'];
+                            $keterangan_rapor->keterangan_c =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_c'];
+                            $keterangan_rapor->keterangan_d =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_d'];
+                            $keterangan_rapor->keterangan2 =  $input->keterangan2[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->save();
                         }
                     }
@@ -388,7 +416,7 @@ class NilaiRaporSemesterController extends Controller
             foreach ($nilai as $nilaiRapor) {
                 // foreach ($nilaiRapor as $a) {
                 $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor'] . 'nilai'] = $nilaiRapor['nilai'];
-                if ($rapor->kelas->type_rapor == '1') {
+                if ($rapor->kelas->type_rapor == '1' || $rapor->kelas->type_rapor == '3') {
                     $keterangan_rapor = $keterangan_rapors->where('id_rapor', $nilaiRapor['id_rapor'])->where('id_komponen_jenis_rapor', $nilaiRapor['id_komponen_jenis_rapor'])->first();
                     if ($keterangan_rapor) {
                         if ($nilaiRapor['nilai'] >= 90 && $nilaiRapor['nilai'] <= 100) {
