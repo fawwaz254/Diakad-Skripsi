@@ -199,10 +199,11 @@ class NilaiRaporSemesterController extends Controller
                                 $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $keterangan_rapor->id_rapor = $rapor->id_rapor;
                                 $keterangan_rapor->id_komponen_jenis_rapor = $komponen_jenis_rapor->id_komponen_jenis_rapor;
-                                $keterangan_rapor->keterangan_a = $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_a'];
-                                $keterangan_rapor->keterangan_b = $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_b'];
-                                $keterangan_rapor->keterangan_c = $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_c'];
-                                $keterangan_rapor->keterangan_d = $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_d'];
+
+                                $keterangan_rapor->keterangan_a = str_replace(" ... ", " Sangat ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
+                                $keterangan_rapor->keterangan_b = str_replace(" ... ", " ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
+                                $keterangan_rapor->keterangan_c = str_replace(" ... ", " Cukup ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
+                                $keterangan_rapor->keterangan_d = str_replace(" ... ", " Kurang ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
                                 $keterangan_rapor->save();
                             }
                         } elseif ($kelas->type_rapor == '2') {

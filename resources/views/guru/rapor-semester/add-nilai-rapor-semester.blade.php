@@ -110,35 +110,14 @@
                             '</div>' +
                             '<div class="col-md-12">' +
                             '<pre>' +
-                            ' nilai A</pre>' +
+                            ' kasih titik 3 ( ... ) tanpa tanda kurung, akan otomatis terisi' +
+                            ' A = Sangat ,B = menghapus ... ,' +
+                            'C = Cukup ,D = Kurang ' +
+                            '</pre>' +
                             '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
                             item
                             .id_komponen_jenis_rapor +
-                            '][keterangan_a]" aria-required="true" aria-invalid="true"></textarea>' +
-                            '</div>' +
-                            '<div class="col-md-12">' +
-                            '<pre>' +
-                            ' nilai B</pre>' +
-                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
-                            item
-                            .id_komponen_jenis_rapor +
-                            '][keterangan_b]" aria-required="true" aria-invalid="true "></textarea>' +
-                            '</div>' +
-                            '<div class="col-md-12">' +
-                            '<pre>' +
-                            ' nilai C</pre>' +
-                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
-                            item
-                            .id_komponen_jenis_rapor +
-                            '][keterangan_c]" aria-required="true" aria-invalid="true"></textarea>' +
-                            '</div>' +
-                            '<div class="col-md-12">' +
-                            '<pre>' +
-                            ' nilai D</pre>' +
-                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
-                            item
-                            .id_komponen_jenis_rapor +
-                            '][keterangan_d]" aria-required="true" aria-invalid="true"></textarea>' +
+                            ']" aria-required="true" aria-invalid="true"></textarea>' +
                             '</div>';
                     });
                     $('#place').html(html);
