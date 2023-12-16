@@ -119,7 +119,9 @@ class NilaiRaporSemesterController extends Controller
     {
         $input = (object) $request->input();
         $kelas_rapor['mapel'] = KelasRapor::where('id_kelas', $input->id_kelas)->with('mata_pelajaran_rapor.mata_pelajaran')->get();
-        $kelas_rapor['kelas'] = Kelas::with('jenis_rapor.komponen_jenis_rapor')->find($input->id_kelas);
+        $kelas_rapor['kelas'] = Kelas::with(['jenis_rapor.komponen_jenis_rapor' => function ($query) {
+            $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
+        }])->find($input->id_kelas);
         return $kelas_rapor;
     }
 
@@ -191,7 +193,7 @@ class NilaiRaporSemesterController extends Controller
 
                     if ($kelas = Kelas::find($input->id_kelas)) {
                         if ($kelas->type_rapor == '1') {
-                            $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->get();
+                            $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
                             foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
                                 $keterangan_rapor = new KeteranganRapor;
                                 $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
