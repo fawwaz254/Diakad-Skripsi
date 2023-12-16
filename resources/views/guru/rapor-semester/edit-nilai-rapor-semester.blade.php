@@ -44,38 +44,77 @@
                             </div>
                         </div>
 
-                        @foreach ($rapor->keterangan_rapor as $keterangan_rapor)
-                            <div class="col-md-12">
-                                <label>Keterangan
-                                    {{ $keterangan_rapor->komponen_jenis_rapor->nm_komponen_jenis_rapor }}
-                                </label>
-                            </div>
-                            <div class="col-md-12">
-                                <pre>nilai A</pre>
-                                <textarea rows="1" cols="50" class="form-control"
-                                    name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_a]" aria-required="true"
-                                    aria-invalid="true">{{ $keterangan_rapor->keterangan_a }}</textarea>
-                            </div>
-                            <div class="col-md-12">
-                                <pre>nilai B</pre>
-                                <textarea rows="1" cols="50" class="form-control"
-                                    name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_b]" aria-required="true"
-                                    aria-invalid="true ">{{ $keterangan_rapor->keterangan_b }}</textarea>
-                            </div>
-                            <div class="col-md-12">
-                                <pre> nilai C</pre>
-                                <textarea rows="1" cols="50" class="form-control"
-                                    name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_c]" aria-required="true"
-                                    aria-invalid="true">{{ $keterangan_rapor->keterangan_c }}</textarea>
-                            </div>
-                            <div class="col-md-12">
-                                <pre>nilai D</pre>
-                                <textarea rows="1" cols="50" class="form-control"
-                                    name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_d]" aria-required="true"
-                                    aria-invalid="true">{{ $keterangan_rapor->keterangan_d }}</textarea>
-                            </div>
-                        @endforeach
+                        @if ($rapor->kelas->type_rapor == '1')
+                            @foreach ($rapor->keterangan_rapor as $keterangan_rapor)
+                                <div class="col-md-12">
+                                    <label>Keterangan
+                                        {{ $keterangan_rapor->komponen_jenis_rapor->nm_komponen_jenis_rapor }}
+                                    </label>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre>nilai A</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_a]" aria-required="true"
+                                        aria-invalid="true">{{ $keterangan_rapor->keterangan_a }}</textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre>nilai B</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_b]" aria-required="true"
+                                        aria-invalid="true ">{{ $keterangan_rapor->keterangan_b }}</textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre> nilai C</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_c]" aria-required="true"
+                                        aria-invalid="true">{{ $keterangan_rapor->keterangan_c }}</textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre>nilai D</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_d]" aria-required="true"
+                                        aria-invalid="true">{{ $keterangan_rapor->keterangan_d }}</textarea>
+                                </div>
+                            @endforeach
+                        @elseif($rapor->kelas->type_rapor == '3')
+                            @foreach ($rapor->keterangan_rapor as $keterangan_rapor)
+                                <div class="col-md-12">
+                                    <label>Keterangan
+                                        {{ $keterangan_rapor->komponen_jenis_rapor->nm_komponen_jenis_rapor }}
+                                    </label>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre>nilai A</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_a]" aria-required="true"
+                                        aria-invalid="true">{{ $keterangan_rapor->keterangan_a }}</textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre>nilai B</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_b]" aria-required="true"
+                                        aria-invalid="true ">{{ $keterangan_rapor->keterangan_b }}</textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre> nilai C</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_c]" aria-required="true"
+                                        aria-invalid="true">{{ $keterangan_rapor->keterangan_c }}</textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre>nilai D</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan_rapor[{{ $keterangan_rapor->id_komponen_jenis_rapor }}][keterangan_d]" aria-required="true"
+                                        aria-invalid="true">{{ $keterangan_rapor->keterangan_d }}</textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <pre>keterangan bawah</pre>
+                                    <textarea rows="1" cols="50" class="form-control"
+                                        name="keterangan2[{{ $keterangan_rapor->id_komponen_jenis_rapor }}]" aria-required="true" aria-invalid="true">{{ $keterangan_rapor->keterangan2 }}</textarea>
+                                </div>
+                            @endforeach
 
+                        @endif
 
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
