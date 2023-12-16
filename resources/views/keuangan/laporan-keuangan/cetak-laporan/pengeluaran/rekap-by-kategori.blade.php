@@ -88,8 +88,8 @@
         <br>
         <table border="1" cellspacing="0" cellpadding="10" style="width: 100%;">
             @php
-                $danaPembangunan = 0;
                 $isDanaPembangunan = true;
+                $grand_total = 0;
             @endphp
             @if (isset($data_laporan['data']))
                 @foreach ($data_laporan['data'] as $nm_kategori => $kategori_laporan)
@@ -106,6 +106,7 @@
                     </tr>
                     @php
                         $no = 1;
+                        $danaPembangunan = 0;
                         $subkategori_non_kbm = $data_laporan['subkategori_non_kbm'];
                     @endphp
                     @foreach ($kategori_laporan->sortBy('tgl_realisasi') as $laporan)
@@ -138,14 +139,17 @@
 
                     <tr>
                         <th colspan="5">TOTAL</th>
-                        <th>{{ number_format($kategori_laporan->sum('dana_realisasi') + $danaPembangunan) }}
+                        <th>
+                            @php
+                                $grand_total += $kategori_laporan->sum('dana_realisasi') + $danaPembangunan;
+                            @endphp
+                            {{ number_format($kategori_laporan->sum('dana_realisasi') + $danaPembangunan) }}
                         </th>
                     </tr>
                     <tr>
                         <td colspan="6"></td>
                     </tr>
                 @endforeach
-                {{-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// --}}
 
                 @if ($isDanaPembangunan && !empty($subkategori_non_kbm['data_with_subkategori_rapb']))
                     @foreach ($subkategori_non_kbm['data_with_subkategori_rapb'] as $key => $data_with_subkategori_rapb)
@@ -179,41 +183,18 @@
 
                         <tr>
                             <th colspan="5">TOTAL</th>
-                            <th>{{ number_format($danaPembangunan) }}
+                            <th>
+                                @php
+                                    $grand_total += $danaPembangunan;
+                                @endphp
+                                {{ number_format($danaPembangunan) }}
                             </th>
                         </tr>
                         <tr>
                             <td colspan="6"></td>
                         </tr>
-
-                        {{-- <ul>
-                            @foreach ($data_with_subkategori_rapb as $subKey => $value)
-                                <li>{{ $subKey }}: {{ $value }}</li>
-                            @endforeach
-                        </ul> --}}
                     @endforeach
-
-
                 @endif
-
-
-
-                {{-- @php
-                    dd($subkategori_non_kbm['data_with_subkategori_rapb']);
-                @endphp --}}
-                {{-- @foreach ($subkategori_non_kbm['data_with_subkategori_rapb'] as $data_with_subkategori_rapb)
-                    <tr>
-                        <td>{{ $no++ }}</td>
-                        <td></td>
-                        <td colspan="3">{{ $key }}</td>
-                        <td style="text-align: right;">
-                            {{ number_format($detail_biaya_internal) }}</td>
-                    </tr>
-                    @php
-                        $danaPembangunan += $detail_biaya_internal;
-                    @endphp
-                @endforeach --}}
-
 
                 @if (isset($subkategori_non_kbm))
                     @if ($subkategori_non_kbm['status'])
@@ -251,7 +232,12 @@
                         @endforeach
                         <tr>
                             <th colspan="5">TOTAL</th>
-                            <th>{{ number_format($subkategori_non_kbm['total_bayar']) }}</th>
+                            <th>
+                                @php
+                                    $grand_total += $subkategori_non_kbm['total_bayar'];
+                                @endphp
+                                {{ number_format($subkategori_non_kbm['total_bayar']) }}
+                            </th>
                         </tr>
                         <tr>
                             <td colspan="6"></td>
@@ -259,7 +245,7 @@
                     @endif
                     <tr>
                         <th colspan="5">GRAND TOTAL</th>
-                        <th>{{ number_format($data_laporan['total_data'] + $danaPembangunan) }}</th>
+                        <th>{{ number_format($grand_total) }}</th>
                     </tr>
                 @endif
             @endif
