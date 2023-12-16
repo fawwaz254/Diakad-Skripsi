@@ -111,7 +111,6 @@ class NilaiRaporSemesterController extends Controller
 
         $rapor = Rapor::with('keterangan_rapor.komponen_jenis_rapor', 'kelas', 'semester', 'mata_pelajaran')->find($id);
 
-
         return view('guru/rapor-semester/edit-nilai-rapor-semester', compact('auth_data', 'rapor'));
     }
 
@@ -163,102 +162,130 @@ class NilaiRaporSemesterController extends Controller
                 'id_mata_pelajaran' => 'required',
                 'id_kelas'              => 'required'
             ]);
+            if ($cekDuplicate) {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => 'Kelas dan Mapel Sudah digunakan oleh ' . $cekDuplicate->pengguna->nm_pengguna,
+                ];
+            }
+            if ($validator->fails() && $mode != 'delete') {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => $validator->errors()->first()
+                ];
+            }
         }
 
-        if ($cekDuplicate) {
-            return [
-                'status' => 300, // FAILED
-                'message' => 'Kelas dan Mapel Sudah digunakan oleh ' . $cekDuplicate->pengguna->nm_pengguna,
-            ];
-        }
 
-        if ($validator->fails() && $mode != 'delete') {
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
-        } else {
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-            if ($mode == 'add') {
-                DB::beginTransaction();
-                // dd($input);
-                try {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $rapor                      = new Rapor;
-                    $rapor->id_rapor            = $id;
-                    $rapor->id_semester         = $input->id_semester;
-                    $rapor->id_mata_pelajaran   = $input->id_mata_pelajaran;
-                    $rapor->id_kelas            = $input->id_kelas;
 
-                    if ($kelas = Kelas::find($input->id_kelas)) {
-                        if ($kelas->type_rapor == '1') {
-                            $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
-                            foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
-                                $keterangan_rapor = new KeteranganRapor;
-                                $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                $keterangan_rapor->id_rapor = $rapor->id_rapor;
-                                $keterangan_rapor->id_komponen_jenis_rapor = $komponen_jenis_rapor->id_komponen_jenis_rapor;
 
-                                $keterangan_rapor->keterangan_a = str_replace(" ... ", " Sangat ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
-                                $keterangan_rapor->keterangan_b = str_replace(" ... ", " ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
-                                $keterangan_rapor->keterangan_c = str_replace(" ... ", " Cukup ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
-                                $keterangan_rapor->keterangan_d = str_replace(" ... ", " Kurang ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
-                                $keterangan_rapor->save();
-                            }
-                        } elseif ($kelas->type_rapor == '2') {
-                            $rapor->keterangan          = $input->keterangan;
-                            $rapor->keterangan2         = $input->keterangan2;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        if ($mode == 'add') {
+            DB::beginTransaction();
+            // dd($input);
+            try {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $rapor                      = new Rapor;
+                $rapor->id_rapor            = $id;
+                $rapor->id_semester         = $input->id_semester;
+                $rapor->id_mata_pelajaran   = $input->id_mata_pelajaran;
+                $rapor->id_kelas            = $input->id_kelas;
+
+                if ($kelas = Kelas::find($input->id_kelas)) {
+                    if ($kelas->type_rapor == '1') {
+                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
+                        foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
+                            $keterangan_rapor = new KeteranganRapor;
+                            $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $keterangan_rapor->id_rapor = $rapor->id_rapor;
+                            $keterangan_rapor->id_komponen_jenis_rapor = $komponen_jenis_rapor->id_komponen_jenis_rapor;
+
+                            $keterangan_rapor->keterangan_a = str_replace(" ... ", " Sangat ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
+                            $keterangan_rapor->keterangan_b = str_replace(" ... ", " ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
+                            $keterangan_rapor->keterangan_c = str_replace(" ... ", " Cukup ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
+                            $keterangan_rapor->keterangan_d = str_replace(" ... ", " Kurang ", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
+                            $keterangan_rapor->save();
+                        }
+                    } elseif ($kelas->type_rapor == '2') {
+                        $rapor->keterangan          = $input->keterangan;
+                        $rapor->keterangan2         = $input->keterangan2;
+                    }
+                }
+
+                $rapor->created_by          = $input->auth_data->pengguna->id_pengguna;
+                $rapor->save();
+
+                $siswa = Siswa::where('id_kelas', $input->id_kelas)
+                    ->whereHas('pengguna.status_pengguna', function ($query) {
+                        $query->where('aktif_status_pengguna', '=', '1');
+                    })
+                    ->get();
+
+                $kelas = Kelas::find($input->id_kelas);
+                $komponen_jenis_rapor = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->get();
+
+                foreach ($siswa as $s) {
+                    foreach ($komponen_jenis_rapor as $komponen) {
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
+                        $list_data[] = [
+                            'id_nilai_rapor' =>  $id,
+                            'id_rapor' => $rapor->id_rapor,
+                            'id_komponen_jenis_rapor' => $komponen->id_komponen_jenis_rapor,
+                            'id_siswa' => $s->id_siswa,
+                            'nilai' => 0,
+                            'keterangan' => null,
+                            'created_at' => Carbon::now(env('APP_TIMEZONE', '')),
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                        ];
+                    }
+                }
+                CreateNilaiRapor::dispatch($list_data);
+
+                DB::Commit();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'rapor-semester/tambah-nilai-rapor-semester',
+                    'message' => 'Save Tambah Nilai Successfully'
+                ];
+            } catch (\Exception $e) {
+
+                DB::rollback();
+
+
+                return [
+                    'status' => 300, // GAGAL
+                    'message' => $e->getMessage()
+                ];
+            }
+        } elseif ($mode == 'edit') {
+            $rapor = Rapor::find($id);
+            if ($rapor) {
+                if ($kelas = Kelas::find($rapor->id_kelas)) {
+                    if ($kelas->type_rapor == '1') {
+                        $keterangan_rapor = KeteranganRapor::where('id_rapor', $rapor->id_rapor)->delete();
+                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
+                        foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
+                            $keterangan_rapor = new KeteranganRapor;
+                            $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $keterangan_rapor->id_rapor = $rapor->id_rapor;
+                            $keterangan_rapor->id_komponen_jenis_rapor = $komponen_jenis_rapor->id_komponen_jenis_rapor;
+
+                            $keterangan_rapor->keterangan_a =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_a'];
+                            $keterangan_rapor->keterangan_b =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_b'];
+                            $keterangan_rapor->keterangan_c =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_c'];
+                            $keterangan_rapor->keterangan_d =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_d'];
+                            $keterangan_rapor->save();
                         }
                     }
-
-                    $rapor->created_by          = $input->auth_data->pengguna->id_pengguna;
-                    $rapor->save();
-
-                    $siswa = Siswa::where('id_kelas', $input->id_kelas)
-                        ->whereHas('pengguna.status_pengguna', function ($query) {
-                            $query->where('aktif_status_pengguna', '=', '1');
-                        })
-                        ->get();
-
-                    $kelas = Kelas::find($input->id_kelas);
-                    $komponen_jenis_rapor = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->get();
-
-                    foreach ($siswa as $s) {
-                        foreach ($komponen_jenis_rapor as $komponen) {
-                            $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
-                            $list_data[] = [
-                                'id_nilai_rapor' =>  $id,
-                                'id_rapor' => $rapor->id_rapor,
-                                'id_komponen_jenis_rapor' => $komponen->id_komponen_jenis_rapor,
-                                'id_siswa' => $s->id_siswa,
-                                'nilai' => 0,
-                                'keterangan' => null,
-                                'created_at' => Carbon::now(env('APP_TIMEZONE', '')),
-                                'created_by' => $input->auth_data->pengguna->id_pengguna,
-                            ];
-                        }
-                    }
-                    CreateNilaiRapor::dispatch($list_data);
-
-                    DB::Commit();
-
-                    return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'rapor-semester/tambah-nilai-rapor-semester',
-                        'message' => 'Save Tambah Nilai Successfully'
-                    ];
-                } catch (\Exception $e) {
-
-                    DB::rollback();
-
-
-                    return [
-                        'status' => 300, // GAGAL
-                        'message' => $e->getMessage()
-                    ];
                 }
             }
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'rapor-semester/tambah-nilai-rapor-semester',
+                'message' => 'Edit Successfully'
+            ];
         }
     }
 
