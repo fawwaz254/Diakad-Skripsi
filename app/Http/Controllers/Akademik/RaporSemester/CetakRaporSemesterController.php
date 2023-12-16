@@ -14,6 +14,7 @@ use App\Models\KelompokTambahanRapor;
 use App\Models\KeteranganRapor;
 use App\Models\KomponenJenisRapor;
 use App\Models\NilaiPribadiSisipan;
+use App\Models\NilaiRapor;
 use App\Models\NilaiTambahanRapor;
 use App\Models\PribadiSisipan;
 use App\Models\Rapor;
@@ -243,6 +244,7 @@ class CetakRaporSemesterController extends Controller
 
             return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'ekskul_tambahan_rapor', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'kehadiran_tambahan_rapor', 'tambahan',  'wali_kelas'));
         } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
+
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
                 foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
@@ -252,6 +254,7 @@ class CetakRaporSemesterController extends Controller
             }
 
             if ($kelas->jenis_rapor->nm_jenis_rapor == 'Merdeka') {
+
                 foreach ($rapors as $rapor) {
                     foreach ($rapor->nilai_rapor as  $nilai_rapor) {
                         if ($nilai_rapor['nilai'] >= 90 && $nilai_rapor['nilai'] <= 100) {
@@ -270,6 +273,70 @@ class CetakRaporSemesterController extends Controller
                 }
                 return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas'));
             } else {
+
+                $nilaiRapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))
+                    ->whereHas('komponen_jenis_rapor', function ($query) {
+                        $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
+                    })->get();
+
+
+                foreach ($rapors as $rapor) {
+                    foreach ($rapor->nilai_rapor as  $nilai_rapor) {
+                        if ($nilai_rapor['nilai'] != '0') {
+
+                            if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'])) {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] += $nilai_rapor['nilai'];
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] += 1;
+                            } else {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] = $nilai_rapor['nilai'];
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] = 1;
+                            }
+                            if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai']) && isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'])) {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'rata-rata'] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] / $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'];
+                            }
+
+
+                            $nilaiRaporMax = $nilaiRapors->where('id_rapor', $rapor['id_rapor'])->where('id_siswa', $nilai_rapor['id_siswa'])->sortByDesc('nilai');
+                            $nilaiMax = $nilaiRaporMax->first();
+                            if ($nilaiMax) {
+                                $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor['id_rapor'])->where('id_komponen_jenis_rapor', $nilaiMax->id_komponen_jenis_rapor)->first();
+                                if ($keterangan_rapor) {
+                                    if ($nilaiMax->nilai >= 90 && $nilaiMax->nilai <= 100) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_a;
+                                    } elseif ($nilaiMax->nilai >= 80 && $nilaiMax->nilai < 90) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_b;
+                                    } elseif ($nilaiMax->nilai >= 70 && $nilaiMax->nilai < 80) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_c;
+                                    } elseif ($nilaiMax->nilai >= 0 && $nilaiMax->nilai < 70) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_d;
+                                    } else {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = '';
+                                    }
+                                }
+                            }
+
+                            $nilaiRaporMin = $nilaiRapors->where('id_rapor', $rapor['id_rapor'])->where('id_siswa', $nilai_rapor['id_siswa'])->sortBy('nilai');
+                            $nilaiMin = $nilaiRaporMin->first();
+                            if ($nilaiMin) {
+                                $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor->id_rapor)->where('id_komponen_jenis_rapor', $nilaiMin->id_komponen_jenis_rapor)->first();
+                                if ($keterangan_rapor) {
+                                    if ($nilaiMin->nilai >= 90 && $nilaiMin->nilai <= 100) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_a;
+                                    } elseif ($nilaiMin->nilai >= 80 && $nilaiMin->nilai < 90) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_b;
+                                    } elseif ($nilaiMin->nilai >= 70 && $nilaiMin->nilai < 80) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_c;
+                                    } elseif ($nilaiMin->nilai >= 0 && $nilaiMin->nilai < 70) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_d;
+                                    } else {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = '';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $nilai_tambahan_rapor = NilaiTambahanRapor::with('tambahan_rapor')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
                 $kehadiran_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
                     $query->where('nm_kelompok_tambahan_rapor', 'Ketidak Hadiran');
