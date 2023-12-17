@@ -110,7 +110,7 @@
                             '</div>' +
                             '<div class="col-md-12">' +
                             '<pre>' +
-                            ' kasih titik 3 ( ... ) tanpa tanda kurung, akan otomatis terisi' +
+                            ' kasih titik 3 (...) tanpa tanda kurung, akan otomatis terisi' +
                             ' A = Sangat ,B = menghapus ... ,' +
                             'C = Cukup ,D = Kurang ' +
                             '</pre>' +
