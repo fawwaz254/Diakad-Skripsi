@@ -73,9 +73,171 @@
 <body>
 
     @foreach ($list_siswa as $siswa)
+        <div class="page">
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+                <tr style="border-style : hidden ;">
+                    <td style="border-style : hidden;width: 14%;">Nama Sekolah
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 35%;">
+                        {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}
+                    </td>
+                    <td style="border-style : hidden;width: 24%;">Kelas
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
+                        {{ $kelas->nm_kelas }}
+                    </td>
+                </tr>
+
+
+                <tr style="border-style : hidden">
+                    <td style="border-style : hidden;width: 14%;vertical-align: top;">Alamat
+                    </td>
+                    <td style="border-style : hidden;width: 1%;vertical-align: top;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 35%;vertical-align: top;">
+                        JL. MANYAR SAMBONGAN 119
+                    </td>
+                    <td style="border-style : hidden;width: 24%;vertical-align: top;">Semester
+                    </td>
+                    <td style="border-style : hidden;width: 1%;vertical-align: top;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%;vertical-align: top; ">
+                        {{ $semester->nm_semester }}
+                    </td>
+                </tr>
+
+                <tr style="border-style : hidden">
+                    <td style="border-style : hidden;width: 14%;">Nama Siswa
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 35%;font-weight: bold;">
+                        {{ $siswa->pengguna->nm_pengguna }}
+                    </td>
+                    <td style="border-style : hidden;width: 24%;">Tahun Pelajaran
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
+                        {{ $semester->tahun_ajaran }}
+                    </td>
+                </tr>
+
+                <tr style="border-style : hidden">
+                    <td style="border-style : hidden;width: 14%;">NO Induk/NISN
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 35%;">
+                        {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
+                    </td>
+                </tr>
+                <tr>
+                </tr>
+            </table>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+                <tr>
+                    <td>
+                        <h2 style="text-align: center">CAPAIAN HASIL BELAJAR</h2>
+                    </td>
+                </tr>
+            </table>
+
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
+                <tr style="font-weight: bold;border-style : hidden">
+                    <td>
+                        A. Sikap
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
+                {{-- <br> --}}
+                <tr style="border-style : hidden">
+                    <td style="font-weight: bold;">1. Sikap Spiritual</td>
+                </tr>
+            </table>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+                <thead class="head" style="background-color: #dcdcff">
+                    <tr>
+                        <th>Predikat</th>
+                        <th>Deskripsi</th>
+                    </tr>
+                </thead>
+                <tbody class="body">
+                    <tr>
+                        <td style="text-align: center;vertical-align: top;padding:10px">Baik</td>
+                        <td style="height: 300px;vertical-align: top;padding:10px">Memiliki sikap spiritual Baik, antara
+                            lain<br>
+                            Konsisten dalam toleran pada agama yang berbeda, taat beribadah, mensyukuri nikmat,
+                            dan berdoa</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
+
+                <tr style="border-style : hidden">
+                    <td style="font-weight: bold;">2. Sikap Sosial</td>
+                </tr>
+            </table>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+                <thead class="head" style="background-color: #dcdcff">
+                    <tr>
+                        <th>Predikat</th>
+                        <th>Deskripsi</th>
+                    </tr>
+                </thead>
+                <tbody class="body">
+                    <tr>
+                        <td style="text-align: center;vertical-align: top;padding:10px">Baik</td>
+                        <td style="height: 300px;vertical-align: top;padding:10px">Memiliki sikap sosial Baik, antara
+                            lain<br>
+                            Konsisten dalam jujur, bertanggung jawab, santun, toleransi, disiplin, pro-aktif, peduli,
+                            dan responsif</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+                <tr>
+                    <td style="border-style : hidden; width:35%;" align="left">
+                    </td>
+                    <td style="width:30%; border-style : hidden;" align="left">
+                    </td>
+                    <td style="width: 35%;">
+                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        <br>
+                        Wali Kelas
+                        <br><br><br><br><br><br><br>
+                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                            <b><u> {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                                    {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                                    {{ $wali_kelas->guru->pengguna->gelar_belakang }}</u></b>
+                        @else
+                            <p
+                                style="width: 250px;
+                                    border-bottom: 1px solid   black;">
+                            </p>
+                        @endif
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+
+
+
         @foreach ($list_komponen as $noKomponen => $komponen)
             <div class="page">
-                <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; " style="border-style : hidden">
+                <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;"
+                    style="border-style : hidden">
                     <tr style="border-style : hidden ;">
                         <td style="border-style : hidden;width: 14%;">Nama Sekolah
                         </td>
@@ -129,15 +291,19 @@
                     </tr>
 
                     <tr style="border-style : hidden">
-                        <td style="border-style : hidden;width: 14%;">NO Induk
+                        <td style="border-style : hidden;width: 14%;">NO Induk/NISN
                         </td>
                         <td style="border-style : hidden;width: 1%;"> :
                         </td>
                         <td style="border-style : hidden;width: 35%;">
-                            {{ $siswa->nis_siswa }}
+                            {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
                         </td>
                     </tr>
+                    <tr>
+                    </tr>
+
                 </table>
+
 
                 <br>
                 <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
@@ -153,7 +319,7 @@
                     </tr>
                 </table>
                 <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                    <thead class="head" style="background-color: #ccccff">
+                    <thead class="head" style="background-color: #dcdcff">
                         <tr>
                             <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
                             <td rowspan="2" style="text-align: center;font-weight: bold;">MATA PELAJARAN<br></td>
