@@ -271,7 +271,36 @@ class CetakRaporSemesterController extends Controller
                         $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = $hasil;
                     }
                 }
-                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas'));
+
+                $nilai_tambahan_rapor = NilaiTambahanRapor::with('tambahan_rapor')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+
+
+                $predikat_sikap_spiritual = TambahanRapor::where('nm_tambahan_rapor', 'Predikat Sikap Spiritual')->first();
+                $deskripsi_sikap_spiritual = TambahanRapor::where('nm_tambahan_rapor', 'Deskripsi Sikap Spiritual')->first();
+                $predikat_sikap_sosial = TambahanRapor::where('nm_tambahan_rapor', 'Predikat Sikap Sosial')->first();
+                $deskripsi_sikap_sosial = TambahanRapor::where('nm_tambahan_rapor', 'Deskripsi Sikap Sosial')->first();
+
+
+                $tambahan = array();
+
+                $tambahan['predikat_sikap_spiritual'] = null;
+                $tambahan['deskripsi_sikap_spiritual'] = null;
+                $tambahan['predikat_sikap_sosial'] = null;
+                $tambahan['deskripsi_sikap_sosial'] = null;
+
+                foreach ($nilai_tambahan_rapor as $n) {
+                    if ($predikat_sikap_spiritual->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['predikat_sikap_spiritual'][$n->id_siswa] = $n->nilai;
+                    } elseif ($deskripsi_sikap_spiritual->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['deskripsi_sikap_spiritual'][$n->id_siswa] = $n->nilai;
+                    } elseif ($predikat_sikap_sosial->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['predikat_sikap_sosial'][$n->id_siswa] = $n->nilai;
+                    } elseif ($deskripsi_sikap_sosial->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['deskripsi_sikap_sosial'][$n->id_siswa] = $n->nilai;
+                    }
+                }
+
+                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan'));
             } else {
 
                 $nilaiRapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))

@@ -170,11 +170,14 @@
                 </thead>
                 <tbody class="body">
                     <tr>
-                        <td style="text-align: center;vertical-align: top;padding:10px">Baik</td>
-                        <td style="height: 300px;vertical-align: top;padding:10px">Memiliki sikap spiritual Baik, antara
-                            lain<br>
-                            Konsisten dalam toleran pada agama yang berbeda, taat beribadah, mensyukuri nikmat,
-                            dan berdoa</td>
+                        <td style="text-align: center;vertical-align: top;padding:10px">
+                            {{ isset($tambahan['predikat_sikap_spiritual'][$siswa->id_siswa]) ? $tambahan['predikat_sikap_spiritual'][$siswa->id_siswa] : '-' }}
+                        </td>
+                        <td style="height: 300px;vertical-align: top;padding:10px">Memiliki sikap spiritual
+                            {{ isset($tambahan['predikat_sikap_spiritual'][$siswa->id_siswa]) ? $tambahan['predikat_sikap_spiritual'][$siswa->id_siswa] : '-' }},
+                            antara lain<br>
+                            {{ isset($tambahan['deskripsi_sikap_spiritual'][$siswa->id_siswa]) ? $tambahan['deskripsi_sikap_spiritual'][$siswa->id_siswa] : '-' }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -194,11 +197,15 @@
                 </thead>
                 <tbody class="body">
                     <tr>
-                        <td style="text-align: center;vertical-align: top;padding:10px">Baik</td>
-                        <td style="height: 300px;vertical-align: top;padding:10px">Memiliki sikap sosial Baik, antara
+                        <td style="text-align: center;vertical-align: top;padding:10px">
+                            {{ isset($tambahan['predikat_sikap_sosial'][$siswa->id_siswa]) ? $tambahan['predikat_sikap_sosial'][$siswa->id_siswa] : '-' }}
+                        </td>
+                        <td style="height: 300px;vertical-align: top;padding:10px">Memiliki sikap sosial
+                            {{ isset($tambahan['predikat_sikap_sosial'][$siswa->id_siswa]) ? $tambahan['predikat_sikap_sosial'][$siswa->id_siswa] : '-' }},
+                            antara
                             lain<br>
-                            Konsisten dalam jujur, bertanggung jawab, santun, toleransi, disiplin, pro-aktif, peduli,
-                            dan responsif</td>
+                            {{ isset($tambahan['deskripsi_sikap_sosial'][$siswa->id_siswa]) ? $tambahan['deskripsi_sikap_sosial'][$siswa->id_siswa] : '-' }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
