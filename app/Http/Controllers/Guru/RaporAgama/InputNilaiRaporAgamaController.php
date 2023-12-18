@@ -51,7 +51,7 @@ class InputNilaiRaporAgamaController extends Controller
             ->with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('nm_rapor', 'agama')
             ->withCount([
                 'nilai_rapor' => function ($q) {
-                    $q->where('nilai', '!=', 0);
+                    $q->where('nilai', '!=', '0');
                 },
             ])
             ->orderBy('created_at', 'desc');
