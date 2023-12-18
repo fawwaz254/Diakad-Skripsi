@@ -35,7 +35,7 @@ class NilaiRaporSemesterController extends Controller
             $id_semester = $input->id_semester;
         }
 
-        $list_data = Rapor::where('id_semester', $id_semester)
+        $list_data = Rapor::where('id_semester', $id_semester)->where('nm_rapor', 'semester')
             ->with('pengguna', 'mata_pelajaran', 'kelas', 'semester')
             ->withCount([
                 'nilai_rapor' => function ($q) {

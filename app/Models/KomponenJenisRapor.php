@@ -26,4 +26,9 @@ class KomponenJenisRapor extends Model
     ];
 
     protected $guarded = [];
+
+    public function jenis_rapor()
+    {
+        return $this->belongsTo(JenisRapor::class, 'id_jenis_rapor');
+    }
 }
