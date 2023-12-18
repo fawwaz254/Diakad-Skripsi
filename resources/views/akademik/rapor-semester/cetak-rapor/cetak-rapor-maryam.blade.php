@@ -40,7 +40,7 @@
         }
 
         .body {
-
+            font-size: 17px;
             border: 5px double;
             border-top-style: none;
         }
@@ -217,7 +217,7 @@
                     <td style="width:30%; border-style : hidden;" align="left">
                     </td>
                     <td style="width: 35%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Surabaya, 21 Desember' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
@@ -339,7 +339,7 @@
                     <tbody class="body">
                         @foreach ($data as $kelompok)
                             <tr>
-                                <td colspan="2" style="font-weight: bold;">
+                                <td colspan="5" style="font-weight: bold;">
                                     {{ isset($kelompok['nama']) ? $kelompok['nama'] : '' }}</td>
                             </tr>
                             @if (isset($kelompok['data']))
