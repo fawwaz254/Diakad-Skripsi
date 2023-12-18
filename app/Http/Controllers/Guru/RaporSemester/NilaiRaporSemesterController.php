@@ -49,7 +49,7 @@ class NilaiRaporSemesterController extends Controller
             $id_semester = $input->id_semester;
         }
 
-        $list_data = Rapor::where('id_semester', $id_semester)
+        $list_data = Rapor::where('id_semester', $id_semester)->where('nm_rapor', 'semester')
             ->with('pengguna', 'mata_pelajaran', 'kelas', 'semester')
             ->withCount([
                 'nilai_rapor' => function ($q) {
@@ -117,7 +117,9 @@ class NilaiRaporSemesterController extends Controller
     public function getMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
-        $kelas_rapor['mapel'] = KelasRapor::where('id_kelas', $input->id_kelas)->with('mata_pelajaran_rapor.mata_pelajaran')->get();
+        $kelas_rapor['mapel'] = KelasRapor::where('id_kelas', $input->id_kelas)->with('mata_pelajaran_rapor.mata_pelajaran')->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
+        })->get();
         $kelas_rapor['kelas'] = Kelas::with(['jenis_rapor.komponen_jenis_rapor' => function ($query) {
             $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
         }])->find($input->id_kelas);
@@ -156,7 +158,7 @@ class NilaiRaporSemesterController extends Controller
         }
 
         if ($mode == 'add') {
-            $cekDuplicate = Rapor::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $input->id_semester)
+            $cekDuplicate = Rapor::where('id_kelas', $input->id_kelas)->where('nm_rapor', 'semester')->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $input->id_semester)
                 ->with('pengguna')->first();
             $validator = Validator::make($request->all(), [
                 'id_mata_pelajaran' => 'required',
@@ -188,6 +190,7 @@ class NilaiRaporSemesterController extends Controller
                 $rapor->id_semester         = $input->id_semester;
                 $rapor->id_mata_pelajaran   = $input->id_mata_pelajaran;
                 $rapor->id_kelas            = $input->id_kelas;
+                $rapor->nm_rapor            = 'semester';
 
                 if ($kelas = Kelas::find($input->id_kelas)) {
                     if ($kelas->type_rapor == '1') {
