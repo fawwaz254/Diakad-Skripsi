@@ -51,6 +51,7 @@
         processing: true,
         serverSide: true,
         responsive: false,
+        order:[1,'asc'],
         ajax: {
             url: datatable_url,
             type: 'GET'
@@ -62,7 +63,7 @@
             },
             {
                 data: 'pengguna.nm_pengguna',
-                name: 'pengguna.nm_pengguna'
+                name: 'pengguna.nm_pengguna',
             },
             {
                 data: 'jumlah_point',
