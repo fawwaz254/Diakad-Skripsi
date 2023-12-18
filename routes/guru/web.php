@@ -8,6 +8,7 @@ use App\Http\Controllers\Guru\Jadwal\JadwalKBMController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\Guru\ELearningSoal\SoalController;
 use App\Http\Controllers\Guru\Jadwal\InputJadwalController;
+use App\Http\Controllers\Guru\FormGuru\FormHarianController;
 use App\Http\Controllers\Guru\Jadwal\JadwalUjianController;
 use App\Http\Controllers\Guru\Biodata\DataPribadiController;
 use App\Http\Controllers\Guru\Laporan\KerjaHarianController;
@@ -90,6 +91,7 @@ use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Guru\WaliMurid\RaporSemesterController;
 use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
 use App\Http\Controllers\Keuangan\SIM\SppController;
+use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Models\WaliMurid;
 
@@ -528,6 +530,15 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('komplain-sarpras/bukualat-sarpras/edit/{id_buku_alat}/{id}', [KomplainSarprasController::class, 'editBukualatKomplainSarpras']);
 
             Route::post('action-komplain-sarpras/{mode}/{id}', [KomplainSarprasController::class, 'actionKomplainSarpras']);
+        });
+
+        Route::prefix('form-guru')->group(function () {
+            Route::prefix('input-form-harian')->group(function () {
+                Route::get('/', [FormHarianController::class, 'viewInputFormHarian']);
+                Route::get('/datatables', [FormHarianController::class, 'datatablesInputFormHarian']);
+                Route::get('/add/{id_form}', [FormHarianController::class, 'addInputFormHarian']);
+                Route::post('action-list-form/{mode}/{id}', [FormHarianController::class, 'actionInputFormHarian']);
+            });
         });
 
         Route::prefix('guru-kpi')->group(function () {

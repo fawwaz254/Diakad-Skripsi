@@ -132,16 +132,15 @@ class InputKPIController extends Controller
 
                     $pointMengajiKPIs = PointKPI::where('id_semester',  $semester_aktif->id_semester)->where('jenis', 3)->get();
                     $predikatMengajiKPIs = PredikatKPI::whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->whereIn('id_point_kpi', $pointMengajiKPIs->pluck('id_point_kpi'))->with('siswa')->get();
-
                     foreach ($data as $row) {
                         foreach ($pointKPIs as $pointKPI) {
-                            if (isset($row[strtolower(str_replace(["__", "___"], ["_", "_"], str_replace([".", "'", " ", "-", "(", ")", ":", "/","&"], ["", "", "_", "_", "", "", "", "",""], $pointKPI->nm_point_kpi)))])) {
+                            if (isset($row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))])) {
                                 $siswa = $list_siswa->where('nis_siswa', $row['nis'])->first();
                                 if ($siswa) {
                                     $predikatKPI = $predikatKPIs->where('id_siswa', $siswa->id_siswa)->where('id_point_kpi', $pointKPI->id_point_kpi)->first();
                                     if ($predikatKPI) {
-                                        if ($predikatKPI->predikat != $row[strtolower(str_replace(["__", "___"], ["_", "_"], str_replace([".", "'", " ", "-", "(", ")", ":", "/","&"], ["", "", "_", "_", "", "", "", "", ""], $pointKPI->nm_point_kpi)))]) {
-                                            $predikatKPI->predikat = $row[strtolower(str_replace(["__", "___"], ["_", "_"], str_replace([".", "'", " ", "-", "(", ")", ":", "/","&"], ["", "", "_", "_", "", "", "", "", ""], $pointKPI->nm_point_kpi)))];
+                                        if ($predikatKPI->predikat != $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))]) {
+                                            $predikatKPI->predikat = $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))];
                                             $predikatKPI->updated_by = $id_pengguna;
                                             $predikatKPI->updated_at = $now;
                                             $predikatKPI->save();
@@ -152,7 +151,7 @@ class InputKPIController extends Controller
                                         $predikatKPI->id_point_kpi = $pointKPI->id_point_kpi;
                                         $predikatKPI->id_kelas = $siswa->id_kelas;
                                         $predikatKPI->id_siswa = $siswa->id_siswa;
-                                        $predikatKPI->predikat = $row[strtolower(str_replace(["__", "___"], ["_", "_"], str_replace([".", "'", " ", "-", "(", ")", ":", "/","&"], ["", "", "_", "_", "", "", "", "", ""], $pointKPI->nm_point_kpi)))];
+                                        $predikatKPI->predikat = $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))];
                                         $predikatKPI->created_by = $id_pengguna;
                                         $predikatKPI->save();
                                     }
@@ -162,13 +161,13 @@ class InputKPIController extends Controller
 
                         //untuk nilai mengaji
                         foreach ($pointMengajiKPIs as $pointKPI) {
-                            if (isset($row[strtolower(str_replace(["__", "___"], ["_", "_"], str_replace([".", "'", " ", "-", "(", ")", ":", "/"], ["", "", "_", "_", "", "", "", ""], $pointKPI->nm_point_kpi)))])) {
+                            if (isset($row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))])) {
                                 $siswa = $list_siswa->where('nis_siswa', $row['nis'])->first();
                                 if ($siswa) {
                                     $predikatKPI = $predikatMengajiKPIs->where('id_siswa', $siswa->id_siswa)->where('id_point_kpi', $pointKPI->id_point_kpi)->first();
                                     if ($predikatKPI) {
-                                        if ($predikatKPI->predikat != $row[strtolower(str_replace(["__", "___"], ["_", "_"], str_replace([".", "'", " ", "-", "(", ")", ":", "/"], ["", "", "_", "_", "", "", "", ""], $pointKPI->nm_point_kpi)))]) {
-                                            $predikatKPI->predikat = $row[strtolower(str_replace(["__", "___"], ["_", "_"], str_replace([".", "'", " ", "-", "(", ")", ":", "/"], ["", "", "_", "_", "", "", "", ""], $pointKPI->nm_point_kpi)))];
+                                        if ($predikatKPI->predikat != $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))]) {
+                                            $predikatKPI->predikat = $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))];
                                             $predikatKPI->updated_by = $id_pengguna;
                                             $predikatKPI->updated_at = $now;
                                             $predikatKPI->save();
@@ -179,7 +178,7 @@ class InputKPIController extends Controller
                                         $predikatKPI->id_point_kpi = $pointKPI->id_point_kpi;
                                         $predikatKPI->id_kelas = $siswa->id_kelas;
                                         $predikatKPI->id_siswa = $siswa->id_siswa;
-                                        $predikatKPI->predikat = $row[strtolower(str_replace(["__", "___"], ["_", "_"], str_replace([".", "'", " ", "-", "(", ")", ":", "/"], ["", "", "_", "_", "", "", "", ""], $pointKPI->nm_point_kpi)))];
+                                        $predikatKPI->predikat = $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))];
                                         $predikatKPI->created_by = $id_pengguna;
                                         $predikatKPI->save();
                                     }
