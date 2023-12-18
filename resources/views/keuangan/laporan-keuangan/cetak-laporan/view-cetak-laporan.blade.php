@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Kunci Laporan</h2>
                             <input class="with-gap radio-col-light-green form-control validate" type="radio"
@@ -78,7 +78,7 @@
                                 {{ !empty(session('kunci_keuangan')) && session('kunci_keuangan') == 'tidak' ? 'checked' : '' }} />
                             <label for="tidak">Tidak</label>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Setting cetak</h2>
@@ -96,18 +96,15 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Sumber Dana</h2>
                             <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                name="print_setting2" value="semua" id="semua"
-                                onchange="changeSettingSession2()"
+                                name="print_setting2" value="semua" id="semua" onchange="changeSettingSession2()"
                                 {{ !empty(session('setting_print_keuangan2')) && session('setting_print_keuangan2') == 'semua' ? 'checked' : '' }} />
                             <label for="semua"> Semua </label>
                             <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                name="print_setting2" value="spp" id="spp"
-                                onchange="changeSettingSession2()"
+                                name="print_setting2" value="spp" id="spp" onchange="changeSettingSession2()"
                                 {{ !empty(session('setting_print_keuangan2')) && session('setting_print_keuangan2') == 'spp' ? 'checked' : '' }} />
                             <label for="spp"> SPP </label>
                             <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                name="print_setting2" value="lain" id="lain"
-                                onchange="changeSettingSession2()"
+                                name="print_setting2" value="lain" id="lain" onchange="changeSettingSession2()"
                                 {{ !empty(session('setting_print_keuangan2')) && session('setting_print_keuangan2') == 'lain' ? 'checked' : '' }} />
                             <label for="lain"> Lain-Lain </label>
                         </div>
