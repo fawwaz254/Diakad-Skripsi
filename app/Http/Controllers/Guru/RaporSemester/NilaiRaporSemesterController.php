@@ -63,6 +63,9 @@ class NilaiRaporSemesterController extends Controller
             $list_data = $list_data->where('created_by', $auth_data->pengguna->id_pengguna);
         }
         $komponen_jenis_rapor = KomponenJenisRapor::get();
+        $kelas_rapors = KelasRapor::whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
+        })->get();
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($komponen_jenis_rapor) {
@@ -77,6 +80,13 @@ class NilaiRaporSemesterController extends Controller
                 }
 
                 return $hasil;
+            })->addColumn('status', function ($item) use ($kelas_rapors) {
+                $kelas_rapor = $kelas_rapors->where('id_kelas', $item->id_kelas)->where('mata_pelajaran_rapor.id_mata_pelajaran', $item->id_mata_pelajaran)->first();
+                if ($kelas_rapor) {
+                    return 'Valid';
+                } else {
+                    return 'Tidak Valid';
+                }
             })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;

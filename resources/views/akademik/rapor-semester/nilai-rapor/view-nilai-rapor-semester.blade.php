@@ -55,7 +55,7 @@
                                 {{-- <th>Jurusan</th> --}}
                                 <th>Nilai Siswa Terisi</th>
                                 <th>Semester</th>
-                                {{-- <th>Nilai</th> --}}
+                                <th>Status</th>
                                 {{-- <th>Template Excel</th> --}}
                                 <th>Action</th>
                                 <th>Pembuat</th>
@@ -81,8 +81,8 @@
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'nilai-rapor/print';
     var primary_table = $('#primary_table').DataTable({
         lengthMenu: [
-            [5, 10, 25, 50, -1],
-            [5, 10, 25, 50, 'All'],
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
         ],
         processing: true,
         serverSide: true,
@@ -132,7 +132,14 @@
                 searchable: false,
                 orderable: false,
                 className: 'align-center'
+            }, {
+                data: 'status',
+                name: 'status',
+                searchable: false,
+                orderable: false,
+                className: 'align-center'
             },
+
             // {
             //     data: 'action',
             //     name: 'action',
