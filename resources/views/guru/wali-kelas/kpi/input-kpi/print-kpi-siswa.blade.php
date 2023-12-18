@@ -109,8 +109,7 @@
             </tr>
         </table>
         <br>
-        <br>
-        <br>
+        
         @php
             $abjad = range('A', 'Z');
             $last_key = 0;
@@ -121,12 +120,7 @@
                 $last_key = $key;
             @endphp
 
-            @if ($key == 2)
-                <div class="break"></div>
-                <br>
-                <br>
-                <br>
-            @endif
+            
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
                 <tr>
                     <td> <b>{{ $abjad[$key] . '. ' . $unit_kelompok_kpi->nm_kelompok_kpi }}</b></td>
@@ -135,7 +129,7 @@
 
             <table cellspacing="0" cellpadding="10"
                 style="width: 90%;  margin-top: 0;
-			margin-bottom: 30px;
+			margin-bottom: 20px;
 			margin-right: auto;
 			margin-left: auto;">
                 <thead class="head">
@@ -154,6 +148,7 @@
                         @foreach ($unit_kelompok_kpi['data'] as $key2 => $point_kpi)
                             @foreach ($point_kpi as $key3 => $p)
                                 @if ($key3 == '0')
+                                
                                     <tr @if ($key1 % 2 == 0) style="background-color: #e3e1e1" @endif>
                                         <td style="text-align:center" rowspan="{{ count($point_kpi) }}">
                                             {{ $key1 }}
@@ -194,7 +189,7 @@
             </tbody>
         </table>
     @endforeach
-
+        
     {{-- mengaji --}}
 
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
@@ -255,8 +250,7 @@ margin-left: auto;">
         </tbody>
     </table>
     <br>
-    <br>
-    <br>
+    
 
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
         <tr>
@@ -272,7 +266,7 @@ margin-left: auto;">
                 <br>
                 Wali Kelas
                 <br><br><br><br><br><br><u><b>
-                        {{ $auth_data->pengguna->nm_pengguna }}</b></u>
+                        {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</b></u>
             </td>
 
         </tr>

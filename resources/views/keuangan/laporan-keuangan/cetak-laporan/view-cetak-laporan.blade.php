@@ -66,6 +66,19 @@
                             </div>
                         </div>
                     </div>
+                    {{-- <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Kunci Laporan</h2>
+                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                name="print_setting3" value="iya" id="iya" onchange="changeSettingSession3()"
+                                {{ !empty(session('kunci_keuangan')) && session('kunci_keuangan') == 'iya' ? 'checked' : '' }} />
+                            <label for="iya">Iya</label>
+                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                name="print_setting3" value="tidak" id="tidak" onchange="changeSettingSession3()"
+                                {{ !empty(session('kunci_keuangan')) && session('kunci_keuangan') == 'tidak' ? 'checked' : '' }} />
+                            <label for="tidak">Tidak</label>
+                        </div>
+                    </div> --}}
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Setting cetak</h2>
@@ -180,6 +193,7 @@
     var modul_url = 'laporan-keuangan';
     var setting_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/setting';
     var setting_url2 = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/setting2';
+    var setting_url3 = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/setting3';
     var print_laporan_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan';
 </script>
 
@@ -291,6 +305,19 @@
                 print_setting: $('input[name=print_setting2]:checked').val()
             },
             url: setting_url2,
+            success: function(response) {
+                console.log('Success ' + response);
+            },
+        });
+    }
+
+    function changeSettingSession3() {
+        $.ajax({
+            type: "POST",
+            data: {
+                print_setting: $('input[name=print_setting3]:checked').val()
+            },
+            url: setting_url3,
             success: function(response) {
                 console.log('Success ' + response);
             },

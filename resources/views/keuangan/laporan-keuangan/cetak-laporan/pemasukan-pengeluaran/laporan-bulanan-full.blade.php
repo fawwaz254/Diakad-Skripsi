@@ -233,14 +233,15 @@
         <tr valign=top>
             <td style="border: none;" colspan=5></td>
             <td class="text-bold" colspan=2>Kas tersedia dalam bulan ini</td>
-            <td class="text-right">
-                {{ number_format(
-                    $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') +
+            @php
+                $kas_tersedia = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') +
                         $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') +
                         $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') +
                         $data_realisasi_pemasukan->sum('total_realisasi') +
-                        ($tutup_buku_kas_bulan_lalu->kas_akhir_bulan ?? 0),
-                ) }}
+                        ($tutup_buku_kas_bulan_lalu->kas_akhir_bulan ?? 0)
+            @endphp
+            <td class="text-right">
+                {{ number_format($kas_tersedia) }}
             </td>
         </tr>
     </table>
@@ -257,6 +258,7 @@
         </tr>
         @php
             $no = 1;
+            $total_realisasi = 0;
         @endphp
         @foreach ($data_realisasi_pengeluaran as $realisasi)
             @if (
@@ -279,6 +281,9 @@
                     @endif
                     <td></td>
                 </tr>
+                @php
+                    $total_realisasi += $subkategori_non_kbm['total_bayar'] + $realisasi->total_realisasi;
+                @endphp
             @elseif(
                 $subkategori_pengembangan_pendidikan['status'] &&
                     $realisasi->kode_subkategori_rapb == 'K.5.4' &&
@@ -300,6 +305,9 @@
                     @endif
                     <td></td>
                 </tr>
+                @php
+                    $total_realisasi += $subkategori_pengembangan_pendidikan['total_bayar'] + $realisasi->total_realisasi;
+                @endphp
             @else
                 <tr valign=top>
                     <td>{{ $no++ }}.</td>
@@ -315,12 +323,15 @@
                     @endif
                     <td></td>
                 </tr>
+            @php
+                $total_realisasi += $realisasi->total_realisasi;
+            @endphp
             @endif
         @endforeach
         <tr valign=top>
             <td colspan=3>JUMLAH</td>
             <td class="text-right">{{ number_format($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb')) }}</td>
-            <td class="text-right">{{ number_format($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran) }}</td>
+            <td class="text-right">{{ number_format($total_realisasi) }}</td>
             @if ($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb') == 0)
                 <td class="text-right">0%</td>
             @else
@@ -328,11 +339,11 @@
                     {{ round(($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran / $data_realisasi_pengeluaran->sum('dana_perkiraan_rapb')) * 100, 2) }}%
                 </td>
             @endif
-            <td class="text-right">{{ number_format($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran) }}</td>
+            <td class="text-right">{{ number_format($total_realisasi) }}</td>
         </tr>
         <tr valign=top>
             <td colspan=6>SALDO AKHIR BULAN</td>
-            <td class="text-right">{{ number_format($tutup_buku_kas_bulan_ini->kas_akhir_bulan) }}</td>
+            <td class="text-right">{{ number_format($kas_tersedia - $total_realisasi) }}</td>
         </tr>
     </table>
     <br>

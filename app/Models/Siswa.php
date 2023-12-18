@@ -62,6 +62,11 @@ class Siswa extends Model
         return $this->hasmany(NilaiPribadiSisipan::class, 'id_siswa');
     }
 
+    public function nilai_tambahan_rapor()
+    {
+        return $this->hasmany(NilaiTambahanRapor::class, 'id_siswa');
+    }
+
 
     public function kpi()
     {
@@ -113,6 +118,11 @@ class Siswa extends Model
     public function nilai_rapor_sisipan()
     {
         return $this->hasMany(NilaiRaporSisipan::class, 'id_siswa');
+    }
+
+    public function nilai_rapor()
+    {
+        return $this->hasMany(NilaiRapor::class, 'id_siswa');
     }
 
     public function nilai_komponen_kpi()

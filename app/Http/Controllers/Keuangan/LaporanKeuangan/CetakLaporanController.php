@@ -22,6 +22,10 @@ class CetakLaporanController extends BaseController
         $auth_data = $input->auth_data;
         $bulan = Bulan::orderBy('id_bulan')->get();
 
+        if (empty(session('kunci_keuangan'))) {
+            session(['kunci_keuangan' => 'iya']);
+        }
+
         if (empty(session('setting_print_keuangan'))) {
             session(['setting_print_keuangan' => 'all']);
         }
@@ -71,6 +75,26 @@ class CetakLaporanController extends BaseController
             session(['setting_print_keuangan2' => 'semua']);
         } else {
             session(['setting_print_keuangan2' => $input->print_setting]);
+        }
+        return $input->print_setting;
+    }
+
+    public function actionSetSettingCetak3(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'print_setting' => 'required|in:semua,spp,lain,iya,tidak',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors()->first();
+        }
+
+        if (empty(session('kunci_keuangan'))) {
+            session(['kunci_keuangan' => 'iya']);
+        } else {
+            session(['kunci_keuangan' => $input->print_setting]);
         }
         return $input->print_setting;
     }

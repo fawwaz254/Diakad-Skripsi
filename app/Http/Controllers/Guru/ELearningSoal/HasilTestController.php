@@ -38,21 +38,21 @@ class HasilTestController extends Controller
             $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna);
         }
 
-        $list_data->with('test', 'kategori_soal', 'paket_soal_kelas.kelas.siswa');
+        $list_data->withCount('test')
+            ->with('kategori_soal', 'paket_soal_kelas.kelas');
 
         return Datatables::of($list_data)
             ->addColumn('total_siswa', function ($item) {
                 $total = 0;
-                foreach ($item->paket_soal_kelas as $kelas) {
-                    if (!empty($kelas->kelas)) {
-                        $total += $kelas->kelas->siswa->count();
-                    }
+                foreach ($item->paket_soal_kelas as $paket_soal_kelas) {
+                    $jumlah_siswa =  $paket_soal_kelas->kelas->loadCount('siswa');
+                    $total += $jumlah_siswa->siswa_count;
                 }
                 return $total;
             })
-            ->addColumn('total_mengerjakan', function ($item) {
-                return $item->test->count();
-            })
+            // ->addColumn('total_mengerjakan', function ($item) {
+            //     return $item->test->count();
+            // })
             ->addColumn('action', function ($item) {
                 $nm_kelas = [];
                 foreach ($item->paket_soal_kelas as $key => $kelas) {
@@ -164,7 +164,7 @@ class HasilTestController extends Controller
                     $nilai_pilihan_ganda  = 100;
                 }
 
-                if ($nilai_pilihan_essay_submit) {
+                if ($nilai_pilihan_essay_submit  > 100) {
                     $nilai_pilihan_essay_submit = 100;
                 }
 
@@ -247,18 +247,20 @@ class HasilTestController extends Controller
     public function printHasilTest3(Request $request, $id)
     {
         set_time_limit(-1);
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal',  'test.jawaban_test')->first();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal')->first();
         $pilihan_pertanyaan = PilihanPertanyaan::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
         $pilihan_soal = PilihanSoal::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
 
-
+        $tests = Test::where('id_paket_soal', $paket_soal->id_paket_soal)->get();
+        // 'test.jawaban_test'
         $nilai_siswa = [];
         $benar = [];
         $isi = [];
         $mapping = ['A', 'B', 'C', 'D', 'E'];
 
-        foreach ($paket_soal->test as $test) {
-            foreach ($test->jawaban_test as $jawaban_test) {
+        foreach ($tests as $test) {
+            $jawaban_tests = JawabanTest::where('id_test', $test->id_test)->get();
+            foreach ($jawaban_tests as $jawaban_test) {
                 if (isset($nilai_siswa[$test->id_pengguna])) {
                     $nilai_siswa[$test->id_pengguna] +=  $jawaban_test->nilai;
                 } else {
@@ -539,18 +541,22 @@ class HasilTestController extends Controller
     public function printHasilTest4(Request $request, $id)
     {
         set_time_limit(-1);
-        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal', 'test.jawaban_test')->first();
+        $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna',  'kategori_soal', 'detail_paket_soal.soal')->first();
         $pilihan_pertanyaan = PilihanPertanyaan::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
         $pilihan_soal = PilihanSoal::whereIn('id_soal', $paket_soal->detail_paket_soal->pluck('id_soal'))->get();
+
+        $tests = Test::where('id_paket_soal', $paket_soal->id_paket_soal)->get();
+
 
         $nilai_siswa = [];
         $benar = [];
 
 
-        foreach ($paket_soal->test as $test) {
+        foreach ($tests as $test) {
             $type1 = 0;
             $type2 = 0;
-            foreach ($test->jawaban_test as $jawaban_test) {
+            $jawaban_tests = JawabanTest::where('id_test', $test->id_test)->get();
+            foreach ($jawaban_tests as $jawaban_test) {
                 if (isset($nilai_siswa[$test->id_pengguna])) {
                     $nilai_siswa[$test->id_pengguna] +=  $jawaban_test->nilai;
                 } else {

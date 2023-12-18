@@ -1,8 +1,4 @@
 <table class="table table-bordered">
-
-
-
-
     <thead>
         <tr>
             <td style="text-align: center;font-weight: bold;">NOMOR</td>

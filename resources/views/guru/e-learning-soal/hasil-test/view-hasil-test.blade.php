@@ -111,8 +111,8 @@
                 orderable: false
             },
             {
-                data: 'total_mengerjakan',
-                name: 'total_mengerjakan',
+                data: 'test_count',
+                name: 'test_count',
                 className: 'align-center',
                 searchable: false,
                 orderable: false

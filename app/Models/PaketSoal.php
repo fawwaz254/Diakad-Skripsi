@@ -54,4 +54,9 @@ class PaketSoal extends Model
     {
         return $this->hasMany(Test::class, 'id_paket_soal');
     }
+
+    public function testSiswa()
+    {
+        return $this->hasOne(Test::class, 'id_paket_soal');
+    }
 }

@@ -36,8 +36,6 @@
                                 <select class="form-control show-tick" name="id_mata_pelajaran" required>
                                 </select>
                             </div>
-
-
                             <div class="col-md-12">
                                 <label>Semester (Otomatis)</label>
                                 <select class="form-control show-tick" name="id_semester" required="">
@@ -55,6 +53,11 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div id="place">
+                        </div>
+
+
 
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -75,6 +78,8 @@
 
 <script>
     function changeKelas(el) {
+        $('select[name=id_mata_pelajaran]').html('');
+        $('#place').html('');
         $.ajax({
             url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/getMataPelajaran') }}',
             type: 'POST',
@@ -85,7 +90,7 @@
             success: function(result) {
                 $('select[name=id_mata_pelajaran]').html('');
                 var html = '<option value="">-- Pilih Mata Pelajaran --</option>';
-                $.each(result, function(key, item) {
+                $.each(result['mapel'], function(key, item) {
                     if (item.mata_pelajaran_rapor.mata_pelajaran)
                         html += '<option value="' + item.mata_pelajaran_rapor.id_mata_pelajaran +
                         '">' +
@@ -94,6 +99,78 @@
                         '</option>'
                 });
                 $('select[name=id_mata_pelajaran]').html(html);
+                $('#place').html('');
+
+                if (result['kelas'].type_rapor == '1') {
+                    var html = '';
+                    $.each(result['kelas'].jenis_rapor.komponen_jenis_rapor, function(key, item) {
+                        html += '<div class="col-md-12">' +
+                            '<label>Keterangan ' + item.nm_komponen_jenis_rapor +
+                            '</label>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<pre>' +
+                            ' kasih titik 3 (...) tanpa tanda kurung, akan otomatis terisi' +
+                            ' A = Sangat ,B = menghapus ... ,' +
+                            'C = Cukup ,D = Kurang ' +
+                            '</pre>' +
+                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
+                            item
+                            .id_komponen_jenis_rapor +
+                            ']" aria-required="true" aria-invalid="true"></textarea>' +
+                            '</div>';
+                    });
+                    $('#place').html(html);
+                } else if (result['kelas'].type_rapor == '2') {
+                    $('#place').append(`<div class="col-md-12">
+                            <label>Keterangan1</label>
+                            <textarea rows="1" cols="50" class="form-control" name="keterangan" aria-required="true" aria-invalid="true"></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Keterangan2</label>
+                            <textarea rows="1" cols="50" class="form-control" name="keterangan2" aria-required="true"
+                                aria-invalid="true"></textarea>
+                        </div>`);
+                } else if (result['kelas'].type_rapor == '3') {
+                    var html = '';
+                    $.each(result['kelas'].jenis_rapor.komponen_jenis_rapor, function(key, item) {
+                        html += '<div class="col-md-12">' +
+                            '<label>Keterangan ' + item.nm_komponen_jenis_rapor +
+                            '</label>' +
+                            '</div>' +
+                            '<div class="row clearfix">' +
+                            '<div class="col-md-3">' +
+                            '<pre>' +
+                            'Menunjukkan penguasaan yang ... baik dalam ' +
+                            '</pre>' +
+                            '</div>' +
+                            '<div class="col-md-9">' +
+                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
+                            item
+                            .id_komponen_jenis_rapor +
+                            ']" aria-required="true" aria-invalid="true"></textarea>' +
+                            '</div></div>' +
+                            '<div class="col-md-12">' +
+                            '<label>Keterangan ' + item.nm_komponen_jenis_rapor + ' bawah</label>' +
+                            '</div>' +
+                            '<div class="row clearfix">' +
+                            '<div class="col-md-3">' +
+                            '<pre>' +
+                            'Perlu meningkatkan penguasaan dalam ' +
+                            '</pre>' +
+                            '</div>' +
+                            '<div class="col-md-9">' +
+                            '<textarea rows="1" cols="50" class="form-control" name="keterangan2[' +
+                            item
+                            .id_komponen_jenis_rapor + ']" aria-required="true"' +
+                            'aria-invalid="true"></textarea>' +
+                            '</div></div>';
+                    });
+                    $('#place').html(html);
+
+                }
+
+
             }
         });
     }
