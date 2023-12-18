@@ -317,7 +317,7 @@
                             @else
                                 C.
                             @endif {{ $komponen->nm_komponen_jenis_rapor }}<br>
-                            Kriteria Ketuntasan Minimal = 75
+                            Kriteria Ketuntasan Minimal = 78
                         </td>
                     </tr>
                 </table>
