@@ -308,7 +308,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Surabaya, 21 Desember' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>

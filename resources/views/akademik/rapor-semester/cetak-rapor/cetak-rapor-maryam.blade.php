@@ -404,7 +404,7 @@
                         <td style="width:30%; border-style : hidden;" align="left">
                         </td>
                         <td style="width: 35%;">
-                            {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                            {{ 'Surabaya, 21 Desember 2023' }}
                             <br>
                             Wali Kelas
                             <br><br><br><br><br><br><br>
@@ -613,7 +613,7 @@
 
                     </td>
                     <td style="width: 35%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
