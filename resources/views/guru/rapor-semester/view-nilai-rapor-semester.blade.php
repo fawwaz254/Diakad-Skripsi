@@ -55,7 +55,7 @@
                                 {{-- <th>Jurusan</th> --}}
                                 <th>Nilai Siswa Terisi</th>
                                 <th>Semester</th>
-                                {{-- <th>Nilai</th> --}}
+                                <th>Status</th>
                                 <th>Template Excel</th>
                                 <th>Action</th>
                                 <th>Pembuat</th>
@@ -129,6 +129,13 @@
             {
                 data: 'semester',
                 name: 'semester',
+                searchable: false,
+                orderable: false,
+                className: 'align-center'
+            },
+            {
+                data: 'status',
+                name: 'status',
                 searchable: false,
                 orderable: false,
                 className: 'align-center'
