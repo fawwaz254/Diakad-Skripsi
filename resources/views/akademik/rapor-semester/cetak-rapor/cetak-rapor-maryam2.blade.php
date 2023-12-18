@@ -182,12 +182,12 @@
                                             {{ round(($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata'] + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'uas'] * 2) / 3) }}
                                         @endif
                                     </td>
-                                    <td>
+                                    <td style="padding: 3px">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan'] : '' }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td style="padding: 3px">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2'] : '' }}
                                     </td>
                                 </tr>
