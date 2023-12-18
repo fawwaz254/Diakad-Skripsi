@@ -51,7 +51,8 @@ class InputKPIController extends Controller
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
-        $list_data = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('pengguna');
+        $list_data = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('pengguna')->get()->unique('pengguna.nm_pengguna');
+
 
         $predikat_kpi = PredikatKPI::whereIn('id_siswa', $list_data->pluck('id_siswa'))->where('id_kelas', $wali_kelas->id_kelas)->whereHas('point_kpi', function ($query) use ($semester_aktif) {
             $query->where('id_semester', $semester_aktif->id_semester);

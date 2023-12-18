@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Nilai Rapor Tengah Semester</title>
+    <title>Cetak Nilai Rapor Semester</title>
 
 
     <style>
@@ -164,17 +164,25 @@
                                     $jumlah = count($data2['nm_point']);
                                 @endphp
                                 <tr>
-                                    <td style="text-align: center;">{{ $key }}</td>
-                                    <td>{{ $data2['nm_point'][0] }}</td>
+                                    <td style="text-align: center;" rowspan="2">{{ $key }}</td>
+                                    <td rowspan="2">{{ $data2['nm_point'][0] }}</td>
 
                                     @php
                                         $komponen = $list_komponen->first();
                                     @endphp
-                                    <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai'] : '' }}
+                                    <td style="text-align: center;font-weight: bold;" rowspan="2">
+                                        @if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata']) &&
+                                                isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'uas']))
+                                            {{ round(($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata'] + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'uas'] * 2) / 3) }}
+                                        @endif
                                     </td>
                                     <td>
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'keterangan']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'keterangan'] : '' }}
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan'] : '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2'] : '' }}
                                     </td>
                                 </tr>
                                 </tr>

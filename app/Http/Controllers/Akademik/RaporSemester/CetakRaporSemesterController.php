@@ -11,8 +11,10 @@ use App\Models\KelasRapor;
 use App\Models\KelompokMapelRapor;
 use App\Models\KelompokPribadiSisipan;
 use App\Models\KelompokTambahanRapor;
+use App\Models\KeteranganRapor;
 use App\Models\KomponenJenisRapor;
 use App\Models\NilaiPribadiSisipan;
+use App\Models\NilaiRapor;
 use App\Models\NilaiTambahanRapor;
 use App\Models\PribadiSisipan;
 use App\Models\Rapor;
@@ -83,16 +85,25 @@ class CetakRaporSemesterController extends Controller
             ->make(true);
     }
 
-    public function printCetakRaporSemester(Request $request, $id_semester, $id_kelas)
+    public function printCetakRaporSemester(Request $request, $id_semester, $id_kelas = null)
     {
         set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->orderBy('nis_siswa')->get();
+        $siswa = Siswa::find($id_semester);
+        if (!empty($siswa)) {
+            $list_siswa = Siswa::where('id_siswa', $id_semester)->orderBy('nis_siswa')->get();
+            $semester = Semester::where('is_aktif_semester', '1')->first();
+            $id_kelas = $siswa->id_kelas;
+            $id_semester = $semester->id_semester;
+        }
+
         $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan', 'jenis_rapor')->first();
         $semester = Semester::find($id_semester);
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
         $list_komponen = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->get();
-        $list_siswa = Siswa::where('id_kelas', $id_kelas)->orderBy('nis_siswa')->get();
+
         $nilai_siswa = [];
         $data = [];
 
@@ -100,11 +111,36 @@ class CetakRaporSemesterController extends Controller
             $q->where('nilai', '>', 0);
         }])->get();
 
+        $keterangan_rapors = KeteranganRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))->get();
+
         foreach ($rapors as $rapor) {
             foreach ($rapor->nilai_rapor as  $nilai_rapor) {
                 if ($nilai_rapor['nilai'] != '0') {
                     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'nilai'] = $nilai_rapor['nilai'];
-                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = $nilai_rapor['keterangan'];
+
+                    if ($kelas->type_rapor == '1') {
+                        $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor->id_rapor)->where('id_komponen_jenis_rapor', $nilai_rapor['id_komponen_jenis_rapor'])->first();
+
+                        if ($keterangan_rapor) {
+                            if ($nilai_rapor['nilai'] >= 90 && $nilai_rapor['nilai'] <= 100) {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = $keterangan_rapor->keterangan_a;
+                            } elseif ($nilai_rapor['nilai'] >= 80 && $nilai_rapor['nilai'] < 90) {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = $keterangan_rapor->keterangan_b;
+                            } elseif ($nilai_rapor['nilai'] >= 70 && $nilai_rapor['nilai'] < 80) {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = $keterangan_rapor->keterangan_c;
+                            } elseif ($nilai_rapor['nilai'] >= 0 && $nilai_rapor['nilai'] < 70) {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = $keterangan_rapor->keterangan_d;
+                            } else {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = '';
+                            }
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan2'] = $keterangan_rapor->keterangan_d;
+                        } else {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = '';
+                        }
+                    } elseif ($kelas->type_rapor == '2') {
+                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan'] = $rapor->keterangan;
+                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'keterangan2'] = $rapor->keterangan2;
+                    }
                 }
             }
         }
@@ -117,8 +153,30 @@ class CetakRaporSemesterController extends Controller
         ])->orderBy('urutan')->get();
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
+
+            $kkm = 0;
+            if ($kelas->tingkat == 1) {
+                $kkm =  78;
+            } elseif ($kelas->tingkat == 2) {
+                $kkm =  79;
+            } else {
+                $kkm = 80;
+            }
+
             foreach ($kelompok_mapel_rapor as $k) {
-                $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
+                if ($kelas->tingkat == '1') {
+                    if ($k->nm_kelompok_mapel_rapor == 'Muatan Nasional') {
+                        $data[$k->urutan]['nama'] = 'A. Mata Pelajaran Umum';
+                    } elseif ($k->nm_kelompok_mapel_rapor == 'Muatan Kewilayahan') {
+                        $data[$k->urutan]['nama'] = 'B. Mata Pelajaran Kejuruan';
+                    } else {
+                        continue;
+                    }
+                } else {
+                    $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
+                }
+
+
                 foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
                     if ($mata_pelajaran_rapor->jenis == '0') {
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] = $mata_pelajaran_rapor->keterangan;
@@ -126,7 +184,7 @@ class CetakRaporSemesterController extends Controller
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
                     } else {
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] =  $mata_pelajaran_rapor->mata_pelajaran->nm_mata_pelajaran;
-                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] =  $mata_pelajaran_rapor->mata_pelajaran->nilai_kkm;
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] =  $kkm;
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
                     }
                 }
@@ -157,10 +215,16 @@ class CetakRaporSemesterController extends Controller
             $catatan_wali_kelas_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Catatan Wali Kelas')->first();
             $kelulusan_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Kelulusan')->first();
 
+            $ekskul_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
+                $query->where('nm_kelompok_tambahan_rapor', 'Ekstrakurikuler');
+            })->get();
+
             $tambahan = array();
 
             $tambahan['ketidakhadiran'] = null;
             $tambahan['sikap'] = null;
+            $tambahan['ekskul'] = null;
+
             $tambahan['catatan_wali_kelas'] = null;
             $tambahan['kelulusan'] = null;
 
@@ -171,13 +235,16 @@ class CetakRaporSemesterController extends Controller
                     $tambahan['sikap'][$n->id_siswa] = $n->nilai;
                 } elseif ($catatan_wali_kelas_tambahan_rapor->id_tambahan_rapor == $n->id_tambahan_rapor) {
                     $tambahan['catatan_wali_kelas'][$n->id_siswa] = $n->nilai;
+                } elseif (in_array($n->id_tambahan_rapor, $ekskul_tambahan_rapor->pluck('id_tambahan_rapor')->toArray())) {
+                    $tambahan['ekskul'][$n->id_siswa][$n->id_tambahan_rapor] = $n->nilai;
                 } elseif ($kelulusan_tambahan_rapor->id_tambahan_rapor == $n->id_tambahan_rapor) {
                     $tambahan['kelulusan'][$n->id_siswa] = $n->nilai;
                 }
             }
 
-            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'kehadiran_tambahan_rapor', 'tambahan',  'wali_kelas'));
+            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'ekskul_tambahan_rapor', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'kehadiran_tambahan_rapor', 'tambahan',  'wali_kelas'));
         } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
+
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
                 foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
@@ -187,6 +254,7 @@ class CetakRaporSemesterController extends Controller
             }
 
             if ($kelas->jenis_rapor->nm_jenis_rapor == 'Merdeka') {
+
                 foreach ($rapors as $rapor) {
                     foreach ($rapor->nilai_rapor as  $nilai_rapor) {
                         if ($nilai_rapor['nilai'] >= 90 && $nilai_rapor['nilai'] <= 100) {
@@ -203,8 +271,116 @@ class CetakRaporSemesterController extends Controller
                         $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = $hasil;
                     }
                 }
-                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas'));
+
+                $nilai_tambahan_rapor = NilaiTambahanRapor::with('tambahan_rapor')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+
+
+                $predikat_sikap_spiritual = TambahanRapor::where('nm_tambahan_rapor', 'Predikat Sikap Spiritual')->first();
+                $deskripsi_sikap_spiritual = TambahanRapor::where('nm_tambahan_rapor', 'Deskripsi Sikap Spiritual')->first();
+                $predikat_sikap_sosial = TambahanRapor::where('nm_tambahan_rapor', 'Predikat Sikap Sosial')->first();
+                $deskripsi_sikap_sosial = TambahanRapor::where('nm_tambahan_rapor', 'Deskripsi Sikap Sosial')->first();
+                $kehadiran_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
+                    $query->where('nm_kelompok_tambahan_rapor', 'Ketidak Hadiran');
+                })->get();
+                $ekskul_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
+                    $query->where('nm_kelompok_tambahan_rapor', 'Ekstrakurikuler');
+                })->get();
+                $catatan_wali_kelas_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Catatan Wali Kelas')->first();
+                $kelulusan_tambahan_rapor = TambahanRapor::where('nm_tambahan_rapor', 'Kelulusan')->first();
+
+                $tambahan = array();
+
+
+
+                $tambahan = array();
+
+                $tambahan['predikat_sikap_spiritual'] = null;
+                $tambahan['deskripsi_sikap_spiritual'] = null;
+                $tambahan['predikat_sikap_sosial'] = null;
+                $tambahan['deskripsi_sikap_sosial'] = null;
+                $tambahan['ketidakhadiran'] = null;
+                $tambahan['ekskul'] = null;
+                $tambahan['catatan_wali_kelas'] = null;
+
+
+                foreach ($nilai_tambahan_rapor as $n) {
+                    if ($predikat_sikap_spiritual->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['predikat_sikap_spiritual'][$n->id_siswa] = $n->nilai;
+                    } elseif ($deskripsi_sikap_spiritual->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['deskripsi_sikap_spiritual'][$n->id_siswa] = $n->nilai;
+                    } elseif ($predikat_sikap_sosial->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['predikat_sikap_sosial'][$n->id_siswa] = $n->nilai;
+                    } elseif ($deskripsi_sikap_sosial->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['deskripsi_sikap_sosial'][$n->id_siswa] = $n->nilai;
+                    } elseif (in_array($n->id_tambahan_rapor, $kehadiran_tambahan_rapor->pluck('id_tambahan_rapor')->toArray())) {
+                        $tambahan['ketidakhadiran'][$n->id_siswa][$n->id_tambahan_rapor] = $n->nilai;
+                    } elseif (in_array($n->id_tambahan_rapor, $ekskul_tambahan_rapor->pluck('id_tambahan_rapor')->toArray())) {
+                        $tambahan['ekskul'][$n->id_siswa][$n->id_tambahan_rapor] = $n->nilai;
+                    } elseif ($catatan_wali_kelas_tambahan_rapor->id_tambahan_rapor == $n->id_tambahan_rapor) {
+                        $tambahan['catatan_wali_kelas'][$n->id_siswa] = $n->nilai;
+                    }
+                }
+
+                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor'));
             } else {
+
+                $nilaiRapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))
+                    ->whereHas('komponen_jenis_rapor', function ($query) {
+                        $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
+                    })->get();
+
+                $k_jenis_rapor_uas = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'UAS')->first();
+
+                foreach ($rapors as $rapor) {
+                    foreach ($rapor->nilai_rapor as  $nilai_rapor) {
+                        if ($nilai_rapor['nilai'] != '0') {
+                            if ($k_jenis_rapor_uas->id_komponen_jenis_rapor == $nilai_rapor->id_komponen_jenis_rapor) {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'uas'] = $nilai_rapor['nilai'];
+                            } else {
+                                if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'])) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] += $nilai_rapor['nilai'];
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] += 1;
+                                } else {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] = $nilai_rapor['nilai'];
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] = 1;
+                                }
+                                if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai']) && isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'])) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'rata-rata'] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] / $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'];
+                                }
+                            }
+
+
+                            $nilaiRaporMax = $nilaiRapors->where('id_rapor', $rapor['id_rapor'])->where('id_siswa', $nilai_rapor['id_siswa'])->sortByDesc('nilai');
+                            $nilaiMax = $nilaiRaporMax->first();
+                            if ($nilaiMax) {
+                                $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor['id_rapor'])->where('id_komponen_jenis_rapor', $nilaiMax->id_komponen_jenis_rapor)->first();
+                                if ($keterangan_rapor) {
+                                    if ($nilaiMax->nilai >= 90 && $nilaiMax->nilai <= 100) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_a;
+                                    } elseif ($nilaiMax->nilai >= 80 && $nilaiMax->nilai < 90) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_b;
+                                    } elseif ($nilaiMax->nilai >= 70 && $nilaiMax->nilai < 80) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_c;
+                                    } elseif ($nilaiMax->nilai >= 0 && $nilaiMax->nilai < 70) {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_d;
+                                    } else {
+                                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = '';
+                                    }
+                                }
+                            }
+
+                            $nilaiRaporMin = $nilaiRapors->where('id_rapor', $rapor['id_rapor'])->where('id_siswa', $nilai_rapor['id_siswa'])->sortBy('nilai');
+                            $nilaiMin = $nilaiRaporMin->first();
+                            if ($nilaiMin) {
+                                $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor->id_rapor)->where('id_komponen_jenis_rapor', $nilaiMin->id_komponen_jenis_rapor)->first();
+                                if ($keterangan_rapor) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan2;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $nilai_tambahan_rapor = NilaiTambahanRapor::with('tambahan_rapor')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
                 $kehadiran_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
                     $query->where('nm_kelompok_tambahan_rapor', 'Ketidak Hadiran');
@@ -234,6 +410,68 @@ class CetakRaporSemesterController extends Controller
                 return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor'));
             }
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
+            $nilaiRapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))
+                ->whereHas('komponen_jenis_rapor', function ($query) {
+                    $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
+                })->get();
+
+
+            foreach ($rapors as $rapor) {
+                foreach ($rapor->nilai_rapor as  $nilai_rapor) {
+                    if ($nilai_rapor['nilai'] != '0') {
+
+                        if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'])) {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] += $nilai_rapor['nilai'];
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] += 1;
+                        } else {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] = $nilai_rapor['nilai'];
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] = 1;
+                        }
+                        if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai']) && isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'])) {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'rata-rata'] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] / $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'];
+                        }
+
+
+                        $nilaiRaporMax = $nilaiRapors->where('id_rapor', $rapor['id_rapor'])->where('id_siswa', $nilai_rapor['id_siswa'])->sortByDesc('nilai');
+                        $nilaiMax = $nilaiRaporMax->first();
+                        if ($nilaiMax) {
+                            $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor['id_rapor'])->where('id_komponen_jenis_rapor', $nilaiMax->id_komponen_jenis_rapor)->first();
+                            if ($keterangan_rapor) {
+                                if ($nilaiMax->nilai >= 90 && $nilaiMax->nilai <= 100) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_a;
+                                } elseif ($nilaiMax->nilai >= 80 && $nilaiMax->nilai < 90) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_b;
+                                } elseif ($nilaiMax->nilai >= 70 && $nilaiMax->nilai < 80) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_c;
+                                } elseif ($nilaiMax->nilai >= 0 && $nilaiMax->nilai < 70) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = $keterangan_rapor->keterangan_d;
+                                } else {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan'] = '';
+                                }
+                            }
+                        }
+
+                        $nilaiRaporMin = $nilaiRapors->where('id_rapor', $rapor['id_rapor'])->where('id_siswa', $nilai_rapor['id_siswa'])->sortBy('nilai');
+                        $nilaiMin = $nilaiRaporMin->first();
+                        if ($nilaiMin) {
+                            $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor->id_rapor)->where('id_komponen_jenis_rapor', $nilaiMin->id_komponen_jenis_rapor)->first();
+                            if ($keterangan_rapor) {
+                                // if ($nilaiMin->nilai >= 90 && $nilaiMin->nilai <= 100) {
+                                //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_a;
+                                // } elseif ($nilaiMin->nilai >= 80 && $nilaiMin->nilai < 90) {
+                                //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_b;
+                                // } elseif ($nilaiMin->nilai >= 70 && $nilaiMin->nilai < 80) {
+                                //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_c;
+                                // } elseif ($nilaiMin->nilai >= 0 && $nilaiMin->nilai < 70) {
+                                //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_d;
+                                // } else {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan2;
+                                // }
+                            }
+                        }
+                    }
+                }
+            }
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
                 foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
@@ -324,6 +562,24 @@ class CetakRaporSemesterController extends Controller
                 return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'pengembangan_karakter_tambahan_rapor'));
             } else {
 
+                foreach ($rapors as $rapor) {
+                    foreach ($rapor->nilai_rapor as  $nilai_rapor) {
+                        if ($nilai_rapor['nilai'] >= 90 && $nilai_rapor['nilai'] <= 100) {
+                            $hasil = 'A';
+                        } elseif ($nilai_rapor['nilai'] >= 80 && $nilai_rapor['nilai'] < 90) {
+                            $hasil = 'B';
+                        } elseif ($nilai_rapor['nilai'] >= 70 && $nilai_rapor['nilai'] < 80) {
+                            $hasil = 'C';
+                        } elseif ($nilai_rapor['nilai'] >= 0 && $nilai_rapor['nilai'] < 70) {
+                            $hasil = 'D';
+                        } else {
+                            $hasil = 'Nilai tidak valid';
+                        }
+                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = $hasil;
+                    }
+                }
+
+
                 $nilai_tambahan_rapor = NilaiTambahanRapor::with('tambahan_rapor')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
                 $kehadiran_tambahan_rapor = TambahanRapor::whereHas('kelompok_tambahan_rapor', function ($query) {
                     $query->where('nm_kelompok_tambahan_rapor', 'Ketidak Hadiran');
@@ -382,7 +638,7 @@ class CetakRaporSemesterController extends Controller
                 },
                 'pengguna'
             ]
-        );
+        )->orderBy('nis_siswa');
 
         $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
 

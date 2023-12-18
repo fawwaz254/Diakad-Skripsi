@@ -68,4 +68,22 @@ class Kelas extends Model
     {
         return $this->belongsTo(JenisRapor::class, 'id_jenis_rapor');
     }
+
+    public function jenis_keterangan()
+    {
+        switch ($this->type_rapor) {
+            case 1:
+                return 'Otomatis';
+                break;
+            case 2:
+                return '2 Kategori';
+                break;
+            case 3:
+                return 'Manual';
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
 }

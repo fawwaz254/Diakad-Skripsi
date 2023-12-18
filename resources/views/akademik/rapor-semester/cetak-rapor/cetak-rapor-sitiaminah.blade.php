@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Nilai Rapor Tengah Semester</title>
+    <title>Cetak Nilai Rapor Semester</title>
 
 
     <style>
@@ -129,12 +129,12 @@
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;">NO Induk
+                    <td style="border-style : hidden;width: 14%;">No Induk/NISN
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
-                        {{ $siswa->nis_siswa }}
+                        {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
                     </td>
                 </tr>
             </table>
@@ -171,7 +171,7 @@
                     <tr>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">MATA PELAJARAN<br></td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">KKM</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">KKTP</td>
                         @foreach ($list_komponen as $komponen)
                             <td colspan="2" style="text-align: center;font-weight: bold;">
                                 {{ $komponen->nm_komponen_jenis_rapor }}
@@ -268,13 +268,13 @@
                     </td>
                     <td style="width:35%; border-style : hidden;" align="left">
                         Mengetahui, <br>
-                        Kepala Madrasah
+                        Kepala Sekolah
                         <br><br><br><br><br><br><br>
                         <b><u>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
@@ -412,7 +412,7 @@
     <br>
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
         <tr style="font-weight: bold;">
-            <td>D. Prestasi</td>
+            <td>D. Ekstrakurikuler</td>
         </tr>
     </table>
 
@@ -420,32 +420,27 @@
         <thead style="background-color: #ffffcc">
             <tr>
                 <th>No</th>
-                <th>Jenis Prestasi</th>
+                <th>Kegiatan Ekstrakurikuler</th>
                 <th>Keterangan</th>
-                {{-- <th>Keterangan</th> --}}
             </tr>
-
-            {{-- @if (isset($nilai_ekskul[$siswa->id_siswa . 'ekskul']))
-                    @foreach ($nilai_ekskul[$siswa->id_siswa . 'ekskul'] as $key => $ekskul)
-                        <tr>
-                            {{-- <td style="text-align: center;">{{ $key + 1 }}</td> --}}
-            {{-- <td> {{ $key + 1 . '. ' . $ekskul }}</td>
-                <td style="text-align: center;">
-                    {{ $nilai_ekskul[$siswa->id_siswa . 'nilai_ekskul'][$key] }}</td> --}}
-            {{-- <td>
-                                        {{ $nilai_ekskul[$siswa->id_siswa . 'keterangan_ekskul'][$key] }}</td> --}}
-            {{-- </tr> --}}
-            {{-- @endforeach --}}
-            {{-- @else --}}
-
-            {{-- @endif --}}
-            {{--  --}}
         </thead>
         <tbody>
-            <tr>
-                <td style="text-align: center;">-</td>
-                <td style="text-align: center;">-</td>
-                <td style="text-align: center;">-</td>
+
+            @foreach ($ekskul_tambahan_rapor as $no_ekskul => $ekskul)
+                @if (isset($tambahan['ekskul'][$siswa->id_siswa][$ekskul->id_tambahan_rapor]))
+                    <tr>
+                        <td style="text-align: center">{{ ++$no_ekskul }}</td>
+                        <td style="text-align: center">{{ $ekskul->nm_tambahan_rapor }}</td>
+                        <td style="text-align: center">
+                            {{ $tambahan['ekskul'][$siswa->id_siswa][$ekskul->id_tambahan_rapor] }}</td>
+                    </tr>
+                @endif
+            @endforeach
+            @if (!isset($tambahan['ekskul'][$siswa->id_siswa]))
+                <tr>
+                    <td>-</td>
+                </tr>
+            @endif
 
             </tr>
         </tbody>
@@ -481,11 +476,11 @@
     <br>
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
         <tr>
-            <td style="font-weight: bold;border-style : hidden">F. Catatan Wali Kelas</td>
+            <td style="font-weight: bold;border-style : hidden;padding: 10px">F. Catatan Wali Kelas</td>
         </tr>
         <tr></tr>
         <tr>
-            <td>
+            <td style="padding: 10px">
                 {{ isset($tambahan['catatan_wali_kelas'][$siswa->id_siswa]) ? $tambahan['catatan_wali_kelas'][$siswa->id_siswa] : '-' }}
                 {{-- Tingkatkan terus semangat dan motivasi belajarmu agar dapat mencapai keberhasilan serta
                 kesuksesan --}}
@@ -520,13 +515,13 @@
             </td>
             <td style="width:35%; border-style : hidden;" align="left">
                 Mengetahui, <br>
-                Kepala Madrasah
+                Kepala Sekolah
                 <br><br><br><br><br><br><br>
                 <b><u>
                         {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
             </td>
             <td style="width: 30%;">
-                {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                {{ 'Surabaya, 21 Desember 2023' }}
                 <br>
                 Wali Kelas
                 <br><br><br><br><br><br><br>
