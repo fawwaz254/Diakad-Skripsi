@@ -330,7 +330,7 @@ class CetakRaporSemesterController extends Controller
                 return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor'));
             } else {
 
-                $nilaiRapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))
+                $nilaiRapors = NilaiRapor::where('nilai', '>', 0)->whereIn('id_rapor', $rapors->pluck('id_rapor'))
                     ->whereHas('komponen_jenis_rapor', function ($query) {
                         $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
                     })->get();
