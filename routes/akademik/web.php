@@ -23,6 +23,8 @@ use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiSiswaController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\RaporAgama\CetakRaporAgamaController;
+use App\Http\Controllers\Akademik\RaporAgama\MataPelajaranRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\JenisRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\MataPelajaranRaporController;
@@ -559,6 +561,23 @@ Route::middleware(['token_staff'])->group(function () {
                     Route::get('importExcel', [CetakRaporSemesterController::class, 'imporExcelDataTambahan']);
                     Route::post('importExcel', [CetakRaporSemesterController::class, 'uploadExcelDataTambahan']);
                 });
+            });
+        });
+
+        Route::prefix('rapor-agama')->group(function () {
+            Route::prefix('komponen-mata-pelajaran')->group(function () {
+                Route::get('/', [MataPelajaranRaporAgamaController::class, 'viewKomponenMataPelajaran']);
+                Route::post('/', [MataPelajaranRaporAgamaController::class, 'postKomponenMataPelajaran']);
+                Route::get('/add/{id_kelas}', [MataPelajaranRaporAgamaController::class, 'addKomponenMataPelajaran']);
+                Route::get('/copy/{id_kelas}', [MataPelajaranRaporAgamaController::class, 'copyKomponenMataPelajaran']);
+                Route::get('/detail/{id_kelas}', [MataPelajaranRaporAgamaController::class, 'viewDetailKomponenMataPelajaran']);
+                Route::get('datatables', [MataPelajaranRaporAgamaController::class, 'datatablesKomponenMataPelajaran']);
+                Route::post('action-komponen-mata-pelajaran/{mode}/{id}', [MataPelajaranRaporAgamaController::class, 'actionKomponenMataPelajaran']);
+            });
+            Route::prefix('cetak-rapor')->group(function () {
+                Route::get('/', [CetakRaporAgamaController::class, 'viewCetakRaporAgama']);
+                Route::get('/print/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporAgama']);
+                Route::get('datatables/', [CetakRaporAgamaController::class, 'datatablesCetakRaporAgama']);
             });
         });
 
