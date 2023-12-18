@@ -329,20 +329,24 @@ class CetakRaporSemesterController extends Controller
                         $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
                     })->get();
 
+                $k_jenis_rapor_uas = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'UAS')->first();
 
                 foreach ($rapors as $rapor) {
                     foreach ($rapor->nilai_rapor as  $nilai_rapor) {
                         if ($nilai_rapor['nilai'] != '0') {
-
-                            if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'])) {
-                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] += $nilai_rapor['nilai'];
-                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] += 1;
+                            if ($k_jenis_rapor_uas->id_komponen_jenis_rapor == $nilai_rapor->id_komponen_jenis_rapor) {
+                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'uas'] = $nilai_rapor['nilai'];
                             } else {
-                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] = $nilai_rapor['nilai'];
-                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] = 1;
-                            }
-                            if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai']) && isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'])) {
-                                $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'rata-rata'] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] / $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'];
+                                if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'])) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] += $nilai_rapor['nilai'];
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] += 1;
+                                } else {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] = $nilai_rapor['nilai'];
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'] = 1;
+                                }
+                                if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai']) && isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'])) {
+                                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'rata-rata'] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'nilai'] / $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']  . 'jumlah'];
+                                }
                             }
 
 
@@ -370,17 +374,7 @@ class CetakRaporSemesterController extends Controller
                             if ($nilaiMin) {
                                 $keterangan_rapor = $keterangan_rapors->where('id_rapor', $rapor->id_rapor)->where('id_komponen_jenis_rapor', $nilaiMin->id_komponen_jenis_rapor)->first();
                                 if ($keterangan_rapor) {
-                                    // if ($nilaiMin->nilai >= 90 && $nilaiMin->nilai <= 100) {
-                                    //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_a;
-                                    // } elseif ($nilaiMin->nilai >= 80 && $nilaiMin->nilai < 90) {
-                                    //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_b;
-                                    // } elseif ($nilaiMin->nilai >= 70 && $nilaiMin->nilai < 80) {
-                                    //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_c;
-                                    // } elseif ($nilaiMin->nilai >= 0 && $nilaiMin->nilai < 70) {
-                                    //     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan_d;
-                                    // } else {
                                     $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'keterangan2'] = $keterangan_rapor->keterangan2;
-                                    // }
                                 }
                             }
                         }
