@@ -337,6 +337,9 @@
                         </tr>
                     </thead>
                     <tbody class="body">
+                        @php
+                            $no = 0;
+                        @endphp
                         @foreach ($data as $kelompok)
                             <tr>
                                 <td colspan="5" style="font-weight: bold;">
@@ -344,11 +347,16 @@
                             </tr>
                             @if (isset($kelompok['data']))
                                 @foreach ($kelompok['data'] as $key => $data2)
+                                    @if (
+                                        !isset(
+                                            $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']))
+                                        @continue;
+                                    @endif
                                     @php
                                         $jumlah = count($data2['nm_point']);
                                     @endphp
                                     <tr>
-                                        <td style="text-align: center;">{{ $key }}</td>
+                                        <td style="text-align: center;">{{ ++$no }}</td>
                                         <td>{{ $data2['nm_point'][0] }}</td>
                                         <td style="text-align: center;font-weight: bold;">
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']) ? round($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']) : '' }}
