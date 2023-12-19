@@ -105,8 +105,7 @@
                                     <th>Pertemuan Ke</th>
                                     <th>Tanggal Entry</th>
                                     <th>Materi Ekskul</th>
-                                    <th>Waktu Mulai</th>
-                                    <th>Waktu Selesai</th>
+                                    
                                     <th>Foto</th>
                                 </thead>
                                 <tbody>
@@ -119,8 +118,7 @@
                                             <td>{{$presensi_ekskul->pertemuan_ke}}</td>
                                             <td>{{$presensi_ekskul->convertDateFormat('tgl_entry', 'd/m/y')}}</td>
                                             <td>{{$presensi_ekskul->materi_ekskul}}</td>
-                                            <td>{{$presensi_ekskul->waktu_mulai}}</td>
-                                            <td>{{$presensi_ekskul->waktu_selesai}}</td>
+                                            
                                             <td><a href="{{ Storage::disk('spaces')->url($presensi_ekskul->image) }}"
                                             target="_blank"><img
                                             src="{{ Storage::disk('spaces')->url($presensi_ekskul->image) }}"
