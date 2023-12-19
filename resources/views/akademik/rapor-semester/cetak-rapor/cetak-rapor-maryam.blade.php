@@ -217,7 +217,7 @@
                     <td style="width:30%; border-style : hidden;" align="left">
                     </td>
                     <td style="width: 35%;">
-                        {{ 'Surabaya, 21 Desember' }}
+                        {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
