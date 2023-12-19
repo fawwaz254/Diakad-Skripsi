@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Nilai Rapor Semester</title>
+    <title>Cetak Nilai Rapor Agama</title>
 
 
     <style>
@@ -74,55 +74,76 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+                <tr style="border-style : hidden">
+                    <td width="15%" align="center" style="margin-right: 10px" style="border-style : hidden">
+                        <img id="logo"
+                            src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
+                            height="110">
+                    </td>
+                    <td width="70%" style="border-style : hidden;text-align: center;">
+                        <span style="margin-top: -10px; font-size:17px">
+                            {{ ' S E K O L A H  M E N E N G A H A T A S' }}
+                            <br>
+                            {{ 'S M A  M A R Y A M' }}
+                            <br>
+                            Status : Terakreditasi "A"
+                            <br>
+                            Jl. Manyar Sambongan No.119 Telp.(031) 5017539 Gubeng, Surabaya 60282
+                            <br>
+                            NSS : 304056007134 NPSN : 20532170
+                            <br>
+                            E-Mail : maryamonline@ymail.com Website : www.smamaryam.sch.id
+                            <br>
+                        </span>
 
+                    </td>
+                    <td width="15%"></td>
+                </tr>
+                <tr></tr>
+            </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+                <tr>
+                    <th colspan="10" style="border-style : hidden">
+                        <br>
+                        <p align="center" style="margin-top: 3px;  font-size:20px">
+                            NILAI PENDIDIKAN AGAMA ISLAM DAN PENGEMBANGAN DIRI <br>
+                            TAHUN PELAJARAN {{ $semester->tahun_ajaran }}
+                        </p>
+                    </th>
+                <tr>
                 <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Nama Peserta Didik
+                    <td style="border-style : hidden;width: 14%;">Nama
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
-                </tr>
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;">NISN/NIS
+                    <td style="border-style : hidden;width: 24%;">Kelas
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;">
-                        {{ $siswa->nisn_siswa . '/' . $siswa->nis_siswa }}
-                    </td>
-
-                </tr>
-                <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Kelas
-                    </td>
-                    <td style="border-style : hidden;width: 1%;"> :
-                    </td>
-                    <td style="border-style : hidden;width: 35%;">
+                    <td style="border-style : hidden;width: 25%; ">
                         {{ $kelas->nm_kelas }}
                     </td>
                 </tr>
-                <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Semester
+                <tr style="border-style : hidden">
+                    <td style="border-style : hidden;width: 14%;">No Induk / NISN
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
+                        {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
+                    </td>
+                    <td style="border-style : hidden;width: 24%;">Semester
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
                         {{ $semester->nm_semester }}
                     </td>
                 </tr>
-                <tr>
-                    <td style="border-style : hidden;width: 14%;vertical-align: top;">Tahun Pelajaran
-                    </td>
-                    <td style="border-style : hidden;width: 1%;vertical-align: top;"> :
-                    </td>
-                    <td style="border-style : hidden;width: 35%;vertical-align: top;">
-                        {{ $semester->tahun_ajaran }}
-                    </td>
-                </tr>
-
             </table>
 
             <br>
@@ -157,6 +178,12 @@
                     </tr>
                 </thead>
                 <tbody class="body">
+                    @php
+                        $pengetahuan = 0;
+                        $keterampilan = 0;
+                        $jumlah_pengetahuan = 0;
+                        $jumlah_keterampilan = 0;
+                    @endphp
                     @foreach ($data as $kelompok)
                         @if (isset($kelompok['data']))
                             <tr>
@@ -173,6 +200,15 @@
                                     <td style="text-align: center;">{{ $data2['kkm'][0] }}</td>
                                     @php
                                         $nilai_akhir = 0;
+                                        if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[0]->id_komponen_jenis_rapor . 'nilai'])) {
+                                            $pengetahuan += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[0]->id_komponen_jenis_rapor . 'nilai'];
+                                            $jumlah_pengetahuan += 1;
+                                        }
+                                        if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'nilai'])) {
+                                            $keterampilan += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'nilai'];
+                                            $jumlah_keterampilan += 1;
+                                        }
+
                                     @endphp
 
                                     <td style="text-align: center;">
@@ -195,24 +231,86 @@
                                             $nilai_akhir += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[0]->id_komponen_jenis_rapor . 'nilai'];
                                             $nilai_akhir += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'nilai'];
                                             $nilai_akhir = $nilai_akhir / 2;
-                                        }
-
-                                        if ($nilai_akhir >= 90 && $nilai_akhir <= 100) {
-                                            $hasil = 'A';
-                                        } elseif ($nilai_akhir >= 80 && $nilai_akhir < 90) {
-                                            $hasil = 'B';
-                                        } elseif ($nilai_akhir >= 70 && $nilai_akhir < 80) {
-                                            $hasil = 'C';
-                                        } elseif ($nilai_akhir >= 1 && $nilai_akhir < 70) {
-                                            $hasil = 'D';
+                                            if ($nilai_akhir >= 90 && $nilai_akhir <= 100) {
+                                                $hasil = 'A';
+                                            } elseif ($nilai_akhir >= 80 && $nilai_akhir < 90) {
+                                                $hasil = 'B';
+                                            } elseif ($nilai_akhir >= 70 && $nilai_akhir < 80) {
+                                                $hasil = 'C';
+                                            } elseif ($nilai_akhir >= 1 && $nilai_akhir < 70) {
+                                                $hasil = 'D';
+                                            } else {
+                                                $hasil = '';
+                                            }
                                         } else {
                                             $hasil = '';
                                         }
+
                                     @endphp
                                     <td style="text-align: center;"> {{ $hasil }}</td>
+                                </tr>
                             @endforeach
                         @endif
                     @endforeach
+                    @php
+                        if ($pengetahuan == '0' || $jumlah_pengetahuan == '0') {
+                            $rata_pengetahuan = 0;
+                        } else {
+                            $rata_pengetahuan = round($pengetahuan / $jumlah_pengetahuan);
+                        }
+
+                        $predikat_pengetahuan = $rata_pengetahuan;
+                        if ($predikat_pengetahuan >= 90 && $predikat_pengetahuan <= 100) {
+                            $predikat_pengetahuan = 'A';
+                        } elseif ($predikat_pengetahuan >= 80 && $predikat_pengetahuan < 90) {
+                            $predikat_pengetahuan = 'B';
+                        } elseif ($predikat_pengetahuan >= 70 && $predikat_pengetahuan < 80) {
+                            $predikat_pengetahuan = 'C';
+                        } elseif ($predikat_pengetahuan >= 1 && $predikat_pengetahuan < 70) {
+                            $predikat_pengetahuan = 'D';
+                        } else {
+                            $predikat_pengetahuan = '';
+                        }
+
+                        if ($keterampilan == '0' || $jumlah_keterampilan == '0') {
+                            $rata_keterampilan = 0;
+                        } else {
+                            $rata_keterampilan = round($keterampilan / $jumlah_keterampilan);
+                        }
+
+                        $predikat_keterampilan = $rata_keterampilan;
+                        if ($predikat_keterampilan >= 90 && $predikat_keterampilan <= 100) {
+                            $predikat_keterampilan = 'A';
+                        } elseif ($predikat_keterampilan >= 80 && $predikat_keterampilan < 90) {
+                            $predikat_keterampilan = 'B';
+                        } elseif ($predikat_keterampilan >= 70 && $predikat_keterampilan < 80) {
+                            $predikat_keterampilan = 'C';
+                        } elseif ($predikat_keterampilan >= 1 && $predikat_keterampilan < 70) {
+                            $predikat_keterampilan = 'D';
+                        } else {
+                            $predikat_keterampilan = '';
+                        }
+
+                    @endphp
+                    <tr>
+                        <td></td>
+                        <td colspan="2" style="font-weight: bold;">JUMLAH</td>
+                        <td style="text-align: center;font-weight: bold;">{{ $pengetahuan }}</td>
+                        <td style="text-align: center;">{{ $predikat_pengetahuan }}</td>
+                        <td style="text-align: center;font-weight: bold;">{{ $keterampilan }}</td>
+                        <td style="text-align: center;">{{ $predikat_keterampilan }}</td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="2" style="font-weight: bold;">RATA-RATA NILAI</td>
+                        <td style="text-align: center;font-weight: bold;">{{ $rata_pengetahuan }}</td>
+                        <td style="text-align: center;">{{ $predikat_pengetahuan }}</td>
+                        <td style="text-align: center;font-weight: bold;">{{ $rata_keterampilan }}
+                        </td>
+                        <td style="text-align: center;">{{ $predikat_keterampilan }}</td>
+                        <td colspan="2"></td>
+                    </tr>
                 </tbody>
             </table>
             <br>
@@ -227,10 +325,10 @@
 								border-bottom: 1px solid   black;">
                         </p>
                     </td>
-                    <td style="width:35%; border-style : hidden;" align="left">
+                    <td style="width:30%; border-style : hidden;" align="left">
 
                     </td>
-                    <td style="width: 30%;">
+                    <td style="width: 35%;">
                         {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
@@ -253,14 +351,14 @@
                 <tr>
                     <td style="border-style : hidden; width:35%;" align="left">
                     </td>
-                    <td style="width:35%; border-style : hidden;" align="left">
+                    <td style="width:30%; border-style : hidden;" align="left">
                         Mengetahui, <br>
                         Kepala Madrasah
                         <br><br><br><br><br><br><br>
                         <b><u>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                     </td>
-                    <td style="width: 30%;">
+                    <td style="width: 35%;">
                     </td>
                 </tr>
             </table>

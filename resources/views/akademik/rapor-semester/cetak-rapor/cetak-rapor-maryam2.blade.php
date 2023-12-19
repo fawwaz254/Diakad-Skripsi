@@ -40,7 +40,7 @@
         }
 
         .body {
-            font-size: 17px;
+            font-size: 15px;
             border: 5px double;
             border-top-style: none;
         }
@@ -147,7 +147,7 @@
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #ccccff">
+                <thead class="head" style="background-color: #ccffff">
                     <tr>
                         <th>No</th>
                         <th>Mata Pelajaran</th>
@@ -308,7 +308,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, 21 Desember' }}
+                        {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>

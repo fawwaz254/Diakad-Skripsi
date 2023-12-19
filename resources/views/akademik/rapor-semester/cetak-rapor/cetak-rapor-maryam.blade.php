@@ -162,7 +162,7 @@
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #dcdcff">
+                <thead class="head" style="background-color: #ccffff">
                     <tr>
                         <th>Predikat</th>
                         <th>Deskripsi</th>
@@ -189,7 +189,7 @@
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #dcdcff">
+                <thead class="head" style="background-color: #ccffff">
                     <tr>
                         <th>Predikat</th>
                         <th>Deskripsi</th>
@@ -217,7 +217,7 @@
                     <td style="width:30%; border-style : hidden;" align="left">
                     </td>
                     <td style="width: 35%;">
-                        {{ 'Surabaya, 21 Desember' }}
+                        {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
@@ -322,21 +322,24 @@
                     </tr>
                 </table>
                 <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                    <thead class="head" style="background-color: #dcdcff">
+                    <thead class="head" style="background-color: #ccffff">
                         <tr>
                             <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
                             <td rowspan="2" style="text-align: center;font-weight: bold;">MATA PELAJARAN<br></td>
-                            <td colspan="3" style="text-align: center;font-weight: bold;">
+                            <td rowspan="2" style="text-align: center;font-weight: bold;">Nilai</td>
+                            <td rowspan="2" style="text-align: center;font-weight: bold;">Predikat</td>
+                            <td style="text-align: center;font-weight: bold;">
                                 {{ $komponen->nm_komponen_jenis_rapor }}<br></td>
 
                         </tr>
                         <tr>
-                            <td style="text-align: center;font-weight: bold;">Nilai</td>
-                            <td style="text-align: center;font-weight: bold;">Predikat</td>
                             <td style="text-align: center;font-weight: bold;">Deskripsi</td>
                         </tr>
                     </thead>
                     <tbody class="body">
+                        @php
+                            $no = 0;
+                        @endphp
                         @foreach ($data as $kelompok)
                             <tr>
                                 <td colspan="5" style="font-weight: bold;">
@@ -344,11 +347,16 @@
                             </tr>
                             @if (isset($kelompok['data']))
                                 @foreach ($kelompok['data'] as $key => $data2)
+                                    @if (
+                                        !isset(
+                                            $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']))
+                                        @continue;
+                                    @endif
                                     @php
                                         $jumlah = count($data2['nm_point']);
                                     @endphp
                                     <tr>
-                                        <td style="text-align: center;">{{ $key }}</td>
+                                        <td style="text-align: center;">{{ ++$no }}</td>
                                         <td>{{ $data2['nm_point'][0] }}</td>
                                         <td style="text-align: center;font-weight: bold;">
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']) ? round($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']) : '' }}
@@ -387,7 +395,7 @@
                             <th>Sangat Baik (A)</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;">70</td>
+                            <td style="text-align: center;">78</td>
                             <td style="text-align: center;">
                                 < 70</td>
                             <td style="text-align: center;">70 - 80</td>
