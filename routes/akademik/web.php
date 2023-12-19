@@ -25,6 +25,7 @@ use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
 use App\Http\Controllers\Akademik\RaporAgama\CetakRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporAgama\MataPelajaranRaporAgamaController;
+use App\Http\Controllers\Akademik\RaporAgama\NilaiRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\JenisRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\MataPelajaranRaporController;
@@ -52,6 +53,7 @@ use App\Http\Controllers\Guru\ELearningSoal\SoalController;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
+use App\Http\Controllers\Guru\RaporAgama\InputNilaiRaporAgamaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
 // use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 // use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
@@ -576,6 +578,14 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/detail/{id_kelas}', [MataPelajaranRaporAgamaController::class, 'viewDetailKomponenMataPelajaran']);
                 Route::get('datatables', [MataPelajaranRaporAgamaController::class, 'datatablesKomponenMataPelajaran']);
                 Route::post('action-komponen-mata-pelajaran/{mode}/{id}', [MataPelajaranRaporAgamaController::class, 'actionKomponenMataPelajaran']);
+            });
+            Route::prefix('nilai-rapor')->group(function () {
+                Route::get('/', [NilaiRaporAgamaController::class, 'viewNilaiRaporAgama']);
+                Route::get('/datatables', [NilaiRaporAgamaController::class, 'datatablesNilaiRapoAgama']);
+                Route::get('print/{id}', [InputNilaiRaporAgamaController::class, 'printRekap']);
+                Route::get('templateExcel/{id}', [InputNilaiRaporAgamaController::class, 'templateExcel']);
+                Route::get('importExcel', [InputNilaiRaporAgamaController::class, 'imporExcel']);
+                Route::post('importExcel', [InputNilaiRaporAgamaController::class, 'uploadNilaiRapor']);
             });
             Route::prefix('cetak-rapor')->group(function () {
                 Route::get('/', [CetakRaporAgamaController::class, 'viewCetakRaporAgama']);

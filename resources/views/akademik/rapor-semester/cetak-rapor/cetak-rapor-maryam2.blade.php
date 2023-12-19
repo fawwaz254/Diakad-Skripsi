@@ -147,7 +147,7 @@
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #ccccff">
+                <thead class="head" style="background-color: #ccffff">
                     <tr>
                         <th>No</th>
                         <th>Mata Pelajaran</th>

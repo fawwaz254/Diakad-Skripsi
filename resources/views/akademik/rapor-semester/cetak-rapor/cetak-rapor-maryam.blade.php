@@ -162,7 +162,7 @@
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #dcdcff">
+                <thead class="head" style="background-color: #ccffff">
                     <tr>
                         <th>Predikat</th>
                         <th>Deskripsi</th>
@@ -189,7 +189,7 @@
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #dcdcff">
+                <thead class="head" style="background-color: #ccffff">
                     <tr>
                         <th>Predikat</th>
                         <th>Deskripsi</th>
@@ -322,7 +322,7 @@
                     </tr>
                 </table>
                 <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                    <thead class="head" style="background-color: #dcdcff">
+                    <thead class="head" style="background-color: #ccffff">
                         <tr>
                             <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
                             <td rowspan="2" style="text-align: center;font-weight: bold;">MATA PELAJARAN<br></td>
