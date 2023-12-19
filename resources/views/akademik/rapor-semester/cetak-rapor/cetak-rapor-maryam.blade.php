@@ -326,13 +326,13 @@
                         <tr>
                             <td rowspan="2" style="text-align: center;font-weight: bold;">NO</td>
                             <td rowspan="2" style="text-align: center;font-weight: bold;">MATA PELAJARAN<br></td>
-                            <td colspan="3" style="text-align: center;font-weight: bold;">
+                            <td rowspan="2" style="text-align: center;font-weight: bold;">Nilai</td>
+                            <td rowspan="2" style="text-align: center;font-weight: bold;">Predikat</td>
+                            <td style="text-align: center;font-weight: bold;">
                                 {{ $komponen->nm_komponen_jenis_rapor }}<br></td>
 
                         </tr>
                         <tr>
-                            <td style="text-align: center;font-weight: bold;">Nilai</td>
-                            <td style="text-align: center;font-weight: bold;">Predikat</td>
                             <td style="text-align: center;font-weight: bold;">Deskripsi</td>
                         </tr>
                     </thead>

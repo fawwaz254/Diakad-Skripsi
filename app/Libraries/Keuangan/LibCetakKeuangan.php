@@ -1887,21 +1887,24 @@ class LibCetakKeuangan
                 ];
             }
 
+            foreach ($rwytBayar->groupBy('keterangan') as $x) {
+                foreach ($x as $y) {
+                    $detailKeterangan[$y->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == '4' ? $y->tagihan_biaya->detail_biaya->keterangan_biaya . ' Tahun ' . $y->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran . ' (' .  $y->tagihan_biaya->detail_biaya->bulan->nm_bulan . ')' : $y->tagihan_biaya->detail_biaya->keterangan_biaya . ' Tahun ' . $y->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran][] = [
+                        'siswa' => $y->tagihan_biaya->siswa,
+                        'besar_pembayaran' => $y->besar_pembayaran,
+                    ];
+                }
+            }
+
+
             $listData[] = [
                 'tanggal_pembayaran' => $tanggal,
                 'total_pembayaran' => collect($detail)->sum('besar_pembayaran'),
                 'detail' => $detail,
+                'detailKeterangan' => $detailKeterangan,
             ];
         }
 
-        $result = $allDataPembayaran->sortBy('tgl_pembayaran')->values()->groupBy(function ($item) {
-            if (isset($item->keterangan)) {
-                return $item->keterangan;
-            }
-        });
-
-        $data['result'] = $result;
-        $data['listData'] = $listData;
-        return $data;
+        return $listData;
     }
 }
