@@ -17,7 +17,7 @@
         </div> --}}
         <h2>
             <a class="btn bg-green waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-semester/nilai-rapor/importExcel/') }}"><i
+                href="{{ url(Request::segment(1) . '#rapor-agama/nilai-rapor/importExcel/') }}"><i
                     class="material-icons">cloud_upload</i><span> Import Excel</span></a>
             <div style="display: inline;margin-right:10px"></div>
         </h2>

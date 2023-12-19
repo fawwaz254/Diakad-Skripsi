@@ -584,7 +584,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/datatables', [NilaiRaporAgamaController::class, 'datatablesNilaiRapoAgama']);
                 Route::get('print/{id}', [InputNilaiRaporAgamaController::class, 'printRekap']);
                 Route::get('templateExcel/{id}', [InputNilaiRaporAgamaController::class, 'templateExcel']);
-                Route::get('importExcel', [InputNilaiRaporAgamaController::class, 'imporExcel']);
+                Route::get('importExcel', [NilaiRaporSemesterController2::class, 'imporExcel']);
                 Route::post('importExcel', [InputNilaiRaporAgamaController::class, 'uploadNilaiRapor']);
             });
             Route::prefix('cetak-rapor')->group(function () {
