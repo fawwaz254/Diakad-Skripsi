@@ -96,6 +96,7 @@ class CetakRaporAgamaController extends Controller
         $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
             $query->where('nm_jenis_rapor', 'agama');
         })->get();
+        $deskripsi = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'Deskripsi')->first();
 
         $nilai_siswa = [];
         $data = [];
@@ -107,17 +108,21 @@ class CetakRaporAgamaController extends Controller
         foreach ($rapors as $rapor) {
             foreach ($rapor->nilai_rapor as  $nilai_rapor) {
                 if ($nilai_rapor['nilai'] != '0') {
-                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'nilai'] = $nilai_rapor['nilai'];
-                    if ($nilai_rapor['nilai'] >= 90 && $nilai_rapor['nilai'] <= 100) {
-                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = 'A';
-                    } elseif ($nilai_rapor['nilai'] >= 80 && $nilai_rapor['nilai'] < 90) {
-                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = 'B';
-                    } elseif ($nilai_rapor['nilai'] >= 70 && $nilai_rapor['nilai'] < 80) {
-                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = 'C';
-                    } elseif ($nilai_rapor['nilai'] >= 0 && $nilai_rapor['nilai'] < 70) {
-                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = 'D';
-                    } else {
-                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = '';
+                    if ($deskripsi->id_komponen_jenis_rapor == $nilai_rapor->id_komponen_jenis_rapor) {
+                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'nilai'] = $nilai_rapor['nilai'];
+                    } elseif (is_numeric($nilai_rapor['nilai'])) {
+                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'nilai'] = $nilai_rapor['nilai'];
+                        if ($nilai_rapor['nilai'] >= 90 && $nilai_rapor['nilai'] <= 100) {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = 'A';
+                        } elseif ($nilai_rapor['nilai'] >= 80 && $nilai_rapor['nilai'] < 90) {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = 'B';
+                        } elseif ($nilai_rapor['nilai'] >= 70 && $nilai_rapor['nilai'] < 80) {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = 'C';
+                        } elseif ($nilai_rapor['nilai'] >= 0 && $nilai_rapor['nilai'] < 70) {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = 'D';
+                        } else {
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = '';
+                        }
                     }
                 }
             }
