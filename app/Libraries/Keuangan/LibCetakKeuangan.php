@@ -1893,6 +1893,15 @@ class LibCetakKeuangan
                 'detail' => $detail,
             ];
         }
-        return $listData;
+
+        $result = $allDataPembayaran->sortBy('tgl_pembayaran')->values()->groupBy(function ($item) {
+            if (isset($item->keterangan)) {
+                return $item->keterangan;
+            }
+        });
+
+        $data['result'] = $result;
+        $data['listData'] = $listData;
+        return $data;
     }
 }

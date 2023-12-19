@@ -395,7 +395,7 @@
                             <th>Sangat Baik (A)</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;">70</td>
+                            <td style="text-align: center;">78</td>
                             <td style="text-align: center;">
                                 < 70</td>
                             <td style="text-align: center;">70 - 80</td>
