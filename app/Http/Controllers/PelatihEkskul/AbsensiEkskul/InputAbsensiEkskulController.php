@@ -29,7 +29,10 @@ use App\Libraries\Pendidikan\LibSiswa;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Barryvdh\Debugbar\Twig\Extension\Debug;
 use DB;
+use Illuminate\Support\Facades\Storage;
 use Session;
 use Validator;
 
@@ -211,8 +214,8 @@ class InputAbsensiEkskulController extends BaseController
             'id_semester' => 'required',
             'id_ekskul' => 'required',
             'pertemuan_ke' => 'required',
-            'waktu_mulai' => 'required',
-            'waktu_selesai' => 'required',
+            // 'waktu_mulai' => 'required',
+            // 'waktu_selesai' => 'required',
             'tgl_entry' => 'required'
         ]);
 
@@ -241,9 +244,18 @@ class InputAbsensiEkskulController extends BaseController
                     }
                     $presensi_ekskul->pertemuan_ke = $input->pertemuan_ke;
                     $presensi_ekskul->materi_ekskul = $input->materi_ekskul;
-                    $presensi_ekskul->waktu_mulai = $input->waktu_mulai;
-                    $presensi_ekskul->waktu_selesai = $input->waktu_selesai;
+                    $presensi_ekskul->waktu_mulai = '00:00';
+                    $presensi_ekskul->waktu_selesai = '00:00';
                     $presensi_ekskul->tgl_entry = $tgl_entry;
+
+                    
+                    if(!empty(request()->file)){
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ekstra/'. $input->id_ekskul .'/'. $id, request()->file, 'public');
+                        $presensi_ekskul->image  = $file;
+                    }
+
                     $presensi_ekskul->save();
 
                     $total_siswa = 0;
@@ -307,7 +319,7 @@ class InputAbsensiEkskulController extends BaseController
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
-
+                    DebugBar::info($e->getMessage());
                     return [
                         'status' => 300, // GAGAL
                         'message' => 'Absensi Ekskul Gagal!'
