@@ -40,7 +40,7 @@
         }
 
         .body {
-            font-size: 17px;
+            font-size: 15px;
             border: 5px double;
             border-top-style: none;
         }
