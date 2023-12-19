@@ -256,7 +256,7 @@
                         if ($pengetahuan == '0' || $jumlah_pengetahuan == '0') {
                             $rata_pengetahuan = 0;
                         } else {
-                            $rata_pengetahuan = $pengetahuan / $jumlah_pengetahuan;
+                            $rata_pengetahuan = round($pengetahuan / $jumlah_pengetahuan);
                         }
 
                         $predikat_pengetahuan = $rata_pengetahuan;
@@ -275,7 +275,7 @@
                         if ($keterampilan == '0' || $jumlah_keterampilan == '0') {
                             $rata_keterampilan = 0;
                         } else {
-                            $rata_keterampilan = $keterampilan / $jumlah_keterampilan;
+                            $rata_keterampilan = round($keterampilan / $jumlah_keterampilan);
                         }
 
                         $predikat_keterampilan = $rata_keterampilan;
@@ -325,10 +325,10 @@
 								border-bottom: 1px solid   black;">
                         </p>
                     </td>
-                    <td style="width:35%; border-style : hidden;" align="left">
+                    <td style="width:30%; border-style : hidden;" align="left">
 
                     </td>
-                    <td style="width: 30%;">
+                    <td style="width: 35%;">
                         {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
@@ -351,14 +351,14 @@
                 <tr>
                     <td style="border-style : hidden; width:35%;" align="left">
                     </td>
-                    <td style="width:35%; border-style : hidden;" align="left">
+                    <td style="width:30%; border-style : hidden;" align="left">
                         Mengetahui, <br>
                         Kepala Madrasah
                         <br><br><br><br><br><br><br>
                         <b><u>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                     </td>
-                    <td style="width: 30%;">
+                    <td style="width: 35%;">
                     </td>
                 </tr>
             </table>
