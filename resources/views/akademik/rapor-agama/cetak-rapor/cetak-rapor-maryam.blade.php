@@ -253,7 +253,13 @@
                         @endif
                     @endforeach
                     @php
-                        $predikat_pengetahuan = $pengetahuan / $jumlah_pengetahuan;
+                        if ($pengetahuan == '0' || $jumlah_pengetahuan == '0') {
+                            $rata_pengetahuan = 0;
+                        } else {
+                            $rata_pengetahuan = $pengetahuan / $jumlah_pengetahuan;
+                        }
+
+                        $predikat_pengetahuan = $rata_pengetahuan;
                         if ($predikat_pengetahuan >= 90 && $predikat_pengetahuan <= 100) {
                             $predikat_pengetahuan = 'A';
                         } elseif ($predikat_pengetahuan >= 80 && $predikat_pengetahuan < 90) {
@@ -266,7 +272,13 @@
                             $predikat_pengetahuan = '';
                         }
 
-                        $predikat_keterampilan = $keterampilan / $jumlah_keterampilan;
+                        if ($keterampilan == '0' || $jumlah_keterampilan == '0') {
+                            $rata_keterampilan = 0;
+                        } else {
+                            $rata_keterampilan = $keterampilan / $jumlah_keterampilan;
+                        }
+
+                        $predikat_keterampilan = $rata_keterampilan;
                         if ($predikat_keterampilan >= 90 && $predikat_keterampilan <= 100) {
                             $predikat_keterampilan = 'A';
                         } elseif ($predikat_keterampilan >= 80 && $predikat_keterampilan < 90) {
@@ -278,6 +290,7 @@
                         } else {
                             $predikat_keterampilan = '';
                         }
+
                     @endphp
                     <tr>
                         <td></td>
@@ -291,9 +304,9 @@
                     <tr>
                         <td></td>
                         <td colspan="2" style="font-weight: bold;">RATA-RATA NILAI</td>
-                        <td style="text-align: center;font-weight: bold;">{{ $pengetahuan / $jumlah_pengetahuan }}</td>
+                        <td style="text-align: center;font-weight: bold;">{{ $rata_pengetahuan }}</td>
                         <td style="text-align: center;">{{ $predikat_pengetahuan }}</td>
-                        <td style="text-align: center;font-weight: bold;">{{ $keterampilan / $jumlah_keterampilan }}
+                        <td style="text-align: center;font-weight: bold;">{{ $rata_keterampilan }}
                         </td>
                         <td style="text-align: center;">{{ $predikat_keterampilan }}</td>
                         <td colspan="2"></td>
