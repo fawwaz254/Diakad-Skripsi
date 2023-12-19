@@ -24,6 +24,7 @@ use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
 use App\Http\Controllers\Akademik\RaporAgama\CetakRaporAgamaController;
+use App\Http\Controllers\Akademik\RaporAgama\KomponenRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporAgama\MataPelajaranRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporAgama\NilaiRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
@@ -570,6 +571,10 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('rapor-agama')->group(function () {
+            Route::prefix('komponen-rapor')->group(function () {
+                Route::get('/', [KomponenRaporAgamaController::class, 'viewKomponenRapor']);
+                Route::get('/datatables', [KomponenRaporAgamaController::class, 'datatablesKomponenRapor']);
+            });
             Route::prefix('komponen-mata-pelajaran')->group(function () {
                 Route::get('/', [MataPelajaranRaporAgamaController::class, 'viewKomponenMataPelajaran']);
                 Route::post('/', [MataPelajaranRaporAgamaController::class, 'postKomponenMataPelajaran']);
@@ -584,7 +589,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/datatables', [NilaiRaporAgamaController::class, 'datatablesNilaiRapoAgama']);
                 Route::get('print/{id}', [InputNilaiRaporAgamaController::class, 'printRekap']);
                 Route::get('templateExcel/{id}', [InputNilaiRaporAgamaController::class, 'templateExcel']);
-                Route::get('importExcel', [InputNilaiRaporAgamaController::class, 'imporExcel']);
+                Route::get('importExcel', [NilaiRaporSemesterController2::class, 'imporExcel']);
                 Route::post('importExcel', [InputNilaiRaporAgamaController::class, 'uploadNilaiRapor']);
             });
             Route::prefix('cetak-rapor')->group(function () {
