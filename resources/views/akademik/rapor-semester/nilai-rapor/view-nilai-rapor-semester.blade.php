@@ -15,6 +15,12 @@
                 <label for="data_semua_pengguna">Data Semua Pengguna</label>
             </h2>
         </div> --}}
+        <h2>
+            <a class="btn bg-green waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#rapor-semester/nilai-rapor/importExcel/') }}"><i
+                    class="material-icons">cloud_upload</i><span> Import Excel</span></a>
+            <div style="display: inline;margin-right:10px"></div>
+        </h2>
         <div class="dropdown" style="display: inline; margin-right:50px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
@@ -55,9 +61,10 @@
                                 {{-- <th>Jurusan</th> --}}
                                 <th>Nilai Siswa Terisi</th>
                                 <th>Semester</th>
-                                {{-- <th>Nilai</th> --}}
-                                {{-- <th>Template Excel</th> --}}
+                                <th>Status</th>
+
                                 <th>Action</th>
+                                <th>Template Excel</th>
                                 <th>Pembuat</th>
                             </tr>
                         </thead>
@@ -77,12 +84,13 @@
         'nilai-rapor/action/delete';
     var template_excel_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'nilai-rapor/templateExcel';
+
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'nilai-rapor/print';
     var primary_table = $('#primary_table').DataTable({
         lengthMenu: [
-            [5, 10, 25, 50, -1],
-            [5, 10, 25, 50, 'All'],
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
         ],
         processing: true,
         serverSide: true,
@@ -132,7 +140,14 @@
                 searchable: false,
                 orderable: false,
                 className: 'align-center'
+            }, {
+                data: 'status',
+                name: 'status',
+                searchable: false,
+                orderable: false,
+                className: 'align-center'
             },
+
             // {
             //     data: 'action',
             //     name: 'action',
@@ -195,6 +210,23 @@
                     //         '    <i class="material-icons">picture_as_pdf</i>' +
                     //         '</a> ';
                     // }
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    if (data.status == '0') {
+                        return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            template_excel_url + '/' + data.id + '" target="_blank">' +
+                            '    <i class="material-icons">backup</i>' +
+                            '</a> ';
+                    } else {
+                        return '';
+                    }
                 }
             },
             {

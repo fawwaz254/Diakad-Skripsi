@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Akademik\RaporSemester;
+namespace App\Http\Controllers\Akademik\RaporAgama;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Kelas;
 use App\Models\KelasRapor;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 use App\Models\KelompokMapelRapor;
@@ -14,14 +14,14 @@ use App\Models\MataPelajaranRapor;
 use App\Models\SubKelompokMapelRapor;
 use Validator;
 
-class MataPelajaranRaporController extends Controller
+class MataPelajaranRaporAgamaController extends Controller
 {
     public function viewKomponenMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', '1')->get();
-        return view('akademik/rapor-semester/komponen-mata-pelajaran/view-komponen-mata-pelajaran', compact('auth_data', 'kelas'));
+        return view('akademik/rapor-agama/komponen-mata-pelajaran/view-komponen-mata-pelajaran', compact('auth_data', 'kelas'));
     }
 
     public function postKomponenMataPelajaran(Request $request)
@@ -39,7 +39,7 @@ class MataPelajaranRaporController extends Controller
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'rapor-semester/komponen-mata-pelajaran/detail/' . $input->id_kelas,
+                'path' => 'rapor-agama/komponen-mata-pelajaran/detail/' . $input->id_kelas,
             ];
         }
     }
@@ -49,7 +49,7 @@ class MataPelajaranRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', '1')->get();
-        return view('akademik/rapor-semester/komponen-mata-pelajaran/detail-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'id_kelas'));
+        return view('akademik/rapor-agama/komponen-mata-pelajaran/detail-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'id_kelas'));
     }
 
     public function datatablesKomponenMataPelajaran(Request $request)
@@ -59,7 +59,7 @@ class MataPelajaranRaporController extends Controller
             ->whereHas('mata_pelajaran_rapor', function ($q) {
                 $q->where('jenis', '1');
             })->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
-                $q->where('nm_rapor', 'semester');
+                $q->where('nm_rapor', 'agama');
             });
 
         return Datatables::of($list_kelas_rapor)
@@ -94,8 +94,8 @@ class MataPelajaranRaporController extends Controller
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', '1')->get();
         $mata_pelajaran = MataPelajaran::with('jenis_mata_pelajaran')->isAktif()->get();
-        $kelompok_mapel_rapor = KelompokMapelRapor::where('nm_rapor', 'semester')->with('sub_kelompok_mapel_rapor')->get();
-        return view('akademik/rapor-semester/komponen-mata-pelajaran/add-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'mata_pelajaran', 'kelompok_mapel_rapor', 'id_kelas'));
+        $kelompok_mapel_rapor = KelompokMapelRapor::where('nm_rapor', 'agama')->with('sub_kelompok_mapel_rapor')->get();
+        return view('akademik/rapor-agama/komponen-mata-pelajaran/add-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'mata_pelajaran', 'kelompok_mapel_rapor', 'id_kelas'));
     }
 
     public function copyKomponenMataPelajaran(Request $request, $id_kelas)
@@ -104,9 +104,9 @@ class MataPelajaranRaporController extends Controller
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', '1')->get();
         $kelas_rapor = KelasRapor::whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
-            $q->where('nm_rapor', 'semester');
+            $q->where('nm_rapor', 'agama');
         })->get();
-        return view('akademik/rapor-semester/komponen-mata-pelajaran/copy-komponen-mata-pelajaran', compact('auth_data', 'kelas',  'id_kelas', 'kelas_rapor'));
+        return view('akademik/rapor-agama/komponen-mata-pelajaran/copy-komponen-mata-pelajaran', compact('auth_data', 'kelas',  'id_kelas', 'kelas_rapor'));
     }
 
     public function actionKomponenMataPelajaran(Request $request, $mode, $id)
@@ -162,7 +162,7 @@ class MataPelajaranRaporController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'rapor-semester/komponen-mata-pelajaran/detail/' . $input->id_kelas,
+                    'path' => 'rapor-agama/komponen-mata-pelajaran/detail/' . $input->id_kelas,
                     'message' => 'Save Data List Form Succesfully'
                 ];
             } elseif ($mode == 'delete') {
@@ -190,7 +190,7 @@ class MataPelajaranRaporController extends Controller
                 ];
             } elseif ($mode == 'copy') {
                 $kelas_rapors = KelasRapor::where('id_kelas', $input->id_kelas)->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
-                    $q->where('nm_rapor', 'semester');
+                    $q->where('nm_rapor', 'agama');
                 })->get();
                 foreach ($kelas_rapors as $kelas_rapor) {
                     $k = new KelasRapor;
@@ -203,7 +203,7 @@ class MataPelajaranRaporController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'rapor-semester/komponen-mata-pelajaran/detail/' . $input->kelas,
+                    'path' => 'rapor-agama/komponen-mata-pelajaran/detail/' . $input->kelas,
                     'message' => 'Save Data List Form Succesfully'
                 ];
             }

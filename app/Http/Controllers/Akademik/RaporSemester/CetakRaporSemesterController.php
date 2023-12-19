@@ -53,13 +53,17 @@ class CetakRaporSemesterController extends Controller
         $list_data = Kelas::where('is_aktif', 1)->with('jurusan')->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $list_rapor = Rapor::whereHas('semester', function ($query) use ($id_semester) {
             $query->where('id_semester', '=', $id_semester);
-        })->get();
+        })->where('nm_rapor', 'semester')->get();
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->get();
         $semester = Semester::where('id_semester', $id_semester)->first();
 
         $kelas_rapor = KelasRapor::whereHas('mata_pelajaran_rapor', function ($q) {
             $q->where('jenis', '1');
+        })->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
         })->get();
+
+
 
         return Datatables::of($list_data)
             ->addColumn('kelas', function ($item) use ($kelas_rapor) {
@@ -109,7 +113,7 @@ class CetakRaporSemesterController extends Controller
 
         $rapors = Rapor::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with(['nilai_rapor' => function ($q) {
             $q->where('nilai', '>', 0);
-        }])->get();
+        }])->where('nm_rapor', 'semester')->get();
 
         $keterangan_rapors = KeteranganRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))->get();
 
@@ -145,8 +149,10 @@ class CetakRaporSemesterController extends Controller
             }
         }
 
-        $kelas_rapor = KelasRapor::where('id_kelas', $id_kelas)->get();
-        $kelompok_mapel_rapor = KelompokMapelRapor::with([
+        $kelas_rapor = KelasRapor::where('id_kelas', $id_kelas)->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
+        })->get();
+        $kelompok_mapel_rapor = KelompokMapelRapor::where('nm_rapor', 'semester')->with([
             'mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
                 $q->whereIn('id_mata_pelajaran_rapor', $kelas_rapor->pluck('id_mata_pelajaran_rapor'))->with('mata_pelajaran');
             }
@@ -324,7 +330,7 @@ class CetakRaporSemesterController extends Controller
                 return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor'));
             } else {
 
-                $nilaiRapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))
+                $nilaiRapors = NilaiRapor::where('nilai', '>', 0)->whereIn('id_rapor', $rapors->pluck('id_rapor'))
                     ->whereHas('komponen_jenis_rapor', function ($query) {
                         $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
                     })->get();
