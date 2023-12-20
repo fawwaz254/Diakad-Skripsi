@@ -51,8 +51,8 @@
                 name: 'nm_kegiatan'
             },
             {
-                data: 'deskripsi_kegiatan',
-                name: 'deskripsi_kegiatan'
+                data: 'deskripsi',
+                name: 'deskripsi'
             },
             {
                 data: 'semester',
