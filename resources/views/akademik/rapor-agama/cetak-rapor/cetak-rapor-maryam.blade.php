@@ -166,14 +166,14 @@
                         <th rowspan="2">SIKAP</th>
                     </tr>
                     <tr>
-                        <th>
+                        <th style="font-size: 15px;">
                             ANGKA
                         </th>
-                        <th>PREDIKAT</th>
-                        <th>
+                        <th style="font-size: 15px;">PREDIKAT</th>
+                        <th style="font-size: 15px;">
                             ANGKA
                         </th>
-                        <th>PREDIKAT</th>
+                        <th style="font-size: 15px;">PREDIKAT</th>
 
                     </tr>
                 </thead>
@@ -223,7 +223,7 @@
                                     <td style="text-align: center;">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'predikat']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'predikat'] : '' }}
                                     </td>
-                                    <td style="padding: 5px">
+                                    <td style="padding: 2px">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[2]->id_komponen_jenis_rapor . 'nilai']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[2]->id_komponen_jenis_rapor . 'nilai'] : '' }}
                                     </td>
                                     @php
