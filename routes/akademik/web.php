@@ -555,6 +555,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('cetak-rapor')->group(function () {
                 Route::get('/', [CetakRaporSemesterController::class, 'viewCetakRaporSemester']);
                 Route::get('/print/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
+                Route::get('/leger/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'legerCetakRaporSemester']);
                 Route::get('datatables/', [CetakRaporSemesterController::class, 'datatablesCetakRaporSemester']);
 
                 //pengembangan diri

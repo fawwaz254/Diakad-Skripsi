@@ -39,6 +39,7 @@
                                     <th>Total Mapel</th>
                                     <th>Mapel terinput</th>
                                     <th>Cetak</th>
+                                    <th>Leger</th>
                                     <th>Data Siswa</th>
                                 </tr>
                             </thead>
@@ -54,6 +55,7 @@
     var modul_url = 'rapor-semester';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print';
+    var leger_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/leger';
     // var pdf_uas_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print2';
     var data_tambahan_url = role_url + '#' + modul_url + '/' + 'cetak-rapor/view-data-tambahan';
 
@@ -118,6 +120,27 @@
                     } else {
                         return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
                             '    <i class="material-icons">picture_as_pdf</i>' +
+                            '</a> ';
+                    }
+
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    if (data.jumlah != '0') {
+                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            leger_url + '/' + data.id_semester + '/' + data.id_kelas +
+                            '"  target="_blank">' +
+                            '    <i class="material-icons">print</i>' +
+                            '</a> ';
+                    } else {
+                        return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
+                            '    <i class="material-icons">print</i>' +
                             '</a> ';
                     }
 
