@@ -157,23 +157,23 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #d4d4d4">
                     <tr>
-                        <th rowspan="2">No</th>
+                        <th rowspan="2" style="width: 5%">No</th>
                         <th rowspan="2">Mata Pelajaran</th>
-                        <th rowspan="2">KKM</th>
-                        <th colspan="2">PENGETAHUAN</th>
-                        <th colspan="2">KETERAMPILAN</th>
+                        <th rowspan="2" style="width: 5%;font-size: 12px;">KKM</th>
+                        <th colspan="2" style="width: 10%">PENGETAHUAN</th>
+                        <th colspan="2" style="width: 10%">KETERAMPILAN</th>
                         <th rowspan="2">DESKRIPSI</th>
-                        <th rowspan="2">SIKAP</th>
+                        <th rowspan="2" style="width: 5%;font-size: 12px;"">SIKAP</th>
                     </tr>
                     <tr>
-                        <th style="font-size: 15px;">
+                        <th style="font-size: 12px;">
                             ANGKA
                         </th>
-                        <th style="font-size: 15px;">PREDIKAT</th>
-                        <th style="font-size: 15px;">
+                        <th style="font-size: 12px;">PREDIKAT</th>
+                        <th style="font-size: 12px;">
                             ANGKA
                         </th>
-                        <th style="font-size: 15px;">PREDIKAT</th>
+                        <th style="font-size: 12px;">PREDIKAT</th>
 
                     </tr>
                 </thead>
