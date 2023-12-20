@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CalonSiswaOrtu;
 use App\Models\Pengguna;
 use App\Models\Role;
 use App\Models\RolePengguna;
@@ -14,6 +15,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Session;
+use DB;
 
 class SignInController extends BaseController
 {
@@ -38,7 +40,50 @@ class SignInController extends BaseController
     public function actionSignIn(Request $request)
     {
         $input = (object) $request->input();
+        $pengguna = Pengguna::where('username', $input->username)->first();
+        $sekolah = Sekolah::where('deleted_by', null)->first();
 
+        if(!$pengguna){
+            $wali_murid = WaliMurid::where('nomor_hp_wali_murid', $input->username)->first();
+
+            if($wali_murid){
+                DB::beginTransaction();
+
+                try {
+                    $pengguna = new Pengguna;
+                    $pengguna->id_pengguna = $wali_murid->id_pengguna;
+                    $pengguna->nm_pengguna = $wali_murid->nm_wali_murid;
+                    $pengguna->id_sekolah = $sekolah->id_sekolah;
+                    $pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
+                    $pengguna->username = $wali_murid->nomor_hp_wali_murid;
+                    $pengguna->password = Hash::make($wali_murid->nomor_hp_wali_murid);
+                    $pengguna->status_join_table = 4;
+                    $pengguna->save();
+                    
+                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+                    $role_wali_murid = new RolePengguna();
+                    $role_wali_murid->id_role = 4;
+                    $role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
+                    $role_wali_murid->keterangan_role_pengguna = "Login Baru";
+                    $role_wali_murid->is_aktif = 1;
+                    $role_wali_murid->save();
+
+                    if($siswa = Siswa::where('id_wali_murid', $wali_murid->id_wali_murid)->first()){
+                        if($calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first()){
+                            $calon_siswa_ortu->nomor_telp_ortu = $wali_murid->nomor_hp_ortu;
+                            $calon_siswa_ortu->nomor_hp_ortu = $wali_murid->nomor_hp_ortu;
+                            $calon_siswa_ortu->nm_wali = $wali_murid->nm_ortu;
+                            $calon_siswa_ortu->save();
+                        }
+                    }
+
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollback();
+                }
+            }
+        }
         /*$http_host = env('APP_URL', '');
 
         // get http_host database sekolah
@@ -49,10 +94,9 @@ class SignInController extends BaseController
 
         // $pengguna = Pengguna::where('username', $input->username)->first();
         // if (Auth::loginUsingId($pengguna->id_pengguna, true)) {
-
-        $global_pass = Sekolah::where('deleted_by', null)->first();
-        if (Hash::check($input->password, $global_pass->password_global)) { // Menggunakan password global
-            $pengguna = Pengguna::where('username', $input->username)->first();
+        
+        if (Hash::check($input->password, $sekolah->password_global)) { // Menggunakan password global
+            
 
             if (!empty($pengguna)) {
                 //barcode, validasi apakah role gurunya tidak aktif
@@ -82,8 +126,6 @@ class SignInController extends BaseController
             return back()->with('toast', 'Sign in failed')->withInput();
         } else { // Tidak menggunakan password global
             //barcode, validasi apakah role gurunya tidak aktif
-            $pengguna = Pengguna::where('username', $input->username)->first();
-
             if(!empty($pengguna->terkunci_hingga) && now()->lt(Carbon::parse($pengguna->terkunci_hingga))){
                 return back()->with('toast', 'Akun anda masih terkunci, mohon hubungi admin')->withInput();
             }
