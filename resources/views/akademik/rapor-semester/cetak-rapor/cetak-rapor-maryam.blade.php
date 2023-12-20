@@ -646,7 +646,7 @@
                     </td>
                     <td style="width:35%; border-style : hidden;" align="left">
                         Mengetahui, <br>
-                        Kepala Madrasah
+                        Kepala Sekolah
                         <br><br><br><br><br><br><br>
                         <b><u>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
