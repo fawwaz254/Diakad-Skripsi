@@ -854,6 +854,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('datatables', [NilaiRaporSemesterController::class, 'datatablesNilaiRaporSemester']);
                 Route::post('action/{mode}/{id}', [NilaiRaporSemesterController::class, 'actionsNilaiRaporSemester']);
                 Route::get('templateExcel/{id}', [NilaiRaporSemesterController::class, 'templateExcel']);
+                Route::get('inputNilai/{id}', [NilaiRaporSemesterController::class, 'inputNilai']);
+                Route::get('getNilai/{id}', [NilaiRaporSemesterController::class, 'getNilai']);
                 Route::get('importExcel', [NilaiRaporSemesterController::class, 'imporExcel']);
                 Route::post('importExcel', [NilaiRaporSemesterController::class, 'uploadNilaiRapor']);
                 Route::get('pdf/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
