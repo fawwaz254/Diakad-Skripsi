@@ -21,7 +21,7 @@
         submitHandler: function(form) {
             $('button').attr('disabled', 'disabled');
             $.ajax({
-                processData: false,  // Important!
+                processData: false, // Important!
                 contentType: false,
                 cache: false,
                 url: form.action,

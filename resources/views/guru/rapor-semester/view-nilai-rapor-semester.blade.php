@@ -57,6 +57,7 @@
                                 <th>Semester</th>
                                 <th>Status</th>
                                 <th>Template Excel</th>
+                                <th>Input Nilai</th>
                                 <th>Action</th>
                                 <th>Pembuat</th>
                             </tr>
@@ -77,6 +78,8 @@
         'tambah-nilai-rapor-semester/action/delete';
     var template_excel_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'tambah-nilai-rapor-semester/templateExcel';
+    var input_nilai = base_url + '/' + role_url + '#' + modul_url + '/' +
+        'tambah-nilai-rapor-semester/inputNilai';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/pdf';
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/print';
     var primary_table = $('#primary_table').DataTable({
@@ -169,6 +172,23 @@
                         return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                             template_excel_url + '/' + data.id + '" target="_blank">' +
                             '    <i class="material-icons">backup</i>' +
+                            '</a> ';
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    if (data.status == '0') {
+                        return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            input_nilai + '/' + data.id + '" >' +
+                            '    <i class="material-icons">add_box</i>' +
                             '</a> ';
                     } else {
                         return '';
