@@ -537,6 +537,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [FormHarianController::class, 'viewInputFormHarian']);
                 Route::get('/datatables', [FormHarianController::class, 'datatablesInputFormHarian']);
                 Route::get('/add/{id_form}', [FormHarianController::class, 'addInputFormHarian']);
+                Route::get('/all/{id_form}', [FormHarianController::class, 'viewAllSubmittedForm']);
+                Route::get('/all/datatables/{id_form}', [FormHarianController::class, 'datatablesJawaban']);
                 Route::post('action-list-form/{mode}/{id}', [FormHarianController::class, 'actionInputFormHarian']);
             });
         });
