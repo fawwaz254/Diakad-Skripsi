@@ -53,7 +53,7 @@ class InputKPIController extends Controller
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
         $list_data = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('pengguna')->whereHas('pengguna.status_pengguna', function ($q) {
-            $q->where('aktif_status_pengguna', 1)->where('nm_status_pengguna', 'AKTIF')->where('nm_status_pengguna', 'MUTASI_MASUK');
+            $q->where('aktif_status_pengguna', 1)->whereIn('nm_status_pengguna', ['AKTIF', 'MUTASI_MASUK']);
         })->whereNotNull('id_kelas')->get()->unique('pengguna.nm_pengguna');
 
 
