@@ -85,8 +85,8 @@ class AuthGlobalController extends BaseController
             $pengguna->save();
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            $role_wali_murid = RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->where('role', 4)->first();
-            if(!$role_wali_murid){
+            $role_wali_murid = RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->where('id_role', 4)->first();
+            if (!$role_wali_murid) {
                 $role_wali_murid = new RolePengguna;
                 $role_wali_murid->id_role = 4;
                 $role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
