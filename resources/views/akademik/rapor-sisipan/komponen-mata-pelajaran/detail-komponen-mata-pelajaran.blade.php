@@ -115,16 +115,16 @@
             },
 
             {
-                data: 'nm_kelompok_sisipan',
-                name: 'nm_kelompok_sisipan'
+                data: 'nm_kelompok_mapel_rapor',
+                name: 'nm_kelompok_mapel_rapor'
             },
             {
                 data: 'nm_mata_pelajaran',
                 name: 'nm_mata_pelajaran'
             },
             {
-                data: 'mata_pelajaran_sisipan.urutan',
-                name: 'mata_pelajaran_sisipan.urutan'
+                data: 'mata_pelajaran_rapor.urutan',
+                name: 'mata_pelajaran_rapor.urutan'
             },
             {
                 data: 'kelas.nm_kelas',

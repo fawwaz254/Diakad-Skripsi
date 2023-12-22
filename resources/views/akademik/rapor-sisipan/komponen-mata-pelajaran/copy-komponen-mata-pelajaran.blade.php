@@ -26,7 +26,7 @@
                                 <select class="form-control show-tick" name="id_kelas" required="">
                                     @foreach ($kelas as $k)
                                         @php
-                                            $jumlah = $kelas_sisipan->where('id_kelas', $k->id_kelas)->count();
+                                            $jumlah = $kelas_rapors->where('id_kelas', $k->id_kelas)->count();
                                         @endphp
                                         @if ($jumlah != '0')
                                             <option value="{{ $k->id_kelas }}"
