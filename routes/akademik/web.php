@@ -23,6 +23,10 @@ use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiSiswaController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\RaporAgama\CetakRaporAgamaController;
+use App\Http\Controllers\Akademik\RaporAgama\KomponenRaporAgamaController;
+use App\Http\Controllers\Akademik\RaporAgama\MataPelajaranRaporAgamaController;
+use App\Http\Controllers\Akademik\RaporAgama\NilaiRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\JenisRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSemester\MataPelajaranRaporController;
@@ -50,6 +54,7 @@ use App\Http\Controllers\Guru\ELearningSoal\SoalController;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
+use App\Http\Controllers\Guru\RaporAgama\InputNilaiRaporAgamaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
 // use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 // use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
@@ -542,11 +547,15 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [NilaiRaporSemesterController::class, 'viewNilaiRaporSemester']);
                 Route::get('/datatables', [NilaiRaporSemesterController::class, 'datatablesNilaiRaporSemester']);
                 Route::get('print/{id}', [NilaiRaporSemesterController2::class, 'printRekap']);
+                Route::get('templateExcel/{id}', [NilaiRaporSemesterController2::class, 'templateExcel']);
+                Route::get('importExcel', [NilaiRaporSemesterController2::class, 'imporExcel']);
+                Route::post('importExcel', [NilaiRaporSemesterController2::class, 'uploadNilaiRapor']);
             });
 
             Route::prefix('cetak-rapor')->group(function () {
                 Route::get('/', [CetakRaporSemesterController::class, 'viewCetakRaporSemester']);
                 Route::get('/print/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
+                Route::get('/leger/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'legerCetakRaporSemester']);
                 Route::get('datatables/', [CetakRaporSemesterController::class, 'datatablesCetakRaporSemester']);
 
                 //pengembangan diri
@@ -559,6 +568,35 @@ Route::middleware(['token_staff'])->group(function () {
                     Route::get('importExcel', [CetakRaporSemesterController::class, 'imporExcelDataTambahan']);
                     Route::post('importExcel', [CetakRaporSemesterController::class, 'uploadExcelDataTambahan']);
                 });
+            });
+        });
+
+        Route::prefix('rapor-agama')->group(function () {
+            Route::prefix('komponen-rapor')->group(function () {
+                Route::get('/', [KomponenRaporAgamaController::class, 'viewKomponenRapor']);
+                Route::get('/datatables', [KomponenRaporAgamaController::class, 'datatablesKomponenRapor']);
+            });
+            Route::prefix('komponen-mata-pelajaran')->group(function () {
+                Route::get('/', [MataPelajaranRaporAgamaController::class, 'viewKomponenMataPelajaran']);
+                Route::post('/', [MataPelajaranRaporAgamaController::class, 'postKomponenMataPelajaran']);
+                Route::get('/add/{id_kelas}', [MataPelajaranRaporAgamaController::class, 'addKomponenMataPelajaran']);
+                Route::get('/copy/{id_kelas}', [MataPelajaranRaporAgamaController::class, 'copyKomponenMataPelajaran']);
+                Route::get('/detail/{id_kelas}', [MataPelajaranRaporAgamaController::class, 'viewDetailKomponenMataPelajaran']);
+                Route::get('datatables', [MataPelajaranRaporAgamaController::class, 'datatablesKomponenMataPelajaran']);
+                Route::post('action-komponen-mata-pelajaran/{mode}/{id}', [MataPelajaranRaporAgamaController::class, 'actionKomponenMataPelajaran']);
+            });
+            Route::prefix('nilai-rapor')->group(function () {
+                Route::get('/', [NilaiRaporAgamaController::class, 'viewNilaiRaporAgama']);
+                Route::get('/datatables', [NilaiRaporAgamaController::class, 'datatablesNilaiRapoAgama']);
+                Route::get('print/{id}', [InputNilaiRaporAgamaController::class, 'printRekap']);
+                Route::get('templateExcel/{id}', [InputNilaiRaporAgamaController::class, 'templateExcel']);
+                Route::get('importExcel', [NilaiRaporSemesterController2::class, 'imporExcel']);
+                Route::post('importExcel', [InputNilaiRaporAgamaController::class, 'uploadNilaiRapor']);
+            });
+            Route::prefix('cetak-rapor')->group(function () {
+                Route::get('/', [CetakRaporAgamaController::class, 'viewCetakRaporAgama']);
+                Route::get('/print/{id_semester}/{id_kelas}', [CetakRaporAgamaController::class, 'printCetakRaporAgama']);
+                Route::get('datatables/', [CetakRaporAgamaController::class, 'datatablesCetakRaporAgama']);
             });
         });
 
