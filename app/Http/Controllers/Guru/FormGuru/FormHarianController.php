@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DetailJawabanForm;
 use App\Models\Form;
 use App\Models\JawabanForm;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -54,11 +55,47 @@ class FormHarianController extends Controller
             ->make(true);
     }
 
+    public function datatablesJawaban(Request $request, $id_form)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+        $list_form = JawabanForm::where('created_by',$id_pengguna)->where('id_form',$id_form);
+
+        return Datatables::of($list_form)
+            ->addColumn('time', function ($item) {
+                if ($item->count() > '0') {
+                    return Carbon::parse($item->created_at);
+                } else {
+                    return '';
+                }
+                
+            })
+            ->addColumn('last_update',function($item){
+                if($item->count() > '0'){
+                    return Carbon::parse($item->updated_at)->diffForHumans();
+                }else{
+                    return '';
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_jawaban_form
+                );
+                return $data;
+            })
+            ->make(true);
+    }
+
     public function addInputFormHarian(Request $request, $id_form)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $form = Form::with('pertanyaan_form')->find($id_form);
+        // $before = DetailJawabanForm::where('created_by',$auth_data->pengguna->id_pengguna)->where('id_jawaban_form',$beforeJawaban->id_jawaban_form)->get();
+        // if($before){
+        //     return view('guru/form-guru/input-form-harian/add-input-form-harian', compact('auth_data', 'form','before'));
+        // }
         return view('guru/form-guru/input-form-harian/add-input-form-harian', compact('auth_data', 'form'));
     }
 
@@ -131,5 +168,19 @@ class FormHarianController extends Controller
                 ];
             }
         }
+    }
+
+    public function viewAllSubmittedForm(Request $req, $id_form){
+
+        $input = (object) $req->input();
+        $auth_data = $input->auth_data;
+
+        $beforeJawaban = JawabanForm::where('created_by',$auth_data->pengguna->id_pengguna)->where('id_form',$id_form)->get();
+        $form = Form::where('id_form',$id_form)->first();
+
+        Debugbar::info($beforeJawaban);
+
+        return view('guru/form-guru/input-form-harian/all-input-form-harian', compact('auth_data', 'beforeJawaban', 'form'));
+        
     }
 }

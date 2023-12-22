@@ -34,7 +34,9 @@
                                 style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
 				word-wrap: break-word;">{{ $pertanyaan_form->nm_pertanyaan_form }}</pre>
                             @if ($pertanyaan_form->jenis_pertanyaan == '1')
-                                <textarea class="form-control" name="jawaban_pertanyaan[{{ $key }}]" data-sample-short required></textarea>
+                                <textarea class="form-control" name="jawaban_pertanyaan[{{ $key }}]" data-sample-short required>
+                                    
+                            </textarea>
                             @elseif($pertanyaan_form->jenis_pertanyaan == '2')
                                 <input type="file" class="form-control"
                                     name="jawaban_pertanyaan[{{ $key }}]" aria-required="true"

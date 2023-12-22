@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>Data List Form Harian</h2>
+                    <h2>Data Input Form {{ $form->nm_form }}</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -12,12 +12,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Form</th>
-                                    <th>Jam Pengisian</th>
-                                    <th>Input Data</th>
-                                    <th>Total Data</th>
-                                    <th>View Data</th>
-                                    <th>Data Terakhir</th>
+                                    <th>Dikumpulkan Pada</th>
+                                    <th>Diubah Pada</th>
+                                    <th>Edit Data</th>
                                 </tr>
                             </thead>
                         </table>
@@ -31,10 +28,9 @@
 @include('scriptjs')
 <script>
     var modul_url = '{{ Request::segment(2) }}';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-form-harian/datatables';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-form-harian/all/datatables/' + '{{Request::segment(5)}}';
     var add_url = role_url + '#' + modul_url + '/' + 'input-form-harian/add';
-    var view_url = role_url + '#' + modul_url + '/' + 'input-form-harian/all';
-    var detail_url = role_url + '#' + modul_url + '/' + 'input-form-harian/detail';
+    // var detail_url = role_url + '#' + modul_url + '/' + 'input-form-harian/detail';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -51,12 +47,15 @@
                 className: 'align-center',
             },
             {
-                data: 'nm_form',
-                name: 'nm_form'
-            },
-            {
                 data: 'time',
                 name: 'time',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
+            },
+            {
+                data: 'last_update',
+                name: 'last_update',
                 className: 'align-center',
                 searchable: false,
                 orderable: false,
@@ -74,34 +73,6 @@
 
                 }
             },
-            {
-                data: 'jumlah_jawaban',
-                name: 'jumlah_jawaban',
-                className: 'align-center',
-                searchable: false,
-                orderable: false,
-            },
-            {
-                data: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        view_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">remove_red_eye</i>' +
-                        '</a>';
-
-                }
-            },
-            {
-                data: 'last_data',
-                name: 'last_data',
-                className: 'align-center',
-                searchable: false,
-                orderable: false,
-            },
-
         ]
     });
 

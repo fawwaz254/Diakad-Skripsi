@@ -40,7 +40,7 @@
         }
 
         .body {
-            font-size: 17px;
+            font-size: 15px;
             border: 5px double;
             border-top-style: none;
         }
@@ -157,23 +157,23 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #d4d4d4">
                     <tr>
-                        <th rowspan="2">No</th>
+                        <th rowspan="2" style="width: 5%">No</th>
                         <th rowspan="2">Mata Pelajaran</th>
-                        <th rowspan="2">KKM</th>
-                        <th colspan="2">PENGETAHUAN</th>
-                        <th colspan="2">KETERAMPILAN</th>
+                        <th rowspan="2" style="width: 5%;font-size: 12px;">KKM</th>
+                        <th colspan="2" style="width: 10%">PENGETAHUAN</th>
+                        <th colspan="2" style="width: 10%">KETERAMPILAN</th>
                         <th rowspan="2">DESKRIPSI</th>
-                        <th rowspan="2">SIKAP</th>
+                        <th rowspan="2" style="width: 5%;font-size: 12px;"">SIKAP</th>
                     </tr>
                     <tr>
-                        <th>
+                        <th style="font-size: 12px;">
                             ANGKA
                         </th>
-                        <th>PREDIKAT</th>
-                        <th>
+                        <th style="font-size: 12px;">PREDIKAT</th>
+                        <th style="font-size: 12px;">
                             ANGKA
                         </th>
-                        <th>PREDIKAT</th>
+                        <th style="font-size: 12px;">PREDIKAT</th>
 
                     </tr>
                 </thead>
@@ -223,7 +223,7 @@
                                     <td style="text-align: center;">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'predikat']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'predikat'] : '' }}
                                     </td>
-                                    <td style="padding: 10px">
+                                    <td style="padding: 2px">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[2]->id_komponen_jenis_rapor . 'nilai']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[2]->id_komponen_jenis_rapor . 'nilai'] : '' }}
                                     </td>
                                     @php
@@ -353,7 +353,7 @@
                     </td>
                     <td style="width:30%; border-style : hidden;" align="left">
                         Mengetahui, <br>
-                        Kepala Madrasah
+                        Kepala Sekolah
                         <br><br><br><br><br><br><br>
                         <b><u>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>

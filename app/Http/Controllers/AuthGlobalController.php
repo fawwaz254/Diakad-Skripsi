@@ -85,13 +85,15 @@ class AuthGlobalController extends BaseController
             $pengguna->save();
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            $role_wali_murid = new RolePengguna;
-            // $role_wali_murid->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $role_wali_murid->id_role = 4;
-            $role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
-            $role_wali_murid->keterangan_role_pengguna = "Input Wali Murid";
-            $role_wali_murid->is_aktif = 1;
-            $role_wali_murid->save();
+            $role_wali_murid = RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->where('id_role', 4)->first();
+            if (!$role_wali_murid) {
+                $role_wali_murid = new RolePengguna;
+                $role_wali_murid->id_role = 4;
+                $role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
+                $role_wali_murid->keterangan_role_pengguna = "Input Wali Murid";
+                $role_wali_murid->is_aktif = 1;
+                $role_wali_murid->save();
+            }
 
             $siswa1 = Siswa::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
             $siswa1->id_wali_murid = $wali_murid->id_wali_murid;
