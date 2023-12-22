@@ -40,7 +40,7 @@
         }
 
         .body {
-
+            font-size: 15px;
             border: 5px double;
             border-top-style: none;
         }
@@ -147,9 +147,9 @@
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <thead class="head" style="background-color: #ccccff">
+                <thead class="head" style="background-color: #ccffff">
                     <tr>
-                        <th>No</th>
+                        <th style="width: 5%">No</th>
                         <th>Mata Pelajaran</th>
                         <th>Nilai</th>
                         <th>Capaian Kompetensi</th>
@@ -159,12 +159,18 @@
                 <tbody class="body">
                     @foreach ($data as $kelompok)
                         @if (isset($kelompok['data']))
+                            @php
+                                $no = 0;
+                            @endphp
                             @foreach ($kelompok['data'] as $key => $data2)
                                 @php
                                     $jumlah = count($data2['nm_point']);
                                 @endphp
+                                @if (!isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata']) && $kelas->tingkat == '2')
+                                    @continue
+                                @endif
                                 <tr>
-                                    <td style="text-align: center;" rowspan="2">{{ $key }}</td>
+                                    <td style="text-align: center;width: 5%" rowspan="2">{{ ++$no }}</td>
                                     <td rowspan="2">{{ $data2['nm_point'][0] }}</td>
 
                                     @php
@@ -176,12 +182,12 @@
                                             {{ round(($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata'] + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'uas'] * 2) / 3) }}
                                         @endif
                                     </td>
-                                    <td>
+                                    <td style="padding: 3px">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan'] : '' }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td style="padding: 3px">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2'] : '' }}
                                     </td>
                                 </tr>
@@ -192,7 +198,8 @@
                 </tbody>
             </table>
             <br>
-
+        </div>
+        <div class="page">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
                 <tr>
                     <td><b>II. Ekstra Kurikuler</b></td>
@@ -200,9 +207,9 @@
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <tr>
-                    <th>No</th>
-                    <th>Nama Ekstrakurikuler</th>
-                    <th>Keterangan</th>
+                    <th style="width: 5%">No</th>
+                    <th style="width:30%">Nama Ekstrakurikuler</th>
+                    <th style="65%">Keterangan</th>
                 </tr>
 
                 @php
@@ -212,7 +219,7 @@
                     @if (isset($tambahan['ekskul'][$siswa->id_siswa][$ekskul->id_tambahan_rapor]))
                         <tr>
                             <td style="text-align: center">{{ ++$no_ekskul }}</td>
-                            <td style="text-align: center">{{ $ekskul->nm_tambahan_rapor }}</td>
+                            <td style="padding-left: 10px">{{ $ekskul->nm_tambahan_rapor }}</td>
                             <td style="text-align: center">
                                 {{ $tambahan['ekskul'][$siswa->id_siswa][$ekskul->id_tambahan_rapor] }}</td>
                         </tr>
@@ -221,9 +228,9 @@
 
                 @if (!isset($tambahan['ekskul'][$siswa->id_siswa]))
                     <tr>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
+                        <td style="text-align: center">-</td>
+                        <td style="padding-left: 10px">-</td>
+                        <td style="text-align: center">-</td>
                     </tr>
                 @endif
 
@@ -236,14 +243,14 @@
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; ">
                 <tr>
-                    <th>No</th>
-                    <th>Jenis Prestasi</th>
-                    <th>Keterangan</th>
+                    <th style="width: 5%">No</th>
+                    <th style="width:30%">Jenis Prestasi</th>
+                    <th style="width: 65%">Keterangan</th>
                 </tr>
                 <tr>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
+                    <td style="text-align: center">-</td>
+                    <td style="padding-left: 10px">-</td>
+                    <td style="text-align: center">-</td>
                 </tr>
             </table>
             <br>
@@ -256,16 +263,25 @@
                 <tr>
                     <th>Alasan Ketidak Hadiran</th>
                     <th>Jumlah Ketidak Hadiran</th>
-
+                    <th
+                        style="width: 50%;border-right: hidden; 
+        border-bottom: hidden; 
+        border-top: hidden;">
+                    </th>
                 </tr>
 
                 @foreach ($kehadiran_tambahan_rapor as $k)
                     <tr>
-                        <td style="text-align: center">
+                        <td style="padding-left: 10px">
                             {{ $k->nm_tambahan_rapor }}
                         </td>
-                        <td style="text-align: center">
+                        <td style="padding-left: 10px">
                             {{ isset($tambahan['ketidakhadiran'][$siswa->id_siswa][$k->id_tambahan_rapor]) ? $tambahan['ketidakhadiran'][$siswa->id_siswa][$k->id_tambahan_rapor] . ' Hari' : '-' }}
+                        </td>
+                        <td
+                            style="width: 50%;border-right: hidden; 
+                border-bottom: hidden; 
+                border-top: hidden;">
                         </td>
                     </tr>
                 @endforeach
@@ -301,7 +317,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Surabaya, 21 Desember 2023' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
@@ -325,7 +341,7 @@
                     </td>
                     <td style="width:35%; border-style : hidden;" align="left">
                         Mengetahui, <br>
-                        Kepala Madrasah
+                        Kepala Sekolah
                         <br><br><br><br><br><br><br>
                         <b><u>
                                 {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>

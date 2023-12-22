@@ -19,7 +19,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST"
+                    <form id="form-validation" method="POST" enctype="multipart/form-data"
                         action="{{ url(Request::segment(1) . '/' . $auth_data->modul_url . '/' . $auth_data->menu_url . '/action/manage') }}">
                         {{ csrf_field() }}
                         @if ($presensi_ekskul)
@@ -73,34 +73,22 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <label>Waktu Mulai</label>
+                                        <label>Foto</label>
                                         @if ($presensi_ekskul)
-                                            <input type="text" class="datepicker-time form-control"
-                                                name="waktu_mulai" required="" aria-required="true"
-                                                aria-invalid="true" value="{{ $presensi_ekskul->waktu_mulai }}">
+                                            <a href="{{ Storage::disk('spaces')->url($presensi_ekskul->image) }}"
+                                            target="_blank"><img
+                                            src="{{ Storage::disk('spaces')->url($presensi_ekskul->image) }}"
+                                            style="width: 300px;height: 300px;"></a>
+                                            <input type="file" accept=".jpg, .jpeg, .png" class="form-control" name="file" rows="10" cols="100" required>
+                                            
                                         @else
-                                            <input type="text" class="datepicker-time form-control"
-                                                name="waktu_mulai" required="" aria-required="true"
-                                                aria-invalid="true" value="">
+                                            <input type="file" accept=".jpg, .jpeg, .png" class="form-control" name="file" rows="10" cols="100" required>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <label>Waktu Selesai</label>
-                                        @if ($presensi_ekskul)
-                                            <input type="text" class="datepicker-time form-control"
-                                                name="waktu_selesai" required="" aria-required="true"
-                                                aria-invalid="true" value="{{ $presensi_ekskul->waktu_selesai }}">
-                                        @else
-                                            <input type="text" class="datepicker-time form-control"
-                                                name="waktu_selesai" required="" aria-required="true"
-                                                aria-invalid="true" value="">
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line">
+                                
+                                    <div class="form-group">
+                                        <div class="form-line">
                                         <labe>Tanggal dan jam presensi</label>
                                             @if ($presensi_ekskul)
                                                 <input type="text" class="datetimepicker form-control"
@@ -112,8 +100,8 @@
                                                     aria-invalid="true"
                                                     value="{{ \Carbon\Carbon::today()->format('Y-m-d H:i') }}">
                                             @endif
+                                        </div>
                                     </div>
-                                </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i
@@ -243,3 +231,36 @@
         });
     });
 </script>
+
+
+<!-- 
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <label>Waktu Mulai</label>
+                                            if ($presensi_ekskul)
+                                            <input type="text" class="datepicker-time form-control"
+                                            name="waktu_mulai" required="" aria-required="true"
+                                            aria-invalid="true" value="$presensi_ekskul->waktu_mulai">
+                                            lse
+                                            <input type="text" class="datepicker-time form-control"
+                                            name="waktu_mulai" required="" aria-required="true"
+                                            aria-invalid="true" value="">
+                                            endif
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <label>Waktu Selesai</label>
+                                            if ($presensi_ekskul)
+                                            <input type="text" class="datepicker-time form-control"
+                                            name="waktu_selesai" required="" aria-required="true"
+                                            aria-invalid="true" value="$presensi_ekskul->waktu_selesai">
+                                            else
+                                            <input type="text" class="datepicker-time form-control"
+                                            name="waktu_selesai" required="" aria-required="true"
+                                            aria-invalid="true" value="">
+                                            endif
+                                        </div>
+                                    </div>
+                                    -->

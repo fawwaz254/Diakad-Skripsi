@@ -251,7 +251,6 @@ class CetakLaporanController extends BaseController
             return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/rekap-by-kategori', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
         } elseif ($jenis == 'detail') {
             $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranDetail($auth_data, $start_date, $end_date);
-            // dd($data_laporan);
             return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/rekap-by-detail', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
         }
     }

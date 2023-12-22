@@ -49,7 +49,7 @@ class NilaiRaporSemesterController extends Controller
             $id_semester = $input->id_semester;
         }
 
-        $list_data = Rapor::where('id_semester', $id_semester)
+        $list_data = Rapor::where('id_semester', $id_semester)->where('nm_rapor', 'semester')
             ->with('pengguna', 'mata_pelajaran', 'kelas', 'semester')
             ->withCount([
                 'nilai_rapor' => function ($q) {
@@ -63,6 +63,9 @@ class NilaiRaporSemesterController extends Controller
             $list_data = $list_data->where('created_by', $auth_data->pengguna->id_pengguna);
         }
         $komponen_jenis_rapor = KomponenJenisRapor::get();
+        $kelas_rapors = KelasRapor::whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
+        })->get();
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($komponen_jenis_rapor) {
@@ -77,6 +80,13 @@ class NilaiRaporSemesterController extends Controller
                 }
 
                 return $hasil;
+            })->addColumn('status', function ($item) use ($kelas_rapors) {
+                $kelas_rapor = $kelas_rapors->where('id_kelas', $item->id_kelas)->where('mata_pelajaran_rapor.id_mata_pelajaran', $item->id_mata_pelajaran)->first();
+                if ($kelas_rapor) {
+                    return 'Valid';
+                } else {
+                    return 'Tidak Valid';
+                }
             })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
@@ -117,7 +127,9 @@ class NilaiRaporSemesterController extends Controller
     public function getMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
-        $kelas_rapor['mapel'] = KelasRapor::where('id_kelas', $input->id_kelas)->with('mata_pelajaran_rapor.mata_pelajaran')->get();
+        $kelas_rapor['mapel'] = KelasRapor::where('id_kelas', $input->id_kelas)->with('mata_pelajaran_rapor.mata_pelajaran')->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
+        })->get();
         $kelas_rapor['kelas'] = Kelas::with(['jenis_rapor.komponen_jenis_rapor' => function ($query) {
             $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
         }])->find($input->id_kelas);
@@ -128,6 +140,7 @@ class NilaiRaporSemesterController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
+
         // $auth_data = $input->auth_data;
         // $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         if ($mode == 'delete') {
@@ -156,7 +169,7 @@ class NilaiRaporSemesterController extends Controller
         }
 
         if ($mode == 'add') {
-            $cekDuplicate = Rapor::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $input->id_semester)
+            $cekDuplicate = Rapor::where('id_kelas', $input->id_kelas)->where('nm_rapor', 'semester')->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $input->id_semester)
                 ->with('pengguna')->first();
             $validator = Validator::make($request->all(), [
                 'id_mata_pelajaran' => 'required',
@@ -188,6 +201,7 @@ class NilaiRaporSemesterController extends Controller
                 $rapor->id_semester         = $input->id_semester;
                 $rapor->id_mata_pelajaran   = $input->id_mata_pelajaran;
                 $rapor->id_kelas            = $input->id_kelas;
+                $rapor->nm_rapor            = 'semester';
 
                 if ($kelas = Kelas::find($input->id_kelas)) {
                     if ($kelas->type_rapor == '1') {
@@ -314,7 +328,79 @@ class NilaiRaporSemesterController extends Controller
                 'path' => 'rapor-semester/tambah-nilai-rapor-semester',
                 'message' => 'Edit Successfully'
             ];
+        } elseif ('editNilai') {
+            $rapor = Rapor::with('kelas')->find($id);
+            $list_siswa = Siswa::with(['nilai_rapor' => function ($query)  use ($id) {
+                $query->where('id_rapor', $id);
+            }, 'pengguna'])->whereHas('nilai_rapor', function ($q) use ($id) {
+                $q->where('id_rapor', $id);
+            })->orderBy('nis_siswa')->get();
+            $list_komponen = KomponenJenisRapor::where('id_jenis_rapor', $rapor->kelas->id_jenis_rapor)->get();
+            $data = json_decode($input->data);
+
+            foreach ($data as $d) {
+                $siswa = $list_siswa->where('nis_siswa', $d[0])->first();
+                if ($siswa) {
+                    $no = 2;
+                    foreach ($list_komponen as $komponen) {
+                        $nilai_rapor = $siswa->nilai_rapor->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
+                        if ($nilai_rapor->nilai != $d[$no]) {
+                            $nilai_rapor->nilai = $d[$no];
+                            $nilai_rapor->save();
+                        }
+                        $no++;
+                    }
+                }
+            }
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Update Sukses',
+            ];
         }
+    }
+
+
+    public function inputNilai(Request $request, $id_rapor)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
+        $list_data = KomponenJenisRapor::where('id_jenis_rapor', $rapor->kelas->id_jenis_rapor)->get();
+        $dynamicColumns = [
+            [
+                'title' => 'NIS',
+                'width' => 150,
+            ], [
+
+                'title' => 'Nama',
+                'width' => 300,
+            ]
+        ];
+        foreach ($list_data as $data) {
+            array_push($dynamicColumns, [
+                'title' => $data->nm_komponen_jenis_rapor,
+            ]);
+        }
+        return view('guru/rapor-semester/view-edit-rapor-semester', compact('auth_data', 'id_rapor',  'dynamicColumns'));
+    }
+
+    public function getNilai(Request $request, $id_rapor)
+    {
+        $list_data = Siswa::with(['nilai_rapor' => function ($query)  use ($id_rapor) {
+            $query->where('id_rapor', $id_rapor);
+        }, 'pengguna'])->whereHas('nilai_rapor', function ($q) use ($id_rapor) {
+            $q->where('id_rapor', $id_rapor);
+        })->orderBy('nis_siswa')->get()->map(function ($item) {
+            $data = array();
+            $data['nis_siswa'] = $item->nis_siswa;
+            $data['nm_pengguna'] = $item->pengguna->nm_pengguna;
+            foreach ($item->nilai_rapor as $n) {
+                $data[$n->id_komponen_jenis_rapor] = $n->nilai;
+            }
+            return $data;
+        })->toArray();
+
+        return response()->json($list_data);
     }
 
     public function templateExcel(Request $request, $id_rapor)

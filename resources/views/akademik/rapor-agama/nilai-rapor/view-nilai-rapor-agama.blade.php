@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header" style=" display: flex;
     justify-content: space-between;">
-        <div>
+        {{-- <div>
             <h2>
                 <a class="btn bg-green waves-effect target-link"
                     href="{{ url(Request::segment(1) . '#rapor-semester/tambah-nilai-rapor-semester/add') }}"><i
@@ -14,7 +14,13 @@
                 <input type="checkbox" id="data_semua_pengguna" class="checkbox">
                 <label for="data_semua_pengguna">Data Semua Pengguna</label>
             </h2>
-        </div>
+        </div> --}}
+        <h2>
+            <a class="btn bg-green waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#rapor-agama/nilai-rapor/importExcel/') }}"><i
+                    class="material-icons">cloud_upload</i><span> Import Excel</span></a>
+            <div style="display: inline;margin-right:10px"></div>
+        </h2>
         <div class="dropdown" style="display: inline; margin-right:50px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
@@ -40,7 +46,7 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
             <div class="header bg-cyan">
-                <h2>Daftar Nilai Rapor Semester</h2>
+                <h2>Daftar Nilai Rapor Agama</h2>
             </div>
             <div class="body">
                 <div class="table-responsive">
@@ -56,9 +62,9 @@
                                 <th>Nilai Siswa Terisi</th>
                                 <th>Semester</th>
                                 <th>Status</th>
-                                <th>Template Excel</th>
-                                <th>Input Nilai</th>
+
                                 <th>Action</th>
+                                <th>Template Excel</th>
                                 <th>Pembuat</th>
                             </tr>
                         </thead>
@@ -71,21 +77,20 @@
 </div>
 
 <script type="text/javascript">
-    var modul_url = 'rapor-semester';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/datatables';
-    var edit_url = role_url + '#' + modul_url + '/' + 'tambah-nilai-rapor-semester/edit';
+    var modul_url = 'rapor-agama';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'nilai-rapor/datatables';
+    var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tambah-nilai-rapor-semester/action/delete';
+        'nilai-rapor/action/delete';
     var template_excel_url = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tambah-nilai-rapor-semester/templateExcel';
-    var input_nilai = base_url + '/' + role_url + '#' + modul_url + '/' +
-        'tambah-nilai-rapor-semester/inputNilai';
-    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/pdf';
-    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'tambah-nilai-rapor-semester/print';
+        'nilai-rapor/templateExcel';
+
+    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
+    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'nilai-rapor/print';
     var primary_table = $('#primary_table').DataTable({
         lengthMenu: [
-            [5, 10, 25, 50, -1],
-            [5, 10, 25, 50, 'All'],
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
         ],
         processing: true,
         serverSide: true,
@@ -135,14 +140,14 @@
                 searchable: false,
                 orderable: false,
                 className: 'align-center'
-            },
-            {
+            }, {
                 data: 'status',
                 name: 'status',
                 searchable: false,
                 orderable: false,
                 className: 'align-center'
             },
+
             // {
             //     data: 'action',
             //     name: 'action',
@@ -161,6 +166,52 @@
 
             //     }
             // },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         if (data.status == '0') {
+            //             return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //                 template_excel_url + '/' + data.id + '" target="_blank">' +
+            //                 '    <i class="material-icons">backup</i>' +
+            //                 '</a> ';
+            //         } else {
+            //             return '';
+            //         }
+            //     }
+            // },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    // if (data.status == '0') {
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        print_url + '/' + data.id + '"  target="_blank">' +
+                        '    <i class="material-icons">print</i>' +
+                        '</a> ';
+                    // '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                    // pdf_url + '/' + data.id + '"  target="_blank">' +
+                    // '    <i class="material-icons">picture_as_pdf</i>' +
+                    // '</a> ' +
+                    // '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                    // delete_url + '\', this)" data-id="' + data.id + '">' +
+                    // '    <i class="material-icons">delete_forever</i>' +
+                    // '</button>'
+                    // ;
+                    // } else {
+                    //     return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                    //         pdf_url + '/' + data.id + '"  target="_blank">' +
+                    //         '    <i class="material-icons">picture_as_pdf</i>' +
+                    //         '</a> ';
+                    // }
+                }
+            },
             {
                 data: 'action',
                 name: 'action',
@@ -175,56 +226,6 @@
                             '</a> ';
                     } else {
                         return '';
-                    }
-                }
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    if (data.status == '0') {
-                        return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            input_nilai + '/' + data.id + '" >' +
-                            '    <i class="material-icons">add_box</i>' +
-                            '</a> ';
-                    } else {
-                        return '';
-                    }
-                }
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    if (data.status == '0') {
-                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            print_url + '/' + data.id + '"  target="_blank">' +
-                            '    <i class="material-icons">print</i>' +
-                            '</a> ' +
-                            '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            pdf_url + '/' + data.id_semester + '/' + data
-                            .id_kelas + '"  target="_blank">' +
-                            '    <i class="material-icons">picture_as_pdf</i>' +
-                            '</a> ' +
-                            '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                            edit_url + '/' + data.id + '">' +
-                            '    <i class="material-icons">edit</i>' +
-                            '</a> ' +
-                            '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                            delete_url + '\', this)" data-id="' + data.id + '">' +
-                            '    <i class="material-icons">delete_forever</i>' +
-                            '</button>';
-                    } else {
-                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            print_url + '/' + data.id + '"  target="_blank">' +
-                            '    <i class="material-icons">print</i>' +
-                            '</a> ';
                     }
                 }
             },

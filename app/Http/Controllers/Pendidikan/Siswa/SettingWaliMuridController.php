@@ -86,11 +86,13 @@ class SettingWaliMuridController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_kelas = Kelas::with('jurusan')->when($id_jurusan != '0', function ($q) use ($id_jurusan) {
+        $data_kelas = Kelas::with('jurusan', 'siswa')->when($id_jurusan != '0', function ($q) use ($id_jurusan) {
             $q->where('kelas.id_jurusan', $id_jurusan);
-        })->when($id_kelas != '0', function ($q) use ($id_kelas) {
-            $q->where('siswa.id_kelas', $id_kelas);
-        })->where('is_aktif', 1)->get();
+        })
+            // ->when($id_kelas != '0', function ($q) use ($id_kelas) {
+            //     $q->where('siswa.id_kelas', $id_kelas);
+            // })
+            ->where('is_aktif', 1)->get();
 
         if ($id_kelas != '0') {
             $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
@@ -660,6 +662,7 @@ class SettingWaliMuridController extends BaseController
                     }
 
                     if (sizeof($batch_insert_data) > 0) {
+
                         Pengguna::insert($batch_insert_data['pengguna']);
                         WaliMurid::insert($batch_insert_data['wali_murid']);
                         RolePengguna::insert($batch_insert_data['role_pengguna']);

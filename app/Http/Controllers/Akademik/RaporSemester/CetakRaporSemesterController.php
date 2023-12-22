@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Akademik\RaporSemester;
 
+use App\Exports\LegerRapor;
 use App\Exports\TambahanRapor as ExcelTambahanRApor;
 use App\Http\Controllers\Controller;
 use App\Imports\UploadTambahanRapor;
@@ -53,13 +54,17 @@ class CetakRaporSemesterController extends Controller
         $list_data = Kelas::where('is_aktif', 1)->with('jurusan')->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $list_rapor = Rapor::whereHas('semester', function ($query) use ($id_semester) {
             $query->where('id_semester', '=', $id_semester);
-        })->get();
+        })->where('nm_rapor', 'semester')->get();
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->get();
         $semester = Semester::where('id_semester', $id_semester)->first();
 
         $kelas_rapor = KelasRapor::whereHas('mata_pelajaran_rapor', function ($q) {
             $q->where('jenis', '1');
+        })->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
         })->get();
+
+
 
         return Datatables::of($list_data)
             ->addColumn('kelas', function ($item) use ($kelas_rapor) {
@@ -109,7 +114,7 @@ class CetakRaporSemesterController extends Controller
 
         $rapors = Rapor::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with(['nilai_rapor' => function ($q) {
             $q->where('nilai', '>', 0);
-        }])->get();
+        }])->where('nm_rapor', 'semester')->get();
 
         $keterangan_rapors = KeteranganRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))->get();
 
@@ -145,8 +150,10 @@ class CetakRaporSemesterController extends Controller
             }
         }
 
-        $kelas_rapor = KelasRapor::where('id_kelas', $id_kelas)->get();
-        $kelompok_mapel_rapor = KelompokMapelRapor::with([
+        $kelas_rapor = KelasRapor::where('id_kelas', $id_kelas)->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
+        })->get();
+        $kelompok_mapel_rapor = KelompokMapelRapor::where('nm_rapor', 'semester')->with([
             'mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
                 $q->whereIn('id_mata_pelajaran_rapor', $kelas_rapor->pluck('id_mata_pelajaran_rapor'))->with('mata_pelajaran');
             }
@@ -324,7 +331,7 @@ class CetakRaporSemesterController extends Controller
                 return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor'));
             } else {
 
-                $nilaiRapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))
+                $nilaiRapors = NilaiRapor::where('nilai', '>', 0)->whereIn('id_rapor', $rapors->pluck('id_rapor'))
                     ->whereHas('komponen_jenis_rapor', function ($query) {
                         $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
                     })->get();
@@ -620,6 +627,64 @@ class CetakRaporSemesterController extends Controller
         }
 
         return 'Sekolah anda tidak menggunakan Rapor';
+    }
+
+
+    public function legerCetakRaporSemester(Request $request, $id_semester, $id_kelas)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->orderBy('nis_siswa')->get();
+
+        $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan', 'jenis_rapor')->first();
+        $semester = Semester::find($id_semester);
+        $list_komponen = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->get();
+        $nilai_siswa = [];
+        $data = [];
+
+        $rapors = Rapor::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with(['nilai_rapor' => function ($q) {
+            $q->where('nilai', '>', 0);
+        }])->where('nm_rapor', 'semester')->get();
+
+        foreach ($rapors as $rapor) {
+            foreach ($rapor->nilai_rapor as  $nilai_rapor) {
+                if ($nilai_rapor['nilai'] != '0') {
+                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'nilai'] = $nilai_rapor['nilai'];
+                    if ($nilai_rapor['nilai'] >= 90 && $nilai_rapor['nilai'] <= 100) {
+                        $hasil = 'A';
+                    } elseif ($nilai_rapor['nilai'] >= 80 && $nilai_rapor['nilai'] < 90) {
+                        $hasil = 'B';
+                    } elseif ($nilai_rapor['nilai'] >= 70 && $nilai_rapor['nilai'] < 80) {
+                        $hasil = 'C';
+                    } elseif ($nilai_rapor['nilai'] >= 0 && $nilai_rapor['nilai'] < 70) {
+                        $hasil = 'D';
+                    } else {
+                        $hasil = '';
+                    }
+                    $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor'] . 'predikat'] = $hasil;
+                }
+            }
+        }
+
+        $kelas_rapor = KelasRapor::where('id_kelas', $id_kelas)->whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
+            $q->where('nm_rapor', 'semester');
+        })->get();
+        $kelompok_mapel_rapor = KelompokMapelRapor::where('nm_rapor', 'semester')->with([
+            'mata_pelajaran_rapor' => function ($q) use ($kelas_rapor) {
+                $q->whereIn('id_mata_pelajaran_rapor', $kelas_rapor->pluck('id_mata_pelajaran_rapor'))->with('mata_pelajaran');
+            }
+        ])->orderBy('urutan')->get();
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        $data['rapor'] = $rapor;
+        $data['list_siswa'] = $list_siswa;
+        $data['semester'] = $semester;
+        $data['list_komponen'] = $list_komponen;
+        $data['kelompok_mapel_rapor'] = $kelompok_mapel_rapor;
+        $data['kelas_rapor'] = $kelas_rapor;
+
+
+        return Excel::download(new LegerRapor($data), 'Leger Rapor (' . $rapor->kelas->nm_kelas . ' - ' . $rapor->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
     }
 
     public function viewDataTambahan(Request $request, $id_semester, $id_kelas)
