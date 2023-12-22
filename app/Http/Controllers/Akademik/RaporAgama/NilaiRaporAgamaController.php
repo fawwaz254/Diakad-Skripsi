@@ -58,6 +58,7 @@ class NilaiRaporAgamaController extends Controller
         })->get();
 
 
+
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($komponen_jenis_rapor) {
                 $nilaiLengkap =  $item->kelas->loadCount('siswa');

@@ -804,7 +804,7 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('rapor-sisipan')->group(function () {
             Route::prefix('daftar-nilai-sts')->group(function () {
 
-                Route::get('/update', [RaporSisipanController::class, 'updateData']);
+                // Route::get('/update', [RaporSisipanController::class, 'updateData']);
                 Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
                 Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
                 Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);

@@ -157,7 +157,7 @@
                     <td style="border-style : hidden;width: 25%;"> :
                         @php
                             $nama = $list_nilai->first();
-                            
+
                             echo $nama->rapor_sisipan->semester->tahun_ajaran ?? '';
                         @endphp
                     </td>
@@ -233,9 +233,11 @@
                                             @foreach ($list_komponen as $komponen)
                                                 @if ($komponen->type != 'uas')
                                                     <td style="text-align: center;">
-                                                        @if (isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
-                                                                $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
-                                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                                        @if (isset(
+                                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] !=
+                                                                    '0')
+                                                            {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                                         @endif
                                                     </td>
                                                 @endif
@@ -293,9 +295,11 @@
                             @foreach ($list_komponen as $komponen)
                                 @if ($komponen->type != 'uas')
                                     <td style="text-align: center;">
-                                        @if (isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
-                                                $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                        @if (isset(
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] !=
+                                                    '0')
+                                            {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif
@@ -352,9 +356,11 @@
                             @foreach ($list_komponen as $komponen)
                                 @if ($komponen->type != 'uas')
                                     <td style="text-align: center;">
-                                        @if (isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
-                                                $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                        @if (isset(
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] !=
+                                                    '0')
+                                            {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif
@@ -409,9 +415,11 @@
                             @foreach ($list_komponen as $komponen)
                                 @if ($komponen->type != 'uas')
                                     <td style="text-align: center;">
-                                        @if (isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
-                                                $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                        @if (isset(
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] !=
+                                                    '0')
+                                            {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif

@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\KomponenJenisRapor;
 // use App\Models\KomponenNilaiRaporSisipan;
 use App\Models\NilaiRaporSisipan;
 use Maatwebsite\Excel\Facades\Excel;
@@ -51,22 +52,19 @@ class KomponenNilaiRaporSisipanController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = KomponenNilaiRaporSisipan::orderBy('urutan', 'asc')->get();
+        // $list_data = KomponenNilaiRaporSisipan::orderBy('urutan', 'asc')->get();
+        $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            $query->where('nm_jenis_rapor',  'sisipan');
+        })->orderByRaw('CAST(urutan AS UNSIGNED)')->get();
 
         return Datatables::of($list_data)
-            ->editColumn('status', function ($item) {
-                if ($item->status == '1') {
-                    return 'Aktif';
-                } else {
-                    return 'Tidak Aktif';
-                }
-            })
-            ->addColumn('action', function ($item) {
-                $data = array(
-                    'id'     => $item->id_komponen_nilai
-                );
-                return $data;
-            })
+
+            // ->addColumn('action', function ($item) {
+            //     $data = array(
+            //         'id'     => $item->id_komponen_nilai
+            //     );
+            //     return $data;
+            // })
             ->make(true);
     }
 

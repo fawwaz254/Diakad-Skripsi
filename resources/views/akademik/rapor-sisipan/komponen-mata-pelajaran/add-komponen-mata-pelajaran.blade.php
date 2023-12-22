@@ -21,17 +21,18 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_kelompok_sisipan" required="">
-                                    @foreach ($kelompok_sisipan as $kel_sisipan)
-                                        @if ($kel_sisipan->sub_kelompok_sisipan->count() > 0)
-                                            @foreach ($kel_sisipan->sub_kelompok_sisipan as $sub_kelompok_sisipan)
-                                                <option value="{{ $sub_kelompok_sisipan->id_sub_kelompok_sisipan }}">
-                                                    {{ $kel_sisipan->nm_kelompok_sisipan . ' - ' . $sub_kelompok_sisipan->nm_sub_kelompok_sisipan }}
+                                <select class="form-control show-tick" name="id_kelompok_mapel_rapor" required="">
+                                    @foreach ($kelompok_mapel_rapor as $mapel_rapor)
+                                        @if ($mapel_rapor->sub_kelompok_mapel_rapor->count() > 0)
+                                            @foreach ($mapel_rapor->sub_kelompok_mapel_rapor as $sub_kelompok_mapel_rapor)
+                                                <option
+                                                    value="{{ $sub_kelompok_mapel_rapor->id_sub_kelompok_mapel_rapor }}">
+                                                    {{ $mapel_rapor->nm_kelompok_sisipan . ' - ' . $sub_kelompok_mapel_rapor->nm_sub_kelompok_mapel_rapor }}
                                                 </option>
                                             @endforeach
                                         @else
-                                            <option value="{{ $kel_sisipan->id_kelompok_sisipan }}">
-                                                {{ $kel_sisipan->nm_kelompok_sisipan }}</option>
+                                            <option value="{{ $mapel_rapor->id_kelompok_mapel_rapor }}">
+                                                {{ $mapel_rapor->nm_kelompok_mapel_rapor }}</option>
                                         @endif
                                     @endforeach
                                 </select>
