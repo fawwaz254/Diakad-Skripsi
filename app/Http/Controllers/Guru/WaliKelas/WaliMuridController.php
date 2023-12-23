@@ -63,6 +63,12 @@ class WaliMuridController extends Controller
                     return '';
                 }
             })
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'id' => $item->wali_murid->pengguna->id_pengguna
+                );
+                return $data;
+            })
             ->make(true);
     }
 }
