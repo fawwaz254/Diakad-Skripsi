@@ -19,8 +19,8 @@
                                     <th>No</th>
                                     <th>Nama Komponen Nilai</th>
                                     <th>Urutan</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
+                                    {{-- <th>Type</th> --}}
+                                    {{-- <th>Status</th> --}}
                                     {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
@@ -53,8 +53,8 @@
                 className: 'align-center'
             },
             {
-                data: 'nm_nilai',
-                name: 'nm_nilai',
+                data: 'nm_komponen_jenis_rapor',
+                name: 'nm_komponen_jenis_rapor',
                 className: 'align-center'
             },
             {
@@ -62,16 +62,16 @@
                 name: 'urutan',
                 className: 'align-center'
             },
-            {
-                data: 'type',
-                name: 'type',
-                className: 'align-center'
-            },
-            {
-                data: 'status',
-                name: 'status',
-                className: 'align-center'
-            }
+            // {
+            //     data: 'type',
+            //     name: 'type',
+            //     className: 'align-center'
+            // },
+            // {
+            //     data: 'status',
+            //     name: 'status',
+            //     className: 'align-center'
+            // }
             // {
             //     data: 'action',
             //     name: 'action',

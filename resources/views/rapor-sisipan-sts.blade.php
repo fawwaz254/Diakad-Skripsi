@@ -6,7 +6,7 @@
             <td style="text-align: center;font-weight: bold;">NIS</td>
             <td style="text-align: center;font-weight: bold;">NAMA SISWA</td>
             @foreach ($data['list_data'] as $nilai)
-                <td style="text-align: center;font-weight: bold;">{{ $nilai->nm_nilai }}</td>
+                <td style="text-align: center;font-weight: bold;">{{ $nilai->nm_komponen_jenis_rapor }}</td>
             @endforeach
         </tr>
     </thead>
@@ -17,12 +17,12 @@
         @foreach ($data['list_siswa'] as $siswa)
             <tr>
                 <td style="text-align: center">{{ ++$no }}</td>
-                <td style="text-align: center">{{ $data['id_rapor_sisipan'] }} </td>
+                <td style="text-align: center">{{ $data['id_rapor'] }} </td>
                 <td style="text-align: center">'{{ $siswa->nis_siswa }}</td>
                 <td>{{ $siswa->pengguna->nm_pengguna }}</td>
                 @foreach ($data['list_data'] as $nilai)
                     <td style="text-align: center">
-                        {{ isset($data['nilai_siswa'][$nilai->id_komponen_nilai . $siswa->id_siswa . $data['id_rapor_sisipan']]) && $data['nilai_siswa'][$nilai->id_komponen_nilai . $siswa->id_siswa . $data['id_rapor_sisipan']] != '0' ? $data['nilai_siswa'][$nilai->id_komponen_nilai . $siswa->id_siswa . $data['id_rapor_sisipan']] : null }}
+                        {{ isset($data['nilai_siswa'][$nilai->id_komponen_jenis_rapor . $siswa->id_siswa . $data['id_rapor']]) && $data['nilai_siswa'][$nilai->id_komponen_jenis_rapor . $siswa->id_siswa . $data['id_rapor']] != '0' ? $data['nilai_siswa'][$nilai->id_komponen_jenis_rapor . $siswa->id_siswa . $data['id_rapor']] : null }}
                     </td>
                 @endforeach
             </tr>

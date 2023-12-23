@@ -247,8 +247,10 @@
                                                 @if ($komponen->type != 'uts')
                                                     <td style="text-align: center;">
                                                         @if (isset(
-                                                            $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
-                                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] !=
+                                                                    '0')
+                                                            {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                                         @endif
                                                     </td>
                                                 @endif
@@ -256,28 +258,28 @@
 
                                             <td style="text-align: center;">
                                                 @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
+                                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
                                                     {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) / 2) }}
                                                 @endif
                                             </td>
                                             @foreach ($list_komponen as $komponen)
                                                 @if ($komponen->type == 'uts')
                                                     <td style="text-align: center;">
-                                                        {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
+                                                        {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
                                                     </td>
                                                 @endif
                                             @endforeach
                                             <td style="text-align: center;">
                                                 @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
-                                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
+                                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
+                                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
                                                     {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']) / 3) }}
                                                 @endif
                                             </td>
                                         </tr>
                                     @endif
                                     @php
-                                        
+
                                     @endphp
                                 @endforeach
                             @endforeach
@@ -325,8 +327,10 @@
                                 @if ($komponen->type != 'uts')
                                     <td style="text-align: center;">
                                         @if (isset(
-                                            $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] !=
+                                                    '0')
+                                            {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif
@@ -335,22 +339,22 @@
                             <td style="text-align: center;">
                                 {{-- @if (round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi1'] ?? (0 + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi2'] ?? 0)) / 2) != 0) --}}
                                 @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
                                     {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) / 2) }}
                                 @endif
                             </td>
                             @foreach ($list_komponen as $komponen)
                                 @if ($komponen->type == 'uts')
                                     <td style="text-align: center;">
-                                        {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
+                                        {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
                                     </td>
                                 @endif
                             @endforeach
                             <td style="text-align: center;">
 
                                 @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
                                     {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']) / 3) }}
                                 @endif
                                 {{-- {{ if((round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] ?? 0 + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']  + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'uts'] ) / 3) > 0) {
@@ -380,8 +384,10 @@
                                 @if ($komponen->type != 'uts')
                                     <td style="text-align: center;">
                                         @if (isset(
-                                            $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] !=
+                                                    '0')
+                                            {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif
@@ -389,21 +395,21 @@
 
                             <td style="text-align: center;">
                                 @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
                                     {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) / 2) }}
                                 @endif
                             </td>
                             @foreach ($list_komponen as $komponen)
                                 @if ($komponen->type == 'uts')
                                     <td style="text-align: center;">
-                                        {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
+                                        {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
                                     </td>
                                 @endif
                             @endforeach
                             <td style="text-align: center;">
                                 @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
                                     {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']) / 3) }}
                                 @endif
                             </td>
@@ -427,8 +433,10 @@
                                 @if ($komponen->type != 'uts')
                                     <td style="text-align: center;">
                                         @if (isset(
-                                            $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&
+                                                $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] !=
+                                                    '0')
+                                            {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
                                         @endif
                                     </td>
                                 @endif
@@ -436,21 +444,21 @@
 
                             <td style="text-align: center;">
                                 @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']))
                                     {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) / 2) }}
                                 @endif
                             </td>
                             @foreach ($list_komponen as $komponen)
                                 @if ($komponen->type == 'uts')
                                     <td style="text-align: center;">
-                                        {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
+                                        {{ $nilai_siswa[$komponen->id_komponen_jenis_rapor . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
                                     </td>
                                 @endif
                             @endforeach
                             <td style="text-align: center;">
                                 @if (isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
-                                    isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6']) &&
+                                        isset($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']))
                                     {{ round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '5'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '6'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . '9']) / 3) }}
                                 @endif
                             </td>
