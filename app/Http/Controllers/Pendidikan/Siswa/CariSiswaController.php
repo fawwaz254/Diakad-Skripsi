@@ -23,6 +23,7 @@ use App\Models\Siswa as Siswa;
 use App\Models\Semester as Semester;
 use App\Models\WaliMurid;
 use Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use DB;
 use Session;
 use Validator;
@@ -251,9 +252,9 @@ class CariSiswaController extends BaseController
 
 
     $aktivitas = LibSiswa::aktivitasAdmisi($auth_data, $nis_siswa);
-    $wali_murid=WaliMurid::where('nomor_hp_wali_murid',$siswa->nomor_hp_ortu)->first();
+    $wali_murid = WaliMurid::where('nomor_hp_wali_murid', $siswa->nomor_hp_ortu)->first();
     // dd($wali_murid);
-    return view('pendidikan/siswa/cari-siswa/view-detail-siswa-cari-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'jenis_kelamin', 'kota_lahir', 'alamat_jalan_siswa', 'alamat_dusun_siswa', 'alamat_kelurahan_siswa', 'alamat_rt_siswa', 'alamat_rw_siswa', 'alamat_kecamatan_siswa', 'alamat_kodepos_siswa', 'alamat_jalan_ortu', 'alamat_dusun_ortu', 'alamat_kelurahan_ortu', 'alamat_rt_ortu', 'alamat_rw_ortu', 'alamat_kecamatan_ortu', 'alamat_kodepos_ortu', 'alamat_kota_ortu', 'alamat_provinsi_ortu', 'aktivitas', 'grup_semester_kelas', 'email_pengguna','wali_murid'));
+    return view('pendidikan/siswa/cari-siswa/view-detail-siswa-cari-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'jenis_kelamin', 'kota_lahir', 'alamat_jalan_siswa', 'alamat_dusun_siswa', 'alamat_kelurahan_siswa', 'alamat_rt_siswa', 'alamat_rw_siswa', 'alamat_kecamatan_siswa', 'alamat_kodepos_siswa', 'alamat_jalan_ortu', 'alamat_dusun_ortu', 'alamat_kelurahan_ortu', 'alamat_rt_ortu', 'alamat_rw_ortu', 'alamat_kecamatan_ortu', 'alamat_kodepos_ortu', 'alamat_kota_ortu', 'alamat_provinsi_ortu', 'aktivitas', 'grup_semester_kelas', 'email_pengguna', 'wali_murid'));
   }
 
   public function resetPasswordSiswa(Request $request)
@@ -275,6 +276,60 @@ class CariSiswaController extends BaseController
       $log->id_pengguna = $pengguna->id_pengguna;
       $log->created_by  = $input->auth_data->pengguna->id_pengguna;
       $log->save();
+
+      DB::commit();
+
+      return response()->json([
+        'status_code'   => 200,
+        'status_text'   => 'Success',
+        'message' => 'Reset password Successfully'
+      ]);
+    } catch (\Exception $e) {
+      DB::rollback();
+      // something went wrong
+
+      return response()->json([
+        'status_code'   => 300,
+        'status_text'   => 'Failed',
+        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+      ]);
+    }
+  }
+
+  public function multipleResetPassword(Request $request)
+  {
+    $input = (object) $request->input();
+    $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+    try {
+      foreach ($input->data as $item) {
+        if ($item['name'] === 'id_pengguna[]') {
+          $id_pengguna = $item['value'];
+
+          
+          $pengguna = Pengguna::where('id_pengguna', $id_pengguna)->first();
+
+          if ($pengguna) {
+
+            $pengguna->password = Hash::make($pengguna->username);
+            $pengguna->must_change_password = 1;
+            $pengguna->last_time_password = $now;
+            $pengguna->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $pengguna->updated_at = $now;
+            $pengguna->save();
+
+            $log = new LogResetPassword;
+            $log->id_log_reset_password = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $log->id_pengguna = $pengguna->id_pengguna;
+            $log->created_by = $input->auth_data->pengguna->id_pengguna;
+            $log->save();
+          }
+        }
+      }
+
+
+
+
 
       DB::commit();
 

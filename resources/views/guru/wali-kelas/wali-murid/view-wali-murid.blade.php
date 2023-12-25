@@ -7,15 +7,18 @@
                         Data Wali Murid
                     </h2>
                 </div>
+                <form action="" id="form1" method="POST" enctype="multipart/form-data">
+                {{ csrf_field() }}
                 <div class="body">
                     <div class="body">
                         <div class="table-responsive">
-                            <table
-                                class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                                id="primary_table">
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                                 <thead>
                                     <tr>
                                         <th>No. </th>
+                                        <th><input id="checkbox_select_all" type="checkbox" name="select_all" class="filled-in">
+                                            <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
+                                        </th>
                                         <th>Username</th>
                                         <th>Nama Wali Murid</th>
                                         <th>Siswa</th>
@@ -27,9 +30,10 @@
                                     </tr>
                                 </thead>
                             </table>
+                            <button class="m-2 btn bg-blue waves-effect hidden" type="submit" id="deleteAll" method="POST"><i class="material-icons">update</i><span> Reset Password</button>
                         </div>
                     </div>
-
+                    </form>
 
                 </div>
             </div>
@@ -42,7 +46,6 @@
             var modul_url = 'wali-kelas';
             var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'wali-murid/datatables';
             // var reset_password_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pencarian/delete';
-
 
             // alert(datatable_url);
 
@@ -58,6 +61,19 @@
                         data: null,
                         searchable: false,
                         orderable: false
+                    },
+                    {
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        searchable: false,
+                        orderable: false,
+                        render: function(data, type, full, meta) {
+                            return '<input id="checkbox-' + data.id +
+                                '" type="checkbox" name="id_pengguna[]" class="filled-in" value="' + data.id +
+                                '">' +
+                                '<label for="checkbox-' + data.id + '"></label>';
+
+                        }
                     },
                     {
                         data: 'wali_murid.nomor_hp_wali_murid',
@@ -114,8 +130,76 @@
                 });
             }).draw();
 
+            $('input[name="select_all"]').change(function() {
+                var select_all_checked = this.checked;
+                var rows = primary_table.rows({
+                    'search': 'applied'
+                }).nodes();
+
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+
+            });
+
+            $('#primary_table').on('change', 'input[type="checkbox"]', function() {
+                var anyCheckboxChecked = $('#primary_table').DataTable().$('input[type="checkbox"]:checked').length > 0;
+                $('#deleteAll').toggleClass('hidden', !anyCheckboxChecked);
+            });
+
 
         });
+
+        $('#form1').validate({
+            rules:{
+                'checkbox': {
+                    required : true
+                }
+            },
+            submitHandler: function(form){
+                swal({
+                    title: 'Apakah Yakin Untuk Reset Seluruh Password?',
+                    showCancelButton: true
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        $('#deleteAll').attr("disabled", true);
+                        $.ajax({
+                            url: base_url +
+                                '/guru/wali-kelas/wali-murid/reset-password-multiple',
+                            type: 'POST',
+                            data: {
+                                data: $('#form1 :checkbox').serializeArray(),
+                            },
+                            success: function(response) {
+                                if (response.status_code == 200) {
+                                    vex.dialog.alert(response.message);
+                                } else if (response.status_code == 201) {
+                                    vex.dialog.alert(response.message);
+                                    window.location.href = response.link;
+                                } else if (response.status_code == 202) {
+                                    vex.dialog.alert(response.message);
+                                    loadURI(response.path);
+                                } else if (response.status_code == 203) {
+                                    vex.dialog.alert(response.message);
+                                    primary_table.ajax.reload(null, false);
+                                } else if (response.status_code == 204) {
+                                    loadURI(response.path);
+                                } else if (response.status_code == 300) {
+                                    vex.dialog.alert(response.message);
+                                }
+
+                            },
+                            complete: function() {
+                                $('#deleteAll').removeAttr('disabled', 'disabled');
+                                $('#checkbox_select_all').attr('checked',false)
+                                $('#primary_table').DataTable().ajax.reload()
+                            },
+                        });
+                    }
+                    return;
+                }
+            )
+            }
+        })
 
         function resetPasswordSiswa(id, element) {
 
