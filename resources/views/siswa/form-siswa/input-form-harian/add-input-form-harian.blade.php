@@ -43,8 +43,8 @@
                                 <div class="demo-radio-button">
                                     @foreach (json_decode($pertanyaan_form->options, true) as $options)
                                         <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
-                                            id="radio_{{ $options }}" value="{{ $options }}" required>
-                                        <label for="radio_{{ $options }}">
+                                            id="radio_{{$key}}_{{$options}}" value="{{ $options }}" required>
+                                        <label for="radio_{{$key}}_{{ $options }}">
                                             <pre class="is-answer">{{ $options }}</pre>
                                         </label>
                                     @endforeach
