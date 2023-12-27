@@ -91,6 +91,20 @@ class InputFormHarianController extends Controller
             ];
         } else {
             $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+            $form = Form::where('id_form', $request->id_form)->first();
+            
+
+            $end = Carbon::createFromTimeString($form->start_time);
+            $start= Carbon::createFromTimeString($form->end_time);
+            
+
+            if (!$now->between($start, $end)) {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => 'Anda mengisi di luar waktu yang ditentukan.'
+                ];
+            }
             if ($mode == 'add') {
 
                 $jawaban_form = new JawabanForm;
