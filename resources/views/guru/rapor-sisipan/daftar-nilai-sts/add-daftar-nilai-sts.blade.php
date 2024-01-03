@@ -86,11 +86,11 @@
                 $('select[name=id_mata_pelajaran]').html('');
                 var html = '<option value="">-- Pilih Mata Pelajaran --</option>';
                 $.each(result, function(key, item) {
-                    if (item.mata_pelajaran_sisipan.mata_pelajaran)
-                        html += '<option value="' + item.mata_pelajaran_sisipan.id_mata_pelajaran +
+                    if (item.mata_pelajaran_rapor.mata_pelajaran)
+                        html += '<option value="' + item.mata_pelajaran_rapor.id_mata_pelajaran +
                         '">' +
                         item
-                        .mata_pelajaran_sisipan.mata_pelajaran.nm_mata_pelajaran +
+                        .mata_pelajaran_rapor.mata_pelajaran.nm_mata_pelajaran +
                         '</option>'
                 });
                 $('select[name=id_mata_pelajaran]').html(html);

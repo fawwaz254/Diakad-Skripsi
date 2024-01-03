@@ -478,14 +478,14 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('komponen-nilai')->group(function () {
                 Route::get('/', [KomponenNilaiRaporSisipanController::class, 'viewKomponenNilai']);
                 Route::get('datatables', [KomponenNilaiRaporSisipanController::class, 'datatablesKomponenNilai']);
-                Route::get('edit/{id}', [KomponenNilaiRaporSisipanController::class, 'editKomponenNilai']);
-                Route::post('edit/{id}', [KomponenNilaiRaporSisipanController::class, 'actionEditKomponenNilai']);
+                // Route::get('edit/{id}', [KomponenNilaiRaporSisipanController::class, 'editKomponenNilai']);
+                // Route::post('edit/{id}', [KomponenNilaiRaporSisipanController::class, 'actionEditKomponenNilai']);
                 // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
 
             });
 
             Route::prefix('cetak-rapor')->group(function () {
-                Route::get('update', [CetakRaporController::class, 'updateCetakRapor']);
+                // Route::get('update', [CetakRaporController::class, 'updateCetakRapor']);
 
                 Route::get('/', [CetakRaporController::class, 'viewCetakRapor']);
                 Route::get('datatables/', [CetakRaporController::class, 'datatablesCetakRapor']);

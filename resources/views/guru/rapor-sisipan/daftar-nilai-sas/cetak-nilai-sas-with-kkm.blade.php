@@ -86,7 +86,7 @@
                     <h2 align="center" style="margin-top: 3px">
                         DAFTAR NILAI RAPOR SISIPAN<br>
                         {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
-                        TAHUN AJARAN {{ $rapor_sisipan->semester->tahun_ajaran }}
+                        TAHUN AJARAN {{ $rapor->semester->tahun_ajaran }}
 
                     </h2>
                 </td>
@@ -94,9 +94,9 @@
 
             <tr style="border-style : hidden">
                 <td style="border-style : hidden;width: 75%;font-weight: bold;">MATA PELAJARAN :
-                    {{ $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran }}</td>
+                    {{ $rapor->mata_pelajaran->nm_mata_pelajaran }}</td>
                 <td style="border-style : hidden;width: 25%;font-weight: bold;">KELAS :
-                    {{ $rapor_sisipan->kelas->nm_kelas }}</td>
+                    {{ $rapor->kelas->nm_kelas }}</td>
             </tr>
         </table>
 
@@ -153,7 +153,7 @@
                         <td style="text-align: center;">{{ ++$no }}</td>
                         <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
                         <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
-                        {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan . 'kkm']))
+                        {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor . 'kkm']))
                             <td style="text-align: center;">
                                 {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan . 'kkm'] }}
                             </td>
@@ -236,8 +236,8 @@
                     <br>
                     Guru Bidang Study
                     <br><br><br><br><br><br><br>
-                    {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }}
-                    {{ $rapor_sisipan->pengguna->gelar_belakang }}
+                    {{ $rapor->pengguna->gelar_depan }} {{ $rapor->pengguna->nm_pengguna }}
+                    {{ $rapor->pengguna->gelar_belakang }}
                 </td>
 
             </tr>

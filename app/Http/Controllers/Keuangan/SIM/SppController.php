@@ -2030,7 +2030,6 @@ class SppController extends BaseController
             'id_subkategori_rapb' => 'required',
             'dana_realisasi' => 'required',
         ]);
-
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
@@ -2054,7 +2053,7 @@ class SppController extends BaseController
 
             DB::beginTransaction();
             try {
-                $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester])->first();
+                $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $input->auth_data->pengguna->id_pengguna ])->first();
 
                 if ($rapb) { } else {
                     $rapb = new Rapb;
