@@ -299,7 +299,7 @@
             <br>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden">
                 <tr style="font-weight: bold;">
-                    <td>Deskripsi Dari Pengetahuan dan Ketrampila</td>
+                    <td>Deskripsi Dari Pengetahuan dan Ketrampilan</td>
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
