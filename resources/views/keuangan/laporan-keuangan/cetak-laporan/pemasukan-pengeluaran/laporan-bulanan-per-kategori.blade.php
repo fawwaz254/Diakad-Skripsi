@@ -178,6 +178,7 @@
                         <center>{{ $i }}</center>
                     </td>
                 @endfor
+                
             </tr>
             <tr valign=middle>
                 @for ($i = 1; $i <= $length_column; $i++)
@@ -266,24 +267,24 @@
                         {{ number_format($jumlah_in_per_date - $jumlah_out_per_date) }}</td>
                 </tr>
             @endforeach
+
+           
             <tr valign=middle>
                 <td></td>
                 <td class="text-bold">Tunggakan SPP Tahun Lalu yang masuk</td>
                 @foreach ($subkategori_in as $data_subkategori)
                     @if ($data_subkategori->deskripsi_subkategori_rapb == 'Lain-Lain')
                         <td class="text-bold text-right">
-                            {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu + $data_laporan['spp_tahun_lalu']) }}
+                            {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu ) }}
                         </td>
                         @php
-                            $total_all[$data_subkategori->id_subkategori_rapb] += $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu;
-                            $total_all[$data_subkategori->id_subkategori_rapb] += $data_laporan['spp_tahun_lalu'];
                         @endphp
                     @else
                         <td></td>
                     @endif
                 @endforeach
                 <td class="text-bold text-right">
-                    {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu + $data_laporan['spp_tahun_lalu']) }}
+                    {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu ) }}
                 </td>
                 @foreach ($subkategori_out as $data_subkategori)
                     <td></td>
