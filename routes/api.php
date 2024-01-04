@@ -4,6 +4,7 @@
 
 use App\Http\Controllers\Api\v2\KeuanganController;
 use App\Http\Controllers\Apiv1Controller;
+use App\Http\Controllers\BankController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,9 @@ use App\Http\Controllers\Apiv1Controller;
 |
 */
 
+
+
+Route::get('kbbs', [BankController::class, 'kbbs']);
 Route::post('v1/signin', [Apiv1Controller::class, 'actionSignIn']);
 
 Route::middleware(['auth.mobile'])->group(function () {
