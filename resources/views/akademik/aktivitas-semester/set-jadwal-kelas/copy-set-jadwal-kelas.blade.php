@@ -62,7 +62,7 @@
                                 <input id="checkbox_select_all_kelas" type="checkbox" name="select_all"
                                     data-kelas="kelas" class="filled-in">
                                 <label for="checkbox_select_all_kelas" style="margin-bottom: -10px;"></label>
-                                <label><b>Pilih Semua Siswa</b></label>
+                                <label><b>Pilih Semua Kelas</b></label>
 
                                 <br>
 
