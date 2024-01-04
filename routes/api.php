@@ -18,8 +18,7 @@ use App\Http\Controllers\BankController;
 */
 
 
-
-Route::get('kbbs', [BankController::class, 'kbbs']);
+Route::post('kbbs', [BankController::class, 'processJwt']);
 Route::post('v1/signin', [Apiv1Controller::class, 'actionSignIn']);
 
 Route::middleware(['auth.mobile'])->group(function () {
