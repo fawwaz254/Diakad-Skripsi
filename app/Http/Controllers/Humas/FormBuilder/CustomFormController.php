@@ -46,7 +46,7 @@ class CustomFormController extends Controller
         $auth_data = $input->auth_data;
         $roles = Role::whereIn('id_role', [2, 3, 15])->get();
 
-        return view('humas/form-builder/custom-form/add-custom-form', compact('auth_data', 'roles'));
+        return view('humas/form-builder/custom-form/add-custom-form-bulk', compact('auth_data', 'roles'));
     }
 
     public function editCustomForm(Request $request, $id_custom_form)
