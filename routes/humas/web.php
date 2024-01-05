@@ -42,6 +42,7 @@ use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaPondokController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaSholatController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\Absensi\RekapPertanggalController;
+use App\Http\Controllers\Humas\FormBuilder\CustomFormController;
 use App\Http\Controllers\Humas\FormBuilder\ListFormController;
 use App\Http\Controllers\Humas\FormBuilder\RekapFormHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
@@ -84,6 +85,21 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('rekap-bulanan-form-harian/{id_form}/{bulan}/{tahun}/{id_kelas}/{id_pertanyaan}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);
                 Route::post('get-detail-jawaban', [RekapFormHarianController::class, 'getDetailJawaban']);
                 Route::get('detail-jawaban/{id_form}', [RekapFormHarianController::class, 'viewDetailJawaban']);
+            });
+
+            Route::prefix('custom-form')->group(function () {
+                Route::get('/', [CustomFormController::class, 'viewCustomForm']);
+                Route::get('add', [CustomFormController::class, 'addCustomForm']);
+                Route::get('edit/{id_custom_form}', [CustomFormController::class, 'editCustomForm']);
+                Route::post('action/{mode}/{id_custom_form?}', [CustomFormController::class, 'actionCustomForm']);
+                Route::get('datatables', [CustomFormController::class, 'datatablesCustomForm']);
+
+                // komponen
+                Route::get('komponen/{id_custom_form}', [CustomFormController::class, 'viewCustomFormKomponen']);
+                Route::get('komponen/datatables/{id_custom_form}', [CustomFormController::class, 'datatablesCustomFormKomponen']);
+                Route::get('komponen/{id_custom_form}/add', [CustomFormController::class, 'addCustomFormKomponen']);
+                Route::get('komponen/{id_custom_form}/edit/{id_custom_form_komponen}', [CustomFormController::class, 'editCustomFormKomponen']);
+                Route::post('komponen/action/{mode}/{id_custom_form_komponen?}', [CustomFormController::class, 'actionCustomFormKomponen']);
             });
         });
 
