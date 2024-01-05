@@ -86,6 +86,7 @@ use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSemesterController as AppRaporSemesterController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSisipanNonAkademikController;
+use App\Http\Controllers\Guru\WaliKelas\RekapFormWaliController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Guru\WaliMurid\RaporSemesterController;
@@ -537,6 +538,9 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [FormHarianController::class, 'viewInputFormHarian']);
                 Route::get('/datatables', [FormHarianController::class, 'datatablesInputFormHarian']);
                 Route::get('/add/{id_form}', [FormHarianController::class, 'addInputFormHarian']);
+                Route::get('/edit/{id_jawaban}', [FormHarianController::class, 'editSubmittedForm']);
+                Route::get('/all/{id_form}', [FormHarianController::class, 'viewAllSubmittedForm']);
+                Route::get('/all/datatables/{id_form}', [FormHarianController::class, 'datatablesJawaban']);
                 Route::post('action-list-form/{mode}/{id}', [FormHarianController::class, 'actionInputFormHarian']);
             });
         });
@@ -640,7 +644,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             // MENU Rekap Keuangan Kelas
             Route::get('rekap-keuangan-kelas', [RekapKeuanganKelasController::class, 'viewRekapKeuanganKelas']);
-            // Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']); // 
+            Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']); 
             // Route::post('rekap-keuangan-kelas/get-data-tungakan-tahun-lalu', [RekapKeuanganKelasController::class, 'getDataTungakanTahunLalu']);
             Route::post('get-jumlah-tunggakan-pembayaran', [SppController::class, 'getJumlahTunggakanPembayaran']);
             Route::post('get-data-tungakan-tahun-lalu', [SppController::class, 'getDataTungakanTahunLalu']);
@@ -798,6 +802,20 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('importExcel', [AppRaporSemesterController::class, 'imporExcelDataTambahan']);
                 Route::post('importExcel', [CetakRaporSemesterController::class, 'uploadExcelDataTambahan']);
+            });
+
+            Route::prefix('rekap-form-wali')->group(function () {
+                Route::get('/', [RekapFormWaliController::class, 'viewListRekapFormWali']);
+                Route::get('datatables', [RekapFormWaliController::class, 'datatablesListRekapFormWali']);
+
+                Route::get('rekap-harian-form-wali/{id_form}/', [RekapFormWaliController::class, 'viewHarianFormWali']);
+                Route::get('rekap-harian-form-wali/{id_form}/{date}', [RekapFormWaliController::class, 'viewHarianFormWali']);
+
+                Route::get('rekap-bulanan-form-wali/{id_form}', [RekapFormWaliController::class, 'viewRekapBulananFormWali']);
+                Route::get('rekap-bulanan-form-wali/{id_form}/{bulan}/{tahun}/{id_pertanyaan}', [RekapFormWaliController::class, 'viewRekapBulananFormWali']);
+                Route::post('get-detail-jawaban', [RekapFormWaliController::class, 'getDetailJawaban']);
+                Route::get('detail-jawaban/{id_form}', [RekapFormWaliController::class, 'viewDetailJawaban']);
+            
             });
         });
 

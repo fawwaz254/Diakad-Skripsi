@@ -126,6 +126,15 @@
 
 <script>
     var jumlah = 10;
+
+    var options = {
+        toolbar : [],
+        filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+        filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+        filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+        filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
+    };
+    
     $(document).ready(function() {
         $('#btn-submit').attr('disabled', 'disabled');
         changeCkedior();
@@ -233,12 +242,7 @@
     });
 
 
-    var options = {
-        filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
-        filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
-        filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
-        filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
-    };
+    
 
     $('.checkbox').on('change', function() { // on change of state
         if (this.checked) // if changed state is "CHECKED"
