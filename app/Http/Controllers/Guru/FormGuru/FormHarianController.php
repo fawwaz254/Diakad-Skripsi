@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DetailJawabanForm;
 use App\Models\Form;
 use App\Models\JawabanForm;
+use App\Models\PertanyaanForm;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -41,7 +42,7 @@ class FormHarianController extends Controller
             })
             ->addColumn('last_data', function ($item) {
                 if ($item->jawaban_form->count() > '0') {
-                    return Carbon::parse($item->jawaban_form->first()->created_at)->diffForHumans();
+                    return Carbon::parse($item->jawaban_form->first()->updated_at)->diffForHumans();
                 } else {
                     return '';
                 }
@@ -60,7 +61,7 @@ class FormHarianController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $id_pengguna = $auth_data->pengguna->id_pengguna;
-        $list_form = JawabanForm::where('created_by',$id_pengguna)->where('id_form',$id_form);
+        $list_form = JawabanForm::where('created_by', $id_pengguna)->where('id_form', $id_form);
 
         return Datatables::of($list_form)
             ->addColumn('time', function ($item) {
@@ -69,12 +70,11 @@ class FormHarianController extends Controller
                 } else {
                     return '';
                 }
-                
             })
-            ->addColumn('last_update',function($item){
-                if($item->count() > '0'){
+            ->addColumn('last_update', function ($item) {
+                if ($item->count() > '0') {
                     return Carbon::parse($item->updated_at)->diffForHumans();
-                }else{
+                } else {
                     return '';
                 }
             })
@@ -110,7 +110,9 @@ class FormHarianController extends Controller
                 ];
                 break;
             case 'edit':
-                $syarat = [];
+                $syarat = [
+                    'jawaban_pertanyaan'  => 'required',
+                ];
                 break;
             case 'delete':
                 $syarat = [];
@@ -130,18 +132,18 @@ class FormHarianController extends Controller
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             $form = Form::where('id_form', $request->id_form)->first();
-            
-            $end = Carbon::createFromTimeString($form->start_time);
-            $start= Carbon::createFromTimeString($form->end_time);
-            
 
-            if (!$now->between($start, $end)) {
+            $end = Carbon::createFromTimeString($form->start_time);
+            $start = Carbon::createFromTimeString($form->end_time);
+
+
+            if (!$now->between($start, $end) && $mode !== 'delete') {
                 return [
                     'status' => 300, // FAILED
                     'message' => 'Anda mengisi di luar waktu yang ditentukan.'
                 ];
             }
-            
+
             if ($mode == 'add') {
 
                 $jawaban_form = new JawabanForm;
@@ -177,24 +179,81 @@ class FormHarianController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'form-guru/input-form-harian',
+                    'path' => 'form-guru/input-form-harian/',
                     'message' => 'Save Successfully'
+                ];
+            }else if($mode == 'edit'){
+
+                foreach ($input->id_pertanyaan_form as $key => $value) {
+                    $detail_jawaban_form = DetailJawabanForm::find($input->id_pertanyaan_form[$key][1]);
+                    $detail_jawaban_form->id_jawaban_form = $input->id_jawaban_form;
+                    $detail_jawaban_form->id_pertanyaan_form = $input->id_pertanyaan_form[$key][0];
+                    if ($input->jenis_pertanyaan[$key] == '1') {
+                        $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                    } elseif ($input->jenis_pertanyaan[$key] == '2') {
+                        $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->jawaban_pertanyaan[$key], 'public');
+                        $detail_jawaban_form->jawaban = $file;
+                    } elseif ($input->jenis_pertanyaan[$key] == '3') {
+                        $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                    } elseif ($input->jenis_pertanyaan[$key] == '4') {
+                        $jawaban = [];
+                        foreach ($input->jawaban_pertanyaan[$key] as $value) {
+                            $jawaban[] = $value;
+                        }
+                        $detail_jawaban_form->jawaban = json_encode($jawaban);
+                    }
+
+                    $jawaban_form =  JawabanForm::find($input->id_jawaban_form);
+                    $jawaban_form->updated_by = $auth_data->pengguna->id_pengguna;
+                    $jawaban_form->save(); 
+                    $detail_jawaban_form->updated_by = $auth_data->pengguna->id_pengguna;
+                    $detail_jawaban_form->save();
+                }
+
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'form-guru/input-form-harian',
+                    'message' => 'Edit Successfully'
+                ];
+            }else if($mode == 'delete'){
+                $detail_jawaban_form = DetailJawabanForm::where('id_jawaban_form',$input->id_jawaban)
+                ->delete();
+                $jawaban_form = JawabanForm::where('id_jawaban_form',$input->id_jawaban)
+                ->delete();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    // 'path' => 'form-guru/input-form-harian',
+                    'message' => 'Delete Successfully'
                 ];
             }
         }
     }
 
-    public function viewAllSubmittedForm(Request $req, $id_form){
+    public function viewAllSubmittedForm(Request $req, $id_form)
+    {
 
         $input = (object) $req->input();
         $auth_data = $input->auth_data;
 
-        $beforeJawaban = JawabanForm::where('created_by',$auth_data->pengguna->id_pengguna)->where('id_form',$id_form)->get();
-        $form = Form::where('id_form',$id_form)->first();
+        $beforeJawaban = JawabanForm::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_form', $id_form)->get();
+        $form = Form::where('id_form', $id_form)->first();
 
         Debugbar::info($beforeJawaban);
 
         return view('guru/form-guru/input-form-harian/all-input-form-harian', compact('auth_data', 'beforeJawaban', 'form'));
-        
+    }
+
+    public function editSubmittedForm(Request $request, $id_form)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $jawaban = JawabanForm::with('detail_jawaban_form')->where('created_by',$auth_data->pengguna->id_pengguna)->find($id_form);
+        $form = Form::with('pertanyaan_form')->find($jawaban->id_form);
+        // dd($jawaban->detail_jawaban_form->where('id_pertanyaan_form','B9hY71704268019659510f3f1bd9')->first()->jawaban);
+        // DebugBar::info($form);
+        return view('guru/form-guru/input-form-harian/edit-input-form-harian', compact('auth_data', 'form', 'jawaban'));
     }
 }

@@ -14,7 +14,7 @@ class AddColoumnImageInPresensiEkskul extends Migration
     public function up()
     {
         Schema::table('presensi_ekskul', function (Blueprint $table) {
-            $table->addColumn('string', 'image')->nullable()->after('waktu_selesai');
+            $table->addColumn('text', 'image')->nullable()->after('waktu_selesai');
         });
     }
 
