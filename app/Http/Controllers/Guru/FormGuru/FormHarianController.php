@@ -241,7 +241,6 @@ class FormHarianController extends Controller
         $beforeJawaban = JawabanForm::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_form', $id_form)->get();
         $form = Form::where('id_form', $id_form)->first();
 
-        Debugbar::info($beforeJawaban);
 
         return view('guru/form-guru/input-form-harian/all-input-form-harian', compact('auth_data', 'beforeJawaban', 'form'));
     }

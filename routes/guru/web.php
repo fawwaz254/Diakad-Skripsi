@@ -86,6 +86,7 @@ use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSemesterController as AppRaporSemesterController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSisipanNonAkademikController;
+use App\Http\Controllers\Guru\WaliKelas\RekapFormWaliController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Guru\WaliMurid\RaporSemesterController;
@@ -801,6 +802,20 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('importExcel', [AppRaporSemesterController::class, 'imporExcelDataTambahan']);
                 Route::post('importExcel', [CetakRaporSemesterController::class, 'uploadExcelDataTambahan']);
+            });
+
+            Route::prefix('rekap-form-wali')->group(function () {
+                Route::get('/', [RekapFormWaliController::class, 'viewListRekapFormWali']);
+                Route::get('datatables', [RekapFormWaliController::class, 'datatablesListRekapFormWali']);
+
+                Route::get('rekap-harian-form-wali/{id_form}/', [RekapFormWaliController::class, 'viewHarianFormWali']);
+                Route::get('rekap-harian-form-wali/{id_form}/{date}', [RekapFormWaliController::class, 'viewHarianFormWali']);
+
+                Route::get('rekap-bulanan-form-wali/{id_form}', [RekapFormWaliController::class, 'viewRekapBulananFormWali']);
+                Route::get('rekap-bulanan-form-wali/{id_form}/{bulan}/{tahun}/{id_pertanyaan}', [RekapFormWaliController::class, 'viewRekapBulananFormWali']);
+                Route::post('get-detail-jawaban', [RekapFormWaliController::class, 'getDetailJawaban']);
+                Route::get('detail-jawaban/{id_form}', [RekapFormWaliController::class, 'viewDetailJawaban']);
+            
             });
         });
 

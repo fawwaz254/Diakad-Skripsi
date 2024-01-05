@@ -44,6 +44,9 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('input-form-harian')->group(function () {
                 Route::get('/', [InputFormHarianController::class, 'viewInputFormHarian']);
                 Route::get('/datatables', [InputFormHarianController::class, 'datatablesInputFormHarian']);
+                Route::get('/edit/{id_jawaban}', [InputFormHarianController::class, 'editSubmittedForm']);
+                Route::get('/all/{id_form}', [InputFormHarianController::class, 'viewAllSubmittedForm']);
+                Route::get('/all/datatables/{id_form}', [InputFormHarianController::class, 'datatablesJawaban']);
                 Route::get('/add/{id_form}', [InputFormHarianController::class, 'addInputFormHarian']);
                 Route::post('action-list-form/{mode}/{id}', [InputFormHarianController::class, 'actionInputFormHarian']);
             });
