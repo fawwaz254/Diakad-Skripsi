@@ -10,7 +10,6 @@
         <h2><a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
 
-    @if(isset($data['allKelas']))
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card is-gap">
@@ -26,13 +25,8 @@
                             <h2 class="card-inside-title">
                                 Kelas
                             </h2>
-                            <select class="form-control show-tick" name="id_kelas">
-                                @foreach ($data['allKelas'] as $k)
-                                <option value="{{ $k->id_kelas }}" @if ($data['id_kelas'] == $k->id_kelas) SELECTED @endif>
-                                    {{ $k->nm_kelas }}
-                                </option>
-                                @endforeach
-                            </select>
+                            <input class="form-control" value="{{$data['kelas']->nm_kelas}}" disabled>
+                            
                         </div>
 
 
@@ -53,7 +47,6 @@
             </div>
         </div>
     </div>
-    @endif
 </div>
 </div>
 </div>
@@ -145,8 +138,7 @@
 <script>
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
-            '{{ $form->id_form }}' + '/' + $('input[name=date]').val() + '/' + $('select[name=id_kelas]')
-            .val());
+            '{{ $form->id_form }}' + '/' + $('input[name=date]').val() + '/');
     }
 
     var primary_table = $('#primary_table').DataTable({

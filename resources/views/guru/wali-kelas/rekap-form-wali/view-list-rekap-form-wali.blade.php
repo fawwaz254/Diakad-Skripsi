@@ -2,8 +2,9 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
+                {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data List Form Harian</h2>
+                    <h2>Data List Rekap Form</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -13,11 +14,12 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Form</th>
-                                    <th>Jam Pengisian</th>
-                                    <th>Input Data</th>
-                                    <th>Total Data</th>
-                                    <th>View Data</th>
-                                    <th>Data Terakhir</th>
+                                    <th>Role</th>
+                                    <th>Jenis</th>
+                                    <th>Status</th>
+                                    <th>Rekap Harian</th>
+                                    <th>Rekap Bulanan</th>
+                                    <th>Jumlah Data</th>
                                 </tr>
                             </thead>
                         </table>
@@ -31,10 +33,11 @@
 @include('scriptjs')
 <script>
     var modul_url = '{{ Request::segment(2) }}';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-form-harian/datatables';
-    var add_url = role_url + '#' + modul_url + '/' + 'input-form-harian/add';
-    var view_url = role_url + '#' + modul_url + '/' + 'input-form-harian/all';
-    var detail_url = role_url + '#' + modul_url + '/' + 'input-form-harian/detail';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rekap-form-wali/datatables';
+    var rekap_jawaban_harian_url = role_url + '#' + modul_url + '/' + 'rekap-form-wali/rekap-harian-form-wali';
+    var rekap_jawaban_bulanan_url = role_url + '#' + modul_url + '/' + 'rekap-form-wali/rekap-bulanan-form-wali';
+    // var edit_url = role_url + '#' + modul_url + '/' + 'list-form/edit';
+    // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-form/action-list-form/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -55,8 +58,20 @@
                 name: 'nm_form'
             },
             {
-                data: 'time',
-                name: 'time',
+                data: 'role.nm_role',
+                name: 'role.nm_role',
+                className: 'align-center',
+            },
+            {
+                data: 'is_harian',
+                name: 'is_harian',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
+            },
+            {
+                data: 'is_aktif',
+                name: 'is_aktif',
                 className: 'align-center',
                 searchable: false,
                 orderable: false,
@@ -67,9 +82,25 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
+                    if (data.is_harian) {
+                        return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            rekap_jawaban_harian_url + '/' + data.id + '">' +
+                            '    <i class="material-icons">remove_red_eye</i>' +
+                            '</a>';
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            {
+                data: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
                     return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        add_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">add</i>' +
+                        rekap_jawaban_bulanan_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">remove_red_eye</i>' +
                         '</a>';
 
                 }
@@ -81,27 +112,6 @@
                 searchable: false,
                 orderable: false,
             },
-            {
-                data: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        view_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">remove_red_eye</i>' +
-                        '</a>';
-
-                }
-            },
-            {
-                data: 'last_data',
-                name: 'last_data',
-                className: 'align-center',
-                searchable: false,
-                orderable: false,
-            },
-
         ]
     });
 
