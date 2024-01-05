@@ -44,20 +44,16 @@
                                 </div>
                             </div>
                         </div>
-                        @if(isset($datas['allKelas']))
+                        
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <div class="form-line">
                                     <label>Kelas</label>
-                                    <select class="form-control show-tick" name="id_kelas">
-                                        @foreach ($datas['allKelas'] as $k)
-                                        <option {{ $k->id_kelas == $datas['id_kelas'] ? 'selected' : '' }} value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input class="form-control" value="{{ $datas['kelas']->nm_kelas }}" disabled>
                                 </div>
                             </div>
                         </div>
-                        @endif
+                        
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <div class="form-line">
@@ -201,7 +197,7 @@
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
             '{{ $form->id_form }}' + '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]')
-            .val() + '/' + $('select[name=id_kelas]').val() + '/' + $('select[name=id_pertanyaan]').val());
+            .val() + '/' + $('select[name=id_pertanyaan]').val());
     }
 
     var primary_table = $('#primary_table').DataTable({
