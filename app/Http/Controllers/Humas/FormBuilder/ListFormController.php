@@ -160,11 +160,19 @@ class ListFormController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $pertanyaan_form = PertanyaanForm::findOrFail($id_pertanyaan_form);
+        $opsi = [];
+        if (isset($pertanyaan_form->options)) {
+
+            $opsi = array_combine(
+                json_decode($pertanyaan_form->options),
+                json_decode($pertanyaan_form->label_color) ?? json_decode($pertanyaan_form->options)
+            );
+        }
 
         if ($jenis_pertanyaan == '1' || $jenis_pertanyaan == '2') {
             return view('humas/form-builder/list-form/edit-pertanyaan-form', compact('auth_data', 'id_form', 'jenis_pertanyaan', 'pertanyaan_form'));
         } else {
-            return view('humas/form-builder/list-form/edit-pertanyaan-form-opsi', compact('auth_data', 'id_form', 'jenis_pertanyaan', 'pertanyaan_form'));
+            return view('humas/form-builder/list-form/edit-pertanyaan-form-opsi', compact('auth_data', 'id_form', 'jenis_pertanyaan', 'pertanyaan_form', 'opsi'));
         }
     }
 
@@ -243,7 +251,15 @@ class ListFormController extends Controller
                         $opsi[] = $options;
                     }
                     $pertanyaan_form->options                      = json_encode($opsi);
+
+                    if ($input->jenis_pertanyaan == '3') {
+                        foreach ($input->color as $color) {
+                            $warna[] = $color;
+                        }
+                        $pertanyaan_form->label_color                  = json_encode($warna);
+                    }
                 } else {
+                    $pertanyaan_form->label_color                  = null;
                     $pertanyaan_form->options                      = null;
                 }
                 $pertanyaan_form->save();
@@ -266,8 +282,17 @@ class ListFormController extends Controller
                     foreach ($input->options as $options) {
                         $opsi[] = $options;
                     }
-                    $pertanyaan_form->options   = json_encode($opsi);
+                    $pertanyaan_form->options                      = json_encode($opsi);
+
+                    if ($input->jenis_pertanyaan == '3') {
+
+                        foreach ($input->color as $color) {
+                            $warna[] = $color;
+                        }
+                        $pertanyaan_form->label_color                  = json_encode($warna);
+                    }
                 } else {
+                    $pertanyaan_form->label_color                  = null;
                     $pertanyaan_form->options   = null;
                 }
                 $pertanyaan_form->save();

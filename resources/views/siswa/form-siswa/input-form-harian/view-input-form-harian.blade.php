@@ -33,6 +33,7 @@
     var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-form-harian/datatables';
     var add_url = role_url + '#' + modul_url + '/' + 'input-form-harian/add';
+    var view_url = role_url + '#' + modul_url + '/' + 'input-form-harian/all';
     var detail_url = role_url + '#' + modul_url + '/' + 'input-form-harian/detail';
 
     var primary_table = $('#primary_table').DataTable({
@@ -87,7 +88,7 @@
                 className: 'align-center',
                 render: function(data) {
                     return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        add_url + '/' + data.id + '">' +
+                        view_url + '/' + data.id + '">' +
                         '    <i class="material-icons">remove_red_eye</i>' +
                         '</a>';
 
