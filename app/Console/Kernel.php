@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Sekolah;
 use App\Models\Setting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -28,17 +29,23 @@ class Kernel extends ConsoleKernel
         $array_schedule = explode('|', $schedule_setting);
         $schedule_to_number = array_map('convertDayToNumber', $array_schedule);
 
+
+        $except_school = Sekolah::find('B9hY715358553135b8b4ad12f588');
+
         $schedule->command('notification:attendance-class')
             ->dailyAt($attendance_time_setting)
             ->days($schedule_to_number)
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
-        $schedule->command('notification:payment-class')
-            ->dailyAt($payment_time_setting)
-            ->days($schedule_to_number)
-            ->timezone('Asia/Jakarta')
-            ->withoutOverlapping();
+        if (notNullValue($except_school)) {
+
+            $schedule->command('notification:payment-class')
+                ->dailyAt($payment_time_setting)
+                ->days($schedule_to_number)
+                ->timezone('Asia/Jakarta')
+                ->withoutOverlapping();
+        }
 
         $schedule->command('whatsapp:groups')
             ->twiceDaily(1, 5, 9, 13, 17, 21)
