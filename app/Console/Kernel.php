@@ -43,13 +43,17 @@ class Kernel extends ConsoleKernel
             ->dailyAt($payment_time_setting)
             ->days($schedule_to_number)
             ->when(function () use ($except_school) {
-                return $except_school->id_sekolah != 'B9hY715358553135b8b4ad12f588';
+                if ($except_school->id_sekolah == null) {
+                    return 0;
+                } else {
+                    return $except_school->id_sekolah !== 'B9hY715358553135b8b4ad12f588';
+                }
             })
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
         $schedule->command('whatsapp:groups')
-            ->twiceDaily(1, 5, 9, 13, 17, 21)
+            ->everyFourHours()
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
     }
