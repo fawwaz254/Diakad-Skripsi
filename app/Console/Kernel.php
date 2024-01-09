@@ -30,7 +30,8 @@ class Kernel extends ConsoleKernel
         $schedule_to_number = array_map('convertDayToNumber', $array_schedule);
 
 
-        $except_school = Sekolah::find('B9hY715358553135b8b4ad12f588');
+        $except_school = Sekolah::first();
+
 
         $schedule->command('notification:attendance-class')
             ->dailyAt($attendance_time_setting)
@@ -38,7 +39,7 @@ class Kernel extends ConsoleKernel
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
-        if (notNullValue($except_school)) {
+        if ($except_school->id_sekolah != 'B9hY715358553135b8b4ad12f588') {
 
             $schedule->command('notification:payment-class')
                 ->dailyAt($payment_time_setting)
