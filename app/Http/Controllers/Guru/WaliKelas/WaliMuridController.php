@@ -65,7 +65,7 @@ class WaliMuridController extends Controller
             })
             ->addColumn('checkbox', function ($item) {
                 $data = array(
-                    'id' => $item->wali_murid->pengguna->id_pengguna
+                    'id' => isset($item->wali_murid->pengguna->id_pengguna) ? $item->wali_murid->pengguna->id_pengguna : null
                 );
                 return $data;
             })
