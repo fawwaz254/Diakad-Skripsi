@@ -32,21 +32,21 @@ class Kernel extends ConsoleKernel
 
         $except_school = Sekolah::first();
 
-
         $schedule->command('notification:attendance-class')
             ->dailyAt($attendance_time_setting)
             ->days($schedule_to_number)
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
-        if ($except_school->id_sekolah != 'B9hY715358553135b8b4ad12f588') {
 
-            $schedule->command('notification:payment-class')
-                ->dailyAt($payment_time_setting)
-                ->days($schedule_to_number)
-                ->timezone('Asia/Jakarta')
-                ->withoutOverlapping();
-        }
+        $schedule->command('notification:payment-class')
+            ->dailyAt($payment_time_setting)
+            ->days($schedule_to_number)
+            ->when(function () use ($except_school) {
+                return $except_school->id_sekolah != 'B9hY715358553135b8b4ad12f588';
+            })
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
 
         $schedule->command('whatsapp:groups')
             ->twiceDaily(1, 5, 9, 13, 17, 21)
