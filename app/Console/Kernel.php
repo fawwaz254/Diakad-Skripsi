@@ -28,12 +28,15 @@ class Kernel extends ConsoleKernel
         $array_schedule = explode('|', $schedule_setting);
         $schedule_to_number = array_map('convertDayToNumber', $array_schedule);
 
+        $except_sekolah = 
+
         $schedule->command('notification:attendance-class')
             ->dailyAt($attendance_time_setting)
             ->days($schedule_to_number)
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
+        
         $schedule->command('notification:payment-class')
             ->dailyAt($payment_time_setting)
             ->days($schedule_to_number)
