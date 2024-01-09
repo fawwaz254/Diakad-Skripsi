@@ -904,7 +904,7 @@ class PembayaranSiswaController extends BaseController
                     return false;
                 }
 
-                if ($input->auth_data->pengguna->status_join_table == 1 || $input->auth_data->pengguna->status_join_table == 2) {
+                if ($input->auth_data->pengguna->status_join_table == 1) {
                     // get id_guru
                     $staff = DB::table('staff')->select('id_staff')
                         ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
