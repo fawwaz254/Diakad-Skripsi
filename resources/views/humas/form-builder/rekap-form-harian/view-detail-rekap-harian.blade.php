@@ -104,7 +104,7 @@
                                         {{ ' - ' . $item }}<br>
                                         @endforeach
                                     </td>
-                                    @elseif ($pertanyaan_form->jenis_pertanyaan == '4')
+                                    @elseif ($pertanyaan_form->jenis_pertanyaan == '2')
                                     <td>
                                         <img src="{{$dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]}}" alt="">
                                     </td>
