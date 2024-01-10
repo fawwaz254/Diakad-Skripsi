@@ -221,6 +221,7 @@ class InputFormHarianController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'form-siswa/input-form-harian',
                     'message' => 'Delete Successfully'
                 ];
             }

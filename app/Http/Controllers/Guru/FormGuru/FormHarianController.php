@@ -227,7 +227,7 @@ class FormHarianController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    // 'path' => 'form-guru/input-form-harian',
+                    'path' => 'form-guru/input-form-harian',
                     'message' => 'Delete Successfully'
                 ];
             }
