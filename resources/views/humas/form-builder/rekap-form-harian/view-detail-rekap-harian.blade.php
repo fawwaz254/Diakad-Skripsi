@@ -105,8 +105,9 @@
                                         @endforeach
                                     </td>
                                     @elseif ($pertanyaan_form->jenis_pertanyaan == '2')
-                                    <td>
-                                        <img src="{{$dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]}}" alt="">
+                                    <td><a href="{{ Storage::disk('spaces')->url($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]) }}">
+                                        <img src="{{ Storage::disk('spaces')->url($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]) }}" alt="" style="width:300px; height:300px">
+                                        </a>
                                     </td>
                                     @else
                                     <td>{{ $dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form] }}
