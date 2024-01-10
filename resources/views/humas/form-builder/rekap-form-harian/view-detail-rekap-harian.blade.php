@@ -28,7 +28,7 @@
                             </h2>
                             <select class="form-control show-tick" name="id_kelas">
                                 @foreach ($data['allKelas'] as $k)
-                                <option value="{{ $k->id_kelas }}" @if ($data['id_kelas'] == $k->id_kelas) SELECTED @endif>
+                                <option value="{{ $k->id_kelas }}" @if ($data['id_kelas']==$k->id_kelas) SELECTED @endif>
                                     {{ $k->nm_kelas }}
                                 </option>
                                 @endforeach
@@ -103,6 +103,10 @@
                                         @foreach ($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form] as $item)
                                         {{ ' - ' . $item }}<br>
                                         @endforeach
+                                    </td>
+                                    @elseif ($pertanyaan_form->jenis_pertanyaan == '4')
+                                    <td>
+                                        <img src="{{$dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]}}" alt="">
                                     </td>
                                     @else
                                     <td>{{ $dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form] }}
