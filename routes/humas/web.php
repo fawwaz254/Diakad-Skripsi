@@ -100,6 +100,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('komponen/{id_custom_form}/add', [CustomFormController::class, 'addCustomFormKomponen']);
                 Route::get('komponen/{id_custom_form}/edit/{id_custom_form_komponen}', [CustomFormController::class, 'editCustomFormKomponen']);
                 Route::post('komponen/action/{mode}/{id_custom_form_komponen?}', [CustomFormController::class, 'actionCustomFormKomponen']);
+
+                // bulk Custom (like g-forms~)
+                Route::prefix('bulk')->group(function(){
+                    Route::get('/',[CustomFormController::class, 'viewAddCustomFormBulk']);
+                    Route::post('action/add',[CustomFormController::class, 'addCustomFormBulk']);
+
+                });
             });
         });
 

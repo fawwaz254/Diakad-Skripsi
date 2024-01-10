@@ -38,6 +38,7 @@ class Kernel extends ConsoleKernel
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
+
         $schedule->command('notification:payment-class')
             ->dailyAt($payment_time_setting)
             ->days($schedule_to_number)

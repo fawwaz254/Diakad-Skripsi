@@ -131,58 +131,6 @@
                     </div>
                 </div>
 
-                <!-- <div class="card" style="margin: 15px 0;">
-                    <div class="header">
-                        <div class="row clearfix">
-                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                <input style="padding: 5px;border-radius: 5px; height: max-content; background-color: rgba(204, 204, 204, 0.2); font-size:larger; outline: none; border: none; width: 100%; border-bottom: 2px solid rgba(204, 204, 204, 0.35);" placeholder="Pertanyaan Tanpa Judul" type="text" class="" name="nm_custom_form" required="" aria-required="true" aria-invalid="true" value="">
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <select class="form-control show-tick" name="tipe_custom_form_komponen" required="">
-                                    <option value="text">Text (BASIC)</option>
-                                    <option value="number">Number (BASIC)</option>
-                                    <option value="select">Select (BASIC)</option>
-                                    <option value="checkbox">Checkbox (BASIC)</option>
-                                    <option value="custom_kelas">Kelas (CUSTOM)</option>
-                                    <option value="custom_siswa">Siswa (CUSTOM)</option>
-                                    <option value="custom_ttd">Tanda Tangan (CUSTOM)</option>
-                                </select>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="body">
-                        <div class="row clearfix">
-
-                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" id="pertanyaan1">
-                                <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
-                                    <input class="" type="radio" id="rad" disabled>
-                                    <label for="rad" style="width: 100%;">
-                                        <input type="text" class="form-control form-check-label" name="pertanyaan" required="" aria-required="true" aria-invalid="true" value="" placeholder="Jawaban 1">
-                                    </label>
-                                    <div class="btn btn-info" id="tambah" style="margin: 2px 10px 0px 10px;width: 100px;">
-                                        Tambah
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <select class="form-control show-tick" name="order[]" id="awal" required="">
-                                    <option value=null>Pilih Urutan</option>
-                                    <option value="1">1</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <div class="row clearfix">
-                            <div class="p-5">
-
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
 
             </form>
             <div>

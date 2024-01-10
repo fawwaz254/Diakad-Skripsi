@@ -11,6 +11,7 @@ use App\Models\PertanyaanForm;
 use App\Models\Role;
 use Validator;
 use Carbon\Carbon;
+use Exception;
 use Yajra\Datatables\Datatables;
 
 class CustomFormController extends Controller
@@ -46,7 +47,7 @@ class CustomFormController extends Controller
         $auth_data = $input->auth_data;
         $roles = Role::whereIn('id_role', [2, 3, 15])->get();
 
-        return view('humas/form-builder/custom-form/add-custom-form-bulk', compact('auth_data', 'roles'));
+        return view('humas/form-builder/custom-form/add-custom-form', compact('auth_data', 'roles'));
     }
 
     public function editCustomForm(Request $request, $id_custom_form)
@@ -235,6 +236,84 @@ class CustomFormController extends Controller
                     'message' => 'Delete Form Data Succesfully'
                 ];
             }
+        }
+    }
+
+    public function viewAddCustomFormBulk(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $roles = Role::all();
+
+        return view('humas/form-builder/custom-form/add-custom-form-bulk', compact('auth_data', 'roles'));
+    }
+
+    public function addCustomFormBulk(Request $request)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        try {
+
+            $request->validate(
+                [
+                    'id_role'    => 'required',
+                    'nm_custom_form'  => 'required',
+                    'is_aktif'   => 'required',
+                    'start_time'   => 'required',
+                    'end_time'   => 'required',
+                ]
+            );
+
+            $id_custom_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $custom_form = new CustomForm();
+            $custom_form->id_custom_form    = $id_custom_form;
+            $custom_form->id_role           = $input->id_role;
+            $custom_form->nm_custom_form    = $input->nm_custom_form;
+            $custom_form->is_aktif          = $input->is_aktif;
+            $custom_form->start_time        = $input->start_time;
+            $custom_form->end_time          = $input->end_time;
+            $custom_form->created_by        = $auth_data->pengguna->id_pengguna;
+            $custom_form->save();
+
+            $data_komponen = $input->komponen;
+
+            // nambah data & pointer ke Variabel
+            foreach ($data_komponen as $key => &$d) {
+
+                $id_custom_komponen = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $d['id_custom_form'] = $custom_form->id_custom_form;
+                $d['id_custom_form_komponen'] = $id_custom_komponen;
+                $d['nm_custom_form_komponen'] = $d['tipe_custom_form_komponen'] . "_" . $custom_form->nm_custom_form;
+                $d['tipe_custom_form_komponen'] = $d['tipe_custom_form_komponen'] == "null" ? 'text' : $d['tipe_custom_form_komponen'];
+                $d['option_custom_form_komponen'] = json_encode($d['option_custom_form_komponen'] ?? null);
+                $d['created_by'] = $auth_data->pengguna->id_pengguna;
+                $d['created_at'] = $now;
+
+                if ($d['order'] == 'null') {
+
+                    $d['updated_at'] = $d['created_at']->addSeconds($key + 60); // Add 60 seconds plus $key
+                } else {
+                    $d['updated_at'] = $d['created_at']->addSeconds(intval($d['order']) + 60); // Add 60 seconds plus the order value
+                }
+
+                unset($d['order']);
+                CustomFormKomponen::insert($d);
+            }
+
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'form-builder/custom-form/komponen/' . $input->id_custom_form,
+                'message' => 'Add Data Succesfully'
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Gagal Add',
+            ];
         }
     }
 }
