@@ -644,7 +644,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             // MENU Rekap Keuangan Kelas
             Route::get('rekap-keuangan-kelas', [RekapKeuanganKelasController::class, 'viewRekapKeuanganKelas']);
-            Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']); 
+            Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', [PembayaranByKelasController::class, 'printPembayaranByKelas']);
             // Route::post('rekap-keuangan-kelas/get-data-tungakan-tahun-lalu', [RekapKeuanganKelasController::class, 'getDataTungakanTahunLalu']);
             Route::post('get-jumlah-tunggakan-pembayaran', [SppController::class, 'getJumlahTunggakanPembayaran']);
             Route::post('get-data-tungakan-tahun-lalu', [SppController::class, 'getDataTungakanTahunLalu']);
@@ -815,7 +815,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('rekap-bulanan-form-wali/{id_form}/{bulan}/{tahun}/{id_pertanyaan}', [RekapFormWaliController::class, 'viewRekapBulananFormWali']);
                 Route::post('get-detail-jawaban', [RekapFormWaliController::class, 'getDetailJawaban']);
                 Route::get('detail-jawaban/{id_form}', [RekapFormWaliController::class, 'viewDetailJawaban']);
-            
             });
         });
 
@@ -835,6 +834,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
                 Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+                Route::get('inputNilai/{id}', [RaporSisipanController::class, 'inputNilai']);
+                Route::get('getNilai/{id}', [RaporSisipanController::class, 'getNilai']);
                 Route::post('getMataPelajaran', [RaporSisipanController::class, 'getMataPelajaran']);
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
             });
