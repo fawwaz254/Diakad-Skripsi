@@ -458,7 +458,9 @@ class RaporSisipanController extends Controller
     public function getNilai(Request $request, $id_rapor)
     {
         $rapor = Rapor::find($id_rapor);
-        $siswa = Siswa::with('pengguna')->where('id_kelas', $rapor->id_kelas)->orderBy('nis_siswa')->get();
+        $siswa = Siswa::with('pengguna')->where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->orderBy('nis_siswa')->get();
 
         $list_data = $siswa->map(function ($item) use ($id_rapor) {
             $data = array();
