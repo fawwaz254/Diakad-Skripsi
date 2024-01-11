@@ -167,20 +167,22 @@ class RaporSisipanController extends Controller
                 ->where('nm_rapor', 'sisipan')
                 ->where('id_semester', $input->id_semester)
                 ->with('pengguna')->first();
-            $validator = Validator::make($request->all(), [
-                'id_mata_pelajaran' => 'required',
-                'id_kelas'              => 'required'
-            ]);
+
+
+            if ($cekDuplicate) {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => 'Kelas dan Mapel Sudah digunakan oleh ' . $cekDuplicate->pengguna->nm_pengguna,
+                ];
+            }
         }
 
-        if ($cekDuplicate) {
-            return [
-                'status' => 300, // FAILED
-                'message' => 'Kelas dan Mapel Sudah digunakan oleh ' . $cekDuplicate->pengguna->nm_pengguna,
-            ];
-        }
+        $validator = Validator::make($request->all(), [
+            'id_mata_pelajaran' => 'required',
+            'id_kelas'              => 'required'
+        ]);
 
-        if ($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode == 'add') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -250,10 +252,8 @@ class RaporSisipanController extends Controller
                 }
             } elseif ('editNilai') {
                 $rapor = Rapor::with('kelas')->find($id);
-                $list_siswa = Siswa::with(['nilai_rapor' => function ($query)  use ($id) {
-                    $query->where('id_rapor', $id);
-                }, 'pengguna'])->whereHas('nilai_rapor', function ($q) use ($id) {
-                    $q->where('id_rapor', $id);
+                $list_siswa = Siswa::where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+                    $query->where('aktif_status_pengguna', '=', '1');
                 })->orderBy('nis_siswa')->get();
                 // $list_komponen = KomponenJenisRapor::where('id_jenis_rapor', $rapor->kelas->id_jenis_rapor)->get();
                 $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
@@ -265,8 +265,12 @@ class RaporSisipanController extends Controller
                     $siswa = $list_siswa->where('nis_siswa', $d[0])->first();
                     if ($siswa) {
                         $no = 2;
+                        $nilai_rapors = NilaiRapor::where('id_siswa', $siswa->id_siswa)->where('id_rapor', $id)
+                            ->whereHas('komponen_jenis_rapor', function ($query) {
+                                $query->where('nm_komponen_jenis_rapor', "!=", 'UAS');
+                            })->get();
                         foreach ($list_komponen as $komponen) {
-                            $nilai_rapor = $siswa->nilai_rapor->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
+                            $nilai_rapor = $nilai_rapors->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
                             if ($nilai_rapor->nilai != $d[$no]) {
                                 $nilai_rapor->nilai = $d[$no];
                                 $nilai_rapor->save();
@@ -453,20 +457,23 @@ class RaporSisipanController extends Controller
 
     public function getNilai(Request $request, $id_rapor)
     {
-        $list_data = Siswa::with(['nilai_rapor' => function ($query)  use ($id_rapor) {
-            $query->where('id_rapor', $id_rapor);
-        }, 'pengguna'])->whereHas('nilai_rapor', function ($q) use ($id_rapor) {
-            $q->where('id_rapor', $id_rapor);
-        })->orderBy('nis_siswa')->get()->map(function ($item) {
+        $rapor = Rapor::find($id_rapor);
+        $siswa = Siswa::with('pengguna')->where('id_kelas', $rapor->id_kelas)->orderBy('nis_siswa')->get();
+
+        $list_data = $siswa->map(function ($item) use ($id_rapor) {
             $data = array();
             $data['nis_siswa'] = $item->nis_siswa;
             $data['nm_pengguna'] = $item->pengguna->nm_pengguna;
-            foreach ($item->nilai_rapor as $n) {
+            $nilai_rapor = NilaiRapor::where('id_siswa', $item->id_siswa)->where('id_rapor', $id_rapor)
+                ->whereHas('komponen_jenis_rapor', function ($query) {
+                    $query->where('nm_komponen_jenis_rapor', "!=", 'UAS');
+                })
+                ->get();
+            foreach ($nilai_rapor as $n) {
                 $data[$n->id_komponen_jenis_rapor] = $n->nilai;
             }
             return $data;
         })->toArray();
-
         return response()->json($list_data);
     }
 
