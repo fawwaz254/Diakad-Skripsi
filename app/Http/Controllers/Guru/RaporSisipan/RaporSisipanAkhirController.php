@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Imports\UploadRaporSisipanSAS;
 use App\Models\Guru;
 use App\Models\Kelas;
+use App\Models\Rapor;
+use App\Models\KomponenJenisRapor;
 use App\Models\MataPelajaran;
 use App\Models\RaporSisipan;
 use Carbon\Carbon;
@@ -104,19 +106,40 @@ class RaporSisipanAkhirController extends Controller
             $id_semester = $input->id_semester;
         }
 
-        $list_data = RaporSisipan::where('id_semester', $id_semester)
+        // $list_data = RaporSisipan::where('id_semester', $id_semester)
+        //     ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
+        //     ->withCount(['nilai_rapor_sisipan' => function ($q) {
+        //         $q->where('nilai', '!=', 0);
+        //     }])
+        //     ->orderBy('created_at', 'desc');
+
+
+        $list_data = Rapor::where('id_semester', $id_semester)->where('nm_rapor', 'sisipan')
+            // ->with(['nilai_rapor' => function ($q) {
+            //     $q->where('nilai', '!=', '0');
+            // }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester'])
             ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
-            ->withCount(['nilai_rapor_sisipan' => function ($q) {
+            ->withCount(['nilai_rapor' => function ($q) {
                 $q->where('nilai', '!=', 0);
             }])
             ->orderBy('created_at', 'desc');
 
-        $komponen = KomponenNilaiRaporSisipan::where('status', '1')->count();
+
+
+        $komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            $query->where('nm_jenis_rapor', 'sisipan');
+        })->count();
+
+        if ($status == '0') {
+            $list_data = $list_data->where('created_by', $auth_data->pengguna->id_pengguna);
+        }
+
+        // $komponen = KomponenNilaiRaporSisipan::where('status', '1')->count();
 
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($komponen) {
                 $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
-                $nilaiTerisi = $item->nilai_rapor_sisipan_count;
+                $nilaiTerisi = $item->nilai_rapor_count;
                 if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
                     $hasil = '0%';
                 } else {
@@ -130,7 +153,7 @@ class RaporSisipanAkhirController extends Controller
             })
             ->addColumn('action', function ($item) use ($status) {
                 $data = array(
-                    'id'     => $item->id_rapor_sisipan,
+                    'id'     => $item->id_rapor,
                     'status' => $status
                 );
 

@@ -3,9 +3,9 @@
     justify-content: space-between;">
         <div>
             <h2>
-                <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
+                {{-- <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
                     href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas/importExcel/') }}"><i
-                        class="material-icons">cloud_upload</i><span> Import Excel</span></a>
+                        class="material-icons">cloud_upload</i><span> Import Excel</span></a> --}}
                 <div style="display: inline;margin-right:10px"></div>
                 <input type="checkbox" id="data_semua_pengguna" class="checkbox">
                 <label for="data_semua_pengguna">Data Semua Pengguna</label>
@@ -50,9 +50,9 @@
                                     {{-- <th>Nilai SAS Terisi Lengkap</th> --}}
                                     <th>Semester</th>
 
-                                    <th>Nilai</th>
+                                    {{-- <th>Nilai</th>
                                     <th>Template Excel</th>
-                                    <th>Action</th>
+                                    <th>Action</th> --}}
                                     <th>Pembuat</th>
                                 </tr>
                             </thead>
@@ -125,57 +125,57 @@
                 orderable: false,
                 className: 'align-center'
             },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    if (data.status == '0') {
-                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                            nilai_url + '/' + data.id + '">' +
-                            '    <i class="material-icons">visibility</i>' +
-                            '</a> ';
-                    } else {
-                        return '';
-                    }
-                }
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    if (data.status == '0') {
-                        return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            excel_url + '/' + data.id + '" target="_blank">' +
-                            '    <i class="material-icons">backup</i>' +
-                            '</a> ';
-                    } else {
-                        return '';
-                    }
-                }
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    // return  '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                    // print_url + '/' + data.id + '"  target="_blank">' +
-                    //     '    <i class="material-icons">picture_in_picture</i>' +
-                    //     '</a> '+
-                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                        pdf_url + '/' + data.id + '"  target="_blank">' +
-                        '    <i class="material-icons">picture_as_pdf</i>' +
-                        '</a> ';
-                }
-            },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         if (data.status == '0') {
+            //             return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+            //                 nilai_url + '/' + data.id + '">' +
+            //                 '    <i class="material-icons">visibility</i>' +
+            //                 '</a> ';
+            //         } else {
+            //             return '';
+            //         }
+            //     }
+            // },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         if (data.status == '0') {
+            //             return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //                 excel_url + '/' + data.id + '" target="_blank">' +
+            //                 '    <i class="material-icons">backup</i>' +
+            //                 '</a> ';
+            //         } else {
+            //             return '';
+            //         }
+            //     }
+            // },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         // return  '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //         // print_url + '/' + data.id + '"  target="_blank">' +
+            //         //     '    <i class="material-icons">picture_in_picture</i>' +
+            //         //     '</a> '+
+            //         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //             pdf_url + '/' + data.id + '"  target="_blank">' +
+            //             '    <i class="material-icons">picture_as_pdf</i>' +
+            //             '</a> ';
+            //     }
+            // },
             {
                 data: 'pengguna.nm_pengguna',
                 name: 'pengguna.nm_pengguna',
