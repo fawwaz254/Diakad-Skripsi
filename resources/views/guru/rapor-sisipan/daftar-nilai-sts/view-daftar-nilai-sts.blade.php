@@ -6,9 +6,9 @@
                 <a class="btn bg-green waves-effect target-link"
                     href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
                         class="material-icons">add</i><span>Tambah Nilai</span></a>
-                <a class="btn bg-green waves-effect target-link"
+                {{-- <a class="btn bg-green waves-effect target-link"
                     href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/importExcel/') }}"><i
-                        class="material-icons">cloud_upload</i><span> Import Excel</span></a>
+                        class="material-icons">cloud_upload</i><span> Import Excel</span></a> --}}
                 <div style="display: inline;margin-right:10px"></div>
 
                 <input type="checkbox" id="data_semua_pengguna" class="checkbox">
@@ -55,8 +55,9 @@
                                 {{-- <th>Jurusan</th> --}}
                                 <th>Nilai Siswa Terisi</th>
                                 <th>Semester</th>
-                                <th>Nilai</th>
-                                <th>Template Excel</th>
+                                {{-- <th>Nilai</th> --}}
+                                {{-- <th>Template Excel</th> --}}
+                                <th>Input Nilai</th>
                                 <th>Action</th>
                                 <th>Pembuat</th>
                             </tr>
@@ -78,6 +79,10 @@
     var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/excel';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
+    var input_nilai = base_url + '/' + role_url + '#' + modul_url + '/' +
+        'daftar-nilai-sts/inputNilai';
+    // var template_excel_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+    //     'daftar-nilai-sts/templateExcel';
     var primary_table = $('#primary_table').DataTable({
         lengthMenu: [
             [5, 10, 25, 50, -1],
@@ -140,33 +145,50 @@
                 className: 'align-center',
                 render: function(data) {
                     if (data.status == '0') {
-                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                            nilai_url + '/' + data.id + '">' +
-                            '    <i class="material-icons">visibility</i>' +
-                            '</a> ';
-                    } else {
-                        return '';
-                    }
-
-                }
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    if (data.status == '0') {
                         return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            excel_url + '/' + data.id + '" target="_blank">' +
-                            '    <i class="material-icons">backup</i>' +
+                            input_nilai + '/' + data.id + '" >' +
+                            '    <i class="material-icons">add_box</i>' +
                             '</a> ';
                     } else {
                         return '';
                     }
                 }
             },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         if (data.status == '0') {
+            //             return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+            //                 nilai_url + '/' + data.id + '">' +
+            //                 '    <i class="material-icons">visibility</i>' +
+            //                 '</a> ';
+            //         } else {
+            //             return '';
+            //         }
+
+            //     }
+            // },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         if (data.status == '0') {
+            //             return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //                 excel_url + '/' + data.id + '" target="_blank">' +
+            //                 '    <i class="material-icons">backup</i>' +
+            //                 '</a> ';
+            //         } else {
+            //             return '';
+            //         }
+            //     }
+            // },
             {
                 data: 'action',
                 name: 'action',
