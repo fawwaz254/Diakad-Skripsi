@@ -182,7 +182,7 @@ class FormHarianController extends Controller
                     'path' => 'form-guru/input-form-harian/',
                     'message' => 'Save Successfully'
                 ];
-            }else if($mode == 'edit'){
+            } else if ($mode == 'edit') {
 
                 foreach ($input->id_pertanyaan_form as $key => $value) {
                     $detail_jawaban_form = DetailJawabanForm::find($input->id_pertanyaan_form[$key][1]);
@@ -191,9 +191,11 @@ class FormHarianController extends Controller
                     if ($input->jenis_pertanyaan[$key] == '1') {
                         $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
                     } elseif ($input->jenis_pertanyaan[$key] == '2') {
-                        $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
-                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->jawaban_pertanyaan[$key], 'public');
-                        $detail_jawaban_form->jawaban = $file;
+                        if (!is_null(request()->jawaban_pertanyaan[$key]) && isset(request()->jawaban_pertanyaan[$key])) {
+                            $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
+                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->jawaban_pertanyaan[$key], 'public');
+                            $detail_jawaban_form->jawaban = $file;
+                        }
                     } elseif ($input->jenis_pertanyaan[$key] == '3') {
                         $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
                     } elseif ($input->jenis_pertanyaan[$key] == '4') {
@@ -206,7 +208,7 @@ class FormHarianController extends Controller
 
                     $jawaban_form =  JawabanForm::find($input->id_jawaban_form);
                     $jawaban_form->updated_by = $auth_data->pengguna->id_pengguna;
-                    $jawaban_form->save(); 
+                    $jawaban_form->save();
                     $detail_jawaban_form->updated_by = $auth_data->pengguna->id_pengguna;
                     $detail_jawaban_form->save();
                 }
@@ -217,15 +219,15 @@ class FormHarianController extends Controller
                     'path' => 'form-guru/input-form-harian',
                     'message' => 'Edit Successfully'
                 ];
-            }else if($mode == 'delete'){
-                $detail_jawaban_form = DetailJawabanForm::where('id_jawaban_form',$input->id_jawaban)
-                ->delete();
-                $jawaban_form = JawabanForm::where('id_jawaban_form',$input->id_jawaban)
-                ->delete();
+            } else if ($mode == 'delete') {
+                $detail_jawaban_form = DetailJawabanForm::where('id_jawaban_form', $input->id_jawaban)
+                    ->delete();
+                $jawaban_form = JawabanForm::where('id_jawaban_form', $input->id_jawaban)
+                    ->delete();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    // 'path' => 'form-guru/input-form-harian',
+                    'path' => 'form-guru/input-form-harian',
                     'message' => 'Delete Successfully'
                 ];
             }
@@ -249,7 +251,7 @@ class FormHarianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $jawaban = JawabanForm::with('detail_jawaban_form')->where('created_by',$auth_data->pengguna->id_pengguna)->find($id_form);
+        $jawaban = JawabanForm::with('detail_jawaban_form')->where('created_by', $auth_data->pengguna->id_pengguna)->find($id_form);
         $form = Form::with('pertanyaan_form')->find($jawaban->id_form);
         // dd($jawaban->detail_jawaban_form->where('id_pertanyaan_form','B9hY71704268019659510f3f1bd9')->first()->jawaban);
         // DebugBar::info($form);

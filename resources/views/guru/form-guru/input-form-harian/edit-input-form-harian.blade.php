@@ -47,7 +47,7 @@
                             @elseif($pertanyaan_form->jenis_pertanyaan == '2')
                                 <input type="file" class="form-control"
                                     name="jawaban_pertanyaan[{{ $key }}]" aria-required="true"
-                                    aria-invalid="true" required>
+                                    aria-invalid="true" >
                             @elseif($pertanyaan_form->jenis_pertanyaan == '3')
                                 <div class="demo-radio-button">
                                     @foreach (json_decode($pertanyaan_form->options, true) as $options)

@@ -185,9 +185,11 @@ class InputFormHarianController extends Controller
                     if ($input->jenis_pertanyaan[$key] == '1') {
                         $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
                     } elseif ($input->jenis_pertanyaan[$key] == '2') {
-                        $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
-                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->jawaban_pertanyaan[$key], 'public');
-                        $detail_jawaban_form->jawaban = $file;
+                        if (!is_null(request()->jawaban_pertanyaan[$key]) && isset(request()->jawaban_pertanyaan[$key])) {
+                            $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
+                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->jawaban_pertanyaan[$key], 'public');
+                            $detail_jawaban_form->jawaban = $file;
+                        }
                     } elseif ($input->jenis_pertanyaan[$key] == '3') {
                         $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
                     } elseif ($input->jenis_pertanyaan[$key] == '4') {
@@ -208,7 +210,7 @@ class InputFormHarianController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'form-guru/input-form-harian',
+                    'path' => 'form-siswa/input-form-harian',
                     'message' => 'Edit Successfully'
                 ];
             } else if ($mode == 'delete') {
@@ -219,7 +221,7 @@ class InputFormHarianController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    // 'path' => 'form-guru/input-form-harian',
+                    'path' => 'form-siswa/input-form-harian',
                     'message' => 'Delete Successfully'
                 ];
             }
