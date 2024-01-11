@@ -2,12 +2,12 @@
     <thead>
         <tr>
             <td colspan='6'>
-                {{ 'Kelas : ' . $data['rapor_sisipan']['kelas']['nm_kelas'] }}
+                {{ 'Kelas : ' . $data['rapor']['kelas']['nm_kelas'] }}
             </td>
         </tr>
         <tr>
             <td colspan='6'>
-                {{ ' MAPEL : ' . $data['rapor_sisipan']['mata_pelajaran']['nm_mata_pelajaran'] }}
+                {{ ' MAPEL : ' . $data['rapor']['mata_pelajaran']['nm_mata_pelajaran'] }}
             </td>
         </tr>
         <tr>
@@ -30,7 +30,7 @@
                 <td>{{ $siswa->pengguna->nm_pengguna }}</td>
                 @foreach ($data['list_data'] as $nilai)
                     <td style="text-align: center">
-                        {{ isset($data['nilai_siswa'][$nilai['id_komponen_nilai'] . $siswa->id_siswa . $data['id_rapor_sisipan']]) && $data['nilai_siswa'][$nilai['id_komponen_nilai'] . $siswa->id_siswa . $data['id_rapor_sisipan']] != '0' ? $data['nilai_siswa'][$nilai['id_komponen_nilai'] . $siswa->id_siswa . $data['id_rapor_sisipan']] : null }}
+                        {{ isset($data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor']]) && $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor']] != '0' ? $data['nilai_siswa'][$nilai['id_komponen_jenis_rapor'] . $siswa->id_siswa . $data['id_rapor']] : null }}
                     </td>
                 @endforeach
             </tr>

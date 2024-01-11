@@ -202,7 +202,8 @@
                             '    <i class="material-icons">print</i>' +
                             '</a> ' +
                             '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            pdf_url + '/' + data.id + '"  target="_blank">' +
+                            pdf_url + '/' + data.id_semester + '/' + data
+                            .id_kelas + '"  target="_blank">' +
                             '    <i class="material-icons">picture_as_pdf</i>' +
                             '</a> ' +
                             '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
