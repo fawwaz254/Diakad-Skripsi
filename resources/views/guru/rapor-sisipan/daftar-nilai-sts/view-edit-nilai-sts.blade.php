@@ -11,12 +11,12 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header bg-cyan">
-                    <h2>Edit Nilai Rapor Semester</h2>
+                    <h2>Edit Nilai Rapor Sisipan</h2>
 
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sts/action/editNilai/' . $id_rapor) }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sts/action-daftar-nilai-sts/editNilai/' . $id_rapor) }}">
                         {{ csrf_field() }}
                         <input type="hidden" name="data" id="data">
                         <div id="spreadsheet"></div>
