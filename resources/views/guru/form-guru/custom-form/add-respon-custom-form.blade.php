@@ -77,17 +77,29 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="pertanyaan{{$komponen->id_custom_form_komponen}}">
                                 @if($komponen->tipe_custom_form_komponen == "text")
                                 <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban...">
+                                @elseif($komponen->tipe_custom_form_komponen == "number")
+                                <input type="number" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Angka...">
+
                                 @elseif($komponen->tipe_custom_form_komponen == "select")
                                 <!-- <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban..."> -->
-                                <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
-                                    <input class="" type="radio" id="rad" disabled>
-                                    <label for="rad" style="width: 100%;">
-                                        <input type="text" class="form-control form-check-label" name="komponen[${id}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Jawaban 1">
+                                @foreach(json_decode($komponen->option_custom_form_komponen) as $key => $options)
+                                <div style="margin-bottom: 20px; display:flex; align-items:center; gap: 10px">
+                                    <input class="" type="radio" name="respon[{{$komponen->id_custom_form_komponen}}]" id="rad_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}">
+                                    <label for="rad_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}" style="width: 100%; font-size: 16px;">
+                                        <p>{{$options}}</p>
                                     </label>
-                                    <div class="btn btn-info" id="tambah${id}" onclick="" style="margin: 2px 10px 0px 10px; width: 100px;">
-                                        Tambah
-                                    </div>
                                 </div>
+                                @endforeach
+
+                                @elseif($komponen->tipe_custom_form_komponen == "checkbox")
+                                @foreach(json_decode($komponen->option_custom_form_komponen) as $key => $options)
+                                <div style="margin-bottom: 20px; display:flex; align-items:center; gap: 10px">
+                                    <input class="" type="checkbox" name="respon[{{$komponen->id_custom_form_komponen}}]" id="check_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}">
+                                    <label for="check_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}" style="width: 100%;">
+                                        <p>{{$options}}</p>
+                                    </label>
+                                </div>
+                                @endforeach
                                 @elseif($komponen->tipe_custom_form_komponen == "custom_ttd")
 
                                 <input type="hidden" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="">
