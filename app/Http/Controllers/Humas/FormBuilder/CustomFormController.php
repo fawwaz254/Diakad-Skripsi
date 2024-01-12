@@ -306,13 +306,13 @@ class CustomFormController extends Controller
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'form-builder/custom-form/komponen/' . $input->id_custom_form,
+                'path' => 'form-builder/custom-form/',
                 'message' => 'Add Data Succesfully'
             ];
         } catch (Exception $e) {
             return [
                 'status' => 300, // FAILED
-                'message' => 'Gagal Add',
+                'message' => $e->getMessage(),
             ];
         }
     }

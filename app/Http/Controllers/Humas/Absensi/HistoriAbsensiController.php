@@ -29,7 +29,7 @@ class HistoriAbsensiController extends BaseController
 
     public function export_excel_week(Request $request, $date = null, $unit_kerja = null)
     {
-        set_time_limit(9800);
+        set_time_limit(3800);
         if ($unit_kerja == "0") {
             $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
                 ->with('status_pengguna', 'guru.unit_kerja')

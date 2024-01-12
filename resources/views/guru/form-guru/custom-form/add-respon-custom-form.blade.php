@@ -20,50 +20,23 @@
                     <div class="header" style="border-top: 8px solid #555;">
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input style="height: 50px; font-size:x-large; outline: none; border: none; width: 100%; " placeholder="Formulir Tanpa Judul" type="text" class="" name="nm_custom_form" required="" aria-required="true" aria-invalid="true" value="">
+                                <input style="height: 50px; font-size:x-large; outline: none; border: none; width: 100%; " placeholder="Formulir Tanpa Judul" type="text" class="" name="nm_custom_form" required="" aria-required="true" aria-invalid="true" value="FORM {{$form->nm_custom_form}}" disabled>
                             </div>
                         </div>
                     </div>
                     <div class="body">
 
                         <h2 style="font-size:large">
-                            Pengaturan
+                            Deskripsi
                         </h2>
 
-
-                        <h2 class="card-inside-title">
-                            Ditujukkan Kepada
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_role" required="">
-                                    <option selected disabled>Pilih Role</option>
-                                    @foreach ($roles as $role)
-                                    <option value="{{ $role->id_role }}">{{ $role->nm_role }}</option>
-                                    @endforeach
-                                    <option value="PUBLIC">Public</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <h2 class="card-inside-title">
-                            Status
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="is_aktif" required="">
-                                    <option value="1">Aktif</option>
-                                    <option value="0">Non-aktif</option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
                                 <h2 class="card-inside-title">
                                     Jam Mulai Pengisian
                                 </h2>
                                 <div>
-                                    <input type="input" class="timepicker form-control" name="start_time" required="" aria-required="true" aria-invalid="true">
+                                    <input type="text" class=" form-control" name="start_time" required="" aria-required="true" aria-invalid="true" value="{{$form->start_time}}" disabled>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
@@ -71,56 +44,72 @@
                                     Jam Akhir Pengisian
                                 </h2>
                                 <div>
-                                    <input type="input" class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true">
+                                    <input type="text" class=" form-control" name="end_time" required="" aria-required="true" aria-invalid="true" value="{{$form->end_time}}" disabled>
                                 </div>
                             </div>
 
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
                                 <button id="submit" type="submit" class="btn btn-lg bg-blue waves-effect target-link">SIMPAN</button>
                             </div>
-                        </div>
+                        </div> -->
 
 
 
 
                     </div>
                 </div>
-
-
+                @foreach($form->form_komponen as $index => $komponen)
                 <div class="card" style="margin: 15px 0;">
                     <div class="header">
                         <div class="row clearfix">
-                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                <input style="padding: 5px;border-radius: 5px; height: max-content; background-color: rgba(204, 204, 204, 0.2); font-size:larger; outline: none; border: none; width: 100%; border-bottom: 2px solid rgba(204, 204, 204, 0.35);" placeholder="Pertanyaan Tanpa Judul" type="text" class="" name="komponen[][label_custom_form_komponen]" required="" aria-required="true" aria-invalid="true" value="">
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <select class="form-control show-tick" name="komponen[0][tipe_custom_form_komponen]" required="" id="0">
-                                    <option value="null" selected>PILIH TIPE</option>
-                                    <option value="text">Text (BASIC)</option>
-                                    <option value="number">Number (BASIC)</option>
-                                    <option value="select">Select (BASIC)</option>
-                                    <option value="checkbox">Checkbox (BASIC)</option>
-                                    <option value="custom_kelas">Kelas (CUSTOM)</option>
-                                    <option value="custom_siswa">Siswa (CUSTOM)</option>
-                                    <option value="custom_ttd">Tanda Tangan (CUSTOM)</option>
-                                </select>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="">
+                                    <h4>{{$komponen->label_custom_form_komponen}}</h4>
+                                </div>
                             </div>
 
                         </div>
                     </div>
                     <div class="body">
                         <div class="row clearfix">
-                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" id="pertanyaan0">
-                                <input type="text" class="form-control" name="komponen[0]['option_custom_form_komponen]" required="" aria-required="true" aria-invalid="true" value="Teks Singkat" placeholder="Teks Singkat" disabled>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="pertanyaan{{$komponen->id_custom_form_komponen}}">
+                                @if($komponen->tipe_custom_form_komponen == "text")
+                                <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban...">
+                                @elseif($komponen->tipe_custom_form_komponen == "select")
+                                <!-- <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban..."> -->
+                                <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
+                                    <input class="" type="radio" id="rad" disabled>
+                                    <label for="rad" style="width: 100%;">
+                                        <input type="text" class="form-control form-check-label" name="komponen[${id}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Jawaban 1">
+                                    </label>
+                                    <div class="btn btn-info" id="tambah${id}" onclick="" style="margin: 2px 10px 0px 10px; width: 100px;">
+                                        Tambah
+                                    </div>
+                                </div>
+                                @elseif($komponen->tipe_custom_form_komponen == "custom_ttd")
+
+                                <input type="hidden" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="">
+                                <div class="wrapper">
+                                    <canvas id="signature-pad" class="signature-pad" width="400" height="200" style="border:1px solid black;"></canvas>
+                                </div>
+
+                                <!-- <button id="save-png">Save as PNG</button>
+                                <button id="save-jpeg">Save as JPEG</button>
+                                <button id="save-svg">Save as SVG</button>
+                                <button id="draw">Draw</button>
+                                <button id="erase">Erase</button>
+                                <button id="undo">Undo</button> -->
+                                <button class="btn btn-lg btn-danger" type="button" id="clear">
+                                    <h5>Clear</h5>
+                                </button>
+                                @else
+                                <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban...">
+
+                                @endif
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <select class="form-control show-tick" name="komponen[0][order]" id="awal" required="">
-                                    <option value=null>Pilih Urutan</option>
-                                    <option value="1">1</option>
-                                </select>
-                            </div>
+
                         </div>
                     </div>
                     <div class="footer">
@@ -130,25 +119,16 @@
                         </div>
                     </div>
                 </div>
-
+                @endforeach
 
             </form>
             <div>
-                <button id="addPertanyaan" style="margin-bottom: 50px;" class="btn btn-lg text-lg bg-blue waves-effect target-link">Tambah Pertanyaan</button>
+                <button id="submit" type="submit" style="margin-bottom: 50px;" class="btn btn-lg text-lg bg-blue waves-effect target-link">
+                    <h5>KIRIM</h5>
+                </button>
             </div>
 
 
-            <!-- <div class="wrapper">
-                <canvas id="signature-pad" class="signature-pad" width="400" height="200"></canvas>
-            </div>
-
-            <button id="save-png">Save as PNG</button>
-            <button id="save-jpeg">Save as JPEG</button>
-            <button id="save-svg">Save as SVG</button>
-            <button id="draw">Draw</button>
-            <button id="erase">Erase</button>
-            <button id="undo">Undo</button>
-            <button id="clear">Clear</button> -->
         </div>
     </div>
 </div>
@@ -306,7 +286,7 @@
     // })
 </script>
 
-<!-- <script>
+<script>
     $(document).ready(function() {
         var canvas = $('#signature-pad')[0];
 
@@ -375,7 +355,7 @@
             }
         });
     });
-</script> -->
+</script>
 <script>
     $(function() {
         $('.timepicker').bootstrapMaterialDatePicker({
