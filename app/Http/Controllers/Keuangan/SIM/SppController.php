@@ -910,7 +910,11 @@ class SppController extends BaseController
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+            if ($semester_aktif == 'Genap') {
+                $tahun_akademik_semester = $semester_aktif->thn_akademik_semester + 1;
+            } else {
+                $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+            }
         }
 
         if (empty($id_bulan)) {
@@ -2053,7 +2057,7 @@ class SppController extends BaseController
 
             DB::beginTransaction();
             try {
-                $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $input->auth_data->pengguna->id_pengguna ])->first();
+                $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $input->auth_data->pengguna->id_pengguna])->first();
 
                 if ($rapb) { } else {
                     $rapb = new Rapb;
