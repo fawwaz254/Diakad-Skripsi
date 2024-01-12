@@ -171,12 +171,14 @@
                 </ul>
             @endif
         @endif
-
+        {{-- @dd($auth_data->pengguna->nm_pengguna) --}}
         <div class="ttd avoid-page-break">
             {{ $auth_data->sekolah_data->alamat_kecamatan }},
             {{ indonesiaDate(\Carbon\Carbon::parse($tgl_pembayaran)->format('Y-m-d')) }} <br><br><br><br>
             @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smamaryamsby')
+                {{ $auth_data->pengguna->gelar_depan }}
                 {{ $auth_data->pengguna->nm_pengguna }}
+                {{ $auth_data->pengguna->gelar_belakang }}
             @else
                 Bendahara SMA Maryam
             @endif

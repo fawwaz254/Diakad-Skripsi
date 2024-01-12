@@ -125,7 +125,9 @@
             {{ date_format(date_create($tgl_pembayaran), 'd M Y') }} <br><br><br><br>
 
             @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smamaryamsby')
+                {{ $auth_data->pengguna->gelar_depan }}
                 {{ $auth_data->pengguna->nm_pengguna }}
+                {{ $auth_data->pengguna->gelar_belakang }}
             @else
                 Bendahara SMA Maryam
             @endif

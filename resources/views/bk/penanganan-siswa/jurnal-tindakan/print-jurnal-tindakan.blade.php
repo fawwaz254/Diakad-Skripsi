@@ -49,22 +49,42 @@
     @endphp
 
     <div class="container text-center" style="margin-top:20px;">
-        <div class="row">
-            <div class="col-md-2">
-                <img src="{{ asset('logo/logo-yayasan.png') }}" width="120">
+        @if ($is_ypm == '1')
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="{{ asset('logo/logo-yayasan.png') }}" width="120">
+                </div>
+                <div class="col-md-8">
+                    <h3>YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF <br> TAMAN – SEPANJANG – SIDOARJO</h3>
+                    <p>Akte Notaris Goesti Djohan Nomor 91 Tanggal 17 September 1965</p>
+                </div>
             </div>
-            <div class="col-md-8">
-                <h3>YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF <br> TAMAN – SEPANJANG – SIDOARJO</h3>
-                <p>Akte Notaris Goesti Djohan Nomor 91 Tanggal 17 September 1965</p>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Jl.Raya Ngelom 86 Telp. (031) 7874045 Fax. (031) 7884364 Sepanjang 61257 website
+                        http.//www.ypm.ac.id- e-mail:ypm.ac.id.yayasan@ypm.ac.id</p>
+                </div>
             </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-md-12">
-                <p>Jl.Raya Ngelom 86 Telp. (031) 7874045 Fax. (031) 7884364 Sepanjang 61257 website
-                    http.//www.ypm.ac.id- e-mail:ypm.ac.id.yayasan@ypm.ac.id</p>
+        @else
+            <div class="row">
+                <div class="col-md-2">
+                    <img id="logo"
+                        src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
+                        width="120">
+                </div>
+                <div class="col-md-8">
+                    <h3><b>{{ $auth_data->sekolah_data->nm_yayasan_sekolah }}</b>
+                        <br>
+                        <b>SEKOLAH MENENGAH KEJURUAN TANADA</b>
+                    </h3>
+                    <b>PROGRAM KEAHLIAN MULTIMEDIA DAN USAHA PERJALANAN WISATA</b>
+                    <br><span
+                        style="background-color: rgb(0, 255, 0);   padding: 1px 15px; border-radius: 25px;">{{ $auth_data->sekolah_data->alamat_jalan . ' ' . $auth_data->sekolah_data->alamat_kelurahan . ' Sidoarjo, Kode Pos ' . $auth_data->sekolah_data->alamat_kodepos . ' Telp. ' . $auth_data->sekolah_data->nomor_telp_sekolah }}</span>
+                </div>
             </div>
-        </div>
+            <hr>
+        @endif
     </div>
 
     <div class="container text-center" style="margin-top:20px;">
