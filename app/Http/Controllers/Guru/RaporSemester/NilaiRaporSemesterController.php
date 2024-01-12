@@ -399,6 +399,7 @@ class NilaiRaporSemesterController extends Controller
             }
             return $data;
         })->toArray();
+        dd($list_data);
 
         return response()->json($list_data);
     }

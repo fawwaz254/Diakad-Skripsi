@@ -37,7 +37,7 @@
                                     <th>Kelas</th>
                                     <th>Nilai Siswa Terisi</th>
                                     <th>Semester</th>
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                     <th>Pembuat</th>
                                 </tr>
                             </thead>
@@ -104,19 +104,19 @@
                 searchable: false,
                 orderable: false,
             },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                        pdf_url + '/' + data.id + '"  target="_blank">' +
-                        '    <i class="material-icons">picture_as_pdf</i>' +
-                        '</a> ';
-                }
-            },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //             pdf_url + '/' + data.id + '"  target="_blank">' +
+            //             '    <i class="material-icons">picture_as_pdf</i>' +
+            //             '</a> ';
+            //     }
+            // },
             {
                 data: 'pengguna.nm_pengguna',
                 name: 'pengguna.nm_pengguna',

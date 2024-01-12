@@ -45,7 +45,7 @@ class RaporSisipanAkhirController extends Controller
 
         $list_data = Rapor::where('id_semester', $id_semester)
             ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
-            ->withCount(['nilai_rapor_sisipan' => function ($q) {
+            ->withCount(['nilai_rapor' => function ($q) {
                 $q->where('nilai', '!=', 0);
             }])
             ->where('nm_rapor', 'sisipan')

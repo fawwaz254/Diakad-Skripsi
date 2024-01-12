@@ -114,10 +114,6 @@
                     return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float " href="' +
                         print_url + '/' + data.id + '"  target="_blank">' +
                         ' <i class="material-icons">print</i>' +
-                        '</a> ' +
-                        '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                        pdf_url + '/' + data.id + '"  target="_blank">' +
-                        '    <i class="material-icons">picture_as_pdf</i>' +
                         '</a> ';
                 }
             },
