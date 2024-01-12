@@ -910,7 +910,7 @@ class SppController extends BaseController
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-            if ($semester_aktif == 'Genap') {
+            if ($semester_aktif->nm_semester == "Genap") {
                 $tahun_akademik_semester = $semester_aktif->thn_akademik_semester + 1;
             } else {
                 $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
