@@ -81,7 +81,7 @@ class JurnalTindakanController extends BaseController
         $wali_kelas = LibGuru::fetchDataWaliKelas($auth_data, $id_kelas)->where('is_aktif', 1)->first();
 
         $siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, $id_siswa == '0' ? null : $id_siswa);
-        
+
         if ($id_siswa !== '0') {
             $gender_siswa = Siswa::select('calon_siswa_baru.jenis_kelamin')->join('calon_siswa_baru', 'calon_siswa_baru.id_c_siswa', 'siswa.id_c_siswa')->where('id_siswa', $id_siswa)->first();
             if (!empty($gender_siswa->jenis_kelamin)) {
@@ -111,6 +111,7 @@ class JurnalTindakanController extends BaseController
         }
 
         $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
+        $is_ypm = Setting::where('key_setting', 'is_ypm')->first()->value;
         $kategori_pelanggaran = null;
         $deskripsi_perilaku_1 = null;
         $deskripsi_perilaku_2 = null;
@@ -124,8 +125,9 @@ class JurnalTindakanController extends BaseController
         }
 
         if ($id_siswa == '0') {
-            return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan-siswa-kelas', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas','auth_data'));
+            return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan-siswa-kelas', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'auth_data'));
         }
-        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'jenis_kelamin','auth_data'));
+
+        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'jenis_kelamin', 'auth_data', 'is_ypm'));
     }
 }
