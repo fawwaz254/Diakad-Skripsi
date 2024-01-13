@@ -17,6 +17,7 @@ use App\Models\Setting;
 use App\Models\Siswa;
 use Auth;
 use DB;
+use Exception;
 use Session;
 
 class WelcomeController extends BaseController
@@ -52,34 +53,47 @@ class WelcomeController extends BaseController
 
     public function getRekapForm(Request $request)
     {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        try {
 
-        $request->validate([
-            'id_form' => 'required',
-        ]);
+            $input = (object) $request->input();
+            $auth_data = $input->auth_data;
 
-        $form = Form::with('pertanyaan_form', 'jawaban_form.detail_jawaban_form.pertanyaan_form')->find($input->id_form);
+            $request->validate([
+                'id_form' => 'required',
+            ]);
+            $form = Form::with('pertanyaan_form', 'jawaban_form.detail_jawaban_form.pertanyaan_form')
+                ->whereHas('jawaban_form', function ($query) use ($input) {
+                    if (isset($input->date)) {
+                        $query->whereDate('created_at', '=', $input->date);
+                    }
+                })
+                ->find($input->id_form);
 
 
-        $kelas = Kelas::where('is_aktif', 1)->get();
+            $kelas = Kelas::where('is_aktif', 1)->get();
 
-        if (isset($input->id_kelas)) {
-            $id_kelas = $input->id_kelas;
+            $pengguna = null;
+            if (!is_null($form)) {
+                if (isset($input->id_kelas)) {
+                    $id_kelas = $input->id_kelas;
 
-            $siswa = Pengguna::whereHas('status_pengguna', function ($q) {
-                $q->where('aktif_status_pengguna', 1);
-            })->whereHas('siswa', function ($q) use ($id_kelas) {
-                $q->where('id_kelas', $id_kelas);
-            })->orderBy('nm_pengguna')->get();
+                    $pengguna = Pengguna::whereHas('status_pengguna', function ($q) {
+                        $q->where('aktif_status_pengguna', 1);
+                    })->whereHas('siswa', function ($q) use ($id_kelas) {
+                        $q->where('id_kelas', $id_kelas);
+                    })->orderBy('nm_pengguna')->get();
+                } else {
+                    $pengguna = Pengguna::whereHas('role_pengguna', function ($q) use ($form) {
+                        $q->where('id_role', $form->id_role);
+                    })->whereHas('status_pengguna', function ($q) {
+                        $q->where('aktif_status_pengguna', 1);
+                    })->orderBy('nm_pengguna')->get();
+                }
+            }
 
-            // $id_siswa = Siswa::where('id_kelas', $id_kelas)->get();
-
-            // $jawaban = JawabanForm::where('id_form',$form->id_form)->where();
-            
             $counter = null;
-            $i = 0;
-            foreach ($siswa as $user) {
+
+            foreach ($pengguna as $user) {
                 foreach ($form->jawaban_form as $jawa) {
                     if ($user->id_pengguna == $jawa->created_by) {
                         foreach ($jawa->detail_jawaban_form as $ans) {
@@ -90,8 +104,14 @@ class WelcomeController extends BaseController
                                         $counter[$ans->pertanyaan_form->id_pertanyaan_form][$options] = 0;
                                     }
 
-                                    if ($options == $ans->jawaban) {
-                                        $counter[$ans->pertanyaan_form->id_pertanyaan_form][$options]++;
+                                    if (is_array(json_decode($ans->jawaban))) {
+                                        if (in_array($options, json_decode($ans->jawaban))) {
+                                            $counter[$ans->pertanyaan_form->id_pertanyaan_form][$options]++;
+                                        }
+                                    } else {
+                                        if ($options == $ans->jawaban) {
+                                            $counter[$ans->pertanyaan_form->id_pertanyaan_form][$options]++;
+                                        }
                                     }
                                 }
                             } else {
@@ -101,24 +121,34 @@ class WelcomeController extends BaseController
                                 if (isset($counter[$ans->pertanyaan_form->id_pertanyaan_form][$ans->jawaban])) {
                                     $counter[$ans->pertanyaan_form->id_pertanyaan_form][$ans->jawaban]++;
                                 }
-                                // $counter[$ans->pertanyaan_form->id_pertanyaan_form][] = $ans->jawaban;
                             }
-                            $i = 0;
                         }
                     }
                 }
             }
+
+            if (!isset($input->id_kelas)) {
+                return response()->json([
+                    'form' => $form,
+                    'kelas' => $kelas,
+                    'pengguna' => $form->id_role == 3 ? null : $pengguna,
+                    'counter' => $counter
+                ]);
+            } else {
+                return response()->json([
+                    'form' => $form,
+                    'kelas' => $kelas,
+                    'pengguna' => $pengguna,
+                    'counter' => $counter
+                ]);
+            }
+        } catch (Exception $e) {
             return response()->json([
                 'form' => $form,
                 'kelas' => $kelas,
-                'siswa_now' => $siswa,
+                'pengguna' => $pengguna,
                 'counter' => $counter
             ]);
         }
-
-        return response()->json([
-            'form' => $form,
-            'kelas' => $kelas,
-        ]);
     }
 }
