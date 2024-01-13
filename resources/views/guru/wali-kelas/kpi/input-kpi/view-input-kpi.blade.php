@@ -7,6 +7,12 @@
             <a target="_blank" class="btn bg-green waves-effect "
                 href="{{ url(Request::segment(1) . '/wali-kelas/input-kpi/download') }}"><i
                     class="material-icons">note_add</i><span>Download Template Nilai KPI Siswa</span></a>
+
+
+            <a style="color: black; position: absolute; right: 30px;" target="_blank"
+                class="btn bg-white waves-effect d-flex flex-row-reverse"
+                href="{{ url(Request::segment(1) . '/wali-kelas/input-kpi/print') }}"><i
+                    class="material-icons">note_add</i><span>Cetak PDF Nilai KPI Siswa</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -51,7 +57,7 @@
         processing: true,
         serverSide: true,
         responsive: false,
-        order:[1,'asc'],
+        order: [1, 'asc'],
         ajax: {
             url: datatable_url,
             type: 'GET'

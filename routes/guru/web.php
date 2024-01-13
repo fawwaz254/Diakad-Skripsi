@@ -777,6 +777,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('/import', [InputKPIController::class, 'actionImportKPI']);
                 Route::get('/download', [InputKPIController::class, 'downloadTemplateKPI']);
                 Route::get('/datatables', [InputKPIController::class, 'datatablesInputKPI']);
+                Route::get('/print', [InputKPIController::class, 'printAllKPI']);
                 Route::get('/print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
             });
 
