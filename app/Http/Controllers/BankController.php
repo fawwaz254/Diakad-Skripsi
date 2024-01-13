@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Configuration;
-// use Lcobucci\JWT\Signer\Hmac\Sha256;
-// use Lcobucci\JWT\Signer\Key\InMemory;
 use App\Models\PembayaranTrs;
 use App\Models\Siswa;
 use App\Models\Sekolah;
@@ -17,12 +15,14 @@ use App\Models\PembayaranBiaya;
 use App\Models\PembayaranTrsDetail;
 use DB;
 
+
+
 class BankController extends BaseController
 {
     public function processJwt(Request $request)
     {
         $jwtEncoded = $request->input('JwtEncoded');
-        $kode       = $request->input('Kode');
+        $kode_request       = $request->input('Kode');
 
         //Validasi Signature
         try {
@@ -36,152 +36,238 @@ class BankController extends BaseController
         } catch (\Exception $e) {
 
             return response()->json([
-                'Kode' => 01, 'Keterangan' => 'Invalid signature (jwt)'
+                'kode' => '01', 'keterangan' => 'Invalid signature (jwt)'
             ]);
         }
 
         //Validasi Decode
         try {
 
-            $claims     = $token->claims();
-            $kodetrn    = $claims->get('kodetrn');
-            $acno       = $claims->get('acno'); //nis siswa
-            // $nama       = $claims->get('nama');
-            // $nominal    = $claims->get('nominal');
-            $feenominal = $claims->get('feenominal');
-            $idtrn      = $claims->get('idtrn');
-            $id_tagihan = $claims->get('id_tagihan');
+            $claims             = $token->claims();
+            $nis_siswa          = $claims->get('nis_siswa');
+            $nomor_transaksi    = $claims->get('nomor_transaksi');
+            $kode_tagihan       = $claims->get('kode_tagihan');
+            $total_pembayaran   = $claims->get('total_pembayaran');
         } catch (\Exception $e) {
             return response()->json([
-                'Kode' => 98,
-                'Keterangan' => 'Decode jwt error (format jwt error)'
+                'kode' => '02',
+                'keterangan' => 'Decode jwt error (format jwt error)'
             ]);
         }
 
         //Validasi Institusi
         $now = Carbon::now();
         $sekolah = Sekolah::first();
-        if ($kode == 'A0001') { //Create VA
-            $cek_dup = PembayaranTrs::where('nomor_transaksi', $kodetrn)->first();
-            if ($cek_dup) {
-                return response()->json(['Kode ' => 03, 'Keterangan' => 'Duplicate kode VA']);
-            }
-            $siswa = Siswa::where('nis_siswa', $acno)->first();
-            if ($siswa) {
+        $siswa = Siswa::where('nis_siswa', $nis_siswa)->first();
+        if (empty($siswa)) {
+            return response()->json([
+                'kode' => '03',
+                'keterangan' => 'Siswa Not Found'
+            ]);
+        }
 
-                $VA = new PembayaranTrs;
-                $VA->id_pembayaran_trs  = $sekolah->prefix . strtotime($now) . uniqid();
-                $VA->id_siswa           = $siswa->id_siswa;
-                $VA->nomor_transaksi   = $kodetrn;
-                $VA->besar_pembayaran   = 0;
-                $VA->status_pembayaran  = 0; //belum terbayar
-                $VA->token              = '';
-                $VA->id_semester_bayar  = 0;
-                $VA->tgl_pembayaran     = null;
-                $VA->keterangan         = '';
-                $VA->save();
-                return response()->json(['Kode ' => 00, 'Keterangan' => 'Sukses']);
-            } else {
-                return response()->json(['Kode ' => 04, 'Keterangan' => 'kode institusi tidak terdaftar']);
-            }
-        } elseif ($kode == 'A0002') { //Create Tagihan
-            $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $kodetrn)->first();
-            if ($pembayaran_trs) {
-                $cek_dup = PembayaranTrsDetail::where('id_tagihan_biaya', $id_tagihan)->where('id_pembayaran_trs', $pembayaran_trs->id_pembayaran_trs)->first();
-                if ($cek_dup) {
-                    return response()->json(['Kode ' => 03, 'Keterangan' => 'Duplicate tagihan']);
-                }
-                $tagihan = TagihanBiaya::find($id_tagihan);
-                if ($tagihan) {
-                    $tagihan_biaya = new PembayaranTrsDetail;
-                    $tagihan_biaya->id_pembayaran_trs_detail = $sekolah->prefix . strtotime($now) . uniqid();
-                    $tagihan_biaya->id_pembayaran_trs = $pembayaran_trs->id_pembayaran_trs;
-                    $tagihan_biaya->id_tagihan_biaya = $id_tagihan;
-                    $tagihan_biaya->besar_pembayaran = $tagihan->besar_biaya;
-                    $tagihan_biaya->save();
-                    $pembayaran_trs->besar_pembayaran = $pembayaran_trs->besar_pembayaran + $tagihan->besar_biaya;
-                    $pembayaran_trs->save();
-                    return response()->json(['Kode ' => 00, 'Keterangan' => 'Sukses']);
+        if ($kode_request == 'A0001') {
+            $tahun =  Carbon::parse($now)->format("Y");
+            $semester = Semester::where('thn_akademik_semester', $tahun)->first();
+            $tagihan = TagihanBiaya::with('detail_biaya.biaya_sekolah.semester')->where('is_tagih', '1')->where('id_siswa', $siswa->id_siswa)->get();
+            $total_tagihan = $tagihan->sum('besar_biaya');
+            $jumlah_tagihan = $tagihan->count();
+            $kode_tagihan = array();
+
+            foreach ($tagihan as $t) {
+                if ($t->detail_biaya->id_jenis_detail_biaya == '4') {
+                    $tahun_semester = $t->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+                    $kode_tagihan[strtolower(str_replace(' ', '_', $t->detail_biaya->keterangan_biaya . '_' . $t->detail_biaya->id_bulan . '_' . $tahun_semester))] = $t->besar_biaya;
                 } else {
-                    return response()->json(['Kode ' => 04, 'Keterangan' => 'kode institusi tidak terdaftar']);
+                    $kode_tagihan[strtolower(str_replace(' ', '_', $t->detail_biaya->keterangan_biaya))] = $t->besar_biaya;
                 }
-            } else {
-                return response()->json(['Kode ' => 04, 'Keterangan' => 'kode institusi tidak terdaftar']);
             }
-        } elseif ($kode == 'A0003') { //Update Tagihan
-            // $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $kodetrn)->first();
-            // if ($pembayaran_trs) {
-            //     $tagihan_biaya = PembayaranTrsDetail::where('id_pembayaran_trs', $pembayaran_trs)->where('id_tagihan_biaya', '')->first();
-            //     $tagihan = TagihanBiaya::find($id_tagihan);
-            //     if ($tagihan_biaya &&  $tagihan) {
-            //         $pembayaran_trs->besar_pembayaran = $pembayaran_trs->besar_pembayaran - $tagihan_biaya->besar_pembayaran +  $tagihan->besar_biaya;
-            //         $pembayaran_trs->save();
-            //         $tagihan_biaya->besar_pembayaran = $tagihan->besar_biaya;
-            //         $tagihan_biaya->save();
-            //     } else {
-            //         return response()->json(['Kode ' => 04, 'Keterangan' => 'kode institusi tidak terdaftar']);
-            //     }
-            // } else {
-            //     return response()->json(['Kode ' => 04, 'Keterangan' => 'kode institusi tidak terdaftar']);
-            // }
-        } elseif ($kode == 'A0004') { //Update Fee
-            $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $kodetrn)->first();
+
+            $data = [
+                "nis_siswa" => $nis_siswa,
+                "total_tagihan" => $total_tagihan,
+                "jumlah_tagihan" => $jumlah_tagihan,
+                "kode_tagihan" =>  $kode_tagihan
+            ];
+
+            return response()->json([
+                'kode ' => "00",
+                'keterangan' => 'success get data tagihan',
+                'data' => $data,
+            ]);
+        } elseif ($kode_request == 'A0002') {
+            $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $nomor_transaksi)->first();
             if ($pembayaran_trs) {
-                if ($pembayaran_trs->status_pembayaran == '1') {
-                    return response()->json(['Kode ' => 03, 'Keterangan' => 'Duplicate Update Fee']);
+                return response()->json(['kode ' => '04', 'keterangan' => 'Duplicate Payment']);
+            }
+            $data_tagihan = explode(";", $kode_tagihan);
+            $total_tagihan = 0;
+            $list_id_tagihan = array();
+            foreach ($data_tagihan as $key => $k_tagihan) {
+                $nm_tagihan = explode("_", $k_tagihan);
+                if ($nm_tagihan[0] == 'spp') {
+                    $tagihan = TagihanBiaya::where('is_tagih', '1')->where('id_siswa', $siswa->id_siswa)->whereHas('detail_biaya', function ($q) use ($nm_tagihan) {
+                        $q->where('id_bulan', $nm_tagihan[1]);
+                    })->whereHas('detail_biaya.biaya_sekolah.semester', function ($q) use ($nm_tagihan) {
+                        $q->where('tahun_ajaran', $nm_tagihan[2]);
+                    })->first();
+                    if ($tagihan) {
+                        $total_tagihan += $tagihan->besar_biaya;
+                        $list_id_tagihan[$key] = $tagihan->id_tagihan_biaya;
+                    } else {
+                        return response()->json([
+                            'kode' => '05',
+                            'keterangan' => 'Kode Tagihan ' . $k_tagihan . ' Not Found'
+                        ]);
+                    }
+                } else {
+                    $keterangan_biaya = strtoupper(str_replace('_', ' ', $k_tagihan));
+                    $tagihan = TagihanBiaya::where('is_tagih', '1')->where('id_siswa', $siswa->id_siswa)->whereHas('detail_biaya', function ($q) use ($keterangan_biaya) {
+                        $q->where('keterangan_biaya', $keterangan_biaya);
+                    })->first();
+                    if ($tagihan) {
+                        $total_tagihan += $tagihan->besar_biaya;
+                        $list_id_tagihan[$key] = $tagihan->id_tagihan_biaya;
+                    } else {
+                        return response()->json([
+                            'kode' => '05',
+                            'keterangan' => 'Kode Tagihan ' . $k_tagihan . ' Not Found'
+                        ]);
+                    }
                 }
+            }
+
+            //validasi pembayaran
+            if ($total_pembayaran >= $total_tagihan) {
                 DB::beginTransaction();
                 try {
                     $semester = Semester::where('is_aktif_semester', '1')->first();
-                    //pembuatan kuitansi
-                    $pembayaran_trs->fee_admin = $feenominal;
-                    $pembayaran_trs->status_pembayaran = 1;
-                    $pembayaran_trs->payment_code = $idtrn;
+                    $pembayaran_trs = new PembayaranTrs;
+                    $pembayaran_trs->id_pembayaran_trs  = $sekolah->prefix . strtotime($now) . uniqid();
+                    $pembayaran_trs->id_siswa           = $siswa->id_siswa;
+                    $pembayaran_trs->nomor_transaksi   = $nomor_transaksi;
+                    $pembayaran_trs->besar_pembayaran   = $total_pembayaran;
+                    $pembayaran_trs->status_pembayaran  = 1; //lunas
+                    $pembayaran_trs->token              = '';
+                    $pembayaran_trs->id_semester_bayar  = $semester->id_semester;
+                    $pembayaran_trs->tgl_pembayaran     = $now->format("Y-m-d");
+                    $pembayaran_trs->keterangan         = 'Pembayaran Online Bank Bukopin';
+                    $pembayaran_trs->fee_admin          = $total_pembayaran - $total_tagihan;
+                    $pembayaran_trs->payment_code =  $kode_tagihan;
                     $pembayaran_trs->payment_channel = 'KBBS';
-                    $pembayaran_trs->id_semester_bayar = $semester->id_semester;
-                    $pembayaran_trs->tgl_pembayaran = $now->format("Y-m-d");
                     $pembayaran_trs->save();
 
-                    $pembayaran_trs_detail = PembayaranTrsDetail::where('id_pembayaran_trs', $pembayaran_trs->id_pembayaran_trs)->get();
-                    foreach ($pembayaran_trs_detail as $p) {
-                        $tagihan_biaya = TagihanBiaya::find($p->id_tagihan_biaya);
-                        if ($tagihan_biaya) {
-                            $tagihan_biaya->is_tagih = 0;
-                            $tagihan_biaya->tgl_pelunasan =  $now->format("Y-m-d");
-                            $tagihan_biaya->besar_pembayaran = $tagihan_biaya->besar_biaya;
-                            $tagihan_biaya->save();
+                    //detail pembayaran
+                    foreach ($list_id_tagihan as $id_tagihan) {
+                        $tagihan = TagihanBiaya::find($id_tagihan);
+                        if ($tagihan) {
+                            $pembayaran_trs_detail = new PembayaranTrsDetail;
+                            $pembayaran_trs_detail->id_pembayaran_trs_detail = $sekolah->prefix . strtotime($now) . uniqid();
+                            $pembayaran_trs_detail->id_pembayaran_trs = $pembayaran_trs->id_pembayaran_trs;
+                            $pembayaran_trs_detail->id_tagihan_biaya = $id_tagihan;
+                            $pembayaran_trs_detail->besar_pembayaran = $tagihan->besar_biaya;
+                            $pembayaran_trs_detail->save();
+
+                            $tagihan->is_tagih = 0;
+                            $tagihan->tgl_pelunasan =  $now->format("Y-m-d");
+                            $tagihan->besar_pembayaran = $tagihan->besar_biaya;
+                            $tagihan->updated_by = "KBBS";
+                            $tagihan->save();
 
                             $pembayaran = new PembayaranBiaya;
                             $pembayaran->id_pembayaran_biaya = $sekolah->prefix . strtotime($now) . uniqid();
-                            $pembayaran->id_tagihan_biaya = $tagihan_biaya->id_tagihan_biaya;
+                            $pembayaran->id_bank = "02";
+                            $pembayaran->id_bank_via = "02";
+                            $pembayaran->id_tagihan_biaya = $tagihan->id_tagihan_biaya;
                             $pembayaran->id_semester_bayar = $semester->id_semester;
-                            $pembayaran->besar_pembayaran = $tagihan_biaya->besar_biaya;
+                            $pembayaran->besar_pembayaran = $tagihan->besar_biaya;
                             $pembayaran->tgl_pembayaran =  $now->format("Y-m-d");
-                            $pembayaran->nomor_transaksi = $kodetrn;
-                            $pembayaran->keterangan = 'dari Bank';
+                            $pembayaran->nomor_transaksi = $nomor_transaksi;
+                            $pembayaran->keterangan = 'Pembayaran Online Bank Bukopin';
+                            $pembayaran->created_by = "KBBS";
                             $pembayaran->save();
-                        } else {
-                            return response()->json(['Kode ' => 97, 'Keterangan' => 'kodetrn tidak terdaftar']);
                         }
                     }
+
+                    $data = [
+                        "nis_siswa" => $nis_siswa,
+                        "nomor_transaksi" => $nomor_transaksi,
+                    ];
 
                     DB::commit();
                 } catch (\Exception $e) {
                     return response()->json([
-                        'Kode' => 99,
-                        'Keterangan' => $e->getMessage()
+                        'kode' => '09',
+                        'keterangan' => $e->getMessage()
                     ]);
                 }
-                return response()->json(['Kode ' => 00, 'Keterangan' => 'Sukses']);
+
+                return response()->json([
+                    'kode' => "00",
+                    'keterangan' => 'success payment',
+                    'data'  => $data,
+                ]);
             } else {
-                return response()->json(['Kode ' => 04, 'Keterangan' => 'kode institusi tidak terdaftar']);
+                return response()->json([
+                    'kode' => "06",
+                    'keterangan' => 'less payment'
+                ]);
             }
-            return response()->json(['Kode ' => 97, 'Keterangan' => 'kodetrn tidak terdaftar']);
+        } elseif ($kode_request == 'A0003') {
+            $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $nomor_transaksi)->first();
+
+            if ($pembayaran_trs) {
+                foreach ($pembayaran_trs->pembayaran_trs_detail as $pembayaran_trs_detail) {
+                    $tagihan = TagihanBiaya::with('pembayaran')->find($pembayaran_trs_detail->id_tagihan_biaya);
+
+                    if ($tagihan) {
+                        foreach ($tagihan->pembayaran as $pembayaran) {
+                            $pembayaran->deleted_by = 'bank bukopin';
+                            $pembayaran->save();
+                            $pembayaran->delete();
+                        }
+                        $tagihan->is_tagih = '1';
+                        $tagihan->tgl_pelunasan = null;
+                        $tagihan->besar_pembayaran = 0;
+                        $tagihan->updated_by = "batal bayar KBBS";
+                        $tagihan->save();
+                    }
+
+                    $pembayaran_trs_detail->deleted_by = 'bank bukopin';
+                    $pembayaran_trs_detail->save();
+                    $pembayaran_trs_detail->delete();
+                }
+
+                $pembayaran_trs->deleted_by = 'bank bukopin';
+                $pembayaran_trs->save();
+                $pembayaran_trs->delete();
+
+                $data = [
+                    "nis_siswa" => $nis_siswa,
+                    "nomor_transaksi" => $nomor_transaksi,
+                ];
+
+                return response()->json([
+                    'kode' => "00",
+                    'keterangan' => 'success cancel payment',
+                    'data'  => $data,
+                ]);
+            } else {
+                return  response()->json([
+                    'kode' => "07",
+                    'keterangan' => 'Nomor transaksi Not Found'
+                ]);
+            }
+        } else {
+            return  response()->json([
+                'kode' => "08",
+                'keterangan' => 'kode request Not Found'
+            ]);
         }
 
         return  response()->json([
-            'Kode' => 99,
-            'Keterangan' => 'Error unknown'
+            'kode' => "99",
+            'keterangan' => 'Error Unknown'
         ]);
     }
 }
