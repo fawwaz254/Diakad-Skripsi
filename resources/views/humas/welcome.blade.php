@@ -50,7 +50,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                             <h2 class="card-inside-title">
                                 Tanggal
                             </h2>
-                            <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY" value="" name="date" aria-required="true" aria-invalid="true" id="tanggal">
+                            <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY" value="{{date('d-m-Y')}}" name="date" aria-required="true" aria-invalid="true" id="tanggal">
                         </div>
 
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -70,6 +70,12 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
 
     <div class="row clearfix" id="rekapz">
 
+    </div>
+    <div id="load" class="card">
+        <div class="body  d-flex align-items-center">
+            <h5><strong>Loading Data...</strong></h5>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
     </div>
 
     <div class="row">
@@ -110,7 +116,6 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
 
 @include('scriptjs')
 <script>
-
     $('select[name*="id_form"]').select2()
 
     $('select[name*="id_form"]').on('change', function() {
@@ -123,6 +128,17 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
         $('#kelaz').children().remove()
         $('#rekapz').children().remove()
     })
+
+    document.querySelector("#tanggal").valueAsDate = new Date();
+
+    var $loading = $('#load').hide();
+    $(document)
+        .ajaxStart(function() {
+            $loading.show();
+        })
+        .ajaxStop(function() {
+            $loading.hide();
+        });
 </script>
 
 
@@ -181,8 +197,27 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
             },
             xaxis: {
                 categories: data.jenis == 4 ? data.label : Object.keys(data.label),
-            }
-        };
+            },
+            tooltip: {
+                enabled: true,
+                custom({
+                    series,
+                    seriesIndex,
+                    dataPointIndex,
+                    w
+                }) {
+                    return (
+                        '<div style="width: 100%; height: 50px; border-radius: 10px; display:flex; justify-content:center; align-items:center; padding: 0px 15px 0px 15px;">' +
+                        "<span>" +
+                        w.globals.labels[dataPointIndex] + 
+                        "</span>" +
+                        "&nbsp <span><strong> ( " + series[seriesIndex][dataPointIndex]+ " ) </strong></span>" +
+                        "</div>"
+                    );
+                }
+            },
+
+        }
 
         var chart = new ApexCharts(document.querySelector('#' + data.id), options);
         chart.render();
@@ -216,7 +251,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                                     </div>
                                     `)
 
-                    
+
 
                     let counter = chart.counter
 
@@ -298,9 +333,9 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                 // date: tanggal
             },
             function(data, status) {
-                
+
                 if (data.form !== null && data.form.id_role.includes('3')) {
-                    
+
                     $('#kelaz').append(`
                     <div class="row clearfix" style="">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
