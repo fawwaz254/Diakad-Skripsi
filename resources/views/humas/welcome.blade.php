@@ -120,7 +120,6 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
 
     $('#tanggal').on('change', function() {
         var tanggal = $('#tanggal').val() === '' ? new Date().toISOString().substring(0, 10) : $('#tanggal').val();
-        console.log('ubah')
         $('#kelaz').children().remove()
         $('#rekapz').children().remove()
     })
@@ -203,7 +202,6 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
         $.post(get_data, param,
             function(chart, status) {
                 data_chart = []
-                console.log(chart);
                 if (chart.counter !== null) {
 
                     $('#rekapz').append(`
@@ -218,7 +216,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                                     </div>
                                     `)
 
-                    console.log(chart)
+                    
 
                     let counter = chart.counter
 
@@ -292,20 +290,17 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
         var id = $('select[name*="id_form"]').val()
         tanggal = $('#tanggal').val() === '' ? new Date().toISOString().substring(0, 10) : $('#tanggal').val();
 
-        console.log(tanggal);
         $('#kelaz').children().remove()
         $('#rekapz').children().remove()
 
-        console.log('clicked')
         $.post(get_data, {
                 id_form: id
                 // date: tanggal
             },
             function(data, status) {
-                // alert("Data: " + data + "\nStatus: " + status);
-                // console.log(data);
+                
                 if (data.form !== null && data.form.id_role.includes('3')) {
-                    console.log('3')
+                    
                     $('#kelaz').append(`
                     <div class="row clearfix" style="">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
