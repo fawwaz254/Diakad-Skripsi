@@ -56,7 +56,7 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('humas')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-
+        Route::post('rekap-chart', [WelcomeController::class, 'getRekapForm']);
 
         Route::prefix('form-builder')->group(function () {
             Route::prefix('list-form')->group(function () {
