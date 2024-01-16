@@ -157,14 +157,14 @@
             @endphp
             <tr valign=middle>
                 @foreach ($subkategori_in as $data_subkategori)
-                    <td class="text-center text-bold">{{ $data_subkategori->nm_subkategori_rapb }}</td>
+                    <td class="text-center text-bold">{{ $data_subkategori->deskripsi_subkategori_rapb }}</td>
                     @php
                         $total_all[$data_subkategori->id_subkategori_rapb] = 0;
                     @endphp
                 @endforeach
                 @foreach ($subkategori_out as $data_subkategori)
                     <td class="text-center text-bold" style="font-size: 6px;padding:3px">
-                        {{ $data_subkategori->nm_subkategori_rapb }}</td>
+                        {{ $data_subkategori->deskripsi_subkategori_rapb }}</td>
                     @php
                         $total_all[$data_subkategori->id_subkategori_rapb] = 0;
                     @endphp
@@ -197,10 +197,10 @@
                             <td class="text-bold">{{ $report_in['text'] }}</td>
                             @foreach ($subkategori_in as $data_subkategori)
                                 <td class="text-right" style="font-size:9px">
-                                    {{ $report_in['category'] == $data_subkategori->nm_subkategori_rapb ? number_format($report_in['value']) : '' }}
+                                    {{ $report_in['category'] == $data_subkategori->deskripsi_subkategori_rapb ? number_format($report_in['value']) : '' }}
                                 </td>
                                 @php
-                                    if ($report_in['category'] == $data_subkategori->nm_subkategori_rapb && $report_in['text'] != 'Saldo') {
+                                    if ($report_in['category'] == $data_subkategori->deskripsi_subkategori_rapb && $report_in['text'] != 'Saldo') {
                                         $total_all[$data_subkategori->id_subkategori_rapb] += $report_in['value'];
                                     }
                                 @endphp
@@ -234,10 +234,10 @@
                         <td></td>
                         @foreach ($subkategori_out as $data_subkategori)
                             <td class="text-right" style="font-size:8px">
-                                {{ $report_out['id_subkategori_rapb'] == $data_subkategori->id_subkategori_rapb ? number_format($report_out['value']) : '' }}
+                                {{ $report_out['category'] == $data_subkategori->deskripsi_subkategori_rapb ? number_format($report_out['value']) : '' }}
                             </td>
                             @php
-                                if ($report_out['id_subkategori_rapb'] == $data_subkategori->id_subkategori_rapb) {
+                                if ($report_out['category'] == $data_subkategori->deskripsi_subkategori_rapb) {
                                     $total_all[$data_subkategori->id_subkategori_rapb] += $report_out['value'];
                                 }
                             @endphp
@@ -273,7 +273,7 @@
                 <td></td>
                 <td class="text-bold">Tunggakan SPP Tahun Lalu yang masuk</td>
                 @foreach ($subkategori_in as $data_subkategori)
-                    @if ($data_subkategori->nm_subkategori_rapb == 'Lain-Lain')
+                    @if ($data_subkategori->deskripsi_subkategori_rapb == 'Lain-Lain')
                         <td class="text-bold text-right">
                             {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu) }}
                         </td>
@@ -296,7 +296,7 @@
                 <td></td>
                 <td class="text-bold">Subsidi BOS</td>
                 @foreach ($subkategori_in as $data_subkategori)
-                    @if ($data_subkategori->nm_subkategori_rapb == 'Subsidi BOS')
+                    @if ($data_subkategori->deskripsi_subkategori_rapb == 'Subsidi BOS')
                         <td class="text-bold text-right">{{ number_format($subsidi_bos) }}</td>
                         @php
                             $total_all[$data_subkategori->id_subkategori_rapb] += $subsidi_bos;
@@ -320,7 +320,7 @@
                 @endforeach
                 <td class="text-bold text-right"></td>
                 @foreach ($subkategori_out as $data_subkategori)
-                    @if ($data_subkategori->nm_subkategori_rapb == 'Pembelajaran Non KBM')
+                    @if ($data_subkategori->deskripsi_subkategori_rapb == 'Pembelajaran Non KBM')
                         <td class="text-bold text-right" style="font-size:9px">
                             {{ number_format($total_bayar_non_kbm) }}</td>
                         @php
