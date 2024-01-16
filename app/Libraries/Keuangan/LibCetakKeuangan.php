@@ -626,6 +626,7 @@ class LibCetakKeuangan
                 $data_temp['category'] = 'Lain-Lain';
                 $data_temp['text'] = 'Saldo awal BULAN';
                 $data_temp['value'] = $tutup_buku_kas_bulan_lalu->kas_akhir_bulan;
+                $data_temp['id_subkategori_rapb'] = null;
 
                 $data_in[] = $data_temp;
                 $master_saldo_masuk += $data_temp['value'];
@@ -634,6 +635,7 @@ class LibCetakKeuangan
                 $data_temp['category'] = 'Lain-Lain';
                 $data_temp['text'] = 'Saldo';
                 $data_temp['value'] = $master_saldo_masuk;
+                $data_temp['id_subkategori_rapb'] = null;
 
                 $data_in[] = $data_temp;
             }
@@ -674,6 +676,7 @@ class LibCetakKeuangan
             foreach ($realisasi_as_date as $realisasi) {
                 $data_temp['category'] = $realisasi->rapb->subkategori->deskripsi_subkategori_rapb;
                 $data_temp['text'] = $realisasi->nm_realisasi;
+                $data_temp['id_subkategori_rapb'] = $realisasi->rapb->subkategori->id_subkategori_rapb;
                 $data_temp['value'] = $realisasi->dana_realisasi;
 
                 $data_in[] = $data_temp;
@@ -689,6 +692,7 @@ class LibCetakKeuangan
             foreach ($realisasi_as_date as $realisasi) {
                 $data_temp['category'] = $realisasi->rapb->subkategori->deskripsi_subkategori_rapb;
                 $data_temp['text'] = $realisasi->nm_realisasi;
+                $data_temp['id_subkategori_rapb'] = $realisasi->rapb->subkategori->id_subkategori_rapb;
                 $data_temp['value'] = $realisasi->dana_realisasi;
 
                 $data_out[] = $data_temp;
