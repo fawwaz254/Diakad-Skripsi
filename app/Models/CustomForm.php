@@ -18,6 +18,17 @@ class CustomForm extends Model
     public $timestamps = true;
 
     protected $guarded = [];
+    protected $casts = [
+        'form_settings' => 'array'
+    ];
+
+    protected $attributes = [
+        'form_settings' => '{
+            "limit":"false",
+            "editable":"true",
+            "random":"false"
+        }'
+    ];
 
     public function role()
     {

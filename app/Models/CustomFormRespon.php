@@ -18,4 +18,14 @@ class CustomFormRespon extends Model
     public $timestamps = true;
 
     protected $guarded = [];
+
+    public function form_sheet()
+    {
+        return $this->belongsTo(CustomFormSheet::class, 'id_custom_form_sheet');
+    }
+
+    public function form_komponen()
+    {
+        return $this->belongsTo(CustomFormKomponen::class, 'id_custom_form_komponen');
+    }
 }

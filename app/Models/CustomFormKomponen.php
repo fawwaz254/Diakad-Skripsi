@@ -24,3 +24,4 @@ class CustomFormKomponen extends Model
         return $this->hasMany(CustomFormRespon::class, 'id_custom_form_komponen');
     }
 }
+    
