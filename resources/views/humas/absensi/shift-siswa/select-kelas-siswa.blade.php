@@ -13,14 +13,15 @@
                             <label>
                                 Kelas
                             </label>
-                            <select class="form-control show-tick" name="kelas">
-                                <option>Pilih kelas</option>
+                            <select class="form-control show-tick" name="tingkat">
+                                {{-- <option>Pilih kelas</option> --}}
+                                <option value="0">Semua Kelas</option>
                                 <option value="1">Tingkat 1</option>
                                 <option value="2">Tingkat 2</option>
                                 <option value="3">Tingkat 3</option>
-                                @foreach ($kelas as $lk)
+                                {{-- @foreach ($kelas as $lk)
                                     <option value="{{ $lk->id_kelas }}">{{ $lk->nm_kelas }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
                         <div class="col-md-2 col-sm-12 col-xs-12">
@@ -41,6 +42,6 @@
 <script>
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' +
-            $('select[name=kelas]').val());
+            $('select[name=tingkat]').val());
     }
 </script>

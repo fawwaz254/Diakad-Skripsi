@@ -70,7 +70,6 @@ class ShiftPenggunaController extends Controller
 
     public function addShiftPengguna(Request $request)
     {
-
         $shifts = ShiftMaster::all();
         $penggunas = pengguna::whereIn('status_join_table', [1, 2])
             ->with('status_pengguna', 'guru.unit_kerja', 'staff.unit_kerja')
