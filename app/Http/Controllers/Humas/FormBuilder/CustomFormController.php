@@ -253,7 +253,6 @@ class CustomFormController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         try {
@@ -262,11 +261,20 @@ class CustomFormController extends Controller
                 [
                     'id_role'    => 'required',
                     'nm_custom_form'  => 'required',
+                    'komponen' => 'required',
                     'is_aktif'   => 'required',
                     'start_time'   => 'required',
                     'end_time'   => 'required',
                 ]
             );
+
+            $rule = [
+                'limit' => isset($input->multiple) ? 'true' : 'false',
+                'random' => isset($input->random) ? 'true' : 'false',
+                'editable' => isset($input->editable) ? 'true' : 'false'
+            ];
+
+
 
             $id_custom_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $custom_form = new CustomForm();
@@ -276,6 +284,7 @@ class CustomFormController extends Controller
             $custom_form->is_aktif          = $input->is_aktif;
             $custom_form->start_time        = $input->start_time;
             $custom_form->end_time          = $input->end_time;
+            $custom_form->form_settings     = $rule;
             $custom_form->created_by        = $auth_data->pengguna->id_pengguna;
             $custom_form->save();
 
@@ -293,12 +302,7 @@ class CustomFormController extends Controller
                 $d['created_by'] = $auth_data->pengguna->id_pengguna;
                 $d['created_at'] = $now;
 
-                if ($d['order'] == 'null') {
-
-                    $d['updated_at'] = $d['created_at']->addSeconds($key + 60); // Add 60 seconds plus $key
-                } else {
-                    $d['updated_at'] = $d['created_at']->addSeconds(intval($d['order']) + 60); // Add 60 seconds plus the order value
-                }
+                $d['updated_at'] = $d['created_at']->addSeconds($key + 60); // Add 60 seconds plus $key
 
                 unset($d['order']);
                 CustomFormKomponen::insert($d);

@@ -43,6 +43,7 @@ use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaSholatController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\Absensi\RekapPertanggalController;
 use App\Http\Controllers\Humas\FormBuilder\CustomFormController;
+use App\Http\Controllers\Humas\FormBuilder\CustomFormRekapController;
 use App\Http\Controllers\Humas\FormBuilder\ListFormController;
 use App\Http\Controllers\Humas\FormBuilder\RekapFormHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
@@ -107,6 +108,8 @@ Route::middleware(['token_staff'])->group(function () {
                     Route::post('action/add',[CustomFormController::class, 'addCustomFormBulk']);
 
                 });
+                Route::get('/rekap/datatables',[CustomFormRekapController::class,'indexDataTables']);
+                Route::resource('rekap',CustomFormRekapController::class);
             });
         });
 

@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Guru\FormGuru;
 
 use App\Http\Controllers\Controller;
 use App\Models\CustomForm;
+use App\Models\CustomFormKomponen;
 use App\Models\CustomFormRespon;
 use App\Models\CustomFormSheet;
 use App\Models\Role;
 use Carbon\Carbon;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomFormResponController extends Controller
@@ -95,6 +98,7 @@ class CustomFormResponController extends Controller
         $auth_data = $input->auth_data;
 
         $form = CustomForm::with('form_komponen', 'role')->find($id);
+        // $count = count($form->form_komponen->where('tipe_custom_form_komponen', 'custom_ttd'));
 
         return view('guru/form-guru/custom-form/add-respon-custom-form', compact('auth_data', 'form'));
     }
@@ -105,7 +109,7 @@ class CustomFormResponController extends Controller
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-
+        // dd($input);
 
         $request->validate([
             'id_custom_form' => 'required',
@@ -144,14 +148,35 @@ class CustomFormResponController extends Controller
             $res->id_custom_form_respon = $input->auth_data->sekolah_data->prefix . strtotime($sekarang) . uniqid();
             $res->id_custom_form_sheet = $sheet->id_custom_form_sheet;
             $res->id_custom_form_komponen = $key;
-            $res->respon = json_encode($value);
+            $tipe = CustomFormKomponen::where('id_custom_form_komponen', $key)->select('tipe_custom_form_komponen')->first();
+
+            if ($tipe['tipe_custom_form_komponen'] == 'custom_ttd') {
+                $image_parts = explode(";base64,", $value[0]);
+
+                $image_type_aux = explode("image/", $image_parts[0]);
+
+                $image_type = $image_type_aux[1];
+
+                $image_base64 = base64_decode($image_parts[1]);
+
+                DebugBar::info($image_base64);
+                $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
+                $path = 'custom-form/' . $res->id_custom_form_sheet . '/';
+                $nama_file = $res->id_custom_form_respon . uniqid() . '.' . $image_type;
+                $file = Storage::disk('local')->put($singkat_sekolah . '/humas/' . $path . $nama_file, $image_base64, 'public');
+                $res->respon = $path.$nama_file;
+            } else {
+                $res->respon = json_encode($value);
+            }
+
             $res->created_at = $sekarang;
             $res->created_by = $auth_data->pengguna->id_pengguna;
             $res->save();
         }
 
         return [
-            'status' => 200,
+            'status' => 202,
+            'path' => 'form-guru/custom-form',
             'message' => 'Berhasil Mengirim Respon'
         ];
     }
