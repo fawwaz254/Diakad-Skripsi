@@ -333,7 +333,7 @@ class FingerprintController extends BaseController
                 } else {
                     $fingerprint_url = $device->ip_address_wan . '/iWsService';
                 }
-                $client->request('GET', $fingerprint_url, ['timeout' => 10]);
+                $client->request('GET', $fingerprint_url, ['timeout' => 5]);
                 // if (!$response->getStatusCode() == 200) {
                 //     continue;
                 // }
