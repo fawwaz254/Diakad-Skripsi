@@ -85,7 +85,7 @@
     $total_bayar_non_kbm = $data_laporan['total_bayar_non_kbm'];
     $subkategori_in = $subkategori->where('kategori.tipe_kategori_rapb', 1)->values();
     $subkategori_out = $subkategori->where('kategori.tipe_kategori_rapb', 2)->values();
-    
+
     $length_column = 5 + $subkategori_in->count() + $subkategori_out->count();
 @endphp
 
@@ -178,7 +178,7 @@
                         <center>{{ $i }}</center>
                     </td>
                 @endfor
-                
+
             </tr>
             <tr valign=middle>
                 @for ($i = 1; $i <= $length_column; $i++)
@@ -268,14 +268,14 @@
                 </tr>
             @endforeach
 
-           
+
             <tr valign=middle>
                 <td></td>
                 <td class="text-bold">Tunggakan SPP Tahun Lalu yang masuk</td>
                 @foreach ($subkategori_in as $data_subkategori)
                     @if ($data_subkategori->deskripsi_subkategori_rapb == 'Lain-Lain')
                         <td class="text-bold text-right">
-                            {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu ) }}
+                            {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu) }}
                         </td>
                         @php
                         @endphp
@@ -284,7 +284,7 @@
                     @endif
                 @endforeach
                 <td class="text-bold text-right">
-                    {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu ) }}
+                    {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu) }}
                 </td>
                 @foreach ($subkategori_out as $data_subkategori)
                     <td></td>
