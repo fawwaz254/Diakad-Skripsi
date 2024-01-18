@@ -291,7 +291,7 @@ class SettingPesertaEkskulController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'message' => 'Input Peserta Ekskul Berhasil Dilakukan',
-                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/'
+                       //'path' => 'ekstrakurikuler/setting-peserta-ekskul/'//
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
