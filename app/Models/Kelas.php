@@ -44,6 +44,14 @@ class Kelas extends Model
         return $this->hasMany(Siswa::class, 'id_kelas');
     }
 
+    public function siswa_one()
+    {
+        return $this->hasOne(Siswa::class, 'id_kelas')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        });
+    }
+
+
     public function tagihan()
     {
         return $this->hasMany(TagihanBiaya::class, 'id_kelas');
