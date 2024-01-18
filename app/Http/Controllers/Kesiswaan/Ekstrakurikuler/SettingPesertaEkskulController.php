@@ -291,7 +291,8 @@ class SettingPesertaEkskulController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'message' => 'Input Peserta Ekskul Berhasil Dilakukan',
-                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/'
+                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-kelas/' . $semester->id_semester . '/' . $id_ekskul . '/' . $siswa->id_kelas
+
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -428,7 +429,7 @@ class SettingPesertaEkskulController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'message' => 'Setting Pengambilan Ekskul Berhasil',
-                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/setting/' . $id_ekskul
+                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/setting/' . $id_ekskul 
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
