@@ -210,8 +210,8 @@ class ShiftSiswaController extends Controller
         try {
             $allShiftPengguna = ShiftPengguna::whereIn('id_pengguna', $siswa->pluck('id_pengguna'))->whereBetween('date', [$startDate, $endDate])->forceDelete();
             $list_data = array();
-            foreach ($siswa as $user) {
-                foreach ($dates as $value) {
+            foreach ($dates as $value) {
+                foreach ($siswa as $user) {
                     $list_data[] = [
                         'id_shift_pengguna' =>  $prefix . strtotime($now) . uniqid(),
                         'id_pengguna' => $user->id_pengguna,
@@ -221,15 +221,19 @@ class ShiftSiswaController extends Controller
                         'created_by' =>  $input->auth_data->pengguna->id_pengguna,
                     ];
                 }
+                // if (!empty($list_data)) {
+                ShiftPengguna::insert($list_data);
+                unset($list_data);
+                // }
             }
 
-            if (!empty($list_data)) {
-                foreach (array_chunk($list_data, 250) as $chunk_list_data) {
-                    foreach ($chunk_list_data as $data) {
-                        JobShiftPengguna::dispatch($data);
-                    }
-                }
-            }
+
+            //     foreach (array_chunk($list_data, 250) as $chunk_list_data) {
+            //         foreach ($chunk_list_data as $data) {
+            //             JobShiftPengguna::dispatch($data);
+            //         }
+            //     }
+            // }
 
             DB::commit();
         } catch (\Exception $e) {
