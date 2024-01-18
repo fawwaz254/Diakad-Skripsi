@@ -104,8 +104,13 @@ Route::post('payment/callback/{id}', [PembayaranOnlineController::class, 'action
 
 Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionCheckExp']);
 
+
+Route::get('/forms', function () {
+    return view('public/forms/index');
+});
 Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);
+
 
 Route::prefix('reporting-dashboard')->group(function () {
     Route::get('/', [SignInController::class, 'indexReportingDashboard']);
@@ -155,3 +160,4 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
     });
 });
+
