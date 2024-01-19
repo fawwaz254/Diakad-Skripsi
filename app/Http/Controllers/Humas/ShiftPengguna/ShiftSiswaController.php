@@ -92,7 +92,7 @@ class ShiftSiswaController extends Controller
     public function addShiftSiswa(Request $request)
     {
 
-        $kelas = Kelas::with('siswa_one')->where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        $kelas = Kelas::with('siswa_one')->whereHas('siswa_one')->where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $shifts = ShiftMaster::all();
         $date =  Carbon::now()->format('Y-m-d');
 
