@@ -28,13 +28,13 @@ class FingerprintController extends BaseController
 
         $now = Carbon::now('Asia/Jakarta');
         return Datatables::of($list_data)
-            ->addColumn('status', function ($item) use ($now) {
-                if (Carbon::parse($item->updated_at)->diffInMinutes($now) > 2) {
-                    return 'OFFLINE';
-                } else {
-                    return 'ONLINE';
-                }
-            })
+            // ->addColumn('status', function ($item) use ($now) {
+            //     if (Carbon::parse($item->updated_at)->diffInMinutes($now) > 2) {
+            //         return 'OFFLINE';
+            //     } else {
+            //         return 'ONLINE';
+            //     }
+            // })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->fp_device_id,
