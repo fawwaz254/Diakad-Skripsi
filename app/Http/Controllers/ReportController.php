@@ -258,32 +258,32 @@ class ReportController extends BaseController
             }
         } elseif ($id_role == 7) { // Akademik
 
-            $kurikulum = Kurikulum::pluck('id_kurikulum');
-            $kurikulum_mp = KurikulumMp::distinct('id_kurikulum')->whereIn('id_kurikulum', $kurikulum)->count('id_kurikulum');
+            // $kurikulum = Kurikulum::pluck('id_kurikulum');
+            // $kurikulum_mp = KurikulumMp::distinct('id_kurikulum')->whereIn('id_kurikulum', $kurikulum)->count('id_kurikulum');
 
             $kelas_mp = KelasMp::where('id_semester', $semester_aktif)->pluck('id_kelas_mp');
 
             $jadwal_kelas_mp = JadwalKelasMp::distinct('id_kelas_mp')->whereIn('id_kelas_mp', $kelas_mp)->count('id_kelas_mp');
 
-            $param[0]['catatan'] = 'Sudah memasukkan kurikulum beserta mapel mapelnya';
+            // $param[0]['catatan'] = 'Sudah memasukkan kurikulum beserta mapel mapelnya';
+            // $param[0]['status'] = 0;
+
+            $param[0]['catatan'] = 'Sudah memasukkan usulan mata ajar pada semester yang aktif';
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah memasukkan usulan mata ajar pada semester yang aktif';
+            $param[1]['catatan'] = 'Sudah memasukkan jadwal mengajar serta ruangan di usulan mata ajar pada semester yang aktif ';
             $param[1]['status'] = 0;
 
-            $param[2]['catatan'] = 'Sudah memasukkan jadwal mengajar serta ruangan di usulan mata ajar pada semester yang aktif ';
-            $param[2]['status'] = 0;
+            // if ($kurikulum_mp > 0 && $kurikulum_mp == $kurikulum->count()) {
+            //     $param[0]['status'] = 1;
+            // }
 
-            if ($kurikulum_mp > 0 && $kurikulum_mp == $kurikulum->count()) {
+            if ($kelas_mp->count()) {
                 $param[0]['status'] = 1;
             }
 
-            if ($kelas_mp->count()) {
-                $param[1]['status'] = 1;
-            }
-
             if ($jadwal_kelas_mp == $kelas_mp->count() && $kelas_mp->count() != 0) {
-                $param[2]['status'] = 1;
+                $param[1]['status'] = 1;
             }
 
             $jumlah_diisi = $this->count_multidimension($param);
