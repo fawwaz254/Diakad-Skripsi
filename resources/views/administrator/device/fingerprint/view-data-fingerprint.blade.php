@@ -26,7 +26,7 @@
                                     <th>No</th>
                                     <th>Nama FP</th>
                                     <th>SN</th>
-                                    <th>Status</th>
+                                    {{-- <th>Status</th> --}}
                                     <th>WAN</th>
                                     <th>LAN</th>
                                     <th>PORT</th>
@@ -70,11 +70,13 @@
                 data: 'sn',
                 searchable: false,
                 orderable: false
-            }, {
-                data: 'status',
-                searchable: false,
-                orderable: false
-            }, {
+            },
+            // {
+            //     data: 'status',
+            //     searchable: false,
+            //     orderable: false
+            // },
+            {
                 data: 'ip_address_wan',
                 searchable: false,
                 orderable: false
