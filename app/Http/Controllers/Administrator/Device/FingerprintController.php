@@ -28,13 +28,13 @@ class FingerprintController extends BaseController
 
         $now = Carbon::now('Asia/Jakarta');
         return Datatables::of($list_data)
-            ->addColumn('status', function ($item) use ($now) {
-                if (Carbon::parse($item->updated_at)->diffInMinutes($now) > 2) {
-                    return 'OFFLINE';
-                } else {
-                    return 'ONLINE';
-                }
-            })
+            // ->addColumn('status', function ($item) use ($now) {
+            //     if (Carbon::parse($item->updated_at)->diffInMinutes($now) > 2) {
+            //         return 'OFFLINE';
+            //     } else {
+            //         return 'ONLINE';
+            //     }
+            // })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->fp_device_id,
@@ -69,11 +69,11 @@ class FingerprintController extends BaseController
 
         if (isset($input->SN)) {
             // if ($device = FPDevice::where('sn', $input->SN)->first()) {
-                // if (isset($input->INFO)) {
-                //     $ip_address_lan = explode(',', $input->INFO)[4];
-                //     $device->ip_address_lan = $ip_address_lan;
-                // }
-                // $device->ip_address_wan = $request->ip();
+            // if (isset($input->INFO)) {
+            //     $ip_address_lan = explode(',', $input->INFO)[4];
+            //     $device->ip_address_lan = $ip_address_lan;
+            // }
+            // $device->ip_address_wan = $request->ip();
             //     $device->updated_at = Carbon::now('Asia/Jakarta');
             //     $device->save();
             // }
@@ -324,7 +324,7 @@ class FingerprintController extends BaseController
         $client = new \GuzzleHttp\Client();
 
         $finger_sukses = 'Finger yang berhasil diambil = </br>';
-        $devices = FPDevice::orderBy('updated_at', 'DESC')->get();
+        $devices = FPDevice::orderBy('updated_at', 'asc')->get();
         foreach ($devices as $device) {
             $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
             try {
@@ -333,7 +333,7 @@ class FingerprintController extends BaseController
                 } else {
                     $fingerprint_url = $device->ip_address_wan . '/iWsService';
                 }
-                $client->request('GET', $fingerprint_url, ['timeout' => 3.14]);
+                $client->request('GET', $fingerprint_url, ['timeout' => 5]);
                 // if (!$response->getStatusCode() == 200) {
                 //     continue;
                 // }
@@ -435,6 +435,8 @@ class FingerprintController extends BaseController
             } catch (Exception $e) {
                 continue;
             }
+            $device->updated_at = Carbon::now('Asia/Jakarta');
+            $device->save();
         }
         echo $finger_sukses;
     }
