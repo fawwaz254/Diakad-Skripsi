@@ -68,7 +68,7 @@ use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaDikunciController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaTerkunciController;
 use App\Http\Controllers\Guru\Faq\FaqController;
-use App\Http\Controllers\Guru\FormGuru\CustomFormResponController;
+use App\Http\Controllers\CustomFormResponController;
 use App\Http\Controllers\Guru\GuruKpi\GuruKpiController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController;
 use App\Http\Controllers\Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController;

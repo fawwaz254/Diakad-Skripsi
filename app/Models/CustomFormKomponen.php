@@ -18,10 +18,18 @@ class CustomFormKomponen extends Model
     public $timestamps = true;
 
     protected $guarded = [];
+    protected $casts = [
+        'komponen_settings' => 'array'
+    ];
+
+    protected $attributes = [
+        'komponen_settings' => '{
+            "mandatory": "true"
+        }'
+    ];
 
     public function form_respon()
     {
         return $this->hasMany(CustomFormRespon::class, 'id_custom_form_komponen');
     }
 }
-    

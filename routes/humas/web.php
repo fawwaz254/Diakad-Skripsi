@@ -88,29 +88,33 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('detail-jawaban/{id_form}', [RekapFormHarianController::class, 'viewDetailJawaban']);
             });
 
+            
             Route::prefix('custom-form')->group(function () {
-                Route::get('/', [CustomFormController::class, 'viewCustomForm']);
-                Route::get('add', [CustomFormController::class, 'addCustomForm']);
-                Route::get('edit/{id_custom_form}', [CustomFormController::class, 'editCustomForm']);
-                Route::post('action/{mode}/{id_custom_form?}', [CustomFormController::class, 'actionCustomForm']);
-                Route::get('datatables', [CustomFormController::class, 'datatablesCustomForm']);
-
-                // komponen
-                Route::get('komponen/{id_custom_form}', [CustomFormController::class, 'viewCustomFormKomponen']);
-                Route::get('komponen/datatables/{id_custom_form}', [CustomFormController::class, 'datatablesCustomFormKomponen']);
-                Route::get('komponen/{id_custom_form}/add', [CustomFormController::class, 'addCustomFormKomponen']);
-                Route::get('komponen/{id_custom_form}/edit/{id_custom_form_komponen}', [CustomFormController::class, 'editCustomFormKomponen']);
-                Route::post('komponen/action/{mode}/{id_custom_form_komponen?}', [CustomFormController::class, 'actionCustomFormKomponen']);
-
-                // bulk Custom (like g-forms~)
-                Route::prefix('bulk')->group(function(){
-                    Route::get('/',[CustomFormController::class, 'viewAddCustomFormBulk']);
-                    Route::post('action/add',[CustomFormController::class, 'addCustomFormBulk']);
-
-                });
-                Route::get('/rekap/datatables',[CustomFormRekapController::class,'indexDataTables']);
-                Route::resource('rekap',CustomFormRekapController::class);
+                    Route::get('datatables', [CustomFormController::class, 'datatablesCustomForm']);
             });
+            Route::resource('custom-form',CustomFormController::class);
+
+            //     Route::get('/', [CustomFormController::class, 'viewCustomForm']);
+            //     Route::get('add', [CustomFormController::class, 'addCustomForm']);
+            //     Route::get('edit/{id_custom_form}', [CustomFormController::class, 'editCustomForm']);
+            //     Route::post('action/{mode}/{id_custom_form?}', [CustomFormController::class, 'actionCustomForm']);
+
+            //     // komponen
+            //     Route::get('komponen/{id_custom_form}', [CustomFormController::class, 'viewCustomFormKomponen']);
+            //     Route::get('komponen/datatables/{id_custom_form}', [CustomFormController::class, 'datatablesCustomFormKomponen']);
+            //     Route::get('komponen/{id_custom_form}/add', [CustomFormController::class, 'addCustomFormKomponen']);
+            //     Route::get('komponen/{id_custom_form}/edit/{id_custom_form_komponen}', [CustomFormController::class, 'editCustomFormKomponen']);
+            //     Route::post('komponen/action/{mode}/{id_custom_form_komponen?}', [CustomFormController::class, 'actionCustomFormKomponen']);
+
+            //     // bulk Custom (like g-forms~)
+            //     Route::prefix('bulk')->group(function(){
+            //         Route::get('/',[CustomFormController::class, 'viewAddCustomFormBulk']);
+            //         Route::post('action/add',[CustomFormController::class, 'addCustomFormBulk']);
+
+            //     });
+            //     Route::get('/rekap/datatables',[CustomFormRekapController::class,'indexDataTables']);
+            //     Route::resource('rekap',CustomFormRekapController::class);
+            // });
         });
 
         Route::prefix('manajemen-file')->group(function () {

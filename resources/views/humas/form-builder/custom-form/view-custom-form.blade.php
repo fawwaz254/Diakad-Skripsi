@@ -2,8 +2,8 @@
     <div class="block-header">
         <h2>
             <a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/custom-form/add') }}"><i
-                    class="material-icons">note_add</i><span>Tambah Custom Form Form</span></a>
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/custom-form/create') }}"><i
+                    class="material-icons">note_add</i><span>Buat Form Baru</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -24,7 +24,7 @@
                                     <th>Nama Form</th>
                                     <th>Role</th>
                                     <th>Status</th>
-                                    <th>Tambah Pertanyaan</th>
+                                    
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -72,19 +72,10 @@
                 name: 'is_aktif',
                 className: 'align-center',
                 searchable: false,
-            },
-            {
-                data: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
                 render: function(data) {
-                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        komponen_url + '/komponen/' + data.id + '">' +
-                        '    <i class="material-icons">add</i>' +
-                        '</a>';
-
+                    return data == 1 ? 'AKTIF': 'TIDAK AKTIF';
                 }
+                    
             },
             {
                 data: 'action',

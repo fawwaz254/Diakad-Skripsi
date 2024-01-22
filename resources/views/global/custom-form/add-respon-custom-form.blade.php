@@ -8,8 +8,21 @@
 
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' ) }}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/custom-form' ) }}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
+    @if(isset($pesan))
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <div class="card">
+                <div class="body">
+                    <h1>{{$pesan}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @else
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
@@ -20,7 +33,7 @@
                     <div class="header" style="border-top: 8px solid #555;">
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input style="height: 50px; font-size:x-large; outline: none; border: none; width: 100%; " placeholder="Formulir Tanpa Judul" type="text" class="" name="nm_custom_form" required="" aria-required="true" aria-invalid="true" value="FORM {{$form->nm_custom_form}}" disabled>
+                                <input style="height: 50px; font-size:x-large; outline: none; border: none; width: 100%; " placeholder="Formulir Tanpa Judul" type="text" class="" name="nm_custom_form"  aria-required="true" aria-invalid="true" value="FORM {{$form->nm_custom_form}}" disabled>
                             </div>
                         </div>
                     </div>
@@ -36,7 +49,7 @@
                                     Jam Mulai Pengisian
                                 </h2>
                                 <div>
-                                    <input type="text" class=" form-control" name="start_time" required="" aria-required="true" aria-invalid="true" value="{{$form->start_time}}" disabled>
+                                    <input type="text" class=" form-control" name="start_time"  aria-required="true" aria-invalid="true" value="{{$form->start_time}}" disabled>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
@@ -44,16 +57,16 @@
                                     Jam Akhir Pengisian
                                 </h2>
                                 <div>
-                                    <input type="text" class=" form-control" name="end_time" required="" aria-required="true" aria-invalid="true" value="{{$form->end_time}}" disabled>
+                                    <input type="text" class=" form-control" name="end_time"  aria-required="true" aria-invalid="true" value="{{$form->end_time}}" disabled>
                                 </div>
                             </div>
 
                         </div>
-                        <!-- <div class="row">
-                            <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                                <button id="submit" type="submit" class="btn btn-lg bg-blue waves-effect target-link">SIMPAN</button>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+                            <small class="text-danger">* Menunjukkan Pertanyaan Yang Wajib Diisi</small>
                             </div>
-                        </div> -->
+                        </div>
 
 
 
@@ -65,9 +78,8 @@
                     <div class="header">
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="">
-                                    <h4>{{$komponen->label_custom_form_komponen}}</h4>
-                                </div>
+                                    <h4>{{$komponen->label_custom_form_komponen}}  @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true')<span class="text-red-600"> *</span>@endif</h4>
+                                    
                             </div>
 
                         </div>
@@ -76,15 +88,15 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="pertanyaan{{$komponen->id_custom_form_komponen}}">
                                 @if($komponen->tipe_custom_form_komponen == "text")
-                                <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban...">
+                                <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]"  aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban..." @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
                                 @elseif($komponen->tipe_custom_form_komponen == "number")
-                                <input type="number" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Angka...">
+                                <input type="number" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]"  aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Angka..." @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
 
                                 @elseif($komponen->tipe_custom_form_komponen == "select")
-                                <!-- <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban..."> -->
+                                <!-- <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]"  aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban..."> -->
                                 @foreach(json_decode($komponen->option_custom_form_komponen) as $key => $options)
                                 <div style="margin-bottom: 20px; display:flex; align-items:center; gap: 10px">
-                                    <input class="" type="radio" value="{{$options}}" name="respon[{{$komponen->id_custom_form_komponen}}][]" id="rad_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}">
+                                    <input class="" type="radio" value="{{$options}}" name="respon[{{$komponen->id_custom_form_komponen}}][]" id="rad_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}" @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
                                     <label for="rad_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}" style="width: 100%; font-size: 16px;">
                                         <p>{{$options}}</p>
                                     </label>
@@ -94,7 +106,7 @@
                                 @elseif($komponen->tipe_custom_form_komponen == "checkbox")
                                 @foreach(json_decode($komponen->option_custom_form_komponen) as $key => $options)
                                 <div style="margin-bottom: 20px; display:flex; align-items:center; gap: 10px">
-                                    <input class="" type="checkbox" value="{{$options}}" name="respon[{{$komponen->id_custom_form_komponen}}][]" id="check_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}">
+                                    <input class="" type="checkbox" value="{{$options}}" name="respon[{{$komponen->id_custom_form_komponen}}][]" id="check_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}" @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
                                     <label for="check_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}_{{$key}}" style="width: 100%;">
                                         <p>{{$options}}</p>
                                     </label>
@@ -103,7 +115,7 @@
                                 @elseif($komponen->tipe_custom_form_komponen == "custom_ttd")
 
                                 <!-- <input type="file" class="hidden form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" id="ttd{{$komponen->id_custom_form_komponen}}" required aria-required="true" aria-invalid="true" onchange=""> -->
-                                <textarea type="text" class="hidden form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" id="ttd{{$komponen->id_custom_form_komponen}}" required aria-required="true" aria-invalid="true"></textarea>
+                                <textarea type="text" class="hidden form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" id="ttd{{$komponen->id_custom_form_komponen}}" required aria-required="true" aria-invalid="true" @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif></textarea>
                                 <div class="wrapper">
                                     <canvas id="signature-pad{{$komponen->id_custom_form_komponen}}" class="signature-pad" width="400" height="200" style="border:1px solid black;" onmouseleave="getData('{{$komponen->id_custom_form_komponen}}')"></canvas>
                                 </div>
@@ -113,7 +125,7 @@
                                     <h5>Clear</h5>
                                 </button>
                                 @else
-                                <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]" required="" aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban...">
+                                <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]"  aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban..." @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
 
                                 @endif
                             </div>
@@ -139,8 +151,10 @@
 
         </div>
     </div>
+    @endif
 </div>
 @include('scriptjs')
+@if(!isset($pesan))
 <script>
     var signaturePad = [];
     var canvas = [];
@@ -188,3 +202,4 @@
     }
 
 </script>
+@endif

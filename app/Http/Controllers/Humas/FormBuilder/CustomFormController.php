@@ -12,11 +12,13 @@ use App\Models\Role;
 use Validator;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 
 class CustomFormController extends Controller
 {
-    public function viewCustomForm(Request $request)
+
+    public function index(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -30,7 +32,7 @@ class CustomFormController extends Controller
 
         return Datatables::of($list_data)
             ->addColumn('nm_role', function ($item) {
-                return $item->id_role == 'PUBLIC' ? 'PUBLIC' : $item->role->nm_role;
+                return $item->id_role == 99 ? 'PUBLIC' : $item->role->nm_role;
             })
             ->addColumn('action', function ($item) {
                 $data = array(
@@ -41,205 +43,10 @@ class CustomFormController extends Controller
             ->make(true);
     }
 
-    public function addCustomForm(Request $request)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $roles = Role::whereIn('id_role', [2, 3, 15])->get();
-
-        return view('humas/form-builder/custom-form/add-custom-form', compact('auth_data', 'roles'));
-    }
-
-    public function editCustomForm(Request $request, $id_custom_form)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $roles = Role::whereIn('id_role', [2, 3, 15])->get();
-        $form = CustomForm::findOrFail($id_custom_form);
-
-        return view('humas/form-builder/custom-form/edit-custom-form', compact('auth_data', 'roles', 'form'));
-    }
 
 
-    public function actionCustomForm(Request $request, $mode, $id_custom_form = null)
-    {
-        $input = (object) $request->input();
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-        $list_validator = [
-            'id_role'    => 'required',
-            'nm_custom_form'  => 'required',
-            'is_aktif'   => 'required',
-            'start_time'   => 'required',
-            'end_time'   => 'required',
-        ];
 
-        $validator = Validator::make($request->all(), $list_validator);
-
-        if ($validator->fails() && $mode != 'delete') {
-
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
-        } else {
-            if ($mode == 'add') {
-                $id_custom_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $form                               = new CustomForm();
-                $form->id_custom_form               = $id_custom_form;
-                $form->id_role                      = $input->id_role;
-                $form->nm_custom_form               = $input->nm_custom_form;
-                $form->is_aktif                     = $input->is_aktif;
-                $form->start_time                   = $input->start_time;
-                $form->end_time                     = $input->end_time;
-                $form->created_by                   = $input->auth_data->pengguna->id_pengguna;
-                $form->save();
-
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'form-builder/custom-form',
-                    'message' => 'Save Data Succesfully'
-                ];
-            } elseif ($mode == "edit") {
-                $form                               = CustomForm::findOrFail($id_custom_form);
-                $form->id_role                      = $input->id_role;
-                $form->nm_custom_form                      = $input->nm_custom_form;
-                $form->is_aktif                     = $input->is_aktif;
-                $form->start_time                   = $input->start_time;
-                $form->end_time                     = $input->end_time;
-                $form->updated_by                   = $input->auth_data->pengguna->id_pengguna;
-                $form->save();
-
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'form-builder/custom-form',
-                    'message' => 'Update Data Succesfully'
-                ];
-            } elseif ($mode == "delete") {
-                $form = CustomForm::with('form_komponen.form_respon')->findOrFail($id_custom_form);
-
-                foreach ($form->form_komponen()->form_respon() as $child) {
-                    $child->delete();
-                }
-                foreach ($form->form_komponen() as $child) {
-                    $child->delete();
-                }
-                $form->delete();
-
-                return [
-                    'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Data Succesfully'
-                ];
-            }
-        }
-    }
-
-    // KOMPONEN
-    public function viewCustomFormKomponen(Request $request, $id_custom_form)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        return view('humas/form-builder/custom-form/view-custom-form-komponen', compact('auth_data', 'id_custom_form'));
-    }
-
-    public function datatablesCustomFormKomponen(Request $request, $id_custom_form)
-    {
-        $list_data = CustomFormKomponen::where('id_custom_form', $id_custom_form)->get();
-
-        return Datatables::of($list_data)
-            ->addColumn('action', function ($item) {
-                $data = array(
-                    'id' => $item->id_custom_form_komponen
-                );
-                return $data;
-            })
-            ->make(true);
-    }
-
-    public function addCustomFormKomponen(Request $request, $id_custom_form)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        return view('humas/form-builder/custom-form/add-custom-form-komponen', compact('auth_data', 'id_custom_form'));
-    }
-
-    public function editCustomFormKomponen(Request $request, $id_custom_form, $id_custom_form_komponen)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $form_komponen = CustomFormKomponen::find($id_custom_form_komponen);
-
-        return view('humas/form-builder/custom-form/edit-custom-form-komponen', compact('auth_data', 'id_custom_form', 'form_komponen'));
-    }
-
-    public function actionCustomFormKomponen(Request $request, $mode, $id_custom_form_komponen = null)
-    {
-        $input = (object) $request->input();
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-        $list_validator = [
-            'id_custom_form'    => 'required',
-            'label_custom_form_komponen'  => 'required',
-            'tipe_custom_form_komponen'  => 'required',
-        ];
-
-        $validator = Validator::make($request->all(), $list_validator);
-
-        if ($validator->fails() && $mode != 'delete') {
-
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
-        } else {
-            if ($mode == 'add') {
-                $id_custom_form_komponen = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $form_komponen                               = new CustomFormKomponen();
-                $form_komponen->id_custom_form_komponen      = $id_custom_form_komponen;
-                $form_komponen->id_custom_form               = $input->id_custom_form;
-                $form_komponen->label_custom_form_komponen   = $input->label_custom_form_komponen;
-                $form_komponen->nm_custom_form_komponen      = str_replace(' ', '_', strtolower($input->label_custom_form_komponen));
-                $form_komponen->tipe_custom_form_komponen    = $input->tipe_custom_form_komponen;
-                $form_komponen->created_by                   = $input->auth_data->pengguna->id_pengguna;
-                $form_komponen->save();
-
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'form-builder/custom-form/komponen/' . $input->id_custom_form,
-                    'message' => 'Save Data Succesfully'
-                ];
-            } elseif ($mode == "edit") {
-                $form_komponen         = CustomFormKomponen::findOrFail($id_custom_form_komponen);
-                $form_komponen->id_custom_form               = $input->id_custom_form;
-                $form_komponen->label_custom_form_komponen   = $input->label_custom_form_komponen;
-                $form_komponen->nm_custom_form_komponen      = str_replace(' ', '_', strtolower($input->label_custom_form_komponen));
-                $form_komponen->tipe_custom_form_komponen    = $input->tipe_custom_form_komponen;
-                $form_komponen->updated_by                   = $input->auth_data->pengguna->id_pengguna;
-                $form_komponen->save();
-
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'form-builder/custom-form/komponen/' . $input->id_custom_form,
-                    'message' => 'Update Data Succesfully'
-                ];
-            } elseif ($mode == "delete") {
-                $form_komponen = CustomFormKomponen::with('form_respon')->findOrFail($id_custom_form_komponen);
-
-                foreach ($form_komponen->form_respon() as $child) {
-                    $child->delete();
-                }
-                $form_komponen->delete();
-
-                return [
-                    'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Form Data Succesfully'
-                ];
-            }
-        }
-    }
-
-    public function viewAddCustomFormBulk(Request $request)
+    public function create(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -248,13 +55,12 @@ class CustomFormController extends Controller
         return view('humas/form-builder/custom-form/add-custom-form-bulk', compact('auth_data', 'roles'));
     }
 
-    public function addCustomFormBulk(Request $request)
+    public function store(Request $request)
     {
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-
         try {
 
             $request->validate(
@@ -268,45 +74,52 @@ class CustomFormController extends Controller
                 ]
             );
 
-            $rule = [
-                'limit' => isset($input->multiple) ? 'true' : 'false',
-                'random' => isset($input->random) ? 'true' : 'false',
-                'editable' => isset($input->editable) ? 'true' : 'false'
-            ];
+            DB::transaction(function () use ($request, $input, $auth_data, $now) {
+
+                $rule = [
+                    'limit' => isset($input->multiple) ? 'true' : 'false',
+                    'random' => isset($input->random) ? 'true' : 'false',
+                    'editable' => isset($input->editable) ? 'true' : 'false'
+                ];
 
 
 
-            $id_custom_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $custom_form = new CustomForm();
-            $custom_form->id_custom_form    = $id_custom_form;
-            $custom_form->id_role           = $input->id_role;
-            $custom_form->nm_custom_form    = $input->nm_custom_form;
-            $custom_form->is_aktif          = $input->is_aktif;
-            $custom_form->start_time        = $input->start_time;
-            $custom_form->end_time          = $input->end_time;
-            $custom_form->form_settings     = $rule;
-            $custom_form->created_by        = $auth_data->pengguna->id_pengguna;
-            $custom_form->save();
+                $id_custom_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $custom_form = new CustomForm();
+                $custom_form->id_custom_form    = $id_custom_form;
+                $custom_form->id_role           = $input->id_role;
+                $custom_form->nm_custom_form    = $input->nm_custom_form;
+                $custom_form->is_aktif          = $input->is_aktif;
+                $custom_form->start_time        = $input->start_time;
+                $custom_form->end_time          = $input->end_time;
+                $custom_form->form_settings     = $rule;
+                $custom_form->created_by        = $auth_data->pengguna->id_pengguna;
+                $custom_form->save();
 
-            $data_komponen = $input->komponen;
+                $data_komponen = $input->komponen;
 
-            // nambah data & pointer ke Variabel
-            foreach ($data_komponen as $key => &$d) {
+                // nambah data & pointer ke Variabel
+                foreach ($data_komponen as $key => &$d) {
+                    $kom_rules = [
+                        'mandatory' => isset($d['mandatory']) ? 'true' : 'false'
+                    ];
+                    $id_custom_komponen = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $d['id_custom_form'] = $custom_form->id_custom_form;
+                    $d['id_custom_form_komponen'] = $id_custom_komponen;
+                    $d['nm_custom_form_komponen'] = $d['tipe_custom_form_komponen'] . "_" . $custom_form->nm_custom_form;
+                    $d['tipe_custom_form_komponen'] = $d['tipe_custom_form_komponen'] == "null" ? 'text' : $d['tipe_custom_form_komponen'];
+                    $d['option_custom_form_komponen'] = json_encode($d['option_custom_form_komponen'] ?? null);
+                    $d['komponen_settings'] = json_encode($kom_rules);
+                    $d['created_by'] = $auth_data->pengguna->id_pengguna;
+                    $d['created_at'] = $now;
 
-                $id_custom_komponen = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $d['id_custom_form'] = $custom_form->id_custom_form;
-                $d['id_custom_form_komponen'] = $id_custom_komponen;
-                $d['nm_custom_form_komponen'] = $d['tipe_custom_form_komponen'] . "_" . $custom_form->nm_custom_form;
-                $d['tipe_custom_form_komponen'] = $d['tipe_custom_form_komponen'] == "null" ? 'text' : $d['tipe_custom_form_komponen'];
-                $d['option_custom_form_komponen'] = json_encode($d['option_custom_form_komponen'] ?? null);
-                $d['created_by'] = $auth_data->pengguna->id_pengguna;
-                $d['created_at'] = $now;
+                    $d['updated_at'] = $d['created_at']->addSeconds($key + 60); // Add 60 seconds plus $key
 
-                $d['updated_at'] = $d['created_at']->addSeconds($key + 60); // Add 60 seconds plus $key
-
-                unset($d['order']);
-                CustomFormKomponen::insert($d);
-            }
+                    unset($d['order']);
+                    unset($d['mandatory']);
+                    CustomFormKomponen::insert($d);
+                }
+            });
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -314,6 +127,131 @@ class CustomFormController extends Controller
                 'message' => 'Add Data Succesfully'
             ];
         } catch (Exception $e) {
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Gagal Membuat Form',
+            ];
+        }
+    }
+
+
+    public function show(Request $request, $id)
+    {
+        try {
+
+            $input = (object) $request->input();
+            $auth_data = $input->auth_data;
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+            $form = CustomForm::with(['form_komponen' => function ($query) {
+                $query->orderBy('updated_at', 'asc');
+            }])
+                ->findOrFail($id);
+            $roles = Role::all();
+
+
+            return view('humas/form-builder/custom-form/edit-custom-form', compact('auth_data', 'roles', 'form'));
+        } catch (Exception $e) {
+            $pesan = "FORM TIDAK DITEMUKAN";
+            return view('humas/form-builder/custom-form/edit-custom-form', compact('auth_data', 'pesan'));
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $input = (object) $request->input();
+            $auth_data = $input->auth_data;
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $request->validate(
+                [
+                    'id_role'    => 'required',
+                    'nm_custom_form'  => 'required',
+                    'komponen' => 'required',
+                    'is_aktif'   => 'required',
+                    'start_time'   => 'required',
+                    'end_time'   => 'required',
+                ]
+            );
+
+            DB::transaction(function () use ($request, $input, $auth_data, $now, $id) {
+
+                $rule = [
+                    'limit' => isset($input->multiple) ? 'true' : 'false',
+                    'random' => isset($input->random) ? 'true' : 'false',
+                    'editable' => isset($input->editable) ? 'true' : 'false'
+                ];
+
+
+
+                $custom_form = CustomForm::with('form_komponen')->findOrFail($id);
+                $custom_form->id_role           = $input->id_role;
+                $custom_form->nm_custom_form    = $input->nm_custom_form;
+                $custom_form->is_aktif          = $input->is_aktif;
+                $custom_form->start_time        = $input->start_time;
+                $custom_form->end_time          = $input->end_time;
+                $custom_form->form_settings     = $rule;
+                $custom_form->created_by        = $auth_data->pengguna->id_pengguna;
+                $custom_form->save();
+
+                //drop semua komponen
+
+
+                $data_komponen = $input->komponen;
+                $last_komponen = $custom_form->form_komponen->pluck('id_custom_form_komponen')->all();
+
+                // nambah data & pointer ke Variabel
+                foreach ($data_komponen as $key => &$d) {
+
+                    $kom_rules = [
+                        'mandatory' => isset($d['mandatory']) ? 'true' : 'false'
+                    ];
+                    $d['id_custom_form'] = $custom_form->id_custom_form;
+                    $d['nm_custom_form_komponen'] = $d['tipe_custom_form_komponen'] . "_" . $custom_form->nm_custom_form;
+                    $d['tipe_custom_form_komponen'] = $d['tipe_custom_form_komponen'] == "null" ? 'text' : $d['tipe_custom_form_komponen'];
+                    $d['option_custom_form_komponen'] = json_encode($d['option_custom_form_komponen'] ?? null);
+                    $d['created_by'] = $auth_data->pengguna->id_pengguna;
+
+                    $d['updated_at'] = $now->addSeconds($key + 60); // Add 60 seconds plus $key
+
+                    unset($d['order']);
+                    unset($d['mandatory']);
+                    if (isset($d['id_custom_form_komponen'])) {
+                        $d['komponen_settings'] = $kom_rules;
+
+                        $id_custom_form_komponen = $d['id_custom_form_komponen'];
+                        CustomFormKomponen::find($id_custom_form_komponen)->update($d);
+                        unset($d['id_custom_form_komponen']);
+                        $last_komponen = array_diff($last_komponen, [$id_custom_form_komponen]);
+                    } else {
+                        $d['created_at'] = $now;
+
+                        $d['komponen_settings'] = json_encode($kom_rules);
+
+                        $id_custom_komponen = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $d['id_custom_form_komponen'] = $id_custom_komponen;
+                        CustomFormKomponen::insert($d);
+                    }
+                }
+
+                $komponen_dihapus = CustomFormKomponen::with('form_respon')->whereIn('id_custom_form_komponen', $last_komponen)->get();
+
+                foreach ($komponen_dihapus as $komponen) {
+                    if (method_exists($komponen, 'form_respon')) {
+                        $komponen->form_respon()->delete();
+                    }
+                }
+
+                CustomFormKomponen::whereIn('id_custom_form_komponen', $last_komponen)->forceDelete();
+            });
+
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'form-builder/custom-form/',
+                'message' => 'Update FORM Succesfully'
+            ];
+        } catch (Exception $e) {
+            dd($e->getMessage());
             return [
                 'status' => 300, // FAILED
                 'message' => $e->getMessage(),

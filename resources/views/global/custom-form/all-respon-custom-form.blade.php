@@ -2,6 +2,8 @@
     <div class="block-header">
 
     </div>
+    @if(isset($form))
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -26,9 +28,23 @@
             </div>
         </div>
     </div>
+    @else
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-xl-12">
+
+            <div class="card">
+                <div class="body">
+                    {{$pesan}}
+                    </div>
+                </div>
+            </div>
+     
+    </div>
+    @endif
 </div>
 
 @include('scriptjs')
+@if(isset($form))
 <script>
     var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'data/all-datatables/' + {!!json_encode($form->id_custom_form) !!};
@@ -144,3 +160,4 @@
 
     }
 </script>
+@endif

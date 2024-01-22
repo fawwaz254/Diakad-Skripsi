@@ -6,8 +6,10 @@ use App\Http\Controllers\AuthGlobalController;
 use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
 use App\Http\Controllers\PengisianAlumniController;
+use App\Http\Controllers\Publik\CustomFormResponController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SignInController;
+use App\Models\CustomForm;
 use App\Models\Sekolah;
 use Carbon\Carbon;
 use UniSharp\LaravelFilemanager\Controllers\CropController;
@@ -104,10 +106,9 @@ Route::post('payment/callback/{id}', [PembayaranOnlineController::class, 'action
 
 Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionCheckExp']);
 
-
-Route::get('/forms', function () {
-    return view('public/forms/index');
-});
+Route::get('forms',[CustomFormResponController::class,'landingPage']);
+Route::post('forms',[CustomFormResponController::class,'findForms']);
+Route::resource('forms.viewform', CustomFormResponController::class)->shallow();;
 Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);
 
