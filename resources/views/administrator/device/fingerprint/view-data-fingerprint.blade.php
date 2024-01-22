@@ -31,7 +31,7 @@
                                     <th>LAN</th>
                                     <th>PORT</th>
                                     <th>COMM KEY</th>
-                                    <th>Last Updated</th>
+                                    <th>Last Get</th>
                                     <th>Last Data</th>
                                     <th>Last Clear Log</th>
                                     <th></th>
