@@ -45,9 +45,9 @@ class BankController extends BaseController
 
             $claims             = $token->claims();
             $nis_siswa          = $claims->get('nis_siswa');
-            $nomor_transaksi    = $claims->get('nomor_transaksi');
             $kode_tagihan       = $claims->get('kode_tagihan');
             $total_pembayaran   = $claims->get('total_pembayaran');
+            $vano               = $claims->get('vano');
         } catch (\Exception $e) {
             return response()->json([
                 'kode' => '02',
@@ -58,15 +58,16 @@ class BankController extends BaseController
         //Validasi Institusi
         $now = Carbon::now();
         $sekolah = Sekolah::first();
-        $siswa = Siswa::where('nis_siswa', $nis_siswa)->first();
-        if (empty($siswa)) {
-            return response()->json([
-                'kode' => '03',
-                'keterangan' => 'Siswa Not Found'
-            ]);
-        }
 
         if ($kode_request == 'A0001') {
+            $siswa = Siswa::where('nis_siswa', $nis_siswa)->first();
+            if (empty($siswa)) {
+                return response()->json([
+                    'kode' => '03',
+                    'keterangan' => 'Siswa Not Found'
+                ]);
+            }
+            //Get Data Tagihan
             $tahun =  Carbon::parse($now)->format("Y");
             $semester = Semester::where('thn_akademik_semester', $tahun)->first();
             $tagihan = TagihanBiaya::with('detail_biaya.biaya_sekolah.semester')->where('is_tagih', '1')->where('id_siswa', $siswa->id_siswa)->get();
@@ -96,9 +97,12 @@ class BankController extends BaseController
                 'data' => $data,
             ]);
         } elseif ($kode_request == 'A0002') {
-            $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $nomor_transaksi)->first();
-            if ($pembayaran_trs) {
-                return response()->json(['kode ' => '04', 'keterangan' => 'Duplicate Payment']);
+            $siswa = Siswa::where('nis_siswa', $nis_siswa)->first();
+            if (empty($siswa)) {
+                return response()->json([
+                    'kode' => '03',
+                    'keterangan' => 'Siswa Not Found'
+                ]);
             }
             $data_tagihan = explode(";", $kode_tagihan);
             $total_tagihan = 0;
@@ -137,37 +141,98 @@ class BankController extends BaseController
                 }
             }
 
-            //validasi pembayaran
-            if ($total_pembayaran >= $total_tagihan) {
-                DB::beginTransaction();
-                try {
-                    $semester = Semester::where('is_aktif_semester', '1')->first();
-                    $pembayaran_trs = new PembayaranTrs;
-                    $pembayaran_trs->id_pembayaran_trs  = $sekolah->prefix . strtotime($now) . uniqid();
-                    $pembayaran_trs->id_siswa           = $siswa->id_siswa;
-                    $pembayaran_trs->nomor_transaksi   = $nomor_transaksi;
-                    $pembayaran_trs->besar_pembayaran   = $total_pembayaran;
-                    $pembayaran_trs->status_pembayaran  = 1; //lunas
-                    $pembayaran_trs->token              = '';
-                    $pembayaran_trs->id_semester_bayar  = $semester->id_semester;
+            DB::beginTransaction();
+            $generate_va = uniqid();
+            try {
+                $semester = Semester::where('is_aktif_semester', '1')->first();
+                $pembayaran_trs = new PembayaranTrs;
+                $pembayaran_trs->id_pembayaran_trs  = $sekolah->prefix . strtotime($now) . uniqid();
+                $pembayaran_trs->id_siswa           = $siswa->id_siswa;
+                $pembayaran_trs->nomor_transaksi   = $generate_va; //va
+                $pembayaran_trs->besar_pembayaran   = $total_tagihan;
+                $pembayaran_trs->status_pembayaran  = 0; //belum lunas
+                $pembayaran_trs->token              = '';
+                $pembayaran_trs->id_semester_bayar  = $semester->id_semester;
+                $pembayaran_trs->tgl_pembayaran     = null;
+                $pembayaran_trs->keterangan         = 'tagihan kbbs';
+                $pembayaran_trs->fee_admin          = 0;
+                $pembayaran_trs->payment_code =  $kode_tagihan;
+                $pembayaran_trs->payment_channel = 'KBBS';
+                $pembayaran_trs->save();
+
+                //detail pembayaran
+                foreach ($list_id_tagihan as $id_tagihan) {
+                    $tagihan = TagihanBiaya::find($id_tagihan);
+                    if ($tagihan) {
+                        $pembayaran_trs_detail = new PembayaranTrsDetail;
+                        $pembayaran_trs_detail->id_pembayaran_trs_detail = $sekolah->prefix . strtotime($now) . uniqid();
+                        $pembayaran_trs_detail->id_pembayaran_trs = $pembayaran_trs->id_pembayaran_trs;
+                        $pembayaran_trs_detail->id_tagihan_biaya = $id_tagihan;
+                        $pembayaran_trs_detail->besar_pembayaran = $tagihan->besar_biaya;
+                        $pembayaran_trs_detail->save();
+                    }
+                }
+
+                $data = [
+                    "nis_siswa" => $nis_siswa,
+                    "vano" => $generate_va,
+                ];
+
+                DB::commit();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'kode' => '09',
+                    'keterangan' => $e->getMessage()
+                ]);
+            }
+
+            return response()->json([
+                'kode' => "00",
+                'keterangan' => 'success create tagihan',
+                'data'  => $data,
+            ]);
+        } elseif ($kode_request == 'A0003') {
+
+            $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $vano)->first();
+            if ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '1') {
+                $data = [
+                    "tagihan" => 0,
+                ];
+                return response()->json([
+                    'kode' => "00",
+                    'keterangan' => 'success payment',
+                    'data'  => $data,
+                ]);
+            } elseif ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '0') {
+                $data = [
+                    "vano" => $vano,
+                    "tagihan" => $pembayaran_trs->besar_pembayaran,
+                    'keterangan' => $pembayaran_trs->payment_code
+                ];
+                return response()->json([
+                    'kode' => "00",
+                    'keterangan' => 'success inquiry',
+                    'data'  => $data,
+                ]);
+            } else {
+                return response()->json(['kode ' => '07', 'keterangan' => 'Nomor VA Tidak Ditemukan']);
+            }
+        } elseif ($kode_request == 'A0004') {
+
+            $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $vano)->first();
+            if ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '1') {
+                return response()->json(['kode ' => '04', 'keterangan' => 'Duplicate Payment']);
+            } elseif ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '0') {
+                $semester = Semester::where('is_aktif_semester', '1')->first();
+                if ($total_pembayaran >= $pembayaran_trs->besar_pembayaran) {
+                    $pembayaran_trs->status_pembayaran  = 1;
                     $pembayaran_trs->tgl_pembayaran     = $now->format("Y-m-d");
-                    $pembayaran_trs->keterangan         = 'Pembayaran Online Bank Bukopin';
-                    $pembayaran_trs->fee_admin          = $total_pembayaran - $total_tagihan;
-                    $pembayaran_trs->payment_code =  $kode_tagihan;
-                    $pembayaran_trs->payment_channel = 'KBBS';
+                    $pembayaran_trs->fee_admin          = $total_pembayaran - $pembayaran_trs->besar_pembayaran;
                     $pembayaran_trs->save();
 
-                    //detail pembayaran
-                    foreach ($list_id_tagihan as $id_tagihan) {
-                        $tagihan = TagihanBiaya::find($id_tagihan);
+                    foreach ($pembayaran_trs->pembayaran_trs_detail as $pembayaran_trs_detail) {
+                        $tagihan = TagihanBiaya::find($pembayaran_trs_detail->id_tagihan_biaya);
                         if ($tagihan) {
-                            $pembayaran_trs_detail = new PembayaranTrsDetail;
-                            $pembayaran_trs_detail->id_pembayaran_trs_detail = $sekolah->prefix . strtotime($now) . uniqid();
-                            $pembayaran_trs_detail->id_pembayaran_trs = $pembayaran_trs->id_pembayaran_trs;
-                            $pembayaran_trs_detail->id_tagihan_biaya = $id_tagihan;
-                            $pembayaran_trs_detail->besar_pembayaran = $tagihan->besar_biaya;
-                            $pembayaran_trs_detail->save();
-
                             $tagihan->is_tagih = 0;
                             $tagihan->tgl_pelunasan =  $now->format("Y-m-d");
                             $tagihan->besar_pembayaran = $tagihan->besar_biaya;
@@ -182,7 +247,7 @@ class BankController extends BaseController
                             $pembayaran->id_semester_bayar = $semester->id_semester;
                             $pembayaran->besar_pembayaran = $tagihan->besar_biaya;
                             $pembayaran->tgl_pembayaran =  $now->format("Y-m-d");
-                            $pembayaran->nomor_transaksi = $nomor_transaksi;
+                            $pembayaran->nomor_transaksi = $vano; // va
                             $pembayaran->keterangan = 'Pembayaran Online Bank Bukopin';
                             $pembayaran->created_by = "KBBS";
                             $pembayaran->save();
@@ -190,31 +255,24 @@ class BankController extends BaseController
                     }
 
                     $data = [
-                        "nis_siswa" => $nis_siswa,
-                        "nomor_transaksi" => $nomor_transaksi,
+                        "vano" => $vano,
                     ];
-
-                    DB::commit();
-                } catch (\Exception $e) {
                     return response()->json([
-                        'kode' => '09',
-                        'keterangan' => $e->getMessage()
+                        'kode' => "00",
+                        'keterangan' => 'success payment',
+                        'data'  => $data,
+                    ]);
+                } else {
+                    return response()->json([
+                        'kode' => "06",
+                        'keterangan' => 'less payment'
                     ]);
                 }
-
-                return response()->json([
-                    'kode' => "00",
-                    'keterangan' => 'success payment',
-                    'data'  => $data,
-                ]);
             } else {
-                return response()->json([
-                    'kode' => "06",
-                    'keterangan' => 'less payment'
-                ]);
+                return response()->json(['kode ' => '07', 'keterangan' => 'Nomor VA Tidak Ditemukan']);
             }
-        } elseif ($kode_request == 'A0003') {
-            $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $nomor_transaksi)->first();
+        } elseif ($kode_request == 'A0005') {
+            $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $vano)->first();
 
             if ($pembayaran_trs) {
                 foreach ($pembayaran_trs->pembayaran_trs_detail as $pembayaran_trs_detail) {
@@ -243,8 +301,7 @@ class BankController extends BaseController
                 $pembayaran_trs->delete();
 
                 $data = [
-                    "nis_siswa" => $nis_siswa,
-                    "nomor_transaksi" => $nomor_transaksi,
+                    "vano" => $vano,
                 ];
 
                 return response()->json([
