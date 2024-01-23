@@ -142,7 +142,16 @@ class BankController extends BaseController
             }
 
             DB::beginTransaction();
-            $generate_va = uniqid();
+
+            do {
+                $sama = false;
+                $generate_va =  random_int(1000000000, 9999999999);
+                if (PembayaranTrs::where('nomor_transaksi', $generate_va)->first()) {
+                    $sama = true;
+                }
+            } while ($sama);
+
+
             try {
                 $semester = Semester::where('is_aktif_semester', '1')->first();
                 $pembayaran_trs = new PembayaranTrs;
