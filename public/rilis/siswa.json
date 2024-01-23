@@ -1,4 +1,23 @@
 {
     "role": "siswa",
-    "update": []
+    "update": [
+        {
+            "tanggal-update": "2023-12-18",
+            "list-update": [
+                {
+                    "modul": "Keuangan",
+                    "list-fitur": [
+                        {
+                            "fitur": "Tagihan",
+                            "deskripsi": "Di menu anda dapat melihat tagihan siswa satu tahun ajaran."
+                        },
+                        {
+                            "fitur": "Riwayat Bayar",
+                            "deskripsi": "Di menu anda dapat melihat riwayat pembayaran siswa satu tahun ajaran."
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
