@@ -47,7 +47,7 @@ class BankController extends BaseController
             $nis_siswa          = $claims->get('nis_siswa');
             $kode_tagihan       = $claims->get('kode_tagihan');
             $total_pembayaran   = $claims->get('total_pembayaran');
-            $vano               = $claims->get('vano');
+            $nomor_transaksi    = $claims->get('nomor_transaksi');
         } catch (\Exception $e) {
             return response()->json([
                 'kode' => '02',
@@ -175,7 +175,7 @@ class BankController extends BaseController
 
                 $data = [
                     "nis_siswa" => $nis_siswa,
-                    "vano" => $generate_va,
+                    "nomor_transaksi" => $generate_va,
                 ];
 
                 DB::commit();
@@ -193,10 +193,14 @@ class BankController extends BaseController
             ]);
         } elseif ($kode_request == 'A0003') {
 
-            $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $vano)->first();
+            $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $nomor_transaksi)->first();
+
             if ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '1') {
+                $siswa = Siswa::with('pengguna')->find($pembayaran_trs->id_siswa);
                 $data = [
                     "tagihan" => 0,
+                    "nis_siswa" => $siswa->nis_siswa,
+                    "nama_siswa" => $siswa->pengguna->nm_pengguna
                 ];
                 return response()->json([
                     'kode' => "00",
@@ -204,10 +208,13 @@ class BankController extends BaseController
                     'data'  => $data,
                 ]);
             } elseif ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '0') {
+                $siswa = Siswa::with('pengguna')->find($pembayaran_trs->id_siswa);
                 $data = [
-                    "vano" => $vano,
+                    "nomor_transaksi" => $nomor_transaksi,
                     "tagihan" => $pembayaran_trs->besar_pembayaran,
-                    'keterangan' => $pembayaran_trs->payment_code
+                    'keterangan' => $pembayaran_trs->payment_code,
+                    "nis_siswa" => $siswa->nis_siswa,
+                    "nama_siswa" => $siswa->pengguna->nm_pengguna
                 ];
                 return response()->json([
                     'kode' => "00",
@@ -219,7 +226,7 @@ class BankController extends BaseController
             }
         } elseif ($kode_request == 'A0004') {
 
-            $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $vano)->first();
+            $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $nomor_transaksi)->first();
             if ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '1') {
                 return response()->json(['kode ' => '04', 'keterangan' => 'Duplicate Payment']);
             } elseif ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '0') {
@@ -247,7 +254,7 @@ class BankController extends BaseController
                             $pembayaran->id_semester_bayar = $semester->id_semester;
                             $pembayaran->besar_pembayaran = $tagihan->besar_biaya;
                             $pembayaran->tgl_pembayaran =  $now->format("Y-m-d");
-                            $pembayaran->nomor_transaksi = $vano; // va
+                            $pembayaran->nomor_transaksi = $nomor_transaksi; // va
                             $pembayaran->keterangan = 'Pembayaran Online Bank Bukopin';
                             $pembayaran->created_by = "KBBS";
                             $pembayaran->save();
@@ -255,7 +262,7 @@ class BankController extends BaseController
                     }
 
                     $data = [
-                        "vano" => $vano,
+                        "nomor_transaksi" => $nomor_transaksi,
                     ];
                     return response()->json([
                         'kode' => "00",
@@ -272,7 +279,7 @@ class BankController extends BaseController
                 return response()->json(['kode ' => '07', 'keterangan' => 'Nomor VA Tidak Ditemukan']);
             }
         } elseif ($kode_request == 'A0005') {
-            $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $vano)->first();
+            $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $nomor_transaksi)->first();
 
             if ($pembayaran_trs) {
                 foreach ($pembayaran_trs->pembayaran_trs_detail as $pembayaran_trs_detail) {
@@ -301,7 +308,7 @@ class BankController extends BaseController
                 $pembayaran_trs->delete();
 
                 $data = [
-                    "vano" => $vano,
+                    "nomor_transaksi" => $nomor_transaksi,
                 ];
 
                 return response()->json([
