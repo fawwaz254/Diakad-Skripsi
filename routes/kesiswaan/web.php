@@ -8,6 +8,7 @@ use App\Http\Controllers\Kesiswaan\Siswa\PembayaranController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
 use App\Http\Controllers\Pendidikan\Siswa\DataSiswaController;
+use App\Http\Controllers\Siswa\DataPribadi\DataSiswaController as DataSiswaControllerRoleSiswa;
 use App\Http\Controllers\Pendidikan\Wisuda\SetLulusController;
 use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
 use App\Http\Controllers\Pendidikan\Siswa\SiswaAktifController;
@@ -313,7 +314,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('insert-update-siswa', [InsertUpdateSiswaController::class, 'viewInsertUpdateSiswa']);
             Route::post('post-view-update-siswa', [InsertUpdateSiswaController::class, 'actionViewUpdateSiswa']);
             Route::get('insert-update-siswa/view-detail/{nis_nama_siswa}', [InsertUpdateSiswaController::class, 'viewDetailUpdateSiswa']);
-            Route::get('insert-update-siswa/view-print-siswa/{nis_nama_siswa}', [InsertUpdateSiswaController::class, 'viewPrintSiswa']);
+            Route::get('insert-update-siswa/view-print-siswa/{nis_nama_siswa}', [DataSiswaControllerRoleSiswa::class, 'viewPrintSiswa']);
             Route::get('insert-update-siswa/view-print-siswa-kelas/{id_kelas}', [InsertUpdateSiswaController::class, 'viewPrintSiswaKelas']);
             Route::get('insert-update-siswa/view-print-siswa-kelas-excel/{id_kelas}', [InsertUpdateSiswaController::class, 'viewExcelSiswaKelas']);
             Route::get('insert-update-siswa/view-cari-siswa/{nis_nama_siswa}', [InsertUpdateSiswaController::class, 'viewCariUpdateSiswa']);
