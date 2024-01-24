@@ -17,7 +17,7 @@ use App\Http\Controllers\BankController;
 |
 */
 
-
+Route::post('kbbs-generate', [BankController::class, 'generateJwt']);
 Route::post('kbbs', [BankController::class, 'processJwt']);
 Route::post('v1/signin', [Apiv1Controller::class, 'actionSignIn']);
 

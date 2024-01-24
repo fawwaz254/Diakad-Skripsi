@@ -14,27 +14,76 @@ use App\Models\TagihanBiaya;
 use App\Models\PembayaranBiaya;
 use App\Models\PembayaranTrsDetail;
 use DB;
-
+use DateTimeImmutable;
+use Lcobucci\Clock\FrozenClock;
+use Lcobucci\JWT\JwtFacade;
+use Lcobucci\JWT\Validation\Constraint;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Token\Builder;
 
 
 class BankController extends BaseController
 {
+
+    public function generateJwt(Request $request)
+    {
+        $kode_request       = $request->input('Kode');
+        $nis_siswa = $request->input('nis_siswa');
+        $kode_tagihan = $request->input('kode_tagihan');
+        $nomor_transaksi = $request->input(('nomor_transaksi'));
+        $total_pembayaran = $request->input('total_pembayaran');
+
+        $key   = InMemory::base64Encoded(
+            'crGyqM0orACXsibBpa5HyU9hFlsOHWCrnlQENXmzY6wrZSXOdtBbbdoVxf8lmDkG'
+        );
+        $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::
+            default()));
+        $algorithm    = new Sha256();
+
+        $now   = new DateTimeImmutable();
+        $token = $tokenBuilder
+            ->issuedAt($now)
+            ->canOnlyBeUsedAfter($now)
+            ->expiresAt($now->modify('+1 hour'));
+        if ($kode_request == 'A0001') {
+            $token->withClaim('nis_siswa', $nis_siswa);
+        } elseif ($kode_request == 'A0002') {
+            $token->withClaim('nis_siswa', $nis_siswa);
+            $token->withClaim('kode_tagihan', $kode_tagihan);
+        } elseif ($kode_request == 'A0003') {
+            $token->withClaim('nomor_transaksi', $nomor_transaksi);
+        } elseif ($kode_request == 'A0004') {
+            $token->withClaim('nomor_transaksi', $nomor_transaksi);
+            $token->withClaim('total_pembayaran', $total_pembayaran);
+        } elseif ($kode_request == 'A0005') {
+            $token->withClaim('nomor_transaksi', $nomor_transaksi);
+        }
+        return $token->withHeader('foo', 'bar')
+            ->getToken($algorithm, $key)->toString();
+    }
+
+
     public function processJwt(Request $request)
     {
         $jwtEncoded = $request->input('JwtEncoded');
         $kode_request       = $request->input('Kode');
-
         //Validasi Signature
+        $now   = new DateTimeImmutable();
+        $key   = InMemory::base64Encoded(
+            'crGyqM0orACXsibBpa5HyU9hFlsOHWCrnlQENXmzY6wrZSXOdtBbbdoVxf8lmDkG'
+        );
         try {
-            $config     = Configuration::forUnsecuredSigner();
-            $token      = $config->parser()->parse($jwtEncoded);
-            //! Untuk Konfigurasi
-            //? $secretKey = InMemory::base64Encoded('crGyqM0orACXsibBpa5HyU9hFlsOHWCrnlQENXmzY6wrZSXOdtBbbdoVxf8lmDkss');
-            //? $signer = new Sha256();
-            //? $config = Configuration::forSymmetricSigner($signer, $secretKey);
-
+            $token = (new JwtFacade())->parse(
+                $jwtEncoded,
+                new Constraint\SignedWith(new Sha256(), $key),
+                new Constraint\StrictValidAt(
+                    new FrozenClock($now)
+                )
+            );
         } catch (\Exception $e) {
-
             return response()->json([
                 'kode' => '01', 'keterangan' => 'Invalid signature (jwt)'
             ]);
@@ -42,7 +91,6 @@ class BankController extends BaseController
 
         //Validasi Decode
         try {
-
             $claims             = $token->claims();
             $nis_siswa          = $claims->get('nis_siswa');
             $kode_tagihan       = $claims->get('kode_tagihan');
@@ -213,7 +261,7 @@ class BankController extends BaseController
                 ];
                 return response()->json([
                     'kode' => "00",
-                    'keterangan' => 'success payment',
+                    'keterangan' => 'success inquiry',
                     'data'  => $data,
                 ]);
             } elseif ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '0') {
@@ -307,14 +355,17 @@ class BankController extends BaseController
                         $tagihan->save();
                     }
 
-                    $pembayaran_trs_detail->deleted_by = 'bank bukopin';
-                    $pembayaran_trs_detail->save();
-                    $pembayaran_trs_detail->delete();
+                    // $pembayaran_trs_detail->deleted_by = 'bank bukopin';
+                    // $pembayaran_trs_detail->save();
+                    // $pembayaran_trs_detail->delete();
                 }
 
-                $pembayaran_trs->deleted_by = 'bank bukopin';
+                // $pembayaran_trs->deleted_by = 'bank bukopin';
+                $pembayaran_trs->status_pembayaran = '0';
+                $pembayaran_trs->fee_admin = '0';
+                $pembayaran_trs->tgl_pembayaran = null;
                 $pembayaran_trs->save();
-                $pembayaran_trs->delete();
+                // $pembayaran_trs->delete();
 
                 $data = [
                     "nomor_transaksi" => $nomor_transaksi,

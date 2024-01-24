@@ -18,7 +18,7 @@
         "laravel-notification-channels/fcm": "^2.7",
         "laravel/framework": "^8.75",
         "laravel/tinker": "^2.5",
-        "lcobucci/jwt": "^4.0",
+        "lcobucci/jwt": "4.2.0",
         "league/flysystem-aws-s3-v3": "1.0.29",
         "maatwebsite/excel": "^3.1",
         "nesbot/carbon": "^2.59",
