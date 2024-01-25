@@ -18,6 +18,27 @@ use Yajra\Datatables\Datatables;
 class CustomFormController extends Controller
 {
 
+    public function customFormCodeGenerator()
+    {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersNumber = strlen($characters);
+        $codeLength = 6;
+
+        $code = '';
+
+        while (strlen($code) < 6) {
+            $position = rand(0, $charactersNumber - 1);
+            $character = $characters[$position];
+            $code = $code . $character;
+        }
+
+        if (CustomForm::whereJsonContains('form_settings->kode', $code)->exists()) {
+            $this->customFormCodeGenerator();
+        }
+
+        return $code;
+    }
+
     public function index(Request $request)
     {
         $input = (object) $request->input();
@@ -82,6 +103,17 @@ class CustomFormController extends Controller
                     'editable' => isset($input->editable) ? 'true' : 'false'
                 ];
 
+                if ($input->jenis_custom_form == 'harian') {
+                    $input->start_time = Carbon::createfromFormat('Y-m-d H:i:s', $now->toDateString() . ' ' . $input->start_time . ':00');
+                    $input->end_time = Carbon::createfromFormat('Y-m-d H:i:s', $now->toDateString() . ' ' . $input->end_time . ':00');
+                } else if ($input->jenis_custom_form == 'bulanan') {
+
+                    $input->end_time = Carbon::createFromFormat('Y-m-d H:i:s', $now->format('Y') . '-1-' . $input->end_time . ' 00:00:00');
+                    $input->start_time = $input->end_time;
+                }
+                if ($input->id_role == 99) {
+                    $rule['kode'] = $this->customFormCodeGenerator();
+                }
 
 
                 $id_custom_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -89,6 +121,7 @@ class CustomFormController extends Controller
                 $custom_form->id_custom_form    = $id_custom_form;
                 $custom_form->id_role           = $input->id_role;
                 $custom_form->nm_custom_form    = $input->nm_custom_form;
+                $custom_form->jenis_custom_form = $input->jenis_custom_form;
                 $custom_form->is_aktif          = $input->is_aktif;
                 $custom_form->start_time        = $input->start_time;
                 $custom_form->end_time          = $input->end_time;
@@ -181,13 +214,26 @@ class CustomFormController extends Controller
                     'random' => isset($input->random) ? 'true' : 'false',
                     'editable' => isset($input->editable) ? 'true' : 'false'
                 ];
+                
+                if ($input->jenis_custom_form == 'harian') {
+                    $input->start_time = Carbon::createfromFormat('Y-m-d H:i:s', $now->toDateString() . ' ' . $input->start_time . ':00');
+                    $input->end_time = Carbon::createfromFormat('Y-m-d H:i:s', $now->toDateString() . ' ' . $input->end_time . ':00');
+                } else if ($input->jenis_custom_form == 'bulanan') {
 
+                    $input->end_time = Carbon::createFromFormat('Y-m-d H:i:s', $now->format('Y') . '-1-' . $input->end_time . ' 00:00:00');
+                    $input->start_time = $input->end_time;
+                }
+
+                if ($input->id_role == 99) {
+                    $rule['kode'] = $this->customFormCodeGenerator();
+                }
 
 
                 $custom_form = CustomForm::with('form_komponen')->findOrFail($id);
                 $custom_form->id_role           = $input->id_role;
                 $custom_form->nm_custom_form    = $input->nm_custom_form;
                 $custom_form->is_aktif          = $input->is_aktif;
+                $custom_form->jenis_custom_form = $input->jenis_custom_form;
                 $custom_form->start_time        = $input->start_time;
                 $custom_form->end_time          = $input->end_time;
                 $custom_form->form_settings     = $rule;
@@ -251,10 +297,38 @@ class CustomFormController extends Controller
                 'message' => 'Update FORM Succesfully'
             ];
         } catch (Exception $e) {
-            dd($e->getMessage());
             return [
                 'status' => 300, // FAILED
                 'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        try {
+
+            $input = (object) $request->input();
+            $auth_data = $input->auth_data;
+
+            $record = CustomForm::with('form_komponen.form_respon')->findOrFail($id);
+            $record->form_komponen->each(function ($komponen) {
+                if ($komponen->form_respon()->exists()) {
+                    $komponen->form_respon()->delete();
+                }
+            });
+            $record->form_komponen()->delete();
+            $record->delete();
+
+            return [
+                'status' => 200,
+                'message' => 'Data Berhasil Dihapus'
+            ];
+        } catch (Exception $e) {
+            dd($e);
+            return [
+                'status' => 300,
+                'message' => 'Tidak Dapat Menghapus Data!'
             ];
         }
     }

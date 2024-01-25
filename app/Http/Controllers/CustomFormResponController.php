@@ -139,28 +139,50 @@ class CustomFormResponController extends Controller
             $auth_data = $input->auth_data;
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
+
             $form = CustomForm::with(['form_komponen' => function ($query) {
                 $query->orderBy('updated_at', 'asc');
             }, 'role'])
                 ->whereIn('id_role', $auth_data->pengguna->role_pengguna->pluck('id_role'))
                 ->findOrFail($id);
             if (isset($form->form_settings['limit']) && $form->form_settings['limit'] == 'true') {
-                $sheets = CustomFormSheet::where('created_by', $auth_data->pengguna->id_pengguna)->first();
+                $sheets = CustomFormSheet::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_custom_form', $id)->first();
                 if ($sheets) {
                     throw new Exception('Form ' . $form->nm_custom_form . ' Hanya Menerima 1 Respon');
                 }
             }
-            if (!$now->between($form->start_time, $form->end_time)) {
+            if ($form->jenis_custom_form === 'harian') {
+                $sheets = CustomFormSheet::where('created_by', $auth_data->pengguna->id_pengguna)->whereDate('created_at', '>=', Carbon::today()->toDateString())->where('id_custom_form', $id)->first();
+                if ($sheets) {
+                    throw new Exception('Anda Telah Mengisi Form ' . $form->nm_custom_form . ' Hari Ini');
+                }
+            } else if ($form->jenis_custom_form === 'bulanan') {
+                $sheets = CustomFormSheet::where('created_by', $auth_data->pengguna->id_pengguna)->whereDay('created_at', Carbon::today()->format('d'))->where('id_custom_form', $id)->first();
+                if ($sheets) {
+                    throw new Exception('Anda Telah Mengisi Form ' . $form->nm_custom_form . ' Bulan Ini');
+                }
+            }
+            $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->start_time);
+            $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->end_time);
+
+
+            if (
+                ($form->jenis_custom_form === 'harian' && !$now->between($startTime->toTimeString(), $endTime->toTimeString())) ||
+                ($form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
+                ($form->jenis_custom_form !== 'harian' && $form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime)) || ($form->is_aktif == 0)
+            ) {
                 throw new Exception('FORM TELAH DIKUNCI');
             }
+            
+
+
 
             return view('global/custom-form/add-respon-custom-form', compact('auth_data', 'form'));
-        } catch (Exception $e) {
-            $pesan = $e->getMessage();
-
-            return view('global/custom-form/add-respon-custom-form', compact('auth_data', 'pesan'));
         } catch (ModelNotFoundException $e) {
             $pesan = "TIDAK MEMILIKI AKSES :(";
+            return view('global/custom-form/add-respon-custom-form', compact('auth_data', 'pesan'));
+        } catch (Exception $e) {
+            $pesan = $e->getMessage();
             return view('global/custom-form/add-respon-custom-form', compact('auth_data', 'pesan'));
         }
     }
@@ -185,7 +207,7 @@ class CustomFormResponController extends Controller
 
             // Biar aman ~
             if (isset($form->form_settings['limit']) && $form->form_settings['limit'] == 'true') {
-                $sheets = CustomFormSheet::where('created_by', $auth_data->pengguna->id_pengguna)->first();
+                $sheets = CustomFormSheet::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_custom_form', $form->id_custom_form)->first();
                 if ($sheets) {
                     return [
                         'status' => 300,
@@ -193,12 +215,21 @@ class CustomFormResponController extends Controller
                     ];
                 }
             }
-            if (!$now->between($form->start_time, $form->end_time)) {
+
+            $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->start_time);
+            $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->end_time);
+
+            if (
+                ($form->jenis_custom_form === 'harian' && !$now->between($startTime->toTimeString(), $endTime->toTimeString())) ||
+                ($form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
+                ($form->jenis_custom_form !== 'harian' && $form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime)) || ($form->is_aktif == 0)
+            ) {
                 return [
                     'status' => 300,
                     'message' => 'Gagal, Anda Mengisi Diluar Jam Yang Ditentukan!'
                 ];
             }
+
             DB::transaction(function () use ($request, $input, $auth_data, $form, $now) {
 
                 $sheet = new CustomFormSheet();
@@ -262,10 +293,26 @@ class CustomFormResponController extends Controller
             $auth_data = $input->auth_data;
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             $form = CustomFormSheet::with('form.form_komponen', 'form_respon.form_komponen')->where('created_by', $auth_data->pengguna->id_pengguna)->findOrFail($id);
+            $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->form->start_time);
+            $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->form->end_time);
+            if ($form->form->form_settings['editable'] !== 'true') {
+                throw new Exception('Form Ini Tidak Dapat Diubah');
+            }
+            if (
+                ($form->form->jenis_custom_form === 'harian' && !$now->between($startTime->toTimeString(), $endTime->toTimeString())) ||
+                ($form->form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
+                ($form->form->jenis_custom_form !== 'harian' && $form->form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime))
+            ) {
+                throw new Exception('Maaf, Form Telah Dikunci');
+            }
+
 
             return view('global/custom-form/edit-respon-custom-form', compact('auth_data', 'form'));
+        } catch (ModelNotFoundException $e) {
+            $pesan = "Anda Tidak Memiliki Akses";
+            return view('global/custom-form/edit-respon-custom-form', compact('auth_data', 'pesan'));
         } catch (Exception $e) {
-            $pesan = "ANDA TIDAK MEMILIKI AKSES! >:(";
+            $pesan = $e->getMessage();
             return view('global/custom-form/edit-respon-custom-form', compact('auth_data', 'pesan'));
         }
     }
@@ -279,12 +326,18 @@ class CustomFormResponController extends Controller
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             $sheet = CustomFormSheet::with('form.form_komponen', 'form_respon.form_komponen')->where('created_by', $auth_data->pengguna->id_pengguna)->findOrFail($id);
-            if (!$now->between($sheet->form->start_time, $sheet->form->end_time) || (Carbon::today()->toDateString() != $sheet->created_at->toDateString())) {
-                return [
-                    'status' => 300,
-                    'message' => 'Gagal, Form Telah Dikunci!'
-                ];
+
+            $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $sheet->form->start_time);
+            $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $sheet->form->end_time);
+
+            if (($sheet->form->jenis_custom_form === 'harian' && !$now->between($startTime->toTimeString(), $endTime->toTimeString())) ||
+                ($sheet->form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
+                ($sheet->form->jenis_custom_form !== 'harian' && $sheet->form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime))
+            ) {
+                throw new Exception('Gagal, Form Telah Dikunci!');
             }
+
+
 
             DB::transaction(function () use ($request, $input, $auth_data, $sheet, $now) {
 
@@ -305,7 +358,7 @@ class CustomFormResponController extends Controller
         } catch (Exception $e) {
             return [
                 'status' => 300,
-                'message' => 'Gagal Mengubah Data!'
+                'message' => $e->getMessage()
             ];
         }
     }

@@ -22,9 +22,9 @@
                         <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i class="material-icons">backspace</i><span>Kembali</span></a>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6" style="display: flex; justify-content:end;">
-                        
-                            <button id="submit" type="submit" form="form-validation" class="btn btn-lg bg-blue waves-effect target-link">SIMPAN</button>
-                        
+
+                        <button id="submit" type="submit" form="form-validation" class="btn btn-lg bg-blue waves-effect target-link">SIMPAN</button>
+
                     </div>
                 </div>
             </div>
@@ -33,7 +33,8 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-            <form id="form-validation" method="POST" action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/'. Request::segment(4) . '/action/add') }}">
+            <form id="form-validation" method="POST" action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3)) }}">
+                @method('post')
                 <div class="card">
                     {{ csrf_field() }}
 
@@ -66,25 +67,37 @@
                             </div>
                         </div>
 
-                        <h2 class="card-inside-title">
-                            Status
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row clearfix mt-2">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Status
+                                </h2>
                                 <select class="form-control show-tick" name="is_aktif" required="">
                                     <option value="1">Aktif</option>
                                     <option value="0">Non-aktif</option>
                                 </select>
                             </div>
 
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Jenis
+                                </h2>
+                                <select class="form-control show-tick" name="jenis_custom_form" required="">
+                                    <option value="harian">Harian</option>
+                                    <option value="bulanan">Bulanan</option>
+                                    <option value="biasa">Biasa</option>
+                                </select>
+                            </div>
+
                         </div>
-                        <div class="row">
+
+                        <div class="row" id="bagianWaktu">
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
                                 <h2 class="card-inside-title">
                                     Jam Mulai Pengisian
                                 </h2>
                                 <div>
-                                    <input type="input" class="timepicker form-control" name="start_time" required="" aria-required="true" aria-invalid="true">
+                                    <input type="time" class="timepicker form-control" name="start_time" required="" aria-required="true" aria-invalid="true">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
@@ -92,26 +105,26 @@
                                     Jam Akhir Pengisian
                                 </h2>
                                 <div>
-                                    <input type="input" class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true">
+                                    <input type="time" class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true">
                                 </div>
                             </div>
 
 
                         </div>
                         <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Lainnya
                                 </h2>
                                 <div class="switch" style="margin-bottom: 8px; ">
                                     <label for="multiple">
-                                        <input type="checkbox" id="multiple" name="multiple">
+                                        <input type="checkbox" id="multiple" name="multiple" disabled>
                                         <span class="lever"></span>
                                         Hanya dapat mengirimkan 1 (satu) Respon.
                                     </label>
                                 </div>
                                 <div class="switch">
-                                    <label for="random" style="margin-bottom: 8px; ">
+                                    <label for="random" style="margin-bottom: 16px;">
                                         <input type="checkbox" id="random" name="random">
                                         <span class="lever"></span>
                                         Urutan acak.
@@ -137,7 +150,7 @@
                 <div class="card-div" style="position: relative;">
 
                 </div>
-                
+
 
             </form>
             <div>
@@ -149,7 +162,7 @@
 </div>
 @include('scriptjs')
 <script>
-     /**@readonly docs code gimang
+    /**@readonly docs code gimang
      * 
      * Hello Kembali lagi dengan saya Reza
      * 
@@ -269,7 +282,7 @@
     }
 
     function tambahOpsi(id) {
-        
+
         $('#pertanyaan' + id).append(`
                             <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
                                     <input class="" type="radio" id="rad" disabled>
@@ -303,7 +316,6 @@
                                 </div>
         `)
     }
-
 </script>
 <script>
     let draggedElem;
@@ -414,20 +426,103 @@
                 </div>`
 
         form.append(content);
-       
+
         $('select').selectpicker();
 
         menuTipe()
 
     })
-    
+
 
     $('.card-div').on('change', 'select[name*=tipe_custom_form_komponen]', function() {
 
         menuTipe()
     })
+</script>
+
+<script>
+    function selectTime(judul, tipe) {
+        return `
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+                                <h2 class="card-inside-title">
+                                    ${judul} Mulai Pengisian
+                                </h2>
+                                <div>
+                                    <input type="${tipe}" class="timepicker form-control" name="start_time" required="" aria-required="true" aria-invalid="true" >
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+                                <h2 class="card-inside-title">
+                                    ${judul} Akhir Pengisian
+                                </h2>
+                                <div>
+                                    <input type="${tipe}" class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true">
+                                </div>
+                            </div> 
+                `
+    }
+
+    function datePicker(pormat) {
+        $('.timepicker').bootstrapMaterialDatePicker({
+            format: pormat,
+            lang: 'id',
+            time: true,
+            date: false,
+            shortTime: false
+        });
+        $('select').selectpicker();
+    }
+
+    $(function(){
+        var pilihan = ['harian','bulanan']
+        if(pilihan.includes($('select[name*=jenis_custom_form]').val())){
+            $('#multiple').prop('disabled',true);   
+            $('#multiple').parent().parent().css('display','none');   
+        }
+    })
+
+    $('select[name*=jenis_custom_form]').on('change', function() {
+        let data = $(this).val()
+        $('#bagianWaktu').children().remove()
+        if (data === 'harian') {
+            $('#bagianWaktu').append(
+                selectTime('Jam', 'time')
+            );
+            datePicker('HH:mm');
+            $('#multiple').prop('disabled',true);
+            $('#multiple').parent().parent().css('display','none');   
+
+        } else if (data === 'bulanan') {
+            $('#bagianWaktu').append(
+                `<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+                                <h2 class="card-inside-title">
+                                    Pilih Tanggal Pengisian (Hari Dalam Bulan)
+                                </h2>
+                                <div id="tanggalManual">
+                                    <input type="hidden" name="start_time" value="0">
+                                    <input type="number" id="pilihTanggal" min="1" max="31"  class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true">
+                                    <small>input manual antara tanggal 1 hingga 31 (Otomatis Ke Akhir Bulan Jika Tidak Terdapat Tanggal 31/30)</small>
+                                </div>
+                            </div>
+                            
+                            `
+            );
+            $('#multiple').prop('disabled',true);
+            $('#multiple').parent().parent().css('display','none');   
+
+        } else {
+            $('#bagianWaktu').append(
+                selectTime('Tanggal', 'datetime-local')
+            )
+            $('#multiple').prop('disabled',false);
+            $('#multiple').parent().parent().css('display','');   
+
+            
+        }
 
 
 
-   
+    })
+
+    
 </script>

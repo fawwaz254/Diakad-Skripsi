@@ -60,32 +60,42 @@
                                 <select class="form-control show-tick" name="id_role" required="">
                                     <option selected disabled>Pilih Role</option>
                                     @foreach ($roles as $role)
-                                    <option value="{{ $role->id_role }}" {{$form->id_role == $role->id_role ? 'selected' : '' }} >{{ $role->nm_role }}</option>
+                                    <option value="{{ $role->id_role }}" {{$form->id_role == $role->id_role ? 'selected' : '' }}>{{ $role->nm_role }}</option>
                                     @endforeach
                                     <option value="99">Public</option>
                                 </select>
                             </div>
                         </div>
 
-                        <h2 class="card-inside-title">
-                            Status
-                        </h2>
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Status
+                                </h2>
                                 <select class="form-control show-tick" name="is_aktif" required="">
                                     <option value="1" {{ $form->is_aktif == 1? 'selected': ''}}>Aktif</option>
                                     <option value="0" {{ $form->is_aktif == 0? 'selected': ''}}>Non-aktif</option>
                                 </select>
                             </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Jenis
+                                </h2>
+                                <select class="form-control show-tick" name="jenis_custom_form" required="">
+                                    <option value="harian" {{$form->jenis_custom_form == 'harian'? 'selected': ''}}>Harian</option>
+                                    <option value="bulanan" {{$form->jenis_custom_form == 'bulanan'? 'selected': ''}}>Bulanan</option>
+                                    <option value="biasa" {{$form->jenis_custom_form == 'biasa'? 'selected': ''}}>Biasa</option>
+                                </select>
+                            </div>
 
                         </div>
-                        <div class="row">
+                        <div class="row" id="bagianWaktu">
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
                                 <h2 class="card-inside-title">
                                     Jam Mulai Pengisian
                                 </h2>
                                 <div>
-                                    <input type="input" class="timepicker form-control" name="start_time" required="" aria-required="true" aria-invalid="true" value="{{$form->start_time}}">
+                                    <input type="time" class="timepicker form-control" name="start_time" required="" aria-required="true" aria-invalid="true" value="{{date('H:i',strtotime($form->start_time))}}">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
@@ -93,14 +103,14 @@
                                     Jam Akhir Pengisian
                                 </h2>
                                 <div>
-                                    <input type="input" class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true" value="{{$form->end_time}}">
+                                    <input type="time" class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true" value="{{date('H:i',strtotime($form->end_time))}}">
                                 </div>
                             </div>
 
 
                         </div>
                         <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Lainnya
                                 </h2>
@@ -112,7 +122,7 @@
                                     </label>
                                 </div>
                                 <div class="switch">
-                                    <label for="random" style="margin-bottom: 8px; ">
+                                    <label for="random" style="margin-bottom: 16px; ">
                                         <input type="checkbox" id="random" name="random">
                                         <span class="lever"></span>
                                         Urutan acak.
@@ -402,7 +412,7 @@
 <script>
     $(function() {
         $('.timepicker').bootstrapMaterialDatePicker({
-            format: 'HH:mm',
+            format: 'HH:mm::ss',
             lang: 'id',
             time: true,
             date: false,
@@ -479,4 +489,91 @@
 
         menuTipe()
     })
+</script>
+<script>
+    function selectTime(judul, tipe, format) {
+
+
+        return `
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+                                <h2 class="card-inside-title">
+                                    ${judul} Mulai Pengisian
+                                </h2>
+                                <div>
+                                    <input type="${tipe}" class="timepicker form-control" name="start_time" required="" aria-required="true" aria-invalid="true" value="${tipe == 'time'? 'harian' == '{{$form->jenis_custom_form}}' && '{{date("H:i",strtotime($form->start_time))}}':'biasa' == '{{$form->jenis_custom_form}}' && '{{\Carbon\Carbon::parse($form->start_time)->toDateTimeLocalString()}}'}" >
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+                                <h2 class="card-inside-title">
+                                    ${judul} Akhir Pengisian
+                                </h2>
+                                <div>
+                                    <input type="${tipe}" class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true" value="${tipe == 'time'? 'harian' == '{{$form->jenis_custom_form}}' && '{{date("H:i",strtotime($form->end_time))}}': 'biasa' == '{{$form->jenis_custom_form}}' && '{{\Carbon\Carbon::parse($form->end_time)->toDateTimeLocalString()}}'}">
+                                </div>
+                            </div> 
+                `
+    }
+
+    function datePicker(pormat) {
+        $('.timepicker').bootstrapMaterialDatePicker({
+            format: pormat,
+            lang: 'id',
+            time: true,
+            date: false,
+            shortTime: false
+        });
+        $('select').selectpicker();
+    }
+
+    $(function() {
+        let data = $('select[name*=jenis_custom_form]').val()
+        changeState(data)
+
+    })
+
+    $('select[name*=jenis_custom_form]').on('change', function() {
+        let data = $(this).val()
+        changeState(data)
+    })
+
+    function changeState(data) {
+        $('#bagianWaktu').children().remove()
+        if (data === 'harian') {
+            $('#bagianWaktu').append(
+                selectTime('Jam', 'time', 'H:i')
+            );
+            datePicker('HH:mm');
+            $('#multiple').prop('disabled', true);
+            $('#multiple').parent().parent().css('display', 'none');
+
+        } else if (data === 'bulanan') {
+            $('#bagianWaktu').append(
+                `<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+                                <h2 class="card-inside-title">
+                                    Pilih Tanggal Pengisian (Hari Dalam Bulan)
+                                </h2>
+                                <div id="tanggalManual">
+                                    <input type="hidden" name="start_time" value="0">
+                                    <input type="number" id="pilihTanggal" min="1" max="31"  class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true" value="{{\Carbon\Carbon::parse($form->start_time)->day}}">
+                                    <small>input manual antara tanggal 1 hingga 31 (Otomatis Ke Akhir Bulan Jika Tidak Terdapat Tanggal 31/30)</small>
+                                </div>
+                            </div>
+                            
+                            `
+            );
+            $('#multiple').prop('disabled', true);
+            $('#multiple').parent().parent().css('display', 'none');
+
+        } else {
+            $('#bagianWaktu').append(
+                selectTime('Tanggal', 'datetime-local', 'dd-mm-yyy H:i')
+            )
+            $('#multiple').prop('disabled', false);
+            $('#multiple').parent().parent().css('display', '');
+
+
+        }
+
+
+    }
 </script>

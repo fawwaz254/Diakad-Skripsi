@@ -45,25 +45,6 @@
 
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
-                                <h2 class="card-inside-title">
-                                    Jam Mulai Pengisian
-                                </h2>
-                                <div>
-                                    <input type="text" class=" form-control" name="start_time"  aria-required="true" aria-invalid="true" value="{{$form->start_time}}" disabled>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
-                                <h2 class="card-inside-title">
-                                    Jam Akhir Pengisian
-                                </h2>
-                                <div>
-                                    <input type="text" class=" form-control" name="end_time"  aria-required="true" aria-invalid="true" value="{{$form->end_time}}" disabled>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
                             <small class="text-danger">* Menunjukkan Pertanyaan Yang Wajib Diisi</small>
                             </div>
                         </div>
@@ -78,7 +59,7 @@
                     <div class="header">
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <h4>{{$komponen->label_custom_form_komponen}}  @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true')<span class="text-red-600"> *</span>@endif</h4>
+                                    <h4>{{$komponen->label_custom_form_komponen}}  @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true')<span class="text-danger"> *</span>@endif</h4>
                                     
                             </div>
 

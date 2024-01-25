@@ -94,6 +94,11 @@ Route::middleware(['token_staff'])->group(function () {
             });
             Route::resource('custom-form',CustomFormController::class);
 
+            Route::get('form-rekap/datatables',[CustomFormRekapController::class, 'indexDataTables']);
+            Route::post('form-rekap/datatables/filter',[CustomFormRekapController::class, 'filterRekapDatatables']);
+            Route::resource('form-rekap',CustomFormRekapController::class);
+            // Route::resource('')
+
             //     Route::get('/', [CustomFormController::class, 'viewCustomForm']);
             //     Route::get('add', [CustomFormController::class, 'addCustomForm']);
             //     Route::get('edit/{id_custom_form}', [CustomFormController::class, 'editCustomForm']);
