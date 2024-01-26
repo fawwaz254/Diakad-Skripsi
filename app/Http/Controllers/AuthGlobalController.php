@@ -47,8 +47,8 @@ class AuthGlobalController extends BaseController
         $input = (object) $request->input();
         $validator = Validator::make($request->all(), [
             'email_pengguna' => 'required',
-            'nm_ortu' => 'required',
-            'nomor_hp_ortu'    => 'required|min:10|max:14',
+            // 'nm_ortu' => 'required',
+            // 'nomor_hp_ortu'    => 'min:10|max:14',
         ]);
 
 

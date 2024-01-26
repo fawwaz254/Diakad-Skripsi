@@ -6,6 +6,7 @@ use App\Http\Controllers\Guru\Laporan\KerjaHarianController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\Tendik\Biodata\DataPribadiController;
 use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
+use App\Http\Controllers\Tendik\FormTendik\FormHarianController;
 use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
 use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
@@ -19,7 +20,7 @@ use App\Http\Controllers\Tendik\JurnalHarian\JurnalHarianTendikController;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('tendik')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
 
@@ -180,6 +181,18 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [DokumenController::class, 'viewDokumen']);
                 Route::get('detail/{id}', [DokumenController::class, 'viewDetailDokumen']);
                 Route::post('datatables', [DokumenController::class, 'datatablesDokumen']);
+            });
+        });
+
+        Route::prefix('form-tendik')->group(function () {
+            Route::prefix('input-form-harian')->group(function () {
+                Route::get('/', [FormHarianController::class, 'viewInputFormHarian']);
+                Route::get('/datatables', [FormHarianController::class, 'datatablesInputFormHarian']);
+                Route::get('/add/{id_form}', [FormHarianController::class, 'addInputFormHarian']);
+                Route::get('/edit/{id_jawaban}', [FormHarianController::class, 'editSubmittedForm']);
+                Route::get('/all/{id_form}', [FormHarianController::class, 'viewAllSubmittedForm']);
+                Route::get('/all/datatables/{id_form}', [FormHarianController::class, 'datatablesJawaban']);
+                Route::post('action-list-form/{mode}/{id}', [FormHarianController::class, 'actionInputFormHarian']);
             });
         });
     });
