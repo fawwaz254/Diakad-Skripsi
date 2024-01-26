@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guru\RaporSisipan;
 
 use App\Exports\RaporSisipanSAS;
 use App\Exports\RaporSisipanSTS;
+use App\Exports\RekapRaporSisipanSTS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Imports\UploadRaporSisipanSAS;
@@ -156,7 +157,9 @@ class RaporSisipanAkhirController extends Controller
             ->addColumn('action', function ($item) use ($status) {
                 $data = array(
                     'id'     => $item->id_rapor,
-                    'status' => $status
+                    'status' => $status,
+                    'id_kelas' => $item->id_kelas,
+                    'id_semester' => $item->id_semester,
                 );
 
                 return $data;
@@ -526,5 +529,72 @@ class RaporSisipanAkhirController extends Controller
                 'message' => 'Update Sukses',
             ];
         }
+    }
+    public function printDaftarNilaiSAS(Request $request, $id_rapor)
+    {
+        set_time_limit(1800);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
+
+        // $list_data = KomponenNilaiRapor::where('status', 1)->where('nm_komponen_jenis_rapor', '!=', 'uas')->orderBy('urutan', 'asc')->get();
+        $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            $query->where('nm_jenis_rapor', 'sisipan');
+        })
+            // ->where('nm_komponen_jenis_rapor', '!=', 'uas')
+            ->orderBy('urutan', 'asc')->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })->whereHas('nilai_rapor', function ($query) use ($id_rapor) {
+            $query->where('id_rapor', '=', $id_rapor)->where('nilai', '!=', '0');
+        })->orderBy('nis_siswa')->get();
+
+        $list_nilai = NilaiRapor::where('id_rapor', $id_rapor)
+            ->whereHas('komponen_jenis_rapor', function ($query) {
+                // $query->where('nm_komponen_jenis_rapor', '!=', 'uas');
+            })->get();
+
+        $nilai_siswa = [];
+        $list_kd_aktif = [];
+        // $nilai_komponen = [];
+        if ($list_siswa) {
+            $nilai = $list_nilai->toArray();
+            foreach ($nilai as $nilaiRapor) {
+                foreach ($nilaiRapor as $a) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_jenis_rapor'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor']] = $nilaiRapor['nilai'];
+                    // $nilai_sumatif1 = $list_data->firstWhere('urutan', '=', '5');
+                    // $nilai_sumatif2 = $list_data->firstWhere('urutan', '=', '6');
+                    // $sts = $list_data->firstWhere('urutan', '=', '9');
+                    // if ($nilaiRapor['id_komponen_jenis_rapor']  == $nilai_sumatif1->id_komponen_jenis_rapor) {
+                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
+                    // }
+                    // if ($nilaiRapor['id_komponen_jenis_rapor']  == $nilai_sumatif2->id_komponen_jenis_rapor) {
+                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
+                    // }
+                    // if ($nilaiRapor['id_komponen_jenis_rapor']  == $sts->id_komponen_jenis_rapor) {
+                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
+                    // }
+                }
+            }
+        }
+        foreach ($list_data as $key => $data) {
+            $data1 = $list_nilai->where('id_komponen_jenis_rapor', $data->id_komponen_jenis_rapor)->where('nilai', '!=', 0)->first();
+            if (!empty($data1)) {
+                $list_kd_aktif[$key]['id_komponen_jenis_rapor'] =   $data->id_komponen_jenis_rapor;
+                $list_kd_aktif[$key]['nm_nilai'] =   $data->nm_nilai;
+            }
+        }
+
+
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        // $data['nilai_komponen'] = $nilai_komponen;
+        $data['rapor'] = $rapor;
+        $data['list_siswa'] = $list_siswa;;
+        $data['list_data'] = $list_kd_aktif;
+        $data['id_rapor'] = $id_rapor;
+
+        return Excel::download(new RekapRaporSisipanSTS($data), 'Rekap Rapor Sisipan SAS (' . $rapor->kelas->nm_kelas . ' - ' . $rapor->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
     }
 }

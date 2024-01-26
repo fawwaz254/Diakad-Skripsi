@@ -53,6 +53,7 @@
                                     {{-- <th>Nilai</th>
                                     <th>Template Excel</th>
                                     <th>Action</th> --}}
+                                    <th>Input Nilai</th>
                                     <th>Action</th>
                                     <th>Pembuat</th>
                                 </tr>
@@ -76,6 +77,7 @@
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/pdf';
     var input_nilai = base_url + '/' + role_url + '#' + modul_url + '/' +
         'daftar-nilai-sas/inputNilai';
+    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/print';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -193,6 +195,31 @@
                             '</a> ';
                     } else {
                         return '';
+                    }
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    if (data.status == '0') {
+                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            print_url + '/' + data.id + '"  target="_blank">' +
+                            '    <i class="material-icons">print</i>' +
+                            '</a> ' +
+                            '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            pdf_url + '/' + data.id_semester + '/' + data
+                            .id_kelas + '"  target="_blank">' +
+                            '    <i class="material-icons">picture_as_pdf</i>' +
+                            '</a> ';
+                    } else {
+                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            pdf_url + '/' + data.id + '"  target="_blank">' +
+                            '    <i class="material-icons">picture_as_pdf</i>' +
+                            '</a> ';
                     }
                 }
             },
