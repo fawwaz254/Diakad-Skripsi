@@ -53,6 +53,7 @@
                                     {{-- <th>Nilai</th>
                                     <th>Template Excel</th>
                                     <th>Action</th> --}}
+                                    <th>Action</th>
                                     <th>Pembuat</th>
                                 </tr>
                             </thead>
@@ -73,6 +74,8 @@
     // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/excel';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sas/pdf';
+    var input_nilai = base_url + '/' + role_url + '#' + modul_url + '/' +
+        'daftar-nilai-sas/inputNilai';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -176,6 +179,23 @@
             //             '</a> ';
             //     }
             // },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    if (data.status == '0') {
+                        return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            input_nilai + '/' + data.id + '" >' +
+                            '    <i class="material-icons">add_box</i>' +
+                            '</a> ';
+                    } else {
+                        return '';
+                    }
+                }
+            },
             {
                 data: 'pengguna.nm_pengguna',
                 name: 'pengguna.nm_pengguna',
