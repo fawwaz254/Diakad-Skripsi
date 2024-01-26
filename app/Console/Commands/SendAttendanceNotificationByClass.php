@@ -90,7 +90,7 @@ class SendAttendanceNotificationByClass extends Command
                     };
 
                     $content_message = join("\n -------------------------------------------------------------------------------- \n", $siswa_kelas);
-                    
+
                     $template = $base_template;
                     $message = str_replace(
                         ['{{CLASS}}', '{{DATE}}', '{{SCHOOL}}', '{{STUDENTS}}', '\n'],
@@ -164,7 +164,7 @@ class SendAttendanceNotificationByClass extends Command
                         [$key, now()->translatedFormat('l, d F Y'), $nama_sekolah, $content_message, "\n"],
                         $template
                     );
-                    
+
                     $data = [
                         'message' => $message,
                         'group_id' => $kelas[$key],
@@ -190,7 +190,7 @@ class SendAttendanceNotificationByClass extends Command
                 }
             }
         } catch (\Exception $e) {
-            \Log::info("Notification Error: " . $e);
+            \Log::info("Notification Error: " . $e->getMessage());
         }
     }
 }
