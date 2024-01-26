@@ -87,7 +87,7 @@
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kelainan jasmani</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tinggi dan berat badan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Berkebutuhan khusus</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" colspan="4">Pendidikan sebelumnya</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="3">Pendidikan sebelumnya</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="2">Pindahan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="2">Diterima di sekolah ini</th>
                 {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nomor KPS</th> --}}
@@ -136,7 +136,7 @@
                 <th style="text-align: center;font-weight: bold;border : 1;">a. Tamatan dari</th>
                 <th style="text-align: center;font-weight: bold;border : 1;">b. Tanggal dan nomor ijazah</th>
                 <th style="text-align: center;font-weight: bold;border : 1;">c. Tanggal dan nomor SKHUN</th>
-                <th style="text-align: center;font-weight: bold;border : 1;">d. Lama belajar</th>
+                {{-- <th style="text-align: center;font-weight: bold;border : 1;">d. Lama belajar</th> --}}
                 <th style="text-align: center;font-weight: bold;border : 1;">a. Dari sekolah</th>
                 <th style="text-align: center;font-weight: bold;border : 1;">b. Alasan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;">a. Di kelas / Semester</th>
@@ -158,6 +158,7 @@
                     $semester_aktif = App\Libraries\Pendidikan\LibDataAkademik::fetchDataSemesterAktif($auth_data);
                     $siswa = App\Libraries\Pendidikan\LibSiswa::fetchDataDetailSiswa($auth_data, $dsiswa->nis_siswa);
                     $beasiswa = App\Models\CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
+                    $semester = App\Models\Semester::where('is_aktif_semester', '=', 1)->first();
                     $data_beasiswa[0]['urutan_1'] = '61.';
                     $data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
                     $data_beasiswa[0]['urutan_3'] = '';
@@ -230,13 +231,13 @@
                     <td></td>
                     <td>{{ $siswa->tinggi_badan }} cm / {{ $siswa->berat_badan }} kg</td>
                     <td>{{ $siswa->nm_kebutuhan_khusus }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ $siswa->asal_sekolah }}</td>
+                    <td>{{ $siswa->tanggal_sttb . $siswa->nomor_sttb }}</td>
+                    <td>{{ $siswa->tanggal_skhus_sebelumnya . $siswa->nomor_skhus_sebelumnya }}</td>
+                    {{-- <td></td> --}}
+                    <td>{{ $siswa->asal_sekolah2 }}</td>
+                    <td>{{ $siswa->alasan_mutasi }}</td>
+                    <td>{{ $siswa->nm_kelas }} / {{ $semester->nm_semester }}</td>
                     <td>{{ $siswa->tgl_diterima }}</td>
                     {{-- <td>{{ $siswa->nomor_kps }}</td> --}}
                     <td>{{ $siswa->nm_ayah }}</td>
