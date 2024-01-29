@@ -226,7 +226,7 @@ class InputAbsensiEkskulController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'manage') {
@@ -248,11 +248,11 @@ class InputAbsensiEkskulController extends BaseController
                     $presensi_ekskul->waktu_selesai = '00:00';
                     $presensi_ekskul->tgl_entry = $tgl_entry;
 
-                    
-                    if(!empty(request()->file)){
+
+                    if (!empty(request()->file)) {
                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
 
-                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ekstra/'. $input->id_ekskul .'/'. $id, request()->file, 'public');
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ekstra/' . $input->id_ekskul . '/' . $id, request()->file, 'public');
                         $presensi_ekskul->image  = $file;
                     }
 

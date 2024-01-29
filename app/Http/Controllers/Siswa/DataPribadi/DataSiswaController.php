@@ -52,7 +52,8 @@ class DataSiswaController extends BaseController
 
 		$data_siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
-		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data_siswa->nis_siswa)) { } else {
+		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data_siswa->nis_siswa)) {
+		} else {
 			return [
 				'status' => 300, // FAILED
 				'message' => 'NIS tidak ditemukan'
@@ -114,7 +115,7 @@ class DataSiswaController extends BaseController
 
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
-		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		$now = Carbon::now();
 
 		$validator = Validator::make($request->all(), []);
 

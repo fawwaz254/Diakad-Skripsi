@@ -216,7 +216,7 @@ class CetakRaporController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $validator = Validator::make($request->all(), [
             'nm_mata_pelajaran' => 'required',
             'tingkat' => 'required',
@@ -292,7 +292,7 @@ class CetakRaporController extends Controller
             $urutan_rapor_sisipan->updated_by          = $input->auth_data->pengguna->id_pengguna;
             $urutan_rapor_sisipan->save();
         } else {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $urutan_rapor_sisipan               = new UrutanRaporSisipan;
             $urutan_rapor_sisipan->id_urutan_rapor_sisipan    = $id;
@@ -1856,7 +1856,8 @@ class CetakRaporController extends Controller
             //     }
 
             //     return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor3', compact('auth_data', 'kelas', 'list_siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'sub', 'list_nilai', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'nilai_komponen'));
-        } else { }
+        } else {
+        }
     }
 
     public function addDeskripsi(Request $request)

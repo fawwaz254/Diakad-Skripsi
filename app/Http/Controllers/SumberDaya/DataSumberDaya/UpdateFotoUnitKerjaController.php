@@ -192,7 +192,7 @@ class UpdateFotoUnitKerjaController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
 
@@ -231,7 +231,7 @@ class UpdateFotoUnitKerjaController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'file' => 'file|required|max:2048|mimes:jpg,jpeg,bmp,png'

@@ -39,7 +39,7 @@ class AbsensiTanpaJadwalController extends BaseController
         $input          = (object) $request->input();
         $auth_data      = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        $tanggal        = Carbon::now(env('APP_TIMEZONE', ''));
+        $tanggal        = Carbon::now();
         $tanggal_id     = $tanggal->format('d F Y');
         $guru           = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
@@ -97,7 +97,7 @@ class AbsensiTanpaJadwalController extends BaseController
         # code...
         $input              = (object) $request->input();
         $auth_data          = $input->auth_data;
-        $now                = Carbon::now(env('APP_TIMEZONE', ''));
+        $now                = Carbon::now();
         $semester_aktif     = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tanggal            = $now->format('d F Y');
 
@@ -216,7 +216,7 @@ class AbsensiTanpaJadwalController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add-kbm') {

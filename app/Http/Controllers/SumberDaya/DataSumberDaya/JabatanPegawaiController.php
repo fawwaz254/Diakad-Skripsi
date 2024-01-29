@@ -18,69 +18,72 @@ use DB;
 use Session;
 use Validator;
 
-class JabatanPegawaiController extends BaseController{
+class JabatanPegawaiController extends BaseController
+{
 
-    public function viewJabatanPegawai(Request $request){
+    public function viewJabatanPegawai(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('sumber-daya/data-sumber-daya/jabatan-pegawai/view-jabatan-pegawai',compact('auth_data'));
-
+        return view('sumber-daya/data-sumber-daya/jabatan-pegawai/view-jabatan-pegawai', compact('auth_data'));
     }
 
-    public function addJabatanPegawai(Request $request){
+    public function addJabatanPegawai(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_jabatan_pegawai = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_jabatan_pegawai = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('sumber-daya/data-sumber-daya/jabatan-pegawai/add-jabatan-pegawai',compact('auth_data','id_jabatan_pegawai'));
-
+        return view('sumber-daya/data-sumber-daya/jabatan-pegawai/add-jabatan-pegawai', compact('auth_data', 'id_jabatan_pegawai'));
     }
 
-    public function editJabatanPegawai($id, Request $request){
+    public function editJabatanPegawai($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_jabatan_pegawai = $this->fetchDataJabatanPegawai($auth_data, $id);
 
-        return view('sumber-daya/data-sumber-daya/jabatan-pegawai/edit-jabatan-pegawai',compact('auth_data','data_jabatan_pegawai'));
-
+        return view('sumber-daya/data-sumber-daya/jabatan-pegawai/edit-jabatan-pegawai', compact('auth_data', 'data_jabatan_pegawai'));
     }
 
-    public function datatablesJabatanPegawai(Request $request){
+    public function datatablesJabatanPegawai(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = $this->fetchDataJabatanPegawai($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_jabatan_pegawai
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_jabatan_pegawai
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function fetchDataJabatanPegawai($auth_data, $id = null){
+    public function fetchDataJabatanPegawai($auth_data, $id = null)
+    {
 
         // get mode view
-        if ($id == null){
+        if ($id == null) {
             $jabatanPegawai = JabatanPegawai::select('jabatan_pegawai.id_jabatan_pegawai', 'jabatan_pegawai.nm_jabatan_pegawai', 'jabatan_pegawai.deskripsi_jabatan_pegawai', 'jabatan_pegawai.tipe_jabatan_pegawai', 'jabatan_pegawai.kode_jabatan_pegawai')
-                    ->where('jabatan_pegawai.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-                    ->orderBy('jabatan_pegawai.nm_jabatan_pegawai', 'asc')
-                    ->get();
+                ->where('jabatan_pegawai.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                ->orderBy('jabatan_pegawai.nm_jabatan_pegawai', 'asc')
+                ->get();
         }
         // get mode edit
-        else{
-            $jabatanPegawai = JabatanPegawai::where('jabatan_pegawai.id_jabatan_pegawai','=',$id)->first();
+        else {
+            $jabatanPegawai = JabatanPegawai::where('jabatan_pegawai.id_jabatan_pegawai', '=', $id)->first();
         }
 
         return $jabatanPegawai;
@@ -88,7 +91,8 @@ class JabatanPegawaiController extends BaseController{
 
 
     // Action POST
-    public function actionJabatanPegawai(Request $request, $mode, $id = null) {
+    public function actionJabatanPegawai(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -99,20 +103,19 @@ class JabatanPegawaiController extends BaseController{
             'kode_jabatan_pegawai'          => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                 $jabatanPegawai                             = new JabatanPegawai;
                 $jabatanPegawai->id_jabatan_pegawai         = $id;
                 $jabatanPegawai->nm_jabatan_pegawai         = $input->nm_jabatan_pegawai;
@@ -128,8 +131,7 @@ class JabatanPegawaiController extends BaseController{
                     'path' => 'data-sumber-daya/jabatan-pegawai',
                     'message' => 'Save Jabatan Pegawai Successfully'
                 ];
-            }
-            elseif($mode == 'edit') {
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $jabatanPegawai                             = JabatanPegawai::find($id);
                 $jabatanPegawai->nm_jabatan_pegawai         = $input->nm_jabatan_pegawai;
@@ -145,15 +147,13 @@ class JabatanPegawaiController extends BaseController{
                     'path' => 'data-sumber-daya/jabatan-pegawai',
                     'message' => 'Update Jabatan Pegawai Successfully'
                 ];
-            }
-            elseif($mode == 'delete') {
-                if($guru = Guru::where('id_jabatan_pegawai',$id)->first() or $staff = Staff::where('id_jabatan_pegawai',$id)->first()) {
+            } elseif ($mode == 'delete') {
+                if ($guru = Guru::where('id_jabatan_pegawai', $id)->first() or $staff = Staff::where('id_jabatan_pegawai', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Jabatan Pegawai'
-                    ]; 
-                }
-                else {
+                    ];
+                } else {
                     // make object to find id
                     $jabatanPegawai               = JabatanPegawai::find($id);
                     $jabatanPegawai->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -169,5 +169,4 @@ class JabatanPegawaiController extends BaseController{
             }
         }
     }
-
 }

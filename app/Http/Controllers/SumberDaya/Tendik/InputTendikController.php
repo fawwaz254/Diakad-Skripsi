@@ -64,7 +64,7 @@ class InputTendikController extends BaseController
         $data_unit_kerja = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $kota = Kota::where('kota.is_aktif', '=', 1)->get();
         $provinsi = Provinsi::where('provinsi.is_aktif', '=', 1)->get();
@@ -178,7 +178,7 @@ class InputTendikController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add') {

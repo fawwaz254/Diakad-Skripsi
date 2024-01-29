@@ -16,7 +16,7 @@ class HideModulBiodataInRoleSiswa extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $modul = Modul::find(12);
         $modul->akses = 0;
         $modul->updated_at = $now;

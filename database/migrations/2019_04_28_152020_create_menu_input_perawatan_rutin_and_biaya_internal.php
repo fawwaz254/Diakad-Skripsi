@@ -17,7 +17,7 @@ class CreateMenuInputPerawatanRutinAndBiayaInternal extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $modul              = new Modul;
         $modul->id_role     = 10;
@@ -75,21 +75,21 @@ class CreateMenuInputPerawatanRutinAndBiayaInternal extends Migration
         $menu->save();
 
         // make object to find id
-        $menu              	= Menu::find(110);
-        $menu->urutan      	= 4;
-        $menu->updated_at  	= $now;
+        $menu                  = Menu::find(110);
+        $menu->urutan          = 4;
+        $menu->updated_at      = $now;
         $menu->save();
 
         // make object to find id
-        $menu              	= Menu::find(111);
-        $menu->urutan      	= 5;
-        $menu->updated_at  	= $now;
+        $menu                  = Menu::find(111);
+        $menu->urutan          = 5;
+        $menu->updated_at      = $now;
         $menu->save();
 
         // make object to find id
-        $menu              	= Menu::find(113);
-        $menu->urutan      	= 6;
-        $menu->updated_at  	= $now;
+        $menu                  = Menu::find(113);
+        $menu->urutan          = 6;
+        $menu->updated_at      = $now;
         $menu->save();
     }
 

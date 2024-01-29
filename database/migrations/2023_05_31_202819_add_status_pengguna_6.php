@@ -20,7 +20,7 @@ class AddStatusPengguna6 extends Migration
         $sekolah = Sekolah::first();
         $pengguna = Pengguna::where('username', 'admin')->first();
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $status_pengguna = new StatusPengguna;
         $status_pengguna->id_status_pengguna = $sekolah->prefix . strtotime($now) . uniqid();
         $status_pengguna->status_join_table = 6;

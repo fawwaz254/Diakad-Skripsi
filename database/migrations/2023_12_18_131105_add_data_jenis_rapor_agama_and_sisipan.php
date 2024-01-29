@@ -16,7 +16,7 @@ class AddDataJenisRaporAgamaAndSisipan extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $sekolah = Sekolah::first();
         $jenis_rapor = new JenisRapor;
         $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();

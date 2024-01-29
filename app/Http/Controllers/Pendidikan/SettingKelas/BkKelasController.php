@@ -52,13 +52,11 @@ class BkKelasController extends BaseController
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        } 
-
-        else {
+        } else {
             return [
-                    'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'setting-kelas/bk-kelas/view-kelas/'.$input->id_kelas
-                ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'setting-kelas/bk-kelas/view-kelas/' . $input->id_kelas
+            ];
         }
     }
 
@@ -84,12 +82,12 @@ class BkKelasController extends BaseController
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
         // ambil data guru melalui role sumber daya
-        $data_guru_tendik = Pengguna::whereIn('status_join_table',[1,2])->where('username','!=','admin')->get();
+        $data_guru_tendik = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->get();
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_bk_kelas = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_bk_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/setting-kelas/bk-kelas/add-bk-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_guru_tendik', 'id_bk_kelas'));
     }
@@ -104,7 +102,7 @@ class BkKelasController extends BaseController
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
 
-        $data_guru_tendik = Pengguna::whereIn('status_join_table',[1,2])->where('username','!=','admin')->get();
+        $data_guru_tendik = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->get();
 
         $data_bk_kelas = LibGuru::fetchDataBkKelas($auth_data, $id_kelas, $id);
 
@@ -118,29 +116,29 @@ class BkKelasController extends BaseController
         $list_data = LibGuru::fetchDataBkKelas($auth_data, $id_kelas);
 
         return Datatables::of($list_data)
-                ->editColumn('nm_bk_kelas', function ($item) {
-                    return $item->gelar_depan.' '.$item->nm_bk_kelas.' '.$item->gelar_belakang;
-                    // return $item->guru->pengguna->fullname();
-                })
-                ->addColumn('semester', function ($item) {
-                    return $item->tahun_ajaran." ".$item->nm_semester;
-                })
-                ->addColumn('status_aktif', function ($item) {
-                    if ($item->is_aktif == 0) {
-                        return "Non-Aktif";
-                    } else {
-                        return "Aktif";
-                    }
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id'            => $item->id_bk_kelas,
-                        'id_kelas'      => $item->id_kelas,
-                        'id_semester'   => $item->id_semester
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->editColumn('nm_bk_kelas', function ($item) {
+                return $item->gelar_depan . ' ' . $item->nm_bk_kelas . ' ' . $item->gelar_belakang;
+                // return $item->guru->pengguna->fullname();
+            })
+            ->addColumn('semester', function ($item) {
+                return $item->tahun_ajaran . " " . $item->nm_semester;
+            })
+            ->addColumn('status_aktif', function ($item) {
+                if ($item->is_aktif == 0) {
+                    return "Non-Aktif";
+                } else {
+                    return "Aktif";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id'            => $item->id_bk_kelas,
+                    'id_kelas'      => $item->id_kelas,
+                    'id_semester'   => $item->id_semester
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
@@ -162,48 +160,44 @@ class BkKelasController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add') {
-               
-                
+
+
 
                 $kelas = Kelas::find($input->id_kelas);
                 $semester = Semester::find($input->id_semester);
                 $pengguna = Pengguna::find($input->id_pengguna);
 
-              //  cek apabila ada record kelas dan semester yg sama
+                //  cek apabila ada record kelas dan semester yg sama
                 $bkKelas = BkKelas::join('semester', 'semester.id_semester', '=', 'bk_kelas.id_semester')
-                               
-                                ->where('bk_kelas.id_kelas', '=', $input->id_kelas)
-                                ->where('bk_kelas.id_semester', '=', $input->id_semester)
-                                ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                                ->first();
-           
+
+                    ->where('bk_kelas.id_kelas', '=', $input->id_kelas)
+                    ->where('bk_kelas.id_semester', '=', $input->id_semester)
+                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
+
 
                 if ($bkKelas) {
-                 
-                
+
+
 
 
                     return [
                         'status' => 300, // FAILED
-                        'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki bk kelas yaitu '.$bkKelas->pengguna->nm_pengguna
+                        'message' => 'Mohon maaf kelas ' . $kelas->nm_kelas . ' pada semester ' . $semester->tahun_ajaran . ' sudah memiliki bk kelas yaitu ' . $bkKelas->pengguna->nm_pengguna
                     ];
-                 
-                
-                } 
+                } else {
 
-                else {
-
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $bkKelas                       = new BkKelas();
                     $bkKelas->id_bk_kelas          = $id;
                     $bkKelas->id_kelas             = $input->id_kelas;
                     $bkKelas->id_semester          = $input->id_semester;
-                    
+
                     $bkKelas->id_pengguna          = $input->id_pengguna;
                     $bkKelas->is_aktif             = $input->is_aktif;
                     $bkKelas->created_by           = $input->auth_data->pengguna->id_pengguna;
@@ -224,13 +218,11 @@ class BkKelasController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'setting-kelas/bk-kelas/view-kelas/'.$input->id_kelas,
+                        'path' => 'setting-kelas/bk-kelas/view-kelas/' . $input->id_kelas,
                         'message' => 'Save BK Kelas Successfully'
                     ];
                 }
-            } 
-
-            elseif ($mode == 'edit') {
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $bkKelas                   = BkKelas::find($id);
                 $bkKelas->id_kelas         = $input->id_kelas;
@@ -256,7 +248,7 @@ class BkKelasController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'setting-kelas/bk-kelas/view-kelas/'.$input->id_kelas,
+                    'path' => 'setting-kelas/bk-kelas/view-kelas/' . $input->id_kelas,
                     'message' => 'Update BK Kelas Successfully'
                 ];
             } elseif ($mode == 'delete') {

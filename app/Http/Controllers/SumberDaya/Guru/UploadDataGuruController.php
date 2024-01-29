@@ -40,7 +40,7 @@ class UploadDataGuruController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         if ($request->hasFile('file-excel')) {
             $path = $request->file('file-excel')->getRealPath();
 

@@ -130,7 +130,7 @@ class ManajemenMateriAjarController extends BaseController
             ];
         } else {
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;

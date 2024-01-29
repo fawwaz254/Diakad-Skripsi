@@ -21,16 +21,15 @@ class RemoveSomeMenuRoleKeuangan extends Migration
 
         // remove menu cari siswa modul laporan keuangan
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $role_id = Role::where('nm_role', 'Keuangan')->first()->id_role;
 
         $modul_id = Modul::where('id_role', $role_id)->where('nm_modul', 'Laporan Keuangan')->first()->id_modul;
-        $menu = Menu::where('id_modul',$modul_id)->where('nm_menu','Cari Siswa')->first();
+        $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Cari Siswa')->first();
         $menu->deleted_at = $now;
         $menu->deleted_by = 'A8bT515358553655b8b4b05a6d86';
         $menu->save();
         $menu->delete();
-
     }
 
     /**

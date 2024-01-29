@@ -83,7 +83,7 @@ class FormLainnyaController extends Controller
         $auth_data = $input->auth_data;
         $kegiatan_harian  = KegiatanHarian::find($id_form);
 
-        return view('tendik/kegiatan-harian/form-lainnya/view-form-lainnya', compact('auth_data', 'id_form','kegiatan_harian'));
+        return view('tendik/kegiatan-harian/form-lainnya/view-form-lainnya', compact('auth_data', 'id_form', 'kegiatan_harian'));
 
 
         // dd($id_form);
@@ -119,12 +119,12 @@ class FormLainnyaController extends Controller
         // } else {
 
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-            // $start_1 = Carbon::createFromTimeString('00:00');
-            // $end_1 = Carbon::createFromTimeString($end_monkes);
+        $now = Carbon::now();
+        // $start_1 = Carbon::createFromTimeString('00:00');
+        // $end_1 = Carbon::createFromTimeString($end_monkes);
 
-            // $start_2 = Carbon::createFromTimeString($start_monkes);
-            // $end_2 = Carbon::createFromTimeString('23:59');
+        // $start_2 = Carbon::createFromTimeString($start_monkes);
+        // $end_2 = Carbon::createFromTimeString('23:59');
 
         if (!isset($input->jawaban_pertanyaan)) {
             return [
@@ -134,113 +134,113 @@ class FormLainnyaController extends Controller
             ];
         }
 
-            if ($mode == 'add') {
-                $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        if ($mode == 'add') {
+            $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                // switch($request->segment(1)){
-                //     case 'tendik':
-                //         $status_join = 1; break;
-                //     case 'guru':
-                //         $status_join = 2; break;
-                //     case 'siswa':
-                //         $status_join = 3; break;
-                //     default:
-                //         $status_join = 0; break;
-                // }
+            // switch($request->segment(1)){
+            //     case 'tendik':
+            //         $status_join = 1; break;
+            //     case 'guru':
+            //         $status_join = 2; break;
+            //     case 'siswa':
+            //         $status_join = 3; break;
+            //     default:
+            //         $status_join = 0; break;
+            // }
 
-                $status_join = $auth_data->pengguna->status_join_table;
-                if (!$status_join) $status_join = 0;
+            $status_join = $auth_data->pengguna->status_join_table;
+            if (!$status_join) $status_join = 0;
 
-                // DB::beginTransaction();
+            // DB::beginTransaction();
 
-                // try {
-                $batch_insert_pengisian_jawaban = array();
-                foreach ($input->jawaban_pertanyaan as $id_pertanyaan => $id_jawaban) {
-                    $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            // try {
+            $batch_insert_pengisian_jawaban = array();
+            foreach ($input->jawaban_pertanyaan as $id_pertanyaan => $id_jawaban) {
+                $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                    $batch_insert_pengisian_jawaban[] = array(
-                        'id_pengisian_jawaban'            => $id,
-                        'id_pengisian_kegiatan_harian'    => $pengisian_kegiatan_harian_id,
-                        'id_kegiatan_harian_pertanyaan'   => $id_pertanyaan,
-                        'id_kegiatan_harian_jawaban'      => $id_jawaban,
-                        'isi_jawaban_text'                => !empty($input->jawaban_text[$id_jawaban]) ? $input->jawaban_text[$id_jawaban] : null,
-                        'bobot_jawaban'                   => $kegiatan_harian_jawaban->bobot_jawaban,
-                        'warna_keadaan'                   => $kegiatan_harian_jawaban->warna_keadaan,
-                        'created_at'                      => $now,
-                        'updated_at'                      => $now
-                    );
-                }
-
-                // $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian_id)->orderBy('bobot_jawaban', 'desc')->first();
-                $pengisian_jawaban_terbobot = collect($batch_insert_pengisian_jawaban)->sortByDesc('bobot_jawaban')->first();
-
-                if ($pengisian_jawaban_terbobot['bobot_jawaban'] == 0) {
-                    $status_pengisian = 1;
-                } else if ($pengisian_jawaban_terbobot['bobot_jawaban'] < 5) {
-                    $status_pengisian = 3;
-                } else {
-                    $status_pengisian = 2;
-                }
-
-                $insert_pengisian_kegiatan = array();
-                // $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
-                $insert_pengisian_kegiatan['id_pengisian_kegiatan_harian']   = $pengisian_kegiatan_harian_id;
-                $insert_pengisian_kegiatan['id_pengguna_pengisi']            = $input->auth_data->pengguna->id_pengguna;
-                $insert_pengisian_kegiatan['id_kegiatan_harian']            = $id_form;
-                $insert_pengisian_kegiatan['status_join_table']              = $status_join;
-                $insert_pengisian_kegiatan['warna_keadaan']                  = $pengisian_jawaban_terbobot['warna_keadaan'];
-                $insert_pengisian_kegiatan['status_pengisian']               = $status_pengisian;
-                $insert_pengisian_kegiatan['created_by']                     = $input->auth_data->pengguna->id_pengguna;
-                // if ($now->between($start_1, $end_1)) {
-                    $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today(env('APP_TIMEZONE', ''))->format('Y-m-d');
-                // } else if ($now->between($start_2, $end_2)) {
-                    // $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
-                // }
-
-                // if ($status_pengisian == 2) {
-                //     if ($status_join == 3) {
-                //         $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan, istirahat yg cukup dan konsumsi makanan yang tingkatkan imun.';
-                //     } else {
-                //         $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan dan membuat pernyataaan lalu mengunggahnya.';
-                //     }
-                // } else if ($status_pengisian == 3) {
-                //     $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Dengan catatan mohon untuk kegiatan spriritualnya ditingkatkan.';
-                // } else {
-                //     $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Pastikan tetap mematuhi protokol kesehatan.';
-                // }
-
-                PengisianMonkes::dispatch($insert_pengisian_kegiatan, $batch_insert_pengisian_jawaban);
-                // DB::commit();
-
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'kegiatan-harian/form-lainnya/form/'.$id_form,
-                    'message' => 'Successfully'
-                ];
-                // } catch (\Exception $e) {
-                //     DB::rollback();
-
-                //     return [
-                //         'status' => 300, // FAILED
-                //         'message' => 'Oopss'
-                //     ];
-                // }
-
-            } elseif ($mode == 'delete') {
-                $pengisian_kegiatan_harian  = PengisianKegiatanHarian::where('id_pengisian_kegiatan_harian', $id_form)->first();
-                $pengisian_jawaban          = PengisianJawaban::where('id_pengisian_kegiatan_harian', $id_form)->delete();
-
-                $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                $pengisian_kegiatan_harian->save();
-
-                $pengisian_kegiatan_harian->delete();
-
-                return [
-                    'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Successfully'
-                ];
+                $batch_insert_pengisian_jawaban[] = array(
+                    'id_pengisian_jawaban'            => $id,
+                    'id_pengisian_kegiatan_harian'    => $pengisian_kegiatan_harian_id,
+                    'id_kegiatan_harian_pertanyaan'   => $id_pertanyaan,
+                    'id_kegiatan_harian_jawaban'      => $id_jawaban,
+                    'isi_jawaban_text'                => !empty($input->jawaban_text[$id_jawaban]) ? $input->jawaban_text[$id_jawaban] : null,
+                    'bobot_jawaban'                   => $kegiatan_harian_jawaban->bobot_jawaban,
+                    'warna_keadaan'                   => $kegiatan_harian_jawaban->warna_keadaan,
+                    'created_at'                      => $now,
+                    'updated_at'                      => $now
+                );
             }
+
+            // $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian_id)->orderBy('bobot_jawaban', 'desc')->first();
+            $pengisian_jawaban_terbobot = collect($batch_insert_pengisian_jawaban)->sortByDesc('bobot_jawaban')->first();
+
+            if ($pengisian_jawaban_terbobot['bobot_jawaban'] == 0) {
+                $status_pengisian = 1;
+            } else if ($pengisian_jawaban_terbobot['bobot_jawaban'] < 5) {
+                $status_pengisian = 3;
+            } else {
+                $status_pengisian = 2;
+            }
+
+            $insert_pengisian_kegiatan = array();
+            // $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
+            $insert_pengisian_kegiatan['id_pengisian_kegiatan_harian']   = $pengisian_kegiatan_harian_id;
+            $insert_pengisian_kegiatan['id_pengguna_pengisi']            = $input->auth_data->pengguna->id_pengguna;
+            $insert_pengisian_kegiatan['id_kegiatan_harian']            = $id_form;
+            $insert_pengisian_kegiatan['status_join_table']              = $status_join;
+            $insert_pengisian_kegiatan['warna_keadaan']                  = $pengisian_jawaban_terbobot['warna_keadaan'];
+            $insert_pengisian_kegiatan['status_pengisian']               = $status_pengisian;
+            $insert_pengisian_kegiatan['created_by']                     = $input->auth_data->pengguna->id_pengguna;
+            // if ($now->between($start_1, $end_1)) {
+            $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today()->format('Y-m-d');
+            // } else if ($now->between($start_2, $end_2)) {
+            // $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today()->addDays(1)->format('Y-m-d');
+            // }
+
+            // if ($status_pengisian == 2) {
+            //     if ($status_join == 3) {
+            //         $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan, istirahat yg cukup dan konsumsi makanan yang tingkatkan imun.';
+            //     } else {
+            //         $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan dan membuat pernyataaan lalu mengunggahnya.';
+            //     }
+            // } else if ($status_pengisian == 3) {
+            //     $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Dengan catatan mohon untuk kegiatan spriritualnya ditingkatkan.';
+            // } else {
+            //     $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Pastikan tetap mematuhi protokol kesehatan.';
+            // }
+
+            PengisianMonkes::dispatch($insert_pengisian_kegiatan, $batch_insert_pengisian_jawaban);
+            // DB::commit();
+
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'kegiatan-harian/form-lainnya/form/' . $id_form,
+                'message' => 'Successfully'
+            ];
+            // } catch (\Exception $e) {
+            //     DB::rollback();
+
+            //     return [
+            //         'status' => 300, // FAILED
+            //         'message' => 'Oopss'
+            //     ];
+            // }
+
+        } elseif ($mode == 'delete') {
+            $pengisian_kegiatan_harian  = PengisianKegiatanHarian::where('id_pengisian_kegiatan_harian', $id_form)->first();
+            $pengisian_jawaban          = PengisianJawaban::where('id_pengisian_kegiatan_harian', $id_form)->delete();
+
+            $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+            $pengisian_kegiatan_harian->save();
+
+            $pengisian_kegiatan_harian->delete();
+
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Successfully'
+            ];
+        }
         // }
     }
 

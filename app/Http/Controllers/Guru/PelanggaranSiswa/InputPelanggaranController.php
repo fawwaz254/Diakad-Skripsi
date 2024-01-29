@@ -184,7 +184,7 @@ class InputPelanggaranController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $presensi_mp_aktif = PresensiMp::where('id_presensi_mp', '=', $id_presensi_mp)->first();
 
@@ -256,7 +256,7 @@ class InputPelanggaranController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 $presensi_mp = PresensiMp::find($input->id_presensi_mp);

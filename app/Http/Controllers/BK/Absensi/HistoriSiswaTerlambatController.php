@@ -30,7 +30,7 @@ class HistoriSiswaTerlambatController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', 1)->get();
-        $date = Carbon::now(env('APP_TIMEZONE', ''))->toDateString();
+        $date = Carbon::now()->toDateString();
         return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'date', 'kelas'));
     }
 
@@ -171,7 +171,7 @@ class HistoriSiswaTerlambatController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $subKategoriPelanggaran = SubkategoriPelanggaran::where('keterangan_subkategori_pelanggaran', 'Terlambat masuk kelas pada jam pelajaran sekolah.')->first();
         $siswa = Siswa::whereIn('id_pengguna', $input->data_siswa)->get();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);

@@ -19,14 +19,14 @@ class AddingModulAndMenuRoleSiswa extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
 
         $modul = Modul::create([
             "id_role"       => $role_id,
             "nm_modul"      => "Data Pribadi",
-            "route"         => "data-pribadi" ,
+            "route"         => "data-pribadi",
             "urutan"        => 1,
             "akses"         => 1,
             "created_at"    => $now

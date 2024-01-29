@@ -148,22 +148,22 @@ class AbsensiHarianSiswaController extends BaseController
         $bulan = Bulan::get();
 
         $list_data = PresensiHarian::selectRaw('COUNT(*) as jml_record, YEAR(tgl_entry) tahun, MONTH(tgl_entry) bulan')
-                                    ->where('id_semester', $id_semester)
-                                    ->where('id_kelas', $id_kelas)
-                                    ->groupBy(DB::raw('YEAR(tgl_entry),  MONTH(tgl_entry)'));
-                                    
+            ->where('id_semester', $id_semester)
+            ->where('id_kelas', $id_kelas)
+            ->groupBy(DB::raw('YEAR(tgl_entry),  MONTH(tgl_entry)'));
+
         return Datatables::of($list_data)
-                ->editColumn('bulan', function ($item) use ($bulan) {
-                    return $bulan->firstWhere('id_bulan', $item->bulan)->nm_bulan;
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'tahun' => $item->tahun,
-                        'bulan' => $item->bulan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->editColumn('bulan', function ($item) use ($bulan) {
+                return $bulan->firstWhere('id_bulan', $item->bulan)->nm_bulan;
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'tahun' => $item->tahun,
+                    'bulan' => $item->bulan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function datatablesKelasAbsensiHariSiswa(Request $request, $id_semester, $id_kelas, $id = null)
@@ -234,7 +234,7 @@ class AbsensiHarianSiswaController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'manage') {
@@ -244,14 +244,14 @@ class AbsensiHarianSiswaController extends BaseController
                     if (!empty($input->id_presensi_harian)) {
                         $presensi_harian = PresensiHarian::find($input->id_presensi_harian);
                     } else {
-                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_harian = new PresensiHarian;
                         $presensi_harian->id_presensi_harian = $id;
                         $presensi_harian->id_guru_entry = $input->auth_data->pengguna->id_pengguna;
                         $presensi_harian->id_kelas = $input->id_kelas;
                         $presensi_harian->id_semester = $input->id_semester;
                     }
-                    $presensi_harian->id_jadwal_hari = ($tgl_entry->dayOfWeek == 0)? 7 : $tgl_entry->dayOfWeek;
+                    $presensi_harian->id_jadwal_hari = ($tgl_entry->dayOfWeek == 0) ? 7 : $tgl_entry->dayOfWeek;
                     $presensi_harian->tgl_entry = $tgl_entry;
                     $presensi_harian->save();
 
@@ -260,7 +260,7 @@ class AbsensiHarianSiswaController extends BaseController
 
                     // presensi_harian_siswa
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        if (! empty($alasan)) {
+                        if (!empty($alasan)) {
                             $kehadiran = $alasan;
                         } else {
                             $kehadiran = 1;
@@ -270,32 +270,36 @@ class AbsensiHarianSiswaController extends BaseController
                             $presensi_harian_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
                         } else {
                             // make id
-                            $id_presensi_harian_siswa = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $id_presensi_harian_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $presensi_harian_siswa                            = new PresensiHarianSiswa;
                             $presensi_harian_siswa->id_presensi_harian        = $presensi_harian->id_presensi_harian;
                             $presensi_harian_siswa->id_presensi_harian_siswa  = $id_presensi_harian_siswa;
                             $presensi_harian_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
 
-                            if($siswa = Siswa::find($id_siswa)){
-                                if(!empty($siswa->id_wali_murid)){
+                            if ($siswa = Siswa::find($id_siswa)) {
+                                if (!empty($siswa->id_wali_murid)) {
                                     $wali_murid = WaliMurid::find($siswa->id_wali_murid);
 
-                                    switch($kehadiran){
+                                    switch ($kehadiran) {
                                         case 1:
-                                            $status = 'Hadir'; break;
+                                            $status = 'Hadir';
+                                            break;
                                         case 2:
-                                            $status = 'Sakit'; break;
+                                            $status = 'Sakit';
+                                            break;
                                         case 3:
-                                            $status = 'Izin'; break;
+                                            $status = 'Izin';
+                                            break;
                                         case 4:
-                                            $status = 'Alpa'; break;
+                                            $status = 'Alpa';
+                                            break;
                                     }
 
-                                    if($wali_murid){
+                                    if ($wali_murid) {
                                         $token_wali_murid = $wali_murid->pengguna->api_token;
-                                        if(!empty($token_wali_murid)){
-                                            $message = 'Putra/Putri Anda hari ini berstatus '.$status;
+                                        if (!empty($token_wali_murid)) {
+                                            $message = 'Putra/Putri Anda hari ini berstatus ' . $status;
                                             $send_data = array(
                                                 'title' => 'Informasi',
                                                 'body' => $message,
@@ -305,7 +309,7 @@ class AbsensiHarianSiswaController extends BaseController
                                             );
 
                                             $notifikasi = array(
-                                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                                'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                                                 'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                                 'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                                 'isi_notifikasi' => $message,
@@ -313,7 +317,7 @@ class AbsensiHarianSiswaController extends BaseController
                                             );
 
                                             LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
-                                        }   
+                                        }
                                     }
                                 }
                             }
@@ -339,7 +343,7 @@ class AbsensiHarianSiswaController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'guru-piket/absensi-harian-siswa/'.$input->id_semester.'/'.$input->id_kelas,
+                        'path' => 'guru-piket/absensi-harian-siswa/' . $input->id_semester . '/' . $input->id_kelas,
                         'message' => 'Save Absensi Harian Siswa Successfully'
                     ];
                 } catch (\Exception $e) {

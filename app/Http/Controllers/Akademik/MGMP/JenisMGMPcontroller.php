@@ -36,7 +36,7 @@ class JenisMGMPcontroller extends Controller
                 return $data;
             })->make(true);
     }
-    
+
     public function addDataJenis(Request $request)
     {
         # code...
@@ -61,7 +61,7 @@ class JenisMGMPcontroller extends Controller
             ];
         } else {
             //mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -104,7 +104,7 @@ class JenisMGMPcontroller extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'file-excel' => 'required',

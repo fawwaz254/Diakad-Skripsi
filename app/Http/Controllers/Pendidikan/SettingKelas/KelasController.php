@@ -45,7 +45,7 @@ class KelasController extends BaseController
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $id_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -194,7 +194,7 @@ class KelasController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add') {

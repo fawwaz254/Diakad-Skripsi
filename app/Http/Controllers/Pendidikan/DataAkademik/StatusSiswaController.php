@@ -31,11 +31,11 @@ class StatusSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
-        // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $id_status_pengguna = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // mengambil waktu sekarang
+        $now = Carbon::now();
+
+        $id_status_pengguna = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/data-akademik/status-siswa/add-status-siswa', compact('auth_data', 'id_status_pengguna'));
     }
@@ -58,20 +58,20 @@ class StatusSiswaController extends BaseController
         $list_data = $this->fetchDataStatusSiswa($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('status_aktif', function ($item) {
-                    if ($item->aktif_status_pengguna == 0) {
-                        return "Keluar/Non-Aktif";
-                    } else {
-                        return "Aktif";
-                    }
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_status_pengguna
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('status_aktif', function ($item) {
+                if ($item->aktif_status_pengguna == 0) {
+                    return "Keluar/Non-Aktif";
+                } else {
+                    return "Aktif";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_status_pengguna
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function fetchDataStatusSiswa($auth_data, $id = null)
@@ -107,13 +107,13 @@ class StatusSiswaController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', $input->kode_status_pengguna)
-                        ->where('status_join_table', '=', 3)
-                        ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                        ->first();
+                    ->where('status_join_table', '=', 3)
+                    ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
 
                 if ($statusPengguna) {
                     return [
@@ -121,8 +121,8 @@ class StatusSiswaController extends BaseController
                         'message' => 'Failed To Save Status Siswa!'
                     ];
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                    
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                     $statusPengguna                         = new StatusPengguna;
                     $statusPengguna->id_status_pengguna     = $id;
                     $statusPengguna->nm_status_pengguna     = $input->nm_status_pengguna;

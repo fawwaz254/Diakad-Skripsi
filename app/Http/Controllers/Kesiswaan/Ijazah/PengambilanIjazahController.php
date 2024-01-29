@@ -85,7 +85,7 @@ class PengambilanIjazahController extends BaseController
         $auth_data = $input->auth_data;
         $ijazah = PengajuanWisuda::pluck('id_siswa')->toArray();
         // dd($ijazah);
-        $list_data=Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->whereIn('id_siswa',$ijazah);
+        $list_data = Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->whereIn('id_siswa', $ijazah);
         // dd($list_data);
         return Datatables::of($list_data)
             ->addColumn('checkbox', function ($item) {
@@ -150,7 +150,7 @@ class PengambilanIjazahController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 // $data_nis_siswa = preg_split("/\r\n|\n|\r/", $input->id_siswa);
@@ -158,9 +158,10 @@ class PengambilanIjazahController extends BaseController
                 $list_siswa = Siswa::get();
                 $list_ijazah = Ijazah::get();
                 foreach ($input->nis_siswa as $nis_siswa) {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                     $id_siswa = $list_siswa->where('nis_siswa', $nis_siswa)->first()->id_siswa;
-                    if ($list_ijazah->where('id_siswa', $id_siswa)->first()) { } else {
+                    if ($list_ijazah->where('id_siswa', $id_siswa)->first()) {
+                    } else {
                         $ijazah                             = new Ijazah;
                         $ijazah->id_ijazah                  = $id;
                         $ijazah->id_siswa                   = $id_siswa;

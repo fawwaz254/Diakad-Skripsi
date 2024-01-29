@@ -19,7 +19,7 @@ class AddTahunAjaran20232024 extends Migration
         $validasi = Semester::where('tahun_ajaran', '2023/2024')->first();
         if (!$validasi) {
             $sekolah_data = Sekolah::first();
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             //semester ganjil
             $semester = new Semester;
             $semester->id_semester = $sekolah_data->prefix . strtotime($now) . uniqid();
