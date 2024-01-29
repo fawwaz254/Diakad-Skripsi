@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pendidikan\Siswa;
 
+use App\Exports\SettingWaliMurid;
 use App\Imports\DataImportExcel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,10 +21,10 @@ use App\Models\WaliMurid as WaliMurid;
 use App\Models\StatusPengguna as StatusPengguna;
 use App\Models\Pengguna as Pengguna;
 use App\Models\RolePengguna as RolePengguna;
-
+use Maatwebsite\Excel\Facades\Excel;
 use Auth;
 use DB;
-use Excel;
+// use Excel;
 use Session;
 use Validator;
 
@@ -213,14 +214,23 @@ class SettingWaliMuridController extends BaseController
             ->make(true);
     }
 
-    public function downloadFileExcel()
+    public function downloadFileExcel(Request $request, $id_kelas)
     {
-        $file = public_path() . "/excel/ContohFileExcelSettingWaliMurid.xls";
-        $headers = [
-            'Content-Type' => 'application/xls',
-        ];
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-        return response()->download($file, 'ContohFileExcelSettingWaliMurid.xls', $headers);
+        $siswa = Siswa::with('pengguna', 'wali_murid')->whereHas('pengguna')->when($id_kelas != '0', function ($q) use ($id_kelas) {
+            $q->where('id_kelas', $id_kelas);
+        })->get();
+
+        if ($id_kelas != '0') {
+            $nm_kelas = Kelas::find($id_kelas)->nm_kelas;
+        } else {
+            $nm_kelas = 'Semua';
+        }
+
+        return Excel::download(new SettingWaliMurid($siswa), 'ContohFileExcelSettingWaliMurid (' . $nm_kelas . ').xlsx');
     }
 
     public function actionGetWaliMurid(Request $request)
@@ -466,46 +476,49 @@ class SettingWaliMuridController extends BaseController
             $data = $data[0]; // Sheet 1
 
             $batch_insert_data = [];
-
+            $validasi_data = [];
+            //validasi
             if (count($data)) {
                 foreach ($data as $key => $item) {
                     $item = (object) $item;
 
                     if (empty($item->nis)) {
-                        return [
-                            'status'     => 300, // GAGAL
-                            'message'    => 'Upload Setting Wali Murid Gagal, ditemukan NIS siswa yang tidak diisi dalam file yang diupload'
-                        ];
-                        $data->forget($key);
+                        continue;
                     }
 
-                    if ($siswa = Siswa::where('nis_siswa', $item->nis)->first()) {
-                        if (!empty($siswa->id_wali_murid)) {
-                            if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->where('id_wali_murid', '<>', $siswa->id_wali_murid)->first()) {
-                                return [
-                                    'status'     => 300, // GAGAL
-                                    'message'    => 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
-                                ];
-                            }
-                        } else {
-                            if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->first()) {
-                                return [
-                                    'status'     => 300, // GAGAL
-                                    'message'    => 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
-                                ];
-                            }
+                    if (empty($item->telp_wali_murid)) {
+                        continue;
+                    }
+
+                    if (empty($item->nama_wali_murid)) {
+                        continue;
+                    }
+
+
+                    $telp_wali_murid = str_replace("'", '', $item->telp_wali_murid);
+                    if ($siswa = Siswa::with('pengguna')->where('nis_siswa', $item->nis)->first()) {
+                        if ($w = WaliMurid::where('nomor_hp_wali_murid', $telp_wali_murid)->where('id_wali_murid', '<>', $siswa->id_wali_murid)->first()) {
+                            $siswa_lain = Siswa::with('pengguna')->where('id_wali_murid', $w->id_wali_murid)->first();
+                            // dd($w->id_siswa);
+                            return [
+                                'status'     => 300, // GAGAL
+                                'message'    => 'Fail di Siswa ' . $siswa->pengguna->nm_pengguna . ' karena ' . $telp_wali_murid . ' Sudah digunakan oleh ' . $siswa_lain->pengguna->nm_pengguna
+                            ];
                         }
-                    } else {
-                        return [
-                            'status'     => 300, // GAGAL
-                            'message'    => 'Upload Setting Wali Murid Gagal, ditemukan NIS ' . $item->nis . ' yang tidak ada pada kelas dalam file yang diupload'
-                        ];
-                    }
-                }
 
-                foreach ($data as $item_1) {
+                        if (WaliMurid::where('nomor_hp_wali_murid', $telp_wali_murid)->where('id_wali_murid', $siswa->id_wali_murid)->first()) {
+                            continue;
+                        }
+                    }
+                    $validasi_data[] = $item;
+                }
+            }
+
+
+            if (count($validasi_data)) {
+                foreach ($validasi_data as $item_1) {
                     $jumlah_nomor_telp = 0;
-                    foreach ($data as $item_2) {
+                    foreach ($validasi_data as $item_2) {
                         if (!empty($item_1->telp_wali_murid) && !empty($item_2->telp_wali_murid)) {
                             if ($item_1->telp_wali_murid == $item_2->telp_wali_murid) {
                                 $jumlah_nomor_telp++;
@@ -524,142 +537,71 @@ class SettingWaliMuridController extends BaseController
                 DB::beginTransaction();
                 try {
                     $status_pengguna    = StatusPengguna::where('status_join_table', '=', '4')->where('aktif_status_pengguna', '=', '1')->first();
-                    foreach ($data as $item) {
+                    foreach ($validasi_data as $item) {
                         $item = (object) $item;
-
-                        if (!empty($item->telp_wali_murid)) {
+                        $telp_wali_murid = str_replace("'", '', $item->telp_wali_murid);
+                        if (!empty($telp_wali_murid)) {
                             $siswa = Siswa::where('nis_siswa', $item->nis)->first();
-                            if (!empty($siswa->id_wali_murid)) {
-                                // Update Wali Murid
-                                // if ($wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first()) {
 
-                                //     if ($check_wali_murid_lama = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->first()) {
-                                //         // Check Value same or Not
-                                //         if ($wali_murid->nm_wali_murid != $item->nama_wali_murid || $wali_murid->nomor_hp_wali_murid != $item->telp_wali_murid) {
-                                //             $wali_murid->nm_wali_murid         = $item->nama_wali_murid;
-                                //             $wali_murid->nomor_hp_wali_murid   = $item->telp_wali_murid;
-                                //             $wali_murid->save();
-
-                                //             $pengguna                        = Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->first();
-                                //             $pengguna->nm_pengguna           = $item->nama_wali_murid;
-                                //             $pengguna->username              = $item->telp_wali_murid;
-                                //             $pengguna->password              = Hash::make($item->telp_wali_murid);
-                                //             $pengguna->gelar_depan           = $item->gelar_depan;
-                                //             $pengguna->gelar_belakang        = $item->gelar_belakang;
-                                //             $pengguna->save();
-
-                                //             $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
-                                //             $calon_siswa_ortu->nomor_telp_ortu = $item->telp_wali_murid;
-                                //             $calon_siswa_ortu->nomor_hp_ortu = $item->telp_wali_murid;
-                                //             $calon_siswa_ortu->nm_wali = $item->nama_wali_murid;
-                                //             $calon_siswa_ortu->save();
-                                //         }
-                                //     } else {
-                                //         $id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                //         $id_pengguna        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
-                                //         $pengguna = new Pengguna;
-                                //         $pengguna->id_pengguna           = $id_pengguna;
-                                //         $pengguna->id_status_pengguna    = $status_pengguna->id_status_pengguna;
-                                //         $pengguna->id_sekolah            = $input->auth_data->pengguna->id_sekolah;
-                                //         $pengguna->nm_pengguna           = $item->nama_wali_murid;
-                                //         $pengguna->username              = $item->telp_wali_murid;
-                                //         $pengguna->password              = Hash::make($item->telp_wali_murid);
-                                //         $pengguna->gelar_depan           = $item->gelar_depan;
-                                //         $pengguna->gelar_belakang        = $item->gelar_belakang;
-                                //         $pengguna->must_change_password  = 1;
-                                //         $pengguna->status_join_table     = 4;
-                                //         $pengguna->created_at            = $now;
-                                //         $pengguna->created_by            = $input->auth_data->pengguna->id_pengguna;
-                                //         $pengguna->save();
-
-                                //         $wali_murid = new WaliMurid;
-                                //         $wali_murid->id_pengguna           = $id_pengguna;
-                                //         $wali_murid->id_wali_murid         = $id_wali_murid;
-                                //         $wali_murid->nm_wali_murid         = $item->nama_wali_murid;
-                                //         $wali_murid->nomor_hp_wali_murid   = $item->telp_wali_murid;
-                                //         $wali_murid->is_aktif              = 1;
-                                //         $wali_murid->created_at            = $now;
-                                //         $wali_murid->created_by            = $input->auth_data->pengguna->id_pengguna;
-                                //         $wali_murid->save();
-
-                                //         $role_pengguna = new RolePengguna;
-                                //         $role_pengguna->id_role               = 4;
-                                //         $role_pengguna->id_pengguna           = $id_pengguna;
-                                //         $role_pengguna->keterangan_role_pengguna  = "Upload Wali Murid";
-                                //         $role_pengguna->is_aktif              = 1;
-                                //         $role_pengguna->created_at            = $now;
-                                //         $role_pengguna->created_by            = $input->auth_data->pengguna->id_pengguna;
-                                //         $role_pengguna->save();
-
-                                //         $siswa->id_wali_murid = $id_wali_murid;
-                                //         $siswa->save();
-
-                                //         $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
-                                //         $calon_siswa_ortu->nomor_telp_ortu = $item->telp_wali_murid;
-                                //         $calon_siswa_ortu->nomor_hp_ortu = $item->telp_wali_murid;
-                                //         $calon_siswa_ortu->nm_wali = $item->nama_wali_murid;
-                                //         $calon_siswa_ortu->save();
-                                //     }
-                                // }
+                            if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $telp_wali_murid)->first()) {
+                                // wali murid sudah ada (kasus wali murid punya 2 siswa)
+                                $siswa->id_wali_murid       = $wali_murid->id_wali_murid;
+                                $siswa->is_aktif_wali_murid = 1;
+                                $siswa->save();
                             } else {
-                                if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->first()) {
-                                    // wali murid sudah ada (kasus wali murid punya 2 siswa)
-                                    $siswa->id_wali_murid       = $wali_murid->id_wali_murid;
-                                    $siswa->is_aktif_wali_murid = 0;
-                                    $siswa->save();
-                                } else {
-                                    // Insert Wali Murid
-                                    $id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                    $id_pengguna        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                // Insert Wali Murid
+                                $id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $id_pengguna        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                                    $batch_insert_data['pengguna'][] =
-                                        [
-                                            'id_pengguna'           => $id_pengguna,
-                                            'id_status_pengguna'    => $status_pengguna->id_status_pengguna,
-                                            'id_sekolah'            => $input->auth_data->pengguna->id_sekolah,
-                                            'nm_pengguna'           => $item->nama_wali_murid,
-                                            'username'              => $item->telp_wali_murid,
-                                            'password'              => Hash::make($item->telp_wali_murid),
-                                            'gelar_depan'           => $item->gelar_depan,
-                                            'gelar_belakang'        => $item->gelar_belakang,
-                                            'must_change_password'  => 1,
-                                            'status_join_table'     => 4,
-                                            'created_at'            => $now,
-                                            'created_by'            => $input->auth_data->pengguna->id_pengguna
-                                        ];
-
-                                    $batch_insert_data['wali_murid'][] = [
+                                $batch_insert_data['pengguna'][] =
+                                    [
                                         'id_pengguna'           => $id_pengguna,
-                                        'id_wali_murid'         => $id_wali_murid,
-                                        'nm_wali_murid'         => $item->nama_wali_murid,
-                                        'nomor_hp_wali_murid'   => $item->telp_wali_murid,
-                                        'is_aktif'              => 1,
+                                        'id_status_pengguna'    => $status_pengguna->id_status_pengguna,
+                                        'id_sekolah'            => $input->auth_data->pengguna->id_sekolah,
+                                        'nm_pengguna'           => $item->nama_wali_murid,
+                                        'username'              => $telp_wali_murid,
+                                        'password'              => Hash::make($telp_wali_murid),
+                                        // 'gelar_depan'           => $item->gelar_depan,
+                                        // 'gelar_belakang'        => $item->gelar_belakang,
+                                        'must_change_password'  => 1,
+                                        'status_join_table'     => 4,
                                         'created_at'            => $now,
                                         'created_by'            => $input->auth_data->pengguna->id_pengguna
                                     ];
 
-                                    $batch_insert_data['role_pengguna'][] = [
-                                        'id_role'               => 4,
-                                        'id_pengguna'           => $id_pengguna,
-                                        'keterangan_role_pengguna'  => "Upload Wali Murid",
-                                        'is_aktif'              => 1,
-                                        'created_at'            => $now,
-                                        'created_by'            => $input->auth_data->pengguna->id_pengguna
-                                    ];
+                                $batch_insert_data['wali_murid'][] = [
+                                    'id_pengguna'           => $id_pengguna,
+                                    'id_wali_murid'         => $id_wali_murid,
+                                    'nm_wali_murid'         => $item->nama_wali_murid,
+                                    'nomor_hp_wali_murid'   => $telp_wali_murid,
+                                    'is_aktif'              => 1,
+                                    'created_at'            => $now,
+                                    'created_by'            => $input->auth_data->pengguna->id_pengguna
+                                ];
 
-                                    $siswa->id_wali_murid = $id_wali_murid;
-                                    $siswa->save();
+                                $batch_insert_data['role_pengguna'][] = [
+                                    'id_role'               => 4,
+                                    'id_pengguna'           => $id_pengguna,
+                                    'keterangan_role_pengguna'  => "Upload Wali Murid",
+                                    'is_aktif'              => 1,
+                                    'created_at'            => $now,
+                                    'created_by'            => $input->auth_data->pengguna->id_pengguna
+                                ];
 
-                                    $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
-                                    $calon_siswa_ortu->nomor_telp_ortu = $item->telp_wali_murid;
-                                    $calon_siswa_ortu->nomor_hp_ortu = $item->telp_wali_murid;
-                                    $calon_siswa_ortu->nm_wali = $item->nama_wali_murid;
-                                    $calon_siswa_ortu->save();
-                                }
+                                $siswa->id_wali_murid = $id_wali_murid;
+                                $siswa->is_aktif_wali_murid = 1;
+                                $siswa->save();
+
+                                $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first();
+                                $calon_siswa_ortu->nomor_telp_ortu = $telp_wali_murid;
+                                $calon_siswa_ortu->nomor_hp_ortu = $telp_wali_murid;
+                                $calon_siswa_ortu->nm_wali = $item->nama_wali_murid;
+                                $calon_siswa_ortu->save();
                             }
                         }
                     }
+
+
 
                     if (sizeof($batch_insert_data) > 0) {
 
