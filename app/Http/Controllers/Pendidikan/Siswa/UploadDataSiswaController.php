@@ -178,8 +178,10 @@ class UploadDataSiswaController extends BaseController
 				}
 
 
-				if (empty($value->jenis_kelamin)) { } else {
-					if ($value->jenis_kelamin == "L" || $value->jenis_kelamin == "P") { } else {
+				if (empty($value->jenis_kelamin)) {
+				} else {
+					if ($value->jenis_kelamin == "L" || $value->jenis_kelamin == "P") {
+					} else {
 						$validasi[$value->nis]['jenis_kelamin'] = true;
 					}
 				}
@@ -196,43 +198,55 @@ class UploadDataSiswaController extends BaseController
 				}
 
 
-				if (empty($value->orang_tua_kandung)) { } else {
-					if ($value->orang_tua_kandung == 1 || $value->orang_tua_kandung == 0) { } else {
+				if (empty($value->orang_tua_kandung)) {
+				} else {
+					if ($value->orang_tua_kandung == 1 || $value->orang_tua_kandung == 0) {
+					} else {
 						$validasi[$value->nis]['orang_tua_kandung'] = true;
 					}
 				}
 
-				if (empty($value->kode_voucher)) { } else {
+				if (empty($value->kode_voucher)) {
+				} else {
 					$find_voucher = $data_voucher->firstWhere('kode_voucher', $value->kode_voucher);
-					if ($find_voucher) { } else {
+					if ($find_voucher) {
+					} else {
 						$validasi[$value->nis]['kode_voucher'] = true;
 					}
 				}
 
-				if (empty($value->agama)) { } else {
+				if (empty($value->agama)) {
+				} else {
 					$find_agama = $data_agama->firstWhere('kode_agama', $value->agama);
-					if ($find_agama) { } else {
+					if ($find_agama) {
+					} else {
 						$validasi[$value->nis]['agama'] = true;
 					}
 				}
 
-				if (empty($value->kota_lahir)) { } else {
+				if (empty($value->kota_lahir)) {
+				} else {
 					$find_kota = $data_kota->firstWhere('nm_kota', $value->kota_lahir);
-					if ($find_kota) { } else {
+					if ($find_kota) {
+					} else {
 						$validasi[$value->nis]['kota_lahir'] = true;
 					}
 				}
 
-				if (empty($value->tanggal_lahir)) { } else {
+				if (empty($value->tanggal_lahir)) {
+				} else {
 					$tanggal_lahir = date('Y-m-d', strtotime($value->tanggal_lahir));
-					if ($tanggal_lahir != '1970-01-01') { } else {
+					if ($tanggal_lahir != '1970-01-01') {
+					} else {
 						$validasi[$value->nis]['tanggal_lahir'] = true;
 					}
 				}
 
-				if (empty($value->nama_kota_ksk)) { } else {
+				if (empty($value->nama_kota_ksk)) {
+				} else {
 					$find_kota_ksk = $data_kota->firstWhere('nm_kota', $value->nama_kota_ksk);
-					if ($find_kota_ksk) { } else {
+					if ($find_kota_ksk) {
+					} else {
 						$validasi[$value->nis]['nama_kota_ksk'] = true;
 					}
 				}
@@ -261,8 +275,10 @@ class UploadDataSiswaController extends BaseController
 				// }
 
 				//find kewarganegaraan
-				if (empty($value->kewarganegaraan)) { } else {
-					if ($value->kewarganegaraan == 1 || $value->kewarganegaraan == 0) { } else {
+				if (empty($value->kewarganegaraan)) {
+				} else {
+					if ($value->kewarganegaraan == 1 || $value->kewarganegaraan == 0) {
+					} else {
 						$validasi[$value->nis]['kewarganegaraan'] = true;
 					}
 				}
@@ -633,7 +649,8 @@ class UploadDataSiswaController extends BaseController
 				} else {
 					$tanggal_lahir_ayah = date('Y-m-d', strtotime($value->tanggal_lahir_ayah));
 
-					if ($tanggal_lahir_ayah  != '1970-01-01') { } else {
+					if ($tanggal_lahir_ayah  != '1970-01-01') {
+					} else {
 						$validasi[$value->nis]['tanggal_lahir_ayah'] = true;
 					}
 				}
@@ -742,7 +759,8 @@ class UploadDataSiswaController extends BaseController
 					// $tanggal_lahir_ibu = null;
 				} else {
 					$tanggal_lahir_ibu = date('Y-m-d', strtotime($value->tanggal_lahir_ibu));
-					if ($tanggal_lahir_ibu  != '1970-01-01') { } else {
+					if ($tanggal_lahir_ibu  != '1970-01-01') {
+					} else {
 						$validasi[$value->nis]['tanggal_lahir_ibu'] = true;
 					}
 				}
@@ -850,7 +868,8 @@ class UploadDataSiswaController extends BaseController
 					// $tanggal_lahir_wali = null;
 				} else {
 					$tanggal_lahir_wali = date('Y-m-d', strtotime($value->tanggal_lahir_wali));
-					if ($tanggal_lahir_wali  != '1970-01-01') { } else {
+					if ($tanggal_lahir_wali  != '1970-01-01') {
+					} else {
 						$validasi[$value->nis]['tanggal_lahir'] = true;
 					}
 				}
@@ -1068,7 +1087,8 @@ class UploadDataSiswaController extends BaseController
 				// }
 
 				// is berjilbab
-				if (empty($value->apakah_berjilbab)) { } else {
+				if (empty($value->apakah_berjilbab)) {
+				} else {
 					if ($value->apakah_berjilbab == 1 || $value->apakah_berjilbab == 0) {
 						// $apakah_berjilbab = (int) $value->apakah_berjilbab;
 					} else {
@@ -1080,7 +1100,8 @@ class UploadDataSiswaController extends BaseController
 
 
 				// is buta warna
-				if (empty($value->apakah_buta_warna)) { } else {
+				if (empty($value->apakah_buta_warna)) {
+				} else {
 					if ($value->apakah_buta_warna == 1 || $value->apakah_buta_warna == 0) {
 						// $apakah_buta_warna = (int) $value->apakah_buta_warna;
 					} else {
@@ -1106,7 +1127,8 @@ class UploadDataSiswaController extends BaseController
 				// }
 
 				// golongan darah
-				if (empty($value->golongan_darah)) { } else {
+				if (empty($value->golongan_darah)) {
+				} else {
 					if ($value->golongan_darah == 'A' || $value->golongan_darah == 'B' || $value->golongan_darah == 'O' || $value->golongan_darah == 'AB') {
 						// $golongan_darah = $value->golongan_darah;
 					} else {
@@ -1697,7 +1719,7 @@ class UploadDataSiswaController extends BaseController
 		set_time_limit(-1);
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
-		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		$now = Carbon::now();
 		if ($request->hasFile('file-excel')) {
 			$data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
 			$data = $data[0];
@@ -3112,7 +3134,8 @@ class UploadDataSiswaController extends BaseController
 							DB::table('siswa')->insert($row_siswa);
 						}
 
-						if ($check_nis_siswa) { } else {
+						if ($check_nis_siswa) {
+						} else {
 							DB::table('admisi')->insert(
 								[
 									'id_admisi' => $data_siswa['id_admisi'],
@@ -3210,7 +3233,7 @@ class UploadDataSiswaController extends BaseController
 	// {
 	// 	$input = (object) $request->input();
 	// 	$auth_data = $input->auth_data;
-	// 	$now = Carbon::now(env('APP_TIMEZONE', ''));
+	// 	$now = Carbon::now();
 
 	// 	if ($request->hasFile('file-excel')) {
 	// 		// $path = $request->file('file-excel')->getRealPath();

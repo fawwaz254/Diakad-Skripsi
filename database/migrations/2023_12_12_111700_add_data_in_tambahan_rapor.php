@@ -17,7 +17,7 @@ class AddDataInTambahanRapor extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $sekolah = Sekolah::first();
         $kelompok_tambahan_rapor = KelompokTambahanRapor::where('urutan', 1)->first();
         if ($kelompok_tambahan_rapor) {
@@ -85,5 +85,6 @@ class AddDataInTambahanRapor extends Migration
      * @return void
      */
     public function down()
-    { }
+    {
+    }
 }

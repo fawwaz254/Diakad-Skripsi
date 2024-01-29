@@ -40,7 +40,7 @@ class UploadPresensiEkskul implements ToCollection, WithHeadingRow
             $data_siswa = PengambilanEkskul::with('siswa.pengguna')->where('id_semester', $id_semester)->where('id_ekskul', $id_ekskul)->get();
 
             foreach ($rows as  $row) {
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $id_presensi_ekskul = $sekolah->prefix . strtotime($now) . uniqid();
 
                 $hadir = 0;
@@ -58,7 +58,7 @@ class UploadPresensiEkskul implements ToCollection, WithHeadingRow
                     } else {
                         $kehadiran = 4;
                     }
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     $id_presensi_ekskul_peserta = $sekolah->prefix . strtotime($now) . uniqid();
                     $data_presensi_ekskul_peserta[] = [
                         'id_presensi_ekskul_peserta' => $id_presensi_ekskul_peserta, 'id_presensi_ekskul' => $id_presensi_ekskul, 'id_siswa' => $pengambilan_ekskul->id_siswa, 'id_kelas' => $pengambilan_ekskul->siswa->id_kelas, 'kehadiran' => $kehadiran, 'alasan' => '-', 'created_at' => $now->format('Y-m-d H:i:s'), 'created_by' => $id_pengguna

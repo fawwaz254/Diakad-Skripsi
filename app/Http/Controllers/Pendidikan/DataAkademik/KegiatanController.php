@@ -18,34 +18,36 @@ use DB;
 use Session;
 use Validator;
 
-class KegiatanController extends BaseController{
+class KegiatanController extends BaseController
+{
 
-    public function viewKegiatan(Request $request){
+    public function viewKegiatan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('pendidikan/data-akademik/kegiatan/view-kegiatan',compact('auth_data'));
-
+        return view('pendidikan/data-akademik/kegiatan/view-kegiatan', compact('auth_data'));
     }
 
-    public function addKegiatan(Request $request){
+    public function addKegiatan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_kode_kegiatan = KodeKegiatan::orderBy('kode_kegiatan', 'asc')->get();
 
-        $id_kegiatan = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_kegiatan = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('pendidikan/data-akademik/kegiatan/add-kegiatan',compact('auth_data','data_kode_kegiatan','id_kegiatan'));
-
+        return view('pendidikan/data-akademik/kegiatan/add-kegiatan', compact('auth_data', 'data_kode_kegiatan', 'id_kegiatan'));
     }
 
-    public function editKegiatan($id, Request $request){
+    public function editKegiatan($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -54,41 +56,43 @@ class KegiatanController extends BaseController{
 
         $data_kegiatan = LibDataAkademik::fetchDataKegiatan($auth_data, $id);
 
-        return view('pendidikan/data-akademik/kegiatan/edit-kegiatan',compact('auth_data','data_kode_kegiatan','data_kegiatan'));
-
+        return view('pendidikan/data-akademik/kegiatan/edit-kegiatan', compact('auth_data', 'data_kode_kegiatan', 'data_kegiatan'));
     }
 
-    public function datatablesKegiatan(Request $request){
+    public function datatablesKegiatan(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataAkademik::fetchDataKegiatan($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_kegiatan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_kegiatan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function fetchDataKegiatan($auth_data, $id = null){
+    public function fetchDataKegiatan($auth_data, $id = null)
+    {
 
         // get mode view
-        if ($id == null){
-            $kegiatan = Kegiatan::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->orderBy('nm_kegiatan', 'asc')->get();
+        if ($id == null) {
+            $kegiatan = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_kegiatan', 'asc')->get();
         }
         // get mode edit
-        else{
-            $kegiatan = Kegiatan::where('id_kegiatan','=',$id)->first();
+        else {
+            $kegiatan = Kegiatan::where('id_kegiatan', '=', $id)->first();
         }
 
         return $kegiatan;
     }
 
     // Action POST
-    public function actionKegiatan(Request $request, $mode, $id = null){
+    public function actionKegiatan(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -98,18 +102,17 @@ class KegiatanController extends BaseController{
             'kode_kegiatan' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan                       = new Kegiatan;
                 $kegiatan->id_kegiatan          = $id;
@@ -125,8 +128,7 @@ class KegiatanController extends BaseController{
                     'path' => 'data-akademik/kegiatan',
                     'message' => 'Save Kegiatan Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $kegiatan                       = Kegiatan::find($id);
                 $kegiatan->nm_kegiatan          = $input->nm_kegiatan;
@@ -141,15 +143,13 @@ class KegiatanController extends BaseController{
                     'path' => 'data-akademik/kegiatan',
                     'message' => 'Update Kegiatan Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($jadwalKegiatan = JadwalKegiatan::where('id_kegiatan',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($jadwalKegiatan = JadwalKegiatan::where('id_kegiatan', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Kegiatan'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $kegiatan               = Kegiatan::find($id);
                     $kegiatan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -165,5 +165,4 @@ class KegiatanController extends BaseController{
             }
         }
     }
-
 }

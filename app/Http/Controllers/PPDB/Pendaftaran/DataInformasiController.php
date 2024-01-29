@@ -16,7 +16,7 @@ use Carbon\Carbon;
  */
 class DataInformasiController extends Controller
 {
-    
+
     /** 
      * View data informasi
      * @param String id_penerimaan
@@ -27,12 +27,12 @@ class DataInformasiController extends Controller
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
-        $data_informasi = InformasiPpdb::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->first();
+        $data_informasi = InformasiPpdb::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
 
         $isi_informasi = '';
-        if($data_informasi != null) $isi_informasi = $data_informasi->isi_informasi;
+        if ($data_informasi != null) $isi_informasi = $data_informasi->isi_informasi;
 
-        return view('ppdb/pendaftaran/data-informasi/data-informasi',compact('auth_data', 'isi_informasi'));
+        return view('ppdb/pendaftaran/data-informasi/data-informasi', compact('auth_data', 'isi_informasi'));
     }
 
     /** 
@@ -49,20 +49,20 @@ class DataInformasiController extends Controller
             'isi_informasi' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
             ];
         } else {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             /** find data informasi */
-            $data_informasi = InformasiPpdb::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->first();
+            $data_informasi = InformasiPpdb::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
 
-            if($data_informasi == null){ // CREATE INFORMASI DATA
+            if ($data_informasi == null) { // CREATE INFORMASI DATA
                 /** generate id_data_informasi */
-                $id_data_informasi = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id_data_informasi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 /** create data informasi */
                 $data_informasi                     = new InformasiPpdb;

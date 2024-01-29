@@ -260,7 +260,7 @@ class CariSiswaController extends BaseController
   public function resetPasswordSiswa(Request $request)
   {
     $input = (object) $request->input();
-    $now = Carbon::now(env('APP_TIMEZONE', ''));
+    $now = Carbon::now();
 
     try {
       $pengguna                       = Pengguna::find($input->id_pengguna);
@@ -299,14 +299,14 @@ class CariSiswaController extends BaseController
   public function multipleResetPassword(Request $request)
   {
     $input = (object) $request->input();
-    $now = Carbon::now(env('APP_TIMEZONE', ''));
+    $now = Carbon::now();
 
     try {
       foreach ($input->data as $item) {
         if ($item['name'] === 'id_pengguna[]') {
           $id_pengguna = $item['value'];
 
-          
+
           $pengguna = Pengguna::where('id_pengguna', $id_pengguna)->first();
 
           if ($pengguna) {

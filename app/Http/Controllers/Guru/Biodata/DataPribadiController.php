@@ -75,7 +75,7 @@ class DataPribadiController extends BaseController
         } else {
             $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             $id_pengguna = $guru->id_pengguna;
 
             // make object to find id
@@ -89,7 +89,7 @@ class DataPribadiController extends BaseController
             $pengguna->updated_by               = $input->auth_data->pengguna->id_pengguna;
             $pengguna->updated_at               = $now;
             $pengguna->save();
-            
+
             /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
             $guru->updated_by               = $input->auth_data->pengguna->id_pengguna;
             $guru->updated_at               = $now;

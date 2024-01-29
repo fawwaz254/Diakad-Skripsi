@@ -17,34 +17,36 @@ use DB;
 use Session;
 use Validator;
 
-class SubkategoriPemasukanController extends BaseController{
+class SubkategoriPemasukanController extends BaseController
+{
 
-    public function viewSubkategoriPemasukan(Request $request){
+    public function viewSubkategoriPemasukan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('keuangan/pemasukan-sekolah/subkategori-pemasukan/view-subkategori-pemasukan',compact('auth_data'));
-
+        return view('keuangan/pemasukan-sekolah/subkategori-pemasukan/view-subkategori-pemasukan', compact('auth_data'));
     }
 
-    public function addSubkategoriPemasukan(Request $request){
+    public function addSubkategoriPemasukan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_kategori_pemasukan = LibDataKeuangan::fetchDataKategoriPemasukan($auth_data);
 
-        $id_pemasukan_biaya_subkategori = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_pemasukan_biaya_subkategori = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('keuangan/pemasukan-sekolah/subkategori-pemasukan/add-subkategori-pemasukan',compact('auth_data','data_kategori_pemasukan','id_pemasukan_biaya_subkategori'));
-
+        return view('keuangan/pemasukan-sekolah/subkategori-pemasukan/add-subkategori-pemasukan', compact('auth_data', 'data_kategori_pemasukan', 'id_pemasukan_biaya_subkategori'));
     }
 
-    public function editSubkategoriPemasukan($id, Request $request){
+    public function editSubkategoriPemasukan($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -53,27 +55,28 @@ class SubkategoriPemasukanController extends BaseController{
 
         $data_subkategori_pemasukan = LibDataKeuangan::fetchDataSubkategoriPemasukan($auth_data, $id);
 
-        return view('keuangan/pemasukan-sekolah/subkategori-pemasukan/edit-subkategori-pemasukan',compact('auth_data','data_kategori_pemasukan','data_subkategori_pemasukan'));
-
+        return view('keuangan/pemasukan-sekolah/subkategori-pemasukan/edit-subkategori-pemasukan', compact('auth_data', 'data_kategori_pemasukan', 'data_subkategori_pemasukan'));
     }
 
-    public function datatablesSubkategoriPemasukan(Request $request){
+    public function datatablesSubkategoriPemasukan(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataKeuangan::fetchDataSubkategoriPemasukan($auth_data);
+        $list_data = LibDataKeuangan::fetchDataSubkategoriPemasukan($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_pemasukan_biaya_subkategori
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_pemasukan_biaya_subkategori
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionSubkategoriPemasukan(Request $request, $mode, $id = null){
+    public function actionSubkategoriPemasukan(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -82,19 +85,18 @@ class SubkategoriPemasukanController extends BaseController{
             'nm_pemasukan_biaya_subkategori' => 'required',
             'keterangan_pemasukan_biaya_subkategori' => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $subKategoriPemasukan                                             = new PemasukanBiayaSubkategori;
                 $subKategoriPemasukan->id_pemasukan_biaya_subkategori           = $id;
@@ -109,8 +111,7 @@ class SubkategoriPemasukanController extends BaseController{
                     'path' => 'pemasukan-sekolah/subkategori-pemasukan',
                     'message' => 'Save Sub-Kategori Pemasukan Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $subKategoriPemasukan                                             = PemasukanBiayaSubkategori::find($id);
                 $subKategoriPemasukan->id_pemasukan_biaya_kategori              = $input->id_pemasukan_biaya_kategori;
@@ -125,15 +126,13 @@ class SubkategoriPemasukanController extends BaseController{
                     'path' => 'pemasukan-sekolah/subkategori-pemasukan',
                     'message' => 'Update Sub-Kategori Pemasukan Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($pemasukanBiaya = PemasukanBiaya::where('id_pemasukan_biaya_subkategori',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($pemasukanBiaya = PemasukanBiaya::where('id_pemasukan_biaya_subkategori', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Sub-Kategori Pemasukan'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $subKategoriPemasukan               = PemasukanBiayaSubkategori::find($id);
                     $subKategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -149,6 +148,4 @@ class SubkategoriPemasukanController extends BaseController{
             }
         }
     }
-
-
 }

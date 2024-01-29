@@ -81,7 +81,7 @@ class LowonganKerjaController extends BaseController
         } else {
 
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 // dd($input);

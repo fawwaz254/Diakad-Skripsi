@@ -17,14 +17,13 @@ class AddingRouteInModulPembinaEkskulRoleGuru extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
         $modulPembina = Modul::where('id_role', $role_id)->where('nm_modul', 'Pembina Ekskul')->first();
         $modulPembina->route = 'pembina-ekskul';
         $modulPembina->save();
-
     }
 
     /**

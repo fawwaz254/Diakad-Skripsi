@@ -193,7 +193,7 @@ class GuruKpiController extends BaseController
         $kpi = Kpi::where('id_siswa', $input->id_siswa)->where('id_semester', $input->id_semester)->first();
         if ($kpi != null) {
             foreach ($input->id_komponen as $key => $value) {
-                $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+                $now1 = Carbon::now();
                 $nilai = NilaiKomponenKpi::where('id_kpi', $kpi->id_kpi)->where('id_komponen', $input->id_komponen[$key])->where('id_siswa', $input->id_siswa)->first();
                 $nilai->nilai_komponen = $input->nilai_komponen[$key];
                 if ($input->nilai_komponen[$key] == 'A') {
@@ -209,7 +209,7 @@ class GuruKpiController extends BaseController
                 $nilai->save();
             }
         } else {
-            $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+            $now1 = Carbon::now();
 
             $kpi = new Kpi;
             $kpi->id_kpi = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
@@ -230,7 +230,7 @@ class GuruKpiController extends BaseController
             }
 
             foreach ($input->id_komponen as $key => $value) {
-                $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+                $now1 = Carbon::now();
                 $nilai = new NilaiKomponenKpi;
                 $nilai->id_nilai_kpi = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
                 $nilai->id_kpi = $kpi->id_kpi;

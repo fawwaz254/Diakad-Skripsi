@@ -35,7 +35,7 @@ class SettingWaliMuridController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $id_wali_murid      = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -254,7 +254,7 @@ class SettingWaliMuridController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'edit') {
                 $id_jurusan = Kelas::where('id_kelas', $input->id_kelas)->first()->id_jurusan;
@@ -290,7 +290,7 @@ class SettingWaliMuridController extends BaseController
                     ];
                 } else {
                     // if siswa doesnt have wali murid
-                    $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now1 = Carbon::now();
                     $wali_murid = new WaliMurid;
                     $wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
                     $wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -309,7 +309,7 @@ class SettingWaliMuridController extends BaseController
                     $pengguna->password = Hash::make($input->nomor_hp_ortu);
                     $pengguna->status_join_table = 4;
                     $pengguna->save();
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
 
                     $role_wali_murid = new RolePengguna;
                     $role_wali_murid->id_role = 4;
@@ -458,7 +458,7 @@ class SettingWaliMuridController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         if ($request->hasFile('file-excel')) {
 

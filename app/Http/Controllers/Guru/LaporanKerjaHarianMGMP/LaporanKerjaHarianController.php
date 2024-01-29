@@ -84,7 +84,7 @@ class LaporanKerjaHarianController extends Controller
                 'message' => $validator->errors()->first()
             ];
         } else {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
 
@@ -330,8 +330,8 @@ class LaporanKerjaHarianController extends Controller
         $auth_data = $input->auth_data;
 
         $list_data = LaporanKerjaHarianMGMP::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
-        ->orderBy('tanggal', 'DESC')
-        ->get();
+            ->orderBy('tanggal', 'DESC')
+            ->get();
 
         $category_file_mgmp = CategoriFileMGMP::all();
 

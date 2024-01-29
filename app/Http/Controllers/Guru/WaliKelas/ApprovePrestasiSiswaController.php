@@ -264,7 +264,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         if ($data == 'prestasi') {
 
@@ -299,7 +299,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         if ($data == 'prestasi') {
 

@@ -129,7 +129,7 @@ class FormHarianController extends Controller
                 'message' => $validator->errors()->first()
             ];
         } else {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $form = Form::where('id_form', $request->id_form)->first();
 

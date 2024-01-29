@@ -121,7 +121,7 @@ class PembimbingMagangController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'nm_pembimbing_magang'     => 'required'

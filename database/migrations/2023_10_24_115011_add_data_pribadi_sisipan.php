@@ -18,7 +18,7 @@ class AddDataPribadiSisipan extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $sekolah = Sekolah::first();
         $kelompok_pribadi_siswa1 = KelompokPribadiSisipan::where('urutan', 1)->first();
         if ($kelompok_pribadi_siswa1) {

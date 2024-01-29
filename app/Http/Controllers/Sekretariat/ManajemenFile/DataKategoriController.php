@@ -43,7 +43,7 @@ class DataKategoriController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = CategoryFile::with('category_file_role.nama_role')->get();
-      
+
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
@@ -92,7 +92,7 @@ class DataKategoriController extends BaseController
             ];
         } else {
             //mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 if ($input->allowed_role ?? false) {
@@ -135,7 +135,7 @@ class DataKategoriController extends BaseController
 
                     // replace category file role
                     CategoryFileRole::where('category_file_id', $id)->delete();
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     foreach ($input->allowed_role as $key => $value) {
                         $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $datakategori_role = new CategoryFileRole;

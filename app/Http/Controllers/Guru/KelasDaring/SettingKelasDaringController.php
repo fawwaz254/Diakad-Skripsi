@@ -53,7 +53,7 @@ class SettingKelasDaringController extends BaseController
 
         $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-add-setting-kelas-daring', compact('auth_data','data_guru'));
+        return view('guru/kelas-daring/setting-kelas-daring/view-add-setting-kelas-daring', compact('auth_data', 'data_guru'));
     }
 
     public function viewEditKelasDaring(Request $request, $id = '-')
@@ -66,7 +66,7 @@ class SettingKelasDaringController extends BaseController
 
         $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-edit-setting-kelas-daring', compact('auth_data', 'item','data_guru'));
+        return view('guru/kelas-daring/setting-kelas-daring/view-edit-setting-kelas-daring', compact('auth_data', 'item', 'data_guru'));
     }
 
     public function viewAddPresensiMpKelasDaring(Request $request, $id = '-')
@@ -80,7 +80,7 @@ class SettingKelasDaringController extends BaseController
         return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-add-jadwal-daring', compact('auth_data', 'item'));
     }
 
-    public function viewEditPresensiMpKelasDaring(Request $request, $id_kelas_mp_grup = '-' , $id_presensi_mp = '-')
+    public function viewEditPresensiMpKelasDaring(Request $request, $id_kelas_mp_grup = '-', $id_presensi_mp = '-')
     {
         # code...
         $input = (object) $request->input();
@@ -89,7 +89,7 @@ class SettingKelasDaringController extends BaseController
         $item = KelasMpGrup::find($id_kelas_mp_grup);
         $item2 = PresensiMp::find($id_presensi_mp);
 
-        return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-edit-jadwal-daring', compact('auth_data','item','item2'));
+        return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-edit-jadwal-daring', compact('auth_data', 'item', 'item2'));
     }
 
     public function viewEditMateriKelasDaring(Request $request, $id_kelas_mp_grup = '-', $id_presensi_mp = '-')
@@ -128,9 +128,9 @@ class SettingKelasDaringController extends BaseController
 
         // cek apakah sudah mengisi kelas
 
-        $cek_kelas_mp = KelasMp::where('id_kelas_mp_grup',$id)->count();
+        $cek_kelas_mp = KelasMp::where('id_kelas_mp_grup', $id)->count();
 
-        return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-jadwal-daring', compact('auth_data', 'semester_aktif', 'item','cek_kelas_mp'));
+        return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-jadwal-daring', compact('auth_data', 'semester_aktif', 'item', 'cek_kelas_mp'));
     }
 
     public function datatablesKelasDaring(Request $request)
@@ -140,20 +140,20 @@ class SettingKelasDaringController extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $list_data = KelasMpGrup::with('kelas_mp', 'kelas_mp.kelas', 'check_kelas_mp.presensi_mp','guru.pengguna')->where('id_semester', $semester_aktif->id_semester);
+        $list_data = KelasMpGrup::with('kelas_mp', 'kelas_mp.kelas', 'check_kelas_mp.presensi_mp', 'guru.pengguna')->where('id_semester', $semester_aktif->id_semester);
 
-        if($auth_data->pengguna->status_join_table ==2){
+        if ($auth_data->pengguna->status_join_table == 2) {
             $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
             $list_data = $list_data->where('id_guru', $guru->id_guru);
         }
 
         return Datatables::of($list_data)
-            ->addColumn('nm_guru',function($item){
+            ->addColumn('nm_guru', function ($item) {
                 return $item->guru->pengguna->nm_pengguna;
             })
             ->addColumn('kelas', function ($item) {
                 $data_nm_kelas = array();
-                foreach($item->kelas_mp as $kelas_mp){
+                foreach ($item->kelas_mp as $kelas_mp) {
                     $data_nm_kelas[] = $kelas_mp->kelas->nm_kelas;
                 }
 
@@ -165,8 +165,8 @@ class SettingKelasDaringController extends BaseController
             })
             ->addColumn('jadwal', function ($item) {
                 $data_jadwal = array();
-                if(!empty($item->check_kelas_mp)){
-                    foreach($item->check_kelas_mp->presensi_mp as $presensi_mp){
+                if (!empty($item->check_kelas_mp)) {
+                    foreach ($item->check_kelas_mp->presensi_mp as $presensi_mp) {
                         $data_jadwal[] = $presensi_mp->tgl_presensi;
                     }
                 }
@@ -195,15 +195,15 @@ class SettingKelasDaringController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $guru = Guru::find($input->id_guru);
-        $pengampu_mapel = PengampuMapel::where('id_guru',$guru->id_guru)->pluck('id_mata_pelajaran');
+        $pengampu_mapel = PengampuMapel::where('id_guru', $guru->id_guru)->pluck('id_mata_pelajaran');
 
         $list_data = KelasMp::with('kelas', 'mata_pelajaran', 'mata_pelajaran.jenis_mata_pelajaran')
-                            ->where('id_semester', $semester_aktif->id_semester)
-                            ->whereIn('id_mata_pelajaran',$pengampu_mapel);
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->whereIn('id_mata_pelajaran', $pengampu_mapel);
 
-        if(!empty($input->status) && $input->status == 1){
+        if (!empty($input->status) && $input->status == 1) {
             $list_data = $list_data->where('id_kelas_mp_grup', $input->id);
-        }else{
+        } else {
             $list_data = $list_data->whereNull('id_kelas_mp_grup');
         }
 
@@ -230,36 +230,36 @@ class SettingKelasDaringController extends BaseController
 
         return Datatables::of($list_data)
             ->editColumn('tgl_presensi', function ($item) {
-                return date_format(date_create($item->tgl_presensi.' '.$item->waktu_mulai), "d M Y H:i");
+                return date_format(date_create($item->tgl_presensi . ' ' . $item->waktu_mulai), "d M Y H:i");
             })
             ->editColumn('jenis_materi', function ($item) {
                 return $item->jenis_materi_to_text();
             })
             ->addColumn('status_jadwal', function ($item) {
-                
+
                 $kondisi_1 = false;
                 $kondisi_2 = false;
 
-                if(!empty($item->tgl_entry) && $item->tgl_presensi < Carbon::now()->format('Y-m-d')){
+                if (!empty($item->tgl_entry) && $item->tgl_presensi < Carbon::now()->format('Y-m-d')) {
                     $kondisi_1 = true;
                 }
 
-                if( !empty($item->tgl_entry) && ( $item->tgl_presensi == Carbon::now()->format('Y-m-d') && Carbon::now()->format('H:i') >= $item->waktu_selesai) ) {
+                if (!empty($item->tgl_entry) && ($item->tgl_presensi == Carbon::now()->format('Y-m-d') && Carbon::now()->format('H:i') >= $item->waktu_selesai)) {
                     $kondisi_2 = true;
                 }
 
 
-                if($kondisi_1 || $kondisi_2){
+                if ($kondisi_1 || $kondisi_2) {
                     return 'Sudah diadakan';
-                }else{
+                } else {
                     return 'Belum diadakan';
                 }
             })
             ->addColumn('action', function ($item) use ($input) {
-                
+
                 $sudah_diadakan = 0;
 
-                if(!empty($item->tgl_entry)){
+                if (!empty($item->tgl_entry)) {
                     $sudah_diadakan = 1;
                 }
 
@@ -273,52 +273,48 @@ class SettingKelasDaringController extends BaseController
             ->make(true);
     }
 
-    public function actionAddKelasDaring(Request $request) {
+    public function actionAddKelasDaring(Request $request)
+    {
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        if($auth_data->pengguna->status_join_table != 2){
+        if ($auth_data->pengguna->status_join_table != 2) {
             $validator = Validator::make($request->all(), [
                 'nm_kelas_mp_grup'  => 'required',
                 'id_guru'           => 'required',
             ]);
-        }
-
-        else{
+        } else {
             $validator = Validator::make($request->all(), [
                 'nm_kelas_mp_grup'  => 'required',
             ]);
         }
-        
-        if($validator->fails()) {
+
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+        } else {
+            $now = Carbon::now();
             $auth_data = $input->auth_data;
 
-            if($auth_data->pengguna->status_join_table != 2){
+            if ($auth_data->pengguna->status_join_table != 2) {
                 $guru = Guru::where('id_guru', '=', $input->id_guru)->first();
-            }
-
-            else{
+            } else {
                 $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
             }
 
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-    
-            if(empty($input->id)){
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+            if (empty($input->id)) {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $kelas_mp_grup                      = new KelasMpGrup;
                 $kelas_mp_grup->id_kelas_mp_grup    = $id;
                 $kelas_mp_grup->id_semester         = $semester_aktif->id_semester;
                 $kelas_mp_grup->id_guru             = $guru->id_guru;
                 $kelas_mp_grup->created_by          = $auth_data->pengguna->id_pengguna;
-            }else{
+            } else {
                 $kelas_mp_grup                      = KelasMpGrup::find($input->id);
                 $kelas_mp_grup->id_guru             = $guru->id_guru;
                 $kelas_mp_grup->updated_by          = $auth_data->pengguna->id_pengguna;
@@ -335,7 +331,8 @@ class SettingKelasDaringController extends BaseController
         }
     }
 
-    public function actionKelasMpKelasDaring(Request $request, $mode = '-') {
+    public function actionKelasMpKelasDaring(Request $request, $mode = '-')
+    {
 
         $input = (object) $request->input();
 
@@ -343,52 +340,47 @@ class SettingKelasDaringController extends BaseController
             'id_kelas_mp'       => 'required',
             'id'  => 'required',
         ]);
-        
-        if($validator->fails()) {
+
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
+        } else {
 
-        else{
-
-            if($mode == 'set'){
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+            if ($mode == 'set') {
+                $now = Carbon::now();
                 $auth_data = $input->auth_data;
-        
+
                 $kelas_mp                               = KelasMp::find($input->id_kelas_mp);
                 $kelas_mp->id_kelas_mp_grup             = $input->id;
                 $kelas_mp->updated_by                   = $auth_data->pengguna->id_pengguna;
                 $kelas_mp->save();
-        
+
                 return [
                     'status' => 200, // SUCCESS
                     'message' => 'Save Jadwal Kelas'
                 ];
-            }
+            } else {
 
-            else{
-
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $auth_data = $input->auth_data;
-        
+
                 $kelas_mp                               = KelasMp::find($input->id_kelas_mp);
                 $kelas_mp->id_kelas_mp_grup             = null;
                 $kelas_mp->updated_by                   = $auth_data->pengguna->id_pengguna;
                 $kelas_mp->save();
-        
+
                 return [
                     'status' => 200, // SUCCESS
                     'message' => 'Delete Jadwal Kelas'
                 ];
-
             }
-
         }
     }
 
-    public function actionPresensiMpKelasDaring(Request $request, $mode = '-') {
+    public function actionPresensiMpKelasDaring(Request $request, $mode = '-')
+    {
 
         $input = (object) $request->input();
 
@@ -403,35 +395,31 @@ class SettingKelasDaringController extends BaseController
             'waktu_mulai'  => 'required',
             'waktu_selesai'  => 'required',
         ]);
-        
-        if($validator->fails()) {
+
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
 
-            if($mode == 'add-jadwal'){
+            if ($mode == 'add-jadwal') {
 
                 DB::beginTransaction();
 
                 try {
 
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     $auth_data = $input->auth_data;
-            
+
                     $data_kelas_mp = KelasMp::where('id_kelas_mp_grup', $input->id_kelas_mp_grup)->get();
 
-                    foreach($data_kelas_mp as $kelas_mp){
+                    foreach ($data_kelas_mp as $kelas_mp) {
 
-                        if($check_presensi = PresensiMp::where('tgl_presensi', $input->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()){
+                        if ($check_presensi = PresensiMp::where('tgl_presensi', $input->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()) {
+                        } else {
 
-                        }
-
-                        else{
-
-                            $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $presensi_mp = new PresensiMp;
                             $presensi_mp->id_presensi_mp = $id;
                             $presensi_mp->id_kelas_mp = $kelas_mp->id_kelas_mp;
@@ -446,48 +434,38 @@ class SettingKelasDaringController extends BaseController
                             $presensi_mp->created_by = $auth_data->pengguna->id_pengguna;
                             $presensi_mp->save();
 
-                            $list_siswa = Siswa::where('id_kelas',$kelas_mp->id_kelas)->get();
+                            $list_siswa = Siswa::where('id_kelas', $kelas_mp->id_kelas)->get();
 
-                            foreach($list_siswa as $r){
+                            foreach ($list_siswa as $r) {
 
                                 $presensi_mp_siswa = new PresensiMpSiswa;
-                                $presensi_mp_siswa->id_presensi_mp_siswa = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $presensi_mp_siswa->id_presensi_mp_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $presensi_mp_siswa->id_presensi_mp = $id;
                                 $presensi_mp_siswa->id_siswa = $r->id_siswa;
                                 $presensi_mp_siswa->kehadiran = 4; // tanpa keterangan tidak hadir
                                 $presensi_mp_siswa->created_by = $auth_data->pengguna->id_pengguna;
                                 $presensi_mp_siswa->save();
-
                             }
-
-
                         }
-
                     }
 
                     DB::Commit();
-            
+
                     return [
                         'status' => 202, // SUCCESS
-                        'path' => 'kelas-daring/jadwal-kelas/data-jadwal/'.$input->id_kelas_mp_grup,
+                        'path' => 'kelas-daring/jadwal-kelas/data-jadwal/' . $input->id_kelas_mp_grup,
                         'message' => 'Save Jadwal Kelas'
                     ];
-
-                }
-
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
 
                     DB::rollback();
 
                     return [
                         'status'    => 203, // GAGAL
-                        'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                        'message'       => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
                     ];
-                } 
-
-            }
-
-            elseif($mode == 'edit-jadwal'){
+                }
+            } elseif ($mode == 'edit-jadwal') {
 
                 $auth_data = $input->auth_data;
 
@@ -505,17 +483,14 @@ class SettingKelasDaringController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS
-                    'path' => 'kelas-daring/jadwal-kelas/data-jadwal/'.$input->id_kelas_mp_grup,
+                    'path' => 'kelas-daring/jadwal-kelas/data-jadwal/' . $input->id_kelas_mp_grup,
                     'message' => 'Edit Jadwal Kelas Success'
                 ];
+            } else {
 
-            }
-
-            else{
-
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $auth_data = $input->auth_data;
-        
+
                 // $kelas_mp                               = KelasMp::find($input->id_kelas_mp);
                 // $kelas_mp->id_kelas_mp_grup             = null;
                 // $kelas_mp->updated_by                   = $auth_data->pengguna->id_pengguna;
@@ -526,17 +501,17 @@ class SettingKelasDaringController extends BaseController
                 $presensi_mp->save();
 
                 $presensi_mp->delete();
-        
+
                 return [
                     'status' => 203, // SUCCESS
                     'message' => 'Delete Jadwal Kelas Success'
                 ];
-
             }
         }
     }
 
-    public function actionDeletePresensiMpKelasDaring(Request $request,$id){
+    public function actionDeletePresensiMpKelasDaring(Request $request, $id)
+    {
 
         DB::beginTransaction();
 
@@ -561,60 +536,57 @@ class SettingKelasDaringController extends BaseController
                 'status' => 203, // SUCCESS
                 'message' => 'Delete Jadwal Kelas Success'
             ];
-
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
 
             DB::rollback();
 
             return [
                 'status'    => 203, // GAGAL
-                'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                'message'       => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
             ];
-        } 
-
+        }
     }
 
-    public function actionEditMateriKelasDaring(Request $request, $mode = '-') {
+    public function actionEditMateriKelasDaring(Request $request, $mode = '-')
+    {
 
         $input = (object) $request->input();
-        
-        if($mode == 'add-materi'){
+
+        if ($mode == 'add-materi') {
             $validator = Validator::make($request->all(), [
                 'id_kelas_mp_grup'  => 'required',
                 'id_presensi_mp'  => 'required',
                 'uraian_materi'  => 'required',
             ]);
-            
-            if($validator->fails()) {
+
+            if ($validator->fails()) {
                 return [
                     'status' => 300, // FAILED
                     'message' => $validator->errors()->first()
                 ];
             };
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             $auth_data = $input->auth_data;
 
             $presensi_mp = PresensiMp::find($input->id_presensi_mp);
 
             $data_kelas_mp = KelasMp::where('id_kelas_mp_grup', $input->id_kelas_mp_grup)->get();
 
-            foreach($data_kelas_mp as $kelas_mp){
-                if($check_presensi = PresensiMp::where('tgl_presensi', $presensi_mp->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()){
+            foreach ($data_kelas_mp as $kelas_mp) {
+                if ($check_presensi = PresensiMp::where('tgl_presensi', $presensi_mp->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()) {
                     $check_presensi->uraian_materi = $input->uraian_materi;
                     $check_presensi->updated_by = $auth_data->pengguna->id_pengguna;
                     $check_presensi->save();
                 }
             }
-    
+
             return [
                 'status' => 202, // SUCCESS
-                'path' => 'kelas-daring/mengajar-daring/'.$input->id_presensi_mp,
+                'path' => 'kelas-daring/mengajar-daring/' . $input->id_presensi_mp,
                 'message' => 'Success simpan Materi'
             ];
-        }else if($mode == 'add-file'){
+        } else if ($mode == 'add-file') {
             $validator = Validator::make($request->all(), [
                 'id_kelas_mp_grup'  => 'required',
                 'id_presensi_mp'  => 'required',
@@ -622,32 +594,32 @@ class SettingKelasDaringController extends BaseController
                 'file' => 'file|required|max:10240' // 10 MB
             ]);
 
-            if($validator->fails()) {
+            if ($validator->fails()) {
                 return [
                     'status' => 300, // FAILED
                     'message' => $validator->errors()->first()
                 ];
             }
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             $auth_data = $input->auth_data;
             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
 
             $kelas_mp_grup2 = KelasMpGrup::find($input->id_kelas_mp_grup);
             $guru = Guru::where('id_guru', '=', $kelas_mp_grup2->id_guru)->first();
-            
+
             $presensi_mp = PresensiMp::find($input->id_presensi_mp);
             $presensi_mp->tgl_entry = Carbon::now()->format('Y-m-d H:i:s');
             $presensi_mp->updated_by = $auth_data->pengguna->id_pengguna;
             $presensi_mp->save();
 
-            $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru/'.$guru->id_guru.'/materi/'.$input->id_kelas_mp_grup, request()->file, 'public');
-            
+            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi/' . $input->id_kelas_mp_grup, request()->file, 'public');
+
             $data_kelas_mp = KelasMp::where('id_kelas_mp_grup', $input->id_kelas_mp_grup)->get();
 
-            foreach($data_kelas_mp as $kelas_mp){
-                if($check_presensi = PresensiMp::where('tgl_presensi', $presensi_mp->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()){
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            foreach ($data_kelas_mp as $kelas_mp) {
+                if ($check_presensi = PresensiMp::where('tgl_presensi', $presensi_mp->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()) {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $presensi_mp_materi = new PresensiMpMateri;
                     $presensi_mp_materi->id_presensi_mp_materi = $id;
@@ -658,10 +630,10 @@ class SettingKelasDaringController extends BaseController
                     $presensi_mp_materi->save();
                 }
             }
-    
+
             return [
                 'status' => 204, // SUCCESS
-                'path' =>'kelas-daring/mengajar-daring/'.$input->id_presensi_mp,
+                'path' => 'kelas-daring/mengajar-daring/' . $input->id_presensi_mp,
                 'message' => 'Success upload File Materi'
             ];
         }

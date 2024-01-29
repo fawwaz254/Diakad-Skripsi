@@ -50,7 +50,7 @@ class RuanganController extends BaseController
         $data_pemilik_sarpras = LibDataSarpras::fetchDataPemilikSarpras($auth_data);
         $kelas = Kelas::where('is_aktif', 1)->get();
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $id_ruangan = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -128,7 +128,7 @@ class RuanganController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -210,7 +210,7 @@ class RuanganController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'file-excel' => 'required',

@@ -166,7 +166,7 @@ class SppController extends BaseController
         set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         if ($request->hasFile('file-excel')) {
 
             $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
@@ -394,7 +394,8 @@ class SppController extends BaseController
 
         $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first();
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first();
-        if ($tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) { } else {
+        if ($tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) {
+        } else {
             return response()->json([
                 'status_code' => 300,
                 'status_text' => 'Failed',
@@ -533,7 +534,8 @@ class SppController extends BaseController
 
         $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
 
-        if ($tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) { } else {
+        if ($tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) {
+        } else {
             return response()->json([
                 'status_code' => 300,
                 'status_text' => 'Failed',
@@ -1558,7 +1560,7 @@ class SppController extends BaseController
             ];
         } else {
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1716,7 +1718,7 @@ class SppController extends BaseController
             ];
         } else {
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1821,7 +1823,8 @@ class SppController extends BaseController
                         $id_semester = $semester_mulai->id_semester;
                     }
 
-                    if ($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()) { } else {
+                    if ($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()) {
+                    } else {
                         $biaya_sekolah = new BiayaSekolah;
                         $biaya_sekolah->id_biaya_sekolah = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $biaya_sekolah->id_kelompok_biaya = $input->id_kelompok_biaya;
@@ -2059,7 +2062,8 @@ class SppController extends BaseController
             try {
                 $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $input->auth_data->pengguna->id_pengguna])->first();
 
-                if ($rapb) { } else {
+                if ($rapb) {
+                } else {
                     $rapb = new Rapb;
                     $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -2241,7 +2245,8 @@ class SppController extends BaseController
     {
         $auth_data = $request->auth_data;
 
-        if ($pembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->where('id_tagihan_biaya', $id)->first()) { } else {
+        if ($pembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->where('id_tagihan_biaya', $id)->first()) {
+        } else {
             return abort(404);
         }
 
@@ -2364,9 +2369,10 @@ class SppController extends BaseController
                 DB::beginTransaction();
                 try {
                     foreach ($data as $key => $item) {
-                        $now = Carbon::now(env('APP_TIMEZONE', ''));
+                        $now = Carbon::now();
                         if (!empty($item["nis"])) {
-                            if ($tunggakan = TunggakanAlumni::where('nis', $item["nis"])->first()) { } else {
+                            if ($tunggakan = TunggakanAlumni::where('nis', $item["nis"])->first()) {
+                            } else {
                                 $tunggakan = new TunggakanAlumni;
                                 $tunggakan->id_tunggakan_alumni = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $tunggakan->nis = $item["nis"];

@@ -165,7 +165,7 @@
             <table width="90%" class="" style="margin: auto; text-align: center;">
                 <tr>
                     <td width="50%"></td>
-                    <td width="50%">{{ $auth_data->sekolah_data->alamat_kecamatan != null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}{{ Carbon\Carbon::now(env('APP_TIMEZONE', ''))->format('d F Y') }}</td>
+                    <td width="50%">{{ $auth_data->sekolah_data->alamat_kecamatan != null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}{{ Carbon\Carbon::now()->format('d F Y') }}</td>
                 </tr>
                 <tr>
                     <td width="50%">Mengetahui,</td>

@@ -19,8 +19,8 @@ class AddDbEditModulPengadaanSarprasRoleSarpras extends Migration
     public function up()
     {
         //
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-        
+        $now = Carbon::now();
+
         // update modul
         $modul               = Modul::find(68);
         $modul->nm_modul     = "Pengadaan/Perawatan Sarpras";

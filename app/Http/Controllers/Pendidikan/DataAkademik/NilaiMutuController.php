@@ -17,59 +17,62 @@ use DB;
 use Session;
 use Validator;
 
-class NilaiMutuController extends BaseController{
+class NilaiMutuController extends BaseController
+{
 
-    public function viewNilaiMutu(Request $request){
+    public function viewNilaiMutu(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('pendidikan/data-akademik/nilai-mutu/view-nilai-mutu',compact('auth_data'));
-
+        return view('pendidikan/data-akademik/nilai-mutu/view-nilai-mutu', compact('auth_data'));
     }
 
-    public function addNilaiMutu(Request $request){
+    public function addNilaiMutu(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_standar_nilai = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_standar_nilai = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('pendidikan/data-akademik/nilai-mutu/add-nilai-mutu',compact('auth_data','id_standar_nilai'));
-
+        return view('pendidikan/data-akademik/nilai-mutu/add-nilai-mutu', compact('auth_data', 'id_standar_nilai'));
     }
 
-    public function editNilaiMutu($id, Request $request){
+    public function editNilaiMutu($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_nilai_mutu = LibDataAkademik::fetchDataNilaiMutu($auth_data, $id);
 
-        return view('pendidikan/data-akademik/nilai-mutu/edit-nilai-mutu',compact('auth_data','data_nilai_mutu'));
-
+        return view('pendidikan/data-akademik/nilai-mutu/edit-nilai-mutu', compact('auth_data', 'data_nilai_mutu'));
     }
 
-    public function datatablesNilaiMutu(Request $request){
+    public function datatablesNilaiMutu(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataAkademik::fetchDataNilaiMutu($auth_data);
+        $list_data = LibDataAkademik::fetchDataNilaiMutu($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_standar_nilai
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_standar_nilai
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionNilaiMutu(Request $request, $mode, $id = null){
+    public function actionNilaiMutu(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -78,19 +81,18 @@ class NilaiMutuController extends BaseController{
             'mutu_standar_nilai' => 'required',
             'keterangan_standar_nilai' => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $standarNilai                               = new StandarNilai;
                 $standarNilai->id_standar_nilai             = $id;
@@ -106,8 +108,7 @@ class NilaiMutuController extends BaseController{
                     'path' => 'data-akademik/nilai-mutu',
                     'message' => 'Save Nilai Mutu Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $standarNilai                               = StandarNilai::find($id);
                 $standarNilai->nm_standar_nilai             = $input->nm_standar_nilai;
@@ -122,15 +123,13 @@ class NilaiMutuController extends BaseController{
                     'path' => 'data-akademik/nilai-mutu',
                     'message' => 'Update Nilai Mutu Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($peraturanNilai = PeraturanNilai::where('id_standar_nilai',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($peraturanNilai = PeraturanNilai::where('id_standar_nilai', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Nilai Mutu'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $standarNilai               = StandarNilai::find($id);
                     $standarNilai->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -146,6 +145,4 @@ class NilaiMutuController extends BaseController{
             }
         }
     }
-
-
 }

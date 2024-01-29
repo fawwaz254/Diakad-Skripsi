@@ -18,7 +18,7 @@ class RemoveModulPesanRoleTendik extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
 
         $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Pesan')->first();

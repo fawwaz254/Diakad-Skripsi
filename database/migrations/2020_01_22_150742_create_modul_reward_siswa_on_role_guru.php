@@ -18,7 +18,7 @@ class CreateModulRewardSiswaOnRoleGuru extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $modul              = new Modul;
         $modul->id_modul    = 73;

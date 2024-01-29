@@ -31,7 +31,7 @@ class BiayaSekolahController extends BaseController
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
-        if(empty($tahun_akademik_semester)){
+        if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
         }
@@ -46,9 +46,9 @@ class BiayaSekolahController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_kelompok_biaya = LibDataKeuangan::fetchDataKelompokBiaya($auth_data);
 
@@ -56,7 +56,7 @@ class BiayaSekolahController extends BaseController
 
         $data_jalur = LibDataAkademik::fetchDataJalur($auth_data);
 
-        $id_biaya_sekolah = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_biaya_sekolah = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('keuangan/data-keuangan/biaya-sekolah/add-biaya-sekolah', compact('auth_data', 'data_kelompok_biaya', 'data_semester', 'data_jalur', 'id_biaya_sekolah'));
     }
@@ -91,10 +91,10 @@ class BiayaSekolahController extends BaseController
         $tahun_sebelum = (int) $semester->thn_akademik_semester - 2;
 
         $data_semester = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                            ->whereBetween('thn_akademik_semester', [$tahun_sebelum, $now])
-                            ->orderBy('thn_akademik_semester', 'asc')
-                            ->orderBy('nm_semester', 'asc')
-                            ->get();
+            ->whereBetween('thn_akademik_semester', [$tahun_sebelum, $now])
+            ->orderBy('thn_akademik_semester', 'asc')
+            ->orderBy('nm_semester', 'asc')
+            ->get();
 
         return view('keuangan/data-keuangan/biaya-sekolah/copy-biaya-sekolah', compact('auth_data', 'data_semester'));
     }
@@ -103,49 +103,49 @@ class BiayaSekolahController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         $list_data = LibDataKeuangan::fetchDataBiayaSekolah($auth_data, null, null, true);
 
-        if(!empty($input->tahun_akademik_semester)){
+        if (!empty($input->tahun_akademik_semester)) {
             $tahun      = $input->tahun_akademik_semester;
 
-            $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
-            $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+            $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
             $list_data = $list_data->whereIn('biaya_sekolah.id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester]);
         }
 
-        if(!empty($input->kelompok_biaya)){
+        if (!empty($input->kelompok_biaya)) {
             $list_data = $list_data->where('biaya_sekolah.id_kelompok_biaya', $input->kelompok_biaya);
         }
 
         return Datatables::of($list_data)
-                ->addColumn('semester', function ($item) {
-                    return $item->tahun_ajaran." ".$item->nm_semester;
-                })
-                ->addColumn('jalur', function ($item) {
-                    if (! empty($item->nm_jalur)) {
-                        return $item->nm_jalur;
-                    } else {
-                        return "-";
-                    }
-                })
-                ->addColumn('besar_biaya_sekolah', function ($item) {
-                    return "Rp".number_format($item->detail_biaya->sum('besar_biaya'));
-                })
-                ->addColumn('validasi_biaya_sekolah', function ($item) {
-                    if ($item->validasi_biaya_sekolah == 0) {
-                        return "Belum";
-                    } else {
-                        return "Sudah";
-                    }
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_biaya_sekolah
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('semester', function ($item) {
+                return $item->tahun_ajaran . " " . $item->nm_semester;
+            })
+            ->addColumn('jalur', function ($item) {
+                if (!empty($item->nm_jalur)) {
+                    return $item->nm_jalur;
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('besar_biaya_sekolah', function ($item) {
+                return "Rp" . number_format($item->detail_biaya->sum('besar_biaya'));
+            })
+            ->addColumn('validasi_biaya_sekolah', function ($item) {
+                if ($item->validasi_biaya_sekolah == 0) {
+                    return "Belum";
+                } else {
+                    return "Sudah";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_biaya_sekolah
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
@@ -161,7 +161,7 @@ class BiayaSekolahController extends BaseController
             'validasi_biaya_sekolah' => 'required',
             'keterangan_biaya_sekolah' => 'required',
         ]);
-        
+
         if ($validator->fails() && $mode != 'delete' && $mode != 'copy') {
             return [
                 'status' => 300, // FAILED
@@ -169,10 +169,10 @@ class BiayaSekolahController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $biayaSekolah                               = new BiayaSekolah;
                 $biayaSekolah->id_biaya_sekolah             = $id;
@@ -227,7 +227,7 @@ class BiayaSekolahController extends BaseController
                     $batch_insert_biaya_sekolah = [];
                     $batch_insert_detail_biaya = [];
                     foreach ($biaya_sekolah_set as $biaya_sekolah) {
-                        $id_biaya_sekolah           = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $id_biaya_sekolah           = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $id_kelompok_biaya          = $biaya_sekolah->id_kelompok_biaya;
                         $id_semester                = $input->id_semester_paste;
                         $id_jalur                   = $biaya_sekolah->id_jalur;
@@ -251,7 +251,7 @@ class BiayaSekolahController extends BaseController
                         $detail_biaya_set = DetailBiaya::where('id_biaya_sekolah', '=', $biaya_sekolah->id_biaya_sekolah)->get();
 
                         foreach ($detail_biaya_set as $detail_biaya) {
-                            $id_detail_biaya            = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $id_detail_biaya            = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $id_biaya                   = $detail_biaya->id_biaya;
                             $id_kelompok_biaya_internal = $detail_biaya->id_kelompok_biaya_internal;
                             $validasi_biaya             = $detail_biaya->validasi_biaya;
@@ -299,7 +299,7 @@ class BiayaSekolahController extends BaseController
 
                     return [
                         'status' => 300, // GAGAL
-                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                     ];
                 }
             } elseif ($mode == 'delete') {

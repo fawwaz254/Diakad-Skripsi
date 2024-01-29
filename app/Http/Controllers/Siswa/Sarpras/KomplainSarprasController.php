@@ -19,9 +19,11 @@ use DB;
 use Session;
 use Validator;
 
-class KomplainSarprasController extends BaseController{
+class KomplainSarprasController extends BaseController
+{
 
-    public function viewKomplainSarpras(Request $request){
+    public function viewKomplainSarpras(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -30,12 +32,12 @@ class KomplainSarprasController extends BaseController{
 
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data);
 
-    	return view('siswa/sarpras/komplain-sarpras/view-komplain-sarpras',compact('auth_data','data_ruangan','data_buku_alat'));
-
+        return view('siswa/sarpras/komplain-sarpras/view-komplain-sarpras', compact('auth_data', 'data_ruangan', 'data_buku_alat'));
     }
 
     //** ACTION RUANGAN **//
-    public function actionViewRuanganKomplainSarpras(Request $request){
+    public function actionViewRuanganKomplainSarpras(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -44,116 +46,105 @@ class KomplainSarprasController extends BaseController{
             'id_ruangan' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/'.$input->id_ruangan
-                    ];   
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/' . $input->id_ruangan
+            ];
         }
     }
 
-    public function viewRuanganKomplainSarpras(Request $request, $id_ruangan){
+    public function viewRuanganKomplainSarpras(Request $request, $id_ruangan)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data, 1, $id_ruangan);
 
-        return view('siswa/sarpras/komplain-sarpras/view-ruangan-komplain-sarpras',compact('auth_data','data_ruangan'));
-
+        return view('siswa/sarpras/komplain-sarpras/view-ruangan-komplain-sarpras', compact('auth_data', 'data_ruangan'));
     }
 
-    public function datatablesRuanganKomplainSarpras(Request $request, $id_ruangan){
+    public function datatablesRuanganKomplainSarpras(Request $request, $id_ruangan)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $id_ruangan);
 
         return Datatables::of($list_data)
-                ->addColumn('nm_ruangan', function($item){
-                    return $item->nm_ruangan." - ".$item->nm_jenis_ruangan;
-                })
-                ->addColumn('user_komplain', function($item){
-                    if(! empty($item->nm_pengguna_siswa)) {
-                        return $item->nis_siswa." - ".$item->nm_pengguna_siswa." - ".$item->nm_kelas;
+            ->addColumn('nm_ruangan', function ($item) {
+                return $item->nm_ruangan . " - " . $item->nm_jenis_ruangan;
+            })
+            ->addColumn('user_komplain', function ($item) {
+                if (!empty($item->nm_pengguna_siswa)) {
+                    return $item->nis_siswa . " - " . $item->nm_pengguna_siswa . " - " . $item->nm_kelas;
+                } else {
+                    if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                        return $item->gelar_depan . " " . $item->nm_pengguna_guru . ", " . $item->gelar_belakang;
+                    } elseif (!empty($item->gelar_depan)) {
+                        return $item->gelar_depan . " " . $item->nm_pengguna_guru;
+                    } elseif (!empty($item->gelar_belakang)) {
+                        return $item->nm_pengguna_guru . ", " . $item->gelar_belakang;
+                    } else {
+                        return $item->nm_pengguna_guru;
                     }
-                    else{
-                        if( ! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                            return $item->gelar_depan." ".$item->nm_pengguna_guru.", ".$item->gelar_belakang;
-                        }
-                        elseif( ! empty($item->gelar_depan)) {
-                            return $item->gelar_depan." ".$item->nm_pengguna_guru;   
-                        }
-                        elseif( ! empty($item->gelar_belakang)) {
-                            return $item->nm_pengguna_guru.", ".$item->gelar_belakang;   
-                        }
-                        else {
-                            return $item->nm_pengguna_guru; 
-                        }
+                }
+            })
+            ->addColumn('is_urgent', function ($item) {
+                if ($item->is_urgent == 0) {
+                    return "Tidak Urgent";
+                } elseif ($item->is_urgent == 1) {
+                    return "Urgent";
+                } else {
+                    return "Sangat Urgent";
+                }
+            })
+            ->addColumn('is_sudah_perbaikan', function ($item) {
+                if ($item->is_sudah_perbaikan == 0) {
+                    return "Belum Perbaikan";
+                } else {
+                    return "Sudah Perbaikan";
+                }
+            })
+            ->addColumn('nm_pengguna_guru_sarpras', function ($item) {
+                if (!empty($item->nm_pengguna_guru_sarpras)) {
+                    if (!empty($item->gelar_depan_sarpras) && !empty($item->gelar_belakang_sarpras)) {
+                        return $item->gelar_depan_sarpras . " " . $item->nm_pengguna_guru_sarpras . ", " . $item->gelar_belakang_sarpras;
+                    } elseif (!empty($item->gelar_depan_sarpras)) {
+                        return $item->gelar_depan_sarpras . " " . $item->nm_pengguna_guru_sarpras;
+                    } elseif (!empty($item->gelar_belakang_sarpras)) {
+                        return $item->nm_pengguna_guru_sarpras . ", " . $item->gelar_belakang_sarpras;
+                    } else {
+                        return $item->nm_pengguna_guru_sarpras;
                     }
-                })
-                ->addColumn('is_urgent', function($item){
-                    if($item->is_urgent == 0) {
-                        return "Tidak Urgent";
-                    }
-                    elseif($item->is_urgent == 1){
-                        return "Urgent";
-                    }
-                    else {
-                        return "Sangat Urgent";
-                    }
-                })
-                ->addColumn('is_sudah_perbaikan', function($item){
-                    if($item->is_sudah_perbaikan == 0) {
-                        return "Belum Perbaikan";
-                    }
-                    else {
-                        return "Sudah Perbaikan";
-                    }
-                })
-                ->addColumn('nm_pengguna_guru_sarpras', function($item){
-                    if(! empty($item->nm_pengguna_guru_sarpras)) {
-                        if( ! empty($item->gelar_depan_sarpras) && ! empty($item->gelar_belakang_sarpras)) {
-                            return $item->gelar_depan_sarpras." ".$item->nm_pengguna_guru_sarpras.", ".$item->gelar_belakang_sarpras;
-                        }
-                        elseif( ! empty($item->gelar_depan_sarpras)) {
-                            return $item->gelar_depan_sarpras." ".$item->nm_pengguna_guru_sarpras;   
-                        }
-                        elseif( ! empty($item->gelar_belakang_sarpras)) {
-                            return $item->nm_pengguna_guru_sarpras.", ".$item->gelar_belakang_sarpras;   
-                        }
-                        else {
-                            return $item->nm_pengguna_guru_sarpras; 
-                        }
-                    }
-                    else{
-                        return "-";
-                    }
-                })
-                ->addColumn('keterangan_perbaikan', function($item){
-                    if(! empty($item->keterangan_perbaikan)) {
-                        return $item->keterangan_perbaikan;
-                    }
-                    else{
-                        return "-";
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_komplain_sarpras,
-                        'user_perbaikan' => $item->id_guru_sarpras
-                    );
-                    return $data;
-                })
-                ->make(true);
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('keterangan_perbaikan', function ($item) {
+                if (!empty($item->keterangan_perbaikan)) {
+                    return $item->keterangan_perbaikan;
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_komplain_sarpras,
+                    'user_perbaikan' => $item->id_guru_sarpras
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function addRuanganKomplainSarpras(Request $request, $id_ruangan){
+    public function addRuanganKomplainSarpras(Request $request, $id_ruangan)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -163,15 +154,15 @@ class KomplainSarprasController extends BaseController{
         $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data, $id_ruangan);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('siswa/sarpras/komplain-sarpras/add-ruangan-komplain-sarpras',compact('auth_data','data_ruangan','data_inventaris_ruangan','id_komplain_sarpras'));
-
+        return view('siswa/sarpras/komplain-sarpras/add-ruangan-komplain-sarpras', compact('auth_data', 'data_ruangan', 'data_inventaris_ruangan', 'id_komplain_sarpras'));
     }
 
-    public function editRuanganKomplainSarpras(Request $request, $id_ruangan, $id){
+    public function editRuanganKomplainSarpras(Request $request, $id_ruangan, $id)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -182,12 +173,12 @@ class KomplainSarprasController extends BaseController{
 
         $data_komplain_sarpras = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $id_ruangan, $id);
 
-        return view('siswa/sarpras/komplain-sarpras/edit-ruangan-komplain-sarpras',compact('auth_data','data_ruangan','data_inventaris_ruangan','data_komplain_sarpras'));
-
+        return view('siswa/sarpras/komplain-sarpras/edit-ruangan-komplain-sarpras', compact('auth_data', 'data_ruangan', 'data_inventaris_ruangan', 'data_komplain_sarpras'));
     }
 
     //** ACTION BUKU ALAT **//
-    public function actionViewBukualatKomplainSarpras(Request $request){
+    public function actionViewBukualatKomplainSarpras(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -196,116 +187,105 @@ class KomplainSarprasController extends BaseController{
             'id_buku_alat' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'sarpras/komplain-sarpras/bukualat-sarpras/view-bukualat/'.$input->id_buku_alat
-                    ];   
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'sarpras/komplain-sarpras/bukualat-sarpras/view-bukualat/' . $input->id_buku_alat
+            ];
         }
     }
 
-    public function viewBukualatKomplainSarpras(Request $request, $id_buku_alat){
+    public function viewBukualatKomplainSarpras(Request $request, $id_buku_alat)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data, $id_buku_alat);
 
-        return view('siswa/sarpras/komplain-sarpras/view-bukualat-komplain-sarpras',compact('auth_data','data_buku_alat'));
-
+        return view('siswa/sarpras/komplain-sarpras/view-bukualat-komplain-sarpras', compact('auth_data', 'data_buku_alat'));
     }
 
-    public function datatablesBukualatKomplainSarpras(Request $request, $id_buku_alat){
+    public function datatablesBukualatKomplainSarpras(Request $request, $id_buku_alat)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $id_buku_alat);
 
         return Datatables::of($list_data)
-                ->addColumn('nm_buku_alat', function($item){
-                    return $item->nm_buku_alat." - ".$item->nm_jenis_buku_alat;
-                })
-                ->addColumn('user_komplain', function($item){
-                    if(! empty($item->nm_pengguna_siswa)) {
-                        return $item->nis_siswa." - ".$item->nm_pengguna_siswa." - ".$item->nm_kelas;
+            ->addColumn('nm_buku_alat', function ($item) {
+                return $item->nm_buku_alat . " - " . $item->nm_jenis_buku_alat;
+            })
+            ->addColumn('user_komplain', function ($item) {
+                if (!empty($item->nm_pengguna_siswa)) {
+                    return $item->nis_siswa . " - " . $item->nm_pengguna_siswa . " - " . $item->nm_kelas;
+                } else {
+                    if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                        return $item->gelar_depan . " " . $item->nm_pengguna_guru . ", " . $item->gelar_belakang;
+                    } elseif (!empty($item->gelar_depan)) {
+                        return $item->gelar_depan . " " . $item->nm_pengguna_guru;
+                    } elseif (!empty($item->gelar_belakang)) {
+                        return $item->nm_pengguna_guru . ", " . $item->gelar_belakang;
+                    } else {
+                        return $item->nm_pengguna_guru;
                     }
-                    else{
-                        if( ! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                            return $item->gelar_depan." ".$item->nm_pengguna_guru.", ".$item->gelar_belakang;
-                        }
-                        elseif( ! empty($item->gelar_depan)) {
-                            return $item->gelar_depan." ".$item->nm_pengguna_guru;   
-                        }
-                        elseif( ! empty($item->gelar_belakang)) {
-                            return $item->nm_pengguna_guru.", ".$item->gelar_belakang;   
-                        }
-                        else {
-                            return $item->nm_pengguna_guru; 
-                        }
+                }
+            })
+            ->addColumn('is_urgent', function ($item) {
+                if ($item->is_urgent == 0) {
+                    return "Tidak Urgent";
+                } elseif ($item->is_urgent == 1) {
+                    return "Urgent";
+                } else {
+                    return "Sangat Urgent";
+                }
+            })
+            ->addColumn('is_sudah_perbaikan', function ($item) {
+                if ($item->is_sudah_perbaikan == 0) {
+                    return "Belum Perbaikan";
+                } else {
+                    return "Sudah Perbaikan";
+                }
+            })
+            ->addColumn('nm_pengguna_guru_sarpras', function ($item) {
+                if (!empty($item->nm_pengguna_guru_sarpras)) {
+                    if (!empty($item->gelar_depan_sarpras) && !empty($item->gelar_belakang_sarpras)) {
+                        return $item->gelar_depan_sarpras . " " . $item->nm_pengguna_guru_sarpras . ", " . $item->gelar_belakang_sarpras;
+                    } elseif (!empty($item->gelar_depan_sarpras)) {
+                        return $item->gelar_depan_sarpras . " " . $item->nm_pengguna_guru_sarpras;
+                    } elseif (!empty($item->gelar_belakang_sarpras)) {
+                        return $item->nm_pengguna_guru_sarpras . ", " . $item->gelar_belakang_sarpras;
+                    } else {
+                        return $item->nm_pengguna_guru_sarpras;
                     }
-                })
-                ->addColumn('is_urgent', function($item){
-                    if($item->is_urgent == 0) {
-                        return "Tidak Urgent";
-                    }
-                    elseif($item->is_urgent == 1){
-                        return "Urgent";
-                    }
-                    else {
-                        return "Sangat Urgent";
-                    }
-                })
-                ->addColumn('is_sudah_perbaikan', function($item){
-                    if($item->is_sudah_perbaikan == 0) {
-                        return "Belum Perbaikan";
-                    }
-                    else {
-                        return "Sudah Perbaikan";
-                    }
-                })
-                ->addColumn('nm_pengguna_guru_sarpras', function($item){
-                    if(! empty($item->nm_pengguna_guru_sarpras)) {
-                        if( ! empty($item->gelar_depan_sarpras) && ! empty($item->gelar_belakang_sarpras)) {
-                            return $item->gelar_depan_sarpras." ".$item->nm_pengguna_guru_sarpras.", ".$item->gelar_belakang_sarpras;
-                        }
-                        elseif( ! empty($item->gelar_depan_sarpras)) {
-                            return $item->gelar_depan_sarpras." ".$item->nm_pengguna_guru_sarpras;   
-                        }
-                        elseif( ! empty($item->gelar_belakang_sarpras)) {
-                            return $item->nm_pengguna_guru_sarpras.", ".$item->gelar_belakang_sarpras;   
-                        }
-                        else {
-                            return $item->nm_pengguna_guru_sarpras; 
-                        }
-                    }
-                    else{
-                        return "-";
-                    }
-                })
-                ->addColumn('keterangan_perbaikan', function($item){
-                    if(! empty($item->keterangan_perbaikan)) {
-                        return $item->keterangan_perbaikan;
-                    }
-                    else{
-                        return "-";
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_komplain_sarpras,
-                        'user_perbaikan' => $item->id_guru_sarpras
-                    );
-                    return $data;
-                })
-                ->make(true);
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('keterangan_perbaikan', function ($item) {
+                if (!empty($item->keterangan_perbaikan)) {
+                    return $item->keterangan_perbaikan;
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_komplain_sarpras,
+                    'user_perbaikan' => $item->id_guru_sarpras
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function addBukualatKomplainSarpras(Request $request, $id_buku_alat){
+    public function addBukualatKomplainSarpras(Request $request, $id_buku_alat)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -313,15 +293,15 @@ class KomplainSarprasController extends BaseController{
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data, $id_buku_alat);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('siswa/sarpras/komplain-sarpras/add-bukualat-komplain-sarpras',compact('auth_data','data_buku_alat','id_komplain_sarpras'));
-
+        return view('siswa/sarpras/komplain-sarpras/add-bukualat-komplain-sarpras', compact('auth_data', 'data_buku_alat', 'id_komplain_sarpras'));
     }
 
-    public function editBukualatKomplainSarpras(Request $request, $id_buku_alat, $id){
+    public function editBukualatKomplainSarpras(Request $request, $id_buku_alat, $id)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -330,12 +310,12 @@ class KomplainSarprasController extends BaseController{
 
         $data_komplain_sarpras = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $id_buku_alat, $id);
 
-        return view('siswa/sarpras/komplain-sarpras/edit-bukualat-komplain-sarpras',compact('auth_data','data_buku_alat','data_komplain_sarpras'));
-
+        return view('siswa/sarpras/komplain-sarpras/edit-bukualat-komplain-sarpras', compact('auth_data', 'data_buku_alat', 'data_komplain_sarpras'));
     }
 
     // Action POST
-    public function actionKomplainSarpras(Request $request, $mode, $id = null){
+    public function actionKomplainSarpras(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -349,31 +329,29 @@ class KomplainSarprasController extends BaseController{
 
         $mode_delete = array("delete-ruangan", "delete-bukualat");
 
-        if($validator->fails() && !in_array($mode, $mode_delete)) {
+        if ($validator->fails() && !in_array($mode, $mode_delete)) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // get id_siswa
-            $siswa = Siswa::where('id_pengguna','=',$input->auth_data->pengguna->id_pengguna)->first();
+            $siswa = Siswa::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
             $id_siswa = $siswa->id_siswa;
 
             //** MODE UNTUK RUANGAN
-            if($mode == 'add-ruangan') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add-ruangan') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $komplainSarpras                            = new KomplainSarpras;
                 $komplainSarpras->id_komplain_sarpras       = $id;
                 $komplainSarpras->id_ruangan                = $input->id_ruangan;
-                if(! empty($input->id_inventaris_ruangan)) {
+                if (!empty($input->id_inventaris_ruangan)) {
                     $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
-                }
-                else {
+                } else {
                     $komplainSarpras->id_inventaris_ruangan     = null;
                 }
                 $komplainSarpras->id_siswa_komplain         = $id_siswa;
@@ -385,18 +363,16 @@ class KomplainSarprasController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/'.$input->id_ruangan,
+                    'path' => 'sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/' . $input->id_ruangan,
                     'message' => 'Save Komplain Sarpras Successfully'
                 ];
-            }
-            elseif($mode == 'edit-ruangan') {
+            } elseif ($mode == 'edit-ruangan') {
                 // make object to find id
                 $komplainSarpras                            = KomplainSarpras::find($id);
                 $komplainSarpras->id_ruangan                = $input->id_ruangan;
-                if(! empty($input->id_inventaris_ruangan)) {
+                if (!empty($input->id_inventaris_ruangan)) {
                     $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
-                }
-                else {
+                } else {
                     $komplainSarpras->id_inventaris_ruangan     = null;
                 }
                 $komplainSarpras->id_siswa_komplain         = $id_siswa;
@@ -408,11 +384,10 @@ class KomplainSarprasController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/'.$input->id_ruangan,
+                    'path' => 'sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/' . $input->id_ruangan,
                     'message' => 'Update Komplain Sarpras Successfully'
                 ];
-            }
-            elseif($mode == 'delete-ruangan') {
+            } elseif ($mode == 'delete-ruangan') {
                 // make object to find id
                 $komplainSarpras               = KomplainSarpras::find($id);
                 $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -426,9 +401,9 @@ class KomplainSarprasController extends BaseController{
                 ];
             }
             //** MODE UNTUK BUKU/ALAT
-            elseif($mode == 'add-bukualat') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
+            elseif ($mode == 'add-bukualat') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                 $komplainSarpras                            = new KomplainSarpras;
                 $komplainSarpras->id_komplain_sarpras       = $id;
                 $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
@@ -441,11 +416,10 @@ class KomplainSarprasController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'sarpras/komplain-sarpras/bukualat-sarpras/view-bukualat/'.$input->id_buku_alat,
+                    'path' => 'sarpras/komplain-sarpras/bukualat-sarpras/view-bukualat/' . $input->id_buku_alat,
                     'message' => 'Save Komplain Sarpras Successfully'
                 ];
-            }
-            elseif($mode == 'edit-bukualat') {
+            } elseif ($mode == 'edit-bukualat') {
                 // make object to find id
                 $komplainSarpras                            = KomplainSarpras::find($id);
                 $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
@@ -458,11 +432,10 @@ class KomplainSarprasController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'sarpras/komplain-sarpras/bukualat-sarpras/view-bukualat/'.$input->id_buku_alat,
+                    'path' => 'sarpras/komplain-sarpras/bukualat-sarpras/view-bukualat/' . $input->id_buku_alat,
                     'message' => 'Update Komplain Sarpras Successfully'
                 ];
-            }
-            elseif($mode == 'delete-bukualat') {
+            } elseif ($mode == 'delete-bukualat') {
                 // make object to find id
                 $komplainSarpras               = KomplainSarpras::find($id);
                 $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -477,5 +450,4 @@ class KomplainSarprasController extends BaseController{
             }
         }
     }
-
 }

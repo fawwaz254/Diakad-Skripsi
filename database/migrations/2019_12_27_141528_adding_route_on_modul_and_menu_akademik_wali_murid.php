@@ -17,7 +17,7 @@ class AddingRouteOnModulAndMenuAkademikWaliMurid extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // update modul
         $menu               = Modul::find(38);

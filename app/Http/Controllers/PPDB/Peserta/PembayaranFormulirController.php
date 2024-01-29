@@ -12,7 +12,7 @@ use Carbon\Carbon;
 
 class PembayaranFormulirController extends Controller
 {
-    
+
     /** 
      * View pembayaran formulir
      * @param Request 
@@ -42,9 +42,9 @@ class PembayaranFormulirController extends Controller
             'kode_voucher' => 'required'
         ]);
         $this->validationCheck($validator);
-        
+
         $voucher = Voucher::where('kode_voucher', '=', $kode_voucher)->first();
-        if($voucher == null) {
+        if ($voucher == null) {
             return [
                 'status' => 300,
                 'message' => 'Voucher not exist'
@@ -53,7 +53,7 @@ class PembayaranFormulirController extends Controller
 
         return [
             'status'    => 204, // SUCCESS AND LOAD CONTENT
-            'path'      => 'peserta/pembayaran-formulir/'.$kode_voucher
+            'path'      => 'peserta/pembayaran-formulir/' . $kode_voucher
         ];
     }
 
@@ -67,14 +67,28 @@ class PembayaranFormulirController extends Controller
         $auth_data  = $input->auth_data;
 
         $voucher = Voucher::select(
-                        'voucher.id_voucher', 'voucher.id_penerimaan', 'voucher.kode_voucher', 'voucher.pin_password', 'voucher.tgl_ambil', 'voucher.tgl_bayar', 'voucher_tarif.tarif', 'penerimaan.nm_penerimaan', 'voucher.besar_biaya', 'voucher.is_tagih_bank', 'voucher.nomor_transaksi', 'voucher.id_bank', 'voucher.id_bank_via', 'penerimaan.gelombang_penerimaan', 'calon_siswa_baru.nm_c_siswa'
-                    )
-                    ->where('voucher.kode_voucher', '=', $kode_voucher)                    
-                    ->leftJoin('voucher_tarif', 'voucher.id_voucher_tarif', '=', 'voucher_tarif.id_voucher_tarif')
-                    ->leftJoin('calon_siswa_baru', 'voucher.kode_voucher', '=', 'calon_siswa_baru.kode_voucher')
-                    ->leftJoin('penerimaan', 'voucher.id_penerimaan', '=', 'penerimaan.id_penerimaan')
-                    ->first();
-        if($voucher == null) {
+            'voucher.id_voucher',
+            'voucher.id_penerimaan',
+            'voucher.kode_voucher',
+            'voucher.pin_password',
+            'voucher.tgl_ambil',
+            'voucher.tgl_bayar',
+            'voucher_tarif.tarif',
+            'penerimaan.nm_penerimaan',
+            'voucher.besar_biaya',
+            'voucher.is_tagih_bank',
+            'voucher.nomor_transaksi',
+            'voucher.id_bank',
+            'voucher.id_bank_via',
+            'penerimaan.gelombang_penerimaan',
+            'calon_siswa_baru.nm_c_siswa'
+        )
+            ->where('voucher.kode_voucher', '=', $kode_voucher)
+            ->leftJoin('voucher_tarif', 'voucher.id_voucher_tarif', '=', 'voucher_tarif.id_voucher_tarif')
+            ->leftJoin('calon_siswa_baru', 'voucher.kode_voucher', '=', 'calon_siswa_baru.kode_voucher')
+            ->leftJoin('penerimaan', 'voucher.id_penerimaan', '=', 'penerimaan.id_penerimaan')
+            ->first();
+        if ($voucher == null) {
             return [
                 'status'    => 204, // VOUCHER NOT EXIST
                 'path'      => 'peserta/pembayaran-formulir'
@@ -92,7 +106,7 @@ class PembayaranFormulirController extends Controller
      */
     public function validationCheck($validator)
     {
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
@@ -118,7 +132,7 @@ class PembayaranFormulirController extends Controller
         $this->validationCheck($validator);
 
         $voucher = Voucher::where('kode_voucher', '=', $kode_voucher)->first();
-        if($voucher == null) {
+        if ($voucher == null) {
             return [
                 'status' => 300,
                 'message' => 'Voucher not exist'
@@ -146,7 +160,7 @@ class PembayaranFormulirController extends Controller
         // cek apakah tanggal bayar sudah diisi?
         // =====================================
 
-        $now                    = Carbon::now(env('APP_TIMEZONE', ''));
+        $now                    = Carbon::now();
         $voucher->tgl_bayar     = $now;
         $voucher->besar_biaya   = $input->besar_biaya;
         $voucher->updated_by    = $input->auth_data->pengguna->id_pengguna;
@@ -154,7 +168,7 @@ class PembayaranFormulirController extends Controller
 
         return [
             'status'    => 202, // SUCCESS AND LOAD CONTENT
-            'path'      => 'peserta/pembayaran-formulir/'.$kode_voucher ,
+            'path'      => 'peserta/pembayaran-formulir/' . $kode_voucher,
             'message'   => 'Voucher Berhasil Dibayar'
         ];
     }
@@ -168,22 +182,22 @@ class PembayaranFormulirController extends Controller
     {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
-        
+
         $validator = Validator::make($request->all(), [
             'kode_voucher'      => 'required'
         ]);
         $this->validationCheck($validator);
-        
+
         $voucher = Voucher::where('kode_voucher', '=', $kode_voucher)->first();
-        if($voucher == null) {
+        if ($voucher == null) {
             return [
                 'status' => 300,
                 'message' => 'Voucher not exist'
             ];
         }
-            
+
         // BACK SET TO DEFAULT
-        $voucher->is_tagih_bank = null; 
+        $voucher->is_tagih_bank = null;
         $voucher->id_bank = null;
         $voucher->id_bank_via = null;
         $voucher->besar_biaya = null;
@@ -194,7 +208,7 @@ class PembayaranFormulirController extends Controller
 
         return [
             'status'    => 202, // SUCCESS AND LOAD CONTENT
-            'path'      => 'peserta/pembayaran-formulir/'.$kode_voucher ,
+            'path'      => 'peserta/pembayaran-formulir/' . $kode_voucher,
             'message'   => 'Voucher Berhasil Direset'
         ];
     }

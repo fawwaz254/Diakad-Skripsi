@@ -40,7 +40,7 @@ class KondisiRuanganController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
@@ -109,7 +109,7 @@ class KondisiRuanganController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 if ($kondisiRuangan = KondisiRuangan::where('id_ruangan', $input->id_ruangan)->where('id_kerusakan_ruangan', $input->id_kerusakan_ruangan)->first()) {
@@ -190,7 +190,7 @@ class KondisiRuanganController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'file-excel' => 'required',

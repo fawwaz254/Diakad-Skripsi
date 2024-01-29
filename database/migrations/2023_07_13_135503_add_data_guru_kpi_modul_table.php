@@ -16,7 +16,7 @@ class AddDataGuruKpiModulTable extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
@@ -37,6 +37,5 @@ class AddDataGuruKpiModulTable extends Migration
      */
     public function down()
     {
-
     }
 }
