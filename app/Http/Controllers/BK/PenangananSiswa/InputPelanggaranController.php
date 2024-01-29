@@ -43,7 +43,7 @@ class InputPelanggaranController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -256,7 +256,7 @@ class InputPelanggaranController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
 

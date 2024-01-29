@@ -85,7 +85,7 @@ class DataPrestasiSiswaController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
         $validator = Validator::make($request->all(), [

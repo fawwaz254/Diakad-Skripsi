@@ -125,7 +125,7 @@ class AdmisiSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'id_siswa'            => 'required',
@@ -287,7 +287,7 @@ class AdmisiSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'id_semester'     => 'required',

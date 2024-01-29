@@ -147,7 +147,7 @@ class UjianUASController extends BaseController
         }
       })
       ->addColumn('nm_guru', function ($item) {
-        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna. '('. $item->kelas_mp->pengampu_mp_utama->guru->nip_guru . ')';
+        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna . '(' . $item->kelas_mp->pengampu_mp_utama->guru->nip_guru . ')';
       })
       ->addColumn('semester', function ($item) {
         return $item->kelas_mp->semester->nm_semester . ' (' . $item->kelas_mp->semester->tahun_ajaran . ')';
@@ -281,7 +281,7 @@ class UjianUASController extends BaseController
 
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
-    $now = Carbon::now(env('APP_TIMEZONE', ''));
+    $now = Carbon::now();
     $validator = Validator::make($request->all(), [
       'nm_ujian_mp' => 'required',
       'tgl_ujian_mp' => 'required',

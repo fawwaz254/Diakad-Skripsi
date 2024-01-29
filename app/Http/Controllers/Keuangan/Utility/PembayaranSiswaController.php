@@ -250,7 +250,7 @@ class PembayaranSiswaController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $cek_status = Pengguna::where('id_pengguna', $id_pengguna)->with('status_pengguna')->first();
         if ($cek_status->status_pengguna->nm_status_pengguna == "LULUS") {
             $siswa = LibSiswa::fetchDataSiswaByPenggunaTanpaKelas($auth_data, $id_pengguna);
@@ -757,7 +757,7 @@ class PembayaranSiswaController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
 
@@ -1201,7 +1201,7 @@ class PembayaranSiswaController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $dataPembayaran = $input->data_pembayaran;
 

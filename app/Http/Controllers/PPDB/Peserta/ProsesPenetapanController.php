@@ -142,7 +142,7 @@ class ProsesPenetapanController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
 
@@ -256,7 +256,7 @@ class ProsesPenetapanController extends BaseController
                     } else {
                         $pengguna = null;
                     }
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
 
                     if (empty($pengguna)) {
                         //buat pengguna
@@ -295,7 +295,8 @@ class ProsesPenetapanController extends BaseController
                     $siswa->created_by = 'Penetapan';
                     $siswa->save();
 
-                    if ($updateData) { } else {
+                    if ($updateData) {
+                    } else {
                         $role_pengguna = new RolePengguna;
                         // $role_pengguna->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $role_pengguna->id_role = '3';

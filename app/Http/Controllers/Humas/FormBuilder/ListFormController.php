@@ -45,7 +45,7 @@ class ListFormController extends Controller
     public function actionListForm(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $list_validator = [
             'id_role'    => 'required',
             'nm_form'     => 'required',
@@ -217,7 +217,7 @@ class ListFormController extends Controller
     public function actionPertanyaanForm(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $list_validator = [
             'id_form'               => 'required',
             'jenis_pertanyaan'      => 'required',

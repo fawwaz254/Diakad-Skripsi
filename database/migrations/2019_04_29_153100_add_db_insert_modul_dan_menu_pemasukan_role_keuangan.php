@@ -18,7 +18,7 @@ class AddDbInsertModulDanMenuPemasukanRoleKeuangan extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // insert modul
         $modul              = new Modul;
@@ -69,7 +69,6 @@ class AddDbInsertModulDanMenuPemasukanRoleKeuangan extends Migration
         $menu->akses        = 1;
         $menu->created_at   = $now;
         $menu->save();
-
     }
 
     /**

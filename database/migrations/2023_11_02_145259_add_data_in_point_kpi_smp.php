@@ -18,7 +18,7 @@ class AddDataInPointKpiSmp extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $sekolah = Sekolah::first();
         $semester = Semester::where('is_aktif_semester', '1')->first();
         $kelompok_kpi1 = KelompokKPI::where('urutan', 1)->first();
@@ -76,5 +76,6 @@ class AddDataInPointKpiSmp extends Migration
      * @return void
      */
     public function down()
-    { }
+    {
+    }
 }

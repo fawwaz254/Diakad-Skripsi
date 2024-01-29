@@ -26,7 +26,7 @@ class SyaratPenerimaanController extends Controller
      * @return View
      */
     public function viewSyaratPenerimaan(Request $request)
-    {        
+    {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
@@ -34,11 +34,11 @@ class SyaratPenerimaanController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
 
         /** groupping by year and semester */
-        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function($item, $k) {
+        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
             return $item->groupBy('nm_semester_penerimaan');
-        });; 
+        });;
 
-        return view('ppdb/pendaftaran/syarat-penerimaan/view-syarat-penerimaan',compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun'));
+        return view('ppdb/pendaftaran/syarat-penerimaan/view-syarat-penerimaan', compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun'));
     }
 
     /** 
@@ -55,16 +55,15 @@ class SyaratPenerimaanController extends Controller
             'id_penerimaan' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
                 'status'    => 204, // SUCCESS AND LOAD CONTENT
-                'path'      => 'pendaftaran/syarat-penerimaan/'.$input->id_penerimaan
+                'path'      => 'pendaftaran/syarat-penerimaan/' . $input->id_penerimaan
             ];
         }
     }
@@ -83,19 +82,19 @@ class SyaratPenerimaanController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
         /** data (id_penerimaan) tidak ditemukan */
-        if(!$penerimaan) abort(404);
+        if (!$penerimaan) abort(404);
 
         /** retrive data syarat penerimaan */
         $penerimaan_syarat = PenerimaanSyarat::select('id_penerimaan_syarat', 'id_penerimaan', 'penerimaan_syarat.id_jurusan', 'nm_penerimaan_syarat', 'keterangan_penerimaan_syarat', 'is_wajib', 'is_upload_file', 'urutan', 'jurusan.nm_jurusan')
-                                    ->where('penerimaan_syarat.id_penerimaan','=',$id)
-                                    ->orderBy('penerimaan_syarat.urutan', 'asc')
-                                    ->leftJoin('jurusan','jurusan.id_jurusan','=','penerimaan_syarat.id_jurusan')
-                                    ->get();
+            ->where('penerimaan_syarat.id_penerimaan', '=', $id)
+            ->orderBy('penerimaan_syarat.urutan', 'asc')
+            ->leftJoin('jurusan', 'jurusan.id_jurusan', '=', 'penerimaan_syarat.id_jurusan')
+            ->get();
 
         $penerimaan_syarat_umum = $penerimaan_syarat->where('id_jurusan', null)->all();
-        $penerimaan_syarat_khusus = $penerimaan_syarat->where('id_jurusan','!=', null)->all();
+        $penerimaan_syarat_khusus = $penerimaan_syarat->where('id_jurusan', '!=', null)->all();
 
-        return view('ppdb/pendaftaran/syarat-penerimaan/syarat-penerimaan',compact('auth_data', 'penerimaan', 'penerimaan_syarat_umum', 'penerimaan_syarat_khusus'));
+        return view('ppdb/pendaftaran/syarat-penerimaan/syarat-penerimaan', compact('auth_data', 'penerimaan', 'penerimaan_syarat_umum', 'penerimaan_syarat_khusus'));
     }
 
     /** 
@@ -112,13 +111,13 @@ class SyaratPenerimaanController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
         /** data (id_penerimaan) tidak ditemukan */
-        if(!$penerimaan) abort(404);
+        if (!$penerimaan) abort(404);
 
         /** get all data jurusan */
-        $jurusan = Jurusan::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
-        ->orderBy('nm_jurusan', 'asc')->get();
+        $jurusan = Jurusan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->orderBy('nm_jurusan', 'asc')->get();
 
-        return view('ppdb/pendaftaran/syarat-penerimaan/add-syarat-penerimaan',compact('auth_data', 'penerimaan', 'request', 'jurusan'));
+        return view('ppdb/pendaftaran/syarat-penerimaan/add-syarat-penerimaan', compact('auth_data', 'penerimaan', 'request', 'jurusan'));
     }
 
     /** 
@@ -140,33 +139,32 @@ class SyaratPenerimaanController extends Controller
             'urutan'                        => 'required|numeric',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             /** take time now attribute */
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             /** get penerimaan by id */
             $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
             /** data (id_penerimaan) tidak ditemukan */
-            if(!$penerimaan) return [
+            if (!$penerimaan) return [
                 'status'    => 300, // FAILED
                 'message'   => 'Id data penerimaan tidak valid'
             ];
 
             /** generate id_penerimaan_syarat */
-            $id_penerimaan_syarat = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-            
+            $id_penerimaan_syarat = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
             /** action for add data syarat penerimaan */
             $penerimaan_syarat                                  = new PenerimaanSyarat;
             $penerimaan_syarat->id_penerimaan_syarat            = $id_penerimaan_syarat;
             $penerimaan_syarat->id_penerimaan                   = $id;
-            $penerimaan_syarat->id_jurusan                      = ($input->type=="khusus"?$input->id_jurusan:null);
+            $penerimaan_syarat->id_jurusan                      = ($input->type == "khusus" ? $input->id_jurusan : null);
             $penerimaan_syarat->nm_penerimaan_syarat            = $input->nm_penerimaan_syarat;
             $penerimaan_syarat->is_wajib                        = $input->is_wajib;
             $penerimaan_syarat->urutan                          = $input->urutan;
@@ -174,10 +172,10 @@ class SyaratPenerimaanController extends Controller
             $penerimaan_syarat->keterangan_penerimaan_syarat    = $input->keterangan_penerimaan_syarat;
             $penerimaan_syarat->created_by                      = $input->auth_data->pengguna->id_pengguna;
             $penerimaan_syarat->save();
-            
+
             return [
                 'status'    => 202, // SUCCESS AND LOAD CONTENT
-                'path'      => 'pendaftaran/syarat-penerimaan/'.$input->id_penerimaan ,
+                'path'      => 'pendaftaran/syarat-penerimaan/' . $input->id_penerimaan,
                 'message'   => 'Add Syarat Penerimaan Successfully'
             ];
         }
@@ -197,20 +195,20 @@ class SyaratPenerimaanController extends Controller
         $input              = (object) $request->input();
         $penerimaan_syarat  = PenerimaanSyarat::find($id_penerimaan_syarat);
 
-        /** validasi (check syarat penerimaan is exist) */ 
-        if($penerimaan_syarat == null) return 'Wrong Id Syarat Penerimaan';
+        /** validasi (check syarat penerimaan is exist) */
+        if ($penerimaan_syarat == null) return 'Wrong Id Syarat Penerimaan';
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
 
         /** data (id_penerimaan) tidak ditemukan */
-        if(!$penerimaan) abort(404);
+        if (!$penerimaan) abort(404);
 
         /** get all data jurusan */
-        $jurusan = Jurusan::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
-        ->orderBy('nm_jurusan', 'asc')->get();
+        $jurusan = Jurusan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->orderBy('nm_jurusan', 'asc')->get();
 
-        return view('ppdb/pendaftaran/syarat-penerimaan/edit-syarat-penerimaan',compact('auth_data', 'penerimaan', 'penerimaan_syarat', 'request', 'jurusan'));
+        return view('ppdb/pendaftaran/syarat-penerimaan/edit-syarat-penerimaan', compact('auth_data', 'penerimaan', 'penerimaan_syarat', 'request', 'jurusan'));
     }
 
     /** 
@@ -222,7 +220,7 @@ class SyaratPenerimaanController extends Controller
     {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
-        
+
         $validator = Validator::make($request->all(), [
             'id_penerimaan'                 => 'required',
             'nm_penerimaan_syarat'          => 'required',
@@ -232,7 +230,7 @@ class SyaratPenerimaanController extends Controller
             'urutan'                        => 'required|numeric',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
@@ -241,18 +239,18 @@ class SyaratPenerimaanController extends Controller
 
         $penerimaan_syarat  = PenerimaanSyarat::find($id_syarat_penerimaan);
 
-        /** validasi (check penerimaan jurusan is exist) */ 
-        if($penerimaan_syarat == null) {
+        /** validasi (check penerimaan jurusan is exist) */
+        if ($penerimaan_syarat == null) {
             return [
                 'status' => 300, // PENERIMAAN JURUSAN NOT EXIST
                 'message' => 'Failed To Edit Syarat Penerimaan'
             ];
         }
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         /** updating data syarat penerimaan */
-        $penerimaan_syarat->id_jurusan                      = ($input->type=="khusus"?$input->id_jurusan:null);
+        $penerimaan_syarat->id_jurusan                      = ($input->type == "khusus" ? $input->id_jurusan : null);
         $penerimaan_syarat->nm_penerimaan_syarat            = $input->nm_penerimaan_syarat;
         $penerimaan_syarat->is_wajib                        = $input->is_wajib;
         $penerimaan_syarat->urutan                          = $input->urutan;
@@ -264,7 +262,7 @@ class SyaratPenerimaanController extends Controller
 
         return [
             'status'    => 202, // SUCCESS AND LOAD CONTENT
-            'path'      => 'pendaftaran/syarat-penerimaan/'.$id_penerimaan,
+            'path'      => 'pendaftaran/syarat-penerimaan/' . $id_penerimaan,
             'message'   => 'Edit Syarat Penerimaan Successfully'
         ];
     }
@@ -279,8 +277,8 @@ class SyaratPenerimaanController extends Controller
         $input              = (object) $request->input();
         $penerimaan_syarat  = PenerimaanSyarat::find($id_syarat_penerimaan);
 
-        /** validasi (check penerimaan jurusan is exist) */ 
-        if($penerimaan_syarat == null) {
+        /** validasi (check penerimaan jurusan is exist) */
+        if ($penerimaan_syarat == null) {
             return [
                 'status' => 300, // PENERIMAAN JURUSAN NOT EXIST
                 'message' => 'Failed To Delete Syarat Penerimaan'
@@ -294,7 +292,7 @@ class SyaratPenerimaanController extends Controller
 
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path'      => 'pendaftaran/syarat-penerimaan/'.$id_penerimaan,
+            'path'      => 'pendaftaran/syarat-penerimaan/' . $id_penerimaan,
             'message' => 'Delete Syarat Penerimaan Successfully'
         ];
     }

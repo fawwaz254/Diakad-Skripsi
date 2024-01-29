@@ -147,7 +147,7 @@ class UjianUTSController extends BaseController
         }
       })
       ->addColumn('nm_guru', function ($item) {
-        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna. '('. $item->kelas_mp->pengampu_mp_utama->guru->nip_guru . ')';
+        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna . '(' . $item->kelas_mp->pengampu_mp_utama->guru->nip_guru . ')';
       })
       ->addColumn('semester', function ($item) {
         return $item->kelas_mp->semester->nm_semester . ' (' . $item->kelas_mp->semester->tahun_ajaran . ')';
@@ -227,7 +227,7 @@ class UjianUTSController extends BaseController
   {
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
-    $now = Carbon::now(env('APP_TIMEZONE', ''));
+    $now = Carbon::now();
 
     $validator = Validator::make($request->all(), [
       'nm_ujian_mp' => 'required',
@@ -299,20 +299,20 @@ class UjianUTSController extends BaseController
           'message' => 'Save Ujian UTS Successfully'
         ];
       } elseif ($mode == 'delete') {
-          $ujian                        = UjianMp::find($id);
-          $ujian->deleted_by            = $input->auth_data->pengguna->id_pengguna;
-          $ujian->save();
-          $ujian->forceDelete();
+        $ujian                        = UjianMp::find($id);
+        $ujian->deleted_by            = $input->auth_data->pengguna->id_pengguna;
+        $ujian->save();
+        $ujian->forceDelete();
 
-          $ruangan                      = UjianMpRuangan::where('ujian_mp_ruangan.id_ujian_mp', '=', $id)->first();
-          $ruangan->deleted_by          = $input->auth_data->pengguna->id_pengguna;
-          $ruangan->save();
-          $ruangan->forceDelete();
+        $ruangan                      = UjianMpRuangan::where('ujian_mp_ruangan.id_ujian_mp', '=', $id)->first();
+        $ruangan->deleted_by          = $input->auth_data->pengguna->id_pengguna;
+        $ruangan->save();
+        $ruangan->forceDelete();
 
-          return [
-            'status' => 203, // SUCCESS AND LOAD TABLE
-            'message' => 'Delete Ujian Berhasil'
-          ];
+        return [
+          'status' => 203, // SUCCESS AND LOAD TABLE
+          'message' => 'Delete Ujian Berhasil'
+        ];
       } elseif ($mode == 'assign') {
         DB::beginTransaction();
         try {

@@ -1323,7 +1323,7 @@ class RekapAbsensiController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $start_date = $now->startOfWeek()->format('Y-m-d');
         $end_date = $now->endOfWeek()->format('Y-m-d');
 

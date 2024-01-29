@@ -18,7 +18,7 @@ class AddMenuTandaTanganDigitalSekretariat extends Migration
     public function up()
     {
         //
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $id_modul = Modul::where('id_role', 14)->where('nm_modul', 'Manajemen Tanda Tangan')->first()->id_modul;
 

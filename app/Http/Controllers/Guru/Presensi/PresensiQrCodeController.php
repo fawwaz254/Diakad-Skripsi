@@ -58,7 +58,7 @@ class PresensiQrCodeController extends BaseController
                     'message' => 'Absensi KBM Gagal Karna Data Sudah Ada'
                 ];
             } else {
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $id_presensi_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $auth_data = $input->auth_data;

@@ -121,7 +121,8 @@ class SetJadwalKelasGuruController extends Controller
                     $data_kelas_mp[$i . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
                     $data_kelas_mp[$i . $j['id_jadwal_hari'] . 'color'] =  $rand;
                     $data_kelas_mp[$i . $j['id_jadwal_hari'] . 'primary'] = $i == $mulai->jam_ke ? '1' : '0';
-                } elseif ($data_kelas_mp[$i . $j['id_jadwal_hari']] == $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp'])) { } else {
+                } elseif ($data_kelas_mp[$i . $j['id_jadwal_hari']] == $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp'])) {
+                } else {
                     $data_kelas_mp2[$i . $j['id_jadwal_hari']] = $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
                     $data_kelas_mp2[$i . $j['id_jadwal_hari'] . 'color'] =  $rand;
                     $data_kelas_mp2[$i . $j['id_jadwal_hari'] . 'primary'] = $i == $mulai->jam_ke ? '1' : '0';
@@ -158,7 +159,8 @@ class SetJadwalKelasGuruController extends Controller
             $query->orderBy('kd_mata_pelajaran');
         }])->get();
 
-        if (MataPelajaran::where('id_jurusan', $id_jurusan)->first()) { } else {
+        if (MataPelajaran::where('id_jurusan', $id_jurusan)->first()) {
+        } else {
             $id_jurusan = null;
         }
 
@@ -171,7 +173,7 @@ class SetJadwalKelasGuruController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         //validasi waktu
         if ($mode == 'add') {
@@ -232,7 +234,7 @@ class SetJadwalKelasGuruController extends Controller
         // }
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         if ($mode == 'add') {
             $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();

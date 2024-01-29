@@ -48,7 +48,7 @@ class ApproveTandaTanganDigital extends Controller
 
     public function actionApproveTandaTanganDigital(Request $request, $id)
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $input = (object) $request->input();
 
         $dokumen_tanda_tangan_digital = DokumenTandaTanganDigital::find($id);

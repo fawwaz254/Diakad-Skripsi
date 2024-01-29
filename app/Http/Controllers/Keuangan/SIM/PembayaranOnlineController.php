@@ -184,7 +184,7 @@ class PembayaranOnlineController extends BaseController
         DB::beginTransaction();
 
         try {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $siswa = Siswa::find($input->id_siswa);
 
@@ -324,7 +324,7 @@ class PembayaranOnlineController extends BaseController
         $message = 'DECLINED';
         DB::beginTransaction();
         try {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             $sekolah = Sekolah::orderBy('id_sekolah')->first();
             $semester_aktif = Semester::where('id_sekolah', $sekolah->id_sekolah)->where('is_aktif_semester', 1)->first();
 

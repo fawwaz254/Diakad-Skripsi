@@ -121,7 +121,7 @@ class InputKPIController extends Controller
                 $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
                 $data = $data[0];
                 if (count($data)) {
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     $id_pengguna = Auth::id();
                     $semester_aktif = Semester::where('is_aktif_semester', '1')->first();
                     $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();

@@ -19,67 +19,69 @@ use DB;
 use Session;
 use Validator;
 
-class StatusAktifGuruController extends BaseController{
+class StatusAktifGuruController extends BaseController
+{
 
-    public function viewStatusAktifGuru(Request $request){
+    public function viewStatusAktifGuru(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('sumber-daya/data-sumber-daya/status-aktif-guru/view-status-aktif-guru',compact('auth_data'));
-
+        return view('sumber-daya/data-sumber-daya/status-aktif-guru/view-status-aktif-guru', compact('auth_data'));
     }
 
-    public function addStatusAktifGuru(Request $request){
+    public function addStatusAktifGuru(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_status_pengguna = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_status_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('sumber-daya/data-sumber-daya/status-aktif-guru/add-status-aktif-guru',compact('auth_data','id_status_pengguna'));
-
+        return view('sumber-daya/data-sumber-daya/status-aktif-guru/add-status-aktif-guru', compact('auth_data', 'id_status_pengguna'));
     }
 
-    public function editStatusAktifGuru($id, Request $request){
+    public function editStatusAktifGuru($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_status_pengguna = LibDataSumberDaya::fetchDataStatusAktifGuru($auth_data, $id);
 
-        return view('sumber-daya/data-sumber-daya/status-aktif-guru/edit-status-aktif-guru',compact('auth_data','data_status_pengguna'));
-
+        return view('sumber-daya/data-sumber-daya/status-aktif-guru/edit-status-aktif-guru', compact('auth_data', 'data_status_pengguna'));
     }
 
-    public function datatablesStatusAktifGuru(Request $request){
+    public function datatablesStatusAktifGuru(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataSumberDaya::fetchDataStatusAktifGuru($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('aktif_status_pengguna', function($item){
-                    if($item->aktif_status_pengguna == 0) {
-                        return "Keluar/Non-Aktif";
-                    }
-                    elseif($item->aktif_status_pengguna == 1) {
-                        return "Aktif";
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_status_pengguna
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('aktif_status_pengguna', function ($item) {
+                if ($item->aktif_status_pengguna == 0) {
+                    return "Keluar/Non-Aktif";
+                } elseif ($item->aktif_status_pengguna == 1) {
+                    return "Aktif";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_status_pengguna
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionStatusAktifGuru(Request $request, $mode, $id = null) {
+    public function actionStatusAktifGuru(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -88,20 +90,19 @@ class StatusAktifGuruController extends BaseController{
             'aktif_status_pengguna'  => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                 $statusPengguna                         = new StatusPengguna;
                 $statusPengguna->id_status_pengguna     = $id;
                 $statusPengguna->status_join_table      = 2;
@@ -116,8 +117,7 @@ class StatusAktifGuruController extends BaseController{
                     'path' => 'data-sumber-daya/status-aktif-guru',
                     'message' => 'Save Status Aktif Guru Successfully'
                 ];
-            }
-            elseif($mode == 'edit') {
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $statusPengguna                         = StatusPengguna::find($id);
                 $statusPengguna->nm_status_pengguna     = $input->nm_status_pengguna;
@@ -131,15 +131,13 @@ class StatusAktifGuruController extends BaseController{
                     'path' => 'data-sumber-daya/status-aktif-guru',
                     'message' => 'Update Status Aktif Guru Successfully'
                 ];
-            }
-            elseif($mode == 'delete') {
-                if($pengguna = Pengguna::where('id_status_pengguna',$id)->first()) {
+            } elseif ($mode == 'delete') {
+                if ($pengguna = Pengguna::where('id_status_pengguna', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Status Aktif Guru'
-                    ]; 
-                }
-                else {
+                    ];
+                } else {
                     // make object to find id
                     $statusPengguna               = StatusPengguna::find($id);
                     $statusPengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -155,5 +153,4 @@ class StatusAktifGuruController extends BaseController{
             }
         }
     }
-
 }

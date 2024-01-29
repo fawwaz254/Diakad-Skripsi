@@ -44,7 +44,7 @@ class MataPelajaranController extends BaseController
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $jenis_mapel = JenisMataPelajaran::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         $id_mata_pelajaran = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -119,7 +119,7 @@ class MataPelajaranController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add') {

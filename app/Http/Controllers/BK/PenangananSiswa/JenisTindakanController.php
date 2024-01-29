@@ -17,59 +17,62 @@ use DB;
 use Session;
 use Validator;
 
-class JenisTindakanController extends BaseController{
+class JenisTindakanController extends BaseController
+{
 
-    public function viewJenisTindakan(Request $request){
+    public function viewJenisTindakan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('bk/penanganan-siswa/jenis-tindakan/view-jenis-tindakan',compact('auth_data'));
-
+        return view('bk/penanganan-siswa/jenis-tindakan/view-jenis-tindakan', compact('auth_data'));
     }
 
-    public function addJenisTindakan(Request $request){
+    public function addJenisTindakan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_jenis_tindakan = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_jenis_tindakan = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('bk/penanganan-siswa/jenis-tindakan/add-jenis-tindakan',compact('auth_data','id_jenis_tindakan'));
-
+        return view('bk/penanganan-siswa/jenis-tindakan/add-jenis-tindakan', compact('auth_data', 'id_jenis_tindakan'));
     }
 
-    public function editJenisTindakan($id, Request $request){
+    public function editJenisTindakan($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_jenis_tindakan = LibDataPelanggaran::fetchDataJenisTindakan($auth_data, $id);
 
-        return view('bk/penanganan-siswa/jenis-tindakan/edit-jenis-tindakan',compact('auth_data','data_jenis_tindakan'));
-
+        return view('bk/penanganan-siswa/jenis-tindakan/edit-jenis-tindakan', compact('auth_data', 'data_jenis_tindakan'));
     }
 
-    public function datatablesJenisTindakan(Request $request){
+    public function datatablesJenisTindakan(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataPelanggaran::fetchDataJenisTindakan($auth_data);
+        $list_data = LibDataPelanggaran::fetchDataJenisTindakan($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_jenis_tindakan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_jenis_tindakan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionJenisTindakan(Request $request, $mode, $id = null){
+    public function actionJenisTindakan(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -77,19 +80,18 @@ class JenisTindakanController extends BaseController{
             'nm_jenis_tindakan' => 'required',
             'keterangan_jenis_tindakan' => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jenisTindakan                              = new JenisTindakan;
                 $jenisTindakan->id_jenis_tindakan           = $id;
@@ -104,8 +106,7 @@ class JenisTindakanController extends BaseController{
                     'path' => 'data-pelanggaran/jenis-tindakan',
                     'message' => 'Save Jenis Tindakan Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $jenisTindakan                              = JenisTindakan::find($id);
                 $jenisTindakan->nm_jenis_tindakan           = $input->nm_jenis_tindakan;
@@ -119,15 +120,13 @@ class JenisTindakanController extends BaseController{
                     'path' => 'data-pelanggaran/jenis-tindakan',
                     'message' => 'Update Jenis Tindakan Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($tindakanPelanggaran = TindakanPelanggaran::where('id_jenis_tindakan',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_jenis_tindakan', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Jenis Tindakan'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $jenisTindakan               = JenisTindakan::find($id);
                     $jenisTindakan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -143,6 +142,4 @@ class JenisTindakanController extends BaseController{
             }
         }
     }
-
-
 }

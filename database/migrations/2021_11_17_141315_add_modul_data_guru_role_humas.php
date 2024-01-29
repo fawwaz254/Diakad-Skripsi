@@ -19,14 +19,14 @@ class AddModulDataGuruRoleHumas extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
 
         $modul = Modul::create([
             "id_role"       => $role_id,
             "nm_modul"      => "Data Guru",
-            "route"         => "data-guru" ,
+            "route"         => "data-guru",
             "urutan"        => 5,
             "akses"         => 1,
             "created_at"    => $now

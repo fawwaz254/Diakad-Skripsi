@@ -50,7 +50,7 @@ class BiayaSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // ambil data kelompok biaya
         $data_kelompok_biaya = LibDataKeuangan::fetchDataKelompokBiaya($auth_data);
@@ -253,7 +253,7 @@ class BiayaSiswaController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'set') {
                 // make object to find id

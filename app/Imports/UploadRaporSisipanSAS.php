@@ -28,7 +28,7 @@ class UploadRaporSisipanSAS implements ToCollection, WithHeadingRow
     {
 
         set_time_limit(-1);
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $id_pengguna = Auth::id();
         $sekolah = Sekolah::first();
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->get();

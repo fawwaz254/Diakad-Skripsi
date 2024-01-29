@@ -79,7 +79,8 @@ class TagihanSiswaController extends BaseController
                 }
             } else if ($status == 2) {
                 if (!empty($kelas)) {
-                    if ($kelas === 'all') { } else {
+                    if ($kelas === 'all') {
+                    } else {
                         $list_data = $list_data->whereHas('last_kelas_siswa', function ($q) use ($kelas) {
                             $q->where('id_kelas', $kelas)->with('kelas');
                         });
@@ -271,7 +272,8 @@ class TagihanSiswaController extends BaseController
             }
         } else if ($status == '2') {
             if (!empty($id_kelas)) {
-                if ($id_kelas === 'all') { } else {
+                if ($id_kelas === 'all') {
+                } else {
                     $list_data = $list_data->whereHas('last_kelas_siswa', function ($q) use ($id_kelas) {
                         $q->where('id_kelas', $id_kelas);
                     });
@@ -359,7 +361,7 @@ class TagihanSiswaController extends BaseController
             $t->tgl_pelunasan = '2023-07-31 00:00:00';
             $t->keterangan = 'pembayaran awal tahun';
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $pembayaranBiaya = new PembayaranBiaya;
             $pembayaranBiaya->id_pembayaran_biaya = $uuid;

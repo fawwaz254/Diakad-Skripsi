@@ -189,7 +189,7 @@ class RaporSisipanController extends Controller
             ];
         } else {
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             if ($mode == 'add') {
                 DB::beginTransaction();
 
@@ -218,7 +218,7 @@ class RaporSisipanController extends Controller
                     // $komponen_jenis_rapor = KomponenNilaiRapor::where('status', 1)->get();
                     foreach ($siswa as $s) {
                         foreach ($komponen_jenis_rapor as $komponen) {
-                            $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
+                            $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                             $list_data[] = [
                                 'id_nilai_rapor' =>  $id,
                                 'id_rapor' => $rapor->id_rapor,

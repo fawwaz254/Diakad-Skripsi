@@ -152,7 +152,7 @@ class WaliKelasSKPIController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // dd($id_kelas);
         $validator = Validator::make($request->all(), [
@@ -383,7 +383,7 @@ class WaliKelasSKPIController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
 
         $validator = Validator::make($request->all(), [

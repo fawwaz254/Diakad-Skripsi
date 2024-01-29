@@ -18,18 +18,20 @@ use DB;
 use Session;
 use Validator;
 
-class RentangNilaiMutuController extends BaseController{
+class RentangNilaiMutuController extends BaseController
+{
 
-    public function viewRentangNilaiMutu(Request $request){
+    public function viewRentangNilaiMutu(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('pendidikan/data-akademik/rentang-nilai-mutu/view-rentang-nilai-mutu',compact('auth_data'));
-
+        return view('pendidikan/data-akademik/rentang-nilai-mutu/view-rentang-nilai-mutu', compact('auth_data'));
     }
 
-    public function addRentangNilaiMutu(Request $request){
+    public function addRentangNilaiMutu(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -37,15 +39,15 @@ class RentangNilaiMutuController extends BaseController{
         $data_nilai_mutu = LibDataAkademik::fetchDataNilaiMutu($auth_data);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_peraturan_nilai = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_peraturan_nilai = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('pendidikan/data-akademik/rentang-nilai-mutu/add-rentang-nilai-mutu',compact('auth_data','data_nilai_mutu','id_peraturan_nilai'));
-
+        return view('pendidikan/data-akademik/rentang-nilai-mutu/add-rentang-nilai-mutu', compact('auth_data', 'data_nilai_mutu', 'id_peraturan_nilai'));
     }
 
-    public function editRentangNilaiMutu($id, Request $request){
+    public function editRentangNilaiMutu($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -54,56 +56,55 @@ class RentangNilaiMutuController extends BaseController{
 
         $data_rentang_nilai_mutu = $this->fetchDataRentangNilaiMutu($auth_data, $id);
 
-        return view('pendidikan/data-akademik/rentang-nilai-mutu/edit-rentang-nilai-mutu',compact('auth_data','data_nilai_mutu','data_rentang_nilai_mutu'));
-
+        return view('pendidikan/data-akademik/rentang-nilai-mutu/edit-rentang-nilai-mutu', compact('auth_data', 'data_nilai_mutu', 'data_rentang_nilai_mutu'));
     }
 
-    public function datatablesRentangNilaiMutu(Request $request){
+    public function datatablesRentangNilaiMutu(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = $this->fetchDataRentangNilaiMutu($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('status', function($item){
-                    if($item->is_mata_pelajaran == 0){
-                        return "Umum (Ekskul, Magang, dll)";
-                    }
-                    else{
-                        return "Mapel";
-                    }
-                })
-                ->addColumn('nilai_kkm', function($item){
-                    if(! empty($item->nilai_kkm)){
-                        return $item->nilai_kkm;
-                    }
-                    else{
-                        return "-";
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_peraturan_nilai
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('status', function ($item) {
+                if ($item->is_mata_pelajaran == 0) {
+                    return "Umum (Ekskul, Magang, dll)";
+                } else {
+                    return "Mapel";
+                }
+            })
+            ->addColumn('nilai_kkm', function ($item) {
+                if (!empty($item->nilai_kkm)) {
+                    return $item->nilai_kkm;
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_peraturan_nilai
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function fetchDataRentangNilaiMutu($auth_data, $id = null){
+    public function fetchDataRentangNilaiMutu($auth_data, $id = null)
+    {
 
         // get mode view
-        if ($id == null){
-            $rentangNilaiMutu = PeraturanNilai::select('peraturan_nilai.id_peraturan_nilai', 'standar_nilai.nm_standar_nilai', 'standar_nilai.mutu_standar_nilai', 'standar_nilai.keterangan_standar_nilai', 'peraturan_nilai.nilai_kkm','peraturan_nilai.nilai_min_peraturan_nilai', 'peraturan_nilai.nilai_max_peraturan_nilai', 'peraturan_nilai.is_mata_pelajaran')
-                    ->join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')
-                    ->where('standar_nilai.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-                    ->orderBy('peraturan_nilai.is_mata_pelajaran', 'asc')
-                    ->orderBy('peraturan_nilai.nilai_kkm', 'asc')
-                    ->orderBy('standar_nilai.nm_standar_nilai', 'asc')
-                    ->get();
+        if ($id == null) {
+            $rentangNilaiMutu = PeraturanNilai::select('peraturan_nilai.id_peraturan_nilai', 'standar_nilai.nm_standar_nilai', 'standar_nilai.mutu_standar_nilai', 'standar_nilai.keterangan_standar_nilai', 'peraturan_nilai.nilai_kkm', 'peraturan_nilai.nilai_min_peraturan_nilai', 'peraturan_nilai.nilai_max_peraturan_nilai', 'peraturan_nilai.is_mata_pelajaran')
+                ->join('standar_nilai', 'standar_nilai.id_standar_nilai', '=', 'peraturan_nilai.id_standar_nilai')
+                ->where('standar_nilai.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                ->orderBy('peraturan_nilai.is_mata_pelajaran', 'asc')
+                ->orderBy('peraturan_nilai.nilai_kkm', 'asc')
+                ->orderBy('standar_nilai.nm_standar_nilai', 'asc')
+                ->get();
         }
         // get mode edit
-        else{
-            $rentangNilaiMutu = PeraturanNilai::join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')->where('peraturan_nilai.id_peraturan_nilai','=',$id)->first();
+        else {
+            $rentangNilaiMutu = PeraturanNilai::join('standar_nilai', 'standar_nilai.id_standar_nilai', '=', 'peraturan_nilai.id_standar_nilai')->where('peraturan_nilai.id_peraturan_nilai', '=', $id)->first();
         }
 
         return $rentangNilaiMutu;
@@ -111,7 +112,8 @@ class RentangNilaiMutuController extends BaseController{
 
 
     // Action POST
-    public function actionRentangNilaiMutu(Request $request, $mode, $id = null){
+    public function actionRentangNilaiMutu(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -123,40 +125,37 @@ class RentangNilaiMutuController extends BaseController{
             'nilai_max_peraturan_nilai' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
-            if($mode == 'add') {
-                if($input->is_mata_pelajaran == 0) {
-                    $rentangNilaiMutu = PeraturanNilai::join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')
-                        ->where('peraturan_nilai.id_standar_nilai','=',$input->id_standar_nilai)
-                        ->where('standar_nilai.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
+            if ($mode == 'add') {
+                if ($input->is_mata_pelajaran == 0) {
+                    $rentangNilaiMutu = PeraturanNilai::join('standar_nilai', 'standar_nilai.id_standar_nilai', '=', 'peraturan_nilai.id_standar_nilai')
+                        ->where('peraturan_nilai.id_standar_nilai', '=', $input->id_standar_nilai)
+                        ->where('standar_nilai.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->first();
-                }
-                else {
-                    $rentangNilaiMutu = PeraturanNilai::join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')
-                        ->where('peraturan_nilai.id_standar_nilai','=',$input->id_standar_nilai)
-                        ->where('peraturan_nilai.nilai_kkm','=',$input->nilai_kkm)
-                        ->where('standar_nilai.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
+                } else {
+                    $rentangNilaiMutu = PeraturanNilai::join('standar_nilai', 'standar_nilai.id_standar_nilai', '=', 'peraturan_nilai.id_standar_nilai')
+                        ->where('peraturan_nilai.id_standar_nilai', '=', $input->id_standar_nilai)
+                        ->where('peraturan_nilai.nilai_kkm', '=', $input->nilai_kkm)
+                        ->where('standar_nilai.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->first();
                 }
 
-                if($rentangNilaiMutu){
+                if ($rentangNilaiMutu) {
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Failed To Save Rentang Nilai Mutu!'
                     ];
-                }
-                else{
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                } else {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $peraturanNilai                             = new PeraturanNilai;
                     $peraturanNilai->id_peraturan_nilai         = $id;
@@ -174,8 +173,7 @@ class RentangNilaiMutuController extends BaseController{
                         'message' => 'Save Rentang Nilai Mutu Successfully'
                     ];
                 }
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $peraturanNilai                             = PeraturanNilai::find($id);
                 $peraturanNilai->is_mata_pelajaran          = $input->is_mata_pelajaran;
@@ -192,8 +190,7 @@ class RentangNilaiMutuController extends BaseController{
                     'path' => 'data-akademik/rentang-nilai-mutu',
                     'message' => 'Update Rentang Nilai Mutu Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
+            } elseif ($mode == 'delete') {
                 // make object to find id
                 $peraturanNilai               = PeraturanNilai::find($id);
                 $peraturanNilai->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -208,5 +205,4 @@ class RentangNilaiMutuController extends BaseController{
             }
         }
     }
-
 }

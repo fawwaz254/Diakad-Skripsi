@@ -24,7 +24,7 @@ class PetugasPenerimaanController extends Controller
      * @return View
      */
     public function viewPetugasPenerimaan(Request $request)
-    {        
+    {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
@@ -32,11 +32,11 @@ class PetugasPenerimaanController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
 
         /** groupping by year and semester */
-        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function($item, $k) {
+        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
             return $item->groupBy('nm_semester_penerimaan');
-        });; 
+        });;
 
-        return view('ppdb/pendaftaran/petugas-penerimaan/view-petugas-penerimaan',compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun'));
+        return view('ppdb/pendaftaran/petugas-penerimaan/view-petugas-penerimaan', compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun'));
     }
 
     /** 
@@ -53,16 +53,15 @@ class PetugasPenerimaanController extends Controller
             'id_penerimaan' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
                 'status'    => 204, // SUCCESS AND LOAD CONTENT
-                'path'      => 'pendaftaran/petugas-penerimaan/'.$input->id_penerimaan
+                'path'      => 'pendaftaran/petugas-penerimaan/' . $input->id_penerimaan
             ];
         }
     }
@@ -81,25 +80,26 @@ class PetugasPenerimaanController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
 
         /** data (id_penerimaan) tidak ditemukan */
-        if(!$penerimaan) abort(404);
+        if (!$penerimaan) abort(404);
 
         /** query for list petugas penerimaan by id_penerimaan */
         $penerimaan_petugas = PenerimaanPetugas::select(
-                                    'penerimaan_petugas.id_penerimaan_petugas',
-                                    'penerimaan_petugas.jabatan_petugas',
-                                    'penerimaan_petugas.id_pengguna_petugas', 
-                                    'pengguna.status_join_table',
-                                    'pengguna.nm_pengguna', 
-                                    'guru.nip_guru', 
-                                    'staff.nip_staff')
-                                ->leftJoin('pengguna','pengguna.id_pengguna','=','penerimaan_petugas.id_pengguna_petugas')
-                                ->leftJoin('staff', 'staff.id_pengguna', '=', 'pengguna.id_pengguna')
-                                ->leftJoin('guru', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
-                                ->whereIn('pengguna.status_join_table', array(1, 2,))
-                                ->where('id_penerimaan', '=', $id_penerimaan)
-                                ->get();
+            'penerimaan_petugas.id_penerimaan_petugas',
+            'penerimaan_petugas.jabatan_petugas',
+            'penerimaan_petugas.id_pengguna_petugas',
+            'pengguna.status_join_table',
+            'pengguna.nm_pengguna',
+            'guru.nip_guru',
+            'staff.nip_staff'
+        )
+            ->leftJoin('pengguna', 'pengguna.id_pengguna', '=', 'penerimaan_petugas.id_pengguna_petugas')
+            ->leftJoin('staff', 'staff.id_pengguna', '=', 'pengguna.id_pengguna')
+            ->leftJoin('guru', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
+            ->whereIn('pengguna.status_join_table', array(1, 2,))
+            ->where('id_penerimaan', '=', $id_penerimaan)
+            ->get();
 
-        return view('ppdb/pendaftaran/petugas-penerimaan/petugas-penerimaan',compact('auth_data', 'penerimaan', 'penerimaan_petugas'));
+        return view('ppdb/pendaftaran/petugas-penerimaan/petugas-penerimaan', compact('auth_data', 'penerimaan', 'penerimaan_petugas'));
     }
 
     /** 
@@ -108,29 +108,28 @@ class PetugasPenerimaanController extends Controller
      * @return View
      */
     public function addPetugasPenerimaan(Request $request, $id_penerimaan)
-    {        
+    {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
         /** get list pengguna */
-        $pengguna = 
+        $pengguna =
             Pengguna::select('pengguna.id_pengguna', 'pengguna.nm_pengguna', 'guru.nip_guru', 'staff.nip_staff', 'pengguna.status_join_table')
-                ->leftJoin('staff', 'staff.id_pengguna', '=', 'pengguna.id_pengguna')
-                ->leftJoin('guru', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
-                ->whereIn('pengguna.status_join_table', array(1, 2,))
-                ->whereNotIn('pengguna.id_pengguna', function($pengguna) use ($id_penerimaan)
-                    {
-                    $pengguna->from('penerimaan_petugas')
-                        ->selectRaw('id_pengguna_petugas')
-                        ->where('deleted_at', null)
-                        ->where('id_penerimaan', '=', $id_penerimaan);
-                    })
-                ->get();
+            ->leftJoin('staff', 'staff.id_pengguna', '=', 'pengguna.id_pengguna')
+            ->leftJoin('guru', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
+            ->whereIn('pengguna.status_join_table', array(1, 2,))
+            ->whereNotIn('pengguna.id_pengguna', function ($pengguna) use ($id_penerimaan) {
+                $pengguna->from('penerimaan_petugas')
+                    ->selectRaw('id_pengguna_petugas')
+                    ->where('deleted_at', null)
+                    ->where('id_penerimaan', '=', $id_penerimaan);
+            })
+            ->get();
 
         /** get all data penerimaan */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
 
-        return view('ppdb/pendaftaran/petugas-penerimaan/add-petugas-penerimaan',compact('auth_data', 'penerimaan', 'pengguna'));
+        return view('ppdb/pendaftaran/petugas-penerimaan/add-petugas-penerimaan', compact('auth_data', 'penerimaan', 'pengguna'));
     }
 
     /** 
@@ -149,19 +148,18 @@ class PetugasPenerimaanController extends Controller
             'jabatan_petugas'       => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             /** take time now attribute */
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             /** generate id penerimaan jurusan */
-            $id_penerimaan_petugas = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-            
+            $id_penerimaan_petugas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
             /** action for add data penerimaan */
             $penerimaan_petugas                         = new PenerimaanPetugas;
             $penerimaan_petugas->id_penerimaan_petugas  = $id_penerimaan_petugas;
@@ -173,7 +171,7 @@ class PetugasPenerimaanController extends Controller
 
             return [
                 'status'    => 202, // SUCCESS AND LOAD CONTENT
-                'path'      => 'pendaftaran/petugas-penerimaan/'.$input->id_penerimaan ,
+                'path'      => 'pendaftaran/petugas-penerimaan/' . $input->id_penerimaan,
                 'message'   => 'Add Petugas Successfully'
             ];
         }
@@ -189,8 +187,8 @@ class PetugasPenerimaanController extends Controller
         $input              = (object) $request->input();
         $penerimaan_petugas  = PenerimaanPetugas::find($id_penerimaan_petugas);
 
-        /** validasi (check petugas penerimaan is exist) */ 
-        if($penerimaan_petugas == null) {
+        /** validasi (check petugas penerimaan is exist) */
+        if ($penerimaan_petugas == null) {
             return [
                 'status' => 300, // PENERIMAAN JURUSAN NOT EXIST
                 'message' => 'Failed To Delete penerimaan petugas'
@@ -204,7 +202,7 @@ class PetugasPenerimaanController extends Controller
 
         return [
             'status'  => 202, // SUCCESS AND LOAD CONTENT
-            'path'    => 'pendaftaran/petugas-penerimaan/'.$id_penerimaan,
+            'path'    => 'pendaftaran/petugas-penerimaan/' . $id_penerimaan,
             'message' => 'Delete Petugas Penerimaan Successfully'
         ];
     }

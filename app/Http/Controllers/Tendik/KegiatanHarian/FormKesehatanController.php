@@ -50,7 +50,7 @@ class FormKesehatanController extends BaseController
             $end_monkes = '07:00';
         }
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $start_1 = Carbon::createFromTimeString('00:00');
         $end_1 = Carbon::createFromTimeString($end_monkes);
 
@@ -84,7 +84,7 @@ class FormKesehatanController extends BaseController
             $end_monkes = '07:00';
         }
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $start_1 = Carbon::createFromTimeString('00:00');
         $end_1 = Carbon::createFromTimeString($end_monkes);
 
@@ -221,7 +221,7 @@ class FormKesehatanController extends BaseController
             }
 
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $start_1 = Carbon::createFromTimeString('00:00');
             $end_1 = Carbon::createFromTimeString($end_monkes);
@@ -229,7 +229,8 @@ class FormKesehatanController extends BaseController
             $start_2 = Carbon::createFromTimeString($start_monkes);
             $end_2 = Carbon::createFromTimeString('23:59');
 
-            if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)) { } else {
+            if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)) {
+            } else {
                 return [
                     'status' => 300, // FAILED
                     'message' => 'Anda mengisi di luar waktu yang ditentukan.'
@@ -294,9 +295,9 @@ class FormKesehatanController extends BaseController
                 $insert_pengisian_kegiatan['status_pengisian']               = $status_pengisian;
                 $insert_pengisian_kegiatan['created_by']                     = $input->auth_data->pengguna->id_pengguna;
                 if ($now->between($start_1, $end_1)) {
-                    $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today(env('APP_TIMEZONE', ''))->format('Y-m-d');
+                    $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today()->format('Y-m-d');
                 } else if ($now->between($start_2, $end_2)) {
-                    $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
+                    $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today()->addDays(1)->format('Y-m-d');
                 }
 
                 if ($status_pengisian == 2) {

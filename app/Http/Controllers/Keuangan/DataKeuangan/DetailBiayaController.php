@@ -22,44 +22,46 @@ use DB;
 use Illuminate\Support\Facades\Validator;
 use Session;
 
-class DetailBiayaController extends BaseController{
+class DetailBiayaController extends BaseController
+{
 
-    public function viewDetailBiaya2(Request $request,$id){
+    public function viewDetailBiaya2(Request $request, $id)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $biaya_sekolah = BiayaSekolah::with('kelompok','semester')->find($id);
+        $biaya_sekolah = BiayaSekolah::with('kelompok', 'semester')->find($id);
 
-        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/view-detail-biaya',compact('auth_data','biaya_sekolah'));
-
+        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/view-detail-biaya', compact('auth_data', 'biaya_sekolah'));
     }
 
-    public function viewDetailBiaya(Request $request){
+    public function viewDetailBiaya(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
-        if(empty($tahun_akademik_semester)){
+        if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
         }
 
         $data_kelompok_biaya = LibDataKeuangan::fetchDataKelompokBiaya($auth_data);
 
-    	return view('keuangan/data-keuangan/detail-biaya/view-detail-biaya',compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_kelompok_biaya'));
-
+        return view('keuangan/data-keuangan/detail-biaya/view-detail-biaya', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_kelompok_biaya'));
     }
 
-    public function addDetailBiaya2(Request $request,$id){
+    public function addDetailBiaya2(Request $request, $id)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_biaya_sekolah = LibDataKeuangan::fetchDataBiayaSekolah($auth_data, 1);
 
@@ -71,19 +73,19 @@ class DetailBiayaController extends BaseController{
 
         $data_bulan = LibDataKeuangan::fetchDataBulan($auth_data);
 
-        $id_detail_biaya = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_detail_biaya = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/add-detail-biaya',compact('auth_data','data_biaya_sekolah','data_biaya','data_biaya_internal','data_jenis_detail_biaya','data_bulan','id_detail_biaya'));
-
+        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/add-detail-biaya', compact('auth_data', 'data_biaya_sekolah', 'data_biaya', 'data_biaya_internal', 'data_jenis_detail_biaya', 'data_bulan', 'id_detail_biaya'));
     }
 
-    public function addDetailBiaya(Request $request){
+    public function addDetailBiaya(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_biaya_sekolah = LibDataKeuangan::fetchDataBiayaSekolah($auth_data, 1);
 
@@ -95,13 +97,13 @@ class DetailBiayaController extends BaseController{
 
         $data_bulan = LibDataKeuangan::fetchDataBulan($auth_data);
 
-        $id_detail_biaya = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_detail_biaya = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('keuangan/data-keuangan/detail-biaya/add-detail-biaya',compact('auth_data','data_biaya_sekolah','data_biaya','data_biaya_internal','data_jenis_detail_biaya','data_bulan','id_detail_biaya'));
-
+        return view('keuangan/data-keuangan/detail-biaya/add-detail-biaya', compact('auth_data', 'data_biaya_sekolah', 'data_biaya', 'data_biaya_internal', 'data_jenis_detail_biaya', 'data_bulan', 'id_detail_biaya'));
     }
 
-    public function editDetailBiaya2($id, Request $request){
+    public function editDetailBiaya2($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -118,11 +120,11 @@ class DetailBiayaController extends BaseController{
 
         $data_detail_biaya = LibDataKeuangan::fetchDataDetailBiaya($auth_data, $id);
 
-        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/edit-detail-biaya',compact('auth_data','data_biaya_sekolah','data_biaya','data_biaya_internal','data_jenis_detail_biaya','data_bulan','data_detail_biaya'));
-
+        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/edit-detail-biaya', compact('auth_data', 'data_biaya_sekolah', 'data_biaya', 'data_biaya_internal', 'data_jenis_detail_biaya', 'data_bulan', 'data_detail_biaya'));
     }
 
-    public function editDetailBiaya($id, Request $request){
+    public function editDetailBiaya($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -139,151 +141,149 @@ class DetailBiayaController extends BaseController{
 
         $data_detail_biaya = LibDataKeuangan::fetchDataDetailBiaya($auth_data, $id);
 
-        return view('keuangan/data-keuangan/detail-biaya/edit-detail-biaya',compact('auth_data','data_biaya_sekolah','data_biaya','data_biaya_internal','data_jenis_detail_biaya','data_bulan','data_detail_biaya'));
-
+        return view('keuangan/data-keuangan/detail-biaya/edit-detail-biaya', compact('auth_data', 'data_biaya_sekolah', 'data_biaya', 'data_biaya_internal', 'data_jenis_detail_biaya', 'data_bulan', 'data_detail_biaya'));
     }
 
-    public function ajaxGetBulanByJenisBiaya(Request $request) {
+    public function ajaxGetBulanByJenisBiaya(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        if($input->id_jenis_detail_biaya == 4) { 
+        if ($input->id_jenis_detail_biaya == 4) {
             // ambil data bulan
             $data_bulan = LibDataKeuangan::fetchDataBulan($auth_data);
-        }
-        else {
+        } else {
             $data_bulan = null;
         }
 
         return $data_bulan;
     }
 
-    public function datatablesDetailBiaya2(Request $request,$id){
+    public function datatablesDetailBiaya2(Request $request, $id)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataDetailBiaya($auth_data, null, "1");
-        $list_data = $list_data->where('detail_biaya.id_biaya_sekolah',$id);
+        $list_data = $list_data->where('detail_biaya.id_biaya_sekolah', $id);
 
         return Datatables::of($list_data)
-                ->addColumn('biaya_sekolah', function($item){
-                    return $item->nm_kelompok_biaya;
-                })
-                ->editColumn('nm_biaya', function ($item) {
-                    if ($item->id_jenis_detail_biaya == 4) {
-                        return $item->nm_biaya." (".$item->nm_bulan.")";
-                    } else {
-                        return $item->nm_biaya." ".$item->keterangan_biaya;
-                    }
-                })  
-                ->editColumn('detail_internal', function($item){
-                    $data = array(
-                        'id' => $item->id_detail_biaya,
-                        'detail' => $item->detail_internal
-                    );
-                    return $data;
-                })
-                ->addColumn('biaya_asli', function($item){
-                    $pungutan = 0;
-                    foreach($item->detail_internal as $detail){
-                        $pungutan += $detail->besar_biaya;
-                    }
+            ->addColumn('biaya_sekolah', function ($item) {
+                return $item->nm_kelompok_biaya;
+            })
+            ->editColumn('nm_biaya', function ($item) {
+                if ($item->id_jenis_detail_biaya == 4) {
+                    return $item->nm_biaya . " (" . $item->nm_bulan . ")";
+                } else {
+                    return $item->nm_biaya . " " . $item->keterangan_biaya;
+                }
+            })
+            ->editColumn('detail_internal', function ($item) {
+                $data = array(
+                    'id' => $item->id_detail_biaya,
+                    'detail' => $item->detail_internal
+                );
+                return $data;
+            })
+            ->addColumn('biaya_asli', function ($item) {
+                $pungutan = 0;
+                foreach ($item->detail_internal as $detail) {
+                    $pungutan += $detail->besar_biaya;
+                }
 
-                    return "Rp".number_format($item->besar_biaya - $pungutan);
-                })
-                ->addColumn('validasi_biaya', function($item){
-                    if($item->validasi_biaya == 0){
-                        return "Belum";
-                    }
-                    else{
-                        return "Sudah";
-                    }
-                })
-                ->addColumn('besar_biaya', function($item){
-                    return "Rp".number_format($item->besar_biaya);
-                })
-                ->addColumn('jenis_biaya', function($item){
-                    if($item->id_jenis_detail_biaya == 4) {
-                        return $item->nm_jenis_detail_biaya." (".$item->nm_bulan.")";
-                    }
-                    else {
-                        return $item->nm_jenis_detail_biaya;
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_detail_biaya
-                    );
-                    return $data;
-                })
-                ->make(true);
+                return "Rp" . number_format($item->besar_biaya - $pungutan);
+            })
+            ->addColumn('validasi_biaya', function ($item) {
+                if ($item->validasi_biaya == 0) {
+                    return "Belum";
+                } else {
+                    return "Sudah";
+                }
+            })
+            ->addColumn('besar_biaya', function ($item) {
+                return "Rp" . number_format($item->besar_biaya);
+            })
+            ->addColumn('jenis_biaya', function ($item) {
+                if ($item->id_jenis_detail_biaya == 4) {
+                    return $item->nm_jenis_detail_biaya . " (" . $item->nm_bulan . ")";
+                } else {
+                    return $item->nm_jenis_detail_biaya;
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_detail_biaya
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
 
-    public function datatablesDetailBiaya(Request $request){
+    public function datatablesDetailBiaya(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataDetailBiaya($auth_data, null, "1");
-        
-        if(!empty($input->tahun_akademik_semester)){
+
+        if (!empty($input->tahun_akademik_semester)) {
             $tahun = $input->tahun_akademik_semester;
 
-            $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
-            $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+            $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
             $list_data = $list_data->whereIn('biaya_sekolah.id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester]);
         }
 
-        if(!empty($input->kelompok_biaya)){
+        if (!empty($input->kelompok_biaya)) {
             $list_data = $list_data->where('biaya_sekolah.id_kelompok_biaya', $input->kelompok_biaya);
         }
 
         return Datatables::of($list_data)
-                ->addColumn('biaya_sekolah', function($item){
-                    return $item->nm_kelompok_biaya;
-                })
-                ->editColumn('nm_biaya', function ($item) {
-                    if ($item->id_jenis_detail_biaya == 4) {
-                        return $item->nm_biaya." (".$item->nm_bulan.")";
-                    } else {
-                        return $item->nm_biaya." ".$item->keterangan_biaya;
-                    }
-                })  
-                ->addColumn('nm_biaya_internal', function($item){
-                    if($item->detail_internal->first()){
-                        return $item->nm_kelompok_biaya_internal . ' ('.number_format($item->detail_internal->sum('besar_biaya')).')';
-                    }else{
-                        return '-';
-                    }
-                })
-                ->addColumn('validasi_biaya', function($item){
-                    if($item->validasi_biaya == 0){
-                        return "Belum";
-                    }
-                    else{
-                        return "Sudah";
-                    }
-                })
-                ->addColumn('besar_biaya', function($item){
-                    return "Rp".number_format($item->besar_biaya);
-                })
-                ->addColumn('jenis_biaya', function($item){
-                    if($item->id_jenis_detail_biaya == 4) {
-                        return $item->nm_jenis_detail_biaya." (".$item->nm_bulan.")";
-                    }
-                    else {
-                        return $item->nm_jenis_detail_biaya;
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_detail_biaya
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('biaya_sekolah', function ($item) {
+                return $item->nm_kelompok_biaya;
+            })
+            ->editColumn('nm_biaya', function ($item) {
+                if ($item->id_jenis_detail_biaya == 4) {
+                    return $item->nm_biaya . " (" . $item->nm_bulan . ")";
+                } else {
+                    return $item->nm_biaya . " " . $item->keterangan_biaya;
+                }
+            })
+            ->addColumn('nm_biaya_internal', function ($item) {
+                if ($item->detail_internal->first()) {
+                    return $item->nm_kelompok_biaya_internal . ' (' . number_format($item->detail_internal->sum('besar_biaya')) . ')';
+                } else {
+                    return '-';
+                }
+            })
+            ->addColumn('validasi_biaya', function ($item) {
+                if ($item->validasi_biaya == 0) {
+                    return "Belum";
+                } else {
+                    return "Sudah";
+                }
+            })
+            ->addColumn('besar_biaya', function ($item) {
+                return "Rp" . number_format($item->besar_biaya);
+            })
+            ->addColumn('jenis_biaya', function ($item) {
+                if ($item->id_jenis_detail_biaya == 4) {
+                    return $item->nm_jenis_detail_biaya . " (" . $item->nm_bulan . ")";
+                } else {
+                    return $item->nm_jenis_detail_biaya;
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_detail_biaya
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function actionDetailBiaya2(Request $request, $mode, $id = null){
+    public function actionDetailBiaya2(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -297,23 +297,22 @@ class DetailBiayaController extends BaseController{
             'id_jenis_detail_biaya' => 'required'
             //'id_bulan' => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
+            if ($mode == 'add') {
 
-                if (! empty($input->id_bulan)) {
-                    foreach($input->id_bulan as $id_bulan){
-                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-        
+                if (!empty($input->id_bulan)) {
+                    foreach ($input->id_bulan as $id_bulan) {
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                         $detailBiaya                                = new DetailBiaya;
                         $detailBiaya->id_detail_biaya               = $id;
                         $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
@@ -327,10 +326,9 @@ class DetailBiayaController extends BaseController{
                         $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
                         $detailBiaya->save();
                     }
-                }
-                else {
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-        
+                } else {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                     $detailBiaya                                = new DetailBiaya;
                     $detailBiaya->id_detail_biaya               = $id;
                     $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
@@ -346,12 +344,10 @@ class DetailBiayaController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-keuangan/biaya-sekolah/detail-biaya/'.$input->id_biaya_sekolah,
+                    'path' => 'data-keuangan/biaya-sekolah/detail-biaya/' . $input->id_biaya_sekolah,
                     'message' => 'Save Detail Biaya Successfully'
                 ];
-            }
-
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
 
                 // make object to find id
                 $detailBiaya                                = DetailBiaya::find($id);
@@ -362,7 +358,7 @@ class DetailBiayaController extends BaseController{
                 $detailBiaya->besar_biaya                   = $input->besar_biaya;
                 $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
                 $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
-                if (! empty($input->id_bulan)) {
+                if (!empty($input->id_bulan)) {
                     $detailBiaya->id_bulan                      = $input->id_bulan;
                 }
                 $detailBiaya->updated_by                    = $input->auth_data->pengguna->id_pengguna;
@@ -371,20 +367,16 @@ class DetailBiayaController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-keuangan/biaya-sekolah/detail-biaya/'.$input->id_biaya_sekolah,
+                    'path' => 'data-keuangan/biaya-sekolah/detail-biaya/' . $input->id_biaya_sekolah,
                     'message' => 'Update Detail Biaya Successfully'
                 ];
-            }
-
-            elseif($mode == 'delete'){
-                if($tagihanBiaya = TagihanBiaya::where('id_detail_biaya',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($tagihanBiaya = TagihanBiaya::where('id_detail_biaya', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Detail Biaya'
-                    ]; 
-                }
-
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $detailBiaya               = DetailBiaya::find($id);
                     $detailBiaya->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -398,13 +390,12 @@ class DetailBiayaController extends BaseController{
                     ];
                 }
             }
-            
         }
-
     }
 
     // Action POST
-    public function actionDetailBiaya(Request $request, $mode, $id = null){
+    public function actionDetailBiaya(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -418,23 +409,22 @@ class DetailBiayaController extends BaseController{
             'id_jenis_detail_biaya' => 'required'
             //'id_bulan' => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
+            if ($mode == 'add') {
 
-                if (! empty($input->id_bulan)) {
-                    foreach($input->id_bulan as $id_bulan){
-                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-        
+                if (!empty($input->id_bulan)) {
+                    foreach ($input->id_bulan as $id_bulan) {
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                         $detailBiaya                                = new DetailBiaya;
                         $detailBiaya->id_detail_biaya               = $id;
                         $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
@@ -448,10 +438,9 @@ class DetailBiayaController extends BaseController{
                         $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
                         $detailBiaya->save();
                     }
-                }
-                else {
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-        
+                } else {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                     $detailBiaya                                = new DetailBiaya;
                     $detailBiaya->id_detail_biaya               = $id;
                     $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
@@ -470,8 +459,7 @@ class DetailBiayaController extends BaseController{
                     'path' => 'data-keuangan/detail-biaya',
                     'message' => 'Save Detail Biaya Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $detailBiaya                                = DetailBiaya::find($id);
                 $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
@@ -481,7 +469,7 @@ class DetailBiayaController extends BaseController{
                 $detailBiaya->besar_biaya                   = $input->besar_biaya;
                 $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
                 $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
-                if (! empty($input->id_bulan)) {
+                if (!empty($input->id_bulan)) {
                     $detailBiaya->id_bulan                      = $input->id_bulan;
                 }
                 $detailBiaya->updated_by                    = $input->auth_data->pengguna->id_pengguna;
@@ -493,16 +481,14 @@ class DetailBiayaController extends BaseController{
                     'path' => 'data-keuangan/detail-biaya',
                     'message' => 'Update Detail Biaya Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                
-                if($tagihanBiaya = TagihanBiaya::where('id_detail_biaya',$id)->first()){
+            } elseif ($mode == 'delete') {
+
+                if ($tagihanBiaya = TagihanBiaya::where('id_detail_biaya', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Detail Biaya'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $detailBiaya               = DetailBiaya::find($id);
                     $detailBiaya->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -518,6 +504,4 @@ class DetailBiayaController extends BaseController{
             }
         }
     }
-
-
 }

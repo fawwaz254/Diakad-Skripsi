@@ -448,7 +448,7 @@ class UsulanMataAjarController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
 
@@ -682,7 +682,8 @@ class UsulanMataAjarController extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal2 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal2 != null or $input->ruangan2 != null) { } else {
+                        } elseif ($input->jam_jadwal2 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal2 != null or $input->ruangan2 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -716,7 +717,8 @@ class UsulanMataAjarController extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal3 != null or $input->jam_jadwal_selesai3 != null or $input->hari_jadwal3 != null or $input->ruangan3 != null) { } else {
+                        } elseif ($input->jam_jadwal3 != null or $input->jam_jadwal_selesai3 != null or $input->hari_jadwal3 != null or $input->ruangan3 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -750,7 +752,8 @@ class UsulanMataAjarController extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai4 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) { } else {
+                        } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai4 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -784,7 +787,8 @@ class UsulanMataAjarController extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai5 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) { } else {
+                        } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai5 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -818,7 +822,8 @@ class UsulanMataAjarController extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai6 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) { } else {
+                        } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai6 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;

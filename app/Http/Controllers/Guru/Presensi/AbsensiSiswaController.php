@@ -32,7 +32,7 @@ class AbsensiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $id_jadwal_hari = Carbon::now(env('APP_TIMEZONE', ''))->format('N');
+        $id_jadwal_hari = Carbon::now()->format('N');
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -349,7 +349,7 @@ class AbsensiSiswaController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // Ini untuk apa?
             // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();

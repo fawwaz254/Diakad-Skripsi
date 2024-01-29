@@ -20,20 +20,22 @@ use DB;
 use Session;
 use Validator;
 
-class RuanganKelasController extends BaseController{
+class RuanganKelasController extends BaseController
+{
 
-    public function viewRuanganKelas(Request $request){
+    public function viewRuanganKelas(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
-        return view('pendidikan/setting-kelas/ruangan-kelas/view-ruangan-kelas',compact('auth_data','data_kelas'));
-
+        return view('pendidikan/setting-kelas/ruangan-kelas/view-ruangan-kelas', compact('auth_data', 'data_kelas'));
     }
 
-    public function actionViewRuanganKelas(Request $request){
+    public function actionViewRuanganKelas(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -42,32 +44,32 @@ class RuanganKelasController extends BaseController{
             'id_kelas' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'setting-kelas/ruangan-kelas/view-kelas/'.$input->id_kelas
-                    ];   
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'setting-kelas/ruangan-kelas/view-kelas/' . $input->id_kelas
+            ];
         }
     }
 
-    public function viewKelasRuanganKelas(Request $request, $id_kelas){
+    public function viewKelasRuanganKelas(Request $request, $id_kelas)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
-    	return view('pendidikan/setting-kelas/ruangan-kelas/view-kelas-ruangan-kelas',compact('auth_data', 'data_kelas'));
-
+        return view('pendidikan/setting-kelas/ruangan-kelas/view-kelas-ruangan-kelas', compact('auth_data', 'data_kelas'));
     }
 
-    public function addRuanganKelas(Request $request, $id_kelas){
+    public function addRuanganKelas(Request $request, $id_kelas)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -80,15 +82,15 @@ class RuanganKelasController extends BaseController{
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data, 1);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_ruangan_kelas = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_ruangan_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('pendidikan/setting-kelas/ruangan-kelas/add-ruangan-kelas',compact('auth_data','data_kelas','data_semester','data_ruangan','id_ruangan_kelas'));
-
+        return view('pendidikan/setting-kelas/ruangan-kelas/add-ruangan-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_ruangan', 'id_ruangan_kelas'));
     }
 
-    public function editRuanganKelas(Request $request, $id_kelas, $id_semester, $id){
+    public function editRuanganKelas(Request $request, $id_kelas, $id_semester, $id)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -102,40 +104,40 @@ class RuanganKelasController extends BaseController{
 
         $data_ruangan_kelas = LibKelas::fetchDataRuanganKelas($auth_data, $id_kelas, $id_semester, $id);
 
-        return view('pendidikan/setting-kelas/ruangan-kelas/edit-ruangan-kelas',compact('auth_data','data_kelas','data_semester','data_ruangan','data_ruangan_kelas'));
-
+        return view('pendidikan/setting-kelas/ruangan-kelas/edit-ruangan-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_ruangan', 'data_ruangan_kelas'));
     }
 
-    public function datatablesRuanganKelas(Request $request, $id_kelas){
+    public function datatablesRuanganKelas(Request $request, $id_kelas)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibKelas::fetchDataRuanganKelas($auth_data, $id_kelas);
 
         return Datatables::of($list_data)
-                ->addColumn('semester', function($item){
-                    return $item->tahun_ajaran." ".$item->nm_semester;
-                })
-                ->addColumn('status_aktif', function($item){
-                    if($item->is_aktif == 0){
-                        return "Non-Aktif";
-                    }
-                    else{
-                        return "Aktif";
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_ruangan_kelas,
-                        'id_kelas' => $item->id_kelas,
-                        'id_semester' => $item->id_semester
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('semester', function ($item) {
+                return $item->tahun_ajaran . " " . $item->nm_semester;
+            })
+            ->addColumn('status_aktif', function ($item) {
+                if ($item->is_aktif == 0) {
+                    return "Non-Aktif";
+                } else {
+                    return "Aktif";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_ruangan_kelas,
+                    'id_kelas' => $item->id_kelas,
+                    'id_semester' => $item->id_semester
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionRuanganKelas(Request $request, $mode, $id = null){
+    public function actionRuanganKelas(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -146,33 +148,31 @@ class RuanganKelasController extends BaseController{
             'is_aktif' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
-            if($mode == 'add') {
+            if ($mode == 'add') {
                 // cek apabila ada record kelas dan semester yg sama
-                $ruanganKelas = RuanganKelas::join('semester','semester.id_semester','=','ruangan_kelas.id_semester')
-                                ->where('ruangan_kelas.id_kelas','=',$input->id_kelas)
-                                ->where('ruangan_kelas.id_semester','=',$input->id_semester)
-                                ->where('semester.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-                                ->first();
+                $ruanganKelas = RuanganKelas::join('semester', 'semester.id_semester', '=', 'ruangan_kelas.id_semester')
+                    ->where('ruangan_kelas.id_kelas', '=', $input->id_kelas)
+                    ->where('ruangan_kelas.id_semester', '=', $input->id_semester)
+                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
 
-                if($ruanganKelas){
+                if ($ruanganKelas) {
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Failed To Save Ruangan Kelas!'
                     ];
-                }
-                else {
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                } else {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $ruanganKelas                       = new RuanganKelas;
                     $ruanganKelas->id_ruangan_kelas     = $id;
@@ -184,7 +184,7 @@ class RuanganKelasController extends BaseController{
                     $ruanganKelas->save();
 
                     // cek jika update status aktif = 1, maka yg lain status aktif = 0
-                    if($input->is_aktif == 1) {
+                    if ($input->is_aktif == 1) {
                         $data_ruangan_kelas  = RuanganKelas::where('id_kelas', $input->id_kelas)->where('id_ruangan_kelas', "<>", $id)->get();
 
                         foreach ($data_ruangan_kelas as $ruanganKelas) {
@@ -197,12 +197,11 @@ class RuanganKelasController extends BaseController{
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'setting-kelas/ruangan-kelas/view-kelas/'.$input->id_kelas,
+                        'path' => 'setting-kelas/ruangan-kelas/view-kelas/' . $input->id_kelas,
                         'message' => 'Save Ruangan Kelas Successfully'
                     ];
                 }
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $ruanganKelas                   = RuanganKelas::find($id);
                 $ruanganKelas->id_kelas         = $input->id_kelas;
@@ -214,7 +213,7 @@ class RuanganKelasController extends BaseController{
                 $ruanganKelas->save();
 
                 // cek jika update status aktif = 1, maka yg lain status aktif = 0
-                if($input->is_aktif == 1) {
+                if ($input->is_aktif == 1) {
                     $data_ruangan_kelas  = RuanganKelas::where('id_kelas', $input->id_kelas)->where('id_ruangan_kelas', "<>", $id)->get();
 
                     foreach ($data_ruangan_kelas as $ruanganKelas) {
@@ -227,11 +226,10 @@ class RuanganKelasController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'setting-kelas/ruangan-kelas/view-kelas/'.$input->id_kelas,
+                    'path' => 'setting-kelas/ruangan-kelas/view-kelas/' . $input->id_kelas,
                     'message' => 'Update Ruangan Kelas Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
+            } elseif ($mode == 'delete') {
                 // make object to find id
                 $ruanganKelas               = RuanganKelas::find($id);
                 $ruanganKelas->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -246,5 +244,4 @@ class RuanganKelasController extends BaseController{
             }
         }
     }
-
 }

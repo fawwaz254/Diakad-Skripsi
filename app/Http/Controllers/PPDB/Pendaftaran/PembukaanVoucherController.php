@@ -150,7 +150,7 @@ class PembukaanVoucherController extends Controller
             ];
         } else {
             /** take time now attribute */
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             /** get penerimaan by id */
             $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
@@ -300,7 +300,7 @@ class PembukaanVoucherController extends Controller
             $no_seri = $seri_awal + $i;
 
             /** take time now attribute */
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             /** create code voucher */
             $kode_voucher = $prefix . str_pad($no_seri, $n_digit, "0", STR_PAD_LEFT);

@@ -33,7 +33,7 @@ class InventarisController extends Controller
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
@@ -97,7 +97,7 @@ class InventarisController extends Controller
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();

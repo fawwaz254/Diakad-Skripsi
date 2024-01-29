@@ -43,7 +43,7 @@ class AlumniController extends Controller
      */
     public function index(Request $request)
     {
-    	return view(self::RESOURCE_PATH . 'tracer-alumni');
+        return view(self::RESOURCE_PATH . 'tracer-alumni');
     }
 
     /**
@@ -55,7 +55,7 @@ class AlumniController extends Controller
     {
         $data_jurusan = Jurusan::all();
         $alumni = null;
-    	return view(self::RESOURCE_PATH . 'add-alumni',compact('data_jurusan', 'alumni'));
+        return view(self::RESOURCE_PATH . 'add-alumni', compact('data_jurusan', 'alumni'));
     }
 
     /**
@@ -70,7 +70,7 @@ class AlumniController extends Controller
         try {
             $idAlumni  = $this->storeAlumniAndReturnId($request);
             $this->storePartialData($request, $idAlumni);
-    
+
             DB::commit();
             return web_response(202, "Save Successfully", self::PATH);
         } catch (\Exception $e) {
@@ -89,7 +89,7 @@ class AlumniController extends Controller
     {
         $alumni->load(['calon_siswa', 'calon_siswa.jurusan', $alumni->status]);
         $data_jurusan = Jurusan::all();
-    	return view(self::RESOURCE_PATH . 'add-alumni',compact('data_jurusan', 'alumni'));
+        return view(self::RESOURCE_PATH . 'add-alumni', compact('data_jurusan', 'alumni'));
     }
 
     /**
@@ -109,24 +109,23 @@ class AlumniController extends Controller
         try {
             $this->updateStudentApplicant($calonSiswa, $request);
             $this->updateUser($pengguna, $request);
-    
-            if($this->isAlumniStatusChanged($alumni, $request)){
+
+            if ($this->isAlumniStatusChanged($alumni, $request)) {
                 $status = $alumni->status;
                 $alumni->$status->delete();
                 $this->storePartialData($request, $alumni->id_alumni);
             } else {
                 $this->updatePartialData($alumni, $request);
             }
-    
+
             $this->updateAlumni($alumni, $request);
-            
+
             DB::commit();
             return web_response(202, "Update Successfully", self::PATH);
         } catch (\Exception $e) {
             DB::rollback();
             return error_response($e);
         }
-
     }
 
     /**
@@ -138,7 +137,7 @@ class AlumniController extends Controller
     public function destroy(Request $request, Alumni $alumni)
     {
         $alumni->delete();
-        return web_response(203, "Delete alumni Successfully");    
+        return web_response(203, "Delete alumni Successfully");
     }
 
     public function renderDatatables(Request $request)
@@ -146,13 +145,13 @@ class AlumniController extends Controller
         $alumnis    = LibAlumni::getAlumnis();
 
         return Datatables::of($alumnis)
-        ->editColumn('status', function($item){
-            return ucfirst($item->status);
-        })
-        ->addColumn('action', function($item){
-            return [ 'id' => $item->id_alumni];
-        })
-        ->make(true);
+            ->editColumn('status', function ($item) {
+                return ucfirst($item->status);
+            })
+            ->addColumn('action', function ($item) {
+                return ['id' => $item->id_alumni];
+            })
+            ->make(true);
     }
 
     private function storeAlumniAndReturnId($request)
@@ -161,7 +160,7 @@ class AlumniController extends Controller
         $idCalonSiswa   = $this->storeAllDataThatRelatedToCalonSiswaAndReturnId($request);
         $data           = $this->fetchAlumniData($request);
         $data           = $this->handleAlumniCreationData($data, $idCalonSiswa, $request);
-        
+
         $this->storeStudent($request, $idPengguna, $idCalonSiswa);
         LibAlumni::store($data);
 
@@ -178,7 +177,7 @@ class AlumniController extends Controller
             case 'bekerja':
                 return LibAlumni::storeWorkplace($data);
             case 'usaha':
-                return LibAlumni::storeBusiness($data); 
+                return LibAlumni::storeBusiness($data);
             case 'kuliah':
                 return LibAlumni::storeUniversity($data);
             case 'menunggu':
@@ -201,7 +200,7 @@ class AlumniController extends Controller
 
     private function updateStudentApplicant($studentApplicant, $request)
     {
-        $data = $this-> fetchStudentApplicant($request);
+        $data = $this->fetchStudentApplicant($request);
         return $studentApplicant->update($data);
     }
 
@@ -219,42 +218,43 @@ class AlumniController extends Controller
         }
     }
 
-    private function handlePartialCreationData($data, $request){
-        $id         = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+    private function handlePartialCreationData($data, $request)
+    {
+        $id         = auth_data()->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
         $userId     = auth_data()->pengguna->id_pengguna;
 
         switch ($request->status) {
             case 'bekerja':
                 $data['id_alumni_bekerja']    = $id;
-            break;
+                break;
             case 'usaha':
                 $data['id_alumni_wirausaha']  = $id;
-            break;
+                break;
             case 'kuliah':
                 $data['id_alumni_kuliah']     = $id;
-            break;
+                break;
             case 'menunggu':
                 $data['id_alumni_menunggu']   = $id;
-            break;
+                break;
         }
 
         $data['created_by']             = $userId;
-        $data['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
+        $data['created_at']             = Carbon::now();
 
         return $data;
     }
 
     private function storeStudent($request, $idPengguna, $idCalonSiswa)
     {
-        $id         = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $id         = auth_data()->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
         $userId     = auth_data()->pengguna->id_pengguna;
 
         Siswa::insert([
-            'id_siswa'      => $id, 
+            'id_siswa'      => $id,
             'id_pengguna'   => $idPengguna,
             'id_c_siswa'    => $idCalonSiswa,
             'created_by'    => $userId,
-            'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
+            'created_at'    => Carbon::now()
         ]);
     }
 
@@ -275,13 +275,13 @@ class AlumniController extends Controller
 
     private function storeAllDataThatRelatedToCalonSiswaAndReturnId($request)
     {
-        $id     = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $id     = auth_data()->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
         $userId = auth_data()->pengguna->id_pengguna;
 
         $data = [
             'id_c_siswa'    => $id,
             'created_by'    => $userId,
-            'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
+            'created_at'    => Carbon::now()
         ];
         $this->storeCalonSiswa($request, $id);
         CalonSiswaOrtu::insert($data);
@@ -306,18 +306,18 @@ class AlumniController extends Controller
             'nomor_hp_pengguna'     => $request->nomor_hp,
         ];
     }
-    
+
     private function handleUserCreationData($data, $request)
     {
-        $id     = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $id     = auth_data()->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
         $userId = auth_data()->pengguna->id_pengguna;
-        
+
         $data['username']               = str_replace(' ', '_', $request->nama_siswa);
         $data['id_status_pengguna']     = StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna;
         $data['id_sekolah']             = auth_data()->pengguna->id_sekolah;
         $data['id_pengguna']            = $id;
         $data['created_by']             = $userId;
-        $data['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
+        $data['created_at']             = Carbon::now();
 
         return $data;
     }
@@ -336,11 +336,11 @@ class AlumniController extends Controller
     {
         $userId = auth_data()->pengguna->id_pengguna;
 
-        $data['id_c_siswa']        = $id;        
+        $data['id_c_siswa']        = $id;
         $data['id_penerimaan']     = 0;
         $data['status_verifikasi'] = 0;
         $data['created_by']        = $userId;
-        $data['created_at']        = Carbon::now(env('APP_TIMEZONE', ''));
+        $data['created_at']        = Carbon::now();
 
         return $data;
     }
@@ -350,20 +350,20 @@ class AlumniController extends Controller
         return [
             'email'         => $request->email,
             'tahun_lulus'   => $request->tahun_lulus,
-            'status'        => $request->status, 
+            'status'        => $request->status,
         ];
     }
 
     private function handleAlumniCreationData($data, $idCalonSiswa, $request)
     {
-        $id         = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $id         = auth_data()->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
         $userId     = auth_data()->pengguna->id_pengguna;
 
         $data['id_alumni']  = $id;
         $data['id_c_siswa'] = $idCalonSiswa;
         $data['created_by'] = $userId;
-        $data['created_at'] = Carbon::now(env('APP_TIMEZONE', ''));
-        
+        $data['created_at'] = Carbon::now();
+
         return $data;
     }
 
@@ -371,5 +371,4 @@ class AlumniController extends Controller
     {
         return $request->status != $alumni->status;
     }
-
 }

@@ -190,7 +190,7 @@ class NilaiRaporSemesterController extends Controller
         }
 
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         if ($mode == 'add') {
             DB::beginTransaction();
             // dd($input);
@@ -253,7 +253,7 @@ class NilaiRaporSemesterController extends Controller
 
                 foreach ($siswa as $s) {
                     foreach ($komponen_jenis_rapor as $komponen) {
-                        $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                         $list_data[] = [
                             'id_nilai_rapor' =>  $id,
                             'id_rapor' => $rapor->id_rapor,
@@ -261,7 +261,7 @@ class NilaiRaporSemesterController extends Controller
                             'id_siswa' => $s->id_siswa,
                             'nilai' => 0,
                             'keterangan' => null,
-                            'created_at' => Carbon::now(env('APP_TIMEZONE', '')),
+                            'created_at' => Carbon::now(),
                             'created_by' => $input->auth_data->pengguna->id_pengguna,
                         ];
                     }

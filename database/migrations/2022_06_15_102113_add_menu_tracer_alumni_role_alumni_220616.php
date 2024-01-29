@@ -17,30 +17,30 @@ class AddMenuTracerAlumniRoleAlumni220616 extends Migration
      */
     public function up()
     {
-        
-      $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-      $role_id = Role::where('nm_role', 'Alumni')->first()->id_role;
+        $now = Carbon::now();
 
-      $modul = Modul::create([
-          "id_role"       => $role_id,
-          "nm_modul"      => "Alumni",
-          "route"         => "alumni",
-          "urutan"        => 1,
-          "akses"         => 1,
-          "created_at"    => $now
-      ]);
+        $role_id = Role::where('nm_role', 'Alumni')->first()->id_role;
 
-      $modul->menus()->createMany([
-          [
-              "nm_menu"      => "Tracer Alumni",
-              "page"         => "tracer-alumni",
-              "urutan"       => 1,
-              "akses"        => 1,
-              "created_at"   => $now
-          ],
-      ]);
-    //   Modul::where('nm_modul', 'Tracer Study')->where('id_role', '12')->first()->delete();
+        $modul = Modul::create([
+            "id_role"       => $role_id,
+            "nm_modul"      => "Alumni",
+            "route"         => "alumni",
+            "urutan"        => 1,
+            "akses"         => 1,
+            "created_at"    => $now
+        ]);
+
+        $modul->menus()->createMany([
+            [
+                "nm_menu"      => "Tracer Alumni",
+                "page"         => "tracer-alumni",
+                "urutan"       => 1,
+                "akses"        => 1,
+                "created_at"   => $now
+            ],
+        ]);
+        //   Modul::where('nm_modul', 'Tracer Study')->where('id_role', '12')->first()->delete();
     }
 
     /**
