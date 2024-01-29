@@ -20,14 +20,14 @@ class AddingModulMonkesAndMenuRoleBk extends Migration
     public function up()
     {
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Bimbingan Konseling')->first()->id_role;
 
         $modul = Modul::create([
             "id_role"       => $role_id,
             "nm_modul"      => "Monitoring Kesehatan",
-            "route"         => "monitoring-kesehatan" ,
+            "route"         => "monitoring-kesehatan",
             "urutan"        => 1,
             "akses"         => 1,
             "created_at"    => $now
@@ -42,7 +42,6 @@ class AddingModulMonkesAndMenuRoleBk extends Migration
                 "created_at"   => $now
             ],
         ]);
-
     }
 
     /**

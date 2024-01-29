@@ -21,7 +21,7 @@ class CreateDataBkInCategoryJurnalHarianTendik07062023 extends Migration
         $sekolah = Sekolah::first();
         $unit_kerja = UnitKerja::where('nm_unit_kerja', 'BK')->first();
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         if ($unit_kerja) {
             $categoryJurnalHarianTendik = new CategoryJurnalHarianTendik;
             $categoryJurnalHarianTendik->id_category_jh_tendik = $sekolah->prefix . strtotime($now) . uniqid();

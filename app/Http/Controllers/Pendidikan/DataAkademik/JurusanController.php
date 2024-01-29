@@ -36,7 +36,7 @@ class JurusanController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $id_jurusan = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -92,7 +92,7 @@ class JurusanController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();

@@ -17,59 +17,62 @@ use DB;
 use Session;
 use Validator;
 
-class WisudaController extends BaseController{
+class WisudaController extends BaseController
+{
 
-    public function viewWisuda(Request $request){
+    public function viewWisuda(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('pendidikan/wisuda/nama-wisuda/view-wisuda',compact('auth_data'));
-
+        return view('pendidikan/wisuda/nama-wisuda/view-wisuda', compact('auth_data'));
     }
 
-    public function addWisuda(Request $request){
+    public function addWisuda(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_wisuda = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_wisuda = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('pendidikan/wisuda/nama-wisuda/add-wisuda',compact('auth_data','id_wisuda'));
-
+        return view('pendidikan/wisuda/nama-wisuda/add-wisuda', compact('auth_data', 'id_wisuda'));
     }
 
-    public function editWisuda($id, Request $request){
+    public function editWisuda($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_wisuda = LibWisuda::fetchDataWisuda($auth_data, $id);
 
-        return view('pendidikan/wisuda/nama-wisuda/edit-wisuda',compact('auth_data','data_wisuda'));
-
+        return view('pendidikan/wisuda/nama-wisuda/edit-wisuda', compact('auth_data', 'data_wisuda'));
     }
 
-    public function datatablesWisuda(Request $request){
+    public function datatablesWisuda(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibWisuda::fetchDataWisuda($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_wisuda
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_wisuda
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionWisuda(Request $request, $mode, $id = null){
+    public function actionWisuda(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -78,18 +81,17 @@ class WisudaController extends BaseController{
             'keterangan_wisuda' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $wisuda                     = new Wisuda;
                 $wisuda->id_wisuda          = $id;
@@ -104,8 +106,7 @@ class WisudaController extends BaseController{
                     'path' => 'wisuda/nama-wisuda',
                     'message' => 'Save Wisuda Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $wisuda                     = Wisuda::find($id);
                 $wisuda->nm_wisuda          = $input->nm_wisuda;
@@ -119,15 +120,13 @@ class WisudaController extends BaseController{
                     'path' => 'wisuda/nama-wisuda',
                     'message' => 'Update Wisuda Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($periodeWisuda = PeriodeWisuda::where('id_wisuda',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($periodeWisuda = PeriodeWisuda::where('id_wisuda', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Wisuda'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $wisuda               = Wisuda::find($id);
                     $wisuda->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -143,5 +142,4 @@ class WisudaController extends BaseController{
             }
         }
     }
-
 }

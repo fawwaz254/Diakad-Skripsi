@@ -573,7 +573,7 @@ class LibGuru
     public static function fetchDataKelasKosong($auth_data)
     {
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // 2019-01-08
         $tgl = $now->toDateString();

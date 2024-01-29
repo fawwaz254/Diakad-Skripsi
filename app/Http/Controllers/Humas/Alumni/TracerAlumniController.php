@@ -72,7 +72,7 @@ class TracerAlumniController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         if ($request->hasFile('file-excel')) {
             // $path = $request->file('file-excel')->getRealPath();
             // $data = Excel::load($path)->get();
@@ -182,14 +182,14 @@ class TracerAlumniController extends BaseController
                 $data['id_penerimaan']     = 0;
                 $data['status_verifikasi'] = 0;
                 $data['created_by']        = $auth_data->pengguna->id_pengguna;
-                $data['created_at']        = Carbon::now(env('APP_TIMEZONE', ''));
+                $data['created_at']        = Carbon::now();
 
                 CalonSiswaBaru::insert($data);
 
                 $data2 = [
                     'id_c_siswa'    => $data['id_c_siswa'],
                     'created_by'    => $auth_data->pengguna->id_pengguna,
-                    'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
+                    'created_at'    => Carbon::now()
                 ];
 
                 CalonSiswaOrtu::insert($data2);
@@ -204,7 +204,7 @@ class TracerAlumniController extends BaseController
                 $data3['id_sekolah']            = $auth_data->pengguna->id_sekolah;
                 $data3['id_pengguna']           = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data3['created_by']            = $auth_data->pengguna->id_pengguna;
-                $data3['created_at']            = Carbon::now(env('APP_TIMEZONE', ''));
+                $data3['created_at']            = Carbon::now();
 
                 Pengguna::insert($data3);
 
@@ -213,7 +213,7 @@ class TracerAlumniController extends BaseController
                     'id_pengguna'   => $data3['id_pengguna'],
                     'id_c_siswa'    => $data['id_c_siswa'],
                     'created_by'    => $auth_data->pengguna->id_pengguna,
-                    'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
+                    'created_at'    => Carbon::now()
                 ]);
 
                 $data4['id_kelas']      = $request->id_kelas;
@@ -224,7 +224,7 @@ class TracerAlumniController extends BaseController
                 $data4['id_alumni']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data4['id_c_siswa']    = $data['id_c_siswa'];
                 $data4['created_by']    = $auth_data->pengguna->id_pengguna;
-                $data4['created_at']    = Carbon::now(env('APP_TIMEZONE', ''));
+                $data4['created_at']    = Carbon::now();
 
                 Alumni::insert($data4);
 
@@ -253,7 +253,7 @@ class TracerAlumniController extends BaseController
 
                 $data5['id_alumni']              = $data4['id_alumni'];
                 $data5['created_by']             = $auth_data->pengguna->id_pengguna;
-                $data5['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
+                $data5['created_at']             = Carbon::now();
 
                 if ($request->status == 'bekerja') {
                     LibAlumni::storeWorkplace($data5);
@@ -296,7 +296,7 @@ class TracerAlumniController extends BaseController
                 $data4['id_alumni']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data4['id_c_siswa']    = $request->id_c_siswa;
                 $data4['created_by']    = $auth_data->pengguna->id_pengguna;
-                $data4['created_at']    = Carbon::now(env('APP_TIMEZONE', ''));
+                $data4['created_at']    = Carbon::now();
 
                 Alumni::insert($data4);
 
@@ -325,7 +325,7 @@ class TracerAlumniController extends BaseController
 
                 $data5['id_alumni']              = $data4['id_alumni'];
                 $data5['created_by']             = $auth_data->pengguna->id_pengguna;
-                $data5['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
+                $data5['created_at']             = Carbon::now();
 
                 if ($request->status == 'bekerja') {
                     LibAlumni::storeWorkplace($data5);
@@ -398,7 +398,7 @@ class TracerAlumniController extends BaseController
                 $data5['id_alumni']              = $request->id_alumni;
                 $data5['updated_by']             = $auth_data->pengguna->id_pengguna;
                 $data5['created_by']             = $auth_data->pengguna->id_pengguna;
-                $data5['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
+                $data5['created_at']             = Carbon::now();
 
                 if ($request->old_status == 'bekerja') {
                     $hapus_old_status = AlumniBekerja::where('id_alumni', $request->id_alumni)->first();

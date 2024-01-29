@@ -38,9 +38,9 @@ class TindakanPelanggaranController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // ambil data pelanggaran
         $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, $id);
@@ -52,7 +52,7 @@ class TindakanPelanggaranController extends BaseController
 
         $id_pengguna = $auth_data->pengguna->id_pengguna;
 
-        $id_tindakan_pelanggaran = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_tindakan_pelanggaran = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('bk/penanganan-siswa/tindakan-pelanggaran/add-nonkbm-tindakan-pelanggaran', compact('auth_data', 'data_pelanggaran_siswa', 'tgl_pelanggaran', 'data_jenis_tindakan', 'id_pengguna', 'id_tindakan_pelanggaran'));
     }
@@ -62,9 +62,9 @@ class TindakanPelanggaranController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // ambil data presensi mp pelanggaran
         $data_presensi_mp_pelanggaran = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, $id);
@@ -74,7 +74,7 @@ class TindakanPelanggaranController extends BaseController
 
         $data_jenis_tindakan = LibDataPelanggaran::fetchDataJenisTindakan($auth_data);
 
-        $id_tindakan_pelanggaran = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_tindakan_pelanggaran = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('bk/penanganan-siswa/tindakan-pelanggaran/add-kbm-tindakan-pelanggaran', compact('auth_data', 'data_presensi_mp_pelanggaran', 'tgl_pelanggaran', 'data_jenis_tindakan', 'id_tindakan_pelanggaran'));
     }
@@ -89,7 +89,7 @@ class TindakanPelanggaranController extends BaseController
 
         $data_tindakan_pelanggaran = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, null, $id);
 
-        if (! empty($data_tindakan_pelanggaran->id_pelanggaran_siswa)) {
+        if (!empty($data_tindakan_pelanggaran->id_pelanggaran_siswa)) {
             $tgl_pelanggaran = strftime("%d %B %Y %H:%M:%S", strtotime($data_tindakan_pelanggaran->tgl_pelanggaran));
         } else {
             $tgl_pelanggaran = strftime("%d %B %Y %H:%M:%S", strtotime($data_tindakan_pelanggaran->tgl_pelanggaran_presensi));
@@ -110,80 +110,80 @@ class TindakanPelanggaranController extends BaseController
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1");
         // dd($list_data);
         $bk_kelas = [];
-        $pengguna = Pengguna::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
-        if($pengguna){
-            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna',$pengguna->id_pengguna)->pluck('id_kelas')->toArray();
+        $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+        if ($pengguna) {
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna', $pengguna->id_pengguna)->pluck('id_kelas')->toArray();
         }
 
         return Datatables::of($list_data)
-                ->addColumn('cek_pj_bk',function($item) use ($bk_kelas){
-                    $hasil = false;
-                    if(in_array($item->id_kelas,$bk_kelas)){
-                        $hasil = true;
-                    }
-                    return $hasil;
-                })
-                ->addColumn('nis_siswa', function ($item) {
-                    return $item->nis_siswa;
-                })
-                ->addColumn('nm_siswa', function ($item) {
-                    return $item->nm_pengguna;
-                })
-                ->editColumn('nm_subkategori_pelanggaran', function ($item) {
-                    return strip_tags($item->nm_subkategori_pelanggaran);
-                })
-                ->addColumn('aktor_input_pelanggaran', function ($item) {
-                    if ($item->aktor_input_pelanggaran == 1) {
-                        return "Role BK";
-                    } elseif ($item->aktor_input_pelanggaran == 2) {
-                        return "Kesiswaan";
-                    } elseif ($item->aktor_input_pelanggaran == 3) {
-                        return "Wali Kelas";
-                    }
-                })
-                ->addColumn('nm_input', function ($item) {
-                    if (! empty($item->nm_guru_input)) {
-                        if (! empty($item->gelar_depan_guru) && ! empty($item->gelar_belakang_guru)) {
-                            return $item->gelar_depan_guru." ".$item->nm_guru_input.", ".$item->gelar_belakang_guru." (Guru)";
-                        } elseif (! empty($item->gelar_depan_guru)) {
-                            return $item->gelar_depan_guru." ".$item->nm_guru_input." (Guru)";
-                        } elseif (! empty($item->gelar_belakang_guru)) {
-                            return $item->nm_guru_input.", ".$item->gelar_belakang_guru." (Guru)";
-                        } else {
-                            return $item->nm_guru_input." (Guru)";
-                        }
+            ->addColumn('cek_pj_bk', function ($item) use ($bk_kelas) {
+                $hasil = false;
+                if (in_array($item->id_kelas, $bk_kelas)) {
+                    $hasil = true;
+                }
+                return $hasil;
+            })
+            ->addColumn('nis_siswa', function ($item) {
+                return $item->nis_siswa;
+            })
+            ->addColumn('nm_siswa', function ($item) {
+                return $item->nm_pengguna;
+            })
+            ->editColumn('nm_subkategori_pelanggaran', function ($item) {
+                return strip_tags($item->nm_subkategori_pelanggaran);
+            })
+            ->addColumn('aktor_input_pelanggaran', function ($item) {
+                if ($item->aktor_input_pelanggaran == 1) {
+                    return "Role BK";
+                } elseif ($item->aktor_input_pelanggaran == 2) {
+                    return "Kesiswaan";
+                } elseif ($item->aktor_input_pelanggaran == 3) {
+                    return "Wali Kelas";
+                }
+            })
+            ->addColumn('nm_input', function ($item) {
+                if (!empty($item->nm_guru_input)) {
+                    if (!empty($item->gelar_depan_guru) && !empty($item->gelar_belakang_guru)) {
+                        return $item->gelar_depan_guru . " " . $item->nm_guru_input . ", " . $item->gelar_belakang_guru . " (Guru)";
+                    } elseif (!empty($item->gelar_depan_guru)) {
+                        return $item->gelar_depan_guru . " " . $item->nm_guru_input . " (Guru)";
+                    } elseif (!empty($item->gelar_belakang_guru)) {
+                        return $item->nm_guru_input . ", " . $item->gelar_belakang_guru . " (Guru)";
                     } else {
-                        if (! empty($item->gelar_depan_staff) && ! empty($item->gelar_belakang_staff)) {
-                            return $item->gelar_depan_staff." ".$item->nm_staff_input.", ".$item->gelar_belakang_staff." (Tendik)";
-                        } elseif (! empty($item->gelar_depan_staff)) {
-                            return $item->gelar_depan_staff." ".$item->nm_staff_input." (Tendik)";
-                        } elseif (! empty($item->gelar_belakang_staff)) {
-                            return $item->nm_staff_input.", ".$item->gelar_belakang_staff." (Tendik)";
-                        } else {
-                            return $item->nm_staff_input." (Tendik)";
-                        }
+                        return $item->nm_guru_input . " (Guru)";
                     }
-                })
-                ->addColumn('tingkat_pelanggaran', function ($item) {
-                    return $item->tingkat_kategori_pelanggaran.".".$item->tingkat_subkategori_pelanggaran;
-                })
-                ->addColumn('catatan_pelanggaran_khusus', function ($item) use ($auth_data) {
-                    if ($item->created_by == $auth_data->pengguna->id_pengguna) {
-                        return "Klik Action Untuk Melihat/Mengedit";
+                } else {
+                    if (!empty($item->gelar_depan_staff) && !empty($item->gelar_belakang_staff)) {
+                        return $item->gelar_depan_staff . " " . $item->nm_staff_input . ", " . $item->gelar_belakang_staff . " (Tendik)";
+                    } elseif (!empty($item->gelar_depan_staff)) {
+                        return $item->gelar_depan_staff . " " . $item->nm_staff_input . " (Tendik)";
+                    } elseif (!empty($item->gelar_belakang_staff)) {
+                        return $item->nm_staff_input . ", " . $item->gelar_belakang_staff . " (Tendik)";
                     } else {
-                        return "Khusus User Input";
+                        return $item->nm_staff_input . " (Tendik)";
                     }
-                })
-                ->addColumn('tgl_pelanggaran', function ($item) {
-                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran));
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_pelanggaran_siswa
-                    );
-                    return $data;
-                })
-                ->make(true);
+                }
+            })
+            ->addColumn('tingkat_pelanggaran', function ($item) {
+                return $item->tingkat_kategori_pelanggaran . "." . $item->tingkat_subkategori_pelanggaran;
+            })
+            ->addColumn('catatan_pelanggaran_khusus', function ($item) use ($auth_data) {
+                if ($item->created_by == $auth_data->pengguna->id_pengguna) {
+                    return "Klik Action Untuk Melihat/Mengedit";
+                } else {
+                    return "Khusus User Input";
+                }
+            })
+            ->addColumn('tgl_pelanggaran', function ($item) {
+                return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran));
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_pelanggaran_siswa
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function datatablesBelumTindakanKBM(Request $request)
@@ -193,68 +193,68 @@ class TindakanPelanggaranController extends BaseController
         $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1");
 
         $bk_kelas = [];
-        $pengguna = Pengguna::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
-        if($pengguna){
-            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna',$pengguna->id_pengguna)->pluck('id_kelas')->toArray();
+        $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+        if ($pengguna) {
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna', $pengguna->id_pengguna)->pluck('id_kelas')->toArray();
         }
 
         return Datatables::of($list_data)
-                ->addColumn('cek_pj_bk',function($item) use ($bk_kelas){
-                    $hasil = false;
-                    if(in_array($item->id_kelas,$bk_kelas)){
-                        $hasil = true;
-                    }
-                    return $hasil;
-                })
-                ->addColumn('nis_siswa', function ($item) {
-                    return $item->nis_siswa;
-                })
-                ->addColumn('nm_siswa', function ($item) {
-                    return $item->nm_pengguna;
-                })
-                 ->editColumn('nm_subkategori_pelanggaran', function ($item) {
-                    return strip_tags($item->nm_subkategori_pelanggaran);
-                })
-                ->addColumn('aktor_input_pelanggaran', function ($item) {
-                    return "Guru Pengampu";
-                })
-                ->addColumn('nm_input', function ($item) {
-                    if (! empty($item->gelar_depan_guru) && ! empty($item->gelar_belakang_guru)) {
-                        return $item->gelar_depan_guru." ".$item->nm_guru_input.", ".$item->gelar_belakang_guru." (Guru)";
-                    } elseif (! empty($item->gelar_depan_guru)) {
-                        return $item->gelar_depan_guru." ".$item->nm_guru_input." (Guru)";
-                    } elseif (! empty($item->gelar_belakang_guru)) {
-                        return $item->nm_guru_input.", ".$item->gelar_belakang_guru." (Guru)";
-                    } else {
-                        return $item->nm_guru_input." (Guru)";
-                    }
-                })
-                ->addColumn('nm_mapel', function ($item) {
-                    return $item->kd_mata_pelajaran." - ".$item->nm_mata_pelajaran;
-                })
-                ->addColumn('tgl_pelanggaran', function ($item) {
-                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->created_at));
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_presensi_mp_pelanggaran
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('cek_pj_bk', function ($item) use ($bk_kelas) {
+                $hasil = false;
+                if (in_array($item->id_kelas, $bk_kelas)) {
+                    $hasil = true;
+                }
+                return $hasil;
+            })
+            ->addColumn('nis_siswa', function ($item) {
+                return $item->nis_siswa;
+            })
+            ->addColumn('nm_siswa', function ($item) {
+                return $item->nm_pengguna;
+            })
+            ->editColumn('nm_subkategori_pelanggaran', function ($item) {
+                return strip_tags($item->nm_subkategori_pelanggaran);
+            })
+            ->addColumn('aktor_input_pelanggaran', function ($item) {
+                return "Guru Pengampu";
+            })
+            ->addColumn('nm_input', function ($item) {
+                if (!empty($item->gelar_depan_guru) && !empty($item->gelar_belakang_guru)) {
+                    return $item->gelar_depan_guru . " " . $item->nm_guru_input . ", " . $item->gelar_belakang_guru . " (Guru)";
+                } elseif (!empty($item->gelar_depan_guru)) {
+                    return $item->gelar_depan_guru . " " . $item->nm_guru_input . " (Guru)";
+                } elseif (!empty($item->gelar_belakang_guru)) {
+                    return $item->nm_guru_input . ", " . $item->gelar_belakang_guru . " (Guru)";
+                } else {
+                    return $item->nm_guru_input . " (Guru)";
+                }
+            })
+            ->addColumn('nm_mapel', function ($item) {
+                return $item->kd_mata_pelajaran . " - " . $item->nm_mata_pelajaran;
+            })
+            ->addColumn('tgl_pelanggaran', function ($item) {
+                return strftime("%d %B %Y %H:%M:%S", strtotime($item->created_at));
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_presensi_mp_pelanggaran
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     //hapus
 
-    public function deleteDatatablesBelumTindakanNonKBM($id,Request $request){
+    public function deleteDatatablesBelumTindakanNonKBM($id, Request $request)
+    {
         $pelanggaranSiswa = PelanggaranSiswa::where('id_pelanggaran_siswa', '=', $id);
-$pelanggaranSiswa->delete();
+        $pelanggaranSiswa->delete();
 
-return [
-    'status' => 203, // SUCCESS AND LOAD TABLE
-    'message' => 'Delete Tindakan Pelanggaran Siswa Successfully'
-];
-
+        return [
+            'status' => 203, // SUCCESS AND LOAD TABLE
+            'message' => 'Delete Tindakan Pelanggaran Siswa Successfully'
+        ];
     }
 
     public function datatablesSudahTindakan(Request $request)
@@ -264,169 +264,169 @@ return [
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1");
 
         $bk_kelas = [];
-        $pengguna = Pengguna::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
-        if($pengguna){
-            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna',$auth_data->pengguna->id_pengguna)->pluck('id_kelas')->toArray();
+        $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+        if ($pengguna) {
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->pluck('id_kelas')->toArray();
         }
 
         return Datatables::of($list_data)
-                ->addColumn('cek_pj_bk',function($item) use ($bk_kelas){
-                    $hasil = false;
-                    if(in_array($item->id_kelas,$bk_kelas)){
-                        $hasil = true;
-                    }
-                    return $hasil;
-                })
-                ->addColumn('nis_siswa', function ($item) {
-                    return $item->nis_siswa;
-                })
-                ->addColumn('nm_siswa', function ($item) {
-                    if (! empty($item->nm_siswa)) {
-                        return $item->nm_siswa;
-                    } elseif (! empty($item->nm_siswa_presensi)) {
-                        return $item->nm_siswa_presensi;
-                    } else {
-                        return "-";
-                    }
-                })
-                 ->editColumn('nm_subkategori_pelanggaran', function ($item) {
-                    return strip_tags($item->nm_subkategori_pelanggaran);
-                })
-                ->addColumn('nm_kelas', function ($item) {
-                    if (! empty($item->nm_kelas)) {
-                        return $item->nm_kelas;
-                    } elseif (! empty($item->nm_kelas_presensi)) {
-                        return $item->nm_kelas_presensi;
-                    } else {
-                        return "-";
-                    }
-                })
-                ->addColumn('nm_input', function ($item) {
-                    if (! empty($item->id_pelanggaran_siswa)) {
-                        if (! empty($item->nm_guru_input)) {
-                            if (! empty($item->gelar_depan_guru) && ! empty($item->gelar_belakang_guru)) {
-                                return $item->gelar_depan_guru." ".$item->nm_guru_input.", ".$item->gelar_belakang_guru." (Guru)";
-                            } elseif (! empty($item->gelar_depan_guru)) {
-                                return $item->gelar_depan_guru." ".$item->nm_guru_input." (Guru)";
-                            } elseif (! empty($item->gelar_belakang_guru)) {
-                                return $item->nm_guru_input.", ".$item->gelar_belakang_guru." (Guru)";
-                            } else {
-                                return $item->nm_guru_input." (Guru)";
-                            }
+            ->addColumn('cek_pj_bk', function ($item) use ($bk_kelas) {
+                $hasil = false;
+                if (in_array($item->id_kelas, $bk_kelas)) {
+                    $hasil = true;
+                }
+                return $hasil;
+            })
+            ->addColumn('nis_siswa', function ($item) {
+                return $item->nis_siswa;
+            })
+            ->addColumn('nm_siswa', function ($item) {
+                if (!empty($item->nm_siswa)) {
+                    return $item->nm_siswa;
+                } elseif (!empty($item->nm_siswa_presensi)) {
+                    return $item->nm_siswa_presensi;
+                } else {
+                    return "-";
+                }
+            })
+            ->editColumn('nm_subkategori_pelanggaran', function ($item) {
+                return strip_tags($item->nm_subkategori_pelanggaran);
+            })
+            ->addColumn('nm_kelas', function ($item) {
+                if (!empty($item->nm_kelas)) {
+                    return $item->nm_kelas;
+                } elseif (!empty($item->nm_kelas_presensi)) {
+                    return $item->nm_kelas_presensi;
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('nm_input', function ($item) {
+                if (!empty($item->id_pelanggaran_siswa)) {
+                    if (!empty($item->nm_guru_input)) {
+                        if (!empty($item->gelar_depan_guru) && !empty($item->gelar_belakang_guru)) {
+                            return $item->gelar_depan_guru . " " . $item->nm_guru_input . ", " . $item->gelar_belakang_guru . " (Guru)";
+                        } elseif (!empty($item->gelar_depan_guru)) {
+                            return $item->gelar_depan_guru . " " . $item->nm_guru_input . " (Guru)";
+                        } elseif (!empty($item->gelar_belakang_guru)) {
+                            return $item->nm_guru_input . ", " . $item->gelar_belakang_guru . " (Guru)";
                         } else {
-                            if (! empty($item->gelar_depan_staff) && ! empty($item->gelar_belakang_staff)) {
-                                return $item->gelar_depan_staff." ".$item->nm_staff_input.", ".$item->gelar_belakang_staff." (Tendik)";
-                            } elseif (! empty($item->gelar_depan_staff)) {
-                                return $item->gelar_depan_staff." ".$item->nm_staff_input." (Tendik)";
-                            } elseif (! empty($item->gelar_belakang_staff)) {
-                                return $item->nm_staff_input.", ".$item->gelar_belakang_staff." (Tendik)";
-                            } else {
-                                return $item->nm_staff_input." (Tendik)";
-                            }
+                            return $item->nm_guru_input . " (Guru)";
                         }
                     } else {
-                        if (! empty($item->gelar_depan_guru_presensi) && ! empty($item->gelar_belakang_guru_presensi)) {
-                            return $item->gelar_depan_guru_presensi." ".$item->nm_guru_input_presensi.", ".$item->gelar_belakang_guru_presensi." (Guru)";
-                        } elseif (! empty($item->gelar_depan_guru_presensi)) {
-                            return $item->gelar_depan_guru_presensi." ".$item->nm_guru_input_presensi." (Guru)";
-                        } elseif (! empty($item->gelar_belakang_guru_presensi)) {
-                            return $item->nm_guru_input_presensinm_guru_input_presensi.", ".$item->gelar_belakang_guru_presensi." (Guru)";
+                        if (!empty($item->gelar_depan_staff) && !empty($item->gelar_belakang_staff)) {
+                            return $item->gelar_depan_staff . " " . $item->nm_staff_input . ", " . $item->gelar_belakang_staff . " (Tendik)";
+                        } elseif (!empty($item->gelar_depan_staff)) {
+                            return $item->gelar_depan_staff . " " . $item->nm_staff_input . " (Tendik)";
+                        } elseif (!empty($item->gelar_belakang_staff)) {
+                            return $item->nm_staff_input . ", " . $item->gelar_belakang_staff . " (Tendik)";
                         } else {
-                            return $item->nm_guru_input_presensi." (Guru)";
+                            return $item->nm_staff_input . " (Tendik)";
                         }
                     }
-                })
-                ->addColumn('tingkat_pelanggaran', function ($item) {
-                    if (!empty($item->tingkat_kategori_pelanggaran)) {
-                        return $item->tingkat_kategori_pelanggaran.".".$item->tingkat_subkategori_pelanggaran;
-                    } elseif (!empty($item->tingkat_kategori_pelanggaran_mp)) {
-                        return $item->tingkat_kategori_pelanggaran_mp.".".$item->tingkat_subkategori_pelanggaran_mp;
+                } else {
+                    if (!empty($item->gelar_depan_guru_presensi) && !empty($item->gelar_belakang_guru_presensi)) {
+                        return $item->gelar_depan_guru_presensi . " " . $item->nm_guru_input_presensi . ", " . $item->gelar_belakang_guru_presensi . " (Guru)";
+                    } elseif (!empty($item->gelar_depan_guru_presensi)) {
+                        return $item->gelar_depan_guru_presensi . " " . $item->nm_guru_input_presensi . " (Guru)";
+                    } elseif (!empty($item->gelar_belakang_guru_presensi)) {
+                        return $item->nm_guru_input_presensinm_guru_input_presensi . ", " . $item->gelar_belakang_guru_presensi . " (Guru)";
                     } else {
-                        return '-';
+                        return $item->nm_guru_input_presensi . " (Guru)";
                     }
-                })
-                ->addColumn('keterangan_subkategori_pelanggaran', function ($item) {
-                    if (!empty($item->keterangan_subkategori_pelanggaran)) {
-                        return $item->keterangan_subkategori_pelanggaran;
-                    } elseif (!empty($item->keterangan_subkategori_pelanggaran_mp)) {
-                        return $item->keterangan_subkategori_pelanggaran_mp;
-                    } else {
-                        return '-';
-                    }
-                })
-                ->addColumn('catatan_pelanggaran', function ($item) {
-                    if (! empty($item->id_pelanggaran_siswa)) {
-                        return $item->catatan_pelanggaran;
-                    } else {
-                        return $item->catatan_pelanggaran_presensi;
-                    }
-                })
-                ->addColumn('catatan_pelanggaran_khusus', function ($item) use ($auth_data) {
-                    if (! empty($item->id_pelanggaran_siswa)) {
-                        if ($item->created_by == $auth_data->pengguna->id_pengguna) {
-                            return "Klik Action Untuk Melihat/Mengedit";
-                        } else {
-                            return "Khusus User Input";
-                        }
-                    } else {
-                        return "-";
-                    }
-                })
-                ->addColumn('tgl_pelanggaran', function ($item) {
-                    if (! empty($item->id_pelanggaran_siswa)) {
-                        return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran));
-                    } else {
-                        return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran_presensi));
-                    }
-                })
-                ->addColumn('aktor_input_pelanggaran', function ($item) {
-                    if (! empty($item->id_pelanggaran_siswa)) {
-                        if ($item->aktor_input_pelanggaran == 1) {
-                            return "Role BK";
-                        } elseif ($item->aktor_input_pelanggaran == 2) {
-                            return "Kesiswaan";
-                        } elseif ($item->aktor_input_pelanggaran == 3) {
-                            return "Wali Kelas";
-                        }
-                    } else {
-                        return "Guru Pengampu";
-                    }
-                })
-                ->addColumn('nm_input_tindakan', function ($item) {
-                    if (! empty($item->gelar_depan_tindakan) && ! empty($item->gelar_belakang_tindakan)) {
-                        return $item->gelar_depan_tindakan." ".$item->nm_input_tindakan.", ".$item->gelar_belakang_tindakan;
-                    } elseif (! empty($item->gelar_depan_tindakan)) {
-                        return $item->gelar_depan_tindakan." ".$item->nm_input_tindakan;
-                    } elseif (! empty($item->gelar_belakang_tindakan)) {
-                        return $item->nm_input_tindakan.", ".$item->gelar_belakang_tindakan;
-                    } else {
-                        return $item->nm_input_tindakan;
-                    }
-                })
-                ->addColumn('catatan_tindakan_pelanggaran_khusus', function ($item) use ($auth_data) {
-                    if ($item->created_by_tindakan == $auth_data->pengguna->id_pengguna) {
+                }
+            })
+            ->addColumn('tingkat_pelanggaran', function ($item) {
+                if (!empty($item->tingkat_kategori_pelanggaran)) {
+                    return $item->tingkat_kategori_pelanggaran . "." . $item->tingkat_subkategori_pelanggaran;
+                } elseif (!empty($item->tingkat_kategori_pelanggaran_mp)) {
+                    return $item->tingkat_kategori_pelanggaran_mp . "." . $item->tingkat_subkategori_pelanggaran_mp;
+                } else {
+                    return '-';
+                }
+            })
+            ->addColumn('keterangan_subkategori_pelanggaran', function ($item) {
+                if (!empty($item->keterangan_subkategori_pelanggaran)) {
+                    return $item->keterangan_subkategori_pelanggaran;
+                } elseif (!empty($item->keterangan_subkategori_pelanggaran_mp)) {
+                    return $item->keterangan_subkategori_pelanggaran_mp;
+                } else {
+                    return '-';
+                }
+            })
+            ->addColumn('catatan_pelanggaran', function ($item) {
+                if (!empty($item->id_pelanggaran_siswa)) {
+                    return $item->catatan_pelanggaran;
+                } else {
+                    return $item->catatan_pelanggaran_presensi;
+                }
+            })
+            ->addColumn('catatan_pelanggaran_khusus', function ($item) use ($auth_data) {
+                if (!empty($item->id_pelanggaran_siswa)) {
+                    if ($item->created_by == $auth_data->pengguna->id_pengguna) {
                         return "Klik Action Untuk Melihat/Mengedit";
                     } else {
                         return "Khusus User Input";
                     }
-                })
-                ->addColumn('tgl_tindakan_pelanggaran', function ($item) {
-                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_tindakan_pelanggaran));
-                })
-                ->addColumn('aktor_input_tindakan_pelanggaran', function ($item) {
-                    if ($item->aktor_input_tindakan_pelanggaran == 1) {
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('tgl_pelanggaran', function ($item) {
+                if (!empty($item->id_pelanggaran_siswa)) {
+                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran));
+                } else {
+                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran_presensi));
+                }
+            })
+            ->addColumn('aktor_input_pelanggaran', function ($item) {
+                if (!empty($item->id_pelanggaran_siswa)) {
+                    if ($item->aktor_input_pelanggaran == 1) {
                         return "Role BK";
-                    } elseif ($item->aktor_input_tindakan_pelanggaran == 2) {
+                    } elseif ($item->aktor_input_pelanggaran == 2) {
                         return "Kesiswaan";
+                    } elseif ($item->aktor_input_pelanggaran == 3) {
+                        return "Wali Kelas";
                     }
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_tindakan_pelanggaran
-                    );
-                    return $data;
-                })
-                ->make(true);
+                } else {
+                    return "Guru Pengampu";
+                }
+            })
+            ->addColumn('nm_input_tindakan', function ($item) {
+                if (!empty($item->gelar_depan_tindakan) && !empty($item->gelar_belakang_tindakan)) {
+                    return $item->gelar_depan_tindakan . " " . $item->nm_input_tindakan . ", " . $item->gelar_belakang_tindakan;
+                } elseif (!empty($item->gelar_depan_tindakan)) {
+                    return $item->gelar_depan_tindakan . " " . $item->nm_input_tindakan;
+                } elseif (!empty($item->gelar_belakang_tindakan)) {
+                    return $item->nm_input_tindakan . ", " . $item->gelar_belakang_tindakan;
+                } else {
+                    return $item->nm_input_tindakan;
+                }
+            })
+            ->addColumn('catatan_tindakan_pelanggaran_khusus', function ($item) use ($auth_data) {
+                if ($item->created_by_tindakan == $auth_data->pengguna->id_pengguna) {
+                    return "Klik Action Untuk Melihat/Mengedit";
+                } else {
+                    return "Khusus User Input";
+                }
+            })
+            ->addColumn('tgl_tindakan_pelanggaran', function ($item) {
+                return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_tindakan_pelanggaran));
+            })
+            ->addColumn('aktor_input_tindakan_pelanggaran', function ($item) {
+                if ($item->aktor_input_tindakan_pelanggaran == 1) {
+                    return "Role BK";
+                } elseif ($item->aktor_input_tindakan_pelanggaran == 2) {
+                    return "Kesiswaan";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_tindakan_pelanggaran
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
@@ -442,7 +442,7 @@ return [
             /*'catatan_tindakan_pelanggaran_khusus'    => 'required',*/
             'tgl_tindakan_pelanggaran'      => 'required'
         ]);
-        
+
         if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
@@ -450,10 +450,10 @@ return [
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add-nonkbm') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $tindakanPelanggaran                                        = new TindakanPelanggaran;
                 $tindakanPelanggaran->id_tindakan_pelanggaran               = $id;
@@ -479,7 +479,7 @@ return [
                     'message' => 'Save Tindakan Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'add-kbm') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $tindakanPelanggaran                                        = new TindakanPelanggaran;
                 $tindakanPelanggaran->id_tindakan_pelanggaran               = $id;
@@ -509,7 +509,7 @@ return [
                 $tindakanPelanggaran                                            = TindakanPelanggaran::find($id);
                 $tindakanPelanggaran->id_jenis_tindakan                         = $input->id_jenis_tindakan;
                 $tindakanPelanggaran->catatan_tindakan_pelanggaran              = $input->catatan_tindakan_pelanggaran;
-                if (! empty($input->catatan_tindakan_pelanggaran_khusus)) {
+                if (!empty($input->catatan_tindakan_pelanggaran_khusus)) {
                     $tindakanPelanggaran->catatan_tindakan_pelanggaran_khusus   = $input->catatan_tindakan_pelanggaran_khusus;
                 }
                 // convert format date
@@ -524,7 +524,7 @@ return [
                     'message' => 'Update Tindakan Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'delete') {
-                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_tindakan_pelanggaran',$id)->where('created_by', '<>', $input->auth_data->pengguna->id_pengguna)->first()) {
+                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_tindakan_pelanggaran', $id)->where('created_by', '<>', $input->auth_data->pengguna->id_pengguna)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Tindakan Pelanggaran Siswa, Yg boleh menghapus hanya penindak'

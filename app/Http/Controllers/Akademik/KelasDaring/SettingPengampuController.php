@@ -125,7 +125,7 @@ class SettingPengampuController extends BaseController
             ];
         } else {
             if ($mode == 'set') {
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $auth_data = $input->auth_data;
 
                 $pengampu_mapel                     = new PengampuMapel;
@@ -140,7 +140,7 @@ class SettingPengampuController extends BaseController
                     'message' => 'Save Pengampu Mapel'
                 ];
             } else {
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $auth_data = $input->auth_data;
 
                 $pengampu_mapel = PengampuMapel::where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_guru', $input->id)->first();

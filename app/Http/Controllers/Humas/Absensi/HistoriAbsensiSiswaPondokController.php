@@ -88,7 +88,7 @@ class HistoriAbsensiSiswaPondokController extends Controller
                     // $dataUpdate['id_shift_master'] = 'Pondok';
                     // $shiftPenggunaId->update($dataUpdate);
                 } else {
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     $html = '';
                     $list_data['id_shift_pengguna'] =   $html .= $prefix . strtotime($now) . uniqid();
                     $list_data['id_pengguna'] = $user->pengguna->id_pengguna;
@@ -682,7 +682,7 @@ class HistoriAbsensiSiswaPondokController extends Controller
     public function storeHistoriAbsensi(Request $request, $id_pengguna = null, $kelas = null, $date = null)
     {
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $prefix = Sekolah::first()->prefix;
         // $uuid = $prefix . strtotime($now) . uniqid();
         $input = $request->input();

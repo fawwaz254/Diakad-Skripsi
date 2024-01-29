@@ -33,13 +33,13 @@ class SubkategoriPelanggaranController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_kategori_pelanggaran = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
 
-        $id_subkategori_pelanggaran = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_subkategori_pelanggaran = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('bk/data-pelanggaran/subkategori-pelanggaran/add-subkategori-pelanggaran', compact('auth_data', 'data_kategori_pelanggaran', 'id_subkategori_pelanggaran'));
     }
@@ -64,16 +64,16 @@ class SubkategoriPelanggaranController extends BaseController
         $list_data = LibDataPelanggaran::fetchDataSubkategoriPelanggaran($auth_data);
 
         return Datatables::of($list_data)
-                ->editColumn('nm_subkategori_pelanggaran', function ($item) {
-                    return strip_tags($item->nm_subkategori_pelanggaran);
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_subkategori_pelanggaran
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->editColumn('nm_subkategori_pelanggaran', function ($item) {
+                return strip_tags($item->nm_subkategori_pelanggaran);
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_subkategori_pelanggaran
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
@@ -88,7 +88,7 @@ class SubkategoriPelanggaranController extends BaseController
             'poin_subkategori_pelanggaran' => 'required',
             'keterangan_subkategori_pelanggaran' => 'required'
         ]);
-        
+
         if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
@@ -96,10 +96,10 @@ class SubkategoriPelanggaranController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $subKategoriPelanggaran                                       = new SubkategoriPelanggaran;
                 $subKategoriPelanggaran->id_subkategori_pelanggaran           = $id;

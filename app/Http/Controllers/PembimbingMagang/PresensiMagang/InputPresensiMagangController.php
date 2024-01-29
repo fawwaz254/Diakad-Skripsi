@@ -150,14 +150,15 @@ class InputPresensiMagangController extends Controller
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             // ACTION ADD
             if ($mode == 'add') {
                 DB::beginTransaction();
                 try {
                     $tanggal = Carbon::parse($input->tanggal);
                     $pembimbing_magang = PembimbingMagang::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
-                    if ($presensi = PresensiMagang::where('tanggal', $tanggal)->where('id_pembimbing_magang', $pembimbing_magang->id_pembimbing_magang)->first()) { } else {
+                    if ($presensi = PresensiMagang::where('tanggal', $tanggal)->where('id_pembimbing_magang', $pembimbing_magang->id_pembimbing_magang)->first()) {
+                    } else {
                         $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi = new PresensiMagang;
                         $presensi->id_presensi_magang = $id;
@@ -178,7 +179,8 @@ class InputPresensiMagangController extends Controller
 
                     // presensi_ekskul_peserta
                     foreach ($array_combine as $item) {
-                        if ($presensi_siswa = PresensiMagangSiswa::where('id_presensi_magang', '=', $presensi->id_presensi_magang)->where('id_siswa', '=', $item->id_siswa)->first()) { } else {
+                        if ($presensi_siswa = PresensiMagangSiswa::where('id_presensi_magang', '=', $presensi->id_presensi_magang)->where('id_siswa', '=', $item->id_siswa)->first()) {
+                        } else {
                             $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $presensi_siswa                                 = new PresensiMagangSiswa;
                             $presensi_siswa->id_presensi_magang_siswa       = $id;
@@ -286,7 +288,8 @@ class InputPresensiMagangController extends Controller
 
                     ];
                 }
-            } else { }
+            } else {
+            }
         }
     }
     public function viewDetailInputPresensiMagang(Request $request, $id_presensi_magang)

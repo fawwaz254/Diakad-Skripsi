@@ -18,11 +18,11 @@ class ChangePositionDataJenisTindakanRoleBk extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $role_id = Role::where('nm_role', 'Bimbingan Konseling')->first()->id_role;
 
         $modul_id = Modul::where('id_role', $role_id)->where('nm_modul', 'Penanganan Siswa')->first()->id_modul;
-        $menu = Menu::where('id_modul',$modul_id)->where('nm_menu','Data Jenis Tindakan')->first();
+        $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Data Jenis Tindakan')->first();
         $menu->id_modul = 70;
         $menu->save();
     }

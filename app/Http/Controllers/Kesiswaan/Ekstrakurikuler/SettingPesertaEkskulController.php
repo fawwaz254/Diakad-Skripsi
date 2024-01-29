@@ -243,7 +243,7 @@ class SettingPesertaEkskulController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             // dd($input);
             // ACTION ADD
             if ($mode == 'add') {
@@ -429,7 +429,7 @@ class SettingPesertaEkskulController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'message' => 'Setting Pengambilan Ekskul Berhasil',
-                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/setting/' . $id_ekskul 
+                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/setting/' . $id_ekskul
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

@@ -21,10 +21,10 @@ class CreateKerjasamaModule extends Migration
         $alumniModule = Modul::create([
             "id_role"       => $humasRoleId,
             "nm_modul"      => "Kerja Sama",
-            "route"         => "kerjasama" ,
+            "route"         => "kerjasama",
             "urutan"        => 4,
             "akses"         => 1,
-            "created_at"    => Carbon::now(env('APP_TIMEZONE', ''))
+            "created_at"    => Carbon::now()
         ]);
 
         $alumniModule->menus()->createMany([
@@ -33,28 +33,28 @@ class CreateKerjasamaModule extends Migration
                 "page"         => "/",
                 "urutan"       => 1,
                 "akses"        => 1,
-                "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
+                "created_at"   => Carbon::now()
             ],
             [
                 "nm_menu"      => "Jenis Kerja Sama",
                 "page"         => "/jenis",
                 "urutan"       => 2,
                 "akses"        => 1,
-                "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
+                "created_at"   => Carbon::now()
             ],
             [
                 "nm_menu"      => "Berkas Kerja Sama",
                 "page"         => "/berkas",
                 "urutan"       => 3,
                 "akses"        => 1,
-                "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
+                "created_at"   => Carbon::now()
             ],
             [
                 "nm_menu"      => "Instansi",
                 "page"         => "/instansi",
                 "urutan"       => 4,
                 "akses"        => 1,
-                "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
+                "created_at"   => Carbon::now()
             ],
         ]);
     }

@@ -172,7 +172,7 @@ class DataFileController extends BaseController
                     }
 
                     foreach ($files as $file) {
-                        $now = Carbon::now(env('APP_TIMEZONE', ''));
+                        $now = Carbon::now();
                         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                         $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -204,7 +204,7 @@ class DataFileController extends BaseController
                         ];
                     }
 
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $data = new FilePengguna;
                     $data->file_pengguna_id = $id;

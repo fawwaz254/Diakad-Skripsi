@@ -41,7 +41,7 @@ class PushNotification implements ShouldQueue
     public function handle()
     {
         $sekolah = Sekolah::first();
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $notifikasi = new NotifikasiPengguna;
         $notifikasi->id_notifikasi_pengguna =  $sekolah->prefix . strtotime($now) . uniqid();
         $notifikasi->id_pengguna = $this->p->id_pengguna;

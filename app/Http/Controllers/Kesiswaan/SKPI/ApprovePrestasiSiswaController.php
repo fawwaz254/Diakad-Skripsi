@@ -421,7 +421,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         if ($data == 'prestasi') {
 
@@ -467,7 +467,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         if ($data == 'prestasi') {
 
@@ -1044,7 +1044,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $data_ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
@@ -1063,7 +1063,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'nm_prestasi_siswa' => 'required',
@@ -1125,7 +1125,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $tingkat = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
@@ -1139,7 +1139,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'nm_kegiatan_siswa' => 'required',
@@ -1200,7 +1200,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'jenis_informasi_tambahan' => 'required',

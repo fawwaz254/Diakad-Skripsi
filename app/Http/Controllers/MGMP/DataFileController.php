@@ -13,6 +13,7 @@ use App\Models\Pengguna;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+
 class DataFileController extends Controller
 {
     public function viewDataFile(Request $request)
@@ -21,13 +22,13 @@ class DataFileController extends Controller
         $input = (object) $request->input();
         // $auth_data = $input->auth_data->role_aktif->id_role;
         $pengguna = $input->auth_data->pengguna->id_pengguna;
-      
-    
+
+
         // $category = CategoriFileGuru::where('id_pengguna' , $pengguna)->get();
         $category = CategoriFileGuru::join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'category_file_guru.category_file_mgmp_id')
             ->where('category_file_guru.id_pengguna', $pengguna)
             ->select('category_file_mgmp.*')->get();
- 
+
         return view('guru/mgmp/data-file/view-data-file', compact('auth_data', 'category'));
     }
 
@@ -48,7 +49,7 @@ class DataFileController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-      
+
         $sub_category = SubCategoryFileMGMP::find($id);
         $data_file = Pengguna::Has('file_pengguna')
             ->with(["file_pengguna" => function ($q) use ($id) {
@@ -61,8 +62,8 @@ class DataFileController extends Controller
                 $files->push($file);
             }
         }
-      
-        return view('guru/mgmp/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'data_file','files'));
+
+        return view('guru/mgmp/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'data_file', 'files'));
     }
 
     public function dropdownCategory(Request $request)
@@ -77,18 +78,18 @@ class DataFileController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data->pengguna->id_pengguna;
-    
+
         $category = CategoriFileGuru::join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'category_file_guru.category_file_mgmp_id')
             ->where('category_file_guru.id_pengguna', $auth_data)
             ->select('category_file_mgmp.*')->get();
-            
+
         $sub_category = DB::table('sub_category_file_mgmp')
             ->join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'sub_category_file_mgmp.category_file_mgmp_id')
             ->join('category_file_guru', 'category_file_guru.category_file_mgmp_id', '=', 'category_file_mgmp.category_file_mgmp_id')
             ->where('category_file_guru.id_pengguna', '=', $auth_data)
             ->where('sub_category_file_mgmp.deleted_at', '=', null)
             ->select('sub_category_file_mgmp.*')->distinct()->get();
-      
+
         return view('guru/mgmp/data-file/add-data-file', compact('auth_data', 'category', 'sub_category'));
     }
 
@@ -98,7 +99,7 @@ class DataFileController extends Controller
 
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
 
-      
+
 
 
         if ($mode == 'delete-many') {
@@ -140,7 +141,7 @@ class DataFileController extends Controller
                 'message' => 'Delete File Successfully'
             ];
         }
-      
+
 
 
         $list_validator = [
@@ -189,7 +190,7 @@ class DataFileController extends Controller
                     }
 
                     foreach ($files as $file) {
-                        $now = Carbon::now(env('APP_TIMEZONE', ''));
+                        $now = Carbon::now();
                         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                         $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -221,7 +222,7 @@ class DataFileController extends Controller
                         ];
                     }
 
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $data = new FilePengguna;
                     $data->file_pengguna_id = $id;
@@ -238,7 +239,7 @@ class DataFileController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'mgmp/data-file-mapel/sub-category/'.$input->sub_category_file_id,
+                    'path' => 'mgmp/data-file-mapel/sub-category/' . $input->sub_category_file_id,
                     'message' => 'Save File Pegguna Successfully'
                 ];
             }

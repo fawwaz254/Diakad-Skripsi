@@ -337,7 +337,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-wali-murid/upload-setting-wali-murid/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'viewUploadSettingWaliMurid']);
             Route::get('setting-wali-murid/upload-setting-wali-murid/download/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'viewDownloadSettingWaliMurid']);
             Route::post('setting-wali-murid/upload/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'uploadFileExcel']);
-            Route::get('/download-file-excel-wali-murid', [SettingWaliMuridController::class, 'downloadFileExcel'])->name('siswa/download-file-excel-wali-murid');
+            Route::get('/download-file-excel-wali-murid/{id_kelas}', [SettingWaliMuridController::class, 'downloadFileExcel']);
 
             Route::post('setting-wali-murid/reset-wali-murid-collect', [SettingWaliMuridController::class, 'resetWaliMuridCollect']);
             Route::post('action-setting-wali-murid/{mode}/{id}', [SettingWaliMuridController::class, 'actionSettingWaliMurid']);

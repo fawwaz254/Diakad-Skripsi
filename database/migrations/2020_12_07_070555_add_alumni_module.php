@@ -21,10 +21,10 @@ class AddAlumniModule extends Migration
         $alumniModule = Modul::create([
             "id_role"       => $humasRoleId,
             "nm_modul"      => "Alumni",
-            "route"         => "alumni" ,
+            "route"         => "alumni",
             "urutan"         => 2,
             "akses"         => 1,
-            "created_at"    => Carbon::now(env('APP_TIMEZONE', ''))
+            "created_at"    => Carbon::now()
         ]);
 
         $alumniModule->menus()->createMany([
@@ -33,14 +33,14 @@ class AddAlumniModule extends Migration
                 "page"         => "/",
                 "urutan"       => 1,
                 "akses"        => 1,
-                "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
+                "created_at"   => Carbon::now()
             ],
             [
                 "nm_menu"      => "Tambah Alumni",
                 "page"         => "add",
                 "urutan"       => 2,
                 "akses"        => 1,
-                "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
+                "created_at"   => Carbon::now()
             ],
         ]);
     }

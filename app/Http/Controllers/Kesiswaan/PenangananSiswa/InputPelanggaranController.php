@@ -43,7 +43,7 @@ class InputPelanggaranController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -257,7 +257,7 @@ class InputPelanggaranController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             if ($mode == 'add') {
                 $time = Carbon::parse($input->tgl_pelanggaran)->toDateString();
                 $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran', $time)->where('id_semester', $input->id_semester)->where('id_siswa', $input->id_siswa)->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();

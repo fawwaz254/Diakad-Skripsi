@@ -47,8 +47,8 @@ class AuthGlobalController extends BaseController
         $input = (object) $request->input();
         $validator = Validator::make($request->all(), [
             'email_pengguna' => 'required',
-            'nm_ortu' => 'required',
-            'nomor_hp_ortu'    => 'required|min:10|max:14',
+            // 'nm_ortu' => 'required',
+            // 'nomor_hp_ortu'    => 'min:10|max:14',
         ]);
 
 
@@ -59,12 +59,13 @@ class AuthGlobalController extends BaseController
             ];
         }
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $siswa = Siswa::where('nis_siswa', '=', $nis_siswa)->first();
         $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid ?? null)->first();
-        if ($wali_murid != null) { } else {
+        if ($wali_murid != null) {
+        } else {
             // if siswa doesnt have wali murid
-            $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+            $now1 = Carbon::now();
             $wali_murid = new WaliMurid;
             $wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
             $wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -83,7 +84,7 @@ class AuthGlobalController extends BaseController
             $pengguna->password = Hash::make($input->nomor_hp_ortu);
             $pengguna->status_join_table = 4;
             $pengguna->save();
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $role_wali_murid = RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->where('id_role', 4)->first();
             if (!$role_wali_murid) {
@@ -155,7 +156,7 @@ class AuthGlobalController extends BaseController
                 'message' => $validator->errors()->first(),
             ];
         }
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $input = (object) $request->input();
         $pengguna = $input->auth_data->pengguna;
@@ -186,7 +187,7 @@ class AuthGlobalController extends BaseController
             ];
         }
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $input = (object) $request->input();
         $pengguna = $input->auth_data->pengguna;
@@ -232,7 +233,7 @@ class AuthGlobalController extends BaseController
             ];
         }
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $input = (object) $request->input();
         $pengguna = Auth::user();

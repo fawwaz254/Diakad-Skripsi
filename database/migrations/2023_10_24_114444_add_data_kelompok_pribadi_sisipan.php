@@ -17,7 +17,7 @@ class AddDataKelompokPribadiSisipan extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $sekolah = Sekolah::first();
         $kelompok_pribadi_sisipan = new KelompokPribadiSisipan;
         $kelompok_pribadi_sisipan->id_kelompok_pribadi_sisipan = $sekolah->prefix . strtotime($now) . uniqid();

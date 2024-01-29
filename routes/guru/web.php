@@ -858,6 +858,11 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/excel/{id}', [RaporSisipanAkhirController::class, 'excelDaftarNilaiSAS']);
                 Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
+                Route::get('inputNilai/{id}', [RaporSisipanAkhirController::class, 'inputNilai']);
+                Route::get('getNilai/{id}', [RaporSisipanAkhirController::class, 'getNilai']);
+                Route::get('print/{id}', [RaporSisipanAkhirController::class, 'printDaftarNilaiSAS']);
+                Route::get('pdf/{id_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor2']);
+                Route::post('action-daftar-nilai-sas/{mode}/{id}', [RaporSisipanAkhirController::class, 'actionDaftarNilaiSAS']);
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
             });
 

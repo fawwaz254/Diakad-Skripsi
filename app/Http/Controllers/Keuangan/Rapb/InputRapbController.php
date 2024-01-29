@@ -36,7 +36,7 @@ class InputRapbController extends BaseController
 
         return view('keuangan/rapb/input-rapb/view-input-rapb', compact('auth_data', 'data_semester'));
     }
-    
+
     public function actionViewInputRapb(Request $request)
     {
         # code...
@@ -50,14 +50,14 @@ class InputRapbController extends BaseController
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             return [
-                    'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'rapb/input-rapb/view-detail-input-rapb/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai
-                ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'rapb/input-rapb/view-detail-input-rapb/' . $input->id_semester_mulai . '/' . $input->id_semester_selesai
+            ];
         }
     }
 
@@ -68,7 +68,7 @@ class InputRapbController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
-        
+
         return view('keuangan/rapb/input-rapb/view-detail-input-rapb', compact('auth_data', 'id_semester_mulai', 'id_semester_selesai', 'data_semester'));
     }
 
@@ -90,54 +90,54 @@ class InputRapbController extends BaseController
         $list_data = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, null, "1");
 
         return Datatables::of($list_data)
-                ->addColumn('semester', function ($item) {
-                    return $item->tahun_ajaran_mulai." (".$item->nm_semester_mulai.") - ".$item->tahun_ajaran_selesai." (".$item->nm_semester_selesai.")";
-                })
-                ->addColumn('tipe_kategori_rapb', function ($item) {
-                    if ($item->tipe_kategori_rapb == 1) {
-                        return "Penerimaan";
-                    } elseif ($item->tipe_kategori_rapb == 2) {
-                        return "Pengeluaran";
-                    }
-                })
-                ->addColumn('dana_perkiraan_rapb', function ($item) {
-                    return "Rp".number_format($item->dana_perkiraan_rapb);
-                })
-                ->addColumn('tgl_rapb', function ($item) {
-                    return strftime("%A, %d %B %Y", strtotime($item->tgl_rapb));
-                })
-                ->addColumn('prioritas_rapb', function ($item) {
-                    if ($item->prioritas_rapb == 1) {
-                        return "Rendah";
-                    } elseif ($item->prioritas_rapb == 2) {
-                        return "Sedang";
-                    } elseif ($item->prioritas_rapb == 3) {
-                        return "Tinggi";
-                    }
-                })
-                ->addColumn('nm_kepala_unit', function ($item) {
-                    $data = array(
-                        'nm_kepala_unit' => $item->nm_kepala_unit,
-                        'id_unit_kerja'  => $item->id_unit_kerja,
-                        'id_rapb'        => $item->id_rapb
-                    );
-                    return $data;
-                })
-                ->addColumn('nm_kepala_keuangan', function ($item) {
-                    $data = array(
-                        'nm_kepala_keuangan'  => $item->nm_kepala_keuangan,
-                        'id_rapb'             => $item->id_rapb
-                    );
-                    return $data;
-                })
-                ->addColumn('action', function ($item) use ($jenis_jabatan) {
-                    $data = array(
-                        'id' => $item->id_rapb,
-                        'jenis_jabatan' => $jenis_jabatan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('semester', function ($item) {
+                return $item->tahun_ajaran_mulai . " (" . $item->nm_semester_mulai . ") - " . $item->tahun_ajaran_selesai . " (" . $item->nm_semester_selesai . ")";
+            })
+            ->addColumn('tipe_kategori_rapb', function ($item) {
+                if ($item->tipe_kategori_rapb == 1) {
+                    return "Penerimaan";
+                } elseif ($item->tipe_kategori_rapb == 2) {
+                    return "Pengeluaran";
+                }
+            })
+            ->addColumn('dana_perkiraan_rapb', function ($item) {
+                return "Rp" . number_format($item->dana_perkiraan_rapb);
+            })
+            ->addColumn('tgl_rapb', function ($item) {
+                return strftime("%A, %d %B %Y", strtotime($item->tgl_rapb));
+            })
+            ->addColumn('prioritas_rapb', function ($item) {
+                if ($item->prioritas_rapb == 1) {
+                    return "Rendah";
+                } elseif ($item->prioritas_rapb == 2) {
+                    return "Sedang";
+                } elseif ($item->prioritas_rapb == 3) {
+                    return "Tinggi";
+                }
+            })
+            ->addColumn('nm_kepala_unit', function ($item) {
+                $data = array(
+                    'nm_kepala_unit' => $item->nm_kepala_unit,
+                    'id_unit_kerja'  => $item->id_unit_kerja,
+                    'id_rapb'        => $item->id_rapb
+                );
+                return $data;
+            })
+            ->addColumn('nm_kepala_keuangan', function ($item) {
+                $data = array(
+                    'nm_kepala_keuangan'  => $item->nm_kepala_keuangan,
+                    'id_rapb'             => $item->id_rapb
+                );
+                return $data;
+            })
+            ->addColumn('action', function ($item) use ($jenis_jabatan) {
+                $data = array(
+                    'id' => $item->id_rapb,
+                    'jenis_jabatan' => $jenis_jabatan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function addInputRapb(Request $request, $id_semester_mulai, $id_semester_selesai)
@@ -145,11 +145,11 @@ class InputRapbController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
-        // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $id_rapb = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // mengambil waktu sekarang
+        $now = Carbon::now();
+
+        $id_rapb = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
 
@@ -189,9 +189,9 @@ class InputRapbController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
 
@@ -202,9 +202,9 @@ class InputRapbController extends BaseController
         $data_rapb = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id_rapb);
 
         $kategori = SubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'kategori_rapb.tipe_kategori_rapb')
-                            ->join('kategori_rapb', 'kategori_rapb.id_kategori_rapb', '=', 'subkategori_rapb.id_kategori_rapb')
-                            ->where('subkategori_rapb.id_subkategori_rapb', '=', $data_rapb->id_subkategori_rapb)
-                            ->first();
+            ->join('kategori_rapb', 'kategori_rapb.id_kategori_rapb', '=', 'subkategori_rapb.id_kategori_rapb')
+            ->where('subkategori_rapb.id_subkategori_rapb', '=', $data_rapb->id_subkategori_rapb)
+            ->first();
 
         $jenis_kategori = $kategori->tipe_kategori_rapb;
 
@@ -226,7 +226,7 @@ class InputRapbController extends BaseController
     {
         $input = (object) $request->input();
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         if ($mode == 'approve-kepala-unit') {
             $unit_kerja = UnitKerja::where('id_unit_kerja', '=', $id_unit_kerja)->first();
@@ -235,39 +235,39 @@ class InputRapbController extends BaseController
 
             if ($tipe_unit_kerja == 'SARPRAS') {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                              ->where('guru.jenis_jabatan', '=', 1)
-                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                              ->first();
+                    ->where('guru.jenis_jabatan', '=', 1)
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
-                              ->where('staff.jenis_jabatan', '=', 1)
-                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                              ->first();
+                    ->where('staff.jenis_jabatan', '=', 1)
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
             } elseif ($tipe_unit_kerja == 'KEUANGAN') {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                              ->where('guru.jenis_jabatan', '=', 2)
-                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                              ->first();
+                    ->where('guru.jenis_jabatan', '=', 2)
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
-                              ->where('staff.jenis_jabatan', '=', 2)
-                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                              ->first();
+                    ->where('staff.jenis_jabatan', '=', 2)
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
             } else {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                              ->where('guru.id_unit_kerja', '=', $id_unit_kerja)
-                              ->where('guru.jenis_jabatan', '=', 98)
-                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                              ->first();
+                    ->where('guru.id_unit_kerja', '=', $id_unit_kerja)
+                    ->where('guru.jenis_jabatan', '=', 98)
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
-                              ->where('staff.id_unit_kerja', '=', $id_unit_kerja)
-                              ->where('staff.jenis_jabatan', '=', 98)
-                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                              ->first();
+                    ->where('staff.id_unit_kerja', '=', $id_unit_kerja)
+                    ->where('staff.jenis_jabatan', '=', 98)
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
             }
 
-            if (! empty($guru->id_pengguna)) {
+            if (!empty($guru->id_pengguna)) {
                 // make object to find id
                 $rapb                           = Rapb::find($id);
                 $rapb->id_pengguna_kepala_unit  = $guru->id_pengguna;
@@ -276,10 +276,10 @@ class InputRapbController extends BaseController
                 $rapb->save();
 
                 return [
-                  'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Unit Successfully'
-              ];
-            } elseif (! empty($staff->id_pengguna)) {
+                    'status' => 203, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Approve Kepala Unit Successfully'
+                ];
+            } elseif (!empty($staff->id_pengguna)) {
                 // make object to find id
                 $rapb                           = Rapb::find($id);
                 $rapb->id_pengguna_kepala_unit  = $staff->id_pengguna;
@@ -288,27 +288,27 @@ class InputRapbController extends BaseController
                 $rapb->save();
 
                 return [
-                  'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Unit Successfully'
-              ];
+                    'status' => 203, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Approve Kepala Unit Successfully'
+                ];
             } else {
                 return [
                     'status' => 300, // SUCCESS AND LOAD TABLE
-                    'message' => 'Kepala Unit '.$unit_kerja->nm_unit_kerja.' Belum Dilakukan Setting!'
+                    'message' => 'Kepala Unit ' . $unit_kerja->nm_unit_kerja . ' Belum Dilakukan Setting!'
                 ];
             }
         } elseif ($mode == 'approve-kepala-keuangan') {
             $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                          ->where('guru.jenis_jabatan', '=', 2)
-                          ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                          ->first();
+                ->where('guru.jenis_jabatan', '=', 2)
+                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->first();
 
             $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
-                          ->where('staff.jenis_jabatan', '=', 2)
-                          ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                          ->first();
+                ->where('staff.jenis_jabatan', '=', 2)
+                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->first();
 
-            if (! empty($guru->id_pengguna)) {
+            if (!empty($guru->id_pengguna)) {
                 // make object to find id
                 $rapb                               = Rapb::find($id);
                 $rapb->id_pengguna_kepala_keuangan  = $guru->id_pengguna;
@@ -317,10 +317,10 @@ class InputRapbController extends BaseController
                 $rapb->save();
 
                 return [
-                  'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Keuangan Successfully'
-              ];
-            } elseif (! empty($staff->id_pengguna)) {
+                    'status' => 203, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Approve Kepala Keuangan Successfully'
+                ];
+            } elseif (!empty($staff->id_pengguna)) {
                 // make object to find id
                 $rapb                               = Rapb::find($id);
                 $rapb->id_pengguna_kepala_keuangan  = $staff->id_pengguna;
@@ -329,9 +329,9 @@ class InputRapbController extends BaseController
                 $rapb->save();
 
                 return [
-                  'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Keuangan Successfully'
-              ];
+                    'status' => 203, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Approve Kepala Keuangan Successfully'
+                ];
             } else {
                 return [
                     'status' => 300, // SUCCESS AND LOAD TABLE
@@ -355,18 +355,18 @@ class InputRapbController extends BaseController
             'tgl_rapb' => 'required',
             'prioritas_rapb' => 'required'
         ]);
-        
-        if ($validator->fails() && in_array($mode, ['add','edit'])) {
+
+        if ($validator->fails() && in_array($mode, ['add', 'edit'])) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $rapb                         = new Rapb;
                 $rapb->id_rapb                = $id;
@@ -382,7 +382,7 @@ class InputRapbController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'rapb/input-rapb/view-detail-input-rapb/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai,
+                    'path' => 'rapb/input-rapb/view-detail-input-rapb/' . $input->id_semester_mulai . '/' . $input->id_semester_selesai,
                     'message' => 'Input RAPB Successfully'
                 ];
             } elseif ($mode == 'edit') {
@@ -401,7 +401,7 @@ class InputRapbController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'rapb/input-rapb/view-detail-input-rapb/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai,
+                    'path' => 'rapb/input-rapb/view-detail-input-rapb/' . $input->id_semester_mulai . '/' . $input->id_semester_selesai,
                     'message' => 'Input RAPB Successfully'
                 ];
             } elseif ($mode == 'delete') {

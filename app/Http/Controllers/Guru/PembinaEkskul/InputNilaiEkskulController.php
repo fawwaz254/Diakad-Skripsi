@@ -138,7 +138,7 @@ class InputNilaiEkskulController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->only('id_ekskul', 'id_semester'), [
             // dari type hidden
@@ -325,7 +325,7 @@ class InputNilaiEkskulController extends BaseController
         set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             // type hidden

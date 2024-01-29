@@ -19,8 +19,8 @@ class AddingMenuForKegiatanHarian extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-        
+        $now = Carbon::now();
+
         $role = new Role;
         $role->nm_role = 'Humas';
         $role->path = 'humas';
@@ -101,7 +101,7 @@ class AddingMenuForKegiatanHarian extends Migration
         $menu->akses        = 1;
         $menu->created_at   = $now;
         $menu->save();
-        
+
         $modul              = new Modul;
         $modul->id_role     = 3;
         $modul->nm_modul    = "Kegiatan Harian";

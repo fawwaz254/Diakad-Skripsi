@@ -332,7 +332,7 @@ class PlottingMapelSiswaController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add-krs') {
@@ -340,7 +340,7 @@ class PlottingMapelSiswaController extends BaseController
                 DB::beginTransaction();
 
                 try {
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     foreach ($input->id_kelas_mp as $id_kelas_mp) {
                         $pengambilan_mp_insert = array();
                         foreach ($input->id_siswa as $id_siswa) {
@@ -514,7 +514,7 @@ class PlottingMapelSiswaController extends BaseController
             // $pengambilan_mp = PengambilanMp::where('id_semester',$input->id_semester);
             foreach ($list_mapel as $id_kelas_mp) {
                 // $pengambilan_kelas_mp = $pengambilan_mp->where('id_kelas_mp', '=', $id_kelas_mp->id_kelas_mp);
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $pengambilan_mp_insert = array();
                 foreach ($list_siswa as $id_siswa) {
                     // $cekSiswa = $pengambilan_kelas_mp->where('id_siswa', '=', $id_siswa->id_siswa)->first();

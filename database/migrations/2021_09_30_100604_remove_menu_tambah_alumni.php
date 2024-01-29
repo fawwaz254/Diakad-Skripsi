@@ -18,17 +18,16 @@ class RemoveMenuTambahAlumni extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
 
         $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Alumni')->first();
 
-        $menu = Menu::where('id_modul',$modul->id_modul)->where('nm_menu','Tambah Alumni')->first();
+        $menu = Menu::where('id_modul', $modul->id_modul)->where('nm_menu', 'Tambah Alumni')->first();
         $menu->deleted_at = $now;
         $menu->deleted_by = 'A8bT515358553655b8b4b05a6d86';
         $menu->save();
         $menu->delete();
-
     }
 
     /**

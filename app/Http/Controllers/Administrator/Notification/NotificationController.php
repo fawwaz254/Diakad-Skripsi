@@ -94,7 +94,7 @@ class NotificationController extends Controller
                 'message'     => $validator->errors()->first()
             ];
         } else {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
