@@ -62,7 +62,7 @@
                                     @foreach ($roles as $role)
                                     <option value="{{ $role->id_role }}" {{$form->id_role == $role->id_role ? 'selected' : '' }}>{{ $role->nm_role }}</option>
                                     @endforeach
-                                    <option value="99">Public</option>
+                                    <option value="99" {{$form->id_role == 99 ? 'selected' : '' }}>Public</option>
                                 </select>
                             </div>
                         </div>
@@ -167,6 +167,8 @@
                                         <option value="custom_kelas" {{ $komponen->tipe_custom_form_komponen == 'custom_kelas' ? 'selected' : '' }}>Kelas (CUSTOM)</option>
                                         <option value="custom_siswa" {{ $komponen->tipe_custom_form_komponen == 'custom_siswa' ? 'selected' : '' }}>Siswa (CUSTOM)</option>
                                         <option value="custom_ttd" {{ $komponen->tipe_custom_form_komponen == 'custom_ttd' ? 'selected' : '' }}>Tanda Tangan (CUSTOM)</option>
+                                        <option value="file_single" {{ $komponen->tipe_custom_form_komponen == 'file_single' ? 'selected' : '' }}>File Single(PDF,FOTO, dsb)</option>
+                                        <option value="file_multiple" {{ $komponen->tipe_custom_form_komponen == 'file_multiple' ? 'selected' : '' }}>File Multiple (PDF,FOTO, dsb)</option>
                                     </select>
                                 </div>
 
@@ -175,10 +177,100 @@
                         <div class="body">
                             <div class="row clearfix">
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" id="pertanyaan{{$key}}">
+                                    @if($komponen->tipe_custom_form_komponen == "text")
                                     <input type="text" class="form-control" name="komponen[{{$key}}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="Teks Singkat" placeholder="Teks Singkat" disabled>
+                                    @elseif($komponen->tipe_custom_form_komponen == "number")
+                                    <input type="text" class="form-control" name="komponen[{{$key}}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="Jawaban Angka" placeholder="Jawaban Angka" disabled>
+
+                                    @elseif($komponen->tipe_custom_form_komponen == "select")
+                                    <!-- <input type="text" class="form-control" name="respon[{{$komponen->id_custom_form_komponen}}][]"  aria-required="true" aria-invalid="true" value="" placeholder="Masukkan Jawaban..."> -->
+                                    @foreach(json_decode($komponen->option_custom_form_komponen) as $index => $options)
+                                    <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
+                                        <input class="" type="radio" id="rad" disabled>
+                                        <label for="rad" style="width: 100%;">
+                                            <input type="text" class="form-control form-check-label" name="komponen[{{$key}}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="{{$options}}" placeholder="Jawaban 1">
+                                        </label>
+                                        @if($index == 0 )
+                                        <div class="btn btn-info" id="tambah{{$key}}" onclick="tambahOpsi('{{$key}}')" style="margin: 2px 10px 0px 10px; width: 100px;">
+                                            Tambah
+                                        </div>
+                                        @else
+                                        <div class="btn btn-danger delete" id="delete{{$key}}" onclick="hapusOpsi('{{$key}}')" style="margin: 2px 10px 0px 10px; width: 100px;">
+                                            Hapus
+                                        </div>
+                                        @endif
+                                    </div>
+                                    @endforeach
+
+                                    @elseif($komponen->tipe_custom_form_komponen == "checkbox")
+                                    @foreach(json_decode($komponen->option_custom_form_komponen) as $index => $options)
+                                    <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
+                                        <input class="" type="checkbox" id="rad" disabled>
+                                        <label for="rad" style="width: 100%;">
+                                            <input type="text" class="form-control form-check-label" name="komponen[{{$key}}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="{{$options}}" placeholder="Jawaban 1">
+                                        </label>
+                                        @if($index == 0 )
+                                        <div class="btn btn-info" id="tambah{{$key}}" onclick="tambahMultipleChoice('{{$key}}')" style="margin: 2px 10px 0px 10px; width: 100px;">
+                                            Tambah
+                                        </div>
+                                        @else
+                                        <div class="btn btn-danger delete" id="delete{{$key}}" onclick="hapusOpsi('{{$key}}')" style="margin: 2px 10px 0px 10px; width: 100px;">
+                                            Hapus
+                                        </div>
+                                        @endif
+                                    </div>
+                                    @endforeach
+                                    @elseif($komponen->tipe_custom_form_komponen == "custom_kelas")
+                                    <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
+                                        <select id="multiKelas" class="form-control show-tick" id="select{{$key}}" name="komponen[{{$key}}][option_custom_form_komponen][]" placeholder="" disabled>
+                                            <option value="null" >Responden Dapat Memilih Kelas</option>
+                                        </select>
+                                    </div>
+                                    @elseif($komponen->tipe_custom_form_komponen == "custom_siswa")
+                                    <div class="d-flex">
+                                        <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
+                                                <select id="multiKelas" class="form-control show-tick" id="select{{$key}}" name="komponen[{{$key}}][option_custom_form_komponen][]" disabled>
+                                                    <option value="null" >Responden Dapat Memilih Kelas</option>
+                                                </select>
+
+                                                <select id="multiSiswa" class="form-control show-tick" id="select{{$key}}" name="siswa[]" disabled>
+                                                    <option value="null" >Diikuti Dengan Memilih Nama Siswa</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                    @elseif($komponen->tipe_custom_form_komponen == "file_single")
+                                    <input type="text" class="form-control"  name="komponen[{{$key}}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="FILE" placeholder="Jawaban" disabled>
+                                    <div style="margin-top: 40px; display:flex; align-items:center; gap: 10px">
+                                        <select id="fileType{{$key}}" class="form-control show-tick" required name="komponen[{{$key}}][jenis_file][]">
+                                                            <option value="image/*" @if($komponen->komponen_settings['jenis_file'][0] == 'image/*') selected @endif>Gambar (semua ekstensi)</option>
+                                                            <option value=".pdf" @if($komponen->komponen_settings['jenis_file'][0] == '.pdf') selected @endif>Pdf</option>
+                                                            <option value=".doc" @if($komponen->komponen_settings['jenis_file'][0] == '.doc') selected @endif>Doc</option>
+                                                            <option value=".png" @if($komponen->komponen_settings['jenis_file'][0] == '.png') selected @endif>Png</option>
+                                                            <option value=".jpg" @if($komponen->komponen_settings['jenis_file'][0] == '.jpg') selected @endif>Jpg</option>
+                                        </select>
+                                    </div>
+                                    @elseif($komponen->tipe_custom_form_komponen == "file_multiple")
+                                    <input type="text" class="form-control"  name="komponen[{{$key}}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="FILE" placeholder="Jawaban" disabled>
+                                    <div style="margin-top: 40px; display:flex; align-items:center; gap: 10px">
+                                        <select id="fileType{{$key}}" class="form-control show-tick" required name="komponen[{{$key}}][jenis_file][]" multiple>
+                                                            
+                                                            <option value="image/*" @if(in_array('image/*',$komponen->komponen_settings['jenis_file'])) selected @endif>Gambar (semua ekstensi)</option>
+                                                            <option value=".pdf" @if(in_array('.pdf',$komponen->komponen_settings['jenis_file'])) selected @endif>Pdf</option>
+                                                            <option value=".doc" @if(in_array('.doc',$komponen->komponen_settings['jenis_file'])) selected @endif>Doc</option>
+                                                            <option value=".png" @if(in_array('.png',$komponen->komponen_settings['jenis_file'])) selected @endif>Png</option>
+                                                            <option value=".jpg" @if(in_array('.jpg',$komponen->komponen_settings['jenis_file'])) selected @endif>Jpg</option>
+                                        </select>
+                                    </div>
+                                    
+                                    @elseif($komponen->tipe_custom_form_komponen == "custom_ttd")
+                                    <div>Responden Dapat Mengirim TandaTangan</div>
+                                    <input type="text" class="form-control" name="komponen[{{$key}}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="Jawaban TTD" placeholder="Jawaban TTD" disabled>
+                                    @else
+                                    <input type="text" class="form-control" name="komponen[{{$key}}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="Teks Singkat" placeholder="Teks Singkat" disabled>
+
+                                    @endif
                                 </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                </div>
+
                             </div>
                         </div>
                         <div class="footer">
@@ -277,29 +369,25 @@
                 case 'custom_kelas':
                     $('#pertanyaan' + id).append(`
                                 <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
-                                <select id="multiKelas" class="form-control show-tick" id="select${id}" name="komponen[${id}][option_custom_form_komponen][]" multiple="multiple">
-                                        <option value="null" disabled>Pilih Kelas (Klik Untuk Menambahkan Silang Untuk Menghapus )</option>
+                                <select id="multiKelas" class="form-control show-tick" id="select${id}" name="komponen[${id}][option_custom_form_komponen][]" placeholder="" disabled>
+                                        <option value="null" >Responden Dapat Memilih Kelas</option>
                                     </select>
                                 </div>`)
-
-                    $('#multiKelas').select2()
                     break
                 case 'custom_siswa':
                     $('#pertanyaan' + id).append(`
                         <div class="d-flex">
                                 <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
-                                    <select id="multiKelas" class="form-control show-tick" id="select${id}" name="komponen[${id}][option_custom_form_komponen][]" multiple="multiple">
-                                        <option value="null" disabled>Pilih Kelas (Klik Untuk Menambahkan Silang Untuk Menghapus )</option>
+                                    <select id="multiKelas" class="form-control show-tick" id="select${id}" name="komponen[${id}][option_custom_form_komponen][]" disabled>
+                                        <option value="null" >Responden Dapat Memilih Kelas</option>
                                     </select>
 
                                     <select id="multiSiswa" class="form-control show-tick" id="select${id}" name="siswa[]" disabled>
-                                        <option value="null" disabled>Pilih Kelas (Klik Untuk Menambahkan Silang Untuk Menghapus )</option>
+                                        <option value="null" >Diikuti Dengan Memilih Nama Siswa</option>
                                     </select>
                                 </div>
                         </div>`)
 
-                    $('#multiKelas').select2()
-                    $('#multiSiswa').select2()
                     break
                 case 'checkbox':
                     $('#pertanyaan' + id).append(`
@@ -313,6 +401,44 @@
                                     </div>
                                 </div>`)
 
+                    break
+                    case 'file_single': 
+                    $('#pertanyaan' + id).append(`
+                    <input type="text" class="form-control"  name="komponen[${id}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="FILE" placeholder="Jawaban" disabled>
+                    <div style="margin-top: 40px; display:flex; align-items:center; gap: 10px">
+                        <select id="fileType${id}" class="form-control show-tick" required name="komponen[${id}][jenis_file][]">
+                                            <option value="image/*" >Gambar (semua ekstensi)</option>
+                                            <option value=".pdf" >Pdf</option>
+                                            <option value=".doc" >Doc</option>
+                                            <option value=".png" >Png</option>
+                                            <option value=".jpg" >Jpg</option>
+                        </select>
+                    </div>
+                    `)
+
+                    $('#fileType'+id).select2({
+                        placeholder: "Pilih Tipe File",
+
+                    });
+                    break
+                case 'file_multiple':
+                    $('#pertanyaan' + id).append(`
+                    <input type="text" class="form-control"  name="komponen[${id}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="FILE" placeholder="Jawaban" disabled>
+                    <div style="margin-top: 40px; display:flex; align-items:center; gap: 10px">
+                        <select id="fileType${id}" class="form-control show-tick" required name="komponen[${id}][jenis_file][]" multiple>
+                                            <option value="image/*" >Gambar (semua ekstensi)</option>
+                                            <option value=".pdf" >Pdf</option>
+                                            <option value=".doc" >Doc</option>
+                                            <option value=".png" >Png</option>
+                                            <option value=".jpg" >Jpg</option>
+                        </select>
+                    </div>
+                    `)
+
+                    $('#fileType'+id).select2({
+                        placeholder: "Pilih Tipe File",
+
+                    });
                     break
                 default:
                     // $(this).val('text')
@@ -418,6 +544,7 @@
             date: false,
             shortTime: false
         });
+        
         $('select').selectpicker();
 
     });
@@ -444,6 +571,8 @@
                                     <option value="custom_kelas">Kelas (CUSTOM)</option>
                                     <option value="custom_siswa">Siswa (CUSTOM)</option>
                                     <option value="custom_ttd">Tanda Tangan (CUSTOM)</option>
+                                    <option value="file_single">File Single(PDF,FOTO, dsb)</option>
+                                    <option value="file_multiple">File Multiple (PDF,FOTO, dsb)</option>
                                 </select>
                             </div>
 
@@ -454,8 +583,7 @@
                             <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" id="pertanyaan${current}">
                                 <input type="text" class="form-control" name="komponen[${current}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="Teks Singkat" placeholder="Teks Singkat" disabled>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">                                
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="footer">
@@ -528,7 +656,7 @@
     $(function() {
         let data = $('select[name*=jenis_custom_form]').val()
         changeState(data)
-
+        
     })
 
     $('select[name*=jenis_custom_form]').on('change', function() {
@@ -554,7 +682,7 @@
                                 </h2>
                                 <div id="tanggalManual">
                                     <input type="hidden" name="start_time" value="0">
-                                    <input type="number" id="pilihTanggal" min="1" max="31"  class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true" value="{{\Carbon\Carbon::parse($form->start_time)->day}}">
+                                    <input type="number" id="pilihTanggal" min="1" max="31"  class="timepicker form-control" name="end_time" required="" aria-required="true" aria-invalid="true" value="{{ $form->jenis_custom_form == 'bulanan' ?? \Carbon\Carbon::parse($form->start_time)->day}}">
                                     <small>input manual antara tanggal 1 hingga 31 (Otomatis Ke Akhir Bulan Jika Tidak Terdapat Tanggal 31/30)</small>
                                 </div>
                             </div>

@@ -8,6 +8,8 @@ use App\Models\CustomForm;
 use App\Models\CustomFormKomponen;
 use App\Models\CustomFormRespon;
 use App\Models\CustomFormSheet;
+use App\Models\Kelas;
+use App\Models\Pengguna;
 use App\Models\Role;
 use Carbon\Carbon;
 use Barryvdh\Debugbar\Facades\Debugbar;
@@ -15,6 +17,8 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
+use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomFormResponController extends Controller
@@ -139,7 +143,7 @@ class CustomFormResponController extends Controller
             $auth_data = $input->auth_data;
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-
+            
             $form = CustomForm::with(['form_komponen' => function ($query) {
                 $query->orderBy('updated_at', 'asc');
             }, 'role'])
@@ -174,12 +178,18 @@ class CustomFormResponController extends Controller
                 throw new Exception('FORM TELAH DIKUNCI');
             }
             
+            $hello = $form->whereHas('form_komponen',function($query){
+                $query->whereIn('tipe_custom_form_komponen',['custom_kelas','custom_siswa']);
+            })->find($id);
+            if(!is_null($hello)){
+                $kelas = Kelas::where('is_aktif', 1)->get();
 
-
+                return view('global/custom-form/add-respon-custom-form', compact('auth_data', 'form','kelas'));
+            }
 
             return view('global/custom-form/add-respon-custom-form', compact('auth_data', 'form'));
         } catch (ModelNotFoundException $e) {
-            $pesan = "TIDAK MEMILIKI AKSES :(";
+            $pesan = $e->getMessage()   ;
             return view('global/custom-form/add-respon-custom-form', compact('auth_data', 'pesan'));
         } catch (Exception $e) {
             $pesan = $e->getMessage();
@@ -245,9 +255,10 @@ class CustomFormResponController extends Controller
                     $res->id_custom_form_respon = $input->auth_data->sekolah_data->prefix . strtotime($sekarang) . uniqid();
                     $res->id_custom_form_sheet = $sheet->id_custom_form_sheet;
                     $res->id_custom_form_komponen = $key;
-                    $tipe = CustomFormKomponen::where('id_custom_form_komponen', $key)->select('tipe_custom_form_komponen')->first();
-
-                    if ($tipe['tipe_custom_form_komponen'] == 'custom_ttd' && isset($value[0])) {
+                    $komponen = CustomFormKomponen::where('id_custom_form_komponen', $key)->first();
+                    $tipe = $komponen['tipe_custom_form_komponen'];
+                    
+                    if ($tipe == 'custom_ttd' && isset($value[0])) {
                         $image_parts = explode(";base64,", $value[0]);
 
                         $image_type_aux = explode("image/", $image_parts[0]);
@@ -260,16 +271,42 @@ class CustomFormResponController extends Controller
                         $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
                         $path = 'custom-form/' . $res->id_custom_form_sheet . '/';
                         $nama_file = $res->id_custom_form_respon . uniqid() . '.' . $image_type;
-                        $file = Storage::disk('local')->put($singkat_sekolah . '/humas/' . $path . $nama_file, $image_base64, 'public');
-                        $res->respon = $path . $nama_file;
+                        $file = Storage::disk('spaces')->put($singkat_sekolah . '/humas/' . $path . $nama_file, $image_base64, 'public');
+                        $res->respon = $singkat_sekolah . '/humas/'. $path . $nama_file;
+                    }else if (($request->file('respon') != null) && ($tipe == 'file_single' || $tipe == 'file_multiple' )) {
+                        $singkat_sekolah = $auth_data->sekolah_data->nm_singkat_sekolah;
+                        $path = 'custom-form/' . $res->id_custom_form_sheet ;
+                        $nama_file_base = $res->id_custom_form_respon . uniqid();
+                        if ($tipe == 'file_single') {
+                            if('.'.$request->file('respon')[$key][0]->getClientOriginalExtension() != $komponen->komponen_settings['jenis_file'][0]){
+                                throw new ValidationException('TIPE FILE SALAH');
+                            }
+                            $nama_file = $nama_file_base;
+                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $path, $request->file('respon')[$key][0], 'public');
+                            $res->respon = json_encode([$file]);
+                            
+                        } else {
+                            $multi = [];
+                    
+                            foreach ($request->file('respon')[$key] as $v) {
+                                if(!in_array('.'.$v->getClientOriginalExtension(), $komponen->komponen_settings['jenis_file'])){
+                                    throw new ValidationException('TIPE FILE SALAH');
+                                }
+                                $nama_file = $nama_file_base . uniqid();
+                                $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $path, $v, 'public');
+                                array_push($multi, $file);
+                            }
+                            $res->respon = json_encode($multi);
+                        }
+
                     } else {
                         $res->respon = json_encode($value);
                     }
-
                     $res->created_at = $sekarang;
                     $res->created_by = $auth_data->pengguna->id_pengguna;
                     $res->save();
                 }
+                
             });
 
             return [
@@ -277,7 +314,8 @@ class CustomFormResponController extends Controller
                 'path' => '#' . $this->redirectBack($request->path()) . '/custom-form',
                 'message' => 'Berhasil Mengirim Respon'
             ];
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             return [
                 'status' => 300,
                 'message' => 'Gagal Mengirim Respon'
@@ -382,6 +420,35 @@ class CustomFormResponController extends Controller
                 'status' => 300,
                 'message' => 'Tidak Dapat Menghapus Data!'
             ];
+        }
+    }
+
+    public function getDataSiswa(Request $request){
+
+        try {
+
+            $input = (object) $request->input();
+            $auth_data = $input->auth_data;
+
+            $request->validate([
+                'id_kelas' => 'required'
+            ]);
+
+            $id_kelas = $input->id_kelas;
+
+            $siswa = Pengguna::select('nm_pengguna')->whereHas('status_pengguna', function ($q) {
+                $q->where('aktif_status_pengguna', 1);
+            })->whereHas('siswa', function ($q) use ($id_kelas) {
+                $q->where('id_kelas', $id_kelas);
+            })->orderBy('nm_pengguna')->get();
+
+            return response()->json(['data' => $siswa]);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 300,
+                'message' => 'Tidak Dapat Menghapus Data!'
+            ])->status(300);
         }
     }
 }

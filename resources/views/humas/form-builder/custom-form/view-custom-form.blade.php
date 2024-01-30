@@ -24,7 +24,7 @@
                                     <th>Nama Form</th>
                                     <th>Role</th>
                                     <th>Status</th>
-                                    
+                                    <th>Kode</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -74,6 +74,16 @@
                 searchable: false,
                 render: function(data) {
                     return data == 1 ? 'AKTIF': 'TIDAK AKTIF';
+                }
+                    
+            },
+            {
+                data: 'kode',
+                name: 'kode',
+                className: 'align-center',
+                searchable: false,
+                render: function(data) {
+                    return data.ada == true ? data.kode : 'TIDAK PUBLIK';
                 }
                     
             },

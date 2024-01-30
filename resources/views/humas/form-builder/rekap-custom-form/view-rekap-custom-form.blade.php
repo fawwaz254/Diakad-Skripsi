@@ -146,6 +146,16 @@
                                         <img src="${data.data}" alt="" style="width:300px; height:300px">
                                         </a>
                         `
+                    }else if(data.jenis != null && data.jenis == 'file'){
+                        let txt = ''
+                        $.each(data.data, function(index,value){
+                            txt +=(`
+                        <a href="${data.data}">
+                        File-${index+1}
+                        </a>`)
+                        })
+
+                        return txt;
                     }
                 }
                 return data;

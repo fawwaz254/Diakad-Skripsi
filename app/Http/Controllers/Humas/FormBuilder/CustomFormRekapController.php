@@ -160,12 +160,16 @@ class CustomFormRekapController extends Controller
             $rekap_tabel->addColumn(str_replace(' ', '_', preg_replace('/\s+/', ' ', strtolower(trim($value->nm_custom_form_komponen . $key . $value->id_custom_form_komponen)))), function ($items) use ($value) {
 
                 $jawa = CustomFormRespon::with('form_komponen')->where('id_custom_form_komponen', $value->id_custom_form_komponen)->where('id_custom_form_sheet', $items->id_custom_form_sheet)->first();
-                return $jawa->form_komponen->tipe_custom_form_komponen == 'custom_ttd' ? 
+                $tipe = $jawa->form_komponen->tipe_custom_form_komponen;
+                return $tipe == 'custom_ttd' || ($tipe == 'file_single' && (isset($jawa->form_komponen->komponen_settings['jenis_file']) && in_array($jawa->form_komponen->komponen_settings['jenis_file'],['png','jpg','svg','jpeg','image/*'])) ) ? 
                 [
                     'jenis' => 'image',
-                    'data' => $jawa->respon 
+                    'data' => json_decode($jawa->respon)
                 ]
-                : json_decode($jawa->respon);
+                : ($tipe == 'file_multiple' || $tipe == 'file_single' ? [
+                    'jenis' => 'file',
+                    'data' => json_decode($jawa->respon) 
+                ] : json_decode($jawa->respon));
             });
         }
         return $rekap_tabel->make(true);

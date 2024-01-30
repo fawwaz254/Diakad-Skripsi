@@ -192,7 +192,6 @@
         $('select[name*=tipe_custom_form_komponen]').on('change', function() {
             var id = $(this).attr('id')
 
-            console.log($(this).val())
             $('#pertanyaan' + id).children().remove()
             var pilihan = $(this).val()
 
@@ -226,29 +225,25 @@
                 case 'custom_kelas':
                     $('#pertanyaan' + id).append(`
                                 <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
-                                <select id="multiKelas" class="form-control show-tick" id="select${id}" name="komponen[${id}][option_custom_form_komponen][]" multiple="multiple">
-                                        <option value="null" disabled>Pilih Kelas (Klik Untuk Menambahkan Silang Untuk Menghapus )</option>
+                                <select id="multiKelas" class="form-control show-tick" id="select${id}" name="komponen[${id}][option_custom_form_komponen][]" placeholder="" disabled>
+                                        <option value="null" >Responden Dapat Memilih Kelas</option>
                                     </select>
                                 </div>`)
-
-                    $('#multiKelas').select2()
                     break
                 case 'custom_siswa':
                     $('#pertanyaan' + id).append(`
                         <div class="d-flex">
                                 <div style="margin-bottom: 40px; display:flex; align-items:center; gap: 10px">
-                                    <select id="multiKelas" class="form-control show-tick" id="select${id}" name="komponen[${id}][option_custom_form_komponen][]" multiple="multiple">
-                                        <option value="null" disabled>Pilih Kelas (Klik Untuk Menambahkan Silang Untuk Menghapus )</option>
+                                    <select id="multiKelas" class="form-control show-tick" id="select${id}" name="komponen[${id}][option_custom_form_komponen][]" disabled>
+                                        <option value="null" >Responden Dapat Memilih Kelas</option>
                                     </select>
 
                                     <select id="multiSiswa" class="form-control show-tick" id="select${id}" name="siswa[]" disabled>
-                                        <option value="null" disabled>Pilih Kelas (Klik Untuk Menambahkan Silang Untuk Menghapus )</option>
+                                        <option value="null" >Diikuti Dengan Memilih Nama Siswa</option>
                                     </select>
                                 </div>
                         </div>`)
 
-                    $('#multiKelas').select2()
-                    $('#multiSiswa').select2()
                     break
                 case 'checkbox':
                     $('#pertanyaan' + id).append(`
@@ -262,6 +257,44 @@
                                     </div>
                                 </div>`)
 
+                    break
+                case 'file_single': 
+                    $('#pertanyaan' + id).append(`
+                    <input type="text" class="form-control"  name="komponen[${id}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="FILE" placeholder="Jawaban" disabled>
+                    <div style="margin-top: 40px; display:flex; align-items:center; gap: 10px">
+                        <select id="fileType" class="form-control show-tick" id="select${id}" required name="komponen[${id}][jenis_file][]">
+                                            <option value="image/*" >Gambar (semua ekstensi)</option>
+                                            <option value=".pdf" >Pdf</option>
+                                            <option value=".doc" >Doc</option>
+                                            <option value=".png" >Png</option>
+                                            <option value=".jpg" >Jpg</option>
+                        </select>
+                    </div>
+                    `)
+
+                    $('#fileType').select2({
+                        placeholder: "Pilih Tipe File",
+
+                    });
+                    break
+                case 'file_multiple':
+                    $('#pertanyaan' + id).append(`
+                    <input type="text" class="form-control"  name="komponen[${id}][option_custom_form_komponen][]" required="" aria-required="true" aria-invalid="true" value="FILE" placeholder="Jawaban" disabled>
+                    <div style="margin-top: 40px; display:flex; align-items:center; gap: 10px">
+                        <select id="fileType" class="form-control show-tick" id="select${id}" required name="komponen[${id}][jenis_file][]" multiple>
+                                            <option value="image/*" >Gambar (semua ekstensi)</option>
+                                            <option value=".pdf" >Pdf</option>
+                                            <option value=".doc" >Doc</option>
+                                            <option value=".png" >Png</option>
+                                            <option value=".jpg" >Jpg</option>
+                        </select>
+                    </div>
+                    `)
+
+                    $('#fileType').select2({
+                        placeholder: "Pilih Tipe File",
+
+                    });
                     break
                 default:
                     // $(this).val('text')
@@ -393,6 +426,8 @@
                                     <option value="custom_kelas">Kelas (CUSTOM)</option>
                                     <option value="custom_siswa">Siswa (CUSTOM)</option>
                                     <option value="custom_ttd">Tanda Tangan (CUSTOM)</option>
+                                    <option value="file_single">File Single(PDF,FOTO, dsb)</option>
+                                    <option value="file_multiple">File Multiple (PDF,FOTO, dsb)</option>
                                 </select>
                             </div>
 

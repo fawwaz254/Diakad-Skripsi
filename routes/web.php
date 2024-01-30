@@ -108,6 +108,7 @@ Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionC
 
 Route::get('forms',[CustomFormResponController::class,'landingPage']);
 Route::post('forms',[CustomFormResponController::class,'findForms']);
+Route::post('forms/data/siswa',[CustomFormResponController::class,'getDataSiswa']);
 Route::resource('forms.viewform', CustomFormResponController::class)->shallow();;
 Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);

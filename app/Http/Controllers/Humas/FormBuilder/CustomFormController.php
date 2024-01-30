@@ -61,6 +61,12 @@ class CustomFormController extends Controller
                 );
                 return $data;
             })
+            ->addColumn('kode',function($item){
+                return [
+                    'ada' => isset($item->form_settings['kode']),
+                    'kode' => $item->form_settings['kode'] ?? ''
+                ];
+            })
             ->make(true);
     }
 
@@ -136,6 +142,14 @@ class CustomFormController extends Controller
                     $kom_rules = [
                         'mandatory' => isset($d['mandatory']) ? 'true' : 'false'
                     ];
+
+                    if(isset($d['jenis_file'])){
+                        $kom_rules= [   
+                            'mandatory' => isset($d['mandatory']) ? 'true' : 'false',
+                            'jenis_file' => $d['jenis_file']
+                        ];
+                        unset($d['jenis_file']);
+                    }
                     $id_custom_komponen = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $d['id_custom_form'] = $custom_form->id_custom_form;
                     $d['id_custom_form_komponen'] = $id_custom_komponen;

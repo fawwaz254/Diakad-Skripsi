@@ -7,6 +7,8 @@ use App\Models\CustomForm;
 use App\Models\CustomFormKomponen;
 use App\Models\CustomFormRespon;
 use App\Models\CustomFormSheet;
+use App\Models\Kelas;
+use App\Models\Pengguna;
 use App\Models\Role;
 use App\Models\Sekolah;
 use Carbon\Carbon;
@@ -16,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomFormResponController extends Controller
@@ -62,13 +65,16 @@ class CustomFormResponController extends Controller
             }
 
             if (isset($form->form_settings['limit']) && $form->form_settings['limit'] == 'true') {
-                $sheets = CustomFormSheet::where('created_by', $request->ip())->first();
+                $sheets = CustomFormSheet::where('id_custom_form',$id)->where('created_by', $request->ip())->first();
                 if ($sheets) {
                     $pesan = 'Form ' . $form->nm_custom_form . ' Hanya Menerima 1 Respon';
                     return view('public/forms/index', compact('form', 'pesan'));
                 }
             }
-            return view('public/forms/index', compact('form'));
+
+            $kelas = Kelas::where('is_aktif',1)->get();
+
+            return view('public/forms/index', compact('form','kelas'));
         } catch (Exception $e) {
             $pesan = 'Anda Tidak Ada Akses Mohon Maaf >:(';
             return view('public/forms/index', compact('pesan'));
@@ -85,7 +91,6 @@ class CustomFormResponController extends Controller
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             $sekola = Sekolah::first();
-            // dd($input);
             // dd(strtotime($now));
 
             $request->validate([
@@ -117,16 +122,16 @@ class CustomFormResponController extends Controller
                 $sheet->created_at = $now;
                 $sheet->created_by = $request->ip();
                 $sheet->save();
-
                 foreach ($input->respon as $key => $value) {
                     $sekarang = Carbon::now(env('APP_TIMEZONE', ''));
                     $res = new CustomFormRespon();
                     $res->id_custom_form_respon = $sekola->prefix . strtotime($sekarang) . uniqid();
                     $res->id_custom_form_sheet = $sheet->id_custom_form_sheet;
                     $res->id_custom_form_komponen = $key;
-                    $tipe = CustomFormKomponen::where('id_custom_form_komponen', $key)->select('tipe_custom_form_komponen')->first();
-
-                    if ($tipe['tipe_custom_form_komponen'] == 'custom_ttd' && isset($value[0])) {
+                    $komponen = CustomFormKomponen::where('id_custom_form_komponen', $key)->first();
+                    $tipe = $komponen['tipe_custom_form_komponen'];
+                    
+                    if ($tipe == 'custom_ttd' && isset($value[0])) {
                         $image_parts = explode(";base64,", $value[0]);
 
                         $image_type_aux = explode("image/", $image_parts[0]);
@@ -139,12 +144,38 @@ class CustomFormResponController extends Controller
                         $singkat_sekolah = $sekola->nm_singkat_sekolah;
                         $path = 'custom-form/' . $res->id_custom_form_sheet . '/';
                         $nama_file = $res->id_custom_form_respon . uniqid() . '.' . $image_type;
-                        $file = Storage::disk('local')->put($singkat_sekolah . '/humas/' . $path . $nama_file, $image_base64, 'public');
-                        $res->respon = $path . $nama_file;
+                        $file = Storage::disk('spaces')->put($singkat_sekolah . '/humas/' . $path . $nama_file, $image_base64, 'public');
+                        $res->respon = json_encode($singkat_sekolah . '/humas/' .$path . $nama_file);
+                    }else if (($request->file('respon') != null) && ($tipe == 'file_single' || $tipe == 'file_multiple' )) {
+                        $singkat_sekolah = $sekola->nm_singkat_sekolah;
+                        $path = 'custom-form/' . $res->id_custom_form_sheet;
+                        $nama_file_base = $res->id_custom_form_respon . uniqid();
+                        if ($tipe == 'file_single') {
+                            if('.'.$request->file('respon')[$key][0]->getClientOriginalExtension() != $komponen->komponen_settings['jenis_file'][0]){
+                                throw new ValidationException('TIPE FILE SALAH');
+                            }
+                            $nama_file = $nama_file_base;
+                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $path, $request->file('respon')[$key][0], 'public');
+                            $res->respon = json_encode([$file]);
+                            
+                        } else {
+                            $multi = [];
+                    
+                            foreach ($request->file('respon')[$key] as $v) {
+                                if(!in_array('.'.$v->getClientOriginalExtension(), $komponen->komponen_settings['jenis_file'])){
+                                    throw new ValidationException('TIPE FILE SALAH');
+                                }
+                                $nama_file = $nama_file_base . uniqid();
+                                $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $path, $v, 'public');
+                                array_push($multi, $file);
+                            }
+                            $res->respon = json_encode($multi);
+                        }
+
                     } else {
                         $res->respon = json_encode($value);
                     }
-
+                    
                     $res->created_at = $sekarang;
                     $res->created_by = $request->ip();
                     $res->save();
@@ -153,9 +184,46 @@ class CustomFormResponController extends Controller
 
             $pesan = 'Berhasil Mengirim Respon';
             return view('public/forms/index', compact('form', 'pesan'));
-        } catch (Exception $e) {
-            $pesan = 'Anda Tidak Ada Akses Mohon Maaf >:(';
+        } 
+        catch (ValidationException $e){
+            $pesan = $e->getMessage();
+
             return view('public/forms/index', compact('pesan'));
+        }
+        catch (Exception $e) {
+            $pesan = 'Anda Tidak Ada Akses Mohon Maaf >:(';
+
+            return view('public/forms/index', compact('pesan'));
+        }
+    }
+
+    public function getDataSiswa(Request $request){
+
+        try {
+
+            $input = (object) $request->input();
+
+            $request->validate([
+                'id_kelas' => 'required'
+            ], [
+            'id_kelas.required' => 'The id_kelas field is required.'
+            ]);
+
+            $id_kelas = $input->id_kelas;
+
+            $siswa = Pengguna::select('nm_pengguna')->whereHas('status_pengguna', function ($q) {
+                $q->where('aktif_status_pengguna', 1);
+            })->whereHas('siswa', function ($q) use ($id_kelas) {
+                $q->where('id_kelas', $id_kelas);
+            })->orderBy('nm_pengguna')->get();
+
+            return response()->json(['data' => $siswa],200);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 300,
+                'message' => 'Data Tidak Ditemukan!'
+            ],300);
         }
     }
 }

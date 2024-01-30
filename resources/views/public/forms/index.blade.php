@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="{{ request()->segment(1) }}" name="role">
     <meta name="token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     @yield('meta')
     @php
@@ -29,6 +31,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
     <style>
         * {
             font-family: 'Montserrat', sans-serif;
@@ -37,9 +40,9 @@
     
 </head>
 
-<body class="bg-[#f0ebf8]">
+<body class="bg-[#f0ebf8] px-4">
     
-    <form class="flex flex-col justify-center items-center" id="form" method="post" action="">
+    <form class="flex flex-col justify-center items-center" id="form" method="post" action="" enctype="multipart/form-data">
         @method('POST')
         @CSRF
         @if(!isset($pesan))<input type="hidden" value="{{$form->id_custom_form}}" name="id_custom_form">@endif
@@ -80,7 +83,7 @@
         @foreach($form->form_komponen as $index => $komponen)
 
 
-        <div class="bg-white rounded-lg max-w-[640px] w-full h-max mt-4 relative">
+        <div class="bg-white rounded-lg max-w-[640px] w-full h-max mt-4 relative ">
             <div class="m-6" id="pertanyaan{{$komponen->id_custom_form_komponen}}">
                 <h1 class="font-semibold text-md">{{$komponen->label_custom_form_komponen}} @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true')<span class="text-red-600"> *</span>@endif</h1>
                 @if($komponen->tipe_custom_form_komponen == "text")
@@ -114,6 +117,29 @@
                     </div>
                     @endforeach
                 </div>
+                @elseif($komponen->tipe_custom_form_komponen == "custom_kelas" && isset($kelas))
+                <div class="flex m-4" >
+                    <select class="w-full form-control show-tick" id="kelas_{{$komponen->id_custom_form_komponen}}_{{$komponen->label_custom_form_komponen}}" name="respon[{{$komponen->id_custom_form_komponen}}][]" placeholder="" @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
+                        <option>Pilih Kelas</option>
+                            @foreach($kelas as $k)
+                                <option value="{{$k->nm_kelas}}">{{$k->nm_kelas}}</option>
+                            @endforeach
+                    </select>
+                </div>
+                @elseif($komponen->tipe_custom_form_komponen == "custom_siswa" && isset($kelas))
+                <div class="flex m-4" >
+                    <select class="w-full form-control show-tick" onchange="getSiswa(this)" id="kelas_{{$komponen->id_custom_form_komponen}}_{{$komponen->tipe_custom_form_komponen}}" placeholder="" @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
+                        <option disabled selected>Pilih Kelas</option>
+                        @foreach($kelas as $k)
+                        <option value="{{$k->id_kelas}}" >{{$k->nm_kelas}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex m-4" >
+                    <select class="w-full form-control show-tick" id="kelas_{{$komponen->id_custom_form_komponen}}_{{$komponen->tipe_custom_form_komponen}}_siswa" name="respon[{{$komponen->id_custom_form_komponen}}][]" placeholder="" @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
+                        <option disabled selected>Pilih Siswa</option>
+                    </select>
+                </div>                
                 @elseif($komponen->tipe_custom_form_komponen == "custom_ttd")
 
                 <small class="text-gray-400">Tanda Tangan Pada Kotak Di Bawah, Opsi Hapus untuk menghapus TTD</small>
@@ -142,9 +168,10 @@
                         </div>
                         <input class="opacity-0
                         w-full h-40
-                        " aria-describedby="file_input_help" id="file_input" type="file" name="respon[{{$komponen->id_custom_form_komponen}}][]">
+                        " accept="{{implode(',',$komponen->komponen_settings['jenis_file'])}}"  aria-describedby="file_input_help" id="file_{{$komponen->id_custom_form_komponen}}" type="file" name="respon[{{$komponen->id_custom_form_komponen}}][]" @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
+                        <input id="" type="hidden" name="respon[{{$komponen->id_custom_form_komponen}}][]" value="{{$komponen->id_custom_form_komponen}}">
                     </div>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="file_input_help">{{implode(',',$komponen->komponen_settings['jenis_file'])}}</p>
                 </div>
                 @elseif($komponen->tipe_custom_form_komponen == "file_multiple")
                 <small class="text-gray-400">Tarik File Kedalam kotak atau klik kotak</small>
@@ -163,12 +190,15 @@
                         </div>
                         <input class="opacity-0
                         w-full min-h-40
-                        " name="file" id="file_multi" type="file" multiple title="" accept="image/*" name="respon[{{$komponen->id_custom_form_komponen}}][]">
+                        " id="file_multi" type="file" title="" accept="{{implode(',',$komponen->komponen_settings['jenis_file'])}}" name="respon[{{$komponen->id_custom_form_komponen}}][]" multiple @if(isset($komponen->komponen_settings['mandatory']) && $komponen->komponen_settings['mandatory'] == 'true') required @endif>
+                        <input id="" type="hidden" name="respon[{{$komponen->id_custom_form_komponen}}][]" value="{{$komponen->id_custom_form_komponen}}">
+                        
                     </div>
 
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="file_input_help">{{implode(',',$komponen->komponen_settings['jenis_file'])}}</p>
                 </div>
                 @endif
+
             </div>
         </div>
 
@@ -188,8 +218,47 @@
             </div>
         </div>
         @endif
+
     </form>
     @if(!isset($pesan))
+    <script>
+    var siswa_url = '/forms/data/siswa'
+
+    function getSiswa(ths){
+        let id_siswa_component = $('#' +$(ths).attr('id') +'_siswa');
+        console.log(id_siswa_component.attr('id'))
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: siswa_url,
+                type: "POST",
+                dataType: "json",
+                data:{
+                    id_kelas: $(ths).val(),
+                },
+                success: function (data) {
+                    console.log(data);
+                    id_siswa_component.prop('disabled',false)
+                    id_siswa_component.empty();
+                    $.each(data.data,function(index,value){
+                        $(id_siswa_component).append(`
+                            <option value="${value.nm_pengguna}">${value.nm_pengguna}</option> 
+                        `)
+                    });
+                },
+                error: function (data) {
+                    id_siswa_component.prop('disabled',true)
+                },
+                
+            });
+    }
+    
+    $(function(){
+        $('select').select2()
+    })
+
+</script>
     <script>
         $('#btn-res').on('click', function() {
             $('#form').get(0).reset();
@@ -199,58 +268,58 @@
     <script>
         var filesToUpload = []
 
-        $('input[name="file"]').on('change', function(e) {
-            console.log('gg')
-            for (let i = 0; i < e.target.files.length; i++) {
-                let myFile = e.target.files[i];
-                let myFileID = "FID" + (1000 + Math.random() * 9000).toFixed(0);
-                filesToUpload.push({
-                    file: myFile,
-                    size: myFile.size,
-                    FID: myFileID,
-                    name: myFile.name
-                });
-            }
-            display();
-            e.target.value = null;
-        })
+        // $('').on('change', function(e) {
+        //     console.log('gg')
+        //     for (let i = 0; i < e.target.files.length; i++) {
+        //         let myFile = e.target.files[i];
+        //         let myFileID = "FID" + (1000 + Math.random() * 9000).toFixed(0);
+        //         filesToUpload.push({
+        //             file: myFile,
+        //             size: myFile.size,
+        //             FID: myFileID,
+        //             name: myFile.name
+        //         });
+        //     }
+        //     display();
+        //     e.target.value = null;
+        // })
 
-        const display = () => {
-            $('#file-holder').empty();
-            if (filesToUpload.length !== 0) {
-                $('#belum-ada').addClass('hidden')
-            } else {
-                $('#belum-ada').removeClass('hidden')
-            }
-            for (let i = 0; i < filesToUpload.length; i++) {
-                $("#file-holder").append(`
-                            <div class="bg-indigo-200 rounded-lg w-full h-12 px-4 flex justify-center items-center text-white font-medium relative">
-                                <div data-fid="${filesToUpload[i].FID}" class="remove-button absolute -top-2 -right-2 bg-red-400 rounded-full w-5 h-5 flex justify-center items-center ring-2 ring-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="fill-white" height="16" width="12" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-                                    </svg>
-                                </div>
-                                <p>${filesToUpload[i].name}</p>
-                            </div>
-                            `);
-            }
+        // const display = () => {
+        //     $('#file-holder').empty();
+        //     if (filesToUpload.length !== 0) {
+        //         $('#belum-ada').addClass('hidden')
+        //     } else {
+        //         $('#belum-ada').removeClass('hidden')
+        //     }
+        //     for (let i = 0; i < filesToUpload.length; i++) {
+        //         $("#file-holder").append(`
+        //                     <div class="bg-indigo-200 rounded-lg w-full h-12 px-4 flex justify-center items-center text-white font-medium relative">
+        //                         <div data-fid="${filesToUpload[i].FID}" class="remove-button absolute -top-2 -right-2 bg-red-400 rounded-full w-5 h-5 flex justify-center items-center ring-2 ring-white">
+        //                             <svg xmlns="http://www.w3.org/2000/svg" class="fill-white" height="16" width="12" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+        //                                 <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+        //                             </svg>
+        //                         </div>
+        //                         <p>${filesToUpload[i].name}</p>
+        //                     </div>
+        //                     `);
+        //     }
 
-        };
+        // };
 
-        $(document).on('click', '.remove-button', function() {
-            var fidToRemove = $(this).data('fid');
-            for (let i = 0; i < filesToUpload.length; i++) {
-                if (filesToUpload[i].FID === fidToRemove) {
-                    filesToUpload.splice(i, 1);
-                    break;
-                }
-            }
-            display();
-        });
+        // $(document).on('click', '.remove-button', function() {
+        //     var fidToRemove = $(this).data('fid');
+        //     for (let i = 0; i < filesToUpload.length; i++) {
+        //         if (filesToUpload[i].FID === fidToRemove) {
+        //             filesToUpload.splice(i, 1);
+        //             break;
+        //         }
+        //     }
+        //     display();
+        // });
 
-        function bytesToMB(bytes) {
-            return (bytes / (1024 * 1024)).toFixed(2);
-        }
+        // function bytesToMB(bytes) {
+        //     return (bytes / (1024 * 1024)).toFixed(2);
+        // }
     </script>
 
     <!-- SCRIPT INPUT CUSTOM TTD

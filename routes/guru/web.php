@@ -550,6 +550,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('custom-form/submitted/{id}',[CustomFormResponController::class, 'indexAllForm']);
             Route::resource('custom-form.form', CustomFormResponController::class)->shallow();
             Route::get('data/datatables',[CustomFormResponController::class,'indexDataTables']);
+            Route::post('data/siswa',[CustomFormResponController::class,'getDataSiswa']);
             Route::get('data/all-datatables/{id}',[CustomFormResponController::class,'indexAllDataTables']);
             
         });
