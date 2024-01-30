@@ -46,7 +46,7 @@ class MonitoringKelasKosongController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $tgl = $now->toDateString();
         $hari = $now->dayOfWeekIso;
         $jam = $now->hour;
@@ -67,38 +67,38 @@ class MonitoringKelasKosongController extends BaseController
                                     LEFT JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
                                     LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
                                         AND DATE(pmp.tgl_entry) = DATE(NOW()) 
-                                        AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
+                                        AND WEEKDAY(pmp.tgl_entry) = ' . $hari . '-1
                                         AND pmp.deleted_at IS NULL
-                                    WHERE jkm.id_jadwal_hari = '.$hari.' 
+                                    WHERE jkm.id_jadwal_hari = ' . $hari . ' 
                                     AND jkm.deleted_at IS NULL
                                     AND pmp.id_presensi_mp IS NULL
-                                    AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
-                                    AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
+                                    AND kmp.id_semester = "' . $semester_aktif->id_semester . '"
+                                    AND TIME("' . $now . '") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
                                     ORDER BY jj.jam_mulai, jj.menit_mulai, k.tingkat, k.nm_kelas');
-                                    
+
         return Datatables::of($list_data)
-                ->addColumn('nm_pengguna', function ($item) {
-                    if (! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                        return $item->gelar_depan." ".$item->nm_pengguna.", ".$item->gelar_belakang;
-                    } elseif (! empty($item->gelar_depan)) {
-                        return $item->gelar_depan." ".$item->nm_pengguna;
-                    } elseif (! empty($item->gelar_belakang)) {
-                        return $item->nm_pengguna.", ".$item->gelar_belakang;
-                    } else {
-                        return $item->nm_pengguna;
-                    }
-                })
-                ->addColumn('jam', function ($item) {
-                    return $item->jam_mulai.':'.$item->menit_mulai.' - '.$item->jam_selesai.':'.$item->menit_selesai;
-                })
-                ->addColumn('status', function ($item) {
-                    if (!empty($item->id_presensi_mp)) {
-                        return 'Sudah absensi kelas';
-                    } else {
-                        return 'Kelas kosong';
-                    }
-                })
-                ->make(true);
+            ->addColumn('nm_pengguna', function ($item) {
+                if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                    return $item->gelar_depan . " " . $item->nm_pengguna . ", " . $item->gelar_belakang;
+                } elseif (!empty($item->gelar_depan)) {
+                    return $item->gelar_depan . " " . $item->nm_pengguna;
+                } elseif (!empty($item->gelar_belakang)) {
+                    return $item->nm_pengguna . ", " . $item->gelar_belakang;
+                } else {
+                    return $item->nm_pengguna;
+                }
+            })
+            ->addColumn('jam', function ($item) {
+                return $item->jam_mulai . ':' . $item->menit_mulai . ' - ' . $item->jam_selesai . ':' . $item->menit_selesai;
+            })
+            ->addColumn('status', function ($item) {
+                if (!empty($item->id_presensi_mp)) {
+                    return 'Sudah absensi kelas';
+                } else {
+                    return 'Kelas kosong';
+                }
+            })
+            ->make(true);
     }
 
     public function datatablesRekapMonitoringKelasKosong(Request $request)
@@ -126,37 +126,37 @@ class MonitoringKelasKosongController extends BaseController
                                     LEFT JOIN guru g ON g.id_guru = pm.id_guru AND g.deleted_at IS NULL
                                     LEFT JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
                                     LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
-                                        AND DATE(pmp.tgl_presensi) = DATE("'.$on_date.'") 
-                                        AND WEEKDAY(pmp.tgl_presensi) = '.$hari.'-1
+                                        AND DATE(pmp.tgl_presensi) = DATE("' . $on_date . '") 
+                                        AND WEEKDAY(pmp.tgl_presensi) = ' . $hari . '-1
                                         AND pmp.deleted_at IS NULL
-                                    WHERE jkm.id_jadwal_hari = '.$hari.' 
+                                    WHERE jkm.id_jadwal_hari = ' . $hari . ' 
                                     AND jkm.deleted_at IS NULL
                                     AND pmp.id_presensi_mp IS NULL
-                                    AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
+                                    AND kmp.id_semester = "' . $semester_aktif->id_semester . '"
                                     ORDER BY jj.jam_mulai, jj.menit_mulai, k.tingkat, k.nm_kelas');
-                                    
+
         return Datatables::of($list_data)
-                ->addColumn('nm_pengguna', function ($item) {
-                    if (! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                        return $item->gelar_depan." ".$item->nm_pengguna.", ".$item->gelar_belakang;
-                    } elseif (! empty($item->gelar_depan)) {
-                        return $item->gelar_depan." ".$item->nm_pengguna;
-                    } elseif (! empty($item->gelar_belakang)) {
-                        return $item->nm_pengguna.", ".$item->gelar_belakang;
-                    } else {
-                        return $item->nm_pengguna;
-                    }
-                })
-                ->addColumn('jam', function ($item) {
-                    return $item->jam_mulai.':'.$item->menit_mulai.' - '.$item->jam_selesai.':'.$item->menit_selesai;
-                })
-                ->addColumn('status', function ($item) {
-                    if (!empty($item->id_presensi_mp)) {
-                        return 'Sudah absensi kelas';
-                    } else {
-                        return 'Kelas kosong';
-                    }
-                })
-                ->make(true);
+            ->addColumn('nm_pengguna', function ($item) {
+                if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                    return $item->gelar_depan . " " . $item->nm_pengguna . ", " . $item->gelar_belakang;
+                } elseif (!empty($item->gelar_depan)) {
+                    return $item->gelar_depan . " " . $item->nm_pengguna;
+                } elseif (!empty($item->gelar_belakang)) {
+                    return $item->nm_pengguna . ", " . $item->gelar_belakang;
+                } else {
+                    return $item->nm_pengguna;
+                }
+            })
+            ->addColumn('jam', function ($item) {
+                return $item->jam_mulai . ':' . $item->menit_mulai . ' - ' . $item->jam_selesai . ':' . $item->menit_selesai;
+            })
+            ->addColumn('status', function ($item) {
+                if (!empty($item->id_presensi_mp)) {
+                    return 'Sudah absensi kelas';
+                } else {
+                    return 'Kelas kosong';
+                }
+            })
+            ->make(true);
     }
 }

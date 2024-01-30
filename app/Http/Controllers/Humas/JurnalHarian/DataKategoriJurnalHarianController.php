@@ -105,7 +105,7 @@ class DataKategoriJurnalHarianController extends Controller
             ];
         } else {
             //mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 if ($input->allowed_tendik ?? false) {
@@ -148,7 +148,7 @@ class DataKategoriJurnalHarianController extends Controller
 
                 // replace category file role
                 CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik', $id)->delete();
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 foreach ($input->allowed_tendik as $key => $value) {
                     $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $datakategori_role = new CategoryKelompokJurnalHarianTendik();

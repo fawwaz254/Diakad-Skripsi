@@ -20,18 +20,20 @@ use DB;
 use Session;
 use Validator;
 
-class UnitKerjaController extends BaseController{
+class UnitKerjaController extends BaseController
+{
 
-    public function viewUnitKerja(Request $request){
+    public function viewUnitKerja(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('sumber-daya/data-sumber-daya/unit-kerja/view-unit-kerja',compact('auth_data'));
-
+        return view('sumber-daya/data-sumber-daya/unit-kerja/view-unit-kerja', compact('auth_data'));
     }
 
-    public function addUnitKerja(Request $request){
+    public function addUnitKerja(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -39,15 +41,15 @@ class UnitKerjaController extends BaseController{
         $data_unit_kerja_induk = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_unit_kerja = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_unit_kerja = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('sumber-daya/data-sumber-daya/unit-kerja/add-unit-kerja',compact('auth_data','data_unit_kerja_induk','id_unit_kerja'));
-
+        return view('sumber-daya/data-sumber-daya/unit-kerja/add-unit-kerja', compact('auth_data', 'data_unit_kerja_induk', 'id_unit_kerja'));
     }
 
-    public function editUnitKerja($id, Request $request){
+    public function editUnitKerja($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -56,27 +58,28 @@ class UnitKerjaController extends BaseController{
 
         $data_unit_kerja = LibDataSumberDaya::fetchDataUnitKerja($auth_data, $id);
 
-        return view('sumber-daya/data-sumber-daya/unit-kerja/edit-unit-kerja',compact('auth_data','data_unit_kerja_induk','data_unit_kerja'));
-
+        return view('sumber-daya/data-sumber-daya/unit-kerja/edit-unit-kerja', compact('auth_data', 'data_unit_kerja_induk', 'data_unit_kerja'));
     }
 
-    public function datatablesUnitKerja(Request $request){
+    public function datatablesUnitKerja(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_unit_kerja
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_unit_kerja
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionUnitKerja(Request $request, $mode, $id = null) {
+    public function actionUnitKerja(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -88,20 +91,19 @@ class UnitKerjaController extends BaseController{
             'nm_singkatan_unit'     => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                 $unitKerja                          = new UnitKerja;
                 $unitKerja->id_unit_kerja           = $id;
                 $unitKerja->nm_unit_kerja           = $input->nm_unit_kerja;
@@ -118,8 +120,7 @@ class UnitKerjaController extends BaseController{
                     'path' => 'data-sumber-daya/unit-kerja',
                     'message' => 'Save Unit Kerja Successfully'
                 ];
-            }
-            elseif($mode == 'edit') {
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $unitKerja                          = UnitKerja::find($id);
                 $unitKerja->nm_unit_kerja           = $input->nm_unit_kerja;
@@ -136,15 +137,13 @@ class UnitKerjaController extends BaseController{
                     'path' => 'data-sumber-daya/unit-kerja',
                     'message' => 'Update Unit Kerja Successfully'
                 ];
-            }
-            elseif($mode == 'delete') {
-                if($guru = Guru::where('id_unit_kerja',$id)->first() or $staff = Staff::where('id_unit_kerja',$id)->first()) {
+            } elseif ($mode == 'delete') {
+                if ($guru = Guru::where('id_unit_kerja', $id)->first() or $staff = Staff::where('id_unit_kerja', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Unit Kerja'
-                    ]; 
-                }
-                else {
+                    ];
+                } else {
                     // make object to find id
                     $unitKerja               = UnitKerja::find($id);
                     $unitKerja->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -160,5 +159,4 @@ class UnitKerjaController extends BaseController{
             }
         }
     }
-
 }

@@ -19,7 +19,7 @@ class AddDbMenuDataPenetapanModulPenetapanRolePpdb extends Migration
     {
         //
         //
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // update menu
         $menu               = Menu::find(166);

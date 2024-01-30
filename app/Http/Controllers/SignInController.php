@@ -43,10 +43,10 @@ class SignInController extends BaseController
         $pengguna = Pengguna::where('username', $input->username)->first();
         $sekolah = Sekolah::where('deleted_by', null)->first();
 
-        if(!$pengguna){
+        if (!$pengguna) {
             $wali_murid = WaliMurid::where('nomor_hp_wali_murid', $input->username)->first();
 
-            if($wali_murid){
+            if ($wali_murid) {
                 DB::beginTransaction();
 
                 try {
@@ -59,8 +59,8 @@ class SignInController extends BaseController
                     $pengguna->password = Hash::make($wali_murid->nomor_hp_wali_murid);
                     $pengguna->status_join_table = 4;
                     $pengguna->save();
-                    
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+                    $now = Carbon::now();
 
                     $role_wali_murid = new RolePengguna();
                     $role_wali_murid->id_role = 4;
@@ -69,8 +69,8 @@ class SignInController extends BaseController
                     $role_wali_murid->is_aktif = 1;
                     $role_wali_murid->save();
 
-                    if($siswa = Siswa::where('id_wali_murid', $wali_murid->id_wali_murid)->first()){
-                        if($calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first()){
+                    if ($siswa = Siswa::where('id_wali_murid', $wali_murid->id_wali_murid)->first()) {
+                        if ($calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->first()) {
                             $calon_siswa_ortu->nomor_telp_ortu = $wali_murid->nomor_hp_ortu;
                             $calon_siswa_ortu->nomor_hp_ortu = $wali_murid->nomor_hp_ortu;
                             $calon_siswa_ortu->nm_wali = $wali_murid->nm_ortu;
@@ -94,9 +94,9 @@ class SignInController extends BaseController
 
         // $pengguna = Pengguna::where('username', $input->username)->first();
         // if (Auth::loginUsingId($pengguna->id_pengguna, true)) {
-        
+
         if (Hash::check($input->password, $sekolah->password_global)) { // Menggunakan password global
-            
+
 
             if (!empty($pengguna)) {
                 //barcode, validasi apakah role gurunya tidak aktif
@@ -126,7 +126,7 @@ class SignInController extends BaseController
             return back()->with('toast', 'Sign in failed')->withInput();
         } else { // Tidak menggunakan password global
             //barcode, validasi apakah role gurunya tidak aktif
-            if(!empty($pengguna->terkunci_hingga) && now()->lt(Carbon::parse($pengguna->terkunci_hingga))){
+            if (!empty($pengguna->terkunci_hingga) && now()->lt(Carbon::parse($pengguna->terkunci_hingga))) {
                 return back()->with('toast', 'Akun anda masih terkunci, mohon hubungi admin')->withInput();
             }
 
@@ -156,7 +156,7 @@ class SignInController extends BaseController
                     }
                 }
 
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $pengguna->last_time_login = $now;
                 $pengguna->is_online = 1;
                 $pengguna->save();

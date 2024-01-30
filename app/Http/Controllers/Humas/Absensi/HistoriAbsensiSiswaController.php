@@ -537,7 +537,9 @@ class HistoriAbsensiSiswaController extends Controller
             if ($attendance) {
                 if ($attendance->status) {
                     $hasil[$key]['status'] = $attendance->status;
-                    if ($attendance->status == 'sakit') { } elseif ($attendance->status == 'izin') { }
+                    if ($attendance->status == 'sakit') {
+                    } elseif ($attendance->status == 'izin') {
+                    }
                 }
 
                 if ($attendance->id_presensi_pengguna) {
@@ -565,7 +567,8 @@ class HistoriAbsensiSiswaController extends Controller
                     } else {
                         $hasil[$key]['status'] = '';
                     }
-                    if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) { }
+                    if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
+                    }
                 }
             }
             if ($cek_libur) {
@@ -731,7 +734,7 @@ class HistoriAbsensiSiswaController extends Controller
     public function storeHistoriAbsensi(Request $request, $id_pengguna = null, $kelas = null, $date = null)
     {
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $prefix = Sekolah::first()->prefix;
         $input = $request->input();
         $status = $input['status'];

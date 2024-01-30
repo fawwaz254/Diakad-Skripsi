@@ -17,7 +17,7 @@ class AddDataInKelompokKpi2 extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $sekolah = Sekolah::first();
         $kelompok_kpi = new KelompokKPI;
         $kelompok_kpi->id_kelompok_kpi = $sekolah->prefix . strtotime($now) . uniqid();
@@ -58,5 +58,6 @@ class AddDataInKelompokKpi2 extends Migration
      * @return void
      */
     public function down()
-    { }
+    {
+    }
 }

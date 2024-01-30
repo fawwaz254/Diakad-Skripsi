@@ -19,8 +19,8 @@ class AddModulElearningRoleSiswa extends Migration
      */
     public function up()
     {
-        
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
 
@@ -42,7 +42,6 @@ class AddModulElearningRoleSiswa extends Migration
                 "created_at"   => $now
             ],
         ]);
-
     }
 
     /**

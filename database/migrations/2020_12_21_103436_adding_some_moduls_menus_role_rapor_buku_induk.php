@@ -19,14 +19,14 @@ class AddingSomeModulsMenusRoleRaporBukuInduk extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Rapor & Buku Induk')->first()->id_role;
 
         $modul_1 = Modul::create([
             "id_role"       => $role_id,
             "nm_modul"      => "Rapor",
-            "route"         => "rapor" ,
+            "route"         => "rapor",
             "urutan"        => 1,
             "akses"         => 1,
             "created_at"    => $now
@@ -52,7 +52,7 @@ class AddingSomeModulsMenusRoleRaporBukuInduk extends Migration
         $modul_2 = Modul::create([
             "id_role"       => $role_id,
             "nm_modul"      => "Buku Induk",
-            "route"         => "buku-induk" ,
+            "route"         => "buku-induk",
             "urutan"        => 1,
             "akses"         => 1,
             "created_at"    => $now

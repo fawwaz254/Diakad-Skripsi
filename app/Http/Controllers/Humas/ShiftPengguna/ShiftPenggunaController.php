@@ -138,7 +138,7 @@ class ShiftPenggunaController extends Controller
                         $shiftPenggunaId->update($dataUpdate);
                     }
                 } else {
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     $html = '';
                     $list_data[] = [
                         'id_shift_pengguna' =>  $html .= $prefix . strtotime($now) . uniqid(),

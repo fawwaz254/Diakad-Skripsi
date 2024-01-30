@@ -19,7 +19,7 @@ class AddDbMenuPengadaanSarprasRoleSarpras extends Migration
     public function up()
     {
         //
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // update modul
         $modul               = Modul::find(68);

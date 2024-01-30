@@ -128,7 +128,7 @@ if (!function_exists('generate_id')) {
      */
     function generate_id()
     {
-        $now  = Carbon::now(env('APP_TIMEZONE', ''));
+        $now  = Carbon::now();
         $id   = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return $id;

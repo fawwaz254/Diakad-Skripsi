@@ -22,17 +22,18 @@ use Validator;
 
 class KomponenNilaiMagangController extends BaseController
 {
-    public function viewKomponenNilaiMagang(Request $request){
+    public function viewKomponenNilaiMagang(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_periode = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
-    	return view('humas/magang-siswa/komponen-nilai-magang/view-komponen-nilai-magang',compact('auth_data','data_periode'));
-
+        return view('humas/magang-siswa/komponen-nilai-magang/view-komponen-nilai-magang', compact('auth_data', 'data_periode'));
     }
-    public function actionViewKelasKomponenNilaiMagang(Request $request){
+    public function actionViewKelasKomponenNilaiMagang(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -41,45 +42,46 @@ class KomponenNilaiMagangController extends BaseController
             'id_periode_magang' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
-                    'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'magang-siswa/komponen-nilai-magang/view-periode/'.$input->id_periode_magang
-                ];   
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'magang-siswa/komponen-nilai-magang/view-periode/' . $input->id_periode_magang
+            ];
         }
     }
-    public function viewKelasKomponenNilaiMagang(Request $request, $id_periode_magang){
+    public function viewKelasKomponenNilaiMagang(Request $request, $id_periode_magang)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_periode = LibMagangSiswa::fetchDataKomponenNilaiMagang($auth_data, $id_periode_magang);
 
-        return view('humas/magang-siswa/komponen-nilai-magang/view-komponen-nilai-magang-periode',compact('auth_data','data_periode','id_periode_magang'));
-
+        return view('humas/magang-siswa/komponen-nilai-magang/view-komponen-nilai-magang-periode', compact('auth_data', 'data_periode', 'id_periode_magang'));
     }
-    public function datatablesKomponenNilaiMagang(Request $request, $id_periode_magang){
+    public function datatablesKomponenNilaiMagang(Request $request, $id_periode_magang)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibMagangSiswa::fetchDataKomponenNilaiMagangDetail($auth_data, $id_periode_magang);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_komponen_magang
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_komponen_magang
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function addKomponenNilai(Request $request, $id_periode_magang){
+    public function addKomponenNilai(Request $request, $id_periode_magang)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -87,28 +89,28 @@ class KomponenNilaiMagangController extends BaseController
         $data_periode = LibMagangSiswa::fetchDataKomponenNilaiMagang($auth_data, $id_periode_magang);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_komponen_magang = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_komponen_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('humas/magang-siswa/komponen-nilai-magang/add-komponen-nilai-magang',compact('auth_data','data_periode','id_komponen_magang','id_periode_magang'));
-
+        return view('humas/magang-siswa/komponen-nilai-magang/add-komponen-nilai-magang', compact('auth_data', 'data_periode', 'id_komponen_magang', 'id_periode_magang'));
     }
 
-    public function editKomponenNilai(Request $request, $id_periode_magang, $id){
+    public function editKomponenNilai(Request $request, $id_periode_magang, $id)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_periode = LibMagangSiswa::fetchDataKomponenNilaiMagang($auth_data, $id_periode_magang);
 
-        $list_data = LibMagangSiswa::fetchDataKomponenNilaiMagangDetail($auth_data, $id_periode_magang,$id);
- 
-        return view('humas/magang-siswa/komponen-nilai-magang/edit-komponen-nilai-magang',compact('auth_data','data_periode','list_data'));
+        $list_data = LibMagangSiswa::fetchDataKomponenNilaiMagangDetail($auth_data, $id_periode_magang, $id);
 
+        return view('humas/magang-siswa/komponen-nilai-magang/edit-komponen-nilai-magang', compact('auth_data', 'data_periode', 'list_data'));
     }
 
-    public function actionKomponenNilaiMagang(Request $request, $mode, $id = null){
+    public function actionKomponenNilaiMagang(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -120,30 +122,28 @@ class KomponenNilaiMagangController extends BaseController
             'id_periode_magang' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
-            if($mode == 'add') {
-                $komponenMagang = KomponenMagang::where('id_periode_magang','=',$input->id_periode_magang)->where('urutan_komponen_magang','=',$input->urutan_komponen_magang)->first();
+            if ($mode == 'add') {
+                $komponenMagang = KomponenMagang::where('id_periode_magang', '=', $input->id_periode_magang)->where('urutan_komponen_magang', '=', $input->urutan_komponen_magang)->first();
 
-                if($komponenMagang){
+                if ($komponenMagang) {
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Failed To Save Komponen Nilai  Magang(Urutan Sudah Ada)!'
                     ];
-                }
-                else{
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                    
-                    $komponenMagang                         	= new KomponenMagang;
+                } else {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                    $komponenMagang                             = new KomponenMagang;
                     $komponenMagang->id_komponen_magang         = $id;
                     $komponenMagang->id_periode_magang          = $input->id_periode_magang;
                     $komponenMagang->nm_komponen_magang         = $input->nm_komponen_magang;
@@ -154,21 +154,19 @@ class KomponenNilaiMagangController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'magang-siswa/komponen-nilai-magang/view-periode/'.$input->id_periode_magang,
+                        'path' => 'magang-siswa/komponen-nilai-magang/view-periode/' . $input->id_periode_magang,
                         'message' => 'Save Komponen Nilai Magang Successfully'
                     ];
                 }
-            }
-            elseif($mode == 'edit') {
-                $komponenMagang = KomponenMagang::where('id_periode_magang','=',$input->id_periode_magang)->where('urutan_komponen_magang','=',$input->urutan_komponen_magang)->first();
+            } elseif ($mode == 'edit') {
+                $komponenMagang = KomponenMagang::where('id_periode_magang', '=', $input->id_periode_magang)->where('urutan_komponen_magang', '=', $input->urutan_komponen_magang)->first();
 
-                if($komponenMagang){
+                if ($komponenMagang) {
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Failed To Save Komponen Nilai Magang (Urutan Sudah Ada)!'
                     ];
-                }
-                else{
+                } else {
                     // make object to find id
                     $komponenMagang                             = KomponenMagang::find($id);
                     $komponenMagang->nm_komponen_magang         = $input->nm_komponen_magang;
@@ -180,19 +178,17 @@ class KomponenNilaiMagangController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'magang-siswa/komponen-nilai-magang/view-periode/'.$input->id_periode_magang,
+                        'path' => 'magang-siswa/komponen-nilai-magang/view-periode/' . $input->id_periode_magang,
                         'message' => 'Update Komponen Nilai Magang Successfully'
                     ];
                 }
-            }
-            elseif($mode == 'delete') {
-                if($nilaiMp = NilaiMagang::where('id_komponen_magang',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($nilaiMp = NilaiMagang::where('id_komponen_magang', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Komponen Magang Nilai'
-                    ]; 
-                }
-                else {
+                    ];
+                } else {
                     // make object to find id
                     $komponenMagang               = KomponenMagang::find($id);
                     $komponenMagang->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -208,5 +204,4 @@ class KomponenNilaiMagangController extends BaseController
             }
         }
     }
-
 }

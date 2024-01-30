@@ -17,7 +17,7 @@ class AddingRouteOnModulKeuanganPelanggaranWaliMurid extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // update modul
         $menu               = Modul::find(39);
@@ -42,7 +42,7 @@ class AddingRouteOnModulKeuanganPelanggaranWaliMurid extends Migration
         $menu->route        = "pelanggaran";
         $menu->updated_at   = $now;
         $menu->save();
- 
+
         // update menu
         $menu               = Menu::find(154);
         $menu->page         = "riwayat-pelanggaran";

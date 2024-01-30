@@ -70,7 +70,7 @@ class InputGuruController extends BaseController
         $data_unit_kerja = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $id_guru = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -169,10 +169,10 @@ class InputGuruController extends BaseController
                 } else {
                     return $item->nm_pengguna;
                 }
-            })->editColumn('nm_status_pengguna', function($item) {
-                if(isset($item->alasan_keluar)){
-                    return $item->nm_status_pengguna . '<br>' . 'Tanggal Keluar '. '( ' . $item->tgl_keluar . ' )' . '<br>' . ' Alasan Keluar ( ' . $item->alasan_keluar . ' )';
-                }else{
+            })->editColumn('nm_status_pengguna', function ($item) {
+                if (isset($item->alasan_keluar)) {
+                    return $item->nm_status_pengguna . '<br>' . 'Tanggal Keluar ' . '( ' . $item->tgl_keluar . ' )' . '<br>' . ' Alasan Keluar ( ' . $item->alasan_keluar . ' )';
+                } else {
                     return $item->nm_status_pengguna;
                 }
             })->rawColumns(['nm_status_pengguna'])
@@ -214,7 +214,7 @@ class InputGuruController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add') {

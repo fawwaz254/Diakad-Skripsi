@@ -16,7 +16,7 @@ class AddingRouteOnModulAndMenuJadwalUjianMagangAkademikWaliMurid extends Migrat
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // update menu
         $menu               = Menu::find(157);

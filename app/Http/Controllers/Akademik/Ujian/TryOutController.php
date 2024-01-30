@@ -29,45 +29,45 @@ use Validator;
 
 class TryOutController extends BaseController
 {
-    public function viewTryOut(Request $request, $id = 2)
-    {
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $semester = Semester::where('semester.is_aktif_semester', '=', 1)->first();
+  public function viewTryOut(Request $request, $id = 2)
+  {
+    # code...
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $semester = Semester::where('semester.is_aktif_semester', '=', 1)->first();
 
-        return view('akademik/ujian/tryout-reguler-online/view-tryout-reguler-online', compact('auth_data', 'id', 'semester'));
-    }
+    return view('akademik/ujian/tryout-reguler-online/view-tryout-reguler-online', compact('auth_data', 'id', 'semester'));
+  }
 
-    public function addTryOut(Request $request, $id)
-    {
-        # code..
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $kegiatan         = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kode_kegiatan', '=', 'TRY_OUT')->get();
+  public function addTryOut(Request $request, $id)
+  {
+    # code..
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $kegiatan         = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kode_kegiatan', '=', 'TRY_OUT')->get();
 
-        return view('akademik/ujian/tryout-reguler-online/view-add-tryout-reguler-online', compact('auth_data', 'kegiatan', 'id'));
-    }
+    return view('akademik/ujian/tryout-reguler-online/view-add-tryout-reguler-online', compact('auth_data', 'kegiatan', 'id'));
+  }
 
-    public function addDataTryOut(Request $request, $online, $id)
-    {
-        # code..
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $kegiatan     = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kode_kegiatan', '=', 'TRY_OUT')->first();
-        $kelas_mp = KelasMp::join('kelas', 'kelas_mp.id_kelas', '=', 'kelas.id_kelas')->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+  public function addDataTryOut(Request $request, $online, $id)
+  {
+    # code..
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $kegiatan     = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kode_kegiatan', '=', 'TRY_OUT')->first();
+    $kelas_mp = KelasMp::join('kelas', 'kelas_mp.id_kelas', '=', 'kelas.id_kelas')->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
       ->where('id_kelas_mp', '=', $id)->first();
-        $ruangan  = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+    $ruangan  = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
-        return view('akademik/ujian/tryout-reguler-online/add-tryout', compact('auth_data', 'kegiatan', 'id', 'online', 'kegiatan', 'kelas_mp', 'ruangan'));
-    }
+    return view('akademik/ujian/tryout-reguler-online/add-tryout', compact('auth_data', 'kegiatan', 'id', 'online', 'kegiatan', 'kelas_mp', 'ruangan'));
+  }
 
-    public function editDataTryOut(Request $request, $id_ujian_mp)
-    {
-        # code..
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $ujian = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'ruangan.id_ruangan', 'kelas.nm_kelas', 'ujian_mp.id_kegiatan')
+  public function editDataTryOut(Request $request, $id_ujian_mp)
+  {
+    # code..
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $ujian = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'ruangan.id_ruangan', 'kelas.nm_kelas', 'ujian_mp.id_kegiatan')
       ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
       ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
       ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
@@ -78,319 +78,319 @@ class TryOutController extends BaseController
       ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
       ->where('ujian_mp.id_ujian_mp', '=', $id_ujian_mp)
       ->first();
-        $ruangan  = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
-        $tgl_ujian_mp = strftime("%d %B %Y", strtotime($ujian->tgl_ujian_mp));
+    $ruangan  = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+    $tgl_ujian_mp = strftime("%d %B %Y", strtotime($ujian->tgl_ujian_mp));
 
 
-        return view('akademik/ujian/tryout-reguler-online/edit-tryout', compact('auth_data', 'ruangan', 'ujian', 'id_ujian_mp', 'tgl_ujian_mp'));
-    }
+    return view('akademik/ujian/tryout-reguler-online/edit-tryout', compact('auth_data', 'ruangan', 'ujian', 'id_ujian_mp', 'tgl_ujian_mp'));
+  }
 
-    public function assignTryOut(Request $request, $id)
-    {
-        # code..
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $kelas = UjianMp::join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
+  public function assignTryOut(Request $request, $id)
+  {
+    # code..
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $kelas = UjianMp::join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
       ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
       ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
       ->where('id_ujian_mp', '=', $id)->first();
-        $peserta = UjianMpPresensi::where('id_ujian_mp', '=', $id)->first();
-  
-        return view('akademik/ujian/tryout-reguler-online/view-peserta-kelas', compact('auth_data', 'id', 'kelas', 'peserta'));
-    }
+    $peserta = UjianMpPresensi::where('id_ujian_mp', '=', $id)->first();
 
-    public function datatablesTryOut(Request $request, $online)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan')
-        ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
-        ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
-        ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
-        ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
-        ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
-        ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
-        ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-        ->where('ujian_mp.is_online', '=', $online)
-        // ->where('semester.is_aktif_semester', '=', 1)
-        ->where('kegiatan.kode_kegiatan', '=', 'TRY_OUT')
-        ->orderBy('ujian_mp.created_at', 'desc')
-        ->get();
-  
-      return Datatables::of($list_data)
-        ->addColumn('ruangan_ujian', function ($item) {
-          if ($item->nm_gedung == null) {
-            return $item->nm_ruangan;
-          } elseif ($item->nm_ruangan == null && $item->nm_gedung == null) {
-            return "-";
-          } else {
-            return $item->nm_ruangan . " (" . $item->nm_gedung . ")";
-          }
-        })
-        ->addColumn('jenis_ujian', function ($item) {
-          if ($item->is_online == 1) {
-            return $item->nm_kegiatan . " Online";
-          } elseif ($item->is_online == 0) {
-            return $item->nm_kegiatan . " Reguler";
-          }
-        })
-        ->addColumn('semester', function ($item) {
-          return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
-        })
-        ->addColumn('mata_pelajaran', function ($item) {
-          return $item->nm_mata_pelajaran . ' (' . $item->kd_mata_pelajaran . ')';
-        })
-        ->addColumn('action', function ($item) {
-          $data = array(
-            'id' => $item->id_kelas_mp,
-            'id_ujian' => $item->id_ujian_mp
-          );
-          return $data;
-        })
-        ->make(true);
-    }
-        //kode kegiatan diganti sesuai jenis ujiannya
-    //     $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan')
-    //   ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
-    //   ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
-    //   ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
-    //   ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
-    //   ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
-    //   ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
-    //   ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-    //   ->where('ujian_mp.is_online', '=', $online)
-    //   ->where('semester.is_aktif_semester', '=', 1)
-    //   ->where('kegiatan.kode_kegiatan', '=', 'TRY_OUT')
-    //   ->orderBy('ujian_mp.created_at', 'desc')
-    //   ->get();
+    return view('akademik/ujian/tryout-reguler-online/view-peserta-kelas', compact('auth_data', 'id', 'kelas', 'peserta'));
+  }
 
-    //     return Datatables::of($list_data)
-    //       ->addColumn('ruangan_ujian', function ($item) {
-    //           if ($item->nm_gedung == null) {
-    //               return $item->nm_ruangan;
-    //           } elseif ($item->nm_ruangan == null && $item->nm_gedung == null) {
-    //               return "-";
-    //           } else {
-    //               return $item->nm_ruangan." (".$item->nm_gedung.")";
-    //           }
-    //       })
-    //       ->addColumn('jenis_ujian', function ($item) {
-    //           if ($item->is_online == 1) {
-    //               return $item->nm_kegiatan." Online";
-    //           } elseif ($item->is_online == 0) {
-    //               return $item->nm_kegiatan." Reguler";
-    //           }
-    //       })
-    //       ->addColumn('semester', function ($item) {
-    //           return $item->nm_semester.' ('.$item->tahun_ajaran.')';
-    //       })
-    //       ->addColumn('mata_pelajaran', function ($item) {
-    //           return $item->nm_mata_pelajaran.' ('.$item->kd_mata_pelajaran.')';
-    //       })
-    //       ->addColumn('action', function ($item) {
-    //           $data = array(
-    //           'id' => $item->id_kelas_mp,
-    //           'id_ujian' => $item->id_ujian_mp
-    //         );
-    //           return $data;
-    //       })
-    //       ->make(true);
-    // }
+  public function datatablesTryOut(Request $request, $online)
+  {
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan')
+      ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
+      ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
+      ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
+      ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
+      ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
+      ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
+      ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+      ->where('ujian_mp.is_online', '=', $online)
+      // ->where('semester.is_aktif_semester', '=', 1)
+      ->where('kegiatan.kode_kegiatan', '=', 'TRY_OUT')
+      ->orderBy('ujian_mp.created_at', 'desc')
+      ->get();
 
-    public function datatablesDaftarMataPelajaran(Request $request, $online)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+    return Datatables::of($list_data)
+      ->addColumn('ruangan_ujian', function ($item) {
+        if ($item->nm_gedung == null) {
+          return $item->nm_ruangan;
+        } elseif ($item->nm_ruangan == null && $item->nm_gedung == null) {
+          return "-";
+        } else {
+          return $item->nm_ruangan . " (" . $item->nm_gedung . ")";
+        }
+      })
+      ->addColumn('jenis_ujian', function ($item) {
+        if ($item->is_online == 1) {
+          return $item->nm_kegiatan . " Online";
+        } elseif ($item->is_online == 0) {
+          return $item->nm_kegiatan . " Reguler";
+        }
+      })
+      ->addColumn('semester', function ($item) {
+        return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
+      })
+      ->addColumn('mata_pelajaran', function ($item) {
+        return $item->nm_mata_pelajaran . ' (' . $item->kd_mata_pelajaran . ')';
+      })
+      ->addColumn('action', function ($item) {
+        $data = array(
+          'id' => $item->id_kelas_mp,
+          'id_ujian' => $item->id_ujian_mp
+        );
+        return $data;
+      })
+      ->make(true);
+  }
+  //kode kegiatan diganti sesuai jenis ujiannya
+  //     $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan')
+  //   ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
+  //   ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
+  //   ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
+  //   ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
+  //   ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
+  //   ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
+  //   ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+  //   ->where('ujian_mp.is_online', '=', $online)
+  //   ->where('semester.is_aktif_semester', '=', 1)
+  //   ->where('kegiatan.kode_kegiatan', '=', 'TRY_OUT')
+  //   ->orderBy('ujian_mp.created_at', 'desc')
+  //   ->get();
 
-        //kode kegiatan diganti sesuai jenis ujiannya
-        $list_data = KelasMp::select('kelas_mp.nm_kelas_mp', 'kelas_mp.id_kelas', 'kelas_mp.id_mata_pelajaran', 'kelas_mp.id_semester', 'kelas_mp.id_kelas_mp', 'kelas.nm_kelas', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'semester.nm_semester', 'semester.tahun_ajaran')
+  //     return Datatables::of($list_data)
+  //       ->addColumn('ruangan_ujian', function ($item) {
+  //           if ($item->nm_gedung == null) {
+  //               return $item->nm_ruangan;
+  //           } elseif ($item->nm_ruangan == null && $item->nm_gedung == null) {
+  //               return "-";
+  //           } else {
+  //               return $item->nm_ruangan." (".$item->nm_gedung.")";
+  //           }
+  //       })
+  //       ->addColumn('jenis_ujian', function ($item) {
+  //           if ($item->is_online == 1) {
+  //               return $item->nm_kegiatan." Online";
+  //           } elseif ($item->is_online == 0) {
+  //               return $item->nm_kegiatan." Reguler";
+  //           }
+  //       })
+  //       ->addColumn('semester', function ($item) {
+  //           return $item->nm_semester.' ('.$item->tahun_ajaran.')';
+  //       })
+  //       ->addColumn('mata_pelajaran', function ($item) {
+  //           return $item->nm_mata_pelajaran.' ('.$item->kd_mata_pelajaran.')';
+  //       })
+  //       ->addColumn('action', function ($item) {
+  //           $data = array(
+  //           'id' => $item->id_kelas_mp,
+  //           'id_ujian' => $item->id_ujian_mp
+  //         );
+  //           return $data;
+  //       })
+  //       ->make(true);
+  // }
+
+  public function datatablesDaftarMataPelajaran(Request $request, $online)
+  {
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+
+    //kode kegiatan diganti sesuai jenis ujiannya
+    $list_data = KelasMp::select('kelas_mp.nm_kelas_mp', 'kelas_mp.id_kelas', 'kelas_mp.id_mata_pelajaran', 'kelas_mp.id_semester', 'kelas_mp.id_kelas_mp', 'kelas.nm_kelas', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'semester.nm_semester', 'semester.tahun_ajaran')
       ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
       ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
       ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
       ->join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
       ->whereNotExists(function ($query) use ($online) {
-          $query->select(DB::raw(1))
-        ->from('ujian_mp')
-        ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
-        ->whereRaw('ujian_mp.id_kelas_mp = kelas_mp.id_kelas_mp')
-        ->whereRaw('ujian_mp.is_online = '.$online)
-        ->whereRaw('kegiatan.kode_kegiatan = "TRY_OUT"');
+        $query->select(DB::raw(1))
+          ->from('ujian_mp')
+          ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
+          ->whereRaw('ujian_mp.id_kelas_mp = kelas_mp.id_kelas_mp')
+          ->whereRaw('ujian_mp.is_online = ' . $online)
+          ->whereRaw('kegiatan.kode_kegiatan = "TRY_OUT"');
       })
       ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
       ->get();
 
-        return Datatables::of($list_data)
-          ->addColumn('semester', function ($item) {
-              return $item->nm_semester.' ('.$item->tahun_ajaran.')';
-          })
-          ->addColumn('action', function ($item) {
-              $data = array(
-              'id' => $item->id_kelas_mp
-            );
-              return $data;
-          })
-          ->make(true);
-    }
+    return Datatables::of($list_data)
+      ->addColumn('semester', function ($item) {
+        return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
+      })
+      ->addColumn('action', function ($item) {
+        $data = array(
+          'id' => $item->id_kelas_mp
+        );
+        return $data;
+      })
+      ->make(true);
+  }
 
-    public function datatablesDaftarSiswa(Request $request, $id)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $kelas = UjianMp::where('id_ujian_mp', '=', $id)->first();
+  public function datatablesDaftarSiswa(Request $request, $id)
+  {
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $kelas = UjianMp::where('id_ujian_mp', '=', $id)->first();
 
-        $list_data = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'siswa.id_kelas', 'kelas.nm_kelas', 'kelas_mp.nm_kelas_mp', 'siswa.id_siswa')
+    $list_data = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'siswa.id_kelas', 'kelas.nm_kelas', 'kelas_mp.nm_kelas_mp', 'siswa.id_siswa')
       ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
       ->join('kelas_mp', 'kelas_mp.id_kelas', '=', 'kelas.id_kelas')
       ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
       ->where('kelas_mp.id_kelas_mp', '=', $kelas->id_kelas_mp)
       ->get();
 
-        return Datatables::of($list_data)
-          ->addColumn('checkbox', function ($item) {
-              $data = array(
-              'id' => $item->id_siswa
-            );
-              return $data;
-          })
-          ->make(true);
-    }
+    return Datatables::of($list_data)
+      ->addColumn('checkbox', function ($item) {
+        $data = array(
+          'id' => $item->id_siswa
+        );
+        return $data;
+      })
+      ->make(true);
+  }
 
-    public function actionTryOut(Request $request, $mode, $id = null)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+  public function actionTryOut(Request $request, $mode, $id = null)
+  {
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $now = Carbon::now();
 
-        $validator = Validator::make($request->all(), [
-        'nm_ujian_mp' => 'required',
-        'tgl_ujian_mp' => 'required',
-        'jam_mulai' => 'required',
-        'jam_selesai' => 'required'
-      ]);
+    $validator = Validator::make($request->all(), [
+      'nm_ujian_mp' => 'required',
+      'tgl_ujian_mp' => 'required',
+      'jam_mulai' => 'required',
+      'jam_selesai' => 'required'
+    ]);
 
-        if ($validator->fails() && $mode != 'delete' && $mode != 'assign') {
-            return [
-          'status' => 300, // FAILED
-          'message' => $validator->errors()->first()
+    if ($validator->fails() && $mode != 'delete' && $mode != 'assign') {
+      return [
+        'status' => 300, // FAILED
+        'message' => $validator->errors()->first()
+      ];
+    } else {
+      if ($mode == 'add') {
+        $id_ujian_mp          = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_ruangan_ujian_mp  = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+        $ujian                                  = new UjianMp;
+        $ujian->id_ujian_mp               = $id_ujian_mp;
+        $ujian->id_kegiatan               = $input->id_kegiatan;
+        $ujian->id_kelas_mp           = $input->id_kelas_mp;
+        $ujian->nm_ujian_mp           = $input->nm_ujian_mp;
+        $ujian->tgl_ujian_mp          = date_format(date_create($input->tgl_ujian_mp), "Y-m-d");
+        $ujian->jam_mulai                 = $input->jam_mulai;
+        $ujian->jam_selesai               = $input->jam_selesai;
+        $ujian->keterangan                = $input->keterangan;
+        $ujian->is_online               = $input->is_online;
+        $ujian->created_by                = $input->auth_data->pengguna->id_pengguna;
+        $ujian->created_at                = $now;
+        $ujian->save();
+
+        $ruangan                      = new UjianMpRuangan;
+        $ruangan->id_ujian_mp_ruangan = $id_ruangan_ujian_mp;
+        $ruangan->id_ujian_mp         = $id_ujian_mp;
+        $ruangan->id_ruangan          = $input->id_ruangan;
+        $ruangan->created_by          = $input->auth_data->pengguna->id_pengguna;
+        $ruangan->created_at          = $now;
+        $ruangan->save();
+
+        return [
+          'status' => 202, // SUCCESS AND LOAD CONTENT
+          'path' => 'ujian/try-out-reguler-online/',
+          'message' => 'Save Ujian Try Out Successfully'
         ];
+      } elseif ($mode == 'edit') {
+        $ujian                        = UjianMp::find($id);
+        $ujian->id_kegiatan           = $input->id_kegiatan;
+        $ujian->id_kelas_mp           = $input->id_kelas_mp;
+        $ujian->nm_ujian_mp           = $input->nm_ujian_mp;
+        $ujian->tgl_ujian_mp          = date_format(date_create($input->tgl_ujian_mp), "Y-m-d");
+        $ujian->jam_mulai             = $input->jam_mulai;
+        $ujian->jam_selesai           = $input->jam_selesai;
+        $ujian->keterangan            = $input->keterangan;
+        $ujian->is_online             = $input->is_online;
+        $ujian->updated_by            = $input->auth_data->pengguna->id_pengguna;
+        $ujian->updated_at            = $now;
+        $ujian->save();
+
+        $ruangan                      = UjianMpRuangan::where('ujian_mp_ruangan.id_ujian_mp', '=', $id)->first();
+        $ruangan->id_ruangan          = $input->id_ruangan;
+        $ruangan->updated_by          = $input->auth_data->pengguna->id_pengguna;
+        $ruangan->updated_at          = $now;
+        $ruangan->save();
+
+        return [
+          'status' => 202, // SUCCESS AND LOAD CONTENT
+          'path' => 'ujian/tryout-reguler-online',
+          'message' => 'Save Ujian Try Out Successfully'
+        ];
+      } elseif ($mode == 'delete') {
+        $peserta = UjianMpPresensi::where('id_ujian_mp', '=', $id)->first();
+        if ($peserta) {
+          return [
+            'status' => 300, // SUCCESS AND LOAD TABLE
+            'message' => 'Failed To Delete Ujian'
+          ];
         } else {
-            if ($mode == 'add') {
-                $id_ujian_mp          = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                $id_ruangan_ujian_mp  = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+          $ujian                        = UjianMp::find($id);
+          $ujian->deleted_by            = $input->auth_data->pengguna->id_pengguna;
+          $ujian->save();
+          $ujian->forceDelete();
 
-                $ujian                                  = new UjianMp;
-                $ujian->id_ujian_mp               = $id_ujian_mp;
-                $ujian->id_kegiatan               = $input->id_kegiatan;
-                $ujian->id_kelas_mp           = $input->id_kelas_mp;
-                $ujian->nm_ujian_mp           = $input->nm_ujian_mp;
-                $ujian->tgl_ujian_mp          = date_format(date_create($input->tgl_ujian_mp), "Y-m-d");
-                $ujian->jam_mulai                 = $input->jam_mulai;
-                $ujian->jam_selesai               = $input->jam_selesai;
-                $ujian->keterangan                = $input->keterangan;
-                $ujian->is_online               = $input->is_online;
-                $ujian->created_by                = $input->auth_data->pengguna->id_pengguna;
-                $ujian->created_at                = $now;
-                $ujian->save();
+          $ruangan                      = UjianMpRuangan::where('ujian_mp_ruangan.id_ujian_mp', '=', $id)->first();
+          $ruangan->deleted_by          = $input->auth_data->pengguna->id_pengguna;
+          $ruangan->save();
+          $ruangan->forceDelete();
 
-                $ruangan                      = new UjianMpRuangan;
-                $ruangan->id_ujian_mp_ruangan = $id_ruangan_ujian_mp;
-                $ruangan->id_ujian_mp         = $id_ujian_mp;
-                $ruangan->id_ruangan          = $input->id_ruangan;
-                $ruangan->created_by          = $input->auth_data->pengguna->id_pengguna;
-                $ruangan->created_at          = $now;
-                $ruangan->save();
-
-                return [
-              'status' => 202, // SUCCESS AND LOAD CONTENT
-              'path' => 'ujian/try-out-reguler-online/',
-              'message' => 'Save Ujian Try Out Successfully'
-            ];
-            } elseif ($mode == 'edit') {
-                $ujian                        = UjianMp::find($id);
-                $ujian->id_kegiatan           = $input->id_kegiatan;
-                $ujian->id_kelas_mp           = $input->id_kelas_mp;
-                $ujian->nm_ujian_mp           = $input->nm_ujian_mp;
-                $ujian->tgl_ujian_mp          = date_format(date_create($input->tgl_ujian_mp), "Y-m-d");
-                $ujian->jam_mulai             = $input->jam_mulai;
-                $ujian->jam_selesai           = $input->jam_selesai;
-                $ujian->keterangan            = $input->keterangan;
-                $ujian->is_online             = $input->is_online;
-                $ujian->updated_by            = $input->auth_data->pengguna->id_pengguna;
-                $ujian->updated_at            = $now;
-                $ujian->save();
-
-                $ruangan                      = UjianMpRuangan::where('ujian_mp_ruangan.id_ujian_mp', '=', $id)->first();
-                $ruangan->id_ruangan          = $input->id_ruangan;
-                $ruangan->updated_by          = $input->auth_data->pengguna->id_pengguna;
-                $ruangan->updated_at          = $now;
-                $ruangan->save();
-
-                return [
-                'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'ujian/tryout-reguler-online',
-                'message' => 'Save Ujian Try Out Successfully'
-              ];
-            } elseif ($mode == 'delete') {
-                $peserta = UjianMpPresensi::where('id_ujian_mp', '=', $id)->first();
-                if ($peserta) {
-                    return [
-                        'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Ujian'
-                    ];
-                } else {
-                    $ujian                        = UjianMp::find($id);
-                    $ujian->deleted_by            = $input->auth_data->pengguna->id_pengguna;
-                    $ujian->save();
-                    $ujian->forceDelete();
-
-                    $ruangan                      = UjianMpRuangan::where('ujian_mp_ruangan.id_ujian_mp', '=', $id)->first();
-                    $ruangan->deleted_by          = $input->auth_data->pengguna->id_pengguna;
-                    $ruangan->save();
-                    $ruangan->forceDelete();
-
-                    return [
-                        'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Ujian Berhasil'
-                    ];
-                }
-            } elseif ($mode == 'assign') {
-                DB::beginTransaction();
-                try {
-                    foreach ($input->id_siswa as $id_siswa) {
-                        $cekSiswa = UjianMpPresensi::where('ujian_mp_presensi.id_ujian_mp', '=', $id)->where('ujian_mp_presensi.id_siswa', '=', $id_siswa)->first();
-                        if ($cekSiswa) {
-                            DB::rollback();
-                            return [
-                      'status' => 203, // GAGAL
-                      'message' => 'Tambah Peserta Try Out Gagal Dilakukan!'
-                    ];
-                        } else {
-                            $id_presensi = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                            $presensi                       = new UjianMpPresensi;
-                            $presensi->id_ujian_mp_presensi = $id_presensi;
-                            $presensi->id_ujian_mp          = $id;
-                            $presensi->id_siswa             = $id_siswa;
-                            $presensi->created_at           = $now;
-                            $presensi->created_by           = $input->auth_data->pengguna->id_pengguna;
-                            $presensi->save();
-                        }
-                    }
-                    DB::commit();
-                    return [
-                  'status' => 202, // SUCCESS AND LOAD CONTENT
-                  'path' => 'ujian/tryout-reguler-online/',
-                  'message' => 'Tambah Peserta Try Out Successfully'
-                ];
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    //     // something went wrong
-
-                    return [
-                  'status' => 203, // GAGAL
-                  'message' => $e
-                ];
-                }
-            }
+          return [
+            'status' => 203, // SUCCESS AND LOAD TABLE
+            'message' => 'Delete Ujian Berhasil'
+          ];
         }
+      } elseif ($mode == 'assign') {
+        DB::beginTransaction();
+        try {
+          foreach ($input->id_siswa as $id_siswa) {
+            $cekSiswa = UjianMpPresensi::where('ujian_mp_presensi.id_ujian_mp', '=', $id)->where('ujian_mp_presensi.id_siswa', '=', $id_siswa)->first();
+            if ($cekSiswa) {
+              DB::rollback();
+              return [
+                'status' => 203, // GAGAL
+                'message' => 'Tambah Peserta Try Out Gagal Dilakukan!'
+              ];
+            } else {
+              $id_presensi = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+              $presensi                       = new UjianMpPresensi;
+              $presensi->id_ujian_mp_presensi = $id_presensi;
+              $presensi->id_ujian_mp          = $id;
+              $presensi->id_siswa             = $id_siswa;
+              $presensi->created_at           = $now;
+              $presensi->created_by           = $input->auth_data->pengguna->id_pengguna;
+              $presensi->save();
+            }
+          }
+          DB::commit();
+          return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'ujian/tryout-reguler-online/',
+            'message' => 'Tambah Peserta Try Out Successfully'
+          ];
+        } catch (\Exception $e) {
+          DB::rollback();
+          //     // something went wrong
+
+          return [
+            'status' => 203, // GAGAL
+            'message' => $e
+          ];
+        }
+      }
     }
+  }
 }

@@ -18,10 +18,10 @@ class ChangeUrutanModulMonkesRoleBk extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $role_id = Role::where('nm_role', 'Bimbingan Konseling')->first()->id_role;
 
-        $modul= Modul::where('id_role', $role_id)->where('nm_modul', 'Monitoring Kesehatan')->first();
+        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Monitoring Kesehatan')->first();
         $modul->urutan = 3;
         $modul->save();
     }

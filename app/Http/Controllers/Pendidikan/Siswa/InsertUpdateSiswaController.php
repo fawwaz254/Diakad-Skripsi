@@ -100,7 +100,8 @@ class InsertUpdateSiswaController extends BaseController
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
-		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) { } else {
+		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) {
+		} else {
 			return [
 				'status' => 300, // FAILED
 				'message' => 'NIS tidak ditemukan'
@@ -224,7 +225,7 @@ class InsertUpdateSiswaController extends BaseController
 	{
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
-		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		$now = Carbon::now();
 		// dd($input->link_google_drive);
 
 		if ($mode == "insert") {

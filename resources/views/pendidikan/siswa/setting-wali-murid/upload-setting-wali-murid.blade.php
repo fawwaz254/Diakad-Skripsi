@@ -44,7 +44,7 @@
                             </ul>
                             <h5>Catatan: Hanya ubah kolom yang terkait dengan wali murid</h5>
                             <a class="btn btn-block bg-blue waves-effect" target="_blank"
-                                href="{{ route('siswa/download-file-excel-wali-murid') }}">
+                                href="{{ url(Request::segment(1) . '/siswa/download-file-excel-wali-murid/' . $id_kelas) }}">
                                 <i class="material-icons">cloud_upload</i>
                                 <span>Download File Excel</span>
                             </a>

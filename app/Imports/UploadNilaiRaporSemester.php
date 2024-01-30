@@ -28,7 +28,7 @@ class UploadNilaiRaporSemester implements ToCollection, WithHeadingRow
 	public function collection(Collection $rows)
 	{
 		set_time_limit(-1);
-		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		$now = Carbon::now();
 		$id_pengguna = Auth::id();
 		// $sekolah = Sekolah::first();
 		$rapor = Rapor::with('kelas')->find($rows[0]['id']);

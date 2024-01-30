@@ -223,7 +223,7 @@ class PaketSoalController extends Controller
             $paket_soal->save();
 
             foreach ($input->kelas as $id_kelas) {
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $question_package_class = new PaketSoalKelas;
                 $question_package_class->id_paket_soal_kelas    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $question_package_class->id_paket_soal          = $input->id_paket_soal;
@@ -247,7 +247,7 @@ class PaketSoalController extends Controller
             }
         } else {
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $question_package = new PaketSoal;
             $question_package->id_paket_soal        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -263,7 +263,7 @@ class PaketSoalController extends Controller
             $question_package->save();
 
             foreach ($input->kelas as $id_kelas) {
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 $question_package_class = new PaketSoalKelas;
                 $question_package_class->id_paket_soal_kelas    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $question_package_class->id_paket_soal          = $question_package->id_paket_soal;
@@ -300,15 +300,17 @@ class PaketSoalController extends Controller
                 'path' => 'e-learning-soal/paket-soal',
                 'message' => 'Berhasil Menghapus paket Soal'
             ];
-        } else { }
+        } else {
+        }
     }
 
     public function actionDetailAdd(Request $request)
     {
         $input = (object) $request->input();
         if ($input->id_soal != '0') {
-            if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) { } else {
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+            if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) {
+            } else {
+                $now = Carbon::now();
                 $question_package_detail = new DetailPaketSoal;
                 $question_package_detail->id_detail_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $question_package_detail->id_paket_soal = $input->id_paket_soal;
@@ -327,8 +329,9 @@ class PaketSoalController extends Controller
             $soals = Soal::where('id_kategori_soal', $paket_soal->id_kategori_soal)->get();
 
             foreach ($soals as $soal) {
-                if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $soal->id_soal])->first()) { } else {
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $soal->id_soal])->first()) {
+                } else {
+                    $now = Carbon::now();
                     $question_package_detail = new DetailPaketSoal;
                     $question_package_detail->id_detail_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $question_package_detail->id_paket_soal = $input->id_paket_soal;

@@ -47,7 +47,7 @@ class PrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $data_ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
@@ -66,7 +66,7 @@ class PrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $data_ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
@@ -100,7 +100,7 @@ class PrestasiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $alumni = $input->alumni;
-        if ($alumni == 1){
+        if ($alumni == 1) {
             $list_data = PrestasiSiswa::select(
                 'prestasi_siswa.nm_prestasi_siswa',
                 'prestasi_siswa.link_sertif_prestasi_siswa',
@@ -139,7 +139,7 @@ class PrestasiSiswaController extends BaseController
                 ->where('prestasi_siswa.status', 1)
                 // ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
                 ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
-    
+
             return Datatables::of($list_data)
                 ->addIndexColumn()
                 ->addColumn('semester', function ($item) {
@@ -178,7 +178,7 @@ class PrestasiSiswaController extends BaseController
                     return $data;
                 })
                 ->make(true);
-        }else{
+        } else {
             $list_data = PrestasiSiswa::select(
                 'prestasi_siswa.nm_prestasi_siswa',
                 'prestasi_siswa.link_sertif_prestasi_siswa',
@@ -217,7 +217,7 @@ class PrestasiSiswaController extends BaseController
                 ->where('prestasi_siswa.status', 1)
                 // ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
                 ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
-    
+
             return Datatables::of($list_data)
                 ->addIndexColumn()
                 ->addColumn('semester', function ($item) {
@@ -263,7 +263,7 @@ class PrestasiSiswaController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'nm_prestasi_siswa' => 'required',

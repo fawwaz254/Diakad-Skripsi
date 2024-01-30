@@ -132,7 +132,7 @@ class DataKategoriMGMPController extends BaseController
             ];
         } else {
             //mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
 
@@ -196,7 +196,7 @@ class DataKategoriMGMPController extends BaseController
 
                 // replace category file role
                 CategoriFileGuru::where('category_file_mgmp_id', $id)->delete();
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
                 foreach ($input->allowed_guru as $key => $value) {
                     $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $datakategori_role = new CategoriFileGuru();

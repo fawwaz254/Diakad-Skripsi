@@ -103,7 +103,7 @@ class ListUjianController extends Controller
     {
         $input = (object) $request->input();
         $account = $input->auth_data->pengguna->id_pengguna;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $test = Test::where('id_pengguna', $account)->where('id_paket_soal', $id_paket_soal)->first();
         if ($test && session()->has($id_paket_soal)) {
             if ($now > $test->waktu_selesai_pengerjaan) {
@@ -214,7 +214,7 @@ class ListUjianController extends Controller
     public function actionSaveAnswer(Request $request)
     {
         $input = (object) $request->input();
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $test_answer = array();
         $nilai = 0;
         $correct = 0;
@@ -287,7 +287,8 @@ class ListUjianController extends Controller
                 $correct = 1;
                 foreach ($input->question_option as $question_option) {
                     $pilihan_jawaban = session($input->paket_soal)['bank_soal'][$input->no]['soal']['pilihan_soal']->where('id_pilihan_soal', $question_option)->first();
-                    if ($pilihan_jawaban->correct == 1) { } else {
+                    if ($pilihan_jawaban->correct == 1) {
+                    } else {
                         $jawaban_benar = false;
                         $correct = 0;
                     }

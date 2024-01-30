@@ -17,8 +17,8 @@ class AddRouteModulAkademikRoleSiswa extends Migration
      */
     public function up()
     {
-        
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
 
@@ -43,8 +43,6 @@ class AddRouteModulAkademikRoleSiswa extends Migration
         $modul->menus()->where('nm_menu', 'Magang')->update([
             "page" => "9"
         ]);
-
-
     }
 
     /**

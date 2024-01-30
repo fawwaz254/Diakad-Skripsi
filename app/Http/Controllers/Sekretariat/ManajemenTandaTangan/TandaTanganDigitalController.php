@@ -77,7 +77,7 @@ class TandaTanganDigitalController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         //mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         switch ($mode) {
             case 'add':

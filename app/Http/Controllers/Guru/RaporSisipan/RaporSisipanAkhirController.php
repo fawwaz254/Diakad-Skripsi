@@ -57,7 +57,7 @@ class RaporSisipanAkhirController extends Controller
     //         foreach ($rapor_sisipan->nilai_rapor_sisipan as $s) {
     //             foreach ($komponen_nilais as $komponen) {
     //                 // dd($komponen);
-    //                 $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
+    //                 $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
     //                 $list_data[] = [
     //                     'id_nilai_rapor_sisipan' =>  $id,
     //                     'id_rapor_sisipan' => $rapor_sisipan->id_rapor_sisipan,

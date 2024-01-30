@@ -171,7 +171,7 @@ class Apiv1Controller extends BaseController
 
         $id_pengguna = $auth_data->pengguna->id_pengguna;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         DB::beginTransaction();
 
         try {
@@ -449,7 +449,7 @@ class Apiv1Controller extends BaseController
             ]);
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add' || $mode == 'edit') {
@@ -586,7 +586,7 @@ class Apiv1Controller extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $syarat = [
             'id_pengisian_kegiatan_harian' => 'required',
@@ -787,7 +787,7 @@ class Apiv1Controller extends BaseController
             $end_monkes = '07:00';
         }
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $start_1 = Carbon::createFromTimeString('00:00');
         $end_1 = Carbon::createFromTimeString($end_monkes);
@@ -795,7 +795,8 @@ class Apiv1Controller extends BaseController
         $start_2 = Carbon::createFromTimeString($start_monkes);
         $end_2 = Carbon::createFromTimeString('23:59');
 
-        if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)) { } else {
+        if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)) {
+        } else {
             return [
                 'status' => 300, // FAILED
                 'message' => 'Anda mengisi di luar waktu yang ditentukan.'
@@ -862,9 +863,9 @@ class Apiv1Controller extends BaseController
             $pengisian_kegiatan_harian->status_join_table              = $status_join;
             $pengisian_kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
             if ($now->between($start_1, $end_1)) {
-                $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->format('Y-m-d');
+                $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today()->format('Y-m-d');
             } else if ($now->between($start_2, $end_2)) {
-                $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
+                $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today()->addDays(1)->format('Y-m-d');
             }
             $pengisian_kegiatan_harian->warna_keadaan = $pengisian_jawaban_terbobot->warna_keadaan;
             if ($pengisian_jawaban_terbobot->bobot_jawaban == 0) {
@@ -966,7 +967,7 @@ class Apiv1Controller extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $tgl = $now->toDateString();
         $hari = $now->dayOfWeekIso;
         $jam = $now->hour;
@@ -1126,7 +1127,8 @@ class Apiv1Controller extends BaseController
         for ($i = 1; $i <= 25; $i++) {
             $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
             if ($presensiMp) {
-                if (!empty($input->query) && $input->query == 'absensi_is_null') { } else {
+                if (!empty($input->query) && $input->query == 'absensi_is_null') {
+                } else {
                     $pertemuan = array(
                         'text' => 'Pertemuan pekan ' . $i . " (Sudah)",
                         'value' => $i
@@ -1134,7 +1136,8 @@ class Apiv1Controller extends BaseController
                     $data_pertemuan[] = $pertemuan;
                 }
             } else {
-                if (!empty($input->query) && $input->query == 'absensi_is_not_null') { } else {
+                if (!empty($input->query) && $input->query == 'absensi_is_not_null') {
+                } else {
                     $pertemuan = array(
                         'text' => 'Pertemuan pekan ' . $i,
                         'value' => $i
@@ -1271,7 +1274,7 @@ class Apiv1Controller extends BaseController
         DB::beginTransaction();
 
         try {
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             if ($presensi_mp) {
                 $presensi_mp->updated_by         = $input->auth_data->pengguna->id_pengguna;
             } else {
@@ -1560,7 +1563,7 @@ class Apiv1Controller extends BaseController
 
             try {
                 // mengambil waktu sekarang
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
 
                 // get id_guru
                 $guru = Guru::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
@@ -1901,7 +1904,7 @@ class Apiv1Controller extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
             'id_kelas_mp' => 'required',
@@ -2077,7 +2080,8 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal2 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal2 != null or $input->ruangan2 != null) { } else {
+                        } elseif ($input->jam_jadwal2 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal2 != null or $input->ruangan2 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2111,7 +2115,8 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal3 != null or $input->jam_jadwal_selesai3 != null or $input->hari_jadwal3 != null or $input->ruangan3 != null) { } else {
+                        } elseif ($input->jam_jadwal3 != null or $input->jam_jadwal_selesai3 != null or $input->hari_jadwal3 != null or $input->ruangan3 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2145,7 +2150,8 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) { } else {
+                        } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2179,7 +2185,8 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) { } else {
+                        } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2213,7 +2220,8 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) { } else {
+                        } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) {
+                        } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
                             $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -2383,7 +2391,7 @@ class Apiv1Controller extends BaseController
 
             try {
                 // mengambil waktu sekarang
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
 
                 if ($mode == 'add') {
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -2961,7 +2969,7 @@ class Apiv1Controller extends BaseController
 
             try {
                 // mengambil waktu sekarang
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
 
                 // get id_siswa
                 $siswa = Siswa::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
@@ -3168,7 +3176,7 @@ class Apiv1Controller extends BaseController
         // $kerja = UnitKerja::select("id_unit_kerja", "nm_unit_kerja")->orderBy("nm_unit_kerja")->get();
 
         // mengambil waktu sekarang
-        // $now = Carbon::now(env('APP_TIMEZONE', ''));
+        // $now = Carbon::now();
         if ($request->segment(3) == "guru") {
             $data_actor = Guru::select("id_guru", "id_pengguna", "id_unit_kerja", "jenis_kelamin", "tgl_lahir", "nm_ibu_kandung", "alamat_jalan", "alamat_rt", "alamat_rw", "alamat_dusun", "alamat_kelurahan", "alamat_kecamatan", "alamat_kodepos", "alamat_kota", "alamat_provinsi", "id_agama", "npwp_ptk", "kewarganegaraan", "status_kawin", "nm_pasangan_ptk", "nomor_hp", "email")->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->get()->first();
         } elseif ($request->segment(3) == "tendik") {
@@ -3266,7 +3274,7 @@ class Apiv1Controller extends BaseController
         }
         // else {
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         DB::beginTransaction();
 
         try {
@@ -3796,7 +3804,7 @@ class Apiv1Controller extends BaseController
         } else {
             DB::beginTransaction();
             try {
-                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $now = Carbon::now();
 
                 // $siswa = Siswa::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
                 // $id_siswa = $siswa->id_siswa;

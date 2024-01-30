@@ -112,7 +112,7 @@ class MataPelajaranRaporController extends Controller
     public function actionKomponenMataPelajaran(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $list_validator = [
             'id_kelas'                  => 'required',
             'urutan'                    => 'required',

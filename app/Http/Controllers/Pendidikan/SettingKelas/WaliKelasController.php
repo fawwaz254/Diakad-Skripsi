@@ -53,9 +53,9 @@ class WaliKelasController extends BaseController
             ];
         } else {
             return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'setting-kelas/wali-kelas/view-kelas/'.$input->id_kelas
-                    ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'setting-kelas/wali-kelas/view-kelas/' . $input->id_kelas
+            ];
         }
     }
 
@@ -84,9 +84,9 @@ class WaliKelasController extends BaseController
         $data_guru = LibGuru::fetchDataAllGuru($auth_data);
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_wali_kelas = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_wali_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/setting-kelas/wali-kelas/add-wali-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_guru', 'id_wali_kelas'));
     }
@@ -116,29 +116,29 @@ class WaliKelasController extends BaseController
         $list_data = LibGuru::fetchDataWaliKelas($auth_data, $id_kelas);
 
         return Datatables::of($list_data)
-                ->editColumn('nm_wali_kelas', function ($item) {
-                    return $item->gelar_depan.' '.$item->nm_wali_kelas.' '.$item->gelar_belakang;
-                    // return $item->guru->pengguna->fullname();
-                })
-                ->addColumn('semester', function ($item) {
-                    return $item->tahun_ajaran." ".$item->nm_semester;
-                })
-                ->addColumn('status_aktif', function ($item) {
-                    if ($item->is_aktif == 0) {
-                        return "Non-Aktif";
-                    } else {
-                        return "Aktif";
-                    }
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id'            => $item->id_wali_kelas,
-                        'id_kelas'      => $item->id_kelas,
-                        'id_semester'   => $item->id_semester
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->editColumn('nm_wali_kelas', function ($item) {
+                return $item->gelar_depan . ' ' . $item->nm_wali_kelas . ' ' . $item->gelar_belakang;
+                // return $item->guru->pengguna->fullname();
+            })
+            ->addColumn('semester', function ($item) {
+                return $item->tahun_ajaran . " " . $item->nm_semester;
+            })
+            ->addColumn('status_aktif', function ($item) {
+                if ($item->is_aktif == 0) {
+                    return "Non-Aktif";
+                } else {
+                    return "Aktif";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id'            => $item->id_wali_kelas,
+                    'id_kelas'      => $item->id_kelas,
+                    'id_semester'   => $item->id_semester
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
@@ -160,7 +160,7 @@ class WaliKelasController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             // ACTION ADD
             if ($mode == 'add') {
@@ -170,35 +170,34 @@ class WaliKelasController extends BaseController
                 $guru = Guru::find($input->id_guru);
                 // cek apabila ada record kelas dan semester yg sama
                 $waliKelas = WaliKelas::join('semester', 'semester.id_semester', '=', 'wali_kelas.id_semester')
-                                ->where('wali_kelas.id_kelas', '=', $input->id_kelas)
-                                ->where('wali_kelas.id_semester', '=', $input->id_semester)
-                                ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                                ->first();
+                    ->where('wali_kelas.id_kelas', '=', $input->id_kelas)
+                    ->where('wali_kelas.id_semester', '=', $input->id_semester)
+                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
 
                 $waliKelasGuru = WaliKelas::join('semester', 'semester.id_semester', '=', 'wali_kelas.id_semester')
-                                ->where('wali_kelas.id_guru', '=', $input->id_guru)
-                                ->where('wali_kelas.id_semester', '=', $input->id_semester)
-                                ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                                ->first();
+                    ->where('wali_kelas.id_guru', '=', $input->id_guru)
+                    ->where('wali_kelas.id_semester', '=', $input->id_semester)
+                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
 
                 if ($waliKelas || $waliKelasGuru) {
 
-                    if($waliKelas){
+                    if ($waliKelas) {
                         return [
                             'status' => 300, // FAILED
-                            'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki wali kelas yaitu '.$waliKelas->guru->pengguna->nm_pengguna
+                            'message' => 'Mohon maaf kelas ' . $kelas->nm_kelas . ' pada semester ' . $semester->tahun_ajaran . ' sudah memiliki wali kelas yaitu ' . $waliKelas->guru->pengguna->nm_pengguna
                         ];
                     }
 
-                    if($waliKelasGuru){
+                    if ($waliKelasGuru) {
                         return [
                             'status' => 300, // FAILED
-                            'message' => 'Mohon maaf guru atas nama '.$guru->pengguna->nm_pengguna.' pada semester '.$semester->tahun_ajaran.' '.$semester->nm_semester.' telah menjadi wali kelas di kelas '.$waliKelasGuru->kelas->nm_kelas
+                            'message' => 'Mohon maaf guru atas nama ' . $guru->pengguna->nm_pengguna . ' pada semester ' . $semester->tahun_ajaran . ' ' . $semester->nm_semester . ' telah menjadi wali kelas di kelas ' . $waliKelasGuru->kelas->nm_kelas
                         ];
                     }
-                
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $waliKelas                       = new WaliKelas;
                     $waliKelas->id_wali_kelas        = $id;
@@ -223,7 +222,7 @@ class WaliKelasController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'setting-kelas/wali-kelas/view-kelas/'.$input->id_kelas,
+                        'path' => 'setting-kelas/wali-kelas/view-kelas/' . $input->id_kelas,
                         'message' => 'Save Wali Kelas Successfully'
                     ];
                 }
@@ -252,7 +251,7 @@ class WaliKelasController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'setting-kelas/wali-kelas/view-kelas/'.$input->id_kelas,
+                    'path' => 'setting-kelas/wali-kelas/view-kelas/' . $input->id_kelas,
                     'message' => 'Update Wali Kelas Successfully'
                 ];
             } elseif ($mode == 'delete') {

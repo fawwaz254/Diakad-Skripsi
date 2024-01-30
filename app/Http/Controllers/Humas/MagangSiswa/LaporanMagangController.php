@@ -36,7 +36,7 @@ class LaporanMagangController extends BaseController
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
             return view('humas/magang-siswa/laporan-magang/view-laporan-magangsmk3', compact('auth_data', 'data_periode_magang'));
-        }else{
+        } else {
             return view('humas/magang-siswa/laporan-magang/view-laporan-magang', compact('auth_data', 'data_periode_magang'));
         }
     }
@@ -66,12 +66,12 @@ class LaporanMagangController extends BaseController
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
             $data = PengajuanSiswaMagang::with('periode', 'kelas')
-            ->select('id_kelas', 'id_periode_magang')
-            ->groupBy('id_kelas', 'id_periode_magang')
-            ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
-                $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
-            })
-            ->get();
+                ->select('id_kelas', 'id_periode_magang')
+                ->groupBy('id_kelas', 'id_periode_magang')
+                ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
+                    $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
+                })
+                ->get();
 
             return Datatables::of($data)->editColumn('nm_periode_magang', function ($item) {
                 return $item->periode->nm_periode_magang;
@@ -91,12 +91,12 @@ class LaporanMagangController extends BaseController
                 })->make(true);
         } else {
             $data = PengajuanSiswaMagang::with('periode', 'rekanan')
-            ->select('id_rekanan_magang', 'id_periode_magang')
-            ->groupBy('id_rekanan_magang', 'id_periode_magang')
-            ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
-                $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
-            })
-            ->get();
+                ->select('id_rekanan_magang', 'id_periode_magang')
+                ->groupBy('id_rekanan_magang', 'id_periode_magang')
+                ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
+                    $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
+                })
+                ->get();
 
             return Datatables::of($data)->editColumn('nm_periode_magang', function ($item) {
                 return $item->periode->nm_periode_magang;
@@ -156,7 +156,7 @@ class LaporanMagangController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();

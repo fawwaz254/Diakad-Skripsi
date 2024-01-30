@@ -19,8 +19,8 @@ class UpdateAksesMenuKerjaHarianRoleKesiswaan extends Migration
      */
     public function up()
     {
-        
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $now = Carbon::now();
 
         $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
 
@@ -29,8 +29,6 @@ class UpdateAksesMenuKerjaHarianRoleKesiswaan extends Migration
         $modul->menus()->where('nm_menu', 'Kerja Harian')->update([
             "akses" => 0
         ]);
-
-
     }
 
     /**
