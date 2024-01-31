@@ -37,8 +37,9 @@ class BankController extends BaseController
         $total_pembayaran = $request->input('total_pembayaran');
 
         $key   = InMemory::base64Encoded(
-            'crGyqM0orACXsibBpa5HyU9hFlsOHWCrnlQENXmzY6wrZSXOdtBbbdoVxf8lmDkG'
+            env('JWT_SECRET')
         );
+
         $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::
             default()));
         $algorithm    = new Sha256();
@@ -73,7 +74,7 @@ class BankController extends BaseController
         //Validasi Signature
         $now   = new DateTimeImmutable();
         $key   = InMemory::base64Encoded(
-            'crGyqM0orACXsibBpa5HyU9hFlsOHWCrnlQENXmzY6wrZSXOdtBbbdoVxf8lmDkG'
+            env('JWT_SECRET')
         );
         $algorithm    = new Sha256();
 
