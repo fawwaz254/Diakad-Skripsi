@@ -44,7 +44,7 @@
                     KANDUNG</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="7">KETERANGAN TENTANG IBU
                     KANDUNG</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" colspan="6">KETERANGAN TENTANG AYAH WALI
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="5">KETERANGAN TENTANG AYAH WALI
                 </th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="3">KEGEMARAN PESERTA DIDIK</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="6">KETERANGAN PERKEMBANG
@@ -118,8 +118,8 @@
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pekerjaan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pendidikan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Penghasilan per bulan</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alamat rumah / nomor
-                    telepon</th>
+                {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alamat rumah / nomor
+                    telepon</th> --}}
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kesenian</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Olahraga</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kemasyarakatan /
@@ -188,7 +188,7 @@
                     <td>{{ $siswa->nisn_siswa }}</td>
                     <td>'{{ $siswa->nik_siswa }}</td>
                     <td>{{ $siswa->nm_kota_lahir ? $siswa->nm_kota_lahir : '-' }},
-                        {{ $siswa->tgl_lahir ? date('d F Y', strtotime($siswa->tgl_lahir)) : '-' }}</td>
+                        {{ $siswa->tgl_lahir ? date('d F Y', strtotime($siswa->tgl_lahir)) : '' }}</td>
                     <td>{{ $siswa->nm_agama }}</td>
                     @if ($siswa->kewarganegaraan)
                         <td>{{ $siswa->kewarganegaraan == 1 ? 'WNI' : 'WNA' }}</td>
@@ -232,8 +232,10 @@
                     <td>{{ $siswa->tinggi_badan }} cm / {{ $siswa->berat_badan }} kg</td>
                     <td>{{ $siswa->nm_kebutuhan_khusus }}</td>
                     <td>{{ $siswa->asal_sekolah }}</td>
-                    <td>{{ $siswa->tanggal_sttb . $siswa->nomor_sttb }}</td>
-                    <td>{{ $siswa->tanggal_skhus_sebelumnya . $siswa->nomor_skhus_sebelumnya }}</td>
+                    <td>{{ $siswa->tanggal_sttb ? date('d F Y', strtotime($siswa->tanggal_sttb)) : '' }}
+                        {{ $siswa->nomor_sttb }}</td>
+                    <td>{{ $siswa->tanggal_skhus_sebelumnya ? date('d F Y', strtotime($siswa->tanggal_skhus_sebelumnya)) : '' }}
+                        {{ $siswa->nomor_skhus_sebelumnya }}</td>
                     {{-- <td></td> --}}
                     <td>{{ $siswa->asal_sekolah2 }}</td>
                     <td>{{ $siswa->alasan_mutasi }}</td>
@@ -241,7 +243,7 @@
                     {{-- <td>{{ $siswa->tgl_diterima }}</td> --}}
                     {{-- <td>{{ $siswa->nomor_kps }}</td> --}}
                     <td>{{ $siswa->nm_ayah }}</td>
-                    <td>{{ date('Y', strtotime($siswa->tgl_lahir_ayah)) }}</td>
+                    <td>{{ $siswa->tgl_lahir_ayah ? date('Y', strtotime($siswa->tgl_lahir_ayah)) : '' }}</td>
                     <td>{{ $siswa->nm_jenis_pekerjaan_ayah }}</td>
                     <td>{{ $siswa->nm_jenis_pendidikan_ayah }}</td>
                     <td>{{ $siswa->nm_jenis_penghasilan_ayah }}</td>
@@ -258,7 +260,7 @@
                         <td></td>
                     @endif
                     <td>{{ $siswa->nm_ibu }}</td>
-                    <td>{{ date('Y', strtotime($siswa->tgl_lahir_ibu)) }}</td>
+                    <td>{{ $siswa->tgl_lahir_ibu ? date('Y', strtotime($siswa->tgl_lahir_ibu)) : '' }}</td>
                     <td>{{ $siswa->nm_jenis_pekerjaan_ibu }}</td>
                     <td>{{ $siswa->nm_jenis_pendidikan_ibu }}</td>
                     <td>{{ $siswa->nm_jenis_penghasilan_ibu }}</td>
@@ -274,20 +276,13 @@
                         <td></td>
                     @endif
                     <td>{{ $siswa->nm_wali }}</td>
-                    <td>{{ date('Y', strtotime($siswa->tgl_lahir_wali)) }}</td>
+                    <td>{{ $siswa->tgl_lahir_wali ? date('Y', strtotime($siswa->tgl_lahir_wali)) : '' }}</td>
                     <td>{{ $siswa->nm_jenis_pekerjaan_wali }}</td>
                     <td>{{ $siswa->nm_jenis_pendidikan_wali }}</td>
                     <td>{{ $siswa->nm_jenis_penghasilan_wali }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    {{-- <td></td> --}}
-                    {{-- <td>
-                        @foreach ($data_beasiswa as $r)
-                            {{ $r['urutan_3'] }}
-                        @endforeach
-                    </td> --}}
+                    <td>{{ $siswa->kegemaran_kesenian }}</td>
+                    <td>{{ $siswa->kegemaran_olahraga }}</td>
+                    <td>{{ $siswa->kegemaran_organisasi }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
