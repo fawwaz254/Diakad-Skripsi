@@ -1,65 +1,38 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link "
+                href="{{ url(Request::segment(1) . '#ekstrakurikuler/setting-peserta-ekskul/view-ekskul/' . $semester_aktif->id_semester . '/' . $id_ekskul) }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                        Setting Peserta Ekskul
+                        Copy Peserta Ekskul {{ $ekskul_pilih->nm_ekskul }}
                     </h2>
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-setting-peserta-ekskul') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-copy-setting-peserta-ekskul') }}">
                         {{ csrf_field() }}
-                        <h2 class="card-inside-title">
-                            Ekstrakurikuler
-                        </h2>
+                        <input type="hidden" name="id_ekskul" value="{{ $id_ekskul }}">
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                @if ($id_ekskul != null)
-                                    <select class="form-control show-tick" name="id_ekskul">
-                                        @foreach ($ekskul as $data)
-                                            <option value="{{ $data->id_ekskul }}"
-                                                @if ($id_ekskul == $data->id_ekskul) selected @endif>{{ $data->nm_ekskul }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                @else
-                                    <select class="form-control show-tick" name="id_ekskul">
-                                        @foreach ($ekskul as $data)
-                                            <option value="{{ $data->id_ekskul }}">{{ $data->nm_ekskul }}</option>
-                                        @endforeach
-                                    </select>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label>Semester</label>
+                                <label>Dari Semester</label>
                                 <select class="form-control show-tick" name="id_semester" required="">
-                                    @if ($id_semester)
-                                        @foreach ($data_semester as $data)
-                                            <option value="{{ $data->id_semester }}"
-                                                @if ($id_semester == $data->id_semester) selected @endif>
-                                                {{ $data->tahun_ajaran }}
-                                                {{ $data->nm_semester }}
-                                                @if ($data->is_aktif_semester == 1)
-                                                    (Aktif)
-                                                @endif
-                                            </option>
-                                        @endforeach
-                                    @else
-                                        @foreach ($data_semester as $data)
-                                            <option value="{{ $data->id_semester }}"
-                                                @if ($data->is_aktif_semester == 1) selected @endif>
-                                                {{ $data->tahun_ajaran }} {{ $data->nm_semester }}
-                                                @if ($data->is_aktif_semester == 1)
-                                                    (Aktif)
-                                                @endif
-                                            </option>
-                                        @endforeach
-
-                                    @endif
+                                    @foreach ($data_semester as $data)
+                                        @if (
+                                            $data->id_semester == $semester_aktif->id_semester ||
+                                                $data->thn_akademik_semester > $semester_aktif->thn_akademik_semester)
+                                            @continue
+                                        @endif
+                                        <option value="{{ $data->id_semester }}"
+                                            @if ($data->id_semester == $id_semester) selected @endif>
+                                            {{ $data->tahun_ajaran }}
+                                            {{ $data->nm_semester }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -76,21 +49,10 @@
             @if ($id_ekskul != null && $id_semester != null)
                 <div class="card">
                     <div class="body">
-                        <div class="block-header">
-                            <h2>
-                                <a class="btn bg-blue waves-effect target-link"
-                                    href="{{ url(Request::segment(1) . '#ekstrakurikuler/setting-peserta-ekskul/add/' . $id_semester . '/' . $id_ekskul) }}"><i
-                                        class="material-icons">note_add</i><span>Tambah Peserta Ekskul</span></a>
-                                <a class="btn bg-blue waves-effect target-link"
-                                    href="{{ url(Request::segment(1) . '#ekstrakurikuler/setting-peserta-ekskul/copy/' . $semester_lalu->id_semester . '/' . $id_ekskul) }}"><i
-                                        class="material-icons">content_copy</i><span>Copy Peserta Ekskul</span></a>
-                                {{-- <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ekstrakurikuler/setting-peserta-ekskul/setting/'.$id_ekskul)}}"><i class="material-icons">settings_applications</i><span>Setting Pengambilan Ekskul</span></a> --}}
-                            </h2>
-                        </div>
                         <div class="row clearfix">
                             <div class="body">
                                 <form form id="form-validation1" method="POST"
-                                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-setting-peserta-ekskul/checkdelete/' . $id_ekskul) }}">
+                                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-setting-peserta-ekskul/copy/' . $id_ekskul) }}">
                                     {{ csrf_field() }}
                                     <div class="table-responsive">
                                         <table
@@ -107,14 +69,12 @@
                                                     </th>
                                                     <th>NIS - Nama Siswa</th>
                                                     <th>Kelas</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                         </table>
                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                             <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                                    class="material-icons">delete_forever</i><span>Delete</span></button>
+                                                    class="material-icons">content_copy</i><span>Simpan</span></button>
                                         </div>
                                     </div>
 
@@ -130,19 +90,19 @@
 </div>
 @include('scriptjs')
 <script>
-    // var modul_url = location.hash.replace('#','').split('/')[0];
-    // var id_semester = {!! json_encode($id_semester) !!};
     var id_ekskul = {!! json_encode($id_ekskul) !!};
     var id_semester = {!! json_encode($id_semester) !!};
 
     var modul_url = 'ekstrakurikuler';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'setting-peserta-ekskul/datatables/' +
-        id_ekskul + '/' + id_semester;
-    var edit_url = role_url + '#' + modul_url + '/' + 'setting-peserta-ekskul/edit';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-setting-peserta-ekskul/delete';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'setting-peserta-ekskul/copy/datatables/' +
+        id_semester + '/' + id_ekskul;
 
 
     var primary_table = $('#primary_table').DataTable({
+        lengthMenu: [
+            [-1, 10, 25, 50],
+            ['All', 10, 25, 50],
+        ],
         processing: true,
         serverSide: true,
         responsive: false,
@@ -176,26 +136,7 @@
                 data: 'nm_kelas',
                 name: 'nm_kelas'
             },
-            {
-                data: 'is_aktif',
-                name: 'is_aktif'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        edit_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">edit</i>' +
-                        '</a> ' +
-                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                        delete_url + '\', this)" data-id="' + data.id + '">' +
-                        '    <i class="material-icons">delete_forever</i>' +
-                        '</button>';
-                }
-            }
+
         ]
     });
 
