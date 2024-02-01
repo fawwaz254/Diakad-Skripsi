@@ -8,7 +8,7 @@
                 @foreach ($data_semester as $data)
                     <li> <a onclick="changeThn(this)" data-id=" {{ $data->thn_akademik_semester }} ">
                             {{ $data->tahun_ajaran . ' ' . $data->nm_semester }}
-                            @if ($semester_aktif->id_semester == $data->id_semester)
+                            @if ($semester_aktif->thn_akademik_semester == $data->thn_akademik_semester)
                                 (Aktif)
                             @endif
                         </a>
