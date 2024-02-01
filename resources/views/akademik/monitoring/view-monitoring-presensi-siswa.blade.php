@@ -145,7 +145,7 @@
                                                     $auth_data->sekolah_data->nm_singkat_sekolah == 'smknu' ||
                                                     $auth_data->sekolah_data->nm_singkat_sekolah == 'smpnu' ||
                                                     $auth_data->sekolah_data->nm_singkat_sekolah == 'tkqnu')
-                                                @if ($date->format('l') == 'Saturday' || $date->format('l') == 'Sunday')
+                                                @if ($date->format('l') == 'Friday')
                                                     <td style="background: #ffffff; text-align:center;">
                                                         <b><a class="target-link">Libur</a></b>
                                                     </td>

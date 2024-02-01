@@ -186,16 +186,10 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tgl_lahir)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tgl_lahir)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir" aria-required="true" aria-invalid="true"
-                                                    required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control" name="tgl_lahir"
+                                                aria-required="true" aria-invalid="true"
+                                                value="{{ isset($siswa->tgl_lahir) ? date('d F Y', strtotime($siswa->tgl_lahir)) : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <br>
@@ -719,16 +713,10 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tgl_lahir_ayah)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_ayah" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tgl_lahir_ayah)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_ayah" aria-required="true" aria-invalid="true"
-                                                    required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tgl_lahir_ayah" aria-required="true" aria-invalid="true"
+                                                value="{{ isset($siswa->tgl_lahir_ayah) ? date('d F Y', strtotime($siswa->tgl_lahir_ayah)) : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <br>
@@ -996,16 +984,10 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tgl_lahir_ibu)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_ibu" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tgl_lahir_ibu)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_ibu" aria-required="true" aria-invalid="true"
-                                                    required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tgl_lahir_ibu" aria-required="true" aria-invalid="true"
+                                                value="{{ isset($siswa->tgl_lahir_ibu) ? date('d F Y', strtotime($siswa->tgl_lahir_ibu)) : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <br>
@@ -1286,14 +1268,9 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tgl_lahir_wali)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_wali" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tgl_lahir_wali)) }}">
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_wali" aria-required="true" aria-invalid="true">
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tgl_lahir_wali" aria-required="true" aria-invalid="true"
+                                                value="{{ isset($siswa->tgl_lahir_wali) ? date('d F Y', strtotime($siswa->tgl_lahir_wali)) : '' }}">
                                         </div>
                                     </div>
                                     <br>
@@ -1486,7 +1463,7 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <select class="form-control show-tick" name="golongan_darah"
-                                                id="golongan_darah" required>
+                                                id="golongan_darah">
 
                                                 <option value="A"
                                                     {{ $siswa->golongan_darah == 'A' ? 'selected' : '' }}>A
@@ -1596,16 +1573,9 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tanggal_sttb)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_sttb" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_sttb)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_sttb" aria-required="true" aria-invalid="true"
-                                                    required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tanggal_sttb" aria-invalid="true"
+                                                value="{{ isset($siswa->tanggal_sttb) ? date('d F Y', strtotime($siswa->tanggal_sttb)) : '' }}">
                                         </div>
                                     </div>
                                     <br>
@@ -1630,17 +1600,9 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tanggal_skhus_sebelumnya)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_skhus_sebelumnya" aria-required="true"
-                                                    aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_skhus_sebelumnya)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_skhus_sebelumnya" aria-required="true"
-                                                    aria-invalid="true" required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tanggal_skhus_sebelumnya" aria-invalid="true"
+                                                value="{{ isset($siswa->tanggal_skhus_sebelumnya) ? date('d F Y', strtotime($siswa->tanggal_skhus_sebelumnya)) : '' }}">
                                         </div>
                                     </div>
                                     <br>
@@ -1736,17 +1698,11 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tanggal_mutasi_masuk)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_mutasi_masuk" aria-required="true"
-                                                    aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_mutasi_masuk)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_mutasi_masuk" aria-required="true"
-                                                    aria-invalid="true" required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tanggal_mutasi_masuk" aria-required="true"
+                                                aria-invalid="true"
+                                                value="{{ isset($siswa->tanggal_mutasi_masuk) ? date('d F Y', strtotime($siswa->tanggal_mutasi_masuk)) : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <br>
@@ -1767,10 +1723,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
 
                         <br>
                         <div class="row clearfix">
@@ -1798,7 +1750,7 @@
             //lang : 'id',
             clearButton: true,
             weekStart: 1,
-            time: false
+            time: false,
         });
     });
 </script>
