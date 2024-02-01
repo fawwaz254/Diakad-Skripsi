@@ -99,7 +99,7 @@ class RaporSisipanController extends Controller
                 }
             })
             ->editColumn('semester', function ($item) {
-                return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
+                return $item->semester->tahun_ajaran;
             })
             ->addColumn('action', function ($item) {
                 $data = array(
