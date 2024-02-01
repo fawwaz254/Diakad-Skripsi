@@ -140,10 +140,6 @@ workflows:
   #     - deploy-to-staging
 
   to-production:
-    filters:
-      branches:
-        only:
-          - latest-release
     jobs:
       - deploy-to-smp-ypm-1
       - deploy-to-sma-wh-2
