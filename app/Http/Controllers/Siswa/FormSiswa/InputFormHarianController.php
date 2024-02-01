@@ -123,17 +123,15 @@ class InputFormHarianController extends Controller
                 'message' => $validator->errors()->first()
             ];
         } else {
-            $now = Carbon::now();
+            $now = Carbon::now()->toTimeString();
 
             $form = Form::where('id_form', $request->id_form)->first();
 
+            $start= $form->start_time;
+            $end = $form->end_time;
 
-            $end = Carbon::createFromTimeString($form->start_time);
-            $start = Carbon::createFromTimeString($form->end_time);
-
-
-            if (!$now->between($start, $end)) {
-                return [
+            if (!(($start <= $end && ($now >= $start && $now <= $end)) || ($start >= $end && ($now >= $start || $now <= $end))) && $mode !== 'delete') {
+            return [
                     'status' => 300, // FAILED
                     'message' => 'Anda mengisi di luar waktu yang ditentukan.'
                 ];
