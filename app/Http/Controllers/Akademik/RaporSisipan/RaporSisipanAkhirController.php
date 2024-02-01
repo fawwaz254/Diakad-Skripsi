@@ -27,7 +27,7 @@ class RaporSisipanAkhirController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
         return view('akademik/rapor-sisipan/daftar-nilai-sas/view-daftar-nilai-sas', compact('auth_data', 'semester_aktif', 'data_semester'));
     }
 
@@ -36,20 +36,24 @@ class RaporSisipanAkhirController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        if (empty($input->id_semester)) {
+        if (empty($input->thn_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-            $id_semester = $semester_aktif->id_semester;
+            $thn_akademik_semester = $semester_aktif->thn_akademik_semester;
         } else {
-            $id_semester = $input->id_semester;
+            $thn_akademik_semester = $input->thn_akademik_semester;
         }
 
-        $list_data = Rapor::where('id_semester', $id_semester)
-            ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
+        $list_data = Rapor::
+            // where('id_semester', $id_semester)->
+            with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
             ->withCount(['nilai_rapor' => function ($q) {
                 $q->where('nilai', '!=', 0);
-            }])
+            }])->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+            })
             ->where('nm_rapor', 'sisipan')
             ->orderBy('created_at', 'desc');
+
 
         // $komponen = KomponenNilaiRaporSisipan::where('status', '1')->count();
         $komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
@@ -60,7 +64,7 @@ class RaporSisipanAkhirController extends Controller
         return Datatables::of($list_data)
             ->addColumn('jumlah', function ($item) use ($komponen) {
                 $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
-                $nilaiTerisi = $item->nilai_rapor_sisipan_count;
+                $nilaiTerisi = $item->nilai_rapor_count;
                 if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
                     $hasil = '0%';
                 } else {
