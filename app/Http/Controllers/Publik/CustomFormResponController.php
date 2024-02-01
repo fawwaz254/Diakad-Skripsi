@@ -108,10 +108,22 @@ class CustomFormResponController extends Controller
                     return view('public/forms/index', compact('form', 'pesan'));
                 }
             }
+            $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->start_time);
+            $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->end_time);
 
-            if (!$now->between($form->start_time, $form->end_time)) {
+            $time_now = $now->toTimeString();
 
-                $pesan = 'Gagal, Anda Mengisi Diluar Jam Yang Ditentukan!';
+            $start= $startTime->toTimeString();
+            $end = $endTime->toTimeString();
+
+            if (
+                ($form->jenis_custom_form === 'harian' && 
+                !(($start <= $end && ($time_now >= $start && $time_now <= $end)) || ($start >= $end && ($time_now >= $start || $time_now <= $end)))
+                ) ||
+                ($form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
+                ($form->jenis_custom_form !== 'harian' && $form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime)) || ($form->is_aktif == 0)
+            ) {
+                $pesan = 'Gagal, Anda Mengisi Diluar Waktu Yang Ditentukan!';
                 return view('public/forms/index', compact('form', 'pesan'));
             }
             DB::transaction(function () use ($request, $now, $sekola, $input, $form) {

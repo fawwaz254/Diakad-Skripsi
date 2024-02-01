@@ -168,10 +168,15 @@ class CustomFormResponController extends Controller
             }
             $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->start_time);
             $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->end_time);
+            $time_now = $now->toTimeString();
 
+            $start= $startTime->toTimeString();
+            $end = $endTime->toTimeString();
 
             if (
-                ($form->jenis_custom_form === 'harian' && !$now->between($startTime->toTimeString(), $endTime->toTimeString())) ||
+                ($form->jenis_custom_form === 'harian' && 
+                !(($start <= $end && ($time_now >= $start && $time_now <= $end)) || ($start >= $end && ($time_now >= $start || $time_now <= $end)))
+                ) ||
                 ($form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
                 ($form->jenis_custom_form !== 'harian' && $form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime)) || ($form->is_aktif == 0)
             ) {
@@ -229,8 +234,15 @@ class CustomFormResponController extends Controller
             $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->start_time);
             $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->end_time);
 
+            $time_now = $now->toTimeString();
+
+            $start= $startTime->toTimeString();
+            $end = $endTime->toTimeString();
+
             if (
-                ($form->jenis_custom_form === 'harian' && !$now->between($startTime->toTimeString(), $endTime->toTimeString())) ||
+                ($form->jenis_custom_form === 'harian' && 
+                !(($start <= $end && ($time_now >= $start && $time_now <= $end)) || ($start >= $end && ($time_now >= $start || $time_now <= $end)))
+                ) ||
                 ($form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
                 ($form->jenis_custom_form !== 'harian' && $form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime)) || ($form->is_aktif == 0)
             ) {
@@ -336,8 +348,15 @@ class CustomFormResponController extends Controller
             if ($form->form->form_settings['editable'] !== 'true') {
                 throw new Exception('Form Ini Tidak Dapat Diubah');
             }
+            $time_now = $now->toTimeString();
+
+            $start= $startTime->toTimeString();
+            $end = $endTime->toTimeString();
+
             if (
-                ($form->form->jenis_custom_form === 'harian' && !$now->between($startTime->toTimeString(), $endTime->toTimeString())) ||
+                ($form->jenis_custom_form === 'harian' && 
+                !(($start <= $end && ($time_now >= $start && $time_now <= $end)) || ($start >= $end && ($time_now >= $start || $time_now <= $end)))
+                ) ||
                 ($form->form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
                 ($form->form->jenis_custom_form !== 'harian' && $form->form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime))
             ) {
@@ -367,8 +386,15 @@ class CustomFormResponController extends Controller
 
             $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $sheet->form->start_time);
             $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $sheet->form->end_time);
+            $time_now = $now->toTimeString();
 
-            if (($sheet->form->jenis_custom_form === 'harian' && !$now->between($startTime->toTimeString(), $endTime->toTimeString())) ||
+            $start= $startTime->toTimeString();
+            $end = $endTime->toTimeString();
+
+            if (
+                ($sheet->form->jenis_custom_form === 'harian' && 
+                !(($start <= $end && ($time_now >= $start && $time_now <= $end)) || ($start >= $end && ($time_now >= $start || $time_now <= $end)))
+                ) ||
                 ($sheet->form->jenis_custom_form === 'bulanan' && $now->format('d') !== $startTime->format('d') && !($now->format('d') >= $now->endOfMonth()->format('d') && $now->format('d') <= $startTime->format('d'))) ||
                 ($sheet->form->jenis_custom_form !== 'harian' && $sheet->form->jenis_custom_form !== 'bulanan' && !$now->between($startTime, $endTime))
             ) {
