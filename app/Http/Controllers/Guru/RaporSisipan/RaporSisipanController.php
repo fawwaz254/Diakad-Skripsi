@@ -27,6 +27,7 @@ use App\Models\KelasRapor;
 use App\Models\KelasSisipan;
 use App\Models\KomponenJenisRapor;
 use App\Models\Rapor;
+use App\Models\Semester;
 // use App\Models\Rapor;
 use App\Models\Setting;
 use Auth;
@@ -162,9 +163,14 @@ class RaporSisipanController extends Controller
         }
 
         if ($mode == 'add') {
+            $s = Semester::find($input->id_semester);
+            $thn_akademik_semester = $s->thn_akademik_semester;
             $cekDuplicate = Rapor::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)
                 ->where('nm_rapor', 'sisipan')
-                ->where('id_semester', $input->id_semester)
+                ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                    $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+                })
+                // ->where('id_semester', $input->id_semester)
                 ->with('pengguna')->first();
 
 
@@ -396,13 +402,17 @@ class RaporSisipanController extends Controller
             ->addColumn('jumlah', function ($item) use ($komponen) {
                 $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
                 $nilaiTerisi = $item->nilai_rapor_count;
-                if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
-                    $hasil = '0%';
-                } else {
-                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2) . '%';
-                }
 
-                return $hasil;
+                if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
+                    return '0%';
+                } else {
+                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2);
+                    if ($hasil > 100) {
+                        return '100%';
+                    } else {
+                        return $hasil . '%';
+                    }
+                }
             })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
