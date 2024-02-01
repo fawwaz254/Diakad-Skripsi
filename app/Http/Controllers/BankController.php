@@ -36,7 +36,7 @@ class BankController extends BaseController
         $nomor_transaksi = $request->input(('nomor_transaksi'));
         $total_pembayaran = $request->input('total_pembayaran');
 
-        $key   = InMemory::base64Encoded(
+        $key   = InMemory::plainText(
             env('JWT_SECRET')
         );
 
@@ -73,7 +73,7 @@ class BankController extends BaseController
         $kode_request       = $request->input('Kode');
         //Validasi Signature
         $now   = new DateTimeImmutable();
-        $key   = InMemory::base64Encoded(
+        $key   = InMemory::plainText(
             env('JWT_SECRET')
         );
         $algorithm    = new Sha256();
@@ -91,7 +91,7 @@ class BankController extends BaseController
             $token = (new JwtFacade())->parse(
                 $jwtEncoded,
                 new Constraint\SignedWith($algorithm, $key),
-                new Constraint\StrictValidAt(
+                new Constraint\LooseValidAt(
                     new FrozenClock($now)
                 )
             );
