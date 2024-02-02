@@ -7,7 +7,7 @@
     </h2>
 
     <div class="row clearfix card">
-        <table class="table table-striped">
+        <table class="table table-striped" id="primary_table">
             <thead>
                 <tr>
                     <th class="text-center">No.</th>
@@ -31,5 +31,15 @@
                 @endforeach
             </tbody>
         </table>
+
     </div>
 </div>
+
+
+<script>
+    var primary_table = $('#primary_table').DataTable({
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
+    })
+</script>
