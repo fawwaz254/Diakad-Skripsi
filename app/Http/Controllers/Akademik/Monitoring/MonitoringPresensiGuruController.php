@@ -51,12 +51,27 @@ class MonitoringPresensiGuruController extends Controller
         return view('akademik/monitoring/view-monitoring-presensi-guru', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'tahun', 'data_guru', 'data_presensi'));
     }
 
+
+    public function actionDeletePresensiGuru(Request $request, $id_presensi_mp)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $p = PresensiMp::find($id_presensi_mp);
+        if ($p) {
+            $p->deleted_by =     $auth_data->pengguna->id_pengguna;
+            $p->save();
+            $p->delete();
+        }
+        return $id_presensi_mp;
+    }
+
     public function viewDetailPresensiGuru(Request $request, $day,  $id_bulan, $tahun, $id_pengguna)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_presensi = PresensiMp::select('nm_pengguna', 'pengguna.id_pengguna', 'nip_guru', 'pertemuan_ke', 'uraian_materi', 'waktu_mulai', 'waktu_selesai', 'tgl_presensi', 'nm_kelas_mp')
+        $data_presensi = PresensiMp::select('nm_pengguna', 'pengguna.id_pengguna', 'nip_guru', 'pertemuan_ke', 'uraian_materi', 'waktu_mulai', 'waktu_selesai', 'tgl_presensi', 'nm_kelas_mp', 'id_presensi_mp')
             ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'presensi_mp.id_kelas_mp')
             ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', 'kelas_mp.id_kelas_mp')
             ->join('guru', 'guru.id_guru', 'pengampu_mp.id_guru')
