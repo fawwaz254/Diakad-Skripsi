@@ -6,8 +6,9 @@
         </a>
     </h2>
 
-    <div class="row clearfix card">
+    <div class="row clearfix card" style="padding: 10px">
         <table class="table table-striped" id="primary_table">
+            {{-- <br> --}}
             <thead>
                 <tr>
                     <th class="text-center">No.</th>
