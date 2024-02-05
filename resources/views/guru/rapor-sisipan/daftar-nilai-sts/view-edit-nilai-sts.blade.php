@@ -23,6 +23,9 @@
 
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div id="loading">
+                                    <img src="{{ asset('js/loading_new.gif') }}" />
+                                </div>
                                 <button class="btn btn-block bg-indigo waves-effect" id="submit" type="submit"><i
                                         class="material-icons">save</i><span>Save</span></button>
                             </div>
@@ -48,6 +51,7 @@
             url: datatable_url,
             type: 'GET',
             success: function(data) {
+                $('#loading').html('');
                 jspreadsheet(document.getElementById('spreadsheet'), {
                     data: data,
                     colHeaders: dynamicColumns.map(function(column) {
@@ -59,6 +63,12 @@
                     }),
                     allowInsertColumn: false,
                     allowDeleteColumn: false,
+                    columns: dynamicColumns.map(function(column, index) {
+                        return {
+                            readOnly: (index === 0 || index ===
+                                1), // Menonaktifkan kolom nomor 0 dan 1
+                        };
+                    }),
 
                     // tableOverflow: true,
                     // columns: [{
