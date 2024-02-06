@@ -195,4 +195,9 @@ class Siswa extends Model
             return $q->where('id_sekolah', $id_sekolah);
         });
     }
+
+    public function siswaAsrama()
+    {
+        return $this->belongsTo(SiswaAsrama::class, 'id_siswa', 'id_siswa');
+    }
 }
