@@ -201,9 +201,13 @@
     }
 
     var primary_table = $('#primary_table').DataTable({
-        ordering: false,
-
-        paging: false
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
+        lengthMenu: [
+            [-1],
+            ['All'],
+        ],
     });
 
     function cekJawaban(el) {
