@@ -65,7 +65,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="padding: 10px">
                         <table class="table table-bordered table-striped table-hover dataTable" id="primary_table">
                             <thead>
                                 <tr>
@@ -136,15 +136,22 @@
 
 
 <script>
+    var primary_table = $('#primary_table').DataTable({
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
+        lengthMenu: [
+            [-1],
+            ['All'],
+        ],
+    });
+
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
             '{{ $form->id_form }}' + '/' + $('input[name=date]').val() + '/');
     }
 
-    var primary_table = $('#primary_table').DataTable({
-        ordering: false,
-        paging: false
-    });
+    
 
     $("input").on("change", function() {
         this.setAttribute(
