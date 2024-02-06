@@ -42,6 +42,7 @@ use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaPondokController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaSholatController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\Absensi\RekapPertanggalController;
+use App\Http\Controllers\Humas\Asrama\SiswaAsramaController;
 use App\Http\Controllers\Humas\FormBuilder\ListFormController;
 use App\Http\Controllers\Humas\FormBuilder\RekapFormHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
@@ -125,6 +126,17 @@ Route::middleware(['token_staff'])->group(function () {
                 });
             });
         });
+
+        Route::prefix('asrama')->group(function () {
+            Route::prefix('data-siswa-asrama')->group(function () {
+                Route::get('/', [SiswaAsramaController::class, 'viewSiswaAsrama']);
+                Route::get('/datatables/{jenis}', [SiswaAsramaController::class, 'datatablesSiswaAsrama']);
+                Route::post('/add', [SiswaAsramaController::class, 'actionAddSiswaAsrama']);
+                Route::post('/delete', [SiswaAsramaController::class, 'actionDeleteSiswaAsrama']);
+            });
+        });
+
+
 
         Route::prefix('monitoring-kesehatan')->group(function () {
             Route::get('rekap-kesehatan', [GuruPiketRekapKesehatanController::class, 'viewRekapKesehatan']);
