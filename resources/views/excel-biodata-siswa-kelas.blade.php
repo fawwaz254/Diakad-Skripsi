@@ -32,12 +32,12 @@
     <table>
         <thead>
             <tr>
-                <th style="text-align: center;font-weight: bold;border : 1;" colspan="13">KETERANGAN TENTANG DIRI
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="14">KETERANGAN TENTANG DIRI
                     PESERTA DIDIK</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" colspan="3">KETERANGAN TEMPAT TINGGAL
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="4">KETERANGAN TEMPAT TINGGAL
                 </th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="5">KETERANGAN KESEHATAN</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" colspan="6">KETERANGAN PENDIDIKAN</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="7">KETERANGAN PENDIDIKAN</th>
                 {{-- <th style="text-align: center;font-weight: bold;border : 1;" colspan="1">KETERANGAN KARTU
                     PERLINDUNGAN SOSIAL</th> --}}
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="7">KETERANGAN TENTANG AYAH
@@ -58,6 +58,7 @@
                 </td>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama panggilan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jenis kelamin</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">NIS</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">NISN</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">NIK</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tempat dan tanggal lahir
@@ -75,7 +76,7 @@
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alamat</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nomor telepon / HP</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Email Pribadi</th>
-                {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jenis Tinggal</th> --}}
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jenis Tinggal</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Jarak tempat tinggal ke
                     sekolah</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Alat transportasi ke sekolah
@@ -90,6 +91,7 @@
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="3">Pendidikan sebelumnya</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="2">Pindahan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;">Diterima di sekolah ini</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Menerima Beasiswa</th>
                 {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nomor KPS</th> --}}
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tahun Lahir</th>
@@ -185,6 +187,7 @@
                     @else
                         <td></td>
                     @endif
+                    <td>{{ $siswa->nis_siswa }}</td>
                     <td>{{ $siswa->nisn_siswa }}</td>
                     <td>'{{ $siswa->nik_siswa }}</td>
                     <td>{{ $siswa->nm_kota_lahir ? $siswa->nm_kota_lahir : '-' }},
@@ -213,7 +216,7 @@
                     @endif
                     <td>{{ $siswa->bahasa_sehari_hari }}</td> --}}
                     <td>{{ $siswa->alamat_jalan }}
-                        {{ $siswa->almat_rt ? 'RT ' . $siswa->almat_rt : '' }}
+                        {{ $siswa->alamat_rt ? 'RT ' . $siswa->alamat_rt : '' }}
                         {{ $siswa->alamat_rw ? 'RW ' . $siswa->alamat_rw : '' }}
                         {{ $siswa->alamat_kelurahan ? $siswa->alamat_kelurahan : '' }}
                         {{ $siswa->alamat_kodepos ? $siswa->alamat_kodepos : '' }}
@@ -222,7 +225,7 @@
                     <td>Telp. {{ $siswa->nomor_telp_ortu ? $siswa->nomor_telp_ortu : '-' }} / Hp.
                         {{ $siswa->nomor_hp_ortu ? $siswa->nomor_hp_ortu : '-' }}</td>
                     <td>{{ $siswa->email_pengguna }}</td>
-                    {{-- <td>{{ $siswa->nm_jenis_tinggal }}</td> --}}
+                    <td>{{ $siswa->nm_jenis_tinggal }}</td>
                     <td>{{ $siswa->jarak_rumah_sekolah }} km</td>
                     <td>{{ $siswa->nm_jenis_transportasi }}</td>
                     <td>{{ $siswa->waktu_tempuh_sekolah_jam * 60 + $siswa->waktu_tempuh_sekolah_menit }} menit</td>
@@ -240,6 +243,7 @@
                     <td>{{ $siswa->asal_sekolah2 }}</td>
                     <td>{{ $siswa->alasan_mutasi }}</td>
                     <td>{{ $siswa->nm_kelas }} / {{ $semester->nm_semester }}</td>
+                    <td>{{ $siswa->is_penerima_kps == 0 ? 'Tidak' : 'Ya' }}</td>
                     {{-- <td>{{ $siswa->tgl_diterima }}</td> --}}
                     {{-- <td>{{ $siswa->nomor_kps }}</td> --}}
                     <td>{{ $siswa->nm_ayah }}</td>
@@ -283,7 +287,6 @@
                     <td>{{ $siswa->kegemaran_kesenian }}</td>
                     <td>{{ $siswa->kegemaran_olahraga }}</td>
                     <td>{{ $siswa->kegemaran_organisasi }}</td>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
