@@ -382,6 +382,9 @@ class LibSiswa
             'provinsi.nm_provinsi',
             'kota.nm_kota',
             'kota_lahir.nm_kota as nm_kota_lahir',
+            'kota_lahir_ayah.nm_kota as nm_kota_lahir_ayah',
+            'kota_lahir_ibu.nm_kota as nm_kota_lahir_ibu',
+            'kota_lahir_wali.nm_kota as nm_kota_lahir_wali',
             'calon_siswa_ortu.nomor_hp_ortu',
             'calon_siswa_ortu.nm_ayah',
             'calon_siswa_ortu.email_ortu',
@@ -446,6 +449,9 @@ class LibSiswa
             'calon_siswa_ortu.id_jenis_pendidikan_wali',
             'calon_siswa_ortu.id_jenis_pekerjaan_wali',
             'calon_siswa_ortu.id_jenis_penghasilan_wali',
+            'calon_siswa_ortu.kewarganegaraan_ayah',
+            'calon_siswa_ortu.kewarganegaraan_ibu',
+            'calon_siswa_ortu.kewarganegaraan_wali',
             'jp_ayah.nm_jenis_pendidikan as nm_jenis_pendidikan_ayah',
             'jp_ibu.nm_jenis_pendidikan as nm_jenis_pendidikan_ibu',
             'jp_wali.nm_jenis_pendidikan as nm_jenis_pendidikan_wali',
@@ -473,6 +479,9 @@ class LibSiswa
             ->leftJoin('provinsi', 'calon_siswa_baru.alamat_provinsi', '=', 'provinsi.id_provinsi')
             ->leftJoin('kota', 'calon_siswa_baru.alamat_kota', '=', 'kota.id_kota')
             ->leftJoin('kota as kota_lahir', 'calon_siswa_baru.id_kota_lahir', '=', 'kota_lahir.id_kota')
+            ->leftJoin('kota as kota_lahir_ayah', 'calon_siswa_ortu.id_kota_lahir_ayah', '=', 'kota_lahir_ayah.id_kota')
+            ->leftJoin('kota as kota_lahir_ibu', 'calon_siswa_ortu.id_kota_lahir_ibu', '=', 'kota_lahir_ibu.id_kota')
+            ->leftJoin('kota as kota_lahir_wali', 'calon_siswa_ortu.id_kota_lahir_wali', '=', 'kota_lahir_wali.id_kota')
             ->leftJoin('kota as kota_ayah', 'calon_siswa_ortu.alamat_kota_ayah', '=', 'kota_ayah.id_kota')
             ->leftJoin('kota as kota_ibu', 'calon_siswa_ortu.alamat_kota_ibu', '=', 'kota_ibu.id_kota')
             ->leftJoin('jenis_pendidikan as jp_ayah', 'calon_siswa_ortu.id_jenis_pendidikan_ayah', '=', 'jp_ayah.id_jenis_pendidikan')

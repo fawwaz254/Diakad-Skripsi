@@ -709,7 +709,25 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
-                                                Tahun Lahir <span class="is-required">*</span>
+                                                Tempat Lahir <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="id_kota_lahir_ayah"
+                                                id="id_kota_lahir_ayah">
+                                                @foreach ($kotaTinggal as $kota)
+                                                    <option value="{{ $kota->id_kota }}"
+                                                        {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>
+                                                        {{ $kota->nm_kota }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Tanggal Lahir <span class="is-required">*</span>
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -926,6 +944,39 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kewarganegaraan <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="kewarganegaraan_ayah"
+                                                id="kewarganegaraan_ayah" required>
+                                                <option value="1"
+                                                    {{ $dataOrtu->kewarganegaraan_ayah == 1 ? 'selected' : '' }}>WNI
+                                                </option>
+                                                <option value="2"
+                                                    {{ $dataOrtu->kewarganegaraan_ayah == 2 ? 'selected' : '' }}>WNA
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nama Negara <span class="is-required">*</span><br>
+                                                <small>Diisi jika Kewarganegaraan WNA</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_kewarganegaraan_ayah"
+                                                id="nm_kewarganegaraan_ayah" {{-- aria-required="true" aria-invalid="true" --}}
+                                                value="{{ isset($siswa->nm_kewarganegaraan_ayah) ? $siswa->nm_kewarganegaraan_ayah : '' }}">
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -980,7 +1031,25 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
-                                                Tahun Lahir <span class="is-required">*</span>
+                                                Tempat Lahir <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="id_kota_lahir_ibu"
+                                                id="id_kota_lahir_ibu">
+                                                @foreach ($kotaTinggal as $kota)
+                                                    <option value="{{ $kota->id_kota }}"
+                                                        {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>
+                                                        {{ $kota->nm_kota }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Tanggal Lahir <span class="is-required">*</span>
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -1198,6 +1267,38 @@
                                         </div>
                                     </div>
                                     <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kewarganegaraan <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="kewarganegaraan_ibu"
+                                                id="kewarganegaraan_ibu" required>
+                                                <option value="1"
+                                                    {{ $dataOrtu->kewarganegaraan_ibu == 1 ? 'selected' : '' }}>WNI
+                                                </option>
+                                                <option value="2"
+                                                    {{ $dataOrtu->kewarganegaraan_ibu == 2 ? 'selected' : '' }}>WNA
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nama Negara <span class="is-required">*</span><br>
+                                                <small>Diisi jika Kewarganegaraan WNA</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_kewarganegaraan_ibu"
+                                                id="nm_kewarganegaraan_ibu" {{-- aria-required="true" aria-invalid="true" --}}
+                                                value="{{ isset($siswa->nm_kewarganegaraan_ibu) ? $siswa->nm_kewarganegaraan_ibu : '' }}">
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -1258,6 +1359,24 @@
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <input type="text" class="form-control"
                                                 name="nik_wali"aria-invalid="true" value="{{ $siswa->nik_wali }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Tempat Lahir <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="id_kota_lahir_wali"
+                                                id="id_kota_lahir_wali">
+                                                @foreach ($kotaTinggal as $kota)
+                                                    <option value="{{ $kota->id_kota }}"
+                                                        {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>
+                                                        {{ $kota->nm_kota }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <br>
@@ -1342,6 +1461,39 @@
                                                         {{ $kebutuhan->nm_kebutuhan_khusus }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kewarganegaraan <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="kewarganegaraan_wali"
+                                                id="kewarganegaraan_wali" required>
+                                                <option value="1"
+                                                    {{ $siswa->kewarganegaraan_wali == 1 ? 'selected' : '' }}>WNI
+                                                </option>
+                                                <option value="2"
+                                                    {{ $siswa->kewarganegaraan_wali == 2 ? 'selected' : '' }}>WNA
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nama Negara <span class="is-required">*</span><br>
+                                                <small>Diisi jika Kewarganegaraan WNA</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_kewarganegaraan_wali"
+                                                id="nm_kewarganegaraan_wali" {{-- aria-required="true" aria-invalid="true" --}}
+                                                value="{{ isset($siswa->nm_kewarganegaraan_wali) ? $siswa->nm_kewarganegaraan_wali : '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -1514,7 +1666,8 @@
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <input type="number" class="form-control"
                                                 name="waktu_tempuh_sekolah_jam" aria-required="true"
-                                                aria-invalid="true" value="{{ $siswa->waktu_tempuh_sekolah_jam }}">
+                                                aria-invalid="true"
+                                                value="{{ $siswa->waktu_tempuh_sekolah_jam }}">
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <input type="number" class="form-control"

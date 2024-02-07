@@ -36,7 +36,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\LibGlobal;
-
+use App\Models\CalonSiswaOrtu;
 use Auth;
 use DB;
 use Session;
@@ -100,8 +100,7 @@ class InsertUpdateSiswaController extends BaseController
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
-		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) {
-		} else {
+		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) { } else {
 			return [
 				'status' => 300, // FAILED
 				'message' => 'NIS tidak ditemukan'
@@ -176,6 +175,7 @@ class InsertUpdateSiswaController extends BaseController
 		$auth_data = $input->auth_data;
 		$kelas = Kelas::where('id_kelas', $id_kelas)->first();
 		$siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
+
 		return Excel::download(new ExportBiodata($siswa), 'download_biodata_kelas_' . $kelas->nm_kelas . '.xlsx');
 	}
 
@@ -502,7 +502,7 @@ class InsertUpdateSiswaController extends BaseController
 							'alamat_jalan_ayah'			=> $input->alamat_jalan_ayah,
 							'alamat_dusun_ayah'			=> $input->alamat_dusun_ayah,
 							'alamat_kelurahan_ayah'		=> $input->alamat_kelurahan_ayah,
-							'almat_rt_ayah'				=> $input->alamat_rt_ayah,
+							'almat_rt_ayah'				=> $input->almat_rt_ayah,
 							'alamat_rw_ayah'			=> $input->alamat_rw_ayah,
 							'alamat_kecamatan_ayah'		=> $input->alamat_kecamatan_ayah,
 							'alamat_kodepos_ayah'		=> $input->alamat_kodepos_ayah,
