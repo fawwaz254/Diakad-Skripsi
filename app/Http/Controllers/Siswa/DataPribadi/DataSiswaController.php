@@ -34,6 +34,7 @@ use App\Models\TingkatPrestasiSiswa as TingkatPrestasiSiswa;
 use App\Models\Kota as Kota;
 use App\Models\Provinsi as Provinsi;
 use App\Models\CalonSiswaBeasiswa;
+use App\Models\CalonSiswaOrtu;
 use App\Models\RolePengguna;
 use App\Models\WaliMurid;
 use Auth;
@@ -52,8 +53,7 @@ class DataSiswaController extends BaseController
 
 		$data_siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
-		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data_siswa->nis_siswa)) {
-		} else {
+		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data_siswa->nis_siswa)) { } else {
 			return [
 				'status' => 300, // FAILED
 				'message' => 'NIS tidak ditemukan'
@@ -74,8 +74,10 @@ class DataSiswaController extends BaseController
 		$provinsi = Provinsi::get();
 
 		$kotaLahir = Kota::where('id_kota', '=', $siswa->id_kota_lahir)->first();
+		$dataOrtu = CalonSiswaOrtu::where('id_c_siswa', '=', $siswa->id_c_siswa)->first();
 
-		return view('siswa/data-pribadi/data-siswa/view-data-siswa', compact('auth_data', 'siswa', 'agama', 'kebutuhanKhusus', 'jenisTinggal', 'jenisTransportasi', 'jenisPip', 'jenisPendidikan', 'jenisPenghasilan', 'jenisPekerjaan', 'tingkatPrestasi', 'kotaLahir', 'kota', 'provinsi', 'kotaTinggal'));
+
+		return view('siswa/data-pribadi/data-siswa/view-data-siswa', compact('auth_data', 'siswa', 'agama', 'kebutuhanKhusus', 'jenisTinggal', 'jenisTransportasi', 'jenisPip', 'jenisPendidikan', 'jenisPenghasilan', 'jenisPekerjaan', 'tingkatPrestasi', 'kotaLahir', 'kota', 'provinsi', 'kotaTinggal', 'dataOrtu'));
 	}
 
 	public function viewPrintSiswa(Request $request, $nis_nama_siswa)
@@ -231,6 +233,7 @@ class DataSiswaController extends BaseController
 						'nm_ayah'					=> strtoupper($input->nm_ayah),
 						'status_ayah'				=> $input->status_ayah,
 						'nik_ayah'					=> $input->nik_ayah,
+						'id_kota_lahir_ayah'		=> $input->id_kota_lahir_ayah,
 						'tgl_lahir_ayah'			=> $input->tgl_lahir_ayah ? date('Y-m-d', strtotime($input->tgl_lahir_ayah)) : null,
 						'id_jenis_pendidikan_ayah'	=> $input->id_jenis_pendidikan_ayah,
 						'id_jenis_pekerjaan_ayah'	=> $input->id_jenis_pekerjaan_ayah,
@@ -245,9 +248,12 @@ class DataSiswaController extends BaseController
 						'alamat_kodepos_ayah'		=> $input->alamat_kodepos_ayah,
 						'alamat_kota_ayah'			=> $input->alamat_kota_ayah,
 						'alamat_provinsi_ayah'		=> $input->alamat_provinsi_ayah,
+						'kewarganegaraan_ayah'		=> $input->kewarganegaraan_ayah,
+						'nm_kewarganegaraan_ayah'	=> $input->nm_kewarganegaraan_ayah,
 						'nm_ibu'					=> strtoupper($input->nm_ibu),
 						'status_ibu'				=> $input->status_ibu,
 						'nik_ibu'					=> $input->nik_ibu,
+						'id_kota_lahir_ibu'			=> $input->id_kota_lahir_ibu,
 						'tgl_lahir_ibu'			    => $input->tgl_lahir_ibu ? date('Y-m-d', strtotime($input->tgl_lahir_ibu)) : null,
 						'id_jenis_pendidikan_ibu'	=> $input->id_jenis_pendidikan_ibu,
 						'id_jenis_pekerjaan_ibu'	=> $input->id_jenis_pekerjaan_ibu,
@@ -262,15 +268,20 @@ class DataSiswaController extends BaseController
 						'alamat_kodepos_ibu'		=> $input->alamat_kodepos_ibu,
 						'alamat_kota_ibu'			=> $input->alamat_kota_ibu,
 						'alamat_provinsi_ibu'		=> $input->alamat_provinsi_ibu,
+						'kewarganegaraan_ibu'		=> $input->kewarganegaraan_ibu,
+						'nm_kewarganegaraan_ibu'	=> $input->nm_kewarganegaraan_ibu,
 						'nm_wali'					=> strtoupper($input->nm_wali),
 						'hub_wali'					=> $input->hub_wali,
 						'status_wali'				=> $input->status_wali,
 						'nik_wali'					=> $input->nik_wali,
+						'id_kota_lahir_wali'		=> $input->id_kota_lahir_wali,
 						'tgl_lahir_wali'			=> $input->tgl_lahir_wali ? date('Y-m-d', strtotime($input->tgl_lahir_wali)) : null,
 						'id_jenis_pendidikan_wali'	=> $input->id_jenis_pendidikan_wali,
 						'id_jenis_pekerjaan_wali'	=> $input->id_jenis_pekerjaan_wali,
 						'id_jenis_penghasilan_wali'	=> $input->id_jenis_penghasilan_wali,
 						'id_kebutuhan_khusus_wali'	=> $input->id_kebutuhan_khusus_wali,
+						'kewarganegaraan_wali'		=> $input->kewarganegaraan_wali,
+						'nm_kewarganegaraan_wali'	=> $input->nm_kewarganegaraan_wali,
 						'email_ortu'				=> $input->email_ortu,
 						'nomor_telp_ortu'			=> $input->nomor_telp_ortu,
 						'nomor_hp_ortu'				=> $input->nomor_hp_ortu,

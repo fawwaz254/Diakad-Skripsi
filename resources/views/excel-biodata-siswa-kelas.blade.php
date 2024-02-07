@@ -40,11 +40,11 @@
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="7">KETERANGAN PENDIDIKAN</th>
                 {{-- <th style="text-align: center;font-weight: bold;border : 1;" colspan="1">KETERANGAN KARTU
                     PERLINDUNGAN SOSIAL</th> --}}
-                <th style="text-align: center;font-weight: bold;border : 1;" colspan="7">KETERANGAN TENTANG AYAH
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="8">KETERANGAN TENTANG AYAH
                     KANDUNG</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" colspan="7">KETERANGAN TENTANG IBU
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="8">KETERANGAN TENTANG IBU
                     KANDUNG</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" colspan="5">KETERANGAN TENTANG AYAH WALI
+                <th style="text-align: center;font-weight: bold;border : 1;" colspan="6">KETERANGAN TENTANG AYAH WALI
                 </th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="3">KEGEMARAN PESERTA DIDIK</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" colspan="6">KETERANGAN PERKEMBANG
@@ -94,9 +94,9 @@
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Menerima Beasiswa</th>
                 {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nomor KPS</th> --}}
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tahun Lahir</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tanggal Lahir</th>
                 {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Agama</th> --}}
-                {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th> --}}
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pekerjaan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pendidikan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Penghasilan per bulan</th>
@@ -104,9 +104,9 @@
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Masih hidup / meninggal
                     dunia</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tahun Lahir</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tanggal Lahir</th>
                 {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Agama</th> --}}
-                {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th> --}}
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pekerjaan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pendidikan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Penghasilan per bulan</th>
@@ -114,9 +114,9 @@
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Masih hidup / meninggal
                     dunia</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Nama</th>
-                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tahun Lahir</th>
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Tanggal Lahir</th>
                 {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Agama</th> --}}
-                {{-- <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th> --}}
+                <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Kewarganegaraan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pekerjaan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Pendidikan</th>
                 <th style="text-align: center;font-weight: bold;border : 1;" rowspan="2">Penghasilan per bulan</th>
@@ -161,6 +161,7 @@
                     $siswa = App\Libraries\Pendidikan\LibSiswa::fetchDataDetailSiswa($auth_data, $dsiswa->nis_siswa);
                     $beasiswa = App\Models\CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
                     $semester = App\Models\Semester::where('is_aktif_semester', '=', 1)->first();
+                    // $dataOrtu = App\Models\CalonSiswaOrtu::whereIn()
                     $data_beasiswa[0]['urutan_1'] = '61.';
                     $data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
                     $data_beasiswa[0]['urutan_3'] = '';
@@ -247,7 +248,13 @@
                     {{-- <td>{{ $siswa->tgl_diterima }}</td> --}}
                     {{-- <td>{{ $siswa->nomor_kps }}</td> --}}
                     <td>{{ $siswa->nm_ayah }}</td>
-                    <td>{{ $siswa->tgl_lahir_ayah ? date('Y', strtotime($siswa->tgl_lahir_ayah)) : '' }}</td>
+                    <td>{{ $siswa->nm_kota_lahir_ayah ? $siswa->nm_kota_lahir_ayah : '-' }},
+                        {{ $siswa->tgl_lahir_ayah ? date('d F Y', strtotime($siswa->tgl_lahir_ayah)) : '-' }}</td>
+                    @if ($siswa->kewarganegaraan_ayah)
+                        <td>{{ $siswa->kewarganegaraan_ayah == 1 ? 'WNI' : 'WNA' }}</td>
+                    @else
+                        <td></td>
+                    @endif
                     <td>{{ $siswa->nm_jenis_pekerjaan_ayah }}</td>
                     <td>{{ $siswa->nm_jenis_pendidikan_ayah }}</td>
                     <td>{{ $siswa->nm_jenis_penghasilan_ayah }}</td>
@@ -264,7 +271,13 @@
                         <td></td>
                     @endif
                     <td>{{ $siswa->nm_ibu }}</td>
-                    <td>{{ $siswa->tgl_lahir_ibu ? date('Y', strtotime($siswa->tgl_lahir_ibu)) : '' }}</td>
+                    <td>{{ $siswa->nm_kota_lahir_ibu ? $siswa->nm_kota_lahir_ibu : '-' }},
+                        {{ $siswa->tgl_lahir_ibu ? date('d F Y', strtotime($siswa->tgl_lahir_ibu)) : '-' }}</td>
+                    @if ($siswa->kewarganegaraan_ibu)
+                        <td>{{ $siswa->kewarganegaraan_ibu == 1 ? 'WNI' : 'WNA' }}</td>
+                    @else
+                        <td></td>
+                    @endif
                     <td>{{ $siswa->nm_jenis_pekerjaan_ibu }}</td>
                     <td>{{ $siswa->nm_jenis_pendidikan_ibu }}</td>
                     <td>{{ $siswa->nm_jenis_penghasilan_ibu }}</td>
@@ -280,7 +293,13 @@
                         <td></td>
                     @endif
                     <td>{{ $siswa->nm_wali }}</td>
-                    <td>{{ $siswa->tgl_lahir_wali ? date('Y', strtotime($siswa->tgl_lahir_wali)) : '' }}</td>
+                    <td>{{ $siswa->nm_kota_lahir_wali ? $siswa->nm_kota_lahir_wali : '-' }},
+                        {{ $siswa->tgl_lahir_wali ? date('d F Y', strtotime($siswa->tgl_lahir_wali)) : '-' }}</td>
+                    @if ($siswa->kewarganegaraan_wali)
+                        <td>{{ $siswa->kewarganegaraan_wali == 1 ? 'WNI' : 'WNA' }}</td>
+                    @else
+                        <td></td>
+                    @endif
                     <td>{{ $siswa->nm_jenis_pekerjaan_wali }}</td>
                     <td>{{ $siswa->nm_jenis_pendidikan_wali }}</td>
                     <td>{{ $siswa->nm_jenis_penghasilan_wali }}</td>
