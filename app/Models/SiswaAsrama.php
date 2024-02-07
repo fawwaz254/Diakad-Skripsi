@@ -26,4 +26,10 @@ class SiswaAsrama extends Model
     {
         return $this->belongsTo(ShiftMaster::class,  'id_siswa');
     }
+    public function ruangan()
+    {
+        return $this->belongsTo(Ruangan::class, 'id_ruangan')->withDefault([
+            'nm_ruangan' => '',
+        ]);
+    }
 }

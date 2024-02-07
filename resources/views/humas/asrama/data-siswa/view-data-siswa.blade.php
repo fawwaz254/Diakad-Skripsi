@@ -11,13 +11,18 @@
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
                         <li role="presentation" class="active"><a href="#selected" data-toggle="tab"
                                 class="col-green">List Siswa Asrama</a></li>
-                        <li role="presentation"><a href="#not" data-toggle="tab" class="col-pink">Tambah Siswa
+                        <li role="presentation"><a href="#not" data-toggle="tab" class="col-pink">List Siswa Tanpa
                                 Asrama</a>
                         </li>
 
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="selected">
+                            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/data-siswa-asrama/add-ruangan') }}">
+                                <i class="material-icons">add_box</i>
+                                <span>Tambah Ruangan Siswa Asrama</span>
+                            </a>
                             <div class="table-responsive">
                                 <table id="primary_table"
                                     class="table table-bordered table-striped table-hover dataTable"
@@ -28,6 +33,7 @@
                                             <th>Nis</th>
                                             <th>Kelas</th>
                                             <th>Nama</th>
+                                            <th>Ruangan</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -97,6 +103,9 @@
             },
             {
                 data: 'pengguna.nm_pengguna'
+            },
+            {
+                data: 'ruangan'
             },
             {
                 data: 'action',
@@ -200,8 +209,9 @@
                     id_siswa: item.attr('data-id')
                 },
                 success: function(result) {
-                    primary_table.ajax.reload(null, false);
                     secondary_table.ajax.reload(null, false);
+                    primary_table.ajax.reload(null, false);
+
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr.responseText);
