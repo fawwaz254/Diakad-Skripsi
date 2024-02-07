@@ -222,6 +222,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/datatables', [FingerprintRealtimeController::class, 'datatableFingerprintRealtime']);
                 Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
                 Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
+                Route::get('/get-data-barcode', [FingerprintRealtimeController::class, 'getDataBarcodeFingerprint']);
 
                 Route::get('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'createHistoriAbsensi']);
                 Route::post('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'storeHistoriAbsensi']);
