@@ -137,10 +137,8 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('datatables-ruangan/{jenis}', [SiswaAsramaController::class, 'datatablesRuanganSiswa']);
                 Route::post('ruang-asrama-siswa/set', [SiswaAsramaController::class, 'setRuanganSiswa']);
-                // Route::post('ruang-asrama-siswa/edit', [SiswaAsramaController::class, 'editGedungSiswa']);
-
-                // Route::post('action-biaya-siswa/{mode}/{id}', [SiswaAsramaController::class, 'actionGedungSiswa']);
-                // Route::post('action-batch-biaya-siswa/{mode}', [SiswaAsramaController::class, 'actionBatchGedungSiswa']);
+                Route::post('ruang-asrama-siswa/edit', [SiswaAsramaController::class, 'editRuanganSiswa']);
+                Route::post('ruang-asrama-siswa/delete', [SiswaAsramaController::class, 'deleteRuanganSiswa']);
             });
         });
 

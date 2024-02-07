@@ -130,14 +130,65 @@ class SiswaAsramaController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        if (empty($input->id_ruangan) || empty($input->id_siswa)) {
+            return [
+                'status' => 300, // SUCCESS AND LOAD TABLE
+                'message' => 'Pilih Terlebih dahulu'
+            ];
+        }
+
         $list_siswa = SiswaAsrama::whereIn('id_siswa', $input->id_siswa)->get();
         foreach ($list_siswa as $siswa) {
             $siswa->id_ruangan = $input->id_ruangan;
             $siswa->save();
         }
         return [
-            'status' => 203, // SUCCESS AND LOAD TABLE
+            'status' => 200, // SUCCESS AND LOAD TABLE
             'message' => 'Add Ruangan Siswa Successfully'
+        ];
+    }
+
+    public function editRuanganSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if (empty($input->id_ruangan) || empty($input->id_siswa)) {
+            return [
+                'status' => 300, // SUCCESS AND LOAD TABLE
+                'message' => 'Pilih Terlebih dahulu'
+            ];
+        }
+
+        $list_siswa = SiswaAsrama::whereIn('id_siswa', $input->id_siswa)->get();
+        foreach ($list_siswa as $siswa) {
+            $siswa->id_ruangan = $input->id_ruangan;
+            $siswa->save();
+        }
+        return [
+            'status' => 200, // SUCCESS AND LOAD TABLE
+            'message' => 'Edit Ruangan Siswa Successfully'
+        ];
+    }
+
+    public function deleteRuanganSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if (empty($input->id_siswa)) {
+            return [
+                'status' => 300, // SUCCESS AND LOAD TABLE
+                'message' => 'Pilih Terlebih dahulu'
+            ];
+        }
+        $list_siswa = SiswaAsrama::whereIn('id_siswa', $input->id_siswa)->get();
+        foreach ($list_siswa as $siswa) {
+            $siswa->id_ruangan = null;
+            $siswa->save();
+        }
+        return [
+            'status' => 200, // SUCCESS AND LOAD TABLE
+            'message' => 'Delete Ruangan Siswa Successfully'
         ];
     }
 }

@@ -252,22 +252,21 @@
     });
 
     function submitSecondaryForm(el) {
-        var action_url = "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-batch-biaya-siswa') }}";
+        var action_url =
+            "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-siswa-asrama/ruang-asrama-siswa') }}";
         var mode = $(el).attr('data-mode');
+
         $('#secondary_form').attr('action', action_url + '/' + mode);
         $('#secondary_form').submit();
     }
 
-    // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'asrama';
     var datatable_belum = base_url + '/' + role_url + '/' + modul_url + '/' +
         'data-siswa-asrama/datatables-ruangan/belum';
     var datatable_sudah = base_url + '/' + role_url + '/' + modul_url + '/' +
         'data-siswa-asrama/datatables-ruangan/sudah';
-    // var datatable_url_sudah = base_url + '/' + role_url + '/' + modul_url + '/' + 'biaya-siswa/datatables-sudah';
     var set_url = role_url + '#' + modul_url + '/' + 'biaya-siswa/set';
-    var edit_url = role_url + '#' + modul_url + '/' + 'biaya-siswa/edit';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-biaya-siswa/delete';
+
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -384,59 +383,4 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
-
-
-
-
-
-    // function filterAction() {
-    //     primary_table.ajax.reload(null, false);
-    //     secondary_table.ajax.reload(null, false);
-    // }
-
-    // function deleteActionBiaya(delete_url, element) {
-    //     var item = $(element);
-    //     $('button').attr('disabled', 'disabled');
-
-    //     swal({
-    //         title: "Are you sure?",
-    //         text: "You won't be able to delete this!",
-    //         type: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#DD6B55",
-    //         confirmButtonText: "Yes, delete it!",
-    //         cancelButtonText: "No, cancel!",
-    //         closeOnConfirm: true,
-    //         closeOnCancel: true
-    //     }, function(result) {
-    //         if (result) {
-    //             $.ajax({
-    //                 type: "POST",
-    //                 url: delete_url + '/' + item.attr('data-id'),
-    //                 success: function(response) {
-    //                     if (response.status == 200) {
-    //                         vex.dialog.alert(response.message);
-    //                     } else if (response.status == 201) {
-    //                         vex.dialog.alert(response.message);
-    //                         window.location.href = response.link;
-    //                     } else if (response.status == 202) {
-    //                         vex.dialog.alert(response.message);
-    //                         loadURI(response.path);
-    //                     } else if (response.status == 203) {
-    //                         vex.dialog.alert(response.message);
-    //                         primary_table.ajax.reload(null, false);
-    //                         secondary_table.ajax.reload(null, false);
-    //                     } else if (response.status == 300) {
-    //                         vex.dialog.alert(response.message);
-    //                     }
-    //                 },
-    //                 complete: function() {
-    //                     $('button').removeAttr('disabled', 'disabled');
-    //                 }
-    //             });
-    //         } else {
-    //             $('button').removeAttr('disabled', 'disabled');
-    //         }
-    //     });
-    // }
 </script>
