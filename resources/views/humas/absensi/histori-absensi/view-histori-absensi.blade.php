@@ -45,7 +45,10 @@
             <div class="block-header">
                 <h2><a class="btn bg-green waves-effect target-link "
                         href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/get-data') }}"><i
-                            class="material-icons">library_add</i><span>Get Data Fingerprint</span></a></h2>
+                            class="material-icons">library_add</i><span>Get Data Fingerprint</span></a><a
+                        class="btn bg-green waves-effect target-link " style="margin-left: 10px"
+                        onclick="absensiBarcode()"><i class="material-icons">library_add</i><span>Get Data
+                            Barcode</span></a></h2>
             </div>
             <button type="button" class="btn btn-primary">
                 Data Histori Absensi Guru dan Pegawai
@@ -279,6 +282,11 @@
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script> --}}
 <script type="text/javascript">
+    function absensiBarcode() {
+        var url_barcode = base_url + '/' + role_url + '/absensi/histori-absensi/get-data-barcode';
+        window.open(url_barcode, "_blank");
+
+    }
     $(document).ready(function() {
         var table = $('.dataTable').DataTable({
             paging: false,

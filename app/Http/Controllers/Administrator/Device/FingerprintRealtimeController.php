@@ -339,4 +339,11 @@ class FingerprintRealtimeController extends Controller
 
         return $hasil;
     }
+
+    public function getDataBarcodeFingerprint(Request $request)
+    {
+
+
+        return view('administrator/device/fingerprintBarcode/view-fingerprint-barcode');
+    }
 }
