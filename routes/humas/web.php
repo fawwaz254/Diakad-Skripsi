@@ -223,6 +223,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
                 Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
                 Route::get('/get-data-barcode', [FingerprintRealtimeController::class, 'getDataBarcodeFingerprint']);
+                Route::post('/post-data-barcode', [FingerprintRealtimeController::class, 'actionDataBarcodeFingerprint']);
 
                 Route::get('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'createHistoriAbsensi']);
                 Route::post('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'storeHistoriAbsensi']);
