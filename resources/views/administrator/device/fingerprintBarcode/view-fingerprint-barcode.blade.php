@@ -60,7 +60,7 @@
         var sudah_absent = [];
         var base_url = '{{ url(Request::segment(1) . '/' . Request::segment(2)) }}';
         var url_action = base_url + '/' +
-            'post-kbm-absensi-siswa-barcode';
+            'histori-absensi/post-data-barcode';
         let scanner = new Instascan.Scanner({
             video: document.getElementById('preview')
         });
@@ -95,7 +95,7 @@
                     timer: 2000,
                     icon: "success",
                 });
-                jumlah--;
+                // jumlah--;
                 // document.getElementById(c).remove();
                 // document.getElementById('jumlah_siswa_belum_absent').textContent = jumlah;
 
@@ -108,7 +108,7 @@
                     icon: "success",
                 });
             }
-            document.getElementById('last_siswa_absent').textContent = c;
+            // document.getElementById('last_siswa_absent').textContent = c;
             // console.log(jumlah);
             // console.log(sudah_absent);
         });
@@ -139,7 +139,7 @@
                             timer: 2000,
                             icon: "success",
                         });
-                        window.location = '/guru#presensi/absensi-siswa';
+                        window.location = '/humas#absensi/histori-absensi';
                     } else if (response.status == 202) {
                         swal({
                             title: response.message,
@@ -148,7 +148,7 @@
                             icon: "success",
                         });
                         setTimeout(() => {
-                            window.location = '/guru#presensi/absensi-siswa';
+                            window.location = '/humas#absensi/histori-absensi';
                         }, 2300);
                     } else if (response.status == 203) {
                         swal({
