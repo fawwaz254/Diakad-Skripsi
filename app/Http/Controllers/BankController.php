@@ -117,24 +117,16 @@ class BankController extends BaseController
             'A0005' => ['nomor_transaksi', 'user_reverse'],
         ];
 
-        $validasi_empty_data = false;
         if (isset($validasi_rules[$kode_request])) {
             $rules = $validasi_rules[$kode_request];
-
             foreach ($rules as $field) {
                 if (empty($$field)) {
-                    $validasi_empty_data = true;
-                    break;
+                    $returnToken->withClaim('kode', '02');
+                    $returnToken->withClaim('keterangan', 'Decode jwt error (format jwt error)');
+                    return $returnToken->getToken($algorithm, $key)->toString();
                 }
             }
         }
-
-        if ($validasi_empty_data) {
-            $returnToken->withClaim('kode', '02');
-            $returnToken->withClaim('keterangan', 'Decode jwt error (format jwt error)');
-            return $returnToken->getToken($algorithm, $key)->toString();
-        }
-
         //-----------------
 
         $now = Carbon::now();
