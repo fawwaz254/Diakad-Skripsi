@@ -104,6 +104,8 @@ class BankController extends BaseController
             $kode_tagihan       = $claims->get('kode_tagihan');
             $total_pembayaran   = $claims->get('total_pembayaran');
             $nomor_transaksi    = $claims->get('nomor_transaksi');
+            $user_reverse       = $claims->get('user_reverse');
+            $kode_ref           = $claims->get('kode_ref');
         } catch (\Exception $e) {
 
             $retunToken->withClaim('kode', '02');
@@ -295,6 +297,7 @@ class BankController extends BaseController
                     $pembayaran_trs->status_pembayaran  = 1;
                     $pembayaran_trs->tgl_pembayaran     = $now->format("Y-m-d");
                     $pembayaran_trs->fee_admin          = $total_pembayaran - $pembayaran_trs->besar_pembayaran;
+                    $pembayaran_trs->payment_code       = $kode_ref;
                     $pembayaran_trs->save();
 
                     foreach ($pembayaran_trs->pembayaran_trs_detail as $pembayaran_trs_detail) {
@@ -348,14 +351,14 @@ class BankController extends BaseController
 
                     if ($tagihan) {
                         foreach ($tagihan->pembayaran as $pembayaran) {
-                            $pembayaran->deleted_by = 'bank bukopin';
+                            $pembayaran->deleted_by = $user_reverse;
                             $pembayaran->save();
                             $pembayaran->delete();
                         }
                         $tagihan->is_tagih = '1';
                         $tagihan->tgl_pelunasan = null;
                         $tagihan->besar_pembayaran = 0;
-                        $tagihan->updated_by = "batal bayar KBBS";
+                        $tagihan->updated_by = $user_reverse;
                         $tagihan->save();
                     }
 
