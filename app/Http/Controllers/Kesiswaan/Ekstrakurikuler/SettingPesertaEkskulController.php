@@ -435,13 +435,13 @@ class SettingPesertaEkskulController extends BaseController
                     $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                     $ekskul->save();
 
-                    $ekskul->forceDelete();
+                    $ekskul->delete();
 
                     $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
                     $pengambilan->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $pengambilan->save();
 
-                    $pengambilan->forceDelete();
+                    $pengambilan->delete();
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
