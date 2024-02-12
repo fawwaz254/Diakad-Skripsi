@@ -502,7 +502,7 @@ class InsertUpdateSiswaController extends BaseController
 							'alamat_jalan_ayah'			=> $input->alamat_jalan_ayah,
 							'alamat_dusun_ayah'			=> $input->alamat_dusun_ayah,
 							'alamat_kelurahan_ayah'		=> $input->alamat_kelurahan_ayah,
-							'almat_rt_ayah'				=> $input->almat_rt_ayah,
+							'almat_rt_ayah'				=> $input->alamat_rt_ayah,
 							'alamat_rw_ayah'			=> $input->alamat_rw_ayah,
 							'alamat_kecamatan_ayah'		=> $input->alamat_kecamatan_ayah,
 							'alamat_kodepos_ayah'		=> $input->alamat_kodepos_ayah,
