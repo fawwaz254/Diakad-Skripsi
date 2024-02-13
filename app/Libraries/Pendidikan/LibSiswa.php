@@ -372,6 +372,7 @@ class LibSiswa
             'calon_siswa_baru.tgl_proses_verifikasi',
             'calon_siswa_baru.tgl_verifikasi_dokumen',
             'calon_siswa_baru.status_verifikasi',
+            'calon_siswa_baru.thn_penerima_kps',
             'calon_siswa_baru.id_pengguna_verifikator',
             'calon_siswa_baru.tgl_penetapan',
             'calon_siswa_baru.bayar_daftar_ulang',
