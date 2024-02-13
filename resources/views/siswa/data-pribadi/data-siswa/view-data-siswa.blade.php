@@ -556,6 +556,33 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
+                                                Tahun Beasiswa<br>
+                                                <small>apabila menerima</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="thn_penerima_kps"
+                                                id="thn_penerima_kps">
+                                                <option value="">Pilih Tahun</option>
+                                                <option value="1"
+                                                    {{ old('thn_penerima_kps', $siswa->thn_penerima_kps) == 1 ? 'selected' : '' }}>
+                                                    I
+                                                </option>
+                                                <option value="2"
+                                                    {{ old('thn_penerima_kps', $siswa->thn_penerima_kps) == 2 ? 'selected' : '' }}>
+                                                    II
+                                                </option>
+                                                <option value="3"
+                                                    {{ old('thn_penerima_kps', $siswa->thn_penerima_kps) == 3 ? 'selected' : '' }}>
+                                                    III
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
                                                 Sumber Beasiswa<br>
                                                 <small>apabila menerima</small>
                                             </h2>
@@ -715,6 +742,7 @@
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <select class="form-control show-tick" name="id_kota_lahir_ayah"
                                                 id="id_kota_lahir_ayah">
+                                                <option value=""></option>
                                                 @foreach ($kotaTinggal as $kota)
                                                     <option value="{{ $kota->id_kota }}"
                                                         {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>
@@ -1037,6 +1065,7 @@
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <select class="form-control show-tick" name="id_kota_lahir_ibu"
                                                 id="id_kota_lahir_ibu">
+                                                <option value=""></option>
                                                 @foreach ($kotaTinggal as $kota)
                                                     <option value="{{ $kota->id_kota }}"
                                                         {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>
@@ -1371,6 +1400,7 @@
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <select class="form-control show-tick" name="id_kota_lahir_wali"
                                                 id="id_kota_lahir_wali">
+                                                <option value=""></option>
                                                 @foreach ($kotaTinggal as $kota)
                                                     <option value="{{ $kota->id_kota }}"
                                                         {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>

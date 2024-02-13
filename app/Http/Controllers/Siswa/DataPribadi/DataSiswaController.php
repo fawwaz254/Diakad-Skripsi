@@ -76,7 +76,6 @@ class DataSiswaController extends BaseController
 		$kotaLahir = Kota::where('id_kota', '=', $siswa->id_kota_lahir)->first();
 		$dataOrtu = CalonSiswaOrtu::where('id_c_siswa', '=', $siswa->id_c_siswa)->first();
 
-
 		return view('siswa/data-pribadi/data-siswa/view-data-siswa', compact('auth_data', 'siswa', 'agama', 'kebutuhanKhusus', 'jenisTinggal', 'jenisTransportasi', 'jenisPip', 'jenisPendidikan', 'jenisPenghasilan', 'jenisPekerjaan', 'tingkatPrestasi', 'kotaLahir', 'kota', 'provinsi', 'kotaTinggal', 'dataOrtu'));
 	}
 
@@ -205,6 +204,7 @@ class DataSiswaController extends BaseController
 						'id_jenis_transportasi'	=> $input->id_jenis_transportasi,
 						'nomor_kks'				=> $input->nomor_kks,
 						'is_penerima_kps'		=> $input->is_penerima_kps,
+						'thn_penerima_kps'		=> $input->thn_penerima_kps,
 						'nomor_kps'				=> $input->nomor_kps,
 						'is_punya_kip'			=> $input->is_punya_kip,
 						'nomor_kip'				=> $input->nomor_kip,
