@@ -278,6 +278,8 @@
                             {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu) }}
                         </td>
                         @php
+                            $total_all[$data_subkategori->id_subkategori_rapb] += $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu;
+                            $jumlah_in_per_date += $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu;
                         @endphp
                     @else
                         <td></td>
@@ -300,6 +302,7 @@
                         <td class="text-bold text-right">{{ number_format($subsidi_bos) }}</td>
                         @php
                             $total_all[$data_subkategori->id_subkategori_rapb] += $subsidi_bos;
+                            $jumlah_in_per_date += $subsidi_bos;
                         @endphp
                     @else
                         <td></td>
