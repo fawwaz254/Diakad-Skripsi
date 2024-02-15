@@ -17,7 +17,7 @@ class AddModulManajemenTandaTangan extends Migration
     public function up()
     {
         //
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $id_role = Role::where('id_role', 14)->first()->id_role;
 

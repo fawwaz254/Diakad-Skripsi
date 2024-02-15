@@ -17,34 +17,36 @@ use DB;
 use Session;
 use Validator;
 
-class BiayaInternalController extends BaseController{
+class BiayaInternalController extends BaseController
+{
 
-    public function viewBiayaInternal(Request $request){
+    public function viewBiayaInternal(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('keuangan/data-keuangan/biaya-internal/view-biaya-internal',compact('auth_data'));
-
+        return view('keuangan/data-keuangan/biaya-internal/view-biaya-internal', compact('auth_data'));
     }
 
-    public function addBiayaInternal(Request $request){
+    public function addBiayaInternal(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_biaya = LibDataKeuangan::fetchDataNamaBiaya($auth_data);
 
-        $id_kelompok_biaya_internal = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_kelompok_biaya_internal = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('keuangan/data-keuangan/biaya-internal/add-biaya-internal',compact('auth_data','data_biaya','id_kelompok_biaya_internal'));
-
+        return view('keuangan/data-keuangan/biaya-internal/add-biaya-internal', compact('auth_data', 'data_biaya', 'id_kelompok_biaya_internal'));
     }
 
-    public function editBiayaInternal($id, Request $request){
+    public function editBiayaInternal($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -53,40 +55,41 @@ class BiayaInternalController extends BaseController{
 
         $data_biaya_internal = LibDataKeuangan::fetchDataBiayaInternal($auth_data, $id);
 
-        return view('keuangan/data-keuangan/biaya-internal/edit-biaya-internal',compact('auth_data','data_biaya','data_biaya_internal'));
-
+        return view('keuangan/data-keuangan/biaya-internal/edit-biaya-internal', compact('auth_data', 'data_biaya', 'data_biaya_internal'));
     }
 
-    public function datatablesBiayaInternal(Request $request){
+    public function datatablesBiayaInternal(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = KelompokBiayaInternal::select('kelompok_biaya_internal.id_kelompok_biaya_internal', 'kelompok_biaya_internal.is_aktif', 'biaya.id_biaya', 'biaya.nm_biaya', 'kelompok_biaya_internal.nm_kelompok_biaya_internal')
-                                            ->join('biaya', function ($q) {
-                                                $q->on('biaya.id_biaya', '=', 'kelompok_biaya_internal.id_biaya')
-                                                    ->whereNull('biaya.deleted_at');
-                                            })
-                                            ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                                            ->orderBy('biaya.nm_biaya', 'asc')
-                                            ->orderBy('kelompok_biaya_internal.nm_kelompok_biaya_internal', 'desc');
-        
-        if(!empty($input->is_aktif)){
+            ->join('biaya', function ($q) {
+                $q->on('biaya.id_biaya', '=', 'kelompok_biaya_internal.id_biaya')
+                    ->whereNull('biaya.deleted_at');
+            })
+            ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->orderBy('biaya.nm_biaya', 'asc')
+            ->orderBy('kelompok_biaya_internal.nm_kelompok_biaya_internal', 'desc');
+
+        if (!empty($input->is_aktif)) {
             $list_data = $list_data->where('kelompok_biaya_internal.is_aktif', $input->is_aktif);
-        }else{
+        } else {
             $list_data = $list_data->where('kelompok_biaya_internal.is_aktif', 0);
         }
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_kelompok_biaya_internal
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_kelompok_biaya_internal
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionBiayaInternal(Request $request, $mode, $id = null){
+    public function actionBiayaInternal(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -94,19 +97,18 @@ class BiayaInternalController extends BaseController{
             'id_biaya' => 'required',
             'nm_kelompok_biaya_internal' => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $biayaInternal                                  = new KelompokBiayaInternal;
                 $biayaInternal->id_kelompok_biaya_internal      = $id;
@@ -121,8 +123,7 @@ class BiayaInternalController extends BaseController{
                     'path' => 'data-keuangan/biaya-internal',
                     'message' => 'Save Biaya Internal Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $biayaInternal                                  = KelompokBiayaInternal::find($id);
                 $biayaInternal->id_biaya                        = $input->id_biaya;
@@ -137,15 +138,13 @@ class BiayaInternalController extends BaseController{
                     'path' => 'data-keuangan/biaya-internal',
                     'message' => 'Update Biaya Internal Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($detailBiayaInternal = DetailBiayaInternal::where('id_kelompok_biaya_internal',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($detailBiayaInternal = DetailBiayaInternal::where('id_kelompok_biaya_internal', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Biaya Internal'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $biayaInternal               = KelompokBiayaInternal::find($id);
                     $biayaInternal->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -161,6 +160,4 @@ class BiayaInternalController extends BaseController{
             }
         }
     }
-
-
 }

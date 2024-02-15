@@ -57,7 +57,7 @@ class RaporSisipanAkhirController extends Controller
     //         foreach ($rapor_sisipan->nilai_rapor_sisipan as $s) {
     //             foreach ($komponen_nilais as $komponen) {
     //                 // dd($komponen);
-    //                 $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
+    //                 $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
     //                 $list_data[] = [
     //                     'id_nilai_rapor_sisipan' =>  $id,
     //                     'id_rapor_sisipan' => $rapor_sisipan->id_rapor_sisipan,
@@ -89,7 +89,7 @@ class RaporSisipanAkhirController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
 
         return view('guru/rapor-sisipan/daftar-nilai-sas/view-daftar-nilai-sas', compact('auth_data', 'semester_aktif', 'data_semester'));
     }
@@ -101,11 +101,11 @@ class RaporSisipanAkhirController extends Controller
         $auth_data = $input->auth_data;
         $status = $input->status;
 
-        if (empty($input->id_semester)) {
+        if (empty($input->thn_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-            $id_semester = $semester_aktif->id_semester;
+            $thn_akademik_semester = $semester_aktif->thn_akademik_semester;
         } else {
-            $id_semester = $input->id_semester;
+            $thn_akademik_semester = $input->thn_akademik_semester;
         }
 
         // $list_data = RaporSisipan::where('id_semester', $id_semester)
@@ -116,11 +116,14 @@ class RaporSisipanAkhirController extends Controller
         //     ->orderBy('created_at', 'desc');
 
 
-        $list_data = Rapor::where('id_semester', $id_semester)->where('nm_rapor', 'sisipan')
+        $list_data = Rapor::where('nm_rapor', 'sisipan')
             // ->with(['nilai_rapor' => function ($q) {
             //     $q->where('nilai', '!=', '0');
             // }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester'])
             ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
+            ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+            })
             ->withCount(['nilai_rapor' => function ($q) {
                 $q->where('nilai', '!=', 0);
             }])
@@ -152,7 +155,7 @@ class RaporSisipanAkhirController extends Controller
                 return $hasil;
             })
             ->editColumn('semester', function ($item) {
-                return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
+                return $item->semester->tahun_ajaran;
             })
             ->addColumn('action', function ($item) use ($status) {
                 $data = array(

@@ -120,7 +120,7 @@ class TracerAlumniImport implements ToCollection, WithHeadingRow
             try {
                 // $pengguna_center = [];
                 foreach ($arr as $data_siswa) {
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now();
                     //--siswa baru
                     $row_calon_siswa_baru = [
                         'id_c_siswa'     => $this->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),

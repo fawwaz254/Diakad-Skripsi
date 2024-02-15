@@ -57,7 +57,7 @@ class PengajuanMagangController extends BaseController
 
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
-    $now = Carbon::now(env('APP_TIMEZONE', ''));
+    $now = Carbon::now();
 
     $validator = Validator::make($request->all(), [
       'id_rekanan_magang' => 'required',
@@ -243,7 +243,7 @@ class PengajuanMagangController extends BaseController
       ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
       ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
       ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-      ->where('pengambilan_magang.status_apv_pengambilan_magang',null)
+      ->where('pengambilan_magang.status_apv_pengambilan_magang', null)
       ->where('status_pengguna.aktif_status_pengguna', '=', 1)
       ->orderBy('kelas.tingkat', 'asc')
       ->orderBy('kelas.nm_kelas', 'asc')
@@ -283,7 +283,7 @@ class PengajuanMagangController extends BaseController
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
 
-    $now = Carbon::now(env('APP_TIMEZONE', ''));
+    $now = Carbon::now();
 
     $id_pengambilan_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 

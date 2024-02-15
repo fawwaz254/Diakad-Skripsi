@@ -46,7 +46,7 @@ class ManajemenHariLiburController extends BaseController
                 'message' => 'Hari Libur sudah ada'
             ];
         }
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $prefix = Sekolah::first()->prefix;
         $holiday = new ManajemenHariLibur;
         $holiday->manajemen_hari_libur_id = $prefix . strtotime($now) . uniqid();

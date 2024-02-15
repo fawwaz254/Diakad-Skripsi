@@ -31,7 +31,7 @@ class UploadPengembanganDiri implements ToCollection, WithHeadingRow
 	public function collection(Collection $rows)
 	{
 		set_time_limit(-1);
-		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		$now = Carbon::now();
 		$id_pengguna = Auth::id();
 		$list_pribadi_sisipan = PribadiSisipan::get();
 		$kelas = Kelas::where('nm_kelas', $rows[0]['kelas'])->first();

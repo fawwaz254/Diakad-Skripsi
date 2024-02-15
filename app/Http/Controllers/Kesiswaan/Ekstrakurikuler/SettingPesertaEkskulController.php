@@ -44,7 +44,6 @@ class SettingPesertaEkskulController extends BaseController
         $selected_semester = null;
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $selected_semester = null;
-        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
         return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'selected_semester', 'data_semester', 'id_semester'));
     }
@@ -72,6 +71,29 @@ class SettingPesertaEkskulController extends BaseController
             ];
         }
     }
+    public function actionViewCopySettingPesertaEkskul(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'id_ekskul' => 'required',
+            'id_semester' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'ekstrakurikuler/setting-peserta-ekskul/copy/' . $input->id_semester . '/' . $input->id_ekskul
+            ];
+        }
+    }
 
     public function viewEkskulSettingPesertaEkskul(Request $request, $id_semester, $id_ekskul)
     {
@@ -82,7 +104,9 @@ class SettingPesertaEkskulController extends BaseController
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
         $ekskul_pilih = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
-        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'ekskul_pilih', 'data_semester', 'selected_semester', 'id_semester'));
+        $semester = Semester::find($id_semester);
+        $semester_lalu =  Semester::where('thn_akademik_semester', $semester->thn_akademik_semester - 1)->first();
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'ekskul_pilih', 'data_semester', 'selected_semester', 'id_semester', 'semester_lalu'));
     }
 
     public function addSettingPesertaEkskul(Request $request, $id_semester, $id_ekskul, $id_kelas = null)
@@ -95,6 +119,66 @@ class SettingPesertaEkskulController extends BaseController
 
         return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-kelas-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'data_kelas', 'id_kelas', 'ekskul', 'id_semester'));
     }
+
+    public function copySettingPesertaEkskul(Request $request, $id_semester, $id_ekskul, $id_kelas = null)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        // $ekskul = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
+        $ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
+        $ekskul_pilih = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/copy-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'data_kelas', 'id_kelas', 'ekskul', 'id_semester', 'ekskul_pilih', 'data_semester', 'semester_aktif'));
+    }
+
+
+    public function datatablesCopySettingPesertaEkskul(Request $request, $id_semester, $id_ekskul)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $list_data = PesertaEkskulSet::select('peserta_ekskul_set.is_aktif', 'ekskul.id_ekskul', 'siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'peserta_ekskul_set.id_peserta_ekskul_set')
+            ->join('ekskul', 'ekskul.id_ekskul', '=', 'peserta_ekskul_set.id_ekskul')
+            ->join('siswa', 'siswa.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            ->join('pengambilan_ekskul', 'pengambilan_ekskul.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
+            // ->where('pengambilan_ekskul.id_siswa','=', 'peserta_ekskul_set.id_siswa')
+            ->where('pengambilan_ekskul.id_ekskul', '=', $id_ekskul)
+            ->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)
+            ->where('pengambilan_ekskul.id_semester', '=', $id_semester)
+            ->get();
+        // dd($list_data);
+        return Datatables::of($list_data)
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa
+                );
+                return $data;
+            })
+            ->addColumn('nm_siswa', function ($item) {
+                return $item->nis_siswa . '-' . $item->nm_pengguna;
+            })
+            ->addColumn('is_aktif', function ($item) {
+                if ($item->is_aktif == "0") {
+                    return "Tidak Aktif";
+                } else {
+                    return "Aktif";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_peserta_ekskul_set
+                );
+                return $data;
+            })
+            ->make(true);
+    }
+
 
     public function actionAddSettingPesertaEkskul(Request $request)
     {
@@ -243,7 +327,7 @@ class SettingPesertaEkskulController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             // dd($input);
             // ACTION ADD
             if ($mode == 'add') {
@@ -351,13 +435,13 @@ class SettingPesertaEkskulController extends BaseController
                     $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                     $ekskul->save();
 
-                    $ekskul->forceDelete();
+                    $ekskul->delete();
 
                     $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
                     $pengambilan->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $pengambilan->save();
 
-                    $pengambilan->forceDelete();
+                    $pengambilan->delete();
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
@@ -429,7 +513,7 @@ class SettingPesertaEkskulController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'message' => 'Setting Pengambilan Ekskul Berhasil',
-                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/setting/' . $id_ekskul 
+                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/setting/' . $id_ekskul
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -438,6 +522,63 @@ class SettingPesertaEkskulController extends BaseController
                     return [
                         'status' => 300, // GAGAL
                         'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+                    ];
+                }
+            } elseif ($mode == 'copy') {
+                $semester = Semester::where('is_aktif_semester', '=', '1')->where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
+                DB::beginTransaction();
+
+                try {
+                    foreach ($input->id_siswa as $id_siswa) {
+                        $cekSiswa = PesertaEkskulSet::where('peserta_ekskul_set.id_siswa', '=', $id_siswa)->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)->where('peserta_ekskul_set.id_semester', $semester->id_semester)->first();
+                        if ($cekSiswa) {
+                            DB::rollback();
+                            return [
+                                'status' => 203, // GAGAL
+                                'message' => 'Tambah Ekskul Gagal Dilakukan'
+                            ];
+                        }
+                        $id_pengambilan_ekskul = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_peserta_ekskul_set = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                        $siswa = Siswa::find($id_siswa);
+
+                        $pengambilan_ekskul                     = new PengambilanEkskul;
+                        $pengambilan_ekskul->id_pengambilan_ekskul  = $id_pengambilan_ekskul;
+                        $pengambilan_ekskul->id_ekskul          = $id_ekskul;
+                        $pengambilan_ekskul->id_siswa           = $id_siswa;
+                        $pengambilan_ekskul->id_kelas           = $siswa->id_kelas;
+                        $pengambilan_ekskul->id_semester        = $semester->id_semester;
+                        $pengambilan_ekskul->is_tampil          = 0;
+                        $pengambilan_ekskul->created_at         = $now;
+                        $pengambilan_ekskul->created_by         = $input->auth_data->pengguna->id_pengguna;
+
+                        $pengambilan_ekskul->save();
+
+                        $peserta_ekskul_set                         = new PesertaEkskulSet;
+                        $peserta_ekskul_set->id_peserta_ekskul_set  = $id_peserta_ekskul_set;
+                        $peserta_ekskul_set->id_siswa               = $id_siswa;
+                        $peserta_ekskul_set->id_ekskul              = $id_ekskul;
+                        $peserta_ekskul_set->id_semester            = $semester->id_semester;
+                        $peserta_ekskul_set->is_aktif               = 1;
+                        $peserta_ekskul_set->created_at             = $now;
+                        $peserta_ekskul_set->created_by             = $input->auth_data->pengguna->id_pengguna;
+                        $peserta_ekskul_set->save();
+                    }
+                    DB::commit();
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'message' => 'Copy Peserta Ekskul Berhasil Dilakukan',
+                        'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-ekskul/' . $semester->id_semester . '/' . $id_ekskul
+
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+
+                    return [
+                        'status' => 203, // GAGAL
+                        'message' => 'Copy Peserta Ekskul Gagal Dilakukan'
                     ];
                 }
             }

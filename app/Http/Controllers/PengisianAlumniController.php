@@ -65,14 +65,14 @@ class PengisianAlumniController extends BaseController
             $data['id_penerimaan']     = 0;
             $data['status_verifikasi'] = 0;
             $data['created_by']        = $id_pengguna;
-            $data['created_at']        = Carbon::now(env('APP_TIMEZONE', ''));
+            $data['created_at']        = Carbon::now();
 
             CalonSiswaBaru::insert($data);
 
             $data2 = [
                 'id_c_siswa'    => $data['id_c_siswa'],
                 'created_by'    => $id_pengguna,
-                'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
+                'created_at'    => Carbon::now()
             ];
 
             CalonSiswaOrtu::insert($data2);
@@ -87,7 +87,7 @@ class PengisianAlumniController extends BaseController
             $data3['id_sekolah']            = $sekolah_data->id_sekolah;
             $data3['id_pengguna']           = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
             $data3['created_by']            = $id_pengguna;
-            $data3['created_at']            = Carbon::now(env('APP_TIMEZONE', ''));
+            $data3['created_at']            = Carbon::now();
 
             Pengguna::insert($data3);
 
@@ -96,7 +96,7 @@ class PengisianAlumniController extends BaseController
                 'id_pengguna'   => $data3['id_pengguna'],
                 'id_c_siswa'    => $data['id_c_siswa'],
                 'created_by'    => $id_pengguna,
-                'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
+                'created_at'    => Carbon::now()
             ]);
 
             $data4['status_verifikasi'] = 0;
@@ -107,7 +107,7 @@ class PengisianAlumniController extends BaseController
             $data4['id_alumni']     = $sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
             $data4['id_c_siswa']    = $data['id_c_siswa'];
             $data4['created_by']    = $id_pengguna;;
-            $data4['created_at']    = Carbon::now(env('APP_TIMEZONE', ''));
+            $data4['created_at']    = Carbon::now();
 
             Alumni::insert($data4);
 
@@ -132,7 +132,7 @@ class PengisianAlumniController extends BaseController
 
             $data5['id_alumni']              = $data4['id_alumni'];
             $data5['created_by']             = $id_pengguna;;
-            $data5['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
+            $data5['created_at']             = Carbon::now();
 
             if ($request->status == 'bekerja') {
                 LibAlumni::storeWorkplace($data5);

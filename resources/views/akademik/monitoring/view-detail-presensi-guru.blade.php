@@ -6,8 +6,9 @@
         </a>
     </h2>
 
-    <div class="row clearfix card">
-        <table class="table table-striped">
+    <div class="row clearfix card" style="padding: 10px">
+        <table class="table table-striped" id="primary_table">
+            {{-- <br> --}}
             <thead>
                 <tr>
                     <th class="text-center">No.</th>
@@ -16,6 +17,7 @@
                     <th>Jadwal</th>
                     <th>Kelas</th>
                     <th>Uraian Materi</th>
+                    <th style="text-align: center;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,9 +29,60 @@
                         <td>{{ $presensi->waktu_mulai }} - {{ $presensi->waktu_selesai }}</td>
                         <td>{{ $presensi->nm_kelas_mp }}</td>
                         <td>{{ $presensi->uraian_materi }}</td>
+
+                        <td> <button data-id="{{ $presensi->id_presensi_mp }}" style="margin-left:3px;"
+                                class="btn bg-red waves-effect delete-record">
+                                <i class="material-icons">delete</i>
+                            </button></td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
     </div>
 </div>
+
+
+<script>
+    var primary_table = $('#primary_table').DataTable({
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
+    })
+    $(".delete-record").click(function() {
+        var token = $("meta[name='csrf-token']").attr("content");
+        var id = $(this).data("id");
+
+        swal({
+                title: "Are you sure?",
+                showCancelButton: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $('.delete-record').attr("disabled", true);
+                    //swall
+                    $.ajax({
+                        url: ` /akademik/monitoring/monitoring-presensi-guru/action-delete/${id}`,
+                        type: "post",
+
+                        data: {
+                            _token: token,
+                        },
+
+                        success: function() {
+                            swal({
+                                title: "Delete Success",
+                                text: "data berhasil dihapus",
+                                icon: "success",
+                            });
+                            location.reload(true);
+                            // loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' +
+                            //     $('input[name=date]').val() + '/0/0');
+                        },
+                    });
+                }
+                return;
+            }
+        );
+    });
+</script>

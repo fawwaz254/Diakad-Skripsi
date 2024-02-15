@@ -17,78 +17,80 @@ use DB;
 use Session;
 use Validator;
 
-class JenisGedungController extends BaseController{
+class JenisGedungController extends BaseController
+{
 
-    public function viewJenisGedung(Request $request){
+    public function viewJenisGedung(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('sarana-prasarana/data-sarpras-gedung/jenis-gedung/view-jenis-gedung',compact('auth_data'));
-
+        return view('sarana-prasarana/data-sarpras-gedung/jenis-gedung/view-jenis-gedung', compact('auth_data'));
     }
 
-    public function addJenisGedung(Request $request){
+    public function addJenisGedung(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
-        $id_jenis_gedung = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_jenis_gedung = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('sarana-prasarana/data-sarpras-gedung/jenis-gedung/add-jenis-gedung',compact('auth_data','id_jenis_gedung'));
-
+        return view('sarana-prasarana/data-sarpras-gedung/jenis-gedung/add-jenis-gedung', compact('auth_data', 'id_jenis_gedung'));
     }
 
-    public function editJenisGedung($id, Request $request){
+    public function editJenisGedung($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_jenis_gedung = LibDataSarpras::fetchDataJenisGedung($auth_data, $id);
 
-        return view('sarana-prasarana/data-sarpras-gedung/jenis-gedung/edit-jenis-gedung',compact('auth_data','data_jenis_gedung'));
-
+        return view('sarana-prasarana/data-sarpras-gedung/jenis-gedung/edit-jenis-gedung', compact('auth_data', 'data_jenis_gedung'));
     }
 
-    public function datatablesJenisGedung(Request $request){
+    public function datatablesJenisGedung(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataSarpras::fetchDataJenisGedung($auth_data);
+        $list_data = LibDataSarpras::fetchDataJenisGedung($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_jenis_gedung
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_jenis_gedung
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionJenisGedung(Request $request, $mode, $id = null){
+    public function actionJenisGedung(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
             'nm_jenis_gedung' => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jenisGedung                        = new JenisGedung;
                 $jenisGedung->id_jenis_gedung       = $id;
@@ -102,8 +104,7 @@ class JenisGedungController extends BaseController{
                     'path' => 'data-sarpras-gedung/jenis-gedung',
                     'message' => 'Save Jenis Gedung Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $jenisGedung                        = JenisGedung::find($id);
                 $jenisGedung->nm_jenis_gedung       = $input->nm_jenis_gedung;
@@ -116,15 +117,13 @@ class JenisGedungController extends BaseController{
                     'path' => 'data-sarpras-gedung/jenis-gedung',
                     'message' => 'Update Jenis Gedung Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($gedung = Gedung::where('id_jenis_gedung',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($gedung = Gedung::where('id_jenis_gedung', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Jenis Gedung'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $jenisGedung               = JenisGedung::find($id);
                     $jenisGedung->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -140,6 +139,4 @@ class JenisGedungController extends BaseController{
             }
         }
     }
-
-
 }

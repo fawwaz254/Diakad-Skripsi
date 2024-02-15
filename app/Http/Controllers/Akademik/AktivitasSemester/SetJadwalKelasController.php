@@ -150,7 +150,8 @@ class SetJadwalKelasController extends Controller
         $list_jurusan = Jurusan::all();
         $list_jenis_mata_pelajaran = JenisMataPelajaran::all();
 
-        if (MataPelajaran::where('id_jurusan', $id_jurusan)->first()) { } else {
+        if (MataPelajaran::where('id_jurusan', $id_jurusan)->first()) {
+        } else {
             $id_jurusan = null;
         }
 
@@ -185,7 +186,7 @@ class SetJadwalKelasController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validasi = KelasMp::where('id_semester', $input->id_semester_paste)->whereIn('id_kelas', $input->kelas)->whereHas('jadwal_kelas_mp')
             ->whereHas('pengampu_mp')->first();
@@ -271,7 +272,7 @@ class SetJadwalKelasController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         //validasi waktu
         if ($mode != 'delete') {
@@ -320,7 +321,7 @@ class SetJadwalKelasController extends Controller
         // }
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
 
         if ($mode == 'add') {

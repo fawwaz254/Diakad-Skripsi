@@ -169,7 +169,7 @@ class TagihanSiswaController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
             // dd($input->thn_akademik_semester);
             if ($mode == 'add') {
                 DB::beginTransaction();

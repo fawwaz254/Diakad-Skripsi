@@ -12,6 +12,7 @@ use App\Http\Controllers\WaliMurid\Akademik\KalenderAkademikController;
 use App\Http\Controllers\WaliMurid\Akademik\MagangController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiEkskulController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiKehadiranSiswaController;
+use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiPKLController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\BeasiswaController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\NilaiEkskulController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\PrestasiController;
@@ -110,6 +111,11 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('absensi-ekskul')->group(function () {
                 Route::get('/', [AbsensiEkskulController::class, 'viewAbsensiEkskul']);
                 Route::get('detail/{id_semester}/{id_ekskul}', [AbsensiEkskulController::class, 'viewDetailAbsensiEkskul']);
+            });
+            Route::prefix('absensi-magang')->group(function () {
+                Route::get('/', [AbsensiPKLController::class, 'viewAbsensiMagang']);
+                Route::get('/detail/{id_rekanan}/{id_periode}/{date}', [AbsensiPKLController::class, 'viewDetailRekapAbsensiMagang']);
+                Route::get('/print/{id_siswa}', [AbsensiPKLController::class, 'printRekapPresensiMagang']);
             });
 
             Route::prefix('nilai-ekskul')->group(function () {

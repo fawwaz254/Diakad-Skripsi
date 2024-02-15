@@ -17,7 +17,7 @@ class AddDataInKelompokTambahanRapor extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
         $sekolah = Sekolah::first();
         $kelompok_tambahan_rapor = new KelompokTambahanRapor;
         $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();

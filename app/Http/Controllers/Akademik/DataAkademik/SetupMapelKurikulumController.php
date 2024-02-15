@@ -159,7 +159,7 @@ class SetupMapelKurikulumController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
 

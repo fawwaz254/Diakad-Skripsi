@@ -44,15 +44,15 @@ class InputPerawatanRutinController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data);
 
-        $id_perawatan_sarpras = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_perawatan_sarpras = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('sarana-prasarana/perawatan-sarpras/perawatan-rutin/add-perawatan-rutin', compact('auth_data', 'data_ruangan', 'data_buku_alat', 'id_perawatan_sarpras'));
     }
@@ -84,29 +84,29 @@ class InputPerawatanRutinController extends BaseController
         $list_data = LibDataSarpras::fetchDataPerawatanSarpras($auth_data, 0, null, 1);
 
         return Datatables::of($list_data)
-                ->addColumn('nm_ruangan', function ($item) {
-                    return $item->nm_ruangan." - ".$item->nm_jenis_ruangan." (".$item->nm_gedung.")";
-                })
-                ->addColumn('nm_inventaris_ruangan', function ($item) {
-                    if (! empty($item->nm_inventaris_ruangan)) {
-                        return $item->nm_inventaris_ruangan;
-                    } else {
-                        return "-";
-                    }
-                })
-                ->addColumn('nm_buku_alat', function ($item) {
-                    return $item->nm_buku_alat." - ".$item->nm_jenis_buku_alat;
-                })
-                ->addColumn('tgl_perawatan', function ($item) {
-                    return strftime("%d %B %Y", strtotime($item->tgl_perawatan));
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_perawatan_sarpras
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_ruangan', function ($item) {
+                return $item->nm_ruangan . " - " . $item->nm_jenis_ruangan . " (" . $item->nm_gedung . ")";
+            })
+            ->addColumn('nm_inventaris_ruangan', function ($item) {
+                if (!empty($item->nm_inventaris_ruangan)) {
+                    return $item->nm_inventaris_ruangan;
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('nm_buku_alat', function ($item) {
+                return $item->nm_buku_alat . " - " . $item->nm_jenis_buku_alat;
+            })
+            ->addColumn('tgl_perawatan', function ($item) {
+                return strftime("%d %B %Y", strtotime($item->tgl_perawatan));
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_perawatan_sarpras
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function datatablesInputPerawatanRutinSudah(Request $request)
@@ -116,29 +116,29 @@ class InputPerawatanRutinController extends BaseController
         $list_data = LibDataSarpras::fetchDataPerawatanSarpras($auth_data, 1, null, 1);
 
         return Datatables::of($list_data)
-                ->addColumn('nm_ruangan', function ($item) {
-                    return $item->nm_ruangan." - ".$item->nm_jenis_ruangan." (".$item->nm_gedung.")";
-                })
-                ->addColumn('nm_inventaris_ruangan', function ($item) {
-                    if (! empty($item->nm_inventaris_ruangan)) {
-                        return $item->nm_inventaris_ruangan;
-                    } else {
-                        return "-";
-                    }
-                })
-                ->addColumn('nm_buku_alat', function ($item) {
-                    return $item->nm_buku_alat." - ".$item->nm_jenis_buku_alat;
-                })
-                ->addColumn('tgl_perawatan', function ($item) {
-                    return strftime("%d %B %Y", strtotime($item->tgl_perawatan));
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_perawatan_sarpras
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_ruangan', function ($item) {
+                return $item->nm_ruangan . " - " . $item->nm_jenis_ruangan . " (" . $item->nm_gedung . ")";
+            })
+            ->addColumn('nm_inventaris_ruangan', function ($item) {
+                if (!empty($item->nm_inventaris_ruangan)) {
+                    return $item->nm_inventaris_ruangan;
+                } else {
+                    return "-";
+                }
+            })
+            ->addColumn('nm_buku_alat', function ($item) {
+                return $item->nm_buku_alat . " - " . $item->nm_jenis_buku_alat;
+            })
+            ->addColumn('tgl_perawatan', function ($item) {
+                return strftime("%d %B %Y", strtotime($item->tgl_perawatan));
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_perawatan_sarpras
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
@@ -151,7 +151,7 @@ class InputPerawatanRutinController extends BaseController
             'keterangan_perawatan' => 'required',
             'is_sudah_perawatan' => 'required'
         ]);
-        
+
         if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
@@ -159,13 +159,13 @@ class InputPerawatanRutinController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             if ($mode == 'add') {
-                if (! empty($input->id_ruangan) or ! empty($input->id_inventaris_ruangan) or ! empty($input->id_buku_alat)) {
+                if (!empty($input->id_ruangan) or !empty($input->id_inventaris_ruangan) or !empty($input->id_buku_alat)) {
                     // make object to find id
                     $perawatanSarpras                           = new PerawatanSarpras;
-                    $perawatanSarpras->id_perawatan_sarpras     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $perawatanSarpras->id_perawatan_sarpras     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $perawatanSarpras->id_ruangan               = $input->id_ruangan;
                     $perawatanSarpras->id_inventaris_ruangan    = $input->id_inventaris_ruangan;
                     $perawatanSarpras->id_buku_alat             = $input->id_buku_alat;

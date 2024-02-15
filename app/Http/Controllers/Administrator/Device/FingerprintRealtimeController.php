@@ -339,4 +339,84 @@ class FingerprintRealtimeController extends Controller
 
         return $hasil;
     }
+
+    public function getDataBarcodeFingerprint(Request $request)
+    {
+        return view('administrator/device/fingerprintBarcode/view-fingerprint-barcode');
+    }
+
+
+    public function actionDataBarcodeFingerprint(Request $request)
+    {
+        $input = (object) $request->input();
+        $arraySiswaPresensi = explode(",", $input->siswa_presensi);
+        $now = Carbon::now();
+        foreach ($arraySiswaPresensi  as $presensi) {
+            $p = new FPAttendance();
+            $p->id_fp_device = 'barcode';
+            $p->username = $presensi;
+            $p->status = 255;
+            $p->tanggal = $now->format('Y-m-d');
+            $p->fp_date = $now;
+            $p->save();
+        }
+
+        $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereNull('unit')->get();
+        $collection = $data_fingerprint->groupBy('username')->all();
+        $penggunas =  Pengguna::whereIn('username', collect($collection)->keys())->get();
+        $presensis = PresensiPengguna::where('date', $now->format('Y-m-d'))->whereNull('unit')->get();
+
+        foreach ($collection as $username => $group_of_data) {
+            if ($pengguna = $penggunas->where('username', $username)->first()) {
+                $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
+
+                if ($presensi = $presensis->where('id_pengguna', $pengguna->id_pengguna)->first()) { } else {
+                    $presensi = new PresensiPengguna;
+                    $presensi->id_pengguna = $pengguna->id_pengguna;
+                    $presensi->status_join_table = $pengguna->status_join_table;
+                    $presensi->date = $first_time_finger->tanggal;
+                }
+
+                if ($first_time_finger->status == 255) {
+                    if (count($group_of_data) > 1) { // FINGER MORE THAN 1
+                        $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
+                        if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
+                            $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
+                        }
+                    } else { // ONLY CHECK-IN
+                        // if (empty($presensi->check_in)) {
+                        $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        // }
+                    }
+                } else {
+                    if ($first_time_finger->status == 0) {
+                        $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                    }
+
+                    if ($first_time_finger->status == 1) {
+                        $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                    }
+                }
+
+                if (!empty($presensi->check_in) && !empty($presensi->check_out)) {
+                    if ($presensi->check_out < $presensi->check_in) {
+                        $temp_clock = $presensi->check_in;
+
+                        $presensi->check_in = $presensi->check_out;
+                        $presensi->check_out = $temp_clock;
+                    }
+                }
+                $presensi->status = null;
+                $presensi->notes = null;
+                $presensi->save();
+            }
+
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                // 'path' => 'presensi/absensi-siswa',
+                'message' => 'Save Successfully'
+            ];
+        }
+    }
 }

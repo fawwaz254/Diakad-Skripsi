@@ -186,16 +186,10 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tgl_lahir)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tgl_lahir)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir" aria-required="true" aria-invalid="true"
-                                                    required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control" name="tgl_lahir"
+                                                aria-required="true" aria-invalid="true"
+                                                value="{{ isset($siswa->tgl_lahir) ? date('d F Y', strtotime($siswa->tgl_lahir)) : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <br>
@@ -562,6 +556,33 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
+                                                Tahun Beasiswa<br>
+                                                <small>apabila menerima</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="thn_penerima_kps"
+                                                id="thn_penerima_kps">
+                                                <option value="">Pilih Tahun</option>
+                                                <option value="1"
+                                                    {{ old('thn_penerima_kps', $siswa->thn_penerima_kps) == 1 ? 'selected' : '' }}>
+                                                    I
+                                                </option>
+                                                <option value="2"
+                                                    {{ old('thn_penerima_kps', $siswa->thn_penerima_kps) == 2 ? 'selected' : '' }}>
+                                                    II
+                                                </option>
+                                                <option value="3"
+                                                    {{ old('thn_penerima_kps', $siswa->thn_penerima_kps) == 3 ? 'selected' : '' }}>
+                                                    III
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
                                                 Sumber Beasiswa<br>
                                                 <small>apabila menerima</small>
                                             </h2>
@@ -715,20 +736,33 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
-                                                Tahun Lahir <span class="is-required">*</span>
+                                                Tempat Lahir <span class="is-required">*</span>
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tgl_lahir_ayah)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_ayah" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tgl_lahir_ayah)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_ayah" aria-required="true" aria-invalid="true"
-                                                    required>
-                                            @endif
+                                            <select class="form-control show-tick" name="id_kota_lahir_ayah"
+                                                id="id_kota_lahir_ayah">
+                                                <option value=""></option>
+                                                @foreach ($kotaTinggal as $kota)
+                                                    <option value="{{ $kota->id_kota }}"
+                                                        {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>
+                                                        {{ $kota->nm_kota }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Tanggal Lahir <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="datepicker form-control"
+                                                name="tgl_lahir_ayah" aria-required="true" aria-invalid="true"
+                                                value="{{ isset($siswa->tgl_lahir_ayah) ? date('d F Y', strtotime($siswa->tgl_lahir_ayah)) : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <br>
@@ -938,6 +972,39 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kewarganegaraan <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="kewarganegaraan_ayah"
+                                                id="kewarganegaraan_ayah" required>
+                                                <option value="1"
+                                                    {{ $dataOrtu->kewarganegaraan_ayah == 1 ? 'selected' : '' }}>WNI
+                                                </option>
+                                                <option value="2"
+                                                    {{ $dataOrtu->kewarganegaraan_ayah == 2 ? 'selected' : '' }}>WNA
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nama Negara <span class="is-required">*</span><br>
+                                                <small>Diisi jika Kewarganegaraan WNA</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_kewarganegaraan_ayah"
+                                                id="nm_kewarganegaraan_ayah" {{-- aria-required="true" aria-invalid="true" --}}
+                                                value="{{ isset($siswa->nm_kewarganegaraan_ayah) ? $siswa->nm_kewarganegaraan_ayah : '' }}">
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -992,20 +1059,33 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
-                                                Tahun Lahir <span class="is-required">*</span>
+                                                Tempat Lahir <span class="is-required">*</span>
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tgl_lahir_ibu)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_ibu" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tgl_lahir_ibu)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_ibu" aria-required="true" aria-invalid="true"
-                                                    required>
-                                            @endif
+                                            <select class="form-control show-tick" name="id_kota_lahir_ibu"
+                                                id="id_kota_lahir_ibu">
+                                                <option value=""></option>
+                                                @foreach ($kotaTinggal as $kota)
+                                                    <option value="{{ $kota->id_kota }}"
+                                                        {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>
+                                                        {{ $kota->nm_kota }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Tanggal Lahir <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="datepicker form-control"
+                                                name="tgl_lahir_ibu" aria-required="true" aria-invalid="true"
+                                                value="{{ isset($siswa->tgl_lahir_ibu) ? date('d F Y', strtotime($siswa->tgl_lahir_ibu)) : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <br>
@@ -1216,6 +1296,38 @@
                                         </div>
                                     </div>
                                     <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kewarganegaraan <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="kewarganegaraan_ibu"
+                                                id="kewarganegaraan_ibu" required>
+                                                <option value="1"
+                                                    {{ $dataOrtu->kewarganegaraan_ibu == 1 ? 'selected' : '' }}>WNI
+                                                </option>
+                                                <option value="2"
+                                                    {{ $dataOrtu->kewarganegaraan_ibu == 2 ? 'selected' : '' }}>WNA
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nama Negara <span class="is-required">*</span><br>
+                                                <small>Diisi jika Kewarganegaraan WNA</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_kewarganegaraan_ibu"
+                                                id="nm_kewarganegaraan_ibu" {{-- aria-required="true" aria-invalid="true" --}}
+                                                value="{{ isset($siswa->nm_kewarganegaraan_ibu) ? $siswa->nm_kewarganegaraan_ibu : '' }}">
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -1282,18 +1394,32 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
+                                                Tempat Lahir <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="id_kota_lahir_wali"
+                                                id="id_kota_lahir_wali">
+                                                <option value=""></option>
+                                                @foreach ($kotaTinggal as $kota)
+                                                    <option value="{{ $kota->id_kota }}"
+                                                        {{ $dataOrtu->id_kota_lahir_ayah == $kota->id_kota ? 'selected' : '' }}>
+                                                        {{ $kota->nm_kota }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
                                                 Tahun Lahir
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tgl_lahir_wali)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_wali" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tgl_lahir_wali)) }}">
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tgl_lahir_wali" aria-required="true" aria-invalid="true">
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tgl_lahir_wali" aria-required="true" aria-invalid="true"
+                                                value="{{ isset($siswa->tgl_lahir_wali) ? date('d F Y', strtotime($siswa->tgl_lahir_wali)) : '' }}">
                                         </div>
                                     </div>
                                     <br>
@@ -1365,6 +1491,39 @@
                                                         {{ $kebutuhan->nm_kebutuhan_khusus }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Kewarganegaraan <span class="is-required">*</span>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <select class="form-control show-tick" name="kewarganegaraan_wali"
+                                                id="kewarganegaraan_wali" required>
+                                                <option value="1"
+                                                    {{ $siswa->kewarganegaraan_wali == 1 ? 'selected' : '' }}>WNI
+                                                </option>
+                                                <option value="2"
+                                                    {{ $siswa->kewarganegaraan_wali == 2 ? 'selected' : '' }}>WNA
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Nama Negara <span class="is-required">*</span><br>
+                                                <small>Diisi jika Kewarganegaraan WNA</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_kewarganegaraan_wali"
+                                                id="nm_kewarganegaraan_wali" {{-- aria-required="true" aria-invalid="true" --}}
+                                                value="{{ isset($siswa->nm_kewarganegaraan_wali) ? $siswa->nm_kewarganegaraan_wali : '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -1486,7 +1645,7 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <select class="form-control show-tick" name="golongan_darah"
-                                                id="golongan_darah" required>
+                                                id="golongan_darah">
 
                                                 <option value="A"
                                                     {{ $siswa->golongan_darah == 'A' ? 'selected' : '' }}>A
@@ -1537,7 +1696,8 @@
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <input type="number" class="form-control"
                                                 name="waktu_tempuh_sekolah_jam" aria-required="true"
-                                                aria-invalid="true" value="{{ $siswa->waktu_tempuh_sekolah_jam }}">
+                                                aria-invalid="true"
+                                                value="{{ $siswa->waktu_tempuh_sekolah_jam }}">
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <input type="number" class="form-control"
@@ -1596,16 +1756,9 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tanggal_sttb)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_sttb" aria-required="true" aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_sttb)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_sttb" aria-required="true" aria-invalid="true"
-                                                    required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tanggal_sttb" aria-invalid="true"
+                                                value="{{ isset($siswa->tanggal_sttb) ? date('d F Y', strtotime($siswa->tanggal_sttb)) : '' }}">
                                         </div>
                                     </div>
                                     <br>
@@ -1630,17 +1783,9 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tanggal_skhus_sebelumnya)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_skhus_sebelumnya" aria-required="true"
-                                                    aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_skhus_sebelumnya)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_skhus_sebelumnya" aria-required="true"
-                                                    aria-invalid="true" required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tanggal_skhus_sebelumnya" aria-invalid="true"
+                                                value="{{ isset($siswa->tanggal_skhus_sebelumnya) ? date('d F Y', strtotime($siswa->tanggal_skhus_sebelumnya)) : '' }}">
                                         </div>
                                     </div>
                                     <br>
@@ -1736,17 +1881,11 @@
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            @if ($siswa->tanggal_mutasi_masuk)
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_mutasi_masuk" aria-required="true"
-                                                    aria-invalid="true"
-                                                    value="{{ date('d F Y', strtotime($siswa->tanggal_mutasi_masuk)) }}"
-                                                    required>
-                                            @else
-                                                <input type="text" class="datepicker form-control"
-                                                    name="tanggal_mutasi_masuk" aria-required="true"
-                                                    aria-invalid="true" required>
-                                            @endif
+                                            <input type="text" class="datepicker form-control"
+                                                name="tanggal_mutasi_masuk" aria-required="true"
+                                                aria-invalid="true"
+                                                value="{{ isset($siswa->tanggal_mutasi_masuk) ? date('d F Y', strtotime($siswa->tanggal_mutasi_masuk)) : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <br>
@@ -1767,10 +1906,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
 
                         <br>
                         <div class="row clearfix">
@@ -1798,7 +1933,7 @@
             //lang : 'id',
             clearButton: true,
             weekStart: 1,
-            time: false
+            time: false,
         });
     });
 </script>

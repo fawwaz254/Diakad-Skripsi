@@ -36,7 +36,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\LibGlobal;
-
+use App\Models\CalonSiswaOrtu;
 use Auth;
 use DB;
 use Session;
@@ -175,6 +175,7 @@ class InsertUpdateSiswaController extends BaseController
 		$auth_data = $input->auth_data;
 		$kelas = Kelas::where('id_kelas', $id_kelas)->first();
 		$siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
+
 		return Excel::download(new ExportBiodata($siswa), 'download_biodata_kelas_' . $kelas->nm_kelas . '.xlsx');
 	}
 
@@ -224,7 +225,7 @@ class InsertUpdateSiswaController extends BaseController
 	{
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
-		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		$now = Carbon::now();
 		// dd($input->link_google_drive);
 
 		if ($mode == "insert") {

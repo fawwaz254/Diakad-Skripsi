@@ -36,18 +36,17 @@ class BankController extends BaseController
         $nomor_transaksi = $request->input(('nomor_transaksi'));
         $total_pembayaran = $request->input('total_pembayaran');
 
-        $key   = InMemory::base64Encoded(
-            'crGyqM0orACXsibBpa5HyU9hFlsOHWCrnlQENXmzY6wrZSXOdtBbbdoVxf8lmDkG'
+        $key   = InMemory::plainText(
+            env('JWT_SECRET')
         );
+
         $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::
             default()));
         $algorithm    = new Sha256();
 
         $now   = new DateTimeImmutable();
-        $token = $tokenBuilder
-            ->issuedAt($now)
-            ->canOnlyBeUsedAfter($now)
-            ->expiresAt($now->modify('+1 hour'));
+        $token = $tokenBuilder;
+
         if ($kode_request == 'A0001') {
             $token->withClaim('nis_siswa', $nis_siswa);
         } elseif ($kode_request == 'A0002') {
@@ -61,7 +60,7 @@ class BankController extends BaseController
         } elseif ($kode_request == 'A0005') {
             $token->withClaim('nomor_transaksi', $nomor_transaksi);
         }
-        return $token->withHeader('foo', 'bar')
+        return $token
             ->getToken($algorithm, $key)->toString();
     }
 
@@ -72,48 +71,73 @@ class BankController extends BaseController
         $kode_request       = $request->input('Kode');
         //Validasi Signature
         $now   = new DateTimeImmutable();
-        $key   = InMemory::base64Encoded(
-            'crGyqM0orACXsibBpa5HyU9hFlsOHWCrnlQENXmzY6wrZSXOdtBbbdoVxf8lmDkG'
+        $key   = InMemory::plainText(
+            env('JWT_SECRET')
         );
+        $algorithm    = new Sha256();
+
+        $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::
+            default()));
+
+        $returnToken = $tokenBuilder;
+
+
         try {
             $token = (new JwtFacade())->parse(
                 $jwtEncoded,
-                new Constraint\SignedWith(new Sha256(), $key),
-                new Constraint\StrictValidAt(
+                new Constraint\SignedWith($algorithm, $key),
+                new Constraint\LooseValidAt(
                     new FrozenClock($now)
                 )
             );
         } catch (\Exception $e) {
-            return response()->json([
-                'kode' => '01', 'keterangan' => 'Invalid signature (jwt)'
-            ]);
+
+            $returnToken->withClaim('kode', '01');
+            $returnToken->withClaim('keterangan', 'Invalid signature (jwt)');
+            return $returnToken->getToken($algorithm, $key)->toString();
         }
 
-        //Validasi Decode
-        try {
-            $claims             = $token->claims();
-            $nis_siswa          = $claims->get('nis_siswa');
-            $kode_tagihan       = $claims->get('kode_tagihan');
-            $total_pembayaran   = $claims->get('total_pembayaran');
-            $nomor_transaksi    = $claims->get('nomor_transaksi');
-        } catch (\Exception $e) {
-            return response()->json([
-                'kode' => '02',
-                'keterangan' => 'Decode jwt error (format jwt error)'
-            ]);
-        }
 
-        //Validasi Institusi
+        $claims             = $token->claims();
+        $nis_siswa          = $claims->get('nis_siswa');
+        $kode_tagihan       = $claims->get('kode_tagihan');
+        $total_pembayaran   = $claims->get('total_pembayaran');
+        $nomor_transaksi    = $claims->get('nomor_transaksi');
+        $user_reverse       = $claims->get('user_reverse');
+        $kode_ref           = $claims->get('kode_ref');
+
+
+        //Validasi-------------
+
+        $validasi_rules = [
+            'A0001' => ['nis_siswa'],
+            'A0002' => ['nis_siswa', 'kode_tagihan'],
+            'A0003' => ['nomor_transaksi'],
+            'A0004' => ['nomor_transaksi', 'total_pembayaran', 'kode_ref'],
+            'A0005' => ['nomor_transaksi', 'user_reverse'],
+        ];
+
+        if (isset($validasi_rules[$kode_request])) {
+            $rules = $validasi_rules[$kode_request];
+            foreach ($rules as $field) {
+                if (empty($$field)) {
+                    $returnToken->withClaim('kode', '02');
+                    $returnToken->withClaim('keterangan', 'Decode jwt error (format jwt error)');
+                    return $returnToken->getToken($algorithm, $key)->toString();
+                }
+            }
+        }
+        //-----------------
+
         $now = Carbon::now();
         $sekolah = Sekolah::first();
 
         if ($kode_request == 'A0001') {
             $siswa = Siswa::where('nis_siswa', $nis_siswa)->first();
             if (empty($siswa)) {
-                return response()->json([
-                    'kode' => '03',
-                    'keterangan' => 'Siswa Not Found'
-                ]);
+                $returnToken->withClaim('kode', '03');
+                $returnToken->withClaim('keterangan', 'Siswa Not Found');
+                return $returnToken->getToken($algorithm, $key)->toString();
             }
             //Get Data Tagihan
             $tahun =  Carbon::parse($now)->format("Y");
@@ -139,23 +163,21 @@ class BankController extends BaseController
                 "kode_tagihan" =>  $kode_tagihan
             ];
 
-            return response()->json([
-                'kode ' => "00",
-                'keterangan' => 'success get data tagihan',
-                'data' => $data,
-            ]);
+            $returnToken->withClaim('kode', '00');
+            $returnToken->withClaim('keterangan', 'success get data tagihan');
+            $returnToken->withClaim('data', $data);
+            return $returnToken->getToken($algorithm, $key)->toString();
         } elseif ($kode_request == 'A0002') {
             $siswa = Siswa::where('nis_siswa', $nis_siswa)->first();
             if (empty($siswa)) {
-                return response()->json([
-                    'kode' => '03',
-                    'keterangan' => 'Siswa Not Found'
-                ]);
+                $returnToken->withClaim('kode', '03');
+                $returnToken->withClaim('keterangan', 'Siswa Not Found');
+                return $returnToken->getToken($algorithm, $key)->toString();
             }
             $data_tagihan = explode(";", $kode_tagihan);
             $total_tagihan = 0;
             $list_id_tagihan = array();
-            foreach ($data_tagihan as $key => $k_tagihan) {
+            foreach ($data_tagihan as $no => $k_tagihan) {
                 $nm_tagihan = explode("_", $k_tagihan);
                 if ($nm_tagihan[0] == 'spp') {
                     $tagihan = TagihanBiaya::where('is_tagih', '1')->where('id_siswa', $siswa->id_siswa)->whereHas('detail_biaya', function ($q) use ($nm_tagihan) {
@@ -165,12 +187,11 @@ class BankController extends BaseController
                     })->first();
                     if ($tagihan) {
                         $total_tagihan += $tagihan->besar_biaya;
-                        $list_id_tagihan[$key] = $tagihan->id_tagihan_biaya;
+                        $list_id_tagihan[$no] = $tagihan->id_tagihan_biaya;
                     } else {
-                        return response()->json([
-                            'kode' => '05',
-                            'keterangan' => 'Kode Tagihan ' . $k_tagihan . ' Not Found'
-                        ]);
+                        $returnToken->withClaim('kode', '05');
+                        $returnToken->withClaim('keterangan', 'Kode Tagihan ' . $k_tagihan . ' Not Found');
+                        return $returnToken->getToken($algorithm, $key)->toString();
                     }
                 } else {
                     $keterangan_biaya = strtoupper(str_replace('_', ' ', $k_tagihan));
@@ -179,12 +200,11 @@ class BankController extends BaseController
                     })->first();
                     if ($tagihan) {
                         $total_tagihan += $tagihan->besar_biaya;
-                        $list_id_tagihan[$key] = $tagihan->id_tagihan_biaya;
+                        $list_id_tagihan[$no] = $tagihan->id_tagihan_biaya;
                     } else {
-                        return response()->json([
-                            'kode' => '05',
-                            'keterangan' => 'Kode Tagihan ' . $k_tagihan . ' Not Found'
-                        ]);
+                        $returnToken->withClaim('kode', '05');
+                        $returnToken->withClaim('keterangan', 'Kode Tagihan ' . $k_tagihan . ' Not Found');
+                        return $returnToken->getToken($algorithm, $key)->toString();
                     }
                 }
             }
@@ -237,17 +257,15 @@ class BankController extends BaseController
 
                 DB::commit();
             } catch (\Exception $e) {
-                return response()->json([
-                    'kode' => '09',
-                    'keterangan' => $e->getMessage()
-                ]);
+                $returnToken->withClaim('kode', '09');
+                $returnToken->withClaim('keterangan', $e->getMessage());
+                return $returnToken->getToken($algorithm, $key)->toString();
             }
 
-            return response()->json([
-                'kode' => "00",
-                'keterangan' => 'success create tagihan',
-                'data'  => $data,
-            ]);
+            $returnToken->withClaim('kode', '00');
+            $returnToken->withClaim('keterangan', 'success create tagihan');
+            $returnToken->withClaim('data', $data);
+            return $returnToken->getToken($algorithm, $key)->toString();
         } elseif ($kode_request == 'A0003') {
 
             $pembayaran_trs = PembayaranTrs::where('nomor_transaksi', $nomor_transaksi)->first();
@@ -259,11 +277,10 @@ class BankController extends BaseController
                     "nis_siswa" => $siswa->nis_siswa,
                     "nama_siswa" => $siswa->pengguna->nm_pengguna
                 ];
-                return response()->json([
-                    'kode' => "00",
-                    'keterangan' => 'success inquiry',
-                    'data'  => $data,
-                ]);
+                $returnToken->withClaim('kode', '00');
+                $returnToken->withClaim('keterangan', 'success inquiry');
+                $returnToken->withClaim('data', $data);
+                return $returnToken->getToken($algorithm, $key)->toString();
             } elseif ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '0') {
                 $siswa = Siswa::with('pengguna')->find($pembayaran_trs->id_siswa);
                 $data = [
@@ -273,25 +290,29 @@ class BankController extends BaseController
                     "nis_siswa" => $siswa->nis_siswa,
                     "nama_siswa" => $siswa->pengguna->nm_pengguna
                 ];
-                return response()->json([
-                    'kode' => "00",
-                    'keterangan' => 'success inquiry',
-                    'data'  => $data,
-                ]);
+                $returnToken->withClaim('kode', '00');
+                $returnToken->withClaim('keterangan', 'success inquiry');
+                $returnToken->withClaim('data', $data);
+                return $returnToken->getToken($algorithm, $key)->toString();
             } else {
-                return response()->json(['kode ' => '07', 'keterangan' => 'Nomor VA Tidak Ditemukan']);
+                $returnToken->withClaim('kode', '07');
+                $returnToken->withClaim('keterangan', 'Nomor VA Tidak Ditemukan');
+                return $returnToken->getToken($algorithm, $key)->toString();
             }
         } elseif ($kode_request == 'A0004') {
 
             $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $nomor_transaksi)->first();
             if ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '1') {
-                return response()->json(['kode ' => '04', 'keterangan' => 'Duplicate Payment']);
+                $returnToken->withClaim('kode', '04');
+                $returnToken->withClaim('keterangan', 'Duplicate Payment');
+                return $returnToken->getToken($algorithm, $key)->toString();
             } elseif ($pembayaran_trs && $pembayaran_trs->status_pembayaran == '0') {
                 $semester = Semester::where('is_aktif_semester', '1')->first();
                 if ($total_pembayaran >= $pembayaran_trs->besar_pembayaran) {
                     $pembayaran_trs->status_pembayaran  = 1;
                     $pembayaran_trs->tgl_pembayaran     = $now->format("Y-m-d");
                     $pembayaran_trs->fee_admin          = $total_pembayaran - $pembayaran_trs->besar_pembayaran;
+                    $pembayaran_trs->payment_code       = $kode_ref;
                     $pembayaran_trs->save();
 
                     foreach ($pembayaran_trs->pembayaran_trs_detail as $pembayaran_trs_detail) {
@@ -321,19 +342,20 @@ class BankController extends BaseController
                     $data = [
                         "nomor_transaksi" => $nomor_transaksi,
                     ];
-                    return response()->json([
-                        'kode' => "00",
-                        'keterangan' => 'success payment',
-                        'data'  => $data,
-                    ]);
+                    $returnToken->withClaim('kode', '00');
+                    $returnToken->withClaim('keterangan', 'success payment');
+                    $returnToken->withClaim('data', $data);
+                    return $returnToken->getToken($algorithm, $key)->toString();
                 } else {
-                    return response()->json([
-                        'kode' => "06",
-                        'keterangan' => 'less payment'
-                    ]);
+
+                    $returnToken->withClaim('kode', '06');
+                    $returnToken->withClaim('keterangan', 'less payment');
+                    return $returnToken->getToken($algorithm, $key)->toString();
                 }
             } else {
-                return response()->json(['kode ' => '07', 'keterangan' => 'Nomor VA Tidak Ditemukan']);
+                $returnToken->withClaim('kode', '07');
+                $returnToken->withClaim('keterangan', 'Nomor VA Tidak Ditemukan');
+                return $returnToken->getToken($algorithm, $key)->toString();
             }
         } elseif ($kode_request == 'A0005') {
             $pembayaran_trs = PembayaranTrs::with('pembayaran_trs_detail')->where('nomor_transaksi', $nomor_transaksi)->first();
@@ -344,14 +366,14 @@ class BankController extends BaseController
 
                     if ($tagihan) {
                         foreach ($tagihan->pembayaran as $pembayaran) {
-                            $pembayaran->deleted_by = 'bank bukopin';
+                            $pembayaran->deleted_by = $user_reverse;
                             $pembayaran->save();
                             $pembayaran->delete();
                         }
                         $tagihan->is_tagih = '1';
                         $tagihan->tgl_pelunasan = null;
                         $tagihan->besar_pembayaran = 0;
-                        $tagihan->updated_by = "batal bayar KBBS";
+                        $tagihan->updated_by = $user_reverse;
                         $tagihan->save();
                     }
 
@@ -371,27 +393,24 @@ class BankController extends BaseController
                     "nomor_transaksi" => $nomor_transaksi,
                 ];
 
-                return response()->json([
-                    'kode' => "00",
-                    'keterangan' => 'success cancel payment',
-                    'data'  => $data,
-                ]);
+                $returnToken->withClaim('kode', '00');
+                $returnToken->withClaim('keterangan', 'success cancel payment');
+                $returnToken->withClaim('data', $data);
+                return $returnToken->getToken($algorithm, $key)->toString();
             } else {
-                return  response()->json([
-                    'kode' => "07",
-                    'keterangan' => 'Nomor transaksi Not Found'
-                ]);
+                $returnToken->withClaim('kode', '07');
+                $returnToken->withClaim('keterangan', 'Nomor transaksi Not Found');
+                return $returnToken->getToken($algorithm, $key)->toString();
             }
         } else {
-            return  response()->json([
-                'kode' => "08",
-                'keterangan' => 'kode request Not Found'
-            ]);
+
+            $returnToken->withClaim('kode', '08');
+            $returnToken->withClaim('keterangan', 'kode request Not Found');
+            return $returnToken->getToken($algorithm, $key)->toString();
         }
 
-        return  response()->json([
-            'kode' => "99",
-            'keterangan' => 'Error Unknown'
-        ]);
+        $returnToken->withClaim('kode', '99');
+        $returnToken->withClaim('keterangan', 'Error Unknown');
+        return $returnToken->getToken($algorithm, $key)->toString();
     }
 }

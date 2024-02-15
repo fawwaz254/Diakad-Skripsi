@@ -177,10 +177,13 @@ Route::middleware(['token_staff'])->group(function () {
             //MENU Setting Peserta Ekskul
             Route::get('setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'viewSettingPesertaEkskul']);
             Route::post('post-view-setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'actionViewSettingPesertaEkskul']);
+            Route::post('post-view-copy-setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'actionViewCopySettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/view-ekskul/{id_semester}/{id_eskul}', [SettingPesertaEkskulController::class, 'viewEkskulSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/datatables/{id_ekskul}/{id_semester}', [SettingPesertaEkskulController::class, 'datatablesSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/datatables-siswa/{id_kelas}', [SettingPesertaEkskulController::class, 'datatablesSiswaSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/add/{id_semester}/{id_ekskul}', [SettingPesertaEkskulController::class, 'addSettingPesertaEkskul']);
+            Route::get('setting-peserta-ekskul/copy/{id_semester}/{id_ekskul}', [SettingPesertaEkskulController::class, 'copySettingPesertaEkskul']);
+            Route::get('setting-peserta-ekskul/copy/datatables/{id_semester}/{id_ekskul}', [SettingPesertaEkskulController::class, 'datatablesCopySettingPesertaEkskul']);
             Route::post('post-add-setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'actionAddSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/view-kelas/{id_semester}/{id_ekskul}/{id_kelas}', [SettingPesertaEkskulController::class, 'viewKelasSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/edit/{id}', [SettingPesertaEkskulController::class, 'editSettingPesertaEkskul']);
@@ -337,7 +340,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-wali-murid/upload-setting-wali-murid/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'viewUploadSettingWaliMurid']);
             Route::get('setting-wali-murid/upload-setting-wali-murid/download/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'viewDownloadSettingWaliMurid']);
             Route::post('setting-wali-murid/upload/{id_jurusan}/{id_kelas}', [SettingWaliMuridController::class, 'uploadFileExcel']);
-            Route::get('/download-file-excel-wali-murid', [SettingWaliMuridController::class, 'downloadFileExcel'])->name('siswa/download-file-excel-wali-murid');
+            Route::get('/download-file-excel-wali-murid/{id_kelas}', [SettingWaliMuridController::class, 'downloadFileExcel']);
 
             Route::post('setting-wali-murid/reset-wali-murid-collect', [SettingWaliMuridController::class, 'resetWaliMuridCollect']);
             Route::post('action-setting-wali-murid/{mode}/{id}', [SettingWaliMuridController::class, 'actionSettingWaliMurid']);

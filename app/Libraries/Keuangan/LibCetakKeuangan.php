@@ -948,7 +948,7 @@ class LibCetakKeuangan
             }),
             'total_data' => $totalLaporan,
             'subkategori_non_kbm' => $subkategori_non_kbm,
-            'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat'),
+            'tingkat' => Kelas::select('tingkat')->orderBy('tingkat')->distinct()->get()->pluck('tingkat'),
             // 'danaPembangunan' => $danaPembangunan,
         ];
 
@@ -1689,7 +1689,7 @@ class LibCetakKeuangan
             'data' => $allDataPembayaran,
             'semester_aktif' => Semester::where('kode_semester', $tahun_semester . '1')->first(),
             'dates' => CarbonPeriod::create($start_date, $end_date),
-            'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat'),
+            'tingkat' => Kelas::select('tingkat')->orderBy('tingkat')->distinct()->get()->pluck('tingkat'),
             'data_tunggakan' => $allDataPembayaranTunggakan,
         ];
 

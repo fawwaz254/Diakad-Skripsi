@@ -70,7 +70,7 @@ Route::prefix('iclock')->group(function () {
 // END USING FOR FINGERPRINT
 
 Route::get('guid', function () {
-    $now = Carbon::now(env('APP_TIMEZONE', ''));
+    $now = Carbon::now();
     $prefix = Sekolah::first()->prefix;
     if (!empty($_GET['c'])) {
         $html = '';

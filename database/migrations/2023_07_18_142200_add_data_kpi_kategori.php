@@ -19,15 +19,15 @@ class AddDataKpiKategori extends Migration
     public function up()
     {
         $sekolah_data = Sekolah::first();
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-        
+        $now = Carbon::now();
+
         $kategori = new KategoriKpi;
         $kategori->id_kategori_kpi = $sekolah_data->prefix . strtotime($now) . uniqid();
         $kategori->nm_kategori = "A. Kecakapan Penerapan Ibadah";
         $kategori->tingkat = 1;
         $kategori->semester = 'Ganjil';
         $kategori->save();
-        
+
         $subkategori = new SubkategoriKpi;
         $subkategori->id_subkategori_kpi = $sekolah_data->prefix . strtotime($now) . uniqid();
         $subkategori->id_kategori_kpi = $kategori->id_kategori_kpi;
@@ -70,7 +70,7 @@ class AddDataKpiKategori extends Migration
         $subkategori7->id_subkategori_kpi = $sekolah_data->prefix . strtotime($now) . uniqid();
         $subkategori7->id_kategori_kpi = $kategori->id_kategori_kpi;
         $subkategori7->save();
-        
+
         $subkategori8 = new SubkategoriKpi;
         $subkategori8->id_subkategori_kpi = $sekolah_data->prefix . strtotime($now) . uniqid();
         $subkategori8->id_kategori_kpi = $kategori->id_kategori_kpi;
@@ -97,7 +97,7 @@ class AddDataKpiKategori extends Migration
         $komponen3->nm_komponen = "3. Do'a akhir belajar";
         $komponen3->deskripsi_komponen = "menghafalkan secara fasih do'a akhir belajar.";
         $komponen3->save();
-        
+
         $komponen4 = new KomponenKpi;
         $komponen4->id_komponen_kpi = $sekolah_data->prefix . strtotime($now) . uniqid();
         $komponen4->id_subkategori_kpi = $subkategori1->id_subkategori_kpi;
@@ -188,7 +188,7 @@ class AddDataKpiKategori extends Migration
         $komponen16->nm_komponen = "Mempraktikkan bersuci bagi pemakai pembalut luka pada anggota wudlu";
         $komponen16->deskripsi_komponen = "mempraktikkan bersuci bagi pemakai pembalut luka pada anggota wudlu.";
         $komponen16->save();
-        
+
         $komponen17 = new KomponenKpi;
         $komponen17->id_komponen_kpi = $sekolah_data->prefix . strtotime($now) . uniqid();
         $komponen17->id_subkategori_kpi = $subkategori8->id_subkategori_kpi;
@@ -202,8 +202,6 @@ class AddDataKpiKategori extends Migration
         $komponen18->nm_komponen = "2. Berhadats besar";
         $komponen18->deskripsi_komponen = "menyebutkan hal - hal yang terlarang bagi orang berhadats besar.";
         $komponen18->save();
-
-
     }
 
     /**

@@ -26,24 +26,26 @@ use DB;
 use Session;
 use Validator;
 
-class InputPelanggaranController extends BaseController{
+class InputPelanggaranController extends BaseController
+{
 
-    public function viewInputPelanggaran(Request $request) {
+    public function viewInputPelanggaran(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('guru/guru-piket/input-pelanggaran/view-input-pelanggaran',compact('auth_data'));
-
+        return view('guru/guru-piket/input-pelanggaran/view-input-pelanggaran', compact('auth_data'));
     }
 
-    public function addInputPelanggaran(Request $request) {
+    public function addInputPelanggaran(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -53,20 +55,20 @@ class InputPelanggaranController extends BaseController{
         // ambil data all kategori
         $data_kategori = KategoriPelanggaran::with('subkategori_pelanggaran')->where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
 
-        $id_pelanggaran_siswa = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_pelanggaran_siswa = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('guru/guru-piket/input-pelanggaran/add-input-pelanggaran',compact('auth_data','data_semester','data_kategori','id_pelanggaran_siswa', 'data_kelas'));
-
+        return view('guru/guru-piket/input-pelanggaran/add-input-pelanggaran', compact('auth_data', 'data_semester', 'data_kategori', 'id_pelanggaran_siswa', 'data_kelas'));
     }
 
-    public function editInputPelanggaran($id, Request $request) {
+    public function editInputPelanggaran($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         // get id_guru
         $guru = Guru::select('id_guru')
-            ->where('id_pengguna','=',$auth_data->pengguna->id_pengguna)
+            ->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)
             ->first();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -87,10 +89,9 @@ class InputPelanggaranController extends BaseController{
         $data_siswa_sekelas = LibSiswa::fetchDataSiswa($auth_data, isset($data_siswa->id_kelas) ? $data_siswa->id_kelas : null);
 
         // convert format date
-        $tgl_pelanggaran = strftime( "%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));
+        $tgl_pelanggaran = strftime("%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));
 
-        return view('guru/guru-piket/input-pelanggaran/edit-input-pelanggaran',compact('auth_data', 'data_kelas', 'data_semester','data_siswa','data_kategori','data_pelanggaran_siswa','tgl_pelanggaran', 'data_siswa_sekelas'));
-
+        return view('guru/guru-piket/input-pelanggaran/edit-input-pelanggaran', compact('auth_data', 'data_kelas', 'data_semester', 'data_siswa', 'data_kategori', 'data_pelanggaran_siswa', 'tgl_pelanggaran', 'data_siswa_sekelas'));
     }
 
     public function ajaxGetSiswaByKelas(Request $request)
@@ -105,70 +106,76 @@ class InputPelanggaranController extends BaseController{
         return $data_siswa;
     }
 
-    public function datatablesInputPelanggaran(Request $request) {
+    public function datatablesInputPelanggaran(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $list_data = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, null, "1", 'only-me');
 
         return Datatables::of($list_data)
-                ->addColumn('nm_siswa', function($item) use ($request){
-                    return $item->nm_pengguna;
-                    // return $request->segment(2);
-                })
-                ->addColumn('aktor_input_pelanggaran', function($item){
-                    switch($item->aktor_input_pelanggaran){
-                        case 1: 
-                            return 'Role BK'; break;
-                        case 2: 
-                            return 'Kesiswaan'; break;
-                        case 3: 
-                            return 'Wali Kelas'; break;
-                        case 4:
-                            return 'Guru Reguler'; break;
-                        case 5:
-                            return 'Guru Piket'; break;
-                        default:
-                            return ''; break;
-                    }
-                })
-                ->addColumn('nm_input', function($item){
-                    if( ! empty($item->nm_guru_input)){
-                        return $item->nm_guru_input." (Guru)";
-                    }
-                    else{
-                        return $item->nm_staff_input." (Tendik)";
-                    }
-                })
-                ->addColumn('semester', function($item){
-                    return $item->tahun_ajaran." ".$item->nm_semester;
-                })
-                ->addColumn('tingkat_pelanggaran', function($item){
-                    return $item->tingkat_kategori_pelanggaran.".".$item->tingkat_subkategori_pelanggaran;
-                })
-                ->addColumn('tgl_pelanggaran', function($item){
-                    return strftime( "%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran));
-                })
-                ->addColumn('is_sudah_tindakan', function($item){
-                    if ($item->is_sudah_tindakan == 0) {
-                        return "Belum";
-                    }
-                    elseif ($item->is_sudah_tindakan == 1) {
-                        return "Sudah";
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_pelanggaran_siswa,
-                        'is_sudah_tindakan' => $item->is_sudah_tindakan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_siswa', function ($item) use ($request) {
+                return $item->nm_pengguna;
+                // return $request->segment(2);
+            })
+            ->addColumn('aktor_input_pelanggaran', function ($item) {
+                switch ($item->aktor_input_pelanggaran) {
+                    case 1:
+                        return 'Role BK';
+                        break;
+                    case 2:
+                        return 'Kesiswaan';
+                        break;
+                    case 3:
+                        return 'Wali Kelas';
+                        break;
+                    case 4:
+                        return 'Guru Reguler';
+                        break;
+                    case 5:
+                        return 'Guru Piket';
+                        break;
+                    default:
+                        return '';
+                        break;
+                }
+            })
+            ->addColumn('nm_input', function ($item) {
+                if (!empty($item->nm_guru_input)) {
+                    return $item->nm_guru_input . " (Guru)";
+                } else {
+                    return $item->nm_staff_input . " (Tendik)";
+                }
+            })
+            ->addColumn('semester', function ($item) {
+                return $item->tahun_ajaran . " " . $item->nm_semester;
+            })
+            ->addColumn('tingkat_pelanggaran', function ($item) {
+                return $item->tingkat_kategori_pelanggaran . "." . $item->tingkat_subkategori_pelanggaran;
+            })
+            ->addColumn('tgl_pelanggaran', function ($item) {
+                return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran));
+            })
+            ->addColumn('is_sudah_tindakan', function ($item) {
+                if ($item->is_sudah_tindakan == 0) {
+                    return "Belum";
+                } elseif ($item->is_sudah_tindakan == 1) {
+                    return "Sudah";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_pelanggaran_siswa,
+                    'is_sudah_tindakan' => $item->is_sudah_tindakan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionInputPelanggaran(Request $request, $mode, $id = null) {
+    public function actionInputPelanggaran(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -179,59 +186,58 @@ class InputPelanggaranController extends BaseController{
             'catatan_pelanggaran'   => 'required',
             'tgl_pelanggaran'       => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
-            if($request->segment(2) == 'pelanggaran-siswa'){
+            if ($request->segment(2) == 'pelanggaran-siswa') {
                 $load_url = 'pelanggaran-siswa';
                 $aktor_input = 4;
-            }else if($request->segment(2) == 'guru-piket'){
+            } else if ($request->segment(2) == 'guru-piket') {
                 $load_url = 'guru-piket';
                 $aktor_input = 5;
             }
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-            if($mode == 'add') {
+            $now = Carbon::now();
+            if ($mode == 'add') {
 
 
                 $time = Carbon::parse($input->tgl_pelanggaran)->toDateString();
-                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran',$time)->where('id_semester',$input->id_semester)->where('id_siswa',$input->id_siswa )->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
-    
+                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran', $time)->where('id_semester', $input->id_semester)->where('id_siswa', $input->id_siswa)->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
+
                 $users = DB::table('siswa')
-                ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
-                ->where('id_siswa', $input->id_siswa)
-                ->first();
-    
-                if($pelanggaran){
-                   return [
-                            'status' => 300, // FAILED
-                            'message' => 'Data Pelanggaran '.$users->nm_pengguna .' sudah terinput'
-                        ];}
-    
+                    ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                    ->where('id_siswa', $input->id_siswa)
+                    ->first();
+
+                if ($pelanggaran) {
+                    return [
+                        'status' => 300, // FAILED
+                        'message' => 'Data Pelanggaran ' . $users->nm_pengguna . ' sudah terinput'
+                    ];
+                }
+
 
 
                 if ($input->auth_data->pengguna->status_join_table == 2) {
                     // get id_guru
                     $guru = Guru::select('id_guru')
-                        ->where('id_pengguna','=',$input->auth_data->pengguna->id_pengguna)
+                        ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
                         ->first();
 
                     $id_guru_input = $guru->id_guru;
-                }
-                else {
+                } else {
                     $id_guru_input = null;
                 }
 
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                $siswa = Siswa::where('id_siswa','=',$input->id_siswa)->first();
+                $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
                 $pelanggaranSiswa                               = new PelanggaranSiswa;
                 $pelanggaranSiswa->id_pelanggaran_siswa         = $id;
@@ -242,17 +248,17 @@ class InputPelanggaranController extends BaseController{
                 $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
-                $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran),"Y-m-d H:i:s");
+                $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
                 $pelanggaranSiswa->aktor_input_pelanggaran      = $aktor_input;
                 $pelanggaranSiswa->is_sudah_tindakan            = 0;
                 $pelanggaranSiswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->save();
 
-                if(!empty($siswa->id_wali_murid)){
+                if (!empty($siswa->id_wali_murid)) {
                     $wali_murid = WaliMurid::find($siswa->id_wali_murid);
-                    
+
                     $token_wali_murid = $wali_murid->pengguna->api_token;
-                    if(!empty($token_wali_murid)){
+                    if (!empty($token_wali_murid)) {
                         $message = 'Putra/Putri Anda melanggar peraturan sekolah';
                         $send_data = array(
                             'title' => 'Informasi',
@@ -263,25 +269,24 @@ class InputPelanggaranController extends BaseController{
                         );
 
                         $notifikasi = array(
-                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                             'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
                             'created_by' => $input->auth_data->pengguna->id_pengguna
                         );
-                        
+
                         LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
                     }
                 }
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => $load_url.'/input-pelanggaran',
+                    'path' => $load_url . '/input-pelanggaran',
                     'message' => 'Save Pelanggaran Siswa Successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
-                $siswa = Siswa::where('id_siswa','=',$input->id_siswa)->first();
+            } elseif ($mode == 'edit') {
+                $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
                 // make object to find id
                 $pelanggaranSiswa                               = PelanggaranSiswa::find($id);
@@ -291,25 +296,23 @@ class InputPelanggaranController extends BaseController{
                 $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
-                $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran),"Y-m-d H:i:s");
+                $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
                 $pelanggaranSiswa->updated_by                   = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->updated_at                   = $now;
                 $pelanggaranSiswa->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => $load_url.'/input-pelanggaran',
+                    'path' => $load_url . '/input-pelanggaran',
                     'message' => 'Update Pelanggaran Siswa Successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($tindakanPelanggaran = TindakanPelanggaran::where('id_pelanggaran_siswa',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_pelanggaran_siswa', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Pelanggaran Siswa'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $pelanggaranSiswa               = PelanggaranSiswa::find($id);
                     $pelanggaranSiswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -325,6 +328,4 @@ class InputPelanggaranController extends BaseController{
             }
         }
     }
-
-
 }

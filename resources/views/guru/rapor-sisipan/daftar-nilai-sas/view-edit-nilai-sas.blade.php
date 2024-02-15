@@ -19,6 +19,10 @@
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sas/action-daftar-nilai-sas/editNilai/' . $id_rapor) }}">
                         {{ csrf_field() }}
                         <input type="hidden" name="data" id="data">
+                        <div id="loading">
+                            <img src="{{ asset('js/loading_new.gif') }}" />
+                        </div>
+
                         <div id="spreadsheet"></div>
 
                         <div class="row clearfix">
@@ -48,6 +52,7 @@
             url: datatable_url,
             type: 'GET',
             success: function(data) {
+                $('#loading').html('');
                 jspreadsheet(document.getElementById('spreadsheet'), {
                     data: data,
                     colHeaders: dynamicColumns.map(function(column) {
@@ -59,6 +64,12 @@
                     }),
                     allowInsertColumn: false,
                     allowDeleteColumn: false,
+                    columns: dynamicColumns.map(function(column, index) {
+                        return {
+                            readOnly: (index === 0 || index ===
+                                1), // Menonaktifkan kolom nomor 0 dan 1
+                        };
+                    }),
 
                     // tableOverflow: true,
                     // columns: [{

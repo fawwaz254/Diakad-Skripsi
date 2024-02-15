@@ -80,7 +80,7 @@ class HomeVisitController extends BaseController
         $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $now = Carbon::now();
 
         // get id_guru
         $guru = Guru::select('id_guru')
@@ -218,7 +218,7 @@ class HomeVisitController extends BaseController
             ];
         } else {
             // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $now = Carbon::now();
 
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($input->auth_data);
 

@@ -42,6 +42,7 @@ use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaPondokController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaSholatController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\Absensi\RekapPertanggalController;
+use App\Http\Controllers\Humas\Asrama\SiswaAsramaController;
 use App\Http\Controllers\Humas\FormBuilder\ListFormController;
 use App\Http\Controllers\Humas\FormBuilder\RekapFormHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
@@ -126,6 +127,23 @@ Route::middleware(['token_staff'])->group(function () {
             });
         });
 
+        Route::prefix('asrama')->group(function () {
+            Route::prefix('data-siswa-asrama')->group(function () {
+                Route::get('/', [SiswaAsramaController::class, 'viewSiswaAsrama']);
+                Route::get('/datatables/{jenis}', [SiswaAsramaController::class, 'datatablesSiswaAsrama']);
+                Route::post('/add', [SiswaAsramaController::class, 'actionAddSiswaAsrama']);
+                Route::post('/delete', [SiswaAsramaController::class, 'actionDeleteSiswaAsrama']);
+                Route::get('/add-ruangan', [SiswaAsramaController::class, 'viewAddRuangan']);
+
+                Route::get('datatables-ruangan/{jenis}', [SiswaAsramaController::class, 'datatablesRuanganSiswa']);
+                Route::post('ruang-asrama-siswa/set', [SiswaAsramaController::class, 'setRuanganSiswa']);
+                Route::post('ruang-asrama-siswa/edit', [SiswaAsramaController::class, 'editRuanganSiswa']);
+                Route::post('ruang-asrama-siswa/delete', [SiswaAsramaController::class, 'deleteRuanganSiswa']);
+            });
+        });
+
+
+
         Route::prefix('monitoring-kesehatan')->group(function () {
             Route::get('rekap-kesehatan', [GuruPiketRekapKesehatanController::class, 'viewRekapKesehatan']);
             Route::get('rekap-kesehatan/user/{id}/{date}', [WaliKelasRekapKesehatanController::class, 'viewRekapKesehatanSiswa']);
@@ -204,6 +222,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/datatables', [FingerprintRealtimeController::class, 'datatableFingerprintRealtime']);
                 Route::post('/getData', [FingerprintRealtimeController::class, 'getDataFingerprintRealtime']);
                 Route::post('/syncData', [FingerprintRealtimeController::class, 'syncDataFingerprintRealtime']);
+                Route::get('/get-data-barcode', [FingerprintRealtimeController::class, 'getDataBarcodeFingerprint']);
+                Route::post('/post-data-barcode', [FingerprintRealtimeController::class, 'actionDataBarcodeFingerprint']);
 
                 Route::get('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'createHistoriAbsensi']);
                 Route::post('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'storeHistoriAbsensi']);
