@@ -112,10 +112,10 @@ class NotificationController extends Controller
                     'message' => 'Save Data Succesfully'
                 ];
             } elseif ($mode == 'delete') {
-                $data_jenis                       = WhatsappGroup::where('id_group', $input->id_group)->first();
-                $data_jenis->deleted_by           = $input->auth_data->pengguna->id_pengguna;
-                $data_jenis->save();
-                $data_jenis->delete();
+                $groups                       = WhatsappGroup::where('id_group', $input->id_group)->first();
+                $groups->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                $groups->save();
+                $groups->delete();
 
                 return [
                     'status_code' => 202,

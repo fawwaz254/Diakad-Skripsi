@@ -203,9 +203,8 @@ class DataSiswaController extends BaseController
 						'waktu_tempuh_sekolah_menit' => $input->waktu_tempuh_sekolah_menit,
 						'id_jenis_transportasi'	=> $input->id_jenis_transportasi,
 						'nomor_kks'				=> $input->nomor_kks,
-						'is_penerima_kps'		=> $input->is_penerima_kps,
-						'thn_penerima_kps'		=> $input->thn_penerima_kps,
-						'nomor_kps'				=> $input->nomor_kps,
+						'is_penerima_kps'		=> $input->is_penerima_kps ?? null,
+						'nomor_kps'				=> $input->nomor_kps ?? null,
 						'is_punya_kip'			=> $input->is_punya_kip,
 						'nomor_kip'				=> $input->nomor_kip,
 						'nm_tertera_kip'		=> $input->nm_tertera_kip,
@@ -225,6 +224,9 @@ class DataSiswaController extends BaseController
 						'kegemaran_olahraga'	=> $input->kegemaran_olahraga,
 						'kegemaran_organisasi'	=> $input->kegemaran_organisasi,
 						'bahasa_sehari_hari'	=> strtoupper($input->bahasa_sehari_hari),
+						'penerima_beasiswa_thn_1' => in_array(1, $input->thn_penerima_beasiswa ?? []) ? 1 : null,
+						'penerima_beasiswa_thn_2' => in_array(2, $input->thn_penerima_beasiswa ?? []) ? 1 : null,
+						'penerima_beasiswa_thn_3' => in_array(3, $input->thn_penerima_beasiswa ?? []) ? 1 : null,
 						'updated_at' 			=> $now,
 						'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
 					]);
