@@ -167,7 +167,7 @@ class UpdateFotoController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'message' => 'Succes Upload foto siswa', // SUCCESS AND LOAD CONTENT
-                    'path' => 'kesiswaan#siswa/update-foto/upload/' . $id
+                    'path' => 'siswa/update-foto/upload/' . $id
                 ];
             }
         }
