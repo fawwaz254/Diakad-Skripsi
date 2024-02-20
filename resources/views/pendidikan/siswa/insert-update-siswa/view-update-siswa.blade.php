@@ -450,7 +450,7 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row clearfix">
+                        {{-- <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
                                     Penerima KPS/PKH
@@ -476,6 +476,45 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="nomor_kps" aria-required="true"
                                     aria-invalid="true" value="{{ $siswa->nomor_kps }}">
+                            </div>
+                        </div> --}}
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    Penerima Beasiswa Tahun Pertama<br>
+                                    <small>*apabila menerima, tuliskan nama beasiswa</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <input type="text" class="form-control" name="nm_beasiswa_thn_1"
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $siswa->nm_beasiswa_thn_1 }}">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    Penerima Beasiswa Tahun Kedua<br>
+                                    <small>*apabila menerima, tuliskan nama beasiswa</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <input type="text" class="form-control" name="nm_beasiswa_thn_2"
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $siswa->nm_beasiswa_thn_2 }}">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    Penerima Beasiswa Tahun Ketiga<br>
+                                    <small>*apabila menerima, tuliskan nama beasiswa</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <input type="text" class="form-control" name="nm_beasiswa_thn_3"
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $siswa->nm_beasiswa_thn_3 }}">
                             </div>
                         </div>
                         <br>

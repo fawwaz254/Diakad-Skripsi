@@ -236,9 +236,9 @@
                     <td>{{ $siswa->alasan_mutasi }}</td>
                     <td>{{ $siswa->nm_kelas }} / {{ $semester->nm_semester }}</td>
                     {{-- <td>{{ $siswa->is_penerima_kps == 0 ? 'Tidak' : 'Ya' }}</td> --}}
-                    <td>{{ $siswa->penerima_beasiswa_thn_1 == 1 ? 'Ya' : '' }}</td>
-                    <td>{{ $siswa->penerima_beasiswa_thn_2 == 1 ? 'Ya' : '' }}</td>
-                    <td>{{ $siswa->penerima_beasiswa_thn_3 == 1 ? 'Ya' : '' }}</td>
+                    <td>{{ $siswa->nm_beasiswa_thn_1 }}</td>
+                    <td>{{ $siswa->nm_beasiswa_thn_2 }}</td>
+                    <td>{{ $siswa->nm_beasiswa_thn_3 }}</td>
                     {{-- <td>{{ $siswa->tgl_diterima }}</td> --}}
                     {{-- <td>{{ $siswa->nomor_kps }}</td> --}}
                     <td>{{ $siswa->nm_ayah }}</td>
