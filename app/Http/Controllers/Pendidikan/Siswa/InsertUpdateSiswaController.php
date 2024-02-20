@@ -435,7 +435,7 @@ class InsertUpdateSiswaController extends BaseController
 							'password' 				=> Hash::make($input->nis_siswa),
 							'id_sekolah' 			=> $input->auth_data->pengguna->id_sekolah,
 							'id_status_pengguna'	=> $input->id_status_pengguna,
-							'must_change_password' 	=> 1,
+							// 'must_change_password' 	=> 1,
 							'status_join_table' 	=> 3,
 							'updated_at' 			=> $now,
 							'email_pengguna'		=> $input->email_pengguna,

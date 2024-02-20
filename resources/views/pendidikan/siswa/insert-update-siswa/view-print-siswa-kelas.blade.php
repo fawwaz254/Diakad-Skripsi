@@ -162,7 +162,13 @@
                     <tr>
                         <td>15.</td>
                         <td>Alamat</td>
-                        <td>: {{ $siswa->alamat_jalan }}</td>
+                        <td>: {{ $siswa->alamat_jalan }}
+                            {{ $siswa->alamat_rt ? 'RT ' . $siswa->alamat_rt : '' }}
+                            {{ $siswa->alamat_rw ? 'RW ' . $siswa->alamat_rw : '' }}
+                            {{ $siswa->alamat_kelurahan ? $siswa->alamat_kelurahan : '' }}
+                            {{ $siswa->alamat_kodepos ? $siswa->alamat_kodepos : '' }}
+                            {{ $siswa->alamat_kecamatan ? $siswa->alamat_kecamatan : '' }}
+                            {{ $siswa->nm_kota ? $siswa->nm_kota : '' }}</td>
                     </tr>
                     <tr>
                         <td>16.</td>
