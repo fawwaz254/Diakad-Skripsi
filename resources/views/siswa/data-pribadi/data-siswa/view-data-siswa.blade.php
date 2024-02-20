@@ -556,27 +556,40 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
-                                                Penerima Beasiswa<br>
-                                                <small>*apabila menerima</small>
+                                                Penerima Beasiswa Tahun Pertama<br>
+                                                <small>*apabila menerima, tuliskan nama beasiswa</small>
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            <select class="form-control show-tick" multiple
-                                                name="thn_penerima_beasiswa[]" id="thn_penerima_beasiswa">
-                                                <option disabled>Pilih Tahun</option>
-                                                <option value="1"
-                                                    {{ old('thn_penerima_beasiswa', $siswa->penerima_beasiswa_thn_1) == 1 ? 'selected' : '' }}>
-                                                    Tahun Pertama
-                                                </option>
-                                                <option value="2"
-                                                    {{ old('thn_penerima_beasiswa', $siswa->penerima_beasiswa_thn_2) == 1 ? 'selected' : '' }}>
-                                                    Tahun Kedua
-                                                </option>
-                                                <option value="3"
-                                                    {{ old('thn_penerima_beasiswa', $siswa->penerima_beasiswa_thn_3) == 1 ? 'selected' : '' }}>
-                                                    Tahun Ketiga
-                                                </option>
-                                            </select>
+                                            <input type="text" class="form-control" name="nm_beasiswa_thn_1"
+                                                aria-required="true" aria-invalid="true"
+                                                value="{{ $siswa->nm_beasiswa_thn_1 }}">
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Penerima Beasiswa Tahun Kedua<br>
+                                                <small>*apabila menerima, tuliskan nama beasiswa</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_beasiswa_thn_2"
+                                                aria-required="true" aria-invalid="true"
+                                                value="{{ $siswa->nm_beasiswa_thn_2 }}">
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <h2 class="card-inside-title">
+                                                Penerima Beasiswa Tahun Ketiga<br>
+                                                <small>*apabila menerima, tuliskan nama beasiswa</small>
+                                            </h2>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" class="form-control" name="nm_beasiswa_thn_3"
+                                                aria-required="true" aria-invalid="true"
+                                                value="{{ $siswa->nm_beasiswa_thn_3 }}">
                                         </div>
                                     </div>
                                     <br>
