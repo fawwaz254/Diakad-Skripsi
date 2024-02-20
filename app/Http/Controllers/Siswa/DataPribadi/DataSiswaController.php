@@ -224,9 +224,9 @@ class DataSiswaController extends BaseController
 						'kegemaran_olahraga'	=> $input->kegemaran_olahraga,
 						'kegemaran_organisasi'	=> $input->kegemaran_organisasi,
 						'bahasa_sehari_hari'	=> strtoupper($input->bahasa_sehari_hari),
-						'nm_beasiswa_thn_1' => input->nm_beasiswa_thn_1,
-						'nm_beasiswa_thn_2' => input->nm_beasiswa_thn_2,
-						'nm_beasiswa_thn_3' => input->nm_beasiswa_thn_3,
+						'nm_beasiswa_thn_1' => $input->nm_beasiswa_thn_1,
+						'nm_beasiswa_thn_2' => $input->nm_beasiswa_thn_2,
+						'nm_beasiswa_thn_3' => $input->nm_beasiswa_thn_3,
 						'updated_at' 			=> $now,
 						'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
 					]);
