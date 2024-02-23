@@ -68,7 +68,8 @@
                     <td>6.</td>
                     <td>Tempat dan tanggal lahir</td>
                     <td>: {{ $siswa->nm_kota_lahir ? $siswa->nm_kota_lahir : '-' }},
-                        {{ $siswa->tgl_lahir ? \Carbon\Carbon::parse($siswa->tgl_lahir)->translatedFormat('d F Y') : '-' }}</td>
+                        {{ $siswa->tgl_lahir ? \Carbon\Carbon::parse($siswa->tgl_lahir)->translatedFormat('d F Y') : '-' }}
+                    </td>
                 </tr>
                 <tr>
                     <td>7.</td>
@@ -133,7 +134,13 @@
                 <tr>
                     <td>15.</td>
                     <td>Alamat</td>
-                    <td>: {{ $siswa->alamat_jalan }}</td>
+                    <td>: {{ $siswa->alamat_jalan }}
+                        {{ $siswa->alamat_rt ? 'RT ' . $siswa->alamat_rt : '' }}
+                        {{ $siswa->alamat_rw ? 'RW ' . $siswa->alamat_rw : '' }}
+                        {{ $siswa->alamat_kelurahan ? $siswa->alamat_kelurahan : '' }}
+                        {{ $siswa->alamat_kodepos ? $siswa->alamat_kodepos : '' }}
+                        {{ $siswa->alamat_kecamatan ? $siswa->alamat_kecamatan : '' }}
+                        {{ $siswa->nm_kota ? $siswa->nm_kota : '' }}</td>
                 </tr>
                 <tr>
                     <td>16.</td>
@@ -349,7 +356,8 @@
                 <tr>
                     <td>43.</td>
                     <td>Alamat rumah / nomor telepon</td>
-                    <td>: {{ $siswa->alamat_jalan_ibu }} {{ $siswa->almat_rt_ibu ? 'RT ' . $siswa->almat_rt_ibu : '' }}
+                    <td>: {{ $siswa->alamat_jalan_ibu }}
+                        {{ $siswa->almat_rt_ibu ? 'RT ' . $siswa->almat_rt_ibu : '' }}
                         {{ $siswa->alamat_rw_ibu ? 'RW ' . $siswa->alamat_rw_ibu : '' }}
                         {{ $siswa->alamat_kelurahan_ibu ? $siswa->alamat_kelurahan_ibu : '' }}
                         {{ $siswa->alamat_kodepos_ibu ? $siswa->alamat_kodepos_ibu : '' }}
