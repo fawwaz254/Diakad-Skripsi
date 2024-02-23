@@ -14,7 +14,7 @@
                 </div>
                 <div class="body">
                     <form id="form-upload"
-                        method="POST"action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3)) }}">
+                        method="POST"action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3)) . '/action-hasil-placement/add/0' }}">
                         {{ csrf_field() }}
 
                         <div class="row clearfix">

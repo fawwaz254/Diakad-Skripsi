@@ -33,7 +33,7 @@ class HasilPlacementController extends Controller
         $auth_data = $input->auth_data;
 
         // $list_data = LibPenerimaan::fetchDataCalonSiswaPenetapan($auth_data, $id = null);
-        $list_data = CalonSiswaBaru::select('calon_siswa_baru.id_c_siswa', 'calon_siswa_baru.kode_voucher', 'calon_siswa_baru.nm_c_siswa', 'calon_siswa_baru.nomor_hp', 'calon_siswa_sekolah.nm_sekolah_asal')
+        $list_data = CalonSiswaBaru::select('calon_siswa_baru.id_c_siswa', 'calon_siswa_baru.kode_voucher', 'calon_siswa_baru.nm_c_siswa', 'calon_siswa_baru.nomor_hp', 'calon_siswa_sekolah.nm_sekolah_asal', 'calon_siswa_baru.path_file')
             ->join('calon_siswa_sekolah', function ($q) {
                 $q->on('calon_siswa_sekolah.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
                     ->whereNull('calon_siswa_sekolah.deleted_at');
@@ -41,6 +41,7 @@ class HasilPlacementController extends Controller
             ->whereIn('calon_siswa_baru.status_verifikasi', [1, 2])
             ->whereNull('calon_siswa_baru.nomor_ujian')
             ->whereNotNull('calon_siswa_baru.file_hasil_placement')
+            ->whereNotNull('calon_siswa_baru.path_file')
             ->orderBy('calon_siswa_baru.kode_voucher', 'asc');
 
         return Datatables::of($list_data)
@@ -60,7 +61,7 @@ class HasilPlacementController extends Controller
 
                 $data = array(
                     'id'        => $item->id_c_siswa,
-                    // 'file'      => $file,
+                    'file'      => $file,
                 );
                 return $data;
             })
@@ -87,173 +88,91 @@ class HasilPlacementController extends Controller
     public function getSiswa($id_penerimaan)
     {
 
-        $siswa = CalonSiswaBaru::where('id_penerimaan', '=', $id_penerimaan)->orderBy('calon_siswa_baru.kode_voucher', 'asc')->get();
+        $siswa = CalonSiswaBaru::where('id_penerimaan', '=', $id_penerimaan)
+            ->whereNotNull('calon_siswa_baru.kode_voucher')
+            ->orderBy('calon_siswa_baru.kode_voucher', 'asc')->get();
         return response()->json($siswa);
     }
 
-    public function uploadHasilPlacement(Request $request)
+    public function uploadHasilPlacement(Request $request, $mode = null, $id_c_siswa = null)
     {
         $input = (object) $request->input();
 
-        DB::beginTransaction();
+        $data = CalonSiswaBaru::where('id_c_siswa', '=', $request->id_c_siswa)->first();
 
-        try {
+        $validator = Validator::make($request->all(), [
+            'file_hasil_placement'       => 'file:jpeg,jpg,png,pdf|required|max:5120',
+        ]);
 
-            $data = CalonSiswaBaru::where('id_c_siswa', '=', $request->id_c_siswa)->first();
+        if ($validator->fails() && $mode != "delete") {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
 
-            $validator = Validator::make($request->all(), [
-                'file_hasil_placement'       => 'file:jpeg,jpg,png,pdf|required|max:5120',
-            ]);
+        if ($mode == "add") {
+            DB::beginTransaction();
 
-            if ($validator->fails()) {
+            try {
+
+                $upload = $request->file('file_hasil_placement');
+                $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+
+                if ($request->hasFile('file_hasil_placement')) {
+
+                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                    $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ppdb/' . $data->id_c_siswa, request()->file_hasil_placement, 'public');
+
+                    $calon_siswa                        = CalonSiswaBaru::find($request->id_c_siswa);
+                    $calon_siswa->path_file             = $file;
+                    $calon_siswa->file_hasil_placement  = $filename;
+                    $calon_siswa->save();
+                }
+
+                DB::commit();
+                //  Successfully
                 return [
-                    'status' => 300, // FAILED
-                    'message' => $validator->errors()->first()
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'report/input-hasil-placement',
+                    'message' => 'Save Data Dokumen Successfully'
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+                // failed
+                return [
+                    'status' => 203, // GAGAL
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                 ];
             }
+        } elseif ($mode = "delete") {
+            $hasil_placement = CalonSiswaBaru::find($id_c_siswa);
 
-            $upload = $request->file('file_hasil_placement');
-            $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+            // delete DO Spaces
+            $files = Storage::disk('spaces')->delete($hasil_placement->path_file);
 
-            if ($request->hasFile('file_hasil_placement')) {
+            $hasil_placement->file_hasil_placement = null;
+            $hasil_placement->path_file = null;
+            $hasil_placement->updated_by = $input->auth_data->pengguna->id_pengguna;
 
-                $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                // $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/tendik/' . $data->id_c_siswa, request()->file_hasil_placement, 'public');
+            $hasil_placement->save();
 
-                $calon_siswa                        = CalonSiswaBaru::find($request->id_c_siswa);
-                // $calon_siswa->path_file             = $file;
-                $calon_siswa->file_hasil_placement  = $filename;
-                $calon_siswa->save();
-            }
-
-            DB::commit();
-            //  Successfully
             return [
-                'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'report/input-hasil-placement',
-                'message' => 'Save Data Dokumen Successfully'
-            ];
-        } catch (\Exception $e) {
-            DB::rollback();
-            // failed
-            return [
-                'status' => 203, // GAGAL
-                'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Hasil Placement Successfully'
             ];
         }
     }
 
+    public function previewHasilPlacement(Request $request, $id_c_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-    // public function actionViewPlacement(Request $request)
-    // {
-    //     $input      = (object) $request->input();
-    //     $auth_data  = $input->auth_data;
+        $data_hasil_placement = CalonSiswaBaru::findOrFail($id_c_siswa);
+        $ext = pathinfo($data_hasil_placement->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($data_hasil_placement->path_file);
 
-    //     $validator  = Validator::make($request->all(), [
-    //         'id_penerimaan' => 'required'
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return [
-    //             'status'    => 300, // FAILED
-    //             'message'   => $validator->errors()->first()
-    //         ];
-    //     } else {
-    //         return [
-    //             'status'    => 204, // SUCCESS AND LOAD CONTENT
-    //             'path'      => 'report/input-hasil-placement/' . $input->id_penerimaan
-    //         ];
-    //     }
-    // }
-
-    // public function showPlacement($id, Request $request)
-    // {
-    //     $input      = (object) $request->input();
-    //     $auth_data  = $input->auth_data;
-
-    //     /** get all data penerimaan */
-    //     $data_penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
-
-    //     /** groupping by year and semester */
-    //     $grup_penerimaan_tahun = $data_penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
-    //         return $item->groupBy('nm_semester_penerimaan');
-    //     });
-
-    //     /** get penerimaan by id */
-    //     $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
-
-    //     /** data (id_penerimaan) tidak ditemukan */
-    //     if (!$penerimaan) {
-    //         abort(404);
-    //     }
-
-    //     $mode = 'show';
-
-    //     return view('ppdb/hasil-placement/view-hasil-placement', compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun', 'mode', 'id'));
-    // }
-
-    // public function datatablesHasilPlacement($id, Request $request)
-    // {
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $list_data = LibPenerimaan::fetchDataCalonSiswaPenetapan($auth_data, $id);
-
-    //     return Datatables::of($list_data)
-    //         ->addColumn('action', function ($item) {
-    //             $data = array(
-    //                 'id' => $item->id_c_siswa,
-    //             );
-    //             return $data;
-    //         })
-    //         ->make(true);
-    // }
-
-    // public function uploadHasilPlacement($id, Request $request)
-    // {
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
-
-    //     return view('ppdb/hasil-placement/upload-hasil-placement', compact('auth_data', 'penerimaan'));
-    // }
-
-    // public function actionUploadHasilPlacement(Request $request)
-    // {
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $validator = Validator::make($request->all(), [
-    //         'file' => 'file|required|max:5120|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return [
-    //             'status' => 300, // FAILED
-    //             'message' => $validator->errors()->first()
-    //         ];
-    //     } else {
-
-    //         $penerimaan = LibPenerimaan::fetchDataCalonSiswaPenetapan($auth_data, $id);
-
-    //         $id = $penerimaan->id_c_siswa;
-
-    //         $file = Storage::disk('spaces')->putFile($id, request()->file, 'public');
-
-    //         $data = CalonSiswaBaru::find($id);
-    //         $data->file_hasil_placement = $file;
-
-    //         dd($data);
-    //         $data->save();
-
-    //         return [
-    //             'status' => 202,
-    //             'message' => 'Data Berhasil Diupload'
-    //         ];
-    //     }
-    // }
-
-
-
+        return view('ppdb/hasil-placement/preview-hasil-placement', compact('auth_data', 'data_hasil_placement', 'link', 'ext', 'id_c_siswa'));
+    }
 }
