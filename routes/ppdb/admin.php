@@ -22,6 +22,7 @@ use App\Http\Controllers\PPDB\Penetapan\PersidanganController;
 use App\Http\Controllers\PPDB\Peserta\PembayaranFormulirController;
 use App\Http\Controllers\PPDB\Peserta\PindahPenerimaanController;
 use App\Http\Controllers\PPDB\Peserta\ProsesPenetapanController;
+use App\Http\Controllers\PPDB\Report\HasilPlacementController;
 use App\Http\Controllers\PPDB\Report\ReportPendaftaranController;
 use App\Http\Controllers\PPDB\WelcomeController;
 
@@ -148,7 +149,23 @@ Route::middleware(['token_staff'])->group(function () {
 
 			Route::get('report-pendaftaran/detail/{id}', [ReportPendaftaranController::class, 'detailReportPendaftaran']);
 			Route::get('report-pendaftaran/detail/datatables/{id_penerimaan}/{id_jurusan}', [ReportPendaftaranController::class, 'datatablesDetailReportPendaftaran']);
+
+
+			// Route::get('input-hasil-placement', [HasilPlacementController::class, 'viewHasilPlacement']);
+			// Route::post('input-hasil-placement/view-hasil-placement', [HasilPlacementController::class, 'actionViewPlacement']);
+			// Route::get('input-hasil-placement/{id_penerimaan}', [HasilPlacementController::class, 'showPlacement']);
+			// Route::get('input-hasil-placement/datatables', [HasilPlacementController::class, 'datatablesHasilPlacement']);
+			// Route::get('input-hasil-placement/upload/{id}', [HasilPlacementController::class, 'uploadHasilPlacement']);
+			// Route::post('input-hasil-placement', [HasilPlacementController::class, 'actionUploadHasilPlacement']);
+			Route::prefix('input-hasil-placement')->group(function () {
+				Route::get('/', [HasilPlacementController::class, 'viewHasilPlacement']);
+				Route::get('upload', [HasilPlacementController::class, 'viewUploadPlacement']);
+				Route::get('upload/get-siswa/{id_penerimaan}', [HasilPlacementController::class, 'getSiswa']);
+				Route::post('/', [HasilPlacementController::class, 'uploadHasilPlacement']);
+				Route::get('datatables', [HasilPlacementController::class, 'datatablesHasilPlacement']);
+			});
 		});
+
 
 		Route::prefix('penetapan')->group(function () {
 			// MENU penetapan
