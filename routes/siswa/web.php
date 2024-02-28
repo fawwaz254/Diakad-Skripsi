@@ -34,6 +34,7 @@ use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Siswa\Pelanggaran\RiwayatPelanggaranController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('siswa')->group(function () {

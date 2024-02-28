@@ -52,6 +52,9 @@
                                 <li>
                                     <a href="#7" data-toggle="tab">DATA MUTASI MASUK</a>
                                 </li>
+                                <li>
+                                    <a href="#8" data-toggle="tab">UPLOAD FILE</a>
+                                </li>
                             </ul>
 
                             <div class="tab-content ">
@@ -1915,6 +1918,102 @@
                                                 value="{{ $siswa->alasan_mutasi }}">
                                         </div>
                                     </div>
+                                    <br>
+                                </div>
+
+                                <div class="tab-pane" id="8">
+                                    <br>
+                                    @if ($siswa->path_file_akte)
+                                        <div class="row clearfix">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                <h2 class="card-inside-title">Upload Scan Dokumen Akte Kelahiran</h2>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <input type="file" class="form-control" name="akte"
+                                                    aria-required="true" aria-invalid="true"
+                                                    accept="image/jpeg, image/png">
+                                                <small>File harus bertipe: png, jpg, jpeg</small>
+                                                <br>
+                                                <a href="{{ Storage::disk('spaces')->url($siswa->path_file_akte) }}"
+                                                    target="_blank">Lihat file</a>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="row
+                                                    clearfix">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                <h2 class="card-inside-title">Upload Scan Dokumen Akte
+                                                    Kelahiran</h2>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <input type="file" class="form-control" name="akte"
+                                                    aria-required="true" aria-invalid="true"
+                                                    accept="image/jpeg, image/png">
+                                                <small>File harus bertipe: png, jpg, jpeg</small>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <br>
+                                    @if ($siswa->path_file_kk)
+                                        <div class="row clearfix">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                <h2 class="card-inside-title">Upload Scan Dokumen Kartu Keluarga</h2>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <input type="file" class="form-control" name="kk"
+                                                    aria-required="true" aria-invalid="true"
+                                                    accept="image/jpeg, image/png">
+                                                <small>File harus bertipe: png, jpg, jpeg</small>
+                                                <br>
+                                                <a href="{{ Storage::disk('spaces')->url($siswa->path_file_kk) }}"
+                                                    target="_blank">Lihat file</a>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="row
+                                                    clearfix">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                <h2 class="card-inside-title">Upload Scan Dokumen Kartu
+                                                    Keluarga</h2>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <input type="file" class="form-control" name="kk"
+                                                    aria-required="true" aria-invalid="true"
+                                                    accept="image/jpeg, image/png">
+                                                <small>File harus bertipe: png, jpg, jpeg</small>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <br>
+                                    @if ($siswa->path_file_ijazah)
+                                        <div class="row clearfix">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                <h2 class="card-inside-title">Upload Scan Dokumen Ijazah</h2>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <input type="file" class="form-control" name="ijazah"
+                                                    aria-required="true" aria-invalid="true"
+                                                    accept="image/jpeg, image/png">
+                                                <small>File harus bertipe: png, jpg, jpeg</small>
+                                                <br>
+                                                <a href="{{ Storage::disk('spaces')->url($siswa->path_file_ijazah) }}"
+                                                    target="_blank">Lihat file</a>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="row
+                                                    clearfix">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                                <h2 class="card-inside-title">Upload Scan Dokumen Ijazah</h2>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <input type="file" class="form-control" name="ijazah"
+                                                    aria-required="true" aria-invalid="true"
+                                                    accept="image/jpeg, image/png">
+                                                <small>File harus bertipe: png, jpg, jpeg</small>
+                                            </div>
+                                        </div>
+                                    @endif
                                     <br>
                                 </div>
                             </div>
