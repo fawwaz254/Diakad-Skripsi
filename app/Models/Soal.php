@@ -53,6 +53,9 @@ class Soal extends Model
             case 7:
                 return 'True/False';
                 break;
+            case 8:
+                return 'Pilihan Ganda Cerita';
+                break;
             default:
                 return '';
                 break;
