@@ -26,17 +26,17 @@ class KategoriSoal extends Model
         'deleted_by'
     ];
 
-
-    public function pengguna()
-    {
-        return $this->belongsTo(Pengguna::class, 'id_pengguna');
+    public function pengguna(){
+        return $this->belongsTo(Pengguna::class, 'id_pengguna')->withDefault([
+            'nm_pengguna' => '-'
+        ]);
     }
-    public function soal()
-    {
+
+    public function soal(){
         return $this->hasOne(Soal::class, 'id_kategori_soal');
     }
-    public function paket_soal()
-    {
+
+    public function paket_soal(){
         return $this->hasOne(PaketSoal::class, 'id_kategori_soal');
     }
 }

@@ -708,7 +708,7 @@ class SoalController extends Controller
             DB::beginTransaction();
             try {
                 $now = Carbon::now();
-                if ($input->id_tipe_soal == 1) {
+                if ($input->id_tipe_soal == 1) { // Pilihan ganda
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         $question = new Soal;
                         $question->id_kategori_soal = $input->id_kategori_soal;
@@ -758,7 +758,7 @@ class SoalController extends Controller
                         $question->id_pilihan_soal_benar = $id_pilihan_soal_benar;
                         $question->save();
                     }
-                } else if ($input->id_tipe_soal == 2) {
+                } else if ($input->id_tipe_soal == 2) { // Isian
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         $question = new Soal;
                         $question->id_kategori_soal = $input->id_kategori_soal;
@@ -783,7 +783,7 @@ class SoalController extends Controller
                         $detail_paket_soal->id_soal = $question->id_soal;
                         $detail_paket_soal->save();
                     }
-                } else if ($input->id_tipe_soal == 3) {
+                } else if ($input->id_tipe_soal == 3) { // File
                     $question = new Soal;
                     $question->id_kategori_soal = $input->id_kategori_soal;
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -806,7 +806,7 @@ class SoalController extends Controller
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
-                } else if ($input->id_tipe_soal == 4) {
+                } else if ($input->id_tipe_soal == 4) { // Pilihan Ganda Kompleks
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) {
                         } else {
@@ -853,27 +853,11 @@ class SoalController extends Controller
                                     $question_option->correct = 0;
                                 }
                                 $question_option->save();
-
-
-                                // if ($input->jawaban_benar[$i] == $no_answer) {
-                                //     $question_option->correct = 1;
-                                // } else {
-                                //     $question_option->correct = 0;
-                                // }
-                                // $question_option->save();
-                                // if ($input->jawaban_benar[$i] == $no_answer) {
-                                //     $id_pilihan_soal_benar = $question_option->id_pilihan_soal;
-                                // }
                             }
                             $question->save();
-                            $detail_paket_soal = new DetailPaketSoal;
-                            $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
-                            $detail_paket_soal->id_soal = $question->id_soal;
-                            $detail_paket_soal->save();
                         }
                     }
-                } else if ($input->id_tipe_soal == 5) {
+                } else if ($input->id_tipe_soal == 5) { // Isian Singkat
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) {
                         } else {
@@ -906,7 +890,7 @@ class SoalController extends Controller
                             $detail_paket_soal->save();
                         }
                     }
-                } else if ($input->id_tipe_soal == 6) {
+                } else if ($input->id_tipe_soal == 6) { // Menjodohkan
                     $question = new Soal;
                     $question->id_kategori_soal = $input->id_kategori_soal;
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -965,7 +949,7 @@ class SoalController extends Controller
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
-                } else if ($input->id_tipe_soal == 7) {
+                } else if ($input->id_tipe_soal == 7) { // True/False
                     $question = new Soal;
                     $question->id_kategori_soal = $input->id_kategori_soal;
                     $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -1006,7 +990,7 @@ class SoalController extends Controller
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
-                } else if ($input->id_tipe_soal == 8) {
+                } else if ($input->id_tipe_soal == 8) { // Pilihan Ganda Cerita
                     // $jumlahKata = str_word_count($input->soal);
                     // if ($jumlahKata > 50) {
                     //     $stringHasil = Str::limit($input->soal, 200);
