@@ -149,7 +149,8 @@ class CustomFormResponController extends Controller
             }, 'role'])
                 ->whereIn('id_role', $auth_data->pengguna->role_pengguna->pluck('id_role'))
                 ->findOrFail($id);
-            if (isset($form->form_settings['limit']) && $form->form_settings['limit'] == 'true') {
+            $form_settings = json_decode($form->form_settings);
+            if (isset($form_settings['limit']) && $form_settings['limit'] == 'true') {
                 $sheets = CustomFormSheet::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_custom_form', $id)->first();
                 if ($sheets) {
                     throw new Exception('Form ' . $form->nm_custom_form . ' Hanya Menerima 1 Respon');
@@ -221,7 +222,9 @@ class CustomFormResponController extends Controller
             $form = CustomForm::findOrFail($input->id_custom_form);
 
             // Biar aman ~
-            if (isset($form->form_settings['limit']) && $form->form_settings['limit'] == 'true') {
+            $form_settings = json_decode($form->form_settings);
+
+            if (isset($form_settings['limit']) && $form_settings['limit'] == 'true') {
                 $sheets = CustomFormSheet::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_custom_form', $form->id_custom_form)->first();
                 if ($sheets) {
                     return [
@@ -345,7 +348,8 @@ class CustomFormResponController extends Controller
             $form = CustomFormSheet::with('form.form_komponen', 'form_respon.form_komponen')->where('created_by', $auth_data->pengguna->id_pengguna)->findOrFail($id);
             $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->form->start_time);
             $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->form->end_time);
-            if ($form->form->form_settings['editable'] !== 'true') {
+            $form_settings = json_decode($form->form->form_settings);
+            if ($form_settings['editable'] !== 'true') {
                 throw new Exception('Form Ini Tidak Dapat Diubah');
             }
             $time_now = $now->toTimeString();
