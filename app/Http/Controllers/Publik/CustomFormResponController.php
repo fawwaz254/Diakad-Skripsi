@@ -38,7 +38,8 @@ class CustomFormResponController extends Controller
         $all_form = CustomForm::where('id_role', 99)->get();
 
         foreach ($all_form as $f) {
-            if (isset($f->form_settings['kode']) && $f->form_settings['kode'] == strtoupper($request->kode)) {
+            $form_settings = json_decode($f->form_settings);
+            if (isset($form_settings['kode']) && $form_settings['kode'] == strtoupper($request->kode)) {
                 $url = base64_encode(Crypt::encrypt($f->id_custom_form));
             }
         }
@@ -64,7 +65,8 @@ class CustomFormResponController extends Controller
                 return view('public/forms/index', compact('form', 'pesan'));
             }
 
-            if (isset($form->form_settings['limit']) && $form->form_settings['limit'] == 'true') {
+            $form_settings = json_decode($form->form_settings);
+            if (isset($form_settings['limit']) && $form_settings['limit'] == 'true') {
                 $sheets = CustomFormSheet::where('id_custom_form',$id)->where('created_by', $request->ip())->first();
                 if ($sheets) {
                     $pesan = 'Form ' . $form->nm_custom_form . ' Hanya Menerima 1 Respon';
@@ -101,7 +103,8 @@ class CustomFormResponController extends Controller
             $form = CustomForm::findOrFail($input->id_custom_form);
 
             // Biar aman ~
-            if (isset($form->form_settings['limit']) && $form->form_settings['limit'] == 'true') {
+            $form_settings = json_decode($form->form->form_settings);
+            if (isset($form_settings['limit']) && $form_settings['limit'] == 'true') {
                 $sheets = CustomFormSheet::where('created_by', $request->ip())->first();
                 if ($sheets) {
                     $pesan = 'Form ' . $form->nm_custom_form . ' Hanya Menerima 1 Respon';

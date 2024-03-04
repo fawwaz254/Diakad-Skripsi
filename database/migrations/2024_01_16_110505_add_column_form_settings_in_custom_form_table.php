@@ -15,7 +15,7 @@ class AddColumnFormSettingsInCustomFormTable extends Migration
     public function up()
     {
         Schema::table('custom_form', function (Blueprint $table) {
-            $table->json('form_settings')->nullable();
+            $table->text('form_settings')->nullable();
         });
     }
 
