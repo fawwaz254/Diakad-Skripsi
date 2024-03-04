@@ -68,6 +68,7 @@ use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaDikunciController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaTerkunciController;
 use App\Http\Controllers\Guru\Faq\FaqController;
+use App\Http\Controllers\CustomFormResponController;
 use App\Http\Controllers\Guru\GuruKpi\GuruKpiController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController;
 use App\Http\Controllers\Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController;
@@ -91,6 +92,7 @@ use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Guru\WaliMurid\RaporSemesterController;
 use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
+use App\Http\Controllers\Humas\FormBuilder\CustomFormController;
 use App\Http\Controllers\Keuangan\SIM\SppController;
 use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
@@ -543,6 +545,14 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/all/datatables/{id_form}', [FormHarianController::class, 'datatablesJawaban']);
                 Route::post('action-list-form/{mode}/{id}', [FormHarianController::class, 'actionInputFormHarian']);
             });
+
+            Route::get('custom-form',[CustomFormResponController::class, 'index']);
+            Route::get('custom-form/submitted/{id}',[CustomFormResponController::class, 'indexAllForm']);
+            Route::resource('custom-form.form', CustomFormResponController::class)->shallow();
+            Route::get('data/datatables',[CustomFormResponController::class,'indexDataTables']);
+            Route::post('data/siswa',[CustomFormResponController::class,'getDataSiswa']);
+            Route::get('data/all-datatables/{id}',[CustomFormResponController::class,'indexAllDataTables']);
+            
         });
 
         Route::prefix('guru-kpi')->group(function () {
