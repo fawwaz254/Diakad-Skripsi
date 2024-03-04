@@ -214,6 +214,10 @@
 
 <!-- ApexChart.js #humas-chart -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        
+
+<!-- Signature Pad -->
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 
 
 {{-- jexcel --}}
