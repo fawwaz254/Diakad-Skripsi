@@ -122,20 +122,24 @@ class RekapFormHarianController extends Controller
                         if ($j->pertanyaan_form->jenis_pertanyaan == '4') {
                             $data_opsi = [];
                             $counter = 0;
-                            $warna = ['#ff0000','#FFA500','#008000'];
+                            $warna = ['#ff0000', '#FFA500', '#008000'];
                             if (!empty($j->jawaban)) {
                                 $options = json_decode($j->jawaban, true);
+                                $others = json_decode($j->jawaban_lainnya, true);
                                 $opsi = json_decode($j->pertanyaan_form->options, true);
                                 $colors = json_decode($j->pertanyaan_form->label_color, true);
                                 $hasil = count($data_opsi) / count($opsi);
                                 foreach ($options as $opsi) {
                                     $data_opsi[] = $opsi;
                                 }
-                                if($hasil >= 0.5){
+                                foreach ($others as $lainnya) {
+                                    $data_opsi[] = $lainnya;
+                                }
+                                if ($hasil >= 0.5) {
                                     $data_warna = $warna[2];
-                                }else if( $hasil < 0.5){
+                                } else if ($hasil < 0.5) {
                                     $data_warna = $warna[1];
-                                }else{
+                                } else {
                                     $data_warna = $warna[0];
                                 }
 
@@ -150,21 +154,20 @@ class RekapFormHarianController extends Controller
                             if (!empty($j->jawaban)) {
                                 $options = json_decode($j->pertanyaan_form->options, true);
                                 $colors = json_decode($j->pertanyaan_form->label_color, true);
-                                foreach($options as $key => $value){
-                                    if($value == $j->jawaban){
+                                foreach ($options as $key => $value) {
+                                    if ($value == $j->jawaban) {
                                         $warna = $colors[$key];
                                     }
                                 }
                             }
 
-                            $dataJawaban[$j->created_by . $date] = [$j->jawaban,$warna];
+                            $dataJawaban[$j->created_by . $date] = [$j->jawaban, $warna];
                         } else {
-                            $dataJawaban[$j->created_by . $date] = [$j->jawaban,'#d4ffdf'];
+                            $dataJawaban[$j->created_by . $date] = [$j->jawaban, '#d4ffdf'];
                         }
                     }
                 }
             }
-
         }
 
         $list_pertanyaan = PertanyaanForm::where('id_form', $id_form)->orderBy('urutan', 'asc')->get();
@@ -252,17 +255,22 @@ class RekapFormHarianController extends Controller
         // }
         // } else {
         // $detail_jawaban_form = DetailJawabanForm::with('pertanyaan_form')->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))->whereIn('id_jawaban_form', $jawaban_form->pluck('id_jawaban_form'))->where('id_pertanyaan_form', $id_pertanyaan)->get();
-        foreach ($jawaban_form as $data_jawaban_form) {
-            foreach ($data_jawaban_form->detail_jawaban_form as $j) {
+        foreach ($jawaban_form as $data_jawaban_form) { // loop data jawaban form
+            foreach ($data_jawaban_form->detail_jawaban_form as $j) { // loop data detail jawaban form
                 // if ($j->id_pertanyaan_form == $id_pertanyaan) {
                 // $date = Carbon::parse($j->created_at)->format('Y-m-d');
-                if ($j->pertanyaan_form->jenis_pertanyaan == '4') {
+                if ($j->pertanyaan_form->jenis_pertanyaan == '4') { // jika jenis pertanyaan banyak opsi
+                    //  handle jawaban
                     $data_opsi = [];
-                    if (!empty($j->jawaban)) {
-                        $options = json_decode($j->jawaban, true);
-                        foreach ($options as $opsi) {
-                            $data_opsi[] = $opsi;
+                    if (!empty($j->jawaban)) { // jika jawaban tidak kosong
+                        $options = json_decode($j->jawaban, true); // decode jawaban
+                        foreach ($options as $opsi) { // loop jawaban opsi
+                            $data_opsi[] = $opsi; // masukkan jawaban ke array
                         }
+                    }
+                    // handle jawaban lainnya
+                    if (!empty($j->jawaban_lainnya)) { // jika jawaban lainnya tidak kosong
+                        $data_opsi[] = $j->jawaban_lainnya; // masukkan jawaban lainnya ke array
                     }
                     $dataJawaban[$j->created_by . $j->pertanyaan_form->id_pertanyaan_form] = $data_opsi;
                 } else {

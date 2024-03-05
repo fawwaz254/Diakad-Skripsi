@@ -9,7 +9,7 @@
         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/action-list-form/edit/0') }}"
         enctype="multipart/form-data">
         {{ csrf_field() }}
-        
+
         <input type="hidden" name="id_form" value="{{ $form->id_form }}">
         <input type="hidden" name="id_jawaban_form" value="{{ $jawaban->id_jawaban_form }}">
         <div class="row clearfix">
@@ -25,7 +25,6 @@
         </div>
 
         @foreach ($form->pertanyaan_form as $key => $pertanyaan_form)
-        
             <input type="hidden" name="id_pertanyaan_form[{{ $key }}][0]"
                 value="{{ $pertanyaan_form->id_pertanyaan_form }}">
             <input type="hidden" name="jenis_pertanyaan[{{ $key }}]"
@@ -38,10 +37,12 @@
                                 style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
 				word-wrap: break-word;">{{ $pertanyaan_form->nm_pertanyaan_form }}</pre>
                             @php
-                                $ans = $jawaban->detail_jawaban_form->where('id_pertanyaan_form',$pertanyaan_form->id_pertanyaan_form)->first();
+                                $ans = $jawaban->detail_jawaban_form
+                                    ->where('id_pertanyaan_form', $pertanyaan_form->id_pertanyaan_form)
+                                    ->first();
                             @endphp
                             <input type="hidden" name="id_pertanyaan_form[{{ $key }}][1]"
-                            value="{{ $ans->id_detail_jawaban_form }}">
+                                value="{{ $ans->id_detail_jawaban_form }}">
                             @if ($pertanyaan_form->jenis_pertanyaan == '1')
                                 <textarea class="form-control" name="jawaban_pertanyaan[{{ $key }}]" data-sample-short required>{{ $ans->jawaban ?? '' }}</textarea>
                             @elseif($pertanyaan_form->jenis_pertanyaan == '2')
@@ -52,22 +53,33 @@
                                 <div class="demo-radio-button">
                                     @foreach (json_decode($pertanyaan_form->options, true) as $options)
                                         <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
-                                            id="radio_{{$key}}_{{ $options }}" value="{{ $options }}" @if(isset($ans->jawaban) && $ans->jawaban == $options) checked  @endif required>
-                                        <label for="radio_{{$key}}_{{ $options }}">
+                                            id="radio_{{ $key }}_{{ $options }}"
+                                            value="{{ $options }}"
+                                            @if (isset($ans->jawaban) && $ans->jawaban == $options) checked @endif required>
+                                        <label for="radio_{{ $key }}_{{ $options }}">
                                             <pre class="is-answer">{{ $options }}</pre>
                                         </label>
                                     @endforeach
                                 </div>
                             @elseif($pertanyaan_form->jenis_pertanyaan == '4')
-                                <div class="demo-radio-button">
+                                <div class="demo-checkbox-container">
                                     @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
-                                        <input name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
-                                            type="checkbox" id="checkbox_{{ $key1 }}"
-                                            value="{{  $options }}" @if(isset($ans->jawaban) && in_array($options,json_decode($ans->jawaban))) checked  @endif>
-                                        <label for="checkbox_{{ $key1 }}">
-                                            <pre class="is-answer">{{ $options }}</pre>
-                                        </label>
+                                        <div class="checkbox-option">
+                                            <input name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
+                                                type="checkbox" id="checkbox_{{ $key }}_{{ $key1 }}"
+                                                value="{{ $options }}"
+                                                @if (isset($ans->jawaban) && in_array($options, json_decode($ans->jawaban, true))) checked @endif>
+                                            <label for="checkbox_{{ $key }}_{{ $key1 }}">
+                                                <pre class="is-answer">{{ $options }}</pre>
+                                            </label>
+                                        </div>
                                     @endforeach
+                                    @if ($pertanyaan_form->others == '1')
+                                        <div class="others-option input-group">
+                                            <input type="text" name="jawaban_lainnya[{{ $key }}]"
+                                                value="{{ $ans->jawaban_lainnya ?? '' }}" class="form-control">
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
                         </div>

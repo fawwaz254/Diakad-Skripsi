@@ -24,6 +24,7 @@ class PertanyaanForm extends Model
         'nm_pertanyaan_form',
         'urutan',
         'options',
+        'others',
         'created_by',
         'updated_by',
         'deleted_by'

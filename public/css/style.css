@@ -10976,3 +10976,32 @@ html.ie11 .bs-searchbox .form-control {
 #modul-item-welcome a:after {
   display: none;
 }
+
+.demo-checkbox-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.checkbox-option {
+  margin-right: 20px;
+  /* Adjust as needed */
+}
+
+.checkbox-option input[type="checkbox"] {
+  width: 60px !important;
+  height: 20px !important;
+}
+
+.checkbox-text {
+  margin-left: 5px;
+}
+
+.others-option input[type="text"] {
+  width: 500px !important;
+  padding: 8px !important;
+  background-color: #ffffff !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  font-family: monospace;
+  font-size: 13px;
+}
