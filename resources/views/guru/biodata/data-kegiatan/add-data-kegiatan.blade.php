@@ -51,12 +51,26 @@
                             
                         </div>
 
-                        <h2 class="card-inside-title">
-                            Tanggal Kegiatan
-                        </h2>
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_kegiatan" required="" aria-required="true" aria-invalid="true">
+                            <div class="col-md-6">
+                                <h2 class="card-inside-title">
+                                    Tanggal Mulai Kegiatan
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="datepicker form-control" name="tgl_mulai_kegiatan" required="" aria-required="true" aria-invalid="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h2 class="card-inside-title">
+                                    Tanggal Berakhir Kegiatan
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="datepicker form-control" name="tgl_berakhir_kegiatan" required="" aria-required="true" aria-invalid="true">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
