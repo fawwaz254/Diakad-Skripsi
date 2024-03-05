@@ -164,11 +164,10 @@ class RaporSisipanController extends Controller
 
         if ($mode == 'add') {
             $s = Semester::find($input->id_semester);
-            $thn_akademik_semester = $s->thn_akademik_semester;
             $cekDuplicate = Rapor::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)
                 ->where('nm_rapor', 'sisipan')
-                ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
-                    $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+                ->whereHas('semester', function ($query) use ($s) {
+                    $query->where('thn_akademik_semester', '=', $s->thn_akademik_semester)->where('kode_semester', $s->kode_semester);
                 })
                 // ->where('id_semester', $input->id_semester)
                 ->with('pengguna')->first();
@@ -415,7 +414,7 @@ class RaporSisipanController extends Controller
                 }
             })
             ->editColumn('semester', function ($item) {
-                return $item->semester->tahun_ajaran;
+                return '(' . $item->semester->nm_semester . ') ' . $item->semester->tahun_ajaran;
             })
             ->addColumn('action', function ($item) use ($status) {
                 $data = array(
