@@ -37,4 +37,8 @@ class Role extends Model
     {
         return $this->hasMany(Modul::class, 'id_role')->where('akses', 1);
     }
+
+    public function custom_form(){
+        return $this->hasMany(CustomForm::class,'id_role');
+    }
 }
