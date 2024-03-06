@@ -72,7 +72,8 @@ class DataKegiatanController extends BaseController
             'lokasi' => 'required',
             'penyelenggara' => 'required',
             'id_tingkat_prestasi_siswa' => 'required',
-            'tgl_kegiatan' => 'required'
+            'tgl_mulai_kegiatan' => 'required',
+            'tgl_berakhir_kegiatan' => 'required',
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
@@ -103,7 +104,8 @@ class DataKegiatanController extends BaseController
                 $kegiatan->lokasi = $input->lokasi;
                 $kegiatan->penyelenggara = $input->penyelenggara;
                 $kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
-                $kegiatan->tgl_kegiatan = date("Y-m-d", strtotime($input->tgl_kegiatan));
+                $kegiatan->tgl_mulai_kegiatan = date("Y-m-d", strtotime($input->tgl_mulai_kegiatan));
+                $kegiatan->tgl_berakhir_kegiatan = date("Y-m-d", strtotime($input->tgl_berakhir_kegiatan));
                 $kegiatan->link_kegiatan = $input->link_kegiatan;
                 $kegiatan->created_by = $input->auth_data->pengguna->id_pengguna;
                 $kegiatan->save();
@@ -129,7 +131,8 @@ class DataKegiatanController extends BaseController
                 $kegiatan->lokasi = $input->lokasi;
                 $kegiatan->penyelenggara = $input->penyelenggara;
                 $kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
-                $kegiatan->tgl_kegiatan = date("Y-m-d", strtotime($input->tgl_kegiatan));
+                $kegiatan->tgl_mulai_kegiatan = date("Y-m-d", strtotime($input->tgl_mulai_kegiatan));
+                $kegiatan->tgl_berakhir_kegiatan = date("Y-m-d", strtotime($input->tgl_berakhir_kegiatan));
                 $kegiatan->link_kegiatan = $input->link_kegiatan;
                 $kegiatan->updated_at = $now;
                 $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
@@ -168,7 +171,8 @@ class DataKegiatanController extends BaseController
             'kegiatan_guru.id_kegiatan_guru',
             'kegiatan_guru.nm_kegiatan',
             'kegiatan_guru.status',
-            'kegiatan_guru.tgl_kegiatan',
+            'kegiatan_guru.tgl_mulai_kegiatan',
+            'kegiatan_guru.tgl_berakhir_kegiatan',
             'kegiatan_guru.lokasi',
             'kegiatan_guru.penyelenggara',
             'kegiatan_guru.link_kegiatan',
@@ -185,6 +189,13 @@ class DataKegiatanController extends BaseController
         }
 
         return Datatables::of($list_data)
+            ->addColumn('tgl_kegiatan', function ($item) {
+                if ($item->tgl_mulai_kegiatan == $item->tgl_berakhir_kegiatan || empty($item->tgl_berakhir_kegiatan)) {
+                    return Carbon::parse($item->tgl_mulai_kegiatan)->translatedFormat('d M Y');
+                } else {
+                    return Carbon::parse($item->tgl_mulai_kegiatan)->translatedFormat('d M Y') . ' - ' . Carbon::parse($item->tgl_berakhir_kegiatan)->translatedFormat('d M Y');
+                }
+            })
             ->addColumn('keterangan_status', function ($item) {
                 if ($item->status == 0) {
                     $status = 'Belum Diapprove';
