@@ -50,37 +50,90 @@
                                     name="jawaban_pertanyaan[{{ $key }}]" aria-required="true"
                                     aria-invalid="true">
                             @elseif($pertanyaan_form->jenis_pertanyaan == '3')
-                                <div class="demo-radio-button">
-                                    @foreach (json_decode($pertanyaan_form->options, true) as $options)
-                                        <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
-                                            id="radio_{{ $key }}_{{ $options }}"
-                                            value="{{ $options }}"
-                                            @if (isset($ans->jawaban) && $ans->jawaban == $options) checked @endif required>
-                                        <label for="radio_{{ $key }}_{{ $options }}">
-                                            <pre class="is-answer">{{ $options }}</pre>
-                                        </label>
-                                    @endforeach
-                                </div>
-                            @elseif($pertanyaan_form->jenis_pertanyaan == '4')
-                                <div class="demo-checkbox-container">
-                                    @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
-                                        <div class="checkbox-option">
-                                            <input name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
-                                                type="checkbox" id="checkbox_{{ $key }}_{{ $key1 }}"
-                                                value="{{ $options }}"
-                                                @if (isset($ans->jawaban) && in_array($options, json_decode($ans->jawaban, true))) checked @endif>
-                                            <label for="checkbox_{{ $key }}_{{ $key1 }}">
+                                @if ($pertanyaan_form->others == '1')
+                                    <div class="demo-radio-button">
+                                        {{-- radio button jawaban utama --}}
+                                        @foreach (json_decode($pertanyaan_form->options, true) as $options)
+                                            <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
+                                                id="radio_{{ $key }}_{{ $options }}"
+                                                value="{{ $options }}" required
+                                                @if (isset($ans->jawaban) && $ans->jawaban == $options) checked @endif>
+                                            <label for="radio_{{ $key }}_{{ $options }}">
                                                 <pre class="is-answer">{{ $options }}</pre>
                                             </label>
-                                        </div>
-                                    @endforeach
-                                    @if ($pertanyaan_form->others == '1')
+                                        @endforeach
+                                        {{-- radio button lainnya --}}
+                                        <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
+                                            id="radio_{{ $key }}_lainnya" value="lainnya" required
+                                            @if (isset($ans->jawaban) && !in_array($ans->jawaban, json_decode($pertanyaan_form->options, true))) checked @endif>
+                                        <label for="radio_{{ $key }}_lainnya">
+                                            <pre class="is-answer">Lainnya</pre>
+                                        </label>
+                                        {{-- text input --}}
                                         <div class="others-option input-group">
                                             <input type="text" name="jawaban_lainnya[{{ $key }}]"
-                                                value="{{ $ans->jawaban_lainnya ?? '' }}" class="form-control">
+                                                value="{{ $ans->jawaban ?? '' }}" class="form-control"
+                                                id="jawaban_lainnya_{{ $key }}">
                                         </div>
-                                    @endif
-                                </div>
+                                    </div>
+                                @else
+                                    <div class="demo-radio-button">
+                                        @foreach (json_decode($pertanyaan_form->options, true) as $options)
+                                            <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
+                                                id="radio_{{ $key }}_{{ $options }}"
+                                                value="{{ $options }}" required>
+                                            <label for="radio_{{ $key }}_{{ $options }}">
+                                                <pre class="is-answer">{{ $options }}</pre>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @elseif($pertanyaan_form->jenis_pertanyaan == '4')
+                                @if ($pertanyaan_form->others == '1')
+                                    <div class="demo-checkbox-container">
+                                        {{-- checkbox jawaban utama --}}
+                                        @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
+                                            <div class="checkbox-option">
+                                                <input
+                                                    name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
+                                                    type="checkbox"
+                                                    id="checkbox_{{ $key1 }}_{{ $options }}"
+                                                    value="{{ $options }}"
+                                                    @if (isset($ans->jawaban) && in_array($options, json_decode($ans->jawaban, true))) checked @endif>
+                                                <label for="checkbox_{{ $key1 }}_{{ $options }}">
+                                                    <pre class="is-answer">{{ $options }}</pre>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                        {{-- checkbox lainnya --}}
+                                        <input type="checkbox" id="checkbox_{{ $key1 }}_lainnya" value=""
+                                            @if (isset($ans->jawaban) && !in_array($ans->jawaban, json_decode($pertanyaan_form->options, true))) checked @endif>
+                                        <label for="checkbox_{{ $key1 }}_lainnya">
+                                            <pre class="is-answer">Lainnya</pre>
+                                        </label>
+                                        {{-- text input --}}
+                                        <div class="others-option input-group">
+                                            <input type="text" name="jawaban_lainnya[{{ $key }}]"
+                                                value="{{ $ans->jawaban_lainnya ?? '' }}" class="form-control"
+                                                id="jawaban_lainnya_{{ $key }}">
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="demo-checkbox-container">
+                                        @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
+                                            <div class="checkbox-option">
+                                                <input
+                                                    name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
+                                                    type="checkbox"
+                                                    id="checkbox_{{ $key1 }}_{{ $options }}"
+                                                    value="{{ $options }}">
+                                                <label for="checkbox_{{ $key1 }}_{{ $options }}">
+                                                    <pre class="is-answer">{{ $options }}</pre>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             @endif
                         </div>
                     </div>
@@ -154,6 +207,35 @@
                 });
 
             }, 1000);
+        }
+    });
+
+    $('input[type="radio"]').on('change', function() {
+        $(this).parents('.demo-radio-button').find('.others-option input[type="text"]').val('');
+        var id = $(this).attr('id');
+        var key = id.split('_')[1];
+        var option = id.split('_').pop();
+
+        if (option == 'lainnya') {
+            $(this).parents('.demo-radio-button').find('.others-option').show();
+        } else {
+            $(this).parents('.demo-radio-button').find('.others-option').hide();
+            $('input[name="jawaban_pertanyaan[' + key + ']"]').val(option);
+        }
+    });
+
+    $('input[type="checkbox"]').on('change', function() {
+        var id = $(this).attr('id');
+        var key = id.split('_')[1];
+        var option = id.split('_').pop();
+
+        if (option == 'lainnya') {
+            if ($(this).is(':checked')) {
+                $(this).parents('.demo-checkbox-container').find('.others-option').show();
+            } else {
+                $(this).parents('.demo-checkbox-container').find('.others-option input[type="text"]').val('');
+                $(this).parents('.demo-checkbox-container').find('.others-option').hide();
+            }
         }
     });
 </script>

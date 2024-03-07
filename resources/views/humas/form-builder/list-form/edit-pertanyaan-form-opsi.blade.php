@@ -66,6 +66,25 @@
                                     </div>
                                 @endforeach
                             </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                    <h2 class="card-inside-title">
+                                        Opsi Lainnya
+                                        <small>Tambahkan Opsi Jawaban "Lainnya"</small>
+                                    </h2>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <div class="demo-switch">
+                                        <div class="switch">
+                                            <label>
+                                                <input type="checkbox" name="others" value="1"
+                                                    @if ($pertanyaan_form->others == '1') checked @endif>
+                                                <span class="lever switch-col-green"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @else
                             <h2 class="card-inside-title">
                                 Opsi

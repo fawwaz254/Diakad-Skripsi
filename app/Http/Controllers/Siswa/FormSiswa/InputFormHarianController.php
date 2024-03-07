@@ -156,7 +156,26 @@ class InputFormHarianController extends Controller
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->jawaban_pertanyaan[$key], 'public');
                         $detail_jawaban_form->jawaban = $file;
                     } elseif ($input->jenis_pertanyaan[$key] == '3') {
-                        $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                        // handle jawaban
+                        if (is_array($input->jawaban_pertanyaan[$key])) {
+                            // If jawaban_pertanyaan is an array
+                            if (in_array('lainnya', $input->jawaban_pertanyaan[$key])) {
+                                // If 'lainnya' is selected, use the 'jawaban_lainnya' value for this question
+                                $detail_jawaban_form->jawaban = $input->jawaban_lainnya[$key];
+                            } else {
+                                // If specific options are selected, save them as the answer
+                                $detail_jawaban_form->jawaban = json_encode($input->jawaban_pertanyaan[$key]);
+                            }
+                        } else {
+                            // If jawaban_pertanyaan is a string
+                            if ($input->jawaban_pertanyaan[$key] === 'lainnya') {
+                                // If 'lainnya' is selected, use the 'jawaban_lainnya' value for this question
+                                $detail_jawaban_form->jawaban = $input->jawaban_lainnya[$key];
+                            } else {
+                                // If a specific option is selected, save that option directly as the answer
+                                $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                            }
+                        }
                     } elseif ($input->jenis_pertanyaan[$key] == '4') { // jenis pertanyaan banyak opsi
                         // handle jawaban
                         $jawaban = [];
@@ -197,7 +216,26 @@ class InputFormHarianController extends Controller
                             $detail_jawaban_form->jawaban = $file;
                         }
                     } elseif ($input->jenis_pertanyaan[$key] == '3') {
-                        $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                        // handle jawaban
+                        if (is_array($input->jawaban_pertanyaan[$key])) {
+                            // If jawaban_pertanyaan is an array
+                            if (in_array('lainnya', $input->jawaban_pertanyaan[$key])) {
+                                // If 'lainnya' is selected, use the 'jawaban_lainnya' value for this question
+                                $detail_jawaban_form->jawaban = $input->jawaban_lainnya[$key];
+                            } else {
+                                // If specific options are selected, save them as the answer
+                                $detail_jawaban_form->jawaban = json_encode($input->jawaban_pertanyaan[$key]);
+                            }
+                        } else {
+                            // If jawaban_pertanyaan is a string
+                            if ($input->jawaban_pertanyaan[$key] === 'lainnya') {
+                                // If 'lainnya' is selected, use the 'jawaban_lainnya' value for this question
+                                $detail_jawaban_form->jawaban = $input->jawaban_lainnya[$key];
+                            } else {
+                                // If a specific option is selected, save that option directly as the answer
+                                $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                            }
+                        }
                     } elseif ($input->jenis_pertanyaan[$key] == '4') { // jenis pertanyaan banyak opsi
                         // handle jawaban
                         $jawaban = [];
