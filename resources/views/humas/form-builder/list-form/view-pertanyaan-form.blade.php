@@ -37,6 +37,7 @@
                                     <th>Jenis Pertanyaan</th>
                                     <th>Urutan</th>
                                     <th>Option</th>
+                                    <th>Opsi Lainnya</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -93,6 +94,17 @@
                             element + ` <br>`;
                     });
                     return html;
+                }
+            },
+            {
+                data: 'others',
+                name: 'others',
+                render: function(data_others) {
+                    if (data_others == 1) {
+                        return 'Ya';
+                    } else {
+                        return 'Tidak';
+                    }
                 }
             },
             {

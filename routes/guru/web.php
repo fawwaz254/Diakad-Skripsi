@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
 use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
 use App\Http\Controllers\Guru\WelcomeController;
@@ -97,6 +99,7 @@ use App\Http\Controllers\Keuangan\SIM\SppController;
 use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Models\WaliMurid;
+
 
 // ROLE GURU
 

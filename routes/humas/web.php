@@ -53,6 +53,7 @@ use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
 use App\Http\Controllers\Humas\MagangSiswa\PembimbingMagangController;
 use App\Http\Controllers\Humas\MagangSiswa\RekapAbsensiMagangController;
 use App\Http\Controllers\Humas\ShiftPengguna\ShiftSiswaController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
 

@@ -24,8 +24,6 @@
         @foreach ($form->pertanyaan_form as $key => $pertanyaan_form)
             <input type="hidden" name="id_pertanyaan_form[{{ $key }}]"
                 value="{{ $pertanyaan_form->id_pertanyaan_form }}">
-            <input type="hidden" name="jenis_pertanyaan[{{ $key }}]"
-                value="{{ $pertanyaan_form->jenis_pertanyaan }}">
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
@@ -33,10 +31,10 @@
                             <pre
                                 style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
 				word-wrap: break-word;">{{ $pertanyaan_form->nm_pertanyaan_form }}</pre>
+                            <input type="hidden" name="jenis_pertanyaan[{{ $key }}]"
+                                value="{{ $pertanyaan_form->jenis_pertanyaan }}">
                             @if ($pertanyaan_form->jenis_pertanyaan == '1')
-                                <textarea class="form-control" name="jawaban_pertanyaan[{{ $key }}]" data-sample-short required>
-                                    
-                            </textarea>
+                                <textarea class="form-control" name="jawaban_pertanyaan[{{ $key }}]" data-sample-short required></textarea>
                             @elseif($pertanyaan_form->jenis_pertanyaan == '2')
                                 <input type="file" class="form-control"
                                     name="jawaban_pertanyaan[{{ $key }}]" aria-required="true"
@@ -53,15 +51,24 @@
                                     @endforeach
                                 </div>
                             @elseif($pertanyaan_form->jenis_pertanyaan == '4')
-                                <div class="demo-radio-button">
+                                <div class="demo-checkbox-container">
                                     @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
-                                        <input name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
-                                            type="checkbox" id="checkbox_{{ $key1 }}_{{ $options }}"
-                                            value="{{ $options }}">
-                                        <label for="checkbox_{{ $key1 }}_{{ $options }}">
-                                            <pre class="is-answer">{{ $options }}</pre>
-                                        </label>
+                                        <div class="checkbox-option">
+                                            <input name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
+                                                type="checkbox" id="checkbox_{{ $key1 }}_{{ $options }}"
+                                                value="{{ $options }}">
+                                            <label for="checkbox_{{ $key1 }}_{{ $options }}">
+                                                <pre class="is-answer">{{ $options }}</pre>
+                                            </label>
+                                        </div>
                                     @endforeach
+                                    {{-- Jika opsi lainnya diaktifkan, tambahkan input text untuk jawaban lainnya --}}
+                                    @if ($pertanyaan_form->others == '1')
+                                        <div class="others-option input-group">
+                                            <input type="text" name="jawaban_lainnya[{{ $key }}]"
+                                                placeholder="Masukkan jawaban lainnya...">
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
                         </div>
