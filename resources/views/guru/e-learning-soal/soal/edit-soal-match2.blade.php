@@ -103,4 +103,7 @@
         let editorText = CKEDITOR.instances[id].getData();
         $('#'+id).val(editorText);
     }
+
+    var editor = CKEDITOR.replace('soal', options);
+    updateDiv('soal');
 </script>
