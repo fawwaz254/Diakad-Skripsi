@@ -14,7 +14,7 @@ class AddColumnKomponenSettingsInCustomFormKomponen extends Migration
     public function up()
     {
         Schema::table('custom_form_komponen', function (Blueprint $table) {
-            $table->json('komponen_settings')->nullable();
+            $table->text('komponen_settings')->nullable();
         });
     }
 
