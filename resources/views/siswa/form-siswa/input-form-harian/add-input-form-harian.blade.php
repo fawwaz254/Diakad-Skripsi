@@ -10,56 +10,116 @@
         enctype="multipart/form-data">
         {{ csrf_field() }}
         <input type="hidden" name="id_form" value="{{ $form->id_form }}">
-        <div class="row clearfix">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="header bg-black">
-                        <h2>
-                            {{ $form->nm_form }}
-                        </h2>
-                    </div>
-                </div>
-            </div>
-        </div>
         @foreach ($form->pertanyaan_form as $key => $pertanyaan_form)
             <input type="hidden" name="id_pertanyaan_form[{{ $key }}]"
                 value="{{ $pertanyaan_form->id_pertanyaan_form }}">
-            <input type="hidden" name="jenis_pertanyaan[{{ $key }}]"
-                value="{{ $pertanyaan_form->jenis_pertanyaan }}">
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="body">
                             <pre
-                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap;
-				word-wrap: break-word;">{{ $pertanyaan_form->nm_pertanyaan_form }}</pre>
+                                style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px; white-space: pre-wrap; word-wrap: break-word;">{{ $pertanyaan_form->nm_pertanyaan_form }}</pre>
+                            <input type="hidden" name="jenis_pertanyaan[{{ $key }}]"
+                                value="{{ $pertanyaan_form->jenis_pertanyaan }}">
                             @if ($pertanyaan_form->jenis_pertanyaan == '1')
                                 <textarea class="form-control" name="jawaban_pertanyaan[{{ $key }}]" data-sample-short required></textarea>
                             @elseif($pertanyaan_form->jenis_pertanyaan == '2')
                                 <input type="file" class="form-control"
                                     name="jawaban_pertanyaan[{{ $key }}]" aria-required="true"
                                     aria-invalid="true" required>
-                            @elseif($pertanyaan_form->jenis_pertanyaan == '3')
-                                <div class="demo-radio-button">
-                                    @foreach (json_decode($pertanyaan_form->options, true) as $options)
+                            @elseif ($pertanyaan_form->jenis_pertanyaan == '3')
+                                @if ($pertanyaan_form->others == '1')
+                                    <div class="demo-radio-button">
+                                        @foreach (json_decode($pertanyaan_form->options, true) as $options)
+                                            <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
+                                                id="radio_{{ $key }}_{{ $options }}"
+                                                value="{{ $options }}" required>
+                                            <label for="radio_{{ $key }}_{{ $options }}">
+                                                <pre class="is-answer">{{ $options }}</pre>
+                                            </label>
+                                        @endforeach
                                         <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
-                                            id="radio_{{$key}}_{{$options}}" value="{{ $options }}" required>
-                                        <label for="radio_{{$key}}_{{ $options }}">
-                                            <pre class="is-answer">{{ $options }}</pre>
+                                            id="radio_{{ $key }}_lainnya" value="lainnya" required
+                                            @if (isset($ans->jawaban) && !in_array($ans->jawaban, json_decode($pertanyaan_form->options, true))) checked @endif>
+                                        <label for="radio_{{ $key }}_lainnya">
+                                            <pre class="is-answer">Lainnya</pre>
                                         </label>
-                                    @endforeach
-                                </div>
+                                        <div class="others-option input-group">
+                                            <input type="text" name="jawaban_lainnya[{{ $key }}]"
+                                                placeholder="Masukkan jawaban lainnya...">
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="demo-radio-button">
+                                        @foreach (json_decode($pertanyaan_form->options, true) as $options)
+                                            <input name="jawaban_pertanyaan[{{ $key }}]" type="radio"
+                                                id="radio_{{ $key }}_{{ $options }}"
+                                                value="{{ $options }}" required>
+                                            <label for="radio_{{ $key }}_{{ $options }}">
+                                                <pre class="is-answer">{{ $options }}</pre>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @endif
                             @elseif($pertanyaan_form->jenis_pertanyaan == '4')
-                                <div class="demo-radio-button">
-                                    @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
-                                        <input name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
-                                            type="checkbox" id="checkbox_{{ $key1 }}_{{ $options}}"
-                                            value="{{ $options }}">
-                                        <label for="checkbox_{{ $key1 }}_{{$options}}">
-                                            <pre class="is-answer">{{ $options }}</pre>
+                                @if ($pertanyaan_form->others == '1')
+                                    <div class="demo-checkbox-container">
+                                        @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
+                                            <div class="checkbox-option">
+                                                <input
+                                                    name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
+                                                    type="checkbox"
+                                                    id="checkbox_{{ $key1 }}_{{ $options }}"
+                                                    value="{{ $options }}">
+                                                <label for="checkbox_{{ $key1 }}_{{ $options }}">
+                                                    <pre class="is-answer">{{ $options }}</pre>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                        <input type="checkbox" id="checkbox_{{ $key1 }}_lainnya" value=""
+                                            @if (isset($ans->jawaban) && !in_array($ans->jawaban, json_decode($pertanyaan_form->options, true))) checked @endif>
+                                        <label for="checkbox_{{ $key1 }}_lainnya">
+                                            <pre class="is-answer">Lainnya</pre>
                                         </label>
+                                        <div class="others-option input-group">
+                                            <input type="text" name="jawaban_lainnya[{{ $key }}]"
+                                                placeholder="Masukkan jawaban lainnya...">
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="demo-checkbox-container">
+                                        @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
+                                            <div class="checkbox-option">
+                                                <input
+                                                    name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
+                                                    type="checkbox"
+                                                    id="checkbox_{{ $key1 }}_{{ $options }}"
+                                                    value="{{ $options }}">
+                                                <label for="checkbox_{{ $key1 }}_{{ $options }}">
+                                                    <pre class="is-answer">{{ $options }}</pre>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                                {{-- <div class="demo-checkbox-container">
+                                    @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
+                                        <div class="checkbox-option">
+                                            <input name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
+                                                type="checkbox" id="checkbox_{{ $key1 }}_{{ $options }}"
+                                                value="{{ $options }}">
+                                            <label for="checkbox_{{ $key1 }}_{{ $options }}">
+                                                <pre class="is-answer">{{ $options }}</pre>
+                                            </label>
+                                        </div>
                                     @endforeach
-                                </div>
+                                    @if ($pertanyaan_form->others == '1')
+                                        <div class="others-option input-group">
+                                            <input type="text" name="jawaban_lainnya[{{ $key }}]"
+                                                placeholder="Masukkan jawaban lainnya...">
+                                        </div>
+                                    @endif
+                                </div> --}}
                             @endif
                         </div>
                     </div>
@@ -78,6 +138,7 @@
             </div>
         </div>
     </form>
+
     {{-- @if (empty($jawabanTest))
                         <input name="question_option" type="radio" id="radio_{{ $no_option }}"
                             value="{{ $question_option->id_pilihan_soal }}" required>
@@ -327,24 +388,27 @@
 {{-- @include('scriptjs') --}}
 
 <script type="text/javascript">
+    // Validate form on submission
     $('#form-upload').submit(function(e) {
-        // alert('test');
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission
     }).validate({
         highlight: function(input) {
-            $(input).addClass('is-danger');
+            $(input).addClass('is-danger'); // Highlight input on validation error
         },
         unhighlight: function(input) {
-            $(input).removeClass('is-danger');
+            $(input).removeClass('is-danger'); // Remove highlight on valid input
         },
         errorPlacement: function(error, element) {
-            $(element).parents('.control').addClass('help').addClass('is-danger').append(error);
+            $(element).parents('.control').addClass('help').addClass('is-danger').append(
+                error); // Place error message near the input
         },
         submitHandler: function(form) {
-            $('button').attr('disabled', 'disabled');
+            $('button').attr('disabled',
+                'disabled'); // Disable submit button to prevent multiple submissions
 
-            var formData = new FormData(form);
+            var formData = new FormData(form); // Create FormData object for form data
 
+            // Submit form data via AJAX after a short delay
             setTimeout(() => {
                 $.ajax({
                     url: form.action,
@@ -355,34 +419,90 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        if (response.status == 200) {
-                            vex.dialog.alert(response.message);
-                        } else if (response.status == 201) {
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        } else if (response.status == 202) {
-                            vex.dialog.alert(response.message);
-                            setTimeout(() => {
-                                loadURI(response.path);
-                            }, 2000);
-                        } else if (response.status == 203) {
-                            vex.dialog.alert(response.message);
-                            primary_table.ajax.reload(null, false);
-                        } else if (response.status == 204) {
-                            loadURI(response.path);
-                        } else if (response.status == 300) {
-                            vex.dialog.alert(response.message);
-                        }
+                        handleResponse(response); // Handle response from server
                     },
                     complete: function() {
-                        $('button').removeAttr('disabled');
+                        $('button').removeAttr(
+                            'disabled'
+                        ); // Re-enable submit button after request completion
                     }
                 });
-
             }, 1000);
         }
     });
+
+    // Handle radio button change event
+    $('input[type="radio"]').on('change', function() {
+        var id = $(this).attr('id');
+        var key = id.split('_')[1];
+        var option = id.split('_').pop();
+
+        // Show/hide 'Other' input based on radio button selection
+        if (option == 'lainnya') {
+            $(this).parents('.demo-radio-button').find('.others-option').show();
+        } else {
+            $(this).parents('.demo-radio-button').find('.others-option').hide();
+            $('input[name="jawaban_pertanyaan[' + key + ']"]').val(option);
+        }
+    });
+
+    // Handle checkbox change event
+    $('input[type="checkbox"]').on('change', function() {
+        var id = $(this).attr('id');
+        var key = id.split('_')[1];
+        var option = id.split('_').pop();
+
+        // Show/hide 'Other' input based on checkbox selection
+        if (option == 'lainnya') {
+            if ($(this).is(':checked')) {
+                $(this).parents('.demo-checkbox-container').find('.others-option').show();
+            } else {
+                $(this).parents('.demo-checkbox-container').find('.others-option').hide();
+                $('input[name="jawaban_lainnya[' + key + ']"]').val(''); // Clear custom value when unchecked
+            }
+        } else {
+            // Update hidden input value based on checkbox state
+            var value = $(this).is(':checked') ? $(this).val() : '';
+            $('input[name="jawaban_pertanyaan[' + key + '][' + option + ']"]').val(value);
+        }
+    });
+
+    // Hide 'Other' input on page load
+    $('.others-option').hide();
+
+    // Function to handle AJAX response from server
+    function handleResponse(response) {
+        switch (response.status) {
+            case 200:
+                vex.dialog.alert(response.message);
+                break;
+            case 201:
+                vex.dialog.alert(response.message);
+                window.location.href = response.link;
+                break;
+            case 202:
+                vex.dialog.alert(response.message);
+                setTimeout(() => {
+                    loadURI(response.path);
+                }, 2000);
+                break;
+            case 203:
+                vex.dialog.alert(response.message);
+                primary_table.ajax.reload(null, false);
+                break;
+            case 204:
+                loadURI(response.path);
+                break;
+            case 300:
+                vex.dialog.alert(response.message);
+                break;
+            default:
+                // Handle other status codes or errors
+                break;
+        }
+    }
 </script>
+
 {{-- <script>
     var id_paket_soal = '{{ $detailPaketSoal->id_paket_soal }}'
     var var_url = 'siswa/e-learning-soal/list-ujian/test/end';

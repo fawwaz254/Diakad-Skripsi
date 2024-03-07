@@ -7,7 +7,7 @@ use App\Models\Form;
 use App\Models\PertanyaanForm;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
@@ -168,11 +168,12 @@ class ListFormController extends Controller
                 json_decode($pertanyaan_form->label_color) ?? json_decode($pertanyaan_form->options)
             );
         }
+        $other = $pertanyaan_form->others;
 
         if ($jenis_pertanyaan == '1' || $jenis_pertanyaan == '2') {
             return view('humas/form-builder/list-form/edit-pertanyaan-form', compact('auth_data', 'id_form', 'jenis_pertanyaan', 'pertanyaan_form'));
         } else {
-            return view('humas/form-builder/list-form/edit-pertanyaan-form-opsi', compact('auth_data', 'id_form', 'jenis_pertanyaan', 'pertanyaan_form', 'opsi'));
+            return view('humas/form-builder/list-form/edit-pertanyaan-form-opsi', compact('auth_data', 'id_form', 'jenis_pertanyaan', 'pertanyaan_form', 'opsi', 'other'));
         }
     }
 
@@ -246,11 +247,23 @@ class ListFormController extends Controller
                 $pertanyaan_form->created_by                   = $input->auth_data->pengguna->id_pengguna;
 
                 if ($input->jenis_pertanyaan == '3' || $input->jenis_pertanyaan == '4') {
+                    // Handle opsi pertanyaan
                     $opsi = [];
                     foreach ($input->options as $options) {
                         $opsi[] = $options;
                     }
                     $pertanyaan_form->options                      = json_encode($opsi);
+
+                    // Handle opsi lainnya
+                    if (property_exists($input, 'others')) {
+                        if ($input->others == '1') {
+                            $pertanyaan_form->others = '1';
+                        } else {
+                            $pertanyaan_form->others = '0';
+                        }
+                    } else {
+                        $pertanyaan_form->others = '0';
+                    }
 
                     if ($input->jenis_pertanyaan == '3') {
                         foreach ($input->color as $color) {
@@ -261,6 +274,7 @@ class ListFormController extends Controller
                 } else {
                     $pertanyaan_form->label_color                  = null;
                     $pertanyaan_form->options                      = null;
+                    $pertanyaan_form->others                       = '0';
                 }
                 $pertanyaan_form->save();
 
@@ -284,6 +298,17 @@ class ListFormController extends Controller
                     }
                     $pertanyaan_form->options                      = json_encode($opsi);
 
+                    // Handle opsi lainnya
+                    if (property_exists($input, 'others')) {
+                        if ($input->others == '1') {
+                            $pertanyaan_form->others = '1';
+                        } else {
+                            $pertanyaan_form->others = '0';
+                        }
+                    } else {
+                        $pertanyaan_form->others = '0';
+                    }
+
                     if ($input->jenis_pertanyaan == '3') {
 
                         foreach ($input->color as $color) {
@@ -294,6 +319,7 @@ class ListFormController extends Controller
                 } else {
                     $pertanyaan_form->label_color                  = null;
                     $pertanyaan_form->options   = null;
+                    $pertanyaan_form->others                       = '0';
                 }
                 $pertanyaan_form->save();
 

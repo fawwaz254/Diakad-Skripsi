@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\Storage;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class InputFormHarianController extends Controller
 {
@@ -127,11 +127,11 @@ class InputFormHarianController extends Controller
 
             $form = Form::where('id_form', $request->id_form)->first();
 
-            $start= $form->start_time;
+            $start = $form->start_time;
             $end = $form->end_time;
 
             if (!(($start <= $end && ($now >= $start && $now <= $end)) || ($start >= $end && ($now >= $start || $now <= $end))) && $mode !== 'delete') {
-            return [
+                return [
                     'status' => 300, // FAILED
                     'message' => 'Anda mengisi di luar waktu yang ditentukan.'
                 ];
@@ -156,13 +156,40 @@ class InputFormHarianController extends Controller
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->jawaban_pertanyaan[$key], 'public');
                         $detail_jawaban_form->jawaban = $file;
                     } elseif ($input->jenis_pertanyaan[$key] == '3') {
-                        $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
-                    } elseif ($input->jenis_pertanyaan[$key] == '4') {
+                        // handle jawaban
+                        if (is_array($input->jawaban_pertanyaan[$key])) {
+                            // If jawaban_pertanyaan is an array
+                            if (in_array('lainnya', $input->jawaban_pertanyaan[$key])) {
+                                // If 'lainnya' is selected, use the 'jawaban_lainnya' value for this question
+                                $detail_jawaban_form->jawaban = $input->jawaban_lainnya[$key];
+                            } else {
+                                // If specific options are selected, save them as the answer
+                                $detail_jawaban_form->jawaban = json_encode($input->jawaban_pertanyaan[$key]);
+                            }
+                        } else {
+                            // If jawaban_pertanyaan is a string
+                            if ($input->jawaban_pertanyaan[$key] === 'lainnya') {
+                                // If 'lainnya' is selected, use the 'jawaban_lainnya' value for this question
+                                $detail_jawaban_form->jawaban = $input->jawaban_lainnya[$key];
+                            } else {
+                                // If a specific option is selected, save that option directly as the answer
+                                $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                            }
+                        }
+                    } elseif ($input->jenis_pertanyaan[$key] == '4') { // jenis pertanyaan banyak opsi
+                        // handle jawaban
                         $jawaban = [];
                         foreach ($input->jawaban_pertanyaan[$key] as $value) {
                             $jawaban[] = $value;
                         }
                         $detail_jawaban_form->jawaban = json_encode($jawaban);
+
+                        // handle jawaban lainnya
+                        if (isset($input->jawaban_lainnya[$key])) {
+                            $detail_jawaban_form->jawaban_lainnya = $input->jawaban_lainnya[$key];
+                        } else {
+                            $detail_jawaban_form->jawaban_lainnya = null;
+                        }
                     }
                     $detail_jawaban_form->created_by = $auth_data->pengguna->id_pengguna;
                     $detail_jawaban_form->save();
@@ -189,13 +216,40 @@ class InputFormHarianController extends Controller
                             $detail_jawaban_form->jawaban = $file;
                         }
                     } elseif ($input->jenis_pertanyaan[$key] == '3') {
-                        $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
-                    } elseif ($input->jenis_pertanyaan[$key] == '4') {
+                        // handle jawaban
+                        if (is_array($input->jawaban_pertanyaan[$key])) {
+                            // If jawaban_pertanyaan is an array
+                            if (in_array('lainnya', $input->jawaban_pertanyaan[$key])) {
+                                // If 'lainnya' is selected, use the 'jawaban_lainnya' value for this question
+                                $detail_jawaban_form->jawaban = $input->jawaban_lainnya[$key];
+                            } else {
+                                // If specific options are selected, save them as the answer
+                                $detail_jawaban_form->jawaban = json_encode($input->jawaban_pertanyaan[$key]);
+                            }
+                        } else {
+                            // If jawaban_pertanyaan is a string
+                            if ($input->jawaban_pertanyaan[$key] === 'lainnya') {
+                                // If 'lainnya' is selected, use the 'jawaban_lainnya' value for this question
+                                $detail_jawaban_form->jawaban = $input->jawaban_lainnya[$key];
+                            } else {
+                                // If a specific option is selected, save that option directly as the answer
+                                $detail_jawaban_form->jawaban = $input->jawaban_pertanyaan[$key];
+                            }
+                        }
+                    } elseif ($input->jenis_pertanyaan[$key] == '4') { // jenis pertanyaan banyak opsi
+                        // handle jawaban
                         $jawaban = [];
                         foreach ($input->jawaban_pertanyaan[$key] as $value) {
                             $jawaban[] = $value;
                         }
                         $detail_jawaban_form->jawaban = json_encode($jawaban);
+
+                        // handle jawaban lainnya
+                        if (isset($input->jawaban_lainnya[$key])) {
+                            $detail_jawaban_form->jawaban_lainnya = $input->jawaban_lainnya[$key];
+                        } else {
+                            $detail_jawaban_form->jawaban_lainnya = null;
+                        }
                     }
 
                     $jawaban_form =  JawabanForm::find($input->id_jawaban_form);

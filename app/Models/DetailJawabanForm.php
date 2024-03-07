@@ -21,6 +21,7 @@ class DetailJawabanForm extends Model
         'id_jawaban_form',
         'id_pertanyaan_form',
         'jawaban',
+        'jawaban_lainnya',
         'created_by',
         'updated_by',
         'deleted_by'
