@@ -148,7 +148,7 @@ workflows:
       - deploy-to-smk-ypm-2
       - deploy-to-smp-ypm-2
       # - deploy-to-smk-pemuda
-      - deploy-to-smk-siti-aminah
+      # - deploy-to-smk-siti-aminah
       - deploy-to-smk-ypm-3
       - deploy-to-sma-maryam
       - deploy-to-midah
