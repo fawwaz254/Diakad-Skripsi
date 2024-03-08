@@ -153,8 +153,6 @@
         var isChecked = checkbox.checked;
         if (isChecked) // if changed state is "CHECKED"
         {
-            var editor = CKEDITOR.replace('soal', options);
-
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 var editor = CKEDITOR.replace(id, options);
@@ -174,8 +172,6 @@
             // }
 
         } else {
-            CKEDITOR.instances['soal'].destroy();
-
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 CKEDITOR.instances[id].destroy();
@@ -277,8 +273,6 @@
     $('.checkbox').on('change', function() { // on change of state
         if (this.checked) // if changed state is "CHECKED"
         {
-            var editor = CKEDITOR.replace('soal', options);
-
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 var editor = CKEDITOR.replace(id, options);
@@ -298,8 +292,6 @@
             }
 
         } else {
-            CKEDITOR.instances['soal'].destroy();
-
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 CKEDITOR.instances[id].destroy();

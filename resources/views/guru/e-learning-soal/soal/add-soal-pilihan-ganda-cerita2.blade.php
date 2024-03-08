@@ -152,8 +152,6 @@
         var checkbox = document.getElementById("wuswug");
         var isChecked = checkbox.checked;
         if (isChecked) {
-            var editor = CKEDITOR.replace('soal', options);
-
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 console.log(id);
@@ -169,8 +167,6 @@
             }
 
         } else {
-            CKEDITOR.instances['soal'].destroy();
-
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 CKEDITOR.instances[id].destroy();
@@ -251,8 +247,6 @@
 
     $('.checkbox').on('change', function() {
         if (this.checked) {
-            var editor = CKEDITOR.replace('soal', options);
-
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 var editor = CKEDITOR.replace(id, options);
@@ -264,8 +258,6 @@
             }
 
         } else {
-            CKEDITOR.instances['soal'].destroy();
-
             for (var i = 1; i <= pertanyaan; i++) {
                 id = 'inputPertanyaan' + i;
                 CKEDITOR.instances[id].destroy();
