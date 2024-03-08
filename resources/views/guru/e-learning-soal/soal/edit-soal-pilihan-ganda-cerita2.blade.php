@@ -116,6 +116,7 @@
     })
 
     function changeCkedior() {
+        var editor = CKEDITOR.replace('soal', options);
 
         for (var i = 1; i <= pertanyaan; i++) {
             id = 'inputPertanyaan' + i;
