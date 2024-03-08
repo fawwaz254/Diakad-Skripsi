@@ -808,8 +808,7 @@ class SoalController extends Controller
                     $detail_paket_soal->save();
                 } else if ($input->id_tipe_soal == 4) { // Pilihan Ganda Kompleks
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) {
-                        } else {
+                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                             $question = new Soal;
                             $question->id_kategori_soal = $input->id_kategori_soal;
                             $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -859,8 +858,7 @@ class SoalController extends Controller
                     }
                 } else if ($input->id_tipe_soal == 5) { // Isian Singkat
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) {
-                        } else {
+                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                             $question = new Soal;
                             $question->id_kategori_soal = $input->id_kategori_soal;
                             $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -1119,7 +1117,7 @@ class SoalController extends Controller
 
                 $data = array(
                     'gambar' => $gambar,
-                    'text' => $text,
+                    'text' => strip_tags($text),
                 );
                 return $data;
             })
