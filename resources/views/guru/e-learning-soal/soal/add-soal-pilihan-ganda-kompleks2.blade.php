@@ -206,9 +206,15 @@
         if (isChecked) {
             for (var i = 1; i <= jumlah; i++) {
                 id = 'q' + i;
-
-                var editor = CKEDITOR.replace(id, options);
-
+                console.log(id);
+                var editor = CKEDITOR.replace(id);
+                if (editor) {
+                    editor.on('instanceReady', function(event) {
+                        event.editor.config.removePlugins = 'toolbar';
+                        var toolbar = event.editor.ui.space('top');
+                        toolbar && toolbar.remove();
+                    });
+                }
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
                     var editorjawaban = CKEDITOR.replace(idjawaban, {
@@ -407,9 +413,14 @@
         {
             for (var i = 1; i <= jumlah; i++) {
                 id = 'q' + i;
-
-                var editor = CKEDITOR.replace(id, options);
-
+                var editor = CKEDITOR.replace(id);
+                if (editor) {
+                    editor.on('instanceReady', function(event) {
+                        event.editor.config.removePlugins = 'toolbar';
+                        var toolbar = event.editor.ui.space('top');
+                        toolbar && toolbar.remove();
+                    });
+                }
                 for (var j = 0; j < 5; j++) {
                     idjawaban = 'a' + i + j;
                     var editorjawaban = CKEDITOR.replace(idjawaban, {
