@@ -264,7 +264,8 @@ class LibCetakKeuangan
                     $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
                 }
 
-                if ($tutup_buku_bulanan_biaya) { } else {
+                if ($tutup_buku_bulanan_biaya) {
+                } else {
                     $id = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $tutup_buku_bulanan_biaya = new TutupBukuBulananBiaya;
@@ -432,7 +433,8 @@ class LibCetakKeuangan
                                     $temp_data_pengembangan_pendidikan[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
                                 }
                                 $total_bayar_pengembangan_pendidikan += $x->besar_biaya;
-                            } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') { } else {
+                            } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
+                            } else {
                                 if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                                     $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                                 } else {
@@ -740,7 +742,8 @@ class LibCetakKeuangan
                         } else {
                             $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] += $x->besar_biaya;
                         }
-                    } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') { } else {
+                    } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
+                    } else {
                         if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                             $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                         } else {
@@ -915,7 +918,8 @@ class LibCetakKeuangan
                             } else {
                                 $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] += $x->besar_biaya;
                             }
-                        } elseif ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') { } else {
+                        } elseif ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
+                        } else {
                             if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
                                 $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
                             } else {
@@ -1856,7 +1860,7 @@ class LibCetakKeuangan
     }
     /** ========== */
 
-    public function fetchLaporanPembayaranDetail($auth_data, $start_date, $end_date)
+    public static function fetchLaporanPembayaranDetail($auth_data, $start_date, $end_date)
     {
         if (empty(session('setting_print_keuangan'))) {
             $print_setting = 'all';
