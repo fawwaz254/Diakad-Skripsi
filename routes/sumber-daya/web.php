@@ -79,7 +79,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             //MENU Upload Guru
             Route::get('upload-data-guru', [UploadDataGuruController::class, 'viewUploadDataGuru']);
-            Route::get('/download-file-excel', [UploadDataGuruController::class, 'downloadFileExcel'])->name('guru/download-file-excel');
+            Route::get('/download-file-excel', [UploadDataGuruController::class, 'downloadFileExcel']);
             Route::post('post-file-excel', [UploadDataGuruController::class, 'uploadFileExcel']);
 
             //merombak menu baru 2
@@ -91,7 +91,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-input-tendik/{mode}/{id}', [InputTendikController::class, 'actionInputTendik']);
 
             Route::get('upload-data-tendik', [UploadDataTendikController::class, 'viewUploadDataTendik']);
-            Route::get('/download-file-excel', [UploadDataTendikController::class, 'downloadFileExcel'])->name('tendik/download-file-excel');
+            Route::get('/download-file-excel', [UploadDataTendikController::class, 'downloadFileExcel']);
             Route::post('post-file-excel', [UploadDataTendikController::class, 'uploadFileExcel']);
 
 

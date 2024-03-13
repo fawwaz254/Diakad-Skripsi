@@ -1789,7 +1789,7 @@ class LibCetakKeuangan
     }
     /** ========== */
 
-    public function fetchLaporanPembayaranDetail($auth_data, $start_date, $end_date)
+    public static function fetchLaporanPembayaranDetail($auth_data, $start_date, $end_date)
     {
         if (empty(session('setting_print_keuangan'))) {
             $print_setting = 'all';
