@@ -29,18 +29,6 @@ class LibCetakKeuangan
             $print_setting = session('setting_print_keuangan');
         }
 
-        if (empty(session('kunci_keuangan'))) {
-            $kunci = 'iya';
-        } else {
-            $kunci = session('kunci_keuangan');
-        }
-
-        // if (empty(session('setting_print_keuangan2'))) {
-        //     $print_setting2 = 'semua';
-        // } else {
-        //     $print_setting2 = session('setting_print_keuangan2');
-        // }
-
         $sc_bulan = Carbon::createFromFormat('Y-m-d', $start_date);
         $id_bulan = $sc_bulan->month;
         $id_bulan_lalu = $sc_bulan->subMonth()->month;
@@ -77,26 +65,6 @@ class LibCetakKeuangan
         } else {
             $where_personal = "";
         }
-
-        // $list_data_jml_siswa = DB::select(
-        //     'SELECT kelas.tingkat, COUNT(siswa.id_siswa) AS jml_siswa
-        //                     FROM siswa
-        //                     JOIN kelas ON kelas.id_kelas = siswa.id_kelas
-        //                         AND kelas.deleted_at IS NULL
-        //                     JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
-        //                         AND pengguna.deleted_at IS NULL
-        //                     -- JOIN admisi ON admisi.id_siswa = siswa.id_siswa
-        //                     --     AND admisi.id_semester = ?
-        //                     --     AND admisi.deleted_at IS NULL
-        //                     JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna
-        //                         AND status_pengguna.aktif_status_pengguna = 1
-        //                         AND status_pengguna.deleted_at IS NULL
-        //                     WHERE siswa.deleted_at IS NULL
-        //                     ' . $where_personal . '
-        //                     GROUP BY kelas.tingkat
-        //                     ORDER BY kelas.tingkat',
-        //     [$id_semester]
-        // );
 
         // REVISI JML SISWA
         $list_data_jml_siswa = DB::select(
@@ -202,34 +170,12 @@ class LibCetakKeuangan
             [$id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]
         );
 
-
-        // $list_data_pembayaran_old_years = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya_tahun_lalu
-        //                     FROM pembayaran_biaya
-        //                     JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya
-        //                         AND tagihan_biaya.deleted_at IS NULL
-        //                     JOIN kelas ON kelas.id_kelas = tagihan_biaya.id_kelas
-        //                         AND kelas.deleted_at IS NULL
-        //                     JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
-        //                         AND detail_biaya.id_jenis_detail_biaya = 4
-        //                         AND detail_biaya.id_bulan = ?
-        //                         AND detail_biaya.deleted_at IS NULL
-        //                     JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
-        //                         AND biaya_sekolah.deleted_at IS NULL
-        //                     JOIN semester ON semester.id_semester = biaya_sekolah.id_semester
-        //                         AND semester.kode_semester < ?
-        //                         AND semester.deleted_at IS NULL
-        //                     WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ?
-        //                         AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
-        //                         AND pembayaran_biaya.deleted_at IS NULL
-        //                         '.$where_personal.'
-        //                     GROUP BY kelas.tingkat
-        //                     ORDER BY kelas.tingkat',
-        //                 [$id_bulan_lalu, $kode_semester_mulai, $tahun, $id_bulan]);
-
         $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
 
         DB::beginTransaction();
         try {
+            $tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+
             if ($id_bulan_lalu < 7) {
                 // Semester lama kurang dari bulan 7
                 $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
@@ -302,15 +248,15 @@ class LibCetakKeuangan
                     }
                 }
 
-                // $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
-                // $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = (!empty($pembayaran_old_years)? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
                 $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu = $pembayaran_tunggakan_bulan_ini;
                 $pembayaran_tunggakan_bulan_ini = 0;
 
                 $tutup_buku_bulanan_biaya->updated_by = $auth_data->pengguna->id_pengguna;
-                // if ($kunci == 'tidak') {
-                $tutup_buku_bulanan_biaya->save();
-                // }
+
+                if ($tutup_buku_bulanan_kas_now && $tutup_buku_bulanan_kas_now->is_fix == 1) {
+                } else {
+                    $tutup_buku_bulanan_biaya->save();
+                }
             }
 
             $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
@@ -321,23 +267,6 @@ class LibCetakKeuangan
             ])->get();
 
             $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
-
-            /* INSERT SISA TUNGGAKAN TAHUN LALU */
-            // $tutup_buku_tahunan_biaya_old = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu])->first();
-
-            // if($tutup_buku_tahunan_biaya_now = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first()){
-            //     $tutup_buku_tahunan_biaya_now->updated_by                   = $auth_data->pengguna->id_pengguna;
-            // }else{
-            //     $tutup_buku_tahunan_biaya_now = new TutupBukuTahunanBiaya;
-            //     $tutup_buku_tahunan_biaya_now->id_tutup_buku_tahunan_biaya  = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-            //     $tutup_buku_tahunan_biaya_now->id_semester_mulai            = $id_semester_mulai;
-            //     $tutup_buku_tahunan_biaya_now->id_semester_selesai          = $id_semester_selesai;
-            //     $tutup_buku_tahunan_biaya_now->created_by                   = $auth_data->pengguna->id_pengguna;
-            // }
-
-            // $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $total_pembayaran_tunggakan_semester_ini;
-            // $tutup_buku_tahunan_biaya_now->save();
-            /* END INSERT TUTUP BUKU TAHUNAN BIAYA */
 
             /* INSERT TUTUP BUKU BULANAN KAS */
             $pembayaran_tunggakan_bulan_ini = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya');
@@ -371,8 +300,7 @@ class LibCetakKeuangan
 
             $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
 
-
-            if ($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->first()) {
+            if ($tutup_buku_bulanan_kas_now) {
                 $tutup_buku_bulanan_kas_now->updated_by = $auth_data->pengguna->id_pengguna;
             } else {
                 $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
@@ -380,6 +308,7 @@ class LibCetakKeuangan
                 $tutup_buku_bulanan_kas_now->id_semester_mulai = $id_semester_mulai;
                 $tutup_buku_bulanan_kas_now->id_semester_selesai = $id_semester_selesai;
                 $tutup_buku_bulanan_kas_now->id_bulan = $id_bulan;
+                $tutup_buku_bulanan_kas_now->is_fix = 0;
                 $tutup_buku_bulanan_kas_now->created_by = $auth_data->pengguna->id_pengguna;
             }
             $tutup_buku_bulanan_kas_now->kas_spp = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
@@ -387,9 +316,9 @@ class LibCetakKeuangan
             $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
             $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
             $tutup_buku_bulanan_kas_now->sisa_tunggakan_biaya = ($tutup_buku_bulanan_kas_old->sisa_tunggakan_biaya ?? 0) - $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
-            // if ($kunci == 'tidak') {
-            $tutup_buku_bulanan_kas_now->save();
-            // }
+            if ($tutup_buku_bulanan_kas_now->is_fix == 0) {
+                $tutup_buku_bulanan_kas_now->save();
+            }
             /* END INSERT TUTUP BUKU BULANAN KAS */
 
             // START SHOW Beban Non-KBM
@@ -462,9 +391,9 @@ class LibCetakKeuangan
                 $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran += $total_bayar_non_kbm;
                 $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran += $total_bayar_pengembangan_pendidikan;
                 $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
-                // if ($kunci == 'tidak') {
-                $tutup_buku_bulanan_kas_now->save();
-                // }
+                if ($tutup_buku_bulanan_kas_now->is_fix == 0) {
+                    $tutup_buku_bulanan_kas_now->save();
+                }
             } else {
                 $subkategori_non_kbm = [
                     'status' => false,
