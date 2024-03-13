@@ -467,6 +467,7 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('laporan-keuangan')->group(function () {
+            Route::get('change-fix-laporan/{id}/{is_fix}', [CetakLaporanController::class, 'actionChangeFix']);
 
             Route::prefix('cetak-laporan')->group(function () {
                 Route::get('/', [CetakLaporanController::class, 'viewCetakLaporan']);

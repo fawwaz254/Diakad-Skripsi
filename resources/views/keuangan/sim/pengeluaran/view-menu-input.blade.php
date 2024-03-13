@@ -4,7 +4,7 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                    INPUT PENGELUARAN
+                        INPUT PENGELUARAN
                     </h2>
                 </div>
                 @include('keuangan/sim/pengeluaran/partials/header-card-menu')
@@ -14,34 +14,33 @@
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/sim/pengeluaran/input/save')}}">
                         {{csrf_field()}}
                         <div class="row clearfix">
-                        <input type="hidden" name="id_realisasi" value="{{ $pengeluaran->id_realisasi ?? null }}">
+                            <input type="hidden" name="id_realisasi" value="{{ $pengeluaran->id_realisasi ?? null }}">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label>Tahun Ajaran</label>
                                 <select class="form-control show-tick" name="tahun">
-                                @foreach($data_semester as $semester)
-                                    <option value="{{$semester->thn_akademik_semester}}" 
-                                        @if($semester->thn_akademik_semester == $tahun_akademik_semester)
-                                            selected
+                                    @foreach($data_semester as $semester)
+                                    <option value="{{$semester->thn_akademik_semester}}" @if($semester->thn_akademik_semester == $tahun_akademik_semester)
+                                        selected
                                         @endif>
-                                    {{$semester->tahun_ajaran}}</option>
-                                @endforeach
+                                        {{$semester->tahun_ajaran}}
+                                    </option>
+                                    @endforeach
                                 </select>
                                 <br>
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Tanggal</label>
-                                        <input type="text" class="datepicker form-control" name="tgl_realisasi" required="" 
-                                        value="{{ isset($pengeluaran) ? $pengeluaran->tgl_realisasi : \Carbon\Carbon::now()->format('Y-m-d') }}">
+                                        <input type="text" class="datepicker form-control" name="tgl_realisasi" required="" value="{{ isset($pengeluaran) ? $pengeluaran->tgl_realisasi : \Carbon\Carbon::now()->format('Y-m-d') }}">
                                     </div>
                                 </div>
                                 <label>Kategori</label>
                                 <select class="form-control show-tick" data-live-search="true" name="id_subkategori_rapb">
                                     @foreach($data_subkategori as $subkategori)
-                                    <option value="{{$subkategori->id_subkategori_rapb}}"
-                                        @if(isset($rapb) && $subkategori->id_subkategori_rapb == $rapb->id_subkategori_rapb)
-                                            selected
+                                    <option value="{{$subkategori->id_subkategori_rapb}}" @if(isset($rapb) && $subkategori->id_subkategori_rapb == $rapb->id_subkategori_rapb)
+                                        selected
                                         @endif>
-                                        {{$subkategori->kode_subkategori_rapb}} {{$subkategori->nm_subkategori_rapb}}</option>
+                                        {{$subkategori->kode_subkategori_rapb}} {{$subkategori->nm_subkategori_rapb}}
+                                    </option>
                                     @endforeach
                                 </select>
                                 <br>
@@ -71,18 +70,18 @@
 </div>
 @include('scriptjs')
 <script>
-$(function(){    
-$('.datepicker').bootstrapMaterialDatePicker({
-    format: 'YYYY-MM-DD',
-    //lang : 'id',
-    clearButton: true,
-    weekStart: 1,
-    time: false
-});
+    $(function() {
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'YYYY-MM-DD',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: false,
+            minDate: '{{ $minDate }}',
+            maxDate: '{{ $maxDate }}',
+        });
 
-$('select:not(.ms)').selectpicker();
+        $('select:not(.ms)').selectpicker();
 
-});
-
+    });
 </script>
-
