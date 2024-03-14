@@ -3,6 +3,10 @@
 
 <head>
     <title></title>
+    <!-- Toast -->
+    <link rel="stylesheet" href="{{ asset('plugins/vex-4.0.1/dist/css/vex.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/vex-4.0.1/dist/css/vex-theme-default.css') }}">
+    
     <style>
         .page {
             width: 1200px;
@@ -62,10 +66,26 @@
         .text-right {
             text-align: right;
         }
+
+        .checklist-fix{
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            font-size: xxx-large !important;
+        }
+
+        .checklist-fix input{
+            transform: scale(5);
+            margin: 30px;
+        }
     </style>
     <style type="text/css" media="print">
         @page {
             size: landscape;
+        }
+
+        .no-print, .no-print *{
+            display: none !important;
         }
     </style>
 </head>
@@ -372,13 +392,35 @@
         </table>
     </div>
     <div class="clear"></div>
+
+    <div class="checklist-fix no-print">
+        <center>
+            <input onchange="changeIsFixAction(this)" type="checkbox" id="checkbox-fix" name="is_fix" class="filled-in" value="1" {{$tutup_buku_kas_bulan_ini->is_fix == 1? 'checked' : ''}}>
+            <label for="checkbox-fix">Laporan sudah fix (Centang agar tidak berubah)</label> <br>
+        </center>
+    </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="{{ asset('plugins/vex-4.0.1/dist/js/vex.combined.min.js') }}"></script>
 <script>
+    vex.defaultOptions.className = 'vex-theme-default';
     var bulan = '{{ $data_laporan['bulan']['nm_bulan'] }}';
     var tahun = '{{ $data_laporan['tahun'] }}';
 
     document.title = 'Laporan Bulanan dengan Tunggakan' + ' - ' + bulan + ' - ' + tahun;
     window.print();
+
+    function changeIsFixAction(el){
+        var id_tutup_buku_kas_bulanan = '{{ $tutup_buku_kas_bulan_ini->id_tutup_buku_bulanan_kas }}';
+        var is_fix = $(el).is(':checked')? 1 : 0;
+        $.ajax({
+            url: '{{url(Request::segment(1).'/'.Request::segment(2).'/change-fix-laporan')}}/' + id_tutup_buku_kas_bulanan + '/' + is_fix,
+            type: 'GET',
+            success: function(result) {
+                vex.dialog.alert(result.message);
+            }
+        });
+    }
 </script>
 
 </html>
