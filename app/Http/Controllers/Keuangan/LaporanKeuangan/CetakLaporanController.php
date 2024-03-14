@@ -39,6 +39,19 @@ class CetakLaporanController extends BaseController
         return view('keuangan/laporan-keuangan/cetak-laporan/view-cetak-laporan', compact('auth_data', 'nis_nama_siswa', 'bulan', 'is_ypm'));
     }
 
+    public function actionChangeFix(Request $request, $id_tutup_buku_bulanan_kas, $is_fix)
+    {
+        $input = (object) $request->input();
+        $id_tutup_buku_bulanan_kas = TutupBukuBulananKas::find($id_tutup_buku_bulanan_kas);
+        $id_tutup_buku_bulanan_kas->is_fix = $is_fix;
+        $id_tutup_buku_bulanan_kas->save();
+
+        return [
+            'status' => 200, // Success
+            'message' => "OK",
+        ];
+    }
+
     public function actionSetSettingCetak(Request $request)
     {
         $input = (object) $request->input();

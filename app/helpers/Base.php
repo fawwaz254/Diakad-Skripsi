@@ -53,6 +53,13 @@ if (!function_exists('auth_data')) {
     }
 }
 
+if (!function_exists('get_id_sekolah')) {
+    function get_id_sekolah()
+    {
+        return auth_data()->sekolah_data->id_sekolah;
+    }
+}
+
 
 if (!function_exists('link_laporan_googledrive')) {
     /**

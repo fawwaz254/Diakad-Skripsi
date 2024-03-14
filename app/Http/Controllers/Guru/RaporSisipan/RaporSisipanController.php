@@ -262,7 +262,10 @@ class RaporSisipanController extends Controller
                 // $list_komponen = KomponenJenisRapor::where('id_jenis_rapor', $rapor->kelas->id_jenis_rapor)->get();
                 $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
                     $query->where('nm_jenis_rapor', 'sisipan');
-                })->where('nm_komponen_jenis_rapor', '!=', 'uas')->orderBy('urutan', 'asc')->get();
+                })
+                    ->where('nm_komponen_jenis_rapor', '!=', 'uas')
+                    ->orderByRaw('CAST(urutan AS UNSIGNED) ASC')
+                    ->get();
                 $data = json_decode($input->data);
 
                 foreach ($data as $d) {
