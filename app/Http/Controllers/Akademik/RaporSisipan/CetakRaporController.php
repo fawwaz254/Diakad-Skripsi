@@ -701,25 +701,27 @@ class CetakRaporController extends Controller
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smktanada') {
             $nilai_siswa = [];
-            $typeuts = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'uts')->where('nm_komponen_jenis_rapor', '!=', 'uas')
+            $typeuts = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'uts')
+                ->orWhere('nm_komponen_jenis_rapor', 'uas')
                 ->whereHas('jenis_rapor', function ($query) {
                     $query->where('nm_jenis_rapor', 'sisipan');
                 })->first();
             foreach ($rapors as $rapor) {
                 foreach ($rapor->nilai_rapor as  $nilai_rapor) {
-                    if ($nilai_rapor->id_komponen_jenis_rapor == $typeuts->id_komponen_jenis_rapor) {
-                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'uts'] = $nilai_rapor['nilai'];
+                    if ($nilai_rapor->id_komponen_jenis_rapor == $typeuts->id_komponen_jenis_rapor) { // if jenis rapor = uts
+                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'uts'] = $nilai_rapor['nilai']; // input nilai uts
                     } else {
                         $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor']] = $nilai_rapor['nilai'];
                         if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_tugas'])) {
-                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_tugas'] += $nilai_rapor['nilai'];
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_tugas'] = (int)$nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_tugas'] + (int)$nilai_rapor['nilai'];
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'jumlah'] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'jumlah']  += 1;
                         } else {
                             $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_tugas'] = $nilai_rapor['nilai'];
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'jumlah'] = 1;
                         }
                     }
                 }
             }
-
 
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
@@ -735,9 +737,16 @@ class CetakRaporController extends Controller
                     }
 
                     foreach ($list_siswa as $siswa) {
-                        if (isset($nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'total_nilai_tugas']) && isset($nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'uts'])) {
-                            $nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = $nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'total_nilai_tugas'] / 4;
-                            $nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = ($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] + $nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'uts']) / 2;
+                        // hitung rata-rata nilai tugas
+                        if (isset($nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'total_nilai_tugas'])) {
+                            $nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = $nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'total_nilai_tugas'] / $nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'jumlah'];
+                        } else {
+                            $nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = 0;
+                        }
+
+                        // hitung rata-rata dan kriteria
+                        if (isset($nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'uts'])) {
+                            $nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = (int)$nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] + (int)$nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'uts'] / 2;
 
                             if ($nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] >= 90 &&  $nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] <= 100) {
                                 $hasil = 'A';
@@ -753,10 +762,35 @@ class CetakRaporController extends Controller
 
                             $nilai_siswa['kriteria' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = $hasil;
                         } else {
-                            $nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = null;
                             $nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = null;
                             $nilai_siswa['kriteria' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = null;
                         }
+                    }
+                }
+
+                $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
+
+                $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
+
+                $pribadi_sisipan_kepribadian = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                    $query->where('nm_kelompok_pribadi_sisipan', 'Kepribadian');
+                })->get();
+
+                $pribadi_sisipan_kehadiran = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                    $query->where('nm_kelompok_pribadi_sisipan', 'Ketidak Hadiran');
+                })->get();
+
+                $pribadi_sisipan_catatan_orang_tua = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                    $query->where('nm_kelompok_pribadi_sisipan', 'Catatan Untuk Orang Tua');
+                })->get();
+
+                $nilai_pengembangan_diri = [];
+
+                foreach ($nilai_pribadi_siswa as $n) {
+                    if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_kepribadian->pluck('id_pribadi_sisipan')->toArray())) {
+                        $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
+                    } else {
+                        $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
                     }
                 }
 
@@ -781,9 +815,7 @@ class CetakRaporController extends Controller
                 $query->where('nm_jenis_rapor', 'sisipan');
             })->orderBy('urutan', 'asc')->get();
 
-
-
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'pribadi_sisipan_kepribadian', 'pribadi_sisipan_kehadiran', 'pribadi_sisipan_catatan_orang_tua', 'semester', 'wali_kelas'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
