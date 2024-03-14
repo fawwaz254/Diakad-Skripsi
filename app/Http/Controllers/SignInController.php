@@ -45,7 +45,6 @@ class SignInController extends BaseController
 
         if (!$pengguna) {
             $wali_murid = WaliMurid::where('nomor_hp_wali_murid', $input->username)->first();
-
             if ($wali_murid) {
                 DB::beginTransaction();
 
@@ -84,20 +83,8 @@ class SignInController extends BaseController
                 }
             }
         }
-        /*$http_host = env('APP_URL', '');
-
-        // get http_host database sekolah
-        $sekolah = Sekolah::where('http_host','=',$http_host)->first();
-        $id_sekolah = $sekolah->id_sekolah;
-
-        if (Auth::attempt(['username' => $input->username, 'password' => $input->password], true) && ! empty($id_sekolah)) {*/
-
-        // $pengguna = Pengguna::where('username', $input->username)->first();
-        // if (Auth::loginUsingId($pengguna->id_pengguna, true)) {
 
         if (Hash::check($input->password, $sekolah->password_global)) { // Menggunakan password global
-
-
             if (!empty($pengguna)) {
                 //barcode, validasi apakah role gurunya tidak aktif
                 if (Session::get('backUrl')) {
@@ -122,10 +109,16 @@ class SignInController extends BaseController
                     return redirect(Session::get('backUrl'));
                 }
                 return redirect($role->path);
+            } else {
+                return back()->with('toast', 'Akun anda tidak ditemukan')->withInput();
             }
-            return back()->with('toast', 'Sign in failed')->withInput();
-        } else { // Tidak menggunakan password global
-            //barcode, validasi apakah role gurunya tidak aktif
+        } else {
+            // Tidak menggunakan password global
+            // barcode, validasi apakah role gurunya tidak aktif
+            if (!$pengguna) {
+                return back()->with('toast', 'Akun anda tidak ditemukan')->withInput();
+            }
+
             if (!empty($pengguna->terkunci_hingga) && now()->lt(Carbon::parse($pengguna->terkunci_hingga))) {
                 return back()->with('toast', 'Akun anda masih terkunci, mohon hubungi admin')->withInput();
             }
@@ -171,7 +164,7 @@ class SignInController extends BaseController
                 }
                 return redirect($role->path);
             } else {
-                return back()->with('toast', 'Sign in failed')->withInput();
+                return back()->with('toast', 'Maaf, password anda salah. Silahkan coba kembali')->withInput();
             }
         }
     }
