@@ -158,7 +158,7 @@
                     <tr>
                         <th rowspan="2"style="text-align: center;font-weight: bold;">No</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">Mata Pelajaran</th>
-                        <th colspan="6" style="text-align: center;font-weight: bold;">Nilai Tugas dan Ulangan</th>
+                        <th colspan="5" style="text-align: center;font-weight: bold;">Nilai Tugas dan Ulangan</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">UTS</th>
                         <th colspan="2" style="text-align: center;font-weight: bold;">Nilai Akhir</th>
                     </tr>
@@ -167,7 +167,6 @@
                         <th style="text-align: center;font-weight: bold;">2</th>
                         <th style="text-align: center;font-weight: bold;">3</th>
                         <th style="text-align: center;font-weight: bold;">4</th>
-                        <th style="text-align: center;font-weight: bold;">5</th>
                         <th style="text-align: center;font-weight: bold;">Rata-rata</th>
                         {{-- <th style="text-align: center;font-weight: bold;">UTS</th> --}}
                         <th style="text-align: center;font-weight: bold;">Rata-rata</th>
@@ -279,8 +278,7 @@
                             @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
                                 {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] }}
                             @else
-                                Tingkatkan terus semangat dan motivasi belajarmu agar dapat mencapai keberhasilan serta
-                                kesuksesan
+                                -
                             @endif
                         </td>
                     </tr>
