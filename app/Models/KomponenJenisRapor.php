@@ -20,6 +20,7 @@ class KomponenJenisRapor extends Model
     protected $fillable = [
         'id_jenis_rapor',
         'nm_komponen_jenis_rapor',
+        'urutan',
         'created_by',
         'updated_by',
         'deleted_by'
