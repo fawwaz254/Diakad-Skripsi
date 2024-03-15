@@ -76,6 +76,9 @@
         <div class="page">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr>
+                    <td style="border-style : hidden;width: 10%;"><img
+                            src="{{ url('https://diakad.sgp1.digitaloceanspaces.com/smktanada/global/logo-sekolah') }}"
+                            alt="" style="width: 100px; height: 100px;"></td>
                     <td colspan="10" style="border-style : hidden">
 
                         <h2 align="center" style="margin-top: 3px">
@@ -112,11 +115,12 @@
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NO. INDUK
+                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NIS / NISN
                     </td>
                     <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">{{ $siswa->nis_siswa }}
+                    <td style="border-style : hidden;width: 35%;font-weight: bold;">
+                        {{ $siswa->nis_siswa }} / {{ $siswa->nisn_siswa }}
                     </td>
                     <td style="border-style : hidden;width: 24%;font-weight: bold;">PROGRAM KEAHLIAN
                     </td>
@@ -183,7 +187,8 @@
                                     $jumlah = count($data2['nm_point']);
                                 @endphp
                                 <tr>
-                                    <td style="text-align: center;">{{ $key }}</td>
+                                    <td style="text-align: center;" rowspan="{{ $jumlah }}">
+                                        {{ $loop->iteration }}</td>
                                     <td>{{ $data2['nm_point'][0] }}</td>
                                     @foreach ($list_komponen as $komponen)
                                         <td style="text-align: center;font-weight: bold;">
@@ -223,6 +228,64 @@
                 </tbody>
             </table>
             <br>
+            {{-- Kepribadian dan Kehadiran --}}
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+                <tr>
+                    <td style="vertical-align: top; border-style : hidden;">
+                        <table cellspacing="0" cellpadding="10"
+                            style="width: 100%; margin: 0 auto; border-collapse: collapse; border: 2px solid black;">
+                            @foreach ($pribadi_sisipan_kepribadian as $key => $k)
+                                <tr>
+                                    <td style="width: 40%; border: none;">{{ $k->nm_pribadi_sisipan }}</td>
+                                    <td style="width: 10%; border: none;">:</td>
+                                    @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
+                                        <td style="width: 50%; border: none; text-align: center;">
+                                            {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] }}
+                                        </td>
+                                    @else
+                                        <td style="width: 50%; border: none; text-align: center;">-</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </table>
+                    </td>
+                    <td style="vertical-align: top; border-style : hidden;">
+                        <table cellspacing="0" cellpadding="10"
+                            style="width: 100%; margin: 0 auto; border-collapse: collapse; border: 2px solid black;">
+                            @foreach ($pribadi_sisipan_kehadiran as $key => $k)
+                                <tr>
+                                    <td style="width: 40%; border: none;">{{ $k->nm_pribadi_sisipan }}</td>
+                                    <td style="width: 10%; border: none;">:</td>
+                                    @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
+                                        <td style="width: 50%; border: none; text-align: center;">
+                                            {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] . ' Hari' }}
+                                        </td>
+                                    @else
+                                        <td style="width: 50%; border: none; text-align: center;">- Hari</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            {{-- Catatan wali kelas --}}
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border: 2px solid black;">
+                @foreach ($pribadi_sisipan_catatan_orang_tua as $key => $k)
+                    <tr>
+                        <td style="width: 100%; border: none; text-align: center; padding: 30px;">
+                            @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
+                                {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
+            <br>
+            {{-- Tanda tangan --}}
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
                     <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="left">
@@ -257,7 +320,7 @@
                 </tr>
                 <td style=" width:25%; border-style : hidden;"></td>
                 <td style="width:45%; border-style : hidden;text-align: center">Mengetahui, <br>
-                    Kepala Madrasah
+                    Kepala Sekolah,
                     <br><br><br><br><br><br><br>
                     <u><b>
                             {{ $auth_data->sekolah_data->nm_kepala_sekolah }}<b></u>
