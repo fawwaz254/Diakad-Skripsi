@@ -53,8 +53,8 @@ class InsertUpdateSiswaController extends BaseController
 			->where('status_join_table', '=', 3)
 			->get();
 		$kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('is_aktif', 1)->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('kelas.tingkat', 'asc')->get();
-		$thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
 		$semester = Semester::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'asc')->get();
+		$thn_masuk_siswa = $semester->pluck('thn_akademik_semester')->unique();
 		$jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
 
 		$sekolah = Sekolah::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->first();
