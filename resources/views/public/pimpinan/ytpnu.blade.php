@@ -33,13 +33,13 @@
                 MANU
             </td>
             <td>
-                <a href="https://manu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://manu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://manu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://manu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://manu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://manu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
         </tr>
         <tr>
@@ -47,13 +47,13 @@
                 MINU
             </td>
             <td>
-                <a href="https://minu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://minu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://minu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://minu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://minu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://minu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
         </tr>
         <tr>
@@ -61,13 +61,13 @@
                 SDNU
             </td>
             <td>
-                <a href="https://sdnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://sdnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://sdnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://sdnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://sdnu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://sdnu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
         </tr>
         <tr>
@@ -75,13 +75,13 @@
                 SMPNU
             </td>
             <td>
-                <a href="https://smpnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://smpnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://smpnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://smpnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://smpnu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://smpnu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
         </tr>
         <tr>
@@ -89,13 +89,13 @@
                 MTSNU
             </td>
             <td>
-                <a href="https://mtsnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://mtsnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://mtsnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://mtsnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://mtsnu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://mtsnu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
         </tr>
         <tr>
@@ -103,13 +103,13 @@
                 SMKNU
             </td>
             <td>
-                <a href="https://smknu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://smknu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://smknu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://smknu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://smknu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://smknu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
         </tr>
         <tr>
@@ -117,13 +117,13 @@
                 TKQNU
             </td>
             <td>
-                <a href="https://tkqnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://tkqnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://tkqnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://tkqnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
-                <a href="https://tkqnu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer"></a>
+                <a href="https://tkqnu.edumate.id/report-wali-kelas" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
         </tr>
     </table>
