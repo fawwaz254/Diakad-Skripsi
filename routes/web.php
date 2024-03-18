@@ -28,6 +28,7 @@ use App\Http\Controllers\Administrator\Device\FingerprintController;
 // Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
 Route::get('pimpinan', [PimpinanController::class, 'index']);
+Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
 Route::get('report-wali-kelas', [ReportController::class, 'viewReportWaliKelas']);
 Route::get('report-guru', [ReportController::class, 'viewReportGuru']);
 
@@ -111,9 +112,9 @@ Route::post('payment/callback/{id}', [PembayaranOnlineController::class, 'action
 
 Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionCheckExp']);
 
-Route::get('forms',[CustomFormResponController::class,'landingPage']);
-Route::post('forms',[CustomFormResponController::class,'findForms']);
-Route::post('forms/data/siswa',[CustomFormResponController::class,'getDataSiswa']);
+Route::get('forms', [CustomFormResponController::class, 'landingPage']);
+Route::post('forms', [CustomFormResponController::class, 'findForms']);
+Route::post('forms/data/siswa', [CustomFormResponController::class, 'getDataSiswa']);
 Route::resource('forms.viewform', CustomFormResponController::class)->shallow();;
 Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);
@@ -167,5 +168,3 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
     });
 });
-
-
