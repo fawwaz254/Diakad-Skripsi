@@ -1,30 +1,35 @@
 <?php
 
-use App\Http\Controllers\Administrator\Device\FingerprintController;
-use App\Http\Controllers\Administrator\WelcomeController;
-use App\Http\Controllers\AuthGlobalController;
-use App\Http\Controllers\ForgetPasswordController;
-use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
-use App\Http\Controllers\PengisianAlumniController;
-use App\Http\Controllers\Publik\CustomFormResponController;
+use Carbon\Carbon;
+use App\Models\Sekolah;
+use App\Models\CustomForm;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SignInController;
-use App\Models\CustomForm;
-use App\Models\Sekolah;
-use Carbon\Carbon;
-use UniSharp\LaravelFilemanager\Controllers\CropController;
-use UniSharp\LaravelFilemanager\Controllers\DeleteController;
-use UniSharp\LaravelFilemanager\Controllers\DemoController;
-use UniSharp\LaravelFilemanager\Controllers\DownloadController;
-use UniSharp\LaravelFilemanager\Controllers\FolderController;
-use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use App\Http\Controllers\AuthGlobalController;
+use App\Http\Controllers\ForgetPasswordController;
+use App\Http\Controllers\PengisianAlumniController;
+use App\Http\Controllers\Administrator\WelcomeController;
 use UniSharp\LaravelFilemanager\Controllers\LfmController;
+use App\Http\Controllers\Publik\PimpinanController;
+use App\Http\Controllers\Publik\CustomFormResponController;
+use UniSharp\LaravelFilemanager\Controllers\CropController;
+use UniSharp\LaravelFilemanager\Controllers\DemoController;
+use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use UniSharp\LaravelFilemanager\Controllers\DeleteController;
+use UniSharp\LaravelFilemanager\Controllers\FolderController;
 use UniSharp\LaravelFilemanager\Controllers\RenameController;
 use UniSharp\LaravelFilemanager\Controllers\ResizeController;
 use UniSharp\LaravelFilemanager\Controllers\UploadController;
+use UniSharp\LaravelFilemanager\Controllers\DownloadController;
+use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
+use App\Http\Controllers\Administrator\Device\FingerprintController;
 
 // Only for deploy to other prod server, 
 // Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
+
+Route::get('pimpinan', [PimpinanController::class, 'index']);
+Route::get('report-wali-kelas', [ReportController::class, 'viewReportWaliKelas']);
+Route::get('report-guru', [ReportController::class, 'viewReportGuru']);
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('laravel-filemanager')->group(function () {
