@@ -106,8 +106,8 @@
                                             id="thn_masuk">
                                             <option value="">-- Pilih Tahun Masuk --</option>
                                             @foreach ($thn_masuk_siswa as $tahun)
-                                                <option value="{{ $tahun->thn_masuk_siswa }}">
-                                                    {{ $tahun->thn_masuk_siswa }}</option>
+                                                <option value="{{ $tahun }}">
+                                                    {{ $tahun }}</option>
                                             @endforeach
                                         </select>
                                     </div>

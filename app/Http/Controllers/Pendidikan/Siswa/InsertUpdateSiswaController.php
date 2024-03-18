@@ -53,8 +53,8 @@ class InsertUpdateSiswaController extends BaseController
 			->where('status_join_table', '=', 3)
 			->get();
 		$kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('is_aktif', 1)->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('kelas.tingkat', 'asc')->get();
-		$thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
 		$semester = Semester::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'asc')->get();
+		$thn_masuk_siswa = $semester->pluck('thn_akademik_semester')->unique();
 		$jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
 
 		$sekolah = Sekolah::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->first();
@@ -100,7 +100,8 @@ class InsertUpdateSiswaController extends BaseController
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
-		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) { } else {
+		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) {
+		} else {
 			return [
 				'status' => 300, // FAILED
 				'message' => 'NIS tidak ditemukan'
@@ -255,7 +256,14 @@ class InsertUpdateSiswaController extends BaseController
 					$siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->first();
 				}
 
-				$id_penerimaan 		= Penerimaan::where('jenis_penerimaan', '=', '1')->where('tahun_penerimaan', '=', $input->thn_masuk_siswa)->first();
+				$id_penerimaan = Penerimaan::where('jenis_penerimaan', '=', '1')->where('tahun_penerimaan', '=', $input->thn_masuk_siswa)->first();
+
+				if ($id_penerimaan == null) {
+					return [
+						'status' 	=> 200, // GAGAL
+						'message'	=> 'Penerimaan untuk tahun ' . $input->thn_masuk_siswa . ' belum diatur'
+					];
+				}
 
 				//jika tidak ada siswa 
 				if ($siswa == null) {
@@ -400,7 +408,7 @@ class InsertUpdateSiswaController extends BaseController
 						// something went wrong
 						return [
 							'status' 	=> 200, // GAGAL
-							'message'	=> 'Insert Data Siswa Gagal ' . $e
+							'message'	=> (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
 						];
 					}
 				} else {
