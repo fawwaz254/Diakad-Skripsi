@@ -8,18 +8,15 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
-    <title>Report</title>
+    <title>Report Pimpinan</title>
   </head>
   <body>
     <div class="container">
-        <h1>Report</h1>
+        <h1>Report Pimpinan</h1>
     <table class="table table-striped">
         <tr>
             <td>
                 LEMBAGA
-            </td>
-            <td>
-                REPORT PIMPINAN
             </td>
             <td>
                 REPORT GURU
@@ -33,9 +30,6 @@
                 MANU
             </td>
             <td>
-                <a href="https://manu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
-            </td>
-            <td>
                 <a href="https://manu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
@@ -45,9 +39,6 @@
         <tr>
             <td>
                 MINU
-            </td>
-            <td>
-                <a href="https://minu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
                 <a href="https://minu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
@@ -61,9 +52,6 @@
                 SDNU
             </td>
             <td>
-                <a href="https://sdnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
-            </td>
-            <td>
                 <a href="https://sdnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
@@ -73,9 +61,6 @@
         <tr>
             <td>
                 SMPNU
-            </td>
-            <td>
-                <a href="https://smpnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
                 <a href="https://smpnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
@@ -89,9 +74,6 @@
                 MTSNU
             </td>
             <td>
-                <a href="https://mtsnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
-            </td>
-            <td>
                 <a href="https://mtsnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
@@ -103,9 +85,6 @@
                 SMKNU
             </td>
             <td>
-                <a href="https://smknu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
-            </td>
-            <td>
                 <a href="https://smknu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
@@ -115,9 +94,6 @@
         <tr>
             <td>
                 TKQNU
-            </td>
-            <td>
-                <a href="https://tkqnu.edumate.id/report-pimpinan" target="_blank" rel="noopener noreferrer">Kunjungi</a>
             </td>
             <td>
                 <a href="https://tkqnu.edumate.id/report-guru" target="_blank" rel="noopener noreferrer">Kunjungi</a>
