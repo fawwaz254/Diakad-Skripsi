@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header" style=" display: flex;
-    justify-content: space-between;">
-        <div class="dropdown" style="display: inline; margin-right:50px">
+    justify-content: flex-start;">
+        <div class="dropdown" style="display: inline; margin-right:10px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
@@ -18,9 +18,8 @@
         </div>
         <input type="hidden" id="thn_akademik_semester" value="">
 
-        <div class="dropdown" style="display: inline; margin-right:50px">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
-                <span class="caret"></span></button>
+        <div class="dropdown" style="display: inline; margin-right:10px">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tingkat Kelas<span class="caret"></span></button>
             <ul class="dropdown-menu">
                 @foreach ($data_tingkat_kelas as $tingkat_kelas)
                     <li>
