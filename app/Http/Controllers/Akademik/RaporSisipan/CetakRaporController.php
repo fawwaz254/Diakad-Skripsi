@@ -371,7 +371,7 @@ class CetakRaporController extends Controller
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
         $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
             $query->where('nm_jenis_rapor', 'sisipan');
-        })->where('nm_komponen_jenis_rapor', '!=', 'UAS')->orderBy('urutan', 'asc')->get();
+        })->where('nm_komponen_jenis_rapor', '!=', 'UAS')->orderByRaw('CAST(urutan AS SIGNED)')->get();
 
         $list_siswa = Siswa::with(['nilai_pribadi_sisipan' => function ($q) use ($id_semester) {
             $q->where('id_semester', $id_semester)->where('nilai', '!=', 0);
@@ -668,6 +668,9 @@ class CetakRaporController extends Controller
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-sitiaminah', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri', 'nilai_ekskul', 'wali_kelas'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
+            $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+                $query->where('nm_jenis_rapor', 'sisipan');
+            })->where('nm_komponen_jenis_rapor', '!=', 'SAS')->orderByRaw('CAST(urutan AS SIGNED)')->get();
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
                 foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
