@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers\Akademik\RaporSisipan;
 
-use App\Exports\RaporSisipanSTS;
-use App\Exports\RekapRaporSisipanSTS;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Guru;
-use App\Models\Kelas;
-use App\Models\MataPelajaran;
-use App\Models\RaporSisipan;
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-use Illuminate\Support\Facades\App;
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\KomponenJenisRapor;
-use App\Models\KomponenNilaiRaporSisipan;
-use App\Models\NilaiRapor;
-use App\Models\NilaiRaporSisipan;
-use App\Models\Rapor;
-use App\Models\Setting;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Models\Siswa;
-use Auth;
 use DB;
+use Auth;
 use Session;
 use Validator;
+use Carbon\Carbon;
+use App\Models\Guru;
+use App\Models\Kelas;
+use App\Models\Rapor;
+use App\Models\Siswa;
+use App\Models\Setting;
+use App\Models\NilaiRapor;
+use App\Models\RaporSisipan;
+use Illuminate\Http\Request;
+use App\Models\MataPelajaran;
+use App\Exports\RaporSisipanSTS;
+use Yajra\Datatables\Datatables;
+use App\Models\NilaiRaporSisipan;
+use App\Models\KomponenJenisRapor;
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RekapRaporSisipanSTS;
+use App\Libraries\Pendidikan\LibKelas;
+use App\Models\KomponenNilaiRaporSisipan;
+use App\Libraries\Pendidikan\LibDataAkademik;
 
 class RaporSisipanController extends Controller
 {
@@ -36,8 +37,9 @@ class RaporSisipanController extends Controller
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
+        $data_tingkat_kelas = Kelas::groupBy('tingkat')->pluck('tingkat');
 
-        return view('akademik/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'semester_aktif', 'data_semester'));
+        return view('akademik/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'semester_aktif', 'data_semester', 'data_tingkat_kelas'));
     }
 
     public function datatablesDaftarNilaiSTS(Request $request)
@@ -67,12 +69,15 @@ class RaporSisipanController extends Controller
             // }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester'])
             // ->
             with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
-            ->withCount(['nilai_rapor' => function ($q) {
-                $q->where('nilai', '!=', 0);
-            }])->where('nm_rapor', 'sisipan')
             ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
+            ->whereHas('kelas', function ($query) use ($input) {
+                $query->where('tingkat', $input->tingkat_kelas);
+            })
+            ->withCount(['nilai_rapor' => function ($q) {
+                $q->where('nilai', '!=', 0);
+            }])->where('nm_rapor', 'sisipan')
             ->orderBy('created_at', 'desc');
 
 
@@ -343,6 +348,7 @@ class RaporSisipanController extends Controller
             }
 
             return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-kd', compact('auth_data', 'id_rapor', 'list_kd_aktif', 'list_siswa', 'nilai_siswa', 'rapor'));
-        } else { }
+        } else {
+        }
     }
 }
