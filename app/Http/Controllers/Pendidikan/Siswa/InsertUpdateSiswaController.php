@@ -100,7 +100,8 @@ class InsertUpdateSiswaController extends BaseController
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
-		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) { } else {
+		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) {
+		} else {
 			return [
 				'status' => 300, // FAILED
 				'message' => 'NIS tidak ditemukan'
@@ -255,7 +256,14 @@ class InsertUpdateSiswaController extends BaseController
 					$siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->first();
 				}
 
-				$id_penerimaan 		= Penerimaan::where('jenis_penerimaan', '=', '1')->where('tahun_penerimaan', '=', $input->thn_masuk_siswa)->first();
+				$id_penerimaan = Penerimaan::where('jenis_penerimaan', '=', '1')->where('tahun_penerimaan', '=', $input->thn_masuk_siswa)->first();
+
+				if ($id_penerimaan == null) {
+					return [
+						'status' 	=> 200, // GAGAL
+						'message'	=> 'Penerimaan untuk tahun ' . $input->thn_masuk_siswa . ' belum diatur'
+					];
+				}
 
 				//jika tidak ada siswa 
 				if ($siswa == null) {
@@ -400,7 +408,7 @@ class InsertUpdateSiswaController extends BaseController
 						// something went wrong
 						return [
 							'status' 	=> 200, // GAGAL
-							'message'	=> 'Insert Data Siswa Gagal ' . $e
+							'message'	=> (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
 						];
 					}
 				} else {
