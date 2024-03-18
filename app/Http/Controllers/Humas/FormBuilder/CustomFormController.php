@@ -32,7 +32,7 @@ class CustomFormController extends Controller
             $code = $code . $character;
         }
 
-        if (CustomForm::where('form_settings', 'like', '%'.$code.'%')->exists()) {
+        if (CustomForm::whereJsonContains('form_settings->kode', $code)->exists()) {
             $this->customFormCodeGenerator();
         }
 
@@ -62,10 +62,9 @@ class CustomFormController extends Controller
                 return $data;
             })
             ->addColumn('kode',function($item){
-                $form_settings = json_decode($item->form_settings);
                 return [
-                    'ada' => isset($form_settings['kode']),
-                    'kode' => $form_settings['kode'] ?? ''
+                    'ada' => isset($item->form_settings['kode']),
+                    'kode' => $item->form_settings['kode'] ?? ''
                 ];
             })
             ->make(true);
@@ -132,7 +131,7 @@ class CustomFormController extends Controller
                 $custom_form->is_aktif          = $input->is_aktif;
                 $custom_form->start_time        = $input->start_time;
                 $custom_form->end_time          = $input->end_time;
-                $custom_form->form_settings     = json_encode($rule);
+                $custom_form->form_settings     = $rule;
                 $custom_form->created_by        = $auth_data->pengguna->id_pengguna;
                 $custom_form->save();
 
@@ -251,7 +250,7 @@ class CustomFormController extends Controller
                 $custom_form->jenis_custom_form = $input->jenis_custom_form;
                 $custom_form->start_time        = $input->start_time;
                 $custom_form->end_time          = $input->end_time;
-                $custom_form->form_settings     = json_encode($rule);
+                $custom_form->form_settings     = $rule;
                 $custom_form->created_by        = $auth_data->pengguna->id_pengguna;
                 $custom_form->save();
 
