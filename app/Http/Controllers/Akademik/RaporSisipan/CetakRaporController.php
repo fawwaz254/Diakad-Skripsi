@@ -869,10 +869,11 @@ class CetakRaporController extends Controller
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm1', compact('auth_data', 'pribadi_sisipan', 'nilai_pengembangan_diri', 'kelas', 'list_siswa', 'data', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'semester'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
-            // $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->orderBy('urutan', 'asc')->get();
+            $excludedColumns = [3, 4, 5, 6, 7, 8, 10];
             $list_komponen = KomponenJenisRapor::whereNotIn('nm_komponen_jenis_rapor', ['uts', 'uas'])->whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan');
-            })->orderBy('urutan', 'asc')->get();
+            })->whereNotIn('urutan', $excludedColumns)->orderByRaw('CAST(urutan AS SIGNED)')->get();
+
             $nilai_siswa = [];
             $total_nilai = [];
 
@@ -895,8 +896,29 @@ class CetakRaporController extends Controller
                 }
             }
 
+            // nama kelompok mapel khusus kelas 10 MANU
+            $custom_nm_kelompok_mapel = [
+                1 => 'Kelompok A (Wajib)',
+                2 => 'Kelompok B (Peminatan)',
+                3 => 'Kelompok C (Muatan Lokal)',
+            ];
+
             foreach ($kelompok_mapel_rapor as $k) {
-                $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
+                // jika kelas 10
+                if ($kelas->tingkat == 1) {
+                    if ($k->urutan == 1) {
+                        // jika kelompok mapel urutan 1, maka ganti nama kelompok mapel dengan Kelompok A (Wajib)
+                        $k->nm_kelompok_mapel_rapor = $custom_nm_kelompok_mapel[1];
+                    } elseif ($k->urutan == 2) {
+                        // jika kelompok mapel urutan 2, maka ganti nama kelompok mapel dengan Kelompok B (Peminatan)
+                        $k->nm_kelompok_mapel_rapor = $custom_nm_kelompok_mapel[2];
+                    } elseif ($k->urutan == 3) {
+                        // jika kelompok mapel urutan 3, maka ganti nama kelompok mapel dengan Kelompok C (Muatan Lokal)
+                        $k->nm_kelompok_mapel_rapor = $custom_nm_kelompok_mapel[3];
+                    }
+                }
+
+                $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor; // assign nama kelompok mapel ke data
                 foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
                     if ($mata_pelajaran_rapor->jenis == '0') {
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] = $mata_pelajaran_rapor->keterangan;
@@ -908,23 +930,7 @@ class CetakRaporController extends Controller
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
                     }
                 }
-
-                // foreach ($k_sisipan->sub_kelompok_sisipan as $sub_kelompok_sisipan) {
-                //     $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['nama'] = $sub_kelompok_sisipan->nm_sub_kelompok_sisipan;
-                //     foreach ($sub_kelompok_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
-                //         if ($mata_pelajaran_sisipan->jenis == '0') {
-                //             $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->keterangan;
-                //             $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = null;
-                //             $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
-                //         } else {
-                //             $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
-                //             $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = $mata_pelajaran_sisipan->mata_pelajaran->nilai_kkm;
-                //             $data[$k_sisipan->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
-                //         }
-                //     }
-                // }
             }
-
 
             $nilai_pribadi_siswa = NilaiPribadiSisipan::with('pribadi_sisipan')->whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_semester', $id_semester)->get();
             $kelompok_sisipan = KelompokPribadiSisipan::where('nm_kelompok_pribadi_sisipan')->first();
@@ -970,7 +976,22 @@ class CetakRaporController extends Controller
             }
 
             arsort($total_nilai);
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri'));
+
+            $kolom_nilai = [];
+
+            if ($kelas->tingkat == '1') {
+                $kolom_nilai = [
+                    ['nama_kolom' => 'TUGAS'],
+                    ['nama_kolom' => 'UH'],
+                ];
+            } elseif ($kelas->tingkat == '2') {
+                $kolom_nilai = [
+                    ['nama_kolom' => 'PENGETAHUAN'],
+                    ['nama_kolom' => 'KETERAMPILAN'],
+                ];
+            }
+
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri', 'kolom_nilai'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smknu') {
 
             if ($kelas->tingkat == '1') {

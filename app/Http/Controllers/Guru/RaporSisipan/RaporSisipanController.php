@@ -34,6 +34,7 @@ use Auth;
 use DB;
 use Session;
 use Validator;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class RaporSisipanController extends Controller
 {
@@ -256,10 +257,10 @@ class RaporSisipanController extends Controller
                 }
             } elseif ('editNilai') {
                 $rapor = Rapor::with('kelas')->find($id);
+                $auth_data = $input->auth_data;
                 $list_siswa = Siswa::where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
                     $query->where('aktif_status_pengguna', '=', '1');
                 })->orderBy('nis_siswa')->get();
-                // $list_komponen = KomponenJenisRapor::where('id_jenis_rapor', $rapor->kelas->id_jenis_rapor)->get();
                 $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
                     $query->where('nm_jenis_rapor', 'sisipan');
                 })
@@ -267,6 +268,42 @@ class RaporSisipanController extends Controller
                     ->orderByRaw('CAST(urutan AS UNSIGNED) ASC')
                     ->get();
                 $data = json_decode($input->data);
+
+                if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
+                    // hanya komponen 1, 2, 9 yang di update
+                    $list_komponen = $list_komponen->whereIn('urutan', [1, 2, 9]);
+
+                    foreach ($data as $d) {
+                        $siswa = $list_siswa->where('nis_siswa', $d[0])->first();
+                        if ($siswa) {
+                            $no = 2;
+                            $excludedColumns = [3, 4, 5, 6, 7, 8, 10]; // urutan komponen yang di exclude
+                            $nilai_rapors = NilaiRapor::where('id_siswa', $siswa->id_siswa)->where('id_rapor', $id)
+                                ->whereHas('komponen_jenis_rapor', function ($query) use ($excludedColumns) {
+                                    $query->where('nm_komponen_jenis_rapor', "!=", 'UAS');
+                                    $query->whereNotIn('urutan', $excludedColumns);
+                                })->get(); // get nilai rapor kecuali komponen yang di exclude
+
+                            foreach ($list_komponen as $komponen) {
+                                $nilai_rapor = $nilai_rapors->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
+                                if ($nilai_rapor) {
+                                    $nilai_rapor->nilai = $nilai_rapor->nilai ?? 0; // jika nilai kosong maka di isi 0
+                                    if ($nilai_rapor->nilai != $d[$no]) {
+                                        $nilai_rapor->nilai = $d[$no];
+                                        $nilai_rapor->save();
+                                    }
+                                }
+
+                                $no++;
+                            }
+                        }
+                    }
+
+                    return [
+                        'status' => 300, // FAILED
+                        'message' => 'Update Sukses',
+                    ];
+                }
 
                 foreach ($data as $d) {
                     $siswa = $list_siswa->where('nis_siswa', $d[0])->first();
@@ -278,10 +315,14 @@ class RaporSisipanController extends Controller
                             })->get();
                         foreach ($list_komponen as $komponen) {
                             $nilai_rapor = $nilai_rapors->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
-                            if ($nilai_rapor->nilai != $d[$no]) {
-                                $nilai_rapor->nilai = $d[$no];
-                                $nilai_rapor->save();
+                            if ($nilai_rapor) {
+                                $nilai_rapor->nilai = $nilai_rapor->nilai ?? 0; // jika nilai kosong maka di isi 0
+                                if ($nilai_rapor->nilai != $d[$no]) {
+                                    $nilai_rapor->nilai = $d[$no];
+                                    $nilai_rapor->save();
+                                }
                             }
+
                             $no++;
                         }
                     }
@@ -452,6 +493,22 @@ class RaporSisipanController extends Controller
             $query->where('nm_jenis_rapor', 'sisipan');
         })->where('nm_komponen_jenis_rapor', '!=', 'uas')->get();
 
+        // Exclude komponen with urutan 3-8 and 10 for manu
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
+            // if ($rapor->kelas->tingkat == '2') {
+            //     $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            //         $query->where('nm_jenis_rapor', 'merdeka');
+            //     })->where('nm_komponen_jenis_rapor', '!=', 'uas')->get();
+            // } else {
+            //     $excludedColumns = [3, 4, 5, 6, 7, 8, 10]; // urutan komponen yang di exclude
+            //     $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            //         $query->where('nm_jenis_rapor', 'sisipan');
+            //     })->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereNotIn('urutan', $excludedColumns)->get();
+            // }
+            $excludedColumns = [3, 4, 5, 6, 7, 8, 10]; // urutan komponen yang di exclude
+            $list_data = $list_data->whereNotIn('urutan', $excludedColumns);
+        }
+
         $dynamicColumns = [
             [
                 'title' => 'NIS',
@@ -462,20 +519,45 @@ class RaporSisipanController extends Controller
                 'width' => 300,
             ]
         ];
+
         foreach ($list_data as $data) {
             array_push($dynamicColumns, [
                 'title' => $data->nm_komponen_jenis_rapor,
             ]);
         }
+
         return view('guru/rapor-sisipan/daftar-nilai-sts/view-edit-nilai-sts', compact('auth_data', 'id_rapor',  'dynamicColumns'));
     }
 
     public function getNilai(Request $request, $id_rapor)
     {
         $rapor = Rapor::find($id_rapor);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
         $siswa = Siswa::with('pengguna')->where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
+
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
+            $list_data = $siswa->map(function ($item) use ($id_rapor) {
+                $data = array();
+                $data['nis_siswa'] = $item->nis_siswa;
+                $data['nm_pengguna'] = $item->pengguna->nm_pengguna;
+                $excludedColumns = [3, 4, 5, 6, 7, 8, 10];
+                $nilai_rapor = NilaiRapor::where('id_siswa', $item->id_siswa)->where('id_rapor', $id_rapor)
+                    ->whereHas('komponen_jenis_rapor', function ($query) use ($excludedColumns) {
+                        $query->where('nm_komponen_jenis_rapor', "!=", 'UAS');
+                        $query->whereNotIn('urutan', $excludedColumns); // Exclude specific columns
+                    })
+                    ->get();
+                foreach ($nilai_rapor as $n) {
+                    $data[$n->id_komponen_jenis_rapor] = $n->nilai;
+                }
+                return $data;
+            })->toArray();
+
+            return response()->json($list_data);
+        }
 
         $list_data = $siswa->map(function ($item) use ($id_rapor) {
             $data = array();
@@ -491,6 +573,7 @@ class RaporSisipanController extends Controller
             }
             return $data;
         })->toArray();
+
         return response()->json($list_data);
     }
 

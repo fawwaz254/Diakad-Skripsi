@@ -131,10 +131,10 @@
                         <th rowspan="2" style="text-align: center;font-weight: bold;">KETERANGAN</th>
                     </tr>
                     <tr>
-                        <th style="text-align: center;font-weight: bold;">TUGAS</th>
-                        <th style="text-align: center;font-weight: bold;">UH</th>
-                        <th style="text-align: center;font-weight: bold;">PTS</th>
-
+                        @foreach ($kolom_nilai as $kolom)
+                            <th style="text-align: center;font-weight: bold;">{{ $kolom['nama_kolom'] }}</th>
+                        @endforeach
+                        <th style="text-align: center;font-weight: bold;">STS</th>
                     </tr>
                 </thead>
                 <br>
@@ -167,10 +167,27 @@
                                     <td style="text-align: center;">
                                         @php
                                             $keterangan = '';
-                                            if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) && isset($data2['kkm'][0])) {
-                                                if (intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]] / 3) >= $data2['kkm'][0]) {
+                                            if (
+                                                isset(
+                                                    $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]],
+                                                ) &&
+                                                isset($data2['kkm'][0])
+                                            ) {
+                                                if (
+                                                    intval(
+                                                        $nilai_siswa[
+                                                            $siswa->id_siswa . $data2['id_mata_pelajaran'][0]
+                                                        ] / 3,
+                                                    ) >= $data2['kkm'][0]
+                                                ) {
                                                     $keterangan = 'Tuntas';
-                                                } elseif (intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]] / 3) < $data2['kkm'][0]) {
+                                                } elseif (
+                                                    intval(
+                                                        $nilai_siswa[
+                                                            $siswa->id_siswa . $data2['id_mata_pelajaran'][0]
+                                                        ] / 3,
+                                                    ) < $data2['kkm'][0]
+                                                ) {
                                                     $keterangan = 'Tidak Tuntas';
                                                 }
                                             }
@@ -196,10 +213,29 @@
                                         <td style="text-align: center;">
                                             @php
                                                 $keterangan = '';
-                                                if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]]) && isset($data2['kkm'][$i])) {
-                                                    if (intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]] / 3) >= $data2['kkm'][$i]) {
+                                                if (
+                                                    isset(
+                                                        $nilai_siswa[
+                                                            $siswa->id_siswa . $data2['id_mata_pelajaran'][$i]
+                                                        ],
+                                                    ) &&
+                                                    isset($data2['kkm'][$i])
+                                                ) {
+                                                    if (
+                                                        intval(
+                                                            $nilai_siswa[
+                                                                $siswa->id_siswa . $data2['id_mata_pelajaran'][$i]
+                                                            ] / 3,
+                                                        ) >= $data2['kkm'][$i]
+                                                    ) {
                                                         $keterangan = 'Tuntas';
-                                                    } elseif (intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]] / 3) < $data2['kkm'][$i]) {
+                                                    } elseif (
+                                                        intval(
+                                                            $nilai_siswa[
+                                                                $siswa->id_siswa . $data2['id_mata_pelajaran'][$i]
+                                                            ] / 3,
+                                                        ) < $data2['kkm'][$i]
+                                                    ) {
                                                         $keterangan = 'Tidak Tuntas';
                                                     }
                                                 }
@@ -286,7 +322,8 @@
                                 @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
                                     <td style="text-align: center;">
                                         @php
-                                            $jumlah += $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan];
+                                            $jumlah +=
+                                                $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan];
                                         @endphp
                                         {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] }}</td>
                                 @else
