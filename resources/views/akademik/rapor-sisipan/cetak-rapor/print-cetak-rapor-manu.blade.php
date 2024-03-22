@@ -79,8 +79,11 @@
                     <td colspan="10" style="border-style : hidden">
                         <h3 align="center" style="margin-top: 3px">
                             REKAPITULASI NILAI ASLI<br>
-                            {{-- PENILAIAN TENGAH SEMESTER (PTS) --}}
-                            SUMATIF TENGAH SEMESTER (STS)
+                            @if ($kelas->tingkat == 2)
+                                PENILAIAN TENGAH SEMESTER (PTS)
+                            @else
+                                SUMATIF TENGAH SEMESTER (STS)
+                            @endif
                             <br>
                         </h3>
                         <br>
@@ -126,15 +129,16 @@
                         <th rowspan="2"style="text-align: center;font-weight: bold;">No</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">Mata Pelajaran</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">KKM</th>
-                        <th colspan="3" style="text-align: center;font-weight: bold;">Nilai Hasil Belajar</th>
+                        <th colspan="{{ $jumlah_komponen }}" style="text-align: center;font-weight: bold;">Nilai
+                            Hasil Belajar</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">RATA RATA</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">KETERANGAN</th>
                     </tr>
                     <tr>
-                        @foreach ($kolom_nilai as $kolom)
-                            <th style="text-align: center;font-weight: bold;">{{ $kolom['nama_kolom'] }}</th>
+                        @foreach ($list_komponen as $komponen)
+                            <th style="text-align: center;font-weight: bold;">{{ $komponen->nm_komponen_jenis_rapor }}
+                            </th>
                         @endforeach
-                        <th style="text-align: center;font-weight: bold;">STS</th>
                     </tr>
                 </thead>
                 <br>
@@ -162,7 +166,7 @@
                                         </td>
                                     @endforeach
                                     <td style="text-align: center;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]] / 3) : '' }}
+                                        {{ isset($rata_rata_mapel[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? $rata_rata_mapel[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]] : '' }}
                                     </td>
                                     <td style="text-align: center;">
                                         @php
@@ -345,7 +349,7 @@
 
 
 
-            {{-- 
+            {{--
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr style="background-color: #9999cc">
                     <th colspan="2">Ekstrakurikuler</th>
@@ -421,7 +425,7 @@
                         Kepala Madrasah
                         <br><br><br><br><br><br><br>
 
-                        {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
+                        Hasanul Bisri, M.Pd
 
                     </td>
                 </tr>

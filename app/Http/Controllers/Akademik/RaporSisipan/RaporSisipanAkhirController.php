@@ -206,7 +206,7 @@ class RaporSisipanAkhirController extends Controller
                 }
             }
 
-            return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-kd', compact('auth_data', 'id_rapor', 'list_kd_aktif', 'list_siswa', 'nilai_siswa', 'raporn'));
+            return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts-kd', compact('auth_data', 'id_rapor', 'list_kd_aktif', 'list_siswa', 'nilai_siswa', 'rapor'));
         }
     }
 }

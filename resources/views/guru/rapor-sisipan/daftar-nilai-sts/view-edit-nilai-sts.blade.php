@@ -113,6 +113,30 @@
             errorPlacement: function(error, element) {
                 $(element).parents('.form-group').append(error);
             },
+            // submitHandler: function(form) {
+            //     var data = $('#spreadsheet').jexcel('getData');
+            //     var columnTitles = $('#spreadsheet').jexcel('getHeaders');
+
+            //     var jsonData = [];
+            //     for (var i = 0; i < data.length; i++) {
+            //         var rowData = = data[i];
+            //         var studentData = {};
+
+            //         for (var j = 0; j < rowData.length; j++) {
+            //             studentData[columnTitles[j]] = rowData[j];
+            //         }
+
+            //         jsonData.push(studentData);
+            //     }
+
+            //     console.log(jsonData);
+
+            //     var jsonDataString = JSON.stringify(jsonData);
+
+            //     $('#data').val(jsonDataString);
+
+            //     form.submit();
+            // }
             submitHandler: function(form) {
                 var data = $('#spreadsheet').jexcel('getData');
                 $('#data').val(JSON.stringify(data));
