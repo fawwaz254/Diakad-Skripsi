@@ -247,8 +247,8 @@
                         <td style="text-align: center;" colspan="6">
                             <h3>JUMLAH</h3>
                         </td>
-                        <td style="text-align: center;" colspan="2">
-                            <h3>{{ $total_nilai[$siswa->id_siswa] }}</h3>
+                        <td style="text-align: center; font-weight: bold;" colspan="2">
+                            {{ isset($total_nilai[$siswa->id_siswa]) ? $total_nilai[$siswa->id_siswa] : '' }}
                         </td>
                     </tr>
 
