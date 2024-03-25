@@ -79,8 +79,11 @@
                     <td colspan="10" style="border-style : hidden">
                         <h3 align="center" style="margin-top: 3px">
                             REKAPITULASI NILAI ASLI<br>
-                            {{-- PENILAIAN TENGAH SEMESTER (PTS) --}}
-                            SUMATIF TENGAH SEMESTER (STS)
+                            @if ($kelas->tingkat == 2)
+                                PENILAIAN TENGAH SEMESTER (PTS)
+                            @else
+                                SUMATIF TENGAH SEMESTER (STS)
+                            @endif
                             <br>
                         </h3>
                         <br>
@@ -126,15 +129,16 @@
                         <th rowspan="2"style="text-align: center;font-weight: bold;">No</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">Mata Pelajaran</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">KKM</th>
-                        <th colspan="3" style="text-align: center;font-weight: bold;">Nilai Hasil Belajar</th>
+                        <th colspan="{{ $jumlah_komponen }}" style="text-align: center;font-weight: bold;">Nilai
+                            Hasil Belajar</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">RATA RATA</th>
                         <th rowspan="2" style="text-align: center;font-weight: bold;">KETERANGAN</th>
                     </tr>
                     <tr>
-                        @foreach ($kolom_nilai as $kolom)
-                            <th style="text-align: center;font-weight: bold;">{{ $kolom['nama_kolom'] }}</th>
+                        @foreach ($list_komponen as $komponen)
+                            <th style="text-align: center;font-weight: bold;">{{ $komponen->nm_komponen_jenis_rapor }}
+                            </th>
                         @endforeach
-                        <th style="text-align: center;font-weight: bold;">STS</th>
                     </tr>
                 </thead>
                 <br>
@@ -158,35 +162,30 @@
                                     </td>
                                     @foreach ($list_komponen as $komponen)
                                         <td style="text-align: center;">
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] : '' }}
+                                            {{ isset($nilai_siswa[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]][$komponen->id_komponen_jenis_rapor]) ? $nilai_siswa[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]][$komponen->id_komponen_jenis_rapor] : '' }}
                                         </td>
                                     @endforeach
                                     <td style="text-align: center;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]] / 3) : '' }}
+                                        {{ isset($rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]]) ? $rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]] : '' }}
                                     </td>
                                     <td style="text-align: center;">
                                         @php
                                             $keterangan = '';
                                             if (
                                                 isset(
-                                                    $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0]],
+                                                    $rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]],
                                                 ) &&
                                                 isset($data2['kkm'][0])
                                             ) {
                                                 if (
-                                                    intval(
-                                                        $nilai_siswa[
-                                                            $siswa->id_siswa . $data2['id_mata_pelajaran'][0]
-                                                        ] / 3,
-                                                    ) >= $data2['kkm'][0]
+                                                    $rata_rata_nilai[$siswa->id_siswa][
+                                                        $data2['id_mata_pelajaran'][0]
+                                                    ] >= $data2['kkm'][0]
                                                 ) {
                                                     $keterangan = 'Tuntas';
                                                 } elseif (
-                                                    intval(
-                                                        $nilai_siswa[
-                                                            $siswa->id_siswa . $data2['id_mata_pelajaran'][0]
-                                                        ] / 3,
-                                                    ) < $data2['kkm'][0]
+                                                    $rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]] <
+                                                    $data2['kkm'][0]
                                                 ) {
                                                     $keterangan = 'Tidak Tuntas';
                                                 }
@@ -204,37 +203,33 @@
                                         </td>
                                         @foreach ($list_komponen as $komponen)
                                             <td style="text-align: center;">
-                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor] : '' }}
+                                                {{ isset($nilai_siswa[$siswa->id_siswa][$data2['id_mata_pelajaran'][$i]][$komponen->id_komponen_jenis_rapor]) ? $nilai_siswa[$siswa->id_siswa][$data2['id_mata_pelajaran'][$i]][$komponen->id_komponen_jenis_rapor] : '' }}
                                             </td>
                                         @endforeach
                                         <td style="text-align: center;">
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]]) ? intval($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i]] / 3) : '' }}
+                                            {{ isset($rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][$i]]) ? $rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][$i]] : '' }}
                                         </td>
                                         <td style="text-align: center;">
                                             @php
                                                 $keterangan = '';
                                                 if (
                                                     isset(
-                                                        $nilai_siswa[
-                                                            $siswa->id_siswa . $data2['id_mata_pelajaran'][$i]
+                                                        $rata_rata_nilai[$siswa->id_siswa][
+                                                            $data2['id_mata_pelajaran'][$i]
                                                         ],
                                                     ) &&
                                                     isset($data2['kkm'][$i])
                                                 ) {
                                                     if (
-                                                        intval(
-                                                            $nilai_siswa[
-                                                                $siswa->id_siswa . $data2['id_mata_pelajaran'][$i]
-                                                            ] / 3,
-                                                        ) >= $data2['kkm'][$i]
+                                                        $rata_rata_nilai[$siswa->id_siswa][
+                                                            $data2['id_mata_pelajaran'][$i]
+                                                        ] >= $data2['kkm'][$i]
                                                     ) {
                                                         $keterangan = 'Tuntas';
                                                     } elseif (
-                                                        intval(
-                                                            $nilai_siswa[
-                                                                $siswa->id_siswa . $data2['id_mata_pelajaran'][$i]
-                                                            ] / 3,
-                                                        ) < $data2['kkm'][$i]
+                                                        $rata_rata_nilai[$siswa->id_siswa][
+                                                            $data2['id_mata_pelajaran'][$i]
+                                                        ] < $data2['kkm'][$i]
                                                     ) {
                                                         $keterangan = 'Tidak Tuntas';
                                                     }
@@ -253,7 +248,7 @@
                             <h3>JUMLAH</h3>
                         </td>
                         <td style="text-align: center;" colspan="2">
-                            <h3>{{ isset($total_nilai[$siswa->id_siswa]) ? $total_nilai[$siswa->id_siswa] : '' }}</h3>
+                            <h3>{{ $total_nilai[$siswa->id_siswa] }}</h3>
                         </td>
                     </tr>
 
@@ -345,7 +340,7 @@
 
 
 
-            {{-- 
+            {{--
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr style="background-color: #9999cc">
                     <th colspan="2">Ekstrakurikuler</th>
@@ -421,7 +416,7 @@
                         Kepala Madrasah
                         <br><br><br><br><br><br><br>
 
-                        {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
+                        Hasanul Bisri, M.Pd
 
                     </td>
                 </tr>
