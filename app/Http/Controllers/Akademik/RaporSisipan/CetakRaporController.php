@@ -918,7 +918,7 @@ class CetakRaporController extends Controller
                         $total_nilai_mapel += $nilai;
                         $jumlah_komponen++;
                     }
-                    $rata_rata_nilai[$id_siswa][$id_mapel] = $total_nilai_mapel / $jumlah_komponen;
+                    $rata_rata_nilai[$id_siswa][$id_mapel] = round($total_nilai_mapel / $jumlah_komponen, 1);
                 }
             }
 
