@@ -272,11 +272,11 @@ class RaporSisipanController extends Controller
 
                 if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
                     if ($rapor->kelas->tingkat == '1') {
-                        $urutan = [1, 4]; // urutan komponen yang di include untuk kelas 10
+                        $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
 
                         $list_komponen = $list_komponen->whereIn('urutan', $urutan);
                     } else if ($rapor->kelas->tingkat == '2') {
-                        $urutan = [2, 3, 5]; // urutan komponen yang di include untuk kelas 11
+                        $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
 
                         $list_komponen = $list_komponen->whereIn('urutan', $urutan);
                     }
@@ -286,9 +286,9 @@ class RaporSisipanController extends Controller
                         if ($siswa) {
                             $no = 2;
                             if ($rapor->kelas->tingkat == '1') {
-                                $urutan = [1, 4]; // urutan komponen yang di include untuk kelas 10
+                                $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
                             } else if ($rapor->kelas->tingkat == '2') {
-                                $urutan = [2, 3, 5]; // urutan komponen yang di include untuk kelas 11
+                                $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
                             }
 
                             $nilai_rapors = NilaiRapor::where('id_siswa', $siswa->id_siswa)->where('id_rapor', $id)
@@ -529,9 +529,9 @@ class RaporSisipanController extends Controller
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
             if ($rapor->kelas->tingkat == '1') {
-                $urutan = [1, 4]; // urutan komponen yang di include untuk kelas 10
+                $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
             } else if ($rapor->kelas->tingkat == '2') {
-                $urutan = [2, 3, 5]; // urutan komponen yang di include untuk kelas 11
+                $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
             }
 
             $list_data = $list_data->whereIn('urutan', $urutan);
@@ -572,9 +572,9 @@ class RaporSisipanController extends Controller
                 $data['nis_siswa'] = $item->nis_siswa;
                 $data['nm_pengguna'] = $item->pengguna->nm_pengguna;
                 if ($item->kelas->tingkat == '1') {
-                    $urutan = [1, 4]; // urutan komponen yang di include untuk kelas 10
+                    $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
                 } else if ($item->kelas->tingkat == '2') {
-                    $urutan = [2, 3, 5]; // urutan komponen yang di include untuk kelas 11
+                    $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
                 }
                 $nilai_rapors = NilaiRapor::where('id_siswa', $item->id_siswa)->where('id_rapor', $id_rapor)
                     ->whereHas('komponen_jenis_rapor', function ($query) use ($urutan) {

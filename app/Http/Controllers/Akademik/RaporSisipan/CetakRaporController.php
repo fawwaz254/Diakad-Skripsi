@@ -870,49 +870,70 @@ class CetakRaporController extends Controller
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm1', compact('auth_data', 'pribadi_sisipan', 'nilai_pengembangan_diri', 'kelas', 'list_siswa', 'data', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'semester'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
             if ($kelas->tingkat == 1) {
-                $urutan = [1, 4];
-
-                $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
-                    $query->where('nm_jenis_rapor', 'sisipan');
-                })->where('nm_komponen_jenis_rapor', "!=", 'UAS')->whereIn('urutan', $urutan)->orderByRaw('CAST(urutan AS SIGNED)')->get();
+                $urutan = [1, 2, 5]; // urutan komponen untuk kelas 10
             } else {
-                $urutan = [2, 3, 5];
-
-                $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
-                    $query->where('nm_jenis_rapor', 'sisipan');
-                })->where('nm_komponen_jenis_rapor', "!=", 'UAS')->whereIn('urutan', $urutan)->orderByRaw('CAST(urutan AS SIGNED)')->get();
+                $urutan = [3, 4, 6]; // urutan komponen untuk kelas 11 dan 12
             }
 
-            $nilai_siswa = [];
-            $rata_rata_mapel = [];
-            $total_nilai = [];
+            $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+                $query->where('nm_jenis_rapor', 'sisipan');
+            })->where('nm_komponen_jenis_rapor', "!=", 'UAS')->whereIn('urutan', $urutan)->orderByRaw('CAST(urutan AS SIGNED)')->get();
 
+            $nilai_siswa = [];
             foreach ($rapors as $rapor) {
                 foreach ($rapor->nilai_rapor as  $nilai_rapor) {
                     if (in_array($nilai_rapor['id_komponen_jenis_rapor'], $list_komponen->pluck('id_komponen_jenis_rapor')->toArray())) {
-                        $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor']] = $nilai_rapor['nilai'];
-                        if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']])) {
-                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']] += (int)$nilai_rapor['nilai'];
-                        } else {
-                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']] = (int)$nilai_rapor['nilai'];
+                        $id_siswa = $nilai_rapor['id_siswa'];
+                        $id_mapel = $rapor['id_mata_pelajaran'];
+                        $id_komponen = $nilai_rapor['id_komponen_jenis_rapor'];
+
+                        if (!isset($nilai_siswa[$id_siswa])) {
+                            $nilai_siswa[$id_siswa] = [];
                         }
 
-                        // hitung rata-rata nilai mapel
-                        if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']])) {
-                            $rata_rata_mapel[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']] / count($list_komponen);
-                        } else {
-                            $rata_rata_mapel[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']] = null;
+                        if (!isset($nilai_siswa[$id_siswa][$id_mapel])) {
+                            $nilai_siswa[$id_siswa][$id_mapel] = [];
                         }
 
-                        // hitung total nilai dari semua mapel
-                        if (isset($rata_rata_mapel[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']])) {
-                            $total_nilai[$nilai_rapor['id_siswa']] = $rata_rata_mapel[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran']];
-                        } else {
-                            $total_nilai[$nilai_rapor['id_siswa']] = null;
+                        if (!isset($nilai_siswa[$id_siswa][$id_mapel][$id_komponen])) {
+                            $nilai_siswa[$id_siswa][$id_mapel][$id_komponen] = 0;
                         }
+
+                        $nilai_siswa[$id_siswa][$id_mapel][$id_komponen] += (int)$nilai_rapor['nilai'];
                     }
                 }
             }
+
+            // dd($nilai_siswa);
+
+            // hitung rata-rata nilai siswa berdasarkan mata pelajaran (nilai seluruh komponen / jumlah komponen)
+            $rata_rata_nilai = [];
+            foreach ($nilai_siswa as $id_siswa => $nilai_mapel) {
+                $rata_rata_nilai[$id_siswa] = [];
+                foreach ($nilai_mapel as $id_mapel => $nilai_komponen) {
+                    $rata_rata_nilai[$id_siswa][$id_mapel] = [];
+                    $total_nilai_mapel = 0;
+                    $jumlah_komponen = 0;
+                    foreach ($nilai_komponen as $id_komponen => $nilai) {
+                        $total_nilai_mapel += $nilai;
+                        $jumlah_komponen++;
+                    }
+                    $rata_rata_nilai[$id_siswa][$id_mapel] = $total_nilai_mapel / $jumlah_komponen;
+                }
+            }
+
+            // dd($rata_rata_nilai);
+
+            // hitung total nilai siswa dari seluruh rata-rata nilai
+            $total_nilai = [];
+            foreach ($rata_rata_nilai as $id_siswa => $nilai_mapel) {
+                $total_nilai[$id_siswa] = 0;
+                foreach ($nilai_mapel as $id_mapel => $nilai) {
+                    $total_nilai[$id_siswa] += $nilai;
+                }
+            }
+
+            // dd($total_nilai);
 
             // nama kelompok mapel khusus kelas 10 MANU
             $custom_nm_kelompok_mapel = [
@@ -997,7 +1018,7 @@ class CetakRaporController extends Controller
 
             $jumlah_komponen = count($list_komponen);
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri', 'jumlah_komponen', 'rata_rata_mapel'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri', 'jumlah_komponen', 'rata_rata_nilai'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smknu') {
 
             if ($kelas->tingkat == '1') {
