@@ -59,7 +59,7 @@
                     }),
                     colWidths: dynamicColumns.map(function(column) {
                         return column.width ||
-                            100;
+                            150;
                     }),
                     allowInsertColumn: false,
                     allowDeleteColumn: false,
