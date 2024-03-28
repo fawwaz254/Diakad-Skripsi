@@ -110,9 +110,7 @@
                             '</div>' +
                             '<div class="col-md-12">' +
                             '<pre>' +
-                            ' kasih titik 3 (...) tanpa tanda kurung, akan otomatis terisi' +
-                            ' A = Sangat ,B = Baik (menghapus tanda titik 3 [...]) ,' +
-                            'C = Cukup ,D = Kurang ' +
+                            ' wajib tambahkan tanda titik 3 (...) tanpa tanda kurung, untuk keterangan dinamis [sangat, cukup, kurang] ' +
                             '</pre>' +
                             '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
                             item
