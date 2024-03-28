@@ -69,20 +69,21 @@
                                                 <input
                                                     name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
                                                     type="checkbox"
-                                                    id="checkbox_{{ $key1 }}_{{ $options }}"
+                                                    id="checkbox_{{ $key }}_{{ $key1 }}"
                                                     value="{{ $options }}">
-                                                <label for="checkbox_{{ $key1 }}_{{ $options }}">
+                                                <label for="checkbox_{{ $key }}_{{ $key1 }}">
                                                     <pre class="is-answer">{{ $options }}</pre>
                                                 </label>
                                             </div>
                                         @endforeach
-                                        <input type="checkbox" id="checkbox_{{ $key1 }}_lainnya" value=""
+                                        <input type="checkbox" id="checkbox_{{ $key }}_lainnya" value=""
                                             @if (isset($ans->jawaban) && !in_array($ans->jawaban, json_decode($pertanyaan_form->options, true))) checked @endif>
-                                        <label for="checkbox_{{ $key1 }}_lainnya">
+                                        <label for="checkbox_{{ $key }}_lainnya">
                                             <pre class="is-answer">Lainnya</pre>
                                         </label>
                                         <div class="others-option input-group">
                                             <input type="text" name="jawaban_lainnya[{{ $key }}]"
+                                                id="jawaban_lainnya_{{ $key }}"
                                                 placeholder="Masukkan jawaban lainnya...">
                                         </div>
                                     </div>
@@ -93,33 +94,15 @@
                                                 <input
                                                     name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
                                                     type="checkbox"
-                                                    id="checkbox_{{ $key1 }}_{{ $options }}"
+                                                    id="checkbox_{{ $key }}_{{ $key1 }}"
                                                     value="{{ $options }}">
-                                                <label for="checkbox_{{ $key1 }}_{{ $options }}">
+                                                <label for="checkbox_{{ $key }}_{{ $key1 }}">
                                                     <pre class="is-answer">{{ $options }}</pre>
                                                 </label>
                                             </div>
                                         @endforeach
                                     </div>
                                 @endif
-                                {{-- <div class="demo-checkbox-container">
-                                    @foreach (json_decode($pertanyaan_form->options, true) as $key1 => $options)
-                                        <div class="checkbox-option">
-                                            <input name="jawaban_pertanyaan[{{ $key }}][{{ $key1 }}]"
-                                                type="checkbox" id="checkbox_{{ $key1 }}_{{ $options }}"
-                                                value="{{ $options }}">
-                                            <label for="checkbox_{{ $key1 }}_{{ $options }}">
-                                                <pre class="is-answer">{{ $options }}</pre>
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                    @if ($pertanyaan_form->others == '1')
-                                        <div class="others-option input-group">
-                                            <input type="text" name="jawaban_lainnya[{{ $key }}]"
-                                                placeholder="Masukkan jawaban lainnya...">
-                                        </div>
-                                    @endif
-                                </div> --}}
                             @endif
                         </div>
                     </div>
