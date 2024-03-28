@@ -22,7 +22,6 @@ class ForgetPasswordController extends BaseController
 
         $sekolah = Sekolah::orderBy('id_sekolah')->first();
         return view('forget-password', compact('sekolah'));
-
     }
 
     public function sendLinkResetPassword(Request $request)
@@ -84,17 +83,13 @@ class ForgetPasswordController extends BaseController
                     'status' => 300,
                     'message' => 'Mohon maaf email anda belum terdaftar pada sistem diakad',
                 ];
-
             }
-
         } catch (Exception $e) {
 
             DB::rollback();
 
             return (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error';
-
         }
-
     }
 
     public function checkLinkResetPassword(Request $request)
@@ -114,31 +109,24 @@ class ForgetPasswordController extends BaseController
                 Session::put('reset_email', $email);
                 Session::put('reset_token', $token);
                 return redirect('reset-password');
-
             } else {
 
                 return redirect('/')->with('error', 'Reset password gagal , token anda tidak valid');
-
             }
-
         } else {
 
             return redirect('/')->with('error', 'Reset password gagal , email anda tidak ditemukan');
-
         }
-
     }
 
     public function resetPassword(Request $request)
     {
-
         if (!session('reset_email')) {
             abort(401);
         }
 
         $sekolah = Sekolah::orderBy('id_sekolah')->first();
         return view('reset-password', compact('sekolah'));
-
     }
 
     public function resetPasswordAction(Request $request)
@@ -181,9 +169,6 @@ class ForgetPasswordController extends BaseController
                 'message' => 'Selamat anda berhasil mengubah password anda',
                 'link' => '/',
             ];
-
         }
-
     }
-
 }
