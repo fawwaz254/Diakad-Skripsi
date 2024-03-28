@@ -454,9 +454,9 @@ class RaporSisipanController extends Controller
             //     $q->where('nilai', '!=', '0');
             // }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester'])
             ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
-            ->withCount(['nilai_rapor' => function ($q) {
-                $q->where('nilai', '!=', 0);
-            }])
+            // ->withCount(['nilai_rapor' => function ($q) {
+            //     $q->where('nilai', '!=', 0);
+            // }])
             ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })->orderBy('created_at', 'desc');
