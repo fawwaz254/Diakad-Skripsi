@@ -511,6 +511,9 @@ class LibCetakKeuangan
 
         $pembayaran_spp = PembayaranBiaya::query()
             ->with('tagihan_biaya.detail_biaya.biaya_sekolah.semester')
+            ->whereHas('tagihan_biaya.detail_biaya.biaya_sekolah', function ($q) use ($semester_pair) {
+                $q->whereIn('id_semester', [$semester_pair->ganjil->id_semester, $semester_pair->genap->id_semester]);
+            })
             ->whereMonth('tgl_pembayaran', $id_bulan)
             ->whereYear('tgl_pembayaran', $tahun)
             ->whereHas('tagihan_biaya.detail_biaya', function ($q) {
