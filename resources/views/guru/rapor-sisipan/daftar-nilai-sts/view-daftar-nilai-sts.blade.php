@@ -53,7 +53,7 @@
                                 <th>Jenis Mata Pelajaran</th>
                                 <th>Kelas</th>
                                 {{-- <th>Jurusan</th> --}}
-                                <th>Nilai Siswa Terisi</th>
+                                {{-- <th>Nilai Siswa Terisi</th> --}}
                                 <th>Semester</th>
                                 {{-- <th>Nilai</th> --}}
                                 {{-- <th>Template Excel</th> --}}
@@ -123,13 +123,13 @@
                 className: 'align-center',
                 orderable: false,
             },
-            {
-                data: 'jumlah',
-                name: 'jumlah',
-                className: 'align-center',
-                searchable: false,
-                orderable: false,
-            },
+            // {
+            //     data: 'jumlah',
+            //     name: 'jumlah',
+            //     className: 'align-center',
+            //     searchable: false,
+            //     orderable: false,
+            // },
             {
                 data: 'semester',
                 name: 'semester',
