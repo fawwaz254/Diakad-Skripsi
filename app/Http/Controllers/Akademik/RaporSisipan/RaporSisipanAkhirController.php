@@ -62,17 +62,17 @@ class RaporSisipanAkhirController extends Controller
 
 
         return Datatables::of($list_data)
-            ->addColumn('jumlah', function ($item) use ($komponen) {
-                $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
-                $nilaiTerisi = $item->nilai_rapor_count;
-                if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
-                    $hasil = '0%';
-                } else {
-                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2) . '%';
-                }
+            // ->addColumn('jumlah', function ($item) use ($komponen) {
+            //     $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
+            //     $nilaiTerisi = $item->nilai_rapor_count;
+            //     if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
+            //         $hasil = '0%';
+            //     } else {
+            //         $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2) . '%';
+            //     }
 
-                return $hasil;
-            })
+            //     return $hasil;
+            // })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran;
             })

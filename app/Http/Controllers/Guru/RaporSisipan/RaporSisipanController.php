@@ -550,21 +550,21 @@ class RaporSisipanController extends Controller
 
 
         return Datatables::of($list_data)
-            ->addColumn('jumlah', function ($item) use ($komponen) {
-                $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
-                $nilaiTerisi = $item->nilai_rapor_count;
+            // ->addColumn('jumlah', function ($item) use ($komponen) {
+            //     $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
+            //     $nilaiTerisi = $item->nilai_rapor_count;
 
-                if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
-                    return '0%';
-                } else {
-                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2);
-                    if ($hasil > 100) {
-                        return '100%';
-                    } else {
-                        return $hasil . '%';
-                    }
-                }
-            })
+            //     if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
+            //         return '0%';
+            //     } else {
+            //         $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2);
+            //         if ($hasil > 100) {
+            //             return '100%';
+            //         } else {
+            //             return $hasil . '%';
+            //         }
+            //     }
+            // })
             ->editColumn('semester', function ($item) {
                 return '(' . $item->semester->nm_semester . ') ' . $item->semester->tahun_ajaran;
             })

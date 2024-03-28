@@ -35,7 +35,7 @@
                                     <th>Mata Pelajaran</th>
                                     <th>Jenis Mata Pelajaran</th>
                                     <th>Kelas</th>
-                                    <th>Nilai Siswa Terisi</th>
+                                    {{-- <th>Nilai Siswa Terisi</th> --}}
                                     <th>Semester</th>
                                     {{-- <th>Action</th> --}}
                                     <th>Pembuat</th>
@@ -89,14 +89,14 @@
                 className: 'align-center',
                 orderable: false,
             },
-            {
-                data: 'jumlah',
-                name: 'jumlah',
-                className: 'align-center',
-                searchable: false,
-                orderable: false,
-                className: 'align-center'
-            },
+            // {
+            //     data: 'jumlah',
+            //     name: 'jumlah',
+            //     className: 'align-center',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center'
+            // },
             {
                 data: 'semester',
                 name: 'semester',
