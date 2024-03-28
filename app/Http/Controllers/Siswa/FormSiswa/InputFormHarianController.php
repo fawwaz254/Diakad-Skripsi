@@ -179,8 +179,10 @@ class InputFormHarianController extends Controller
                     } elseif ($input->jenis_pertanyaan[$key] == '4') { // jenis pertanyaan banyak opsi
                         // handle jawaban
                         $jawaban = [];
-                        foreach ($input->jawaban_pertanyaan[$key] as $value) {
-                            $jawaban[] = $value;
+                        if (isset($input->jawaban_pertanyaan[$key]) && is_array($input->jawaban_pertanyaan[$key])) {
+                            foreach ($input->jawaban_pertanyaan[$key] as $value) {
+                                $jawaban[] = $value;
+                            }
                         }
                         $detail_jawaban_form->jawaban = json_encode($jawaban);
 
@@ -239,8 +241,10 @@ class InputFormHarianController extends Controller
                     } elseif ($input->jenis_pertanyaan[$key] == '4') { // jenis pertanyaan banyak opsi
                         // handle jawaban
                         $jawaban = [];
-                        foreach ($input->jawaban_pertanyaan[$key] as $value) {
-                            $jawaban[] = $value;
+                        if (isset($input->jawaban_pertanyaan[$key]) && is_array($input->jawaban_pertanyaan[$key])) {
+                            foreach ($input->jawaban_pertanyaan[$key] as $value) {
+                                $jawaban[] = $value;
+                            }
                         }
                         $detail_jawaban_form->jawaban = json_encode($jawaban);
 
