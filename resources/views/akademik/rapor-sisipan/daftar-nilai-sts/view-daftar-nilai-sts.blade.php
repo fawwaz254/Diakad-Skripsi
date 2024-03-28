@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header" style=" display: flex;
-    justify-content: flex-start;">
-        <div class="dropdown" style="display: inline; margin-right:10px">
+    justify-content: space-between;">
+        <div class="dropdown" style="display: inline; margin-right:50px">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tahun Ajaran
                 <span class="caret"></span></button>
             <ul class="dropdown-menu">
@@ -17,20 +17,6 @@
             </ul>
         </div>
         <input type="hidden" id="thn_akademik_semester" value="">
-
-        <div class="dropdown" style="display: inline; margin-right:10px">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tingkat Kelas<span class="caret"></span></button>
-            <ul class="dropdown-menu">
-                @foreach ($data_tingkat_kelas as $tingkat_kelas)
-                    <li>
-                        <a onclick="changeTingkatKelas(this)" data-id="{{ $tingkat_kelas }}">
-                            {{ $tingkat_kelas }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-        <input type="hidden" id="tingkat_kelas" value="">
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -49,7 +35,7 @@
                                     <th>Mata Pelajaran</th>
                                     <th>Jenis Mata Pelajaran</th>
                                     <th>Kelas</th>
-                                    <th>Nilai Siswa Terisi</th>
+                                    {{-- <th>Nilai Siswa Terisi</th> --}}
                                     <th>Semester</th>
                                     <th>Action</th>
                                     <th>Pembuat</th>
@@ -69,9 +55,6 @@
     var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
 
-    var tingkat_kelas_default = @json($data_tingkat_kelas[0]);
-    var tingkat_kelas_value = $('#tingkat_kelas').val();
-
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
@@ -81,7 +64,6 @@
             type: 'GET',
             data: function(d) {
                 d.thn_akademik_semester = $('#thn_akademik_semester').val();
-                d.tingkat_kelas = tingkat_kelas_value !== '' ? tingkat_kelas_value : tingkat_kelas_default;
             }
         },
         columns: [{
@@ -108,13 +90,13 @@
                 className: 'align-center',
                 orderable: false,
             },
-            {
-                data: 'jumlah',
-                name: 'jumlah',
-                className: 'align-center',
-                searchable: false,
-                orderable: false,
-            },
+            // {
+            //     data: 'jumlah',
+            //     name: 'jumlah',
+            //     className: 'align-center',
+            //     searchable: false,
+            //     orderable: false,
+            // },
             {
                 data: 'semester',
                 name: 'semester',
@@ -157,12 +139,6 @@
     function changeThn(value) {
         var item = $(value);
         $('#thn_akademik_semester').val(item.attr('data-id'));
-        primary_table.draw();
-    }
-    
-    function changeTingkatKelas(value) {
-        var item = $(value);
-        $('#tingkat_kelas').val(item.attr('data-id'));
         primary_table.draw();
     }
 </script>

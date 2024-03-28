@@ -115,14 +115,14 @@
                 className: 'align-center',
                 orderable: false,
             },
-            {
-                data: 'jumlah',
-                name: 'jumlah',
-                className: 'align-center',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-            },
+            // {
+            //     data: 'jumlah',
+            //     name: 'jumlah',
+            //     className: 'align-center',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            // },
             {
                 data: 'semester',
                 name: 'semester',

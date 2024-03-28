@@ -156,7 +156,13 @@
                                 @endphp
                                 <tr>
                                     <td style="text-align: center;">{{ $key }}</td>
-                                    <td>{{ preg_replace('/(IPA|IPS) - /', '', $data2['nm_point'][0]) }}</td>
+                                    <td>
+                                    @if ($kelas->tingkat == 2)
+                                        {{ preg_replace('/(IPA|IPS) - /', '', $data2['nm_point'][0]) }}
+                                    @else
+                                        {{ $data2['nm_point'][0] }}
+                                    @endif
+                                    </td>
                                     <td style="text-align: center;">
                                         {{ isset($data2['kkm'][0]) ? $data2['kkm'][0] : '' }}
                                     </td>
