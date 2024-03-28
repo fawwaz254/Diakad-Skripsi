@@ -9,20 +9,21 @@
     <meta name="token" content="{{ csrf_token() }}">
     @yield('meta')
     @php
-    $theme_name = Request::segment(1);
+        $theme_name = Request::segment(1);
     @endphp
 
     @if ($theme_name != '')
-    <title><?= str_replace('-', ' ', strtoupper($theme_name)) ?> - Sekolah Berbasis Teknologi by EDUMATE</title>
+        <title><?= str_replace('-', ' ', strtoupper($theme_name)) ?> - Sekolah Berbasis Teknologi by EDUMATE</title>
     @else
-    <title>{{ strtoupper(env('APP_NAME', 'diakad')) }} - Sekolah Berbasis Teknologi by EDUMATE</title>
+        <title>{{ strtoupper(env('APP_NAME', 'diakad')) }} - Sekolah Berbasis Teknologi by EDUMATE</title>
     @endif
 
     <!-- Favicon-->
     <link rel="icon" href="{{ asset('favicon_io/favicon-circle.png') }}" type="image/x-icon">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+        type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap Core Css -->
@@ -55,7 +56,8 @@
     <link href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" rel="stylesheet">
 
     <!-- Bootstrap Material Datetime Picker Css -->
-    <link href="{{ asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}"
+        rel="stylesheet" />
 
     <!-- Custom Css -->
     <link href="{{ asset('css/style.css?v=7') }}" rel="stylesheet">
@@ -73,7 +75,9 @@
     <link href="https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw=="
+        crossorigin="anonymous" />
 
     <script>
         var base_url = document.getElementsByTagName('base')[0].getAttribute('href');
@@ -127,7 +131,8 @@
 <!-- Jquery Core Js -->
 <!-- <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script data-pace-options='{ "document": false, "startOnPageLoad": false }' src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+<script data-pace-options='{ "document": false, "startOnPageLoad": false }'
+    src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 
 <!-- Bootstrap Core Js -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.js') }}"></script>
@@ -197,7 +202,8 @@
 <!-- Select2 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js" integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"
+    integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js">
 </script>
@@ -208,7 +214,7 @@
 
 <!-- ApexChart.js #humas-chart -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
+        
 
 <!-- Signature Pad -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
@@ -230,11 +236,10 @@
             },
         });
 
-        @if(session() - > has('toast'))
-        $(window).load(function() {
-            vex.dialog.alert('{{ session('
-                toast ') }}');
-        });
+        @if (session()->has('toast'))
+            $(window).load(function() {
+                vex.dialog.alert('{{ session('toast') }}');
+            });
         @endif
 
         $('.form-validation').validate({
@@ -270,18 +275,18 @@
 
 
 @if (isset(request()->auth_data->google_analytic_id))
-<script async src="https://www.googletagmanager.com/gtag/js?id={{ request()->auth_data->google_analytic_id }}">
-</script>
-<script>
-    window.dataLayer = window.dataLayer || [];
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ request()->auth_data->google_analytic_id }}">
+    </script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', '{{ request()->auth_data->google_analytic_id }}');
-</script>
+        gtag('config', '{{ request()->auth_data->google_analytic_id }}');
+    </script>
 @endif
 
 @yield('js')
