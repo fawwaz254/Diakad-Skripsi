@@ -156,7 +156,7 @@
                                 @endphp
                                 <tr>
                                     <td style="text-align: center;">{{ $key }}</td>
-                                    <td>{{ $data2['nm_point'][0] }}</td>
+                                    <td>{{ preg_replace('/(IPA|IPS) - /', '', $data2['nm_point'][0]) }}</td>
                                     <td style="text-align: center;">
                                         {{ isset($data2['kkm'][0]) ? $data2['kkm'][0] : '' }}
                                     </td>
@@ -386,7 +386,7 @@
                 </tr>
                 <tr>
                     <td style="width: 70%; border-style : hidden;"></td>
-                    <td>Tanggal : 23 Desember 2023</td>
+                    <td>Tanggal : 4 April 2024</td>
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
