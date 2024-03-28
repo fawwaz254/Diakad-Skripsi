@@ -54,7 +54,7 @@
             <div class="row justify-content-md-center">
                 <div class="">
                     <div class="body" id="khusus-login">
-                        
+
                         <form id="kode" action="" method="post" style="display: flex; justify-content:center; align-items:center;">
                             @method('POST')
                             @CSRF
@@ -75,7 +75,7 @@
             <div class="row" style="background-color:#f7f7f7;margin-right:0;margin-left:0;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;padding-top:25px;padding-bottom:25px ">
                 <div class="row">
                     <div class="col-xs-12 align-center">
-                        Powered By <a href="https://edumate.co.id" target="_blank">EDUMATE</a></span>
+                        <img src="https://diakademik.test/favicon_io/favicon-circle.png" height="8" />Diakad By <a href="https://edumate.id" target="_blank">EDUMATE</a></span>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
     input.addEventListener('input', () => input.style.setProperty('--_otp-digit', input.selectionStart));
 </script>
 <script>
-    if("{{isset($error)}}" === "1"){
+    if ("{{isset($error)}}" === "1") {
         swal({
             title: "Error!",
             text: "Kode Tidak Valid!",
