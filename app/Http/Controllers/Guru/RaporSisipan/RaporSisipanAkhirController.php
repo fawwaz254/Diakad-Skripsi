@@ -124,9 +124,9 @@ class RaporSisipanAkhirController extends Controller
             ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
-            ->withCount(['nilai_rapor' => function ($q) {
-                $q->where('nilai', '!=', 0);
-            }])
+            // ->withCount(['nilai_rapor' => function ($q) {
+            //     $q->where('nilai', '!=', 0);
+            // }])
 
             ->orderBy('created_at', 'desc');
 
@@ -143,17 +143,17 @@ class RaporSisipanAkhirController extends Controller
         // $komponen = KomponenNilaiRaporSisipan::where('status', '1')->count();
 
         return Datatables::of($list_data)
-            ->addColumn('jumlah', function ($item) use ($komponen) {
-                $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
-                $nilaiTerisi = $item->nilai_rapor_count;
-                if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
-                    $hasil = '0%';
-                } else {
-                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2) . '%';
-                }
+            // ->addColumn('jumlah', function ($item) use ($komponen) {
+            //     $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
+            //     $nilaiTerisi = $item->nilai_rapor_count;
+            //     if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
+            //         $hasil = '0%';
+            //     } else {
+            //         $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2) . '%';
+            //     }
 
-                return $hasil;
-            })
+            //     return $hasil;
+            // })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran;
             })

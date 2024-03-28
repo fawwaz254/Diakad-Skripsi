@@ -67,9 +67,10 @@ class RaporSisipanController extends Controller
             // }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester'])
             // ->
             with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
-            ->withCount(['nilai_rapor' => function ($q) {
-                $q->where('nilai', '!=', 0);
-            }])->where('nm_rapor', 'sisipan')
+            // ->withCount(['nilai_rapor' => function ($q) {
+            //     $q->where('nilai', '!=', 0);
+            // }])
+            ->where('nm_rapor', 'sisipan')
             ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
@@ -84,20 +85,20 @@ class RaporSisipanController extends Controller
         //ini
 
         return Datatables::of($list_data)
-            ->addColumn('jumlah', function ($item) use ($komponen) {
-                $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
-                $nilaiTerisi = $item->nilai_rapor_count;
-                if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
-                    return '0%';
-                } else {
-                    $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2);
-                    if ($hasil > 100) {
-                        return '100%';
-                    } else {
-                        return $hasil . '%';
-                    }
-                }
-            })
+            // ->addColumn('jumlah', function ($item) use ($komponen) {
+            //     $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
+            //     $nilaiTerisi = $item->nilai_rapor_count;
+            //     if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
+            //         return '0%';
+            //     } else {
+            //         $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2);
+            //         if ($hasil > 100) {
+            //             return '100%';
+            //         } else {
+            //             return $hasil . '%';
+            //         }
+            //     }
+            // })
             ->editColumn('semester', function ($item) {
                 return '(' . $item->semester->nm_semester . ') ' . $item->semester->tahun_ajaran;
             })
