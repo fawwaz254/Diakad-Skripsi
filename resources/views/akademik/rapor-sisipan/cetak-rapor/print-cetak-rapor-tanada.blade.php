@@ -84,7 +84,7 @@
                         <h2 align="center" style="margin-top: 3px">
                             LAPORAN PENILAIAN HASIL BELAJAR<br>
                             {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
-                            TENGAH SEMESTER GASAL<br>
+                            TENGAH SEMESTER GENAP<br>
                             @php
                                 // $nama = $list_nilai->first();
 
