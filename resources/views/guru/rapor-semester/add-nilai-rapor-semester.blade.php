@@ -111,7 +111,7 @@
                             '<div class="col-md-12">' +
                             '<pre>' +
                             ' kasih titik 3 (...) tanpa tanda kurung, akan otomatis terisi' +
-                            ' A = Sangat ,B = menghapus ... ,' +
+                            ' A = Sangat ,B = Baik (menghapus tanda titik 3 [...]) ,' +
                             'C = Cukup ,D = Kurang ' +
                             '</pre>' +
                             '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
