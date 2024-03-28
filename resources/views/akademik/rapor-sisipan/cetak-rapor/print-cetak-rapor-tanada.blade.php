@@ -301,7 +301,8 @@
                     <td style="width:45%; border-style : hidden"></td>
 
                     <td style="width:30%" align="left">Surabaya,
-                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
+                        16 Maret 2024
 
                         <br>
                         Wali Kelas,
