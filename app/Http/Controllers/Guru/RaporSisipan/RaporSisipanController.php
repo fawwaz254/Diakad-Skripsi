@@ -257,73 +257,165 @@ class RaporSisipanController extends Controller
                     ];
                 }
             } elseif ('editNilai') {
-                $rapor = Rapor::with('kelas')->find($id);
-                $auth_data = $input->auth_data;
-                $list_siswa = Siswa::where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
-                    $query->where('aktif_status_pengguna', '=', '1');
-                })->orderBy('nis_siswa')->get();
-                $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
-                    $query->where('nm_jenis_rapor', 'sisipan');
-                })
-                    ->where('nm_komponen_jenis_rapor', '!=', 'uas')
-                    ->orderByRaw('CAST(urutan AS UNSIGNED) ASC')
-                    ->get();
-                $data = json_decode($input->data);
+                try {
+                    DB::beginTransaction();
 
-                if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
-                    if ($rapor->kelas->tingkat == '1') {
-                        $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
+                    $rapor = Rapor::with('kelas')->find($id);
+                    $auth_data = $input->auth_data;
+                    $list_siswa = Siswa::where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
+                        $query->where('aktif_status_pengguna', '=', '1');
+                    })->orderBy('nis_siswa')->get();
+                    $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+                        $query->where('nm_jenis_rapor', 'sisipan');
+                    })
+                        ->where('nm_komponen_jenis_rapor', '!=', 'uas')
+                        ->orderByRaw('CAST(urutan AS UNSIGNED) ASC')
+                        ->get();
+                    $data = json_decode($input->data);
+
+                    if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
+                        if ($rapor->kelas->tingkat == '1') {
+                            $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
+
+                            $list_komponen = $list_komponen->whereIn('urutan', $urutan);
+                        } else if ($rapor->kelas->tingkat == '2') {
+                            $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
+
+                            $list_komponen = $list_komponen->whereIn('urutan', $urutan);
+                        }
+
+                        foreach ($data as $d) {
+                            $siswa = $list_siswa->where('nis_siswa', $d[0])->first();
+                            if ($siswa) {
+                                $no = 2;
+                                if ($rapor->kelas->tingkat == '1') {
+                                    $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
+                                } else if ($rapor->kelas->tingkat == '2') {
+                                    $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
+                                }
+
+                                $nilai_rapors = NilaiRapor::where('id_siswa', $siswa->id_siswa)->where('id_rapor', $id)
+                                    ->whereHas('komponen_jenis_rapor', function ($query) use ($urutan) {
+                                        $query->where('nm_komponen_jenis_rapor', "!=", 'uas')->whereIn('urutan', $urutan);
+                                    })->get();
+
+                                foreach ($list_komponen as $komponen) {
+                                    $nilai_rapor = $nilai_rapors->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
+                                    if ($nilai_rapor) {
+                                        $nilai_rapor->nilai = $nilai_rapor->nilai ?? 0; // jika nilai kosong maka di isi 0
+                                        if ($nilai_rapor->nilai != $d[$no]) {
+                                            $nilai_rapor->nilai = $d[$no];
+                                            $nilai_rapor->save();
+                                        }
+                                    } else {
+                                        if ($d[$no] != "") {
+                                            $nilai_rapor = new NilaiRapor;
+                                            $nilai_rapor->id_nilai_rapor = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                                            $nilai_rapor->id_rapor = $id;
+                                            $nilai_rapor->id_komponen_jenis_rapor = $komponen->id_komponen_jenis_rapor;
+                                            $nilai_rapor->id_siswa = $siswa->id_siswa;
+                                            $nilai_rapor->nilai = $d[$no];
+                                            $nilai_rapor->created_at = Carbon::now();
+                                            $nilai_rapor->created_by = $auth_data->pengguna->id_pengguna;
+                                            $nilai_rapor->save();
+                                        } else {
+                                            $nilai_rapor = new NilaiRapor;
+                                            $nilai_rapor->id_nilai_rapor = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                                            $nilai_rapor->id_rapor = $id;
+                                            $nilai_rapor->id_komponen_jenis_rapor = $komponen->id_komponen_jenis_rapor;
+                                            $nilai_rapor->id_siswa = $siswa->id_siswa;
+                                            $nilai_rapor->nilai = 0;
+                                            $nilai_rapor->created_at = Carbon::now();
+                                            $nilai_rapor->created_by = $auth_data->pengguna->id_pengguna;
+                                            $nilai_rapor->save();
+                                        }
+                                    }
+
+                                    $no++;
+                                }
+                            }
+                        }
+
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => 'Update Sukses',
+                        ];
+                    } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
+                        if ($rapor->kelas->tingkat == '1' || $rapor->kelas->tingkat == '2') {
+                            $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
+                        } else {
+                            $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
+                        }
 
                         $list_komponen = $list_komponen->whereIn('urutan', $urutan);
-                    } else if ($rapor->kelas->tingkat == '2') {
-                        $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
 
-                        $list_komponen = $list_komponen->whereIn('urutan', $urutan);
+                        foreach ($data as $d) {
+                            $siswa = $list_siswa->where('nis_siswa', $d[0])->first();
+                            if ($siswa) {
+                                $no = 2;
+                                if ($rapor->kelas->tingkat == '1' || $rapor->kelas->tingkat == '2') {
+                                    $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
+                                } else {
+                                    $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
+                                }
+
+                                $nilai_rapors = NilaiRapor::where('id_siswa', $siswa->id_siswa)->where('id_rapor', $id)
+                                    ->whereHas('komponen_jenis_rapor', function ($query) use ($urutan) {
+                                        $query->where('nm_komponen_jenis_rapor', "!=", 'uas')->whereIn('urutan', $urutan);
+                                    })->get();
+
+                                foreach ($list_komponen as $komponen) {
+                                    $nilai_rapor = $nilai_rapors->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
+                                    if ($nilai_rapor) {
+                                        $nilai_rapor->nilai = $nilai_rapor->nilai ?? 0; // jika nilai kosong maka di isi 0
+                                        if ($nilai_rapor->nilai != $d[$no]) {
+                                            $nilai_rapor->nilai = $d[$no];
+                                            $nilai_rapor->save();
+                                        }
+                                    } else {
+                                        if ($d[$no] != "") {
+                                            $nilai_rapor = new NilaiRapor;
+                                            $nilai_rapor->id_nilai_rapor = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                                            $nilai_rapor->id_rapor = $id;
+                                            $nilai_rapor->id_komponen_jenis_rapor = $komponen->id_komponen_jenis_rapor;
+                                            $nilai_rapor->id_siswa = $siswa->id_siswa;
+                                            $nilai_rapor->nilai = $d[$no];
+                                            $nilai_rapor->created_at = Carbon::now();
+                                            $nilai_rapor->created_by = $auth_data->pengguna->id_pengguna;
+                                            $nilai_rapor->save();
+                                        } else {
+                                            $nilai_rapor = new NilaiRapor;
+                                            $nilai_rapor->id_nilai_rapor = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                                            $nilai_rapor->id_rapor = $id;
+                                            $nilai_rapor->id_komponen_jenis_rapor = $komponen->id_komponen_jenis_rapor;
+                                            $nilai_rapor->id_siswa = $siswa->id_siswa;
+                                            $nilai_rapor->nilai = 0;
+                                            $nilai_rapor->created_at = Carbon::now();
+                                            $nilai_rapor->created_by = $auth_data->pengguna->id_pengguna;
+                                            $nilai_rapor->save();
+                                        }
+                                    }
+
+                                    $no++;
+                                }
+                            }
+                        }
                     }
 
                     foreach ($data as $d) {
                         $siswa = $list_siswa->where('nis_siswa', $d[0])->first();
                         if ($siswa) {
                             $no = 2;
-                            if ($rapor->kelas->tingkat == '1') {
-                                $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
-                            } else if ($rapor->kelas->tingkat == '2') {
-                                $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
-                            }
-
                             $nilai_rapors = NilaiRapor::where('id_siswa', $siswa->id_siswa)->where('id_rapor', $id)
-                                ->whereHas('komponen_jenis_rapor', function ($query) use ($urutan) {
-                                    $query->where('nm_komponen_jenis_rapor', "!=", 'uas')->whereIn('urutan', $urutan);
+                                ->whereHas('komponen_jenis_rapor', function ($query) {
+                                    $query->where('nm_komponen_jenis_rapor', "!=", 'UAS');
                                 })->get();
-
                             foreach ($list_komponen as $komponen) {
                                 $nilai_rapor = $nilai_rapors->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
                                 if ($nilai_rapor) {
                                     $nilai_rapor->nilai = $nilai_rapor->nilai ?? 0; // jika nilai kosong maka di isi 0
                                     if ($nilai_rapor->nilai != $d[$no]) {
                                         $nilai_rapor->nilai = $d[$no];
-                                        $nilai_rapor->save();
-                                    }
-                                } else {
-                                    if ($d[$no] != "") {
-                                        $nilai_rapor = new NilaiRapor;
-                                        $nilai_rapor->id_nilai_rapor = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                                        $nilai_rapor->id_rapor = $id;
-                                        $nilai_rapor->id_komponen_jenis_rapor = $komponen->id_komponen_jenis_rapor;
-                                        $nilai_rapor->id_siswa = $siswa->id_siswa;
-                                        $nilai_rapor->nilai = $d[$no];
-                                        $nilai_rapor->created_at = Carbon::now();
-                                        $nilai_rapor->created_by = $auth_data->pengguna->id_pengguna;
-                                        $nilai_rapor->save();
-                                    } else {
-                                        $nilai_rapor = new NilaiRapor;
-                                        $nilai_rapor->id_nilai_rapor = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                                        $nilai_rapor->id_rapor = $id;
-                                        $nilai_rapor->id_komponen_jenis_rapor = $komponen->id_komponen_jenis_rapor;
-                                        $nilai_rapor->id_siswa = $siswa->id_siswa;
-                                        $nilai_rapor->nilai = 0;
-                                        $nilai_rapor->created_at = Carbon::now();
-                                        $nilai_rapor->created_by = $auth_data->pengguna->id_pengguna;
                                         $nilai_rapor->save();
                                     }
                                 }
@@ -333,38 +425,20 @@ class RaporSisipanController extends Controller
                         }
                     }
 
+                    DB::Commit();
+
+                    return [
+                        'status' => 300, // SUCCESS
+                        'message' => 'Update Sukses'
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollback();
                     return [
                         'status' => 300, // FAILED
-                        'message' => 'Update Sukses',
+                        'message' => 'Update Gagal',
+                        'error' => $e->getMessage()
                     ];
                 }
-
-                foreach ($data as $d) {
-                    $siswa = $list_siswa->where('nis_siswa', $d[0])->first();
-                    if ($siswa) {
-                        $no = 2;
-                        $nilai_rapors = NilaiRapor::where('id_siswa', $siswa->id_siswa)->where('id_rapor', $id)
-                            ->whereHas('komponen_jenis_rapor', function ($query) {
-                                $query->where('nm_komponen_jenis_rapor', "!=", 'UAS');
-                            })->get();
-                        foreach ($list_komponen as $komponen) {
-                            $nilai_rapor = $nilai_rapors->where('id_komponen_jenis_rapor', $komponen->id_komponen_jenis_rapor)->first();
-                            if ($nilai_rapor) {
-                                $nilai_rapor->nilai = $nilai_rapor->nilai ?? 0; // jika nilai kosong maka di isi 0
-                                if ($nilai_rapor->nilai != $d[$no]) {
-                                    $nilai_rapor->nilai = $d[$no];
-                                    $nilai_rapor->save();
-                                }
-                            }
-
-                            $no++;
-                        }
-                    }
-                }
-                return [
-                    'status' => 300, // FAILED
-                    'message' => 'Update Sukses',
-                ];
             }
         }
     }
@@ -535,6 +609,14 @@ class RaporSisipanController extends Controller
             }
 
             $list_data = $list_data->whereIn('urutan', $urutan);
+        } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
+            if ($rapor->kelas->tingkat == '1' || $rapor->kelas->tingkat == '2') {
+                $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
+            } else {
+                $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
+            }
+
+            $list_data = $list_data->whereIn('urutan', $urutan);
         }
 
         $dynamicColumns = [
@@ -575,6 +657,27 @@ class RaporSisipanController extends Controller
                     $urutan = [1, 2, 5]; // urutan komponen yang di include untuk kelas 10
                 } else if ($item->kelas->tingkat == '2') {
                     $urutan = [3, 4, 6]; // urutan komponen yang di include untuk kelas 11
+                }
+                $nilai_rapors = NilaiRapor::where('id_siswa', $item->id_siswa)->where('id_rapor', $id_rapor)
+                    ->whereHas('komponen_jenis_rapor', function ($query) use ($urutan) {
+                        $query->where('nm_komponen_jenis_rapor', "!=", 'uas')->whereIn('urutan', $urutan);
+                    })->get();
+                foreach ($nilai_rapors as $n) {
+                    $data[$n->id_komponen_jenis_rapor] = $n->nilai;
+                }
+                return $data;
+            })->toArray();
+
+            return response()->json($list_data);
+        } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
+            $list_data = $siswa->map(function ($item) use ($id_rapor) {
+                $data = array();
+                $data['nis_siswa'] = $item->nis_siswa;
+                $data['nm_pengguna'] = $item->pengguna->nm_pengguna;
+                if ($item->kelas->tingkat == '1' || $item->kelas->tingkat == '2') {
+                    $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
+                } else {
+                    $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
                 }
                 $nilai_rapors = NilaiRapor::where('id_siswa', $item->id_siswa)->where('id_rapor', $id_rapor)
                     ->whereHas('komponen_jenis_rapor', function ($query) use ($urutan) {

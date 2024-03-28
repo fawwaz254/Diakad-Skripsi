@@ -40,6 +40,8 @@ use App\Models\SubRaporSisipan;
 use App\Models\UrutanRaporSisipan;
 use App\Models\WaliKelas;
 use Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Barryvdh\Debugbar\Twig\Extension\Debug;
 use DB;
 use Session;
 use Validator;
@@ -460,7 +462,6 @@ class CetakRaporController extends Controller
             }
         ])->orderBy('urutan')->get();
 
-
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
             if ($kelas->tingkat == '3') {
                 $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
@@ -566,8 +567,6 @@ class CetakRaporController extends Controller
                     $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
                 }
             }
-
-
             if ($kelas->tingkat == '3') {
                 return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas'));
             } else {
