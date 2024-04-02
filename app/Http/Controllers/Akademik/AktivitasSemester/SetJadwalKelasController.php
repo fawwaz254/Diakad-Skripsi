@@ -27,6 +27,7 @@ use App\Models\JenisMataPelajaran;
 use App\Models\Jurusan;
 use App\Models\PresensiMp;
 use App\Models\Semester;
+use Illuminate\Support\Facades\Log;
 
 class SetJadwalKelasController extends Controller
 {
@@ -154,7 +155,6 @@ class SetJadwalKelasController extends Controller
         } else {
             $id_jurusan = null;
         }
-
 
         return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru',  'jam', 'allruangan', 'data_jenis_mata_pelajaran', 'list_jenis_mata_pelajaran', 'list_jurusan', 'id_jurusan'));
     }
@@ -382,37 +382,41 @@ class SetJadwalKelasController extends Controller
                 'message' => 'Save Successfully'
             ];
         } elseif ($mode == 'delete') {
-            // dd($id);
-            if ($kelas_mp = PresensiMp::where('id_kelas_mp', $id)->first()) {
-                return [
-                    'status_code' => 300, // SUCCESS AND LOAD TABLE
-                    'message' => 'Tidak boleh dihapus karena Sudah dilakukan penilaian'
-                ];
-            } else {
-                DB::beginTransaction();
-                try {
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
-
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    PengampuMp::where('id_kelas_mp', $id)->delete();
-
-                    KelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    KelasMp::where('id_kelas_mp', $id)->delete();
-                    DB::commit();
+            try {
+                if (PresensiMp::where('id_kelas_mp', $id)->first()) { // jika jadwal sudah diisi presensi, maka tidak boleh dihapus
                     return [
-                        'status_code' => 202, // SUCCESS AND LOAD TABLE
-                        'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                        'message' => 'Delete Jadwal Mata Ajar Successfully'
-                    ];
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    return [
-                        'status_code' => 202, // SUCCESS AND LOAD TABLE
-                        'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                        'message' => 'Delete Jadwal Mata Ajar Gagal'
+                        'status_code' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Tidak boleh dihapus karena Sudah dilakukan penilaian'
                     ];
                 }
+                DB::beginTransaction();
+
+                JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_at' => $now, 'deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                JadwalKelasMp::where('id_kelas_mp', $id)->delete();
+
+                PengampuMp::where('id_kelas_mp', $id)->update(['deleted_at' => $now, 'deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                PengampuMp::where('id_kelas_mp', $id)->delete();
+
+                KelasMp::where('id_kelas_mp', $id)->update(['deleted_at' => $now, 'deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                KelasMp::where('id_kelas_mp', $id)->delete();
+
+                DB::commit();
+
+                return [
+                    'status_code' => 202, // SUCCESS AND LOAD TABLE
+                    'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                    'message' => 'Delete Jadwal Mata Ajar Successfully'
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                Log::error('Error Delete Jadwal Mata Ajar: ' . $e->getMessage());
+
+                return [
+                    'status_code' => 202, // SUCCESS AND LOAD TABLE
+                    'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                    'message' => 'Delete Jadwal Mata Ajar Gagal'
+                ];
             }
         } elseif ($mode = 'edit') {
             $jadwal_kelas_mp                        = JadwalKelasMp::find($id);
