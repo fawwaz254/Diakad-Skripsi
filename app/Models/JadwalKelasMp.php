@@ -19,15 +19,18 @@ class JadwalKelasMp extends Model
     public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_kelas_mp',
         'id_ruangan',
         'id_jadwal_hari',
         'id_jadwal_jam',
         'id_jadwal_jam_selesai',
+        'created_at',
         'created_by',
+        'updated_at',
         'updated_by',
+        'deleted_at',
         'deleted_by'
     ];
 
