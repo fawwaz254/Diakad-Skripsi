@@ -93,15 +93,10 @@
                                                 <table align="center" class="table table-bordered" border="0"
                                                     cellspacing="0" cellpadding="0">
                                                     <tr>
-
                                                         <td width="85px"
                                                             style="padding:  0 10px 0 10px ; background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}; font-weight: bold;text-align:left;vertical-align: middle">
                                                             <span style="float:right;">
                                                                 @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
-                                                                    {{-- <button type="button"class="btn bg-blue waves-effect passingID3"
-                                                                    style="padding: 0 4px 0 4px " ata-toggle="modal"
-                                                                    data-id='test'  id="person">
-                                                                    <i class="material-icons">person</i></button> --}}
                                                                     <button
                                                                         type="button"class="btn bg-blue waves-effect passingID2"
                                                                         data-toggle="modal"
@@ -115,9 +110,8 @@
                                                                         data-hari=" {{ $hari->id_jadwal_hari }}"
                                                                         data-id-pengampu-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_pengampu_mp'] }}'
                                                                         id="edit" style="padding: 0 4px 0 4px ">
-                                                                        <i class="material-icons">edit</i></button>
-                                                                    {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam']  }}
-                                                                    {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }} --}}
+                                                                        <i class="material-icons">edit</i>
+                                                                    </button>
                                                             </span>
                                                         @else
                                             @endif
@@ -125,9 +119,7 @@
                                         </td>
                                         <td
                                             style="background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}">
-                                            @if (
-                                                $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1' &&
-                                                    empty($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_presensi_mp']))
+                                            @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
                                                 <button type="button"class="btn bg-red waves-effect delete-record"
                                                     data-id="{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_kelas_mp'] }}"
                                                     style="padding: 0 4px 0 4px ">
@@ -166,8 +158,6 @@
                         <i class="material-icons ">add</i>
                     </button>
                     @endif
-
-
                     </td>
                     @endforeach
                     </tr>
