@@ -4,7 +4,7 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                    INPUT PENERIMAAN
+                        INPUT PENERIMAAN
                     </h2>
                 </div>
                 @include('keuangan/sim/spp/partials/header-card-menu')
@@ -20,19 +20,18 @@
                                 @endif
                                 <label>Tahun Ajaran</label>
                                 <select class="form-control show-tick" name="tahun">
-                                @foreach($data_semester as $semester)
-                                    <option value="{{$semester->thn_akademik_semester}}"
-                                        @if($realisasi)
-                                            @if($semester->id_semester == $realisasi->id_semester_realisasi)
-                                                selected
-                                            @endif
+                                    @foreach($data_semester as $semester)
+                                    <option value="{{$semester->thn_akademik_semester}}" @if($realisasi) @if($semester->id_semester == $realisasi->id_semester_realisasi)
+                                        selected
+                                        @endif
                                         @else
-                                            @if($semester->thn_akademik_semester == $tahun_akademik_semester)
-                                                selected
-                                            @endif
+                                        @if($semester->thn_akademik_semester == $tahun_akademik_semester)
+                                        selected
+                                        @endif
                                         @endif>
-                                    {{$semester->tahun_ajaran}}</option>
-                                @endforeach
+                                        {{$semester->tahun_ajaran}}
+                                    </option>
+                                    @endforeach
                                 </select>
                                 <br>
                                 <div class="form-group">
@@ -76,14 +75,16 @@
     </div>
 </div>
 @include('scriptjs')
-    <script>
-    $(function(){
+<script>
+    $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
             //lang : 'id',
             clearButton: true,
             weekStart: 1,
-            time: false
+            time: false,
+            minDate: '{{ $minDate }}',
+            maxDate: '{{ $maxDate }}',
         });
     });
-    </script>
+</script>

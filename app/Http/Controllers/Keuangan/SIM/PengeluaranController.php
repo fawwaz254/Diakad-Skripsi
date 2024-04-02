@@ -138,14 +138,31 @@ class PengeluaranController extends BaseController
         $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester . '2')->first();
 
         if ($item = Rapb::where(['id_subkategori_rapb' => $id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first()) {
-
         } else {
             $item = null;
         }
 
         $subkategori_rapb = SubkategoriRapb::find($id_subkategori_rapb);
 
-        return view('keuangan/sim/pengeluaran/view-menu-input-target', compact('auth_data', 'item', 'semester_mulai', 'tahun_akademik_semester', 'subkategori_rapb'));
+        $maxDate = Carbon::now()->addMonth()->format('Y/m/d');
+        $minDate = Carbon::now()->subMonths(6)->format('Y/m/d');
+
+        $semester_aktif = Semester::where('is_aktif_semester', 1)->first();
+        $semester_ganjil = Semester::where('kode_semester', $semester_aktif->thn_akademik_semester . '1')->first();
+        $semester_genap = Semester::where('kode_semester', $semester_aktif->thn_akademik_semester . '2')->first();
+
+        $id_semester_mulai = $semester_ganjil->id_semester;
+        $id_semester_selesai = $semester_genap->id_semester;
+        if ($tutup_buku_bulanan_kas_last = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'is_fix' => 1, 'created_by' => $auth_data->pengguna->id_pengguna])->orderBy('updated_at', 'desc')->orderBy('id_bulan', 'desc')->first()) {
+            if ($tutup_buku_bulanan_kas_last->id_bulan < 7) {
+                $tahun_semester = $semester_aktif->thn_akademik_semester + 1;
+            } else {
+                $tahun_semester = $semester_aktif->thn_akademik_semester;
+            }
+            $minDate = Carbon::parse($tahun_semester . '-' . $tutup_buku_bulanan_kas_last->id_bulan . '-01')->addMonth()->format('Y/m/d');
+        }
+
+        return view('keuangan/sim/pengeluaran/view-menu-input-target', compact('auth_data', 'item', 'semester_mulai', 'tahun_akademik_semester', 'minDate', 'maxDate', 'subkategori_rapb'));
     }
 
     public function actionSaveEditTarget(Request $request)
@@ -201,12 +218,14 @@ class PengeluaranController extends BaseController
                     if ($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                         ->where('guru.jenis_jabatan', '=', 2)
                         ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                        ->first()) {
+                        ->first()
+                    ) {
                         $rapb->id_pengguna_kepala_unit = $kepala_unit_keuangan->id_pengguna;
                     } else if ($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                         ->where('staff.jenis_jabatan', '=', 2)
                         ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                        ->first()) {
+                        ->first()
+                    ) {
                         $rapb->id_pengguna_kepala_keuangan = $kepala_unit_keuangan->id_pengguna;
                     }
                 }
@@ -318,7 +337,6 @@ class PengeluaranController extends BaseController
             $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
 
             if ($rapb) {
-
             } else {
                 $rapb = new Rapb;
                 $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -340,12 +358,14 @@ class PengeluaranController extends BaseController
                 if ($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.jenis_jabatan', '=', 2)
                     ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                    ->first()) {
+                    ->first()
+                ) {
                     $rapb->id_pengguna_kepala_unit = $kepala_unit_keuangan->id_pengguna;
                 } else if ($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.jenis_jabatan', '=', 2)
                     ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                    ->first()) {
+                    ->first()
+                ) {
                     $rapb->id_pengguna_kepala_keuangan = $kepala_unit_keuangan->id_pengguna;
                 }
                 $rapb->save();
@@ -425,7 +445,25 @@ class PengeluaranController extends BaseController
             $q->where('tipe_kategori_rapb', 2);
         })->get();
 
-        return view('keuangan/sim/pengeluaran/view-menu-input', compact('auth_data', 'pengeluaran', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'rapb'));
+        $maxDate = Carbon::now()->addMonth()->format('Y/m/d');
+        $minDate = Carbon::now()->subMonths(6)->format('Y/m/d');
+
+        $semester_aktif = Semester::where('is_aktif_semester', 1)->first();
+        $semester_ganjil = Semester::where('kode_semester', $semester_aktif->thn_akademik_semester . '1')->first();
+        $semester_genap = Semester::where('kode_semester', $semester_aktif->thn_akademik_semester . '2')->first();
+
+        $id_semester_mulai = $semester_ganjil->id_semester;
+        $id_semester_selesai = $semester_genap->id_semester;
+        if ($tutup_buku_bulanan_kas_last = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'is_fix' => 1, 'created_by' => $auth_data->pengguna->id_pengguna])->orderBy('updated_at', 'desc')->orderBy('id_bulan', 'desc')->first()) {
+            if ($tutup_buku_bulanan_kas_last->id_bulan < 7) {
+                $tahun_semester = $semester_aktif->thn_akademik_semester + 1;
+            } else {
+                $tahun_semester = $semester_aktif->thn_akademik_semester;
+            }
+            $minDate = Carbon::parse($tahun_semester . '-' . $tutup_buku_bulanan_kas_last->id_bulan . '-01')->addMonth()->format('Y/m/d');
+        }
+
+        return view('keuangan/sim/pengeluaran/view-menu-input', compact('auth_data', 'pengeluaran', 'data_semester', 'tahun_akademik_semester', 'minDate', 'maxDate', 'data_subkategori', 'rapb'));
     }
 
     public function deletePengeluaran(Request $request, $id)
