@@ -70,7 +70,25 @@ class SppController extends BaseController
             $realisasi = null;
         }
 
-        return view('keuangan/sim/spp/view-menu-input-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'realisasi'));
+        $maxDate = Carbon::now()->addMonth()->format('Y/m/d');
+        $minDate = Carbon::now()->subMonths(6)->format('Y/m/d');
+
+        $semester_aktif = Semester::where('is_aktif_semester', 1)->first();
+        $semester_ganjil = Semester::where('kode_semester', $semester_aktif->thn_akademik_semester . '1')->first();
+        $semester_genap = Semester::where('kode_semester', $semester_aktif->thn_akademik_semester . '2')->first();
+
+        $id_semester_mulai = $semester_ganjil->id_semester;
+        $id_semester_selesai = $semester_genap->id_semester;
+        if ($tutup_buku_bulanan_kas_last = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'is_fix' => 1, 'created_by' => $auth_data->pengguna->id_pengguna])->orderBy('updated_at', 'desc')->orderBy('id_bulan', 'desc')->first()) {
+            if ($tutup_buku_bulanan_kas_last->id_bulan < 7) {
+                $tahun_semester = $semester_aktif->thn_akademik_semester + 1;
+            } else {
+                $tahun_semester = $semester_aktif->thn_akademik_semester;
+            }
+            $minDate = Carbon::parse($tahun_semester . '-' . $tutup_buku_bulanan_kas_last->id_bulan . '-01')->addMonth()->format('Y/m/d');
+        }
+
+        return view('keuangan/sim/spp/view-menu-input-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'minDate', 'maxDate', 'data_subkategori', 'realisasi'));
     }
 
     public function viewMenuEditSetting(Request $request, $thn_akademik_semester, $id)
