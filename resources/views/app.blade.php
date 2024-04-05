@@ -27,7 +27,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap Core Css -->
-    <link href="{{ asset('plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/bootstrap/css/bootstrap.css') }}?v=2" rel="stylesheet">
 
     <!-- Waves Effect Css -->
     <link href="{{ asset('plugins/node-waves/waves.css') }}" rel="stylesheet" />
@@ -60,7 +60,7 @@
         rel="stylesheet" />
 
     <!-- Custom Css -->
-    <link href="{{ asset('css/style.css?v=6') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css?v=7') }}" rel="stylesheet">
     <link href="{{ asset('css/loadertemp.css?v=6') }}" rel="stylesheet">
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->

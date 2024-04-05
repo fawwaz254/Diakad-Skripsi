@@ -3270,7 +3270,7 @@ section.content {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
-  border-radius: 2px;
+  border-radius: 8px;
   border: none;
   font-size: 13px;
   outline: none;
@@ -3698,10 +3698,10 @@ section.content {
   bottom: 0;
   left: 0;
   /* padding: 30px; */
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  border-radius: 5px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  border-radius: 8px;
 }
 
 .card.is-gap {
@@ -3921,84 +3921,84 @@ section.content {
 .card .body .col-sm-1,
 .card .body .col-md-1,
 .card .body .col-lg-1 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-2,
 .card .body .col-sm-2,
 .card .body .col-md-2,
 .card .body .col-lg-2 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-3,
 .card .body .col-sm-3,
 .card .body .col-md-3,
 .card .body .col-lg-3 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-4,
 .card .body .col-sm-4,
 .card .body .col-md-4,
 .card .body .col-lg-4 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-5,
 .card .body .col-sm-5,
 .card .body .col-md-5,
 .card .body .col-lg-5 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-6,
 .card .body .col-sm-6,
 .card .body .col-md-6,
 .card .body .col-lg-6 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-7,
 .card .body .col-sm-7,
 .card .body .col-md-7,
 .card .body .col-lg-7 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-8,
 .card .body .col-sm-8,
 .card .body .col-md-8,
 .card .body .col-lg-8 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-9,
 .card .body .col-sm-9,
 .card .body .col-md-9,
 .card .body .col-lg-9 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-10,
 .card .body .col-sm-10,
 .card .body .col-md-10,
 .card .body .col-lg-10 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-11,
 .card .body .col-sm-11,
 .card .body .col-md-11,
 .card .body .col-lg-11 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .card .body .col-xs-12,
 .card .body .col-sm-12,
 .card .body .col-md-12,
 .card .body .col-lg-12 {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 /* Infobox ===================================== */
@@ -5352,7 +5352,7 @@ section.content {
 /* Bootstrap Select ============================ */
 .bootstrap-select {
   box-shadow: none !important;
-  border-bottom: 1px solid #ddd !important;
+  /* border-bottom: 1px solid #ddd !important; */
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   -ms-border-radius: 0;
@@ -6792,11 +6792,11 @@ section.content {
 .input-group .form-line {
   display: inline-block;
   width: 100%;
-  border-bottom: 1px solid #ddd;
+  /* border-bottom: 1px solid #ddd; */
   position: relative;
 }
 
-.input-group .form-line:after {
+/* .input-group .form-line:after {
   content: '';
   position: absolute;
   left: 0;
@@ -6812,7 +6812,7 @@ section.content {
   -webkit-transition: 0.25s ease-in;
   transition: 0.25s ease-in;
   border-bottom: 2px solid #1f91f3;
-}
+} */
 
 .input-group .form-line+.input-group-addon {
   padding-right: 0;
@@ -6916,7 +6916,10 @@ section.content {
 
 .form-group {
   width: 100%;
-  margin-bottom: 25px;
+  margin-bottom: 2px;
+  border: 1px solid #14142C33;
+  padding: 2px 8px;
+  border-radius: 8px;
 }
 
 .form-group .form-control {
@@ -6948,10 +6951,10 @@ section.content {
 .form-group .form-line {
   width: 100%;
   position: relative;
-  border-bottom: 1px solid #ddd;
+  /* border-bottom: 1px solid #ddd; */
 }
 
-.form-group .form-line:after {
+/* .form-group .form-line:after {
   content: '';
   position: absolute;
   left: 0;
@@ -6968,7 +6971,7 @@ section.content {
   -webkit-transition: 0.25s ease-in;
   transition: 0.25s ease-in;
   border-bottom: 2px solid #235789;
-}
+} */
 
 .form-group .form-line .form-label {
   font-weight: normal;
@@ -6995,13 +6998,13 @@ section.content {
   border-bottom: 2px solid #FFC107;
 }
 
-.form-group .form-line.focused:after {
+/* .form-group .form-line.focused:after {
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
   -o-transform: scaleX(1);
   -webkit-transform: scaleX(1);
   transform: scaleX(1);
-}
+} */
 
 .form-group .form-line.focused .form-label {
   top: -10px;
@@ -11008,4 +11011,8 @@ html.ie11 .bs-searchbox .form-control {
 
 .others-option input[type="text"]:focus {
   border: 1px solid #26a69a !important;
+}
+
+.btn.dropdown-toggle{
+  padding: 10px 12px 6px !important;
 }
