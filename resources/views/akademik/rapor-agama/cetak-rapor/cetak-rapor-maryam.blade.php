@@ -200,12 +200,42 @@
                                     <td style="text-align: center;">{{ $data2['kkm'][0] }}</td>
                                     @php
                                         $nilai_akhir = 0;
-                                        if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[0]->id_komponen_jenis_rapor . 'nilai'])) {
-                                            $pengetahuan += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[0]->id_komponen_jenis_rapor . 'nilai'];
+                                        if (
+                                            isset(
+                                                $nilai_siswa[
+                                                    $siswa->id_siswa .
+                                                        $data2['id_mata_pelajaran'][0] .
+                                                        $list_komponen[0]->id_komponen_jenis_rapor .
+                                                        'nilai'
+                                                ],
+                                            )
+                                        ) {
+                                            $pengetahuan +=
+                                                $nilai_siswa[
+                                                    $siswa->id_siswa .
+                                                        $data2['id_mata_pelajaran'][0] .
+                                                        $list_komponen[0]->id_komponen_jenis_rapor .
+                                                        'nilai'
+                                                ];
                                             $jumlah_pengetahuan += 1;
                                         }
-                                        if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'nilai'])) {
-                                            $keterampilan += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'nilai'];
+                                        if (
+                                            isset(
+                                                $nilai_siswa[
+                                                    $siswa->id_siswa .
+                                                        $data2['id_mata_pelajaran'][0] .
+                                                        $list_komponen[1]->id_komponen_jenis_rapor .
+                                                        'nilai'
+                                                ],
+                                            )
+                                        ) {
+                                            $keterampilan +=
+                                                $nilai_siswa[
+                                                    $siswa->id_siswa .
+                                                        $data2['id_mata_pelajaran'][0] .
+                                                        $list_komponen[1]->id_komponen_jenis_rapor .
+                                                        'nilai'
+                                                ];
                                             $jumlah_keterampilan += 1;
                                         }
 
@@ -227,9 +257,38 @@
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[2]->id_komponen_jenis_rapor . 'nilai']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[2]->id_komponen_jenis_rapor . 'nilai'] : '' }}
                                     </td>
                                     @php
-                                        if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[0]->id_komponen_jenis_rapor . 'nilai']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'nilai'])) {
-                                            $nilai_akhir += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[0]->id_komponen_jenis_rapor . 'nilai'];
-                                            $nilai_akhir += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $list_komponen[1]->id_komponen_jenis_rapor . 'nilai'];
+                                        if (
+                                            isset(
+                                                $nilai_siswa[
+                                                    $siswa->id_siswa .
+                                                        $data2['id_mata_pelajaran'][0] .
+                                                        $list_komponen[0]->id_komponen_jenis_rapor .
+                                                        'nilai'
+                                                ],
+                                            ) &&
+                                            isset(
+                                                $nilai_siswa[
+                                                    $siswa->id_siswa .
+                                                        $data2['id_mata_pelajaran'][0] .
+                                                        $list_komponen[1]->id_komponen_jenis_rapor .
+                                                        'nilai'
+                                                ],
+                                            )
+                                        ) {
+                                            $nilai_akhir +=
+                                                $nilai_siswa[
+                                                    $siswa->id_siswa .
+                                                        $data2['id_mata_pelajaran'][0] .
+                                                        $list_komponen[0]->id_komponen_jenis_rapor .
+                                                        'nilai'
+                                                ];
+                                            $nilai_akhir +=
+                                                $nilai_siswa[
+                                                    $siswa->id_siswa .
+                                                        $data2['id_mata_pelajaran'][0] .
+                                                        $list_komponen[1]->id_komponen_jenis_rapor .
+                                                        'nilai'
+                                                ];
                                             $nilai_akhir = $nilai_akhir / 2;
                                             if ($nilai_akhir >= 90 && $nilai_akhir <= 100) {
                                                 $hasil = 'A';
@@ -329,7 +388,7 @@
 
                     </td>
                     <td style="width: 35%;">
-                        {{ 'Surabaya, 21 Desember 2023' }}
+                        {{ 'Surabaya, 6 Mei 2024' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
