@@ -132,37 +132,39 @@
                 } else if (result['kelas'].type_rapor == '3') {
                     var html = '';
                     $.each(result['kelas'].jenis_rapor.komponen_jenis_rapor, function(key, item) {
-                        html += '<div class="col-md-12">' +
-                            '<label>Keterangan ' + item.nm_komponen_jenis_rapor +
-                            '</label>' +
-                            '</div>' +
-                            '<div class="row clearfix">' +
-                            '<div class="col-md-3">' +
-                            '<pre>' +
-                            'Menunjukkan penguasaan yang ... baik dalam ' +
-                            '</pre>' +
-                            '</div>' +
-                            '<div class="col-md-9">' +
-                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
-                            item
-                            .id_komponen_jenis_rapor +
-                            ']" aria-required="true" aria-invalid="true"></textarea>' +
-                            '</div></div>' +
-                            '<div class="col-md-12">' +
-                            '<label>Keterangan ' + item.nm_komponen_jenis_rapor + ' bawah</label>' +
-                            '</div>' +
-                            '<div class="row clearfix">' +
-                            '<div class="col-md-3">' +
-                            '<pre>' +
-                            'Perlu meningkatkan penguasaan dalam ' +
-                            '</pre>' +
-                            '</div>' +
-                            '<div class="col-md-9">' +
-                            '<textarea rows="1" cols="50" class="form-control" name="keterangan2[' +
-                            item
-                            .id_komponen_jenis_rapor + ']" aria-required="true"' +
-                            'aria-invalid="true"></textarea>' +
-                            '</div></div>';
+                        if (item.nm_komponen_jenis_rapor !== 'STS' && item
+                            .nm_komponen_jenis_rapor !== 'SAS') {
+                            html += '<div class="col-md-12">' +
+                                '<label>Keterangan ' + item.nm_komponen_jenis_rapor + ' tertinggi' +
+                                '</label>' +
+                                '</div>' +
+                                '<div class="row clearfix">' +
+                                '<div class="col-md-3">' +
+                                '<pre>' +
+                                'Menunjukkan penguasaan yang ... baik dalam ' +
+                                '</pre>' +
+                                '</div>' +
+                                '<div class="col-md-9">' +
+                                '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
+                                item.id_komponen_jenis_rapor +
+                                ']" aria-required="true" aria-invalid="true"></textarea>' +
+                                '</div></div>' +
+                                '<div class="col-md-12">' +
+                                '<label>Keterangan ' + item.nm_komponen_jenis_rapor + ' terendah' +
+                                '</label>' +
+                                '</div>' +
+                                '<div class="row clearfix">' +
+                                '<div class="col-md-3">' +
+                                '<pre>' +
+                                'Perlu meningkatkan penguasaan dalam ' +
+                                '</pre>' +
+                                '</div>' +
+                                '<div class="col-md-9">' +
+                                '<textarea rows="1" cols="50" class="form-control" name="keterangan2[' +
+                                item.id_komponen_jenis_rapor + ']" aria-required="true"' +
+                                'aria-invalid="true"></textarea>' +
+                                '</div></div>';
+                        }
                     });
                     $('#place').html(html);
 
