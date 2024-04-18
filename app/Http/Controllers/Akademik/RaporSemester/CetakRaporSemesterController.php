@@ -534,7 +534,7 @@ class CetakRaporSemesterController extends Controller
 
                 $nilaiRapors = NilaiRapor::where('nilai', '>', 0)->whereIn('id_rapor', $rapors->pluck('id_rapor'))
                     ->whereHas('komponen_jenis_rapor', function ($query) {
-                        $query->where('nm_komponen_jenis_rapor', '!=', 'UAS');
+                        $query->where('nm_komponen_jenis_rapor', '!=', 'UAS')->where('nm_komponen_jenis_rapor', '!=', 'STS')->where('nm_komponen_jenis_rapor', '!=', 'SAS');
                     })->get();
 
                 foreach ($rapors as $rapor) {
