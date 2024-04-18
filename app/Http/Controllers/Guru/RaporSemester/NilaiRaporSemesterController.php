@@ -222,7 +222,7 @@ class NilaiRaporSemesterController extends Controller
                         $rapor->keterangan          = $input->keterangan;
                         $rapor->keterangan2         = $input->keterangan2;
                     } elseif ($kelas->type_rapor == '3') {
-                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
+                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->where('nm_komponen_jenis_rapor', '!=', 'SAS')->where('nm_komponen_jenis_rapor', '!=', 'STS')->get();
                         foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
                             $keterangan_rapor = new KeteranganRapor;
                             $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -306,7 +306,7 @@ class NilaiRaporSemesterController extends Controller
                         }
                     } elseif ($kelas->type_rapor == '3') {
                         $keterangan_rapor = KeteranganRapor::where('id_rapor', $rapor->id_rapor)->delete();
-                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
+                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->where('nm_komponen_jenis_rapor', '!=', 'SAS')->where('nm_komponen_jenis_rapor', '!=', 'STS')->get();
                         foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
                             $keterangan_rapor = new KeteranganRapor;
                             $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();

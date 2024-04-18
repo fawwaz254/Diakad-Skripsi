@@ -40,7 +40,7 @@
         }
 
         .body {
-
+            font-size: 15px;
             border: 5px double;
             border-top-style: none;
         }
@@ -74,15 +74,21 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
-
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Nama Peserta Didik
+                    <td style="border-style : hidden;width: 14%;">Nama Siswa
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
                         {{ $siswa->pengguna->nm_pengguna }}
+                    </td>
+                    <td style="border-style : hidden;width: 24%;">Kelas
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
+                        {{ $kelas->nm_kelas }}
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
@@ -93,39 +99,45 @@
                     <td style="border-style : hidden;width: 35%;">
                         {{ $siswa->nisn_siswa . '/' . $siswa->nis_siswa }}
                     </td>
-
+                    <td style="border-style : hidden;width: 24%;">Fase
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
+                        E
+                    </td>
                 </tr>
                 <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Kelas
+                    <td style="border-style : hidden;width: 14%;">Sekolah
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
-                        {{ $kelas->nm_kelas }}
+                        {{ $auth_data->sekolah_data->nm_sekolah }}
                     </td>
-                </tr>
-                <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Semester
+                    <td style="border-style : hidden;width: 24%;">Semester
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;">
+                    <td style="border-style : hidden;width: 25%; ">
                         {{ $semester->nm_semester }}
                     </td>
                 </tr>
-                <tr>
-                    <td style="border-style : hidden;width: 14%;vertical-align: top;">Tahun Pelajaran
+                <tr style="border-style : hidden ;">
+                    <td style="border-style : hidden;width: 14%;">Alamat
                     </td>
-                    <td style="border-style : hidden;width: 1%;vertical-align: top;"> :
+                    <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;vertical-align: top;">
+                    <td style="border-style : hidden;width: 35%;">Wadungasri Dalam No. 24
+                    </td>
+                    <td style="border-style : hidden;width: 24%;">Tahun Pelajaran
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
                         {{ $semester->tahun_ajaran }}
                     </td>
                 </tr>
-
-
-
-
             </table>
 
             <br>
@@ -139,63 +151,46 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #d4d4d4">
                     <tr>
-                        <th>No</th>
-                        <th>Mata Pelajaran</th>
-                        @foreach ($list_komponen as $komponen)
-                            <th>{{ $komponen->nm_komponen_jenis_rapor }}</th>
-                        @endforeach
-                        <th>Nilai Akhir</th>
-                        <th>Predikat</th>
+                    <tr>
+                        <th style="width: 5%">No</th>
+                        <th style="width: 30%">Mata Pelajaran</th>
+                        <th style="width: 5%">Nilai</th>
+                        <th>Capaian Kompetensi</th>
+                    </tr>
                     </tr>
                 </thead>
                 <tbody class="body">
                     @foreach ($data as $kelompok)
                         @if (isset($kelompok['data']))
-                            <tr>
-                                <td colspan="2" style="font-weight: bold;">
-                                    {{ isset($kelompok['nama']) ? $kelompok['nama'] : '' }}</td>
-                            </tr>
+                            @php
+                                $no = 0;
+                            @endphp
                             @foreach ($kelompok['data'] as $key => $data2)
                                 @php
                                     $jumlah = count($data2['nm_point']);
                                 @endphp
+                                @if (!isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata']) && $kelas->tingkat == '2')
+                                    @continue
+                                @endif
                                 <tr>
-                                    <td style="text-align: center;">{{ $key }}</td>
-                                    <td>{{ $data2['nm_point'][0] }}</td>
+                                    <td style="text-align: center;width: 5%" rowspan="2">{{ ++$no }}</td>
+                                    <td rowspan="2">{{ $data2['nm_point'][0] }}</td>
+
                                     @php
-                                        $nilai_akhir = 0;
+                                        $komponen = $list_komponen->first();
                                     @endphp
-                                    @foreach ($list_komponen as $komponen)
-                                        <td style="text-align: center;">
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai'] : '' }}
-                                        </td>
-                                        @php
-                                            if (isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai'])) {
-                                                $nilai_akhir += $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor . 'nilai'];
-                                            }
-                                        @endphp
-                                    @endforeach
-                                    @php
-                                        $nilai_akhir = $nilai_akhir / 2;
-                                    @endphp
-                                    <td style="text-align: center;">{{ $nilai_akhir != '0' ? $nilai_akhir : '' }}
+                                    <td style="text-align: center;font-weight: bold;" rowspan="2">
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata'] : '' }}
                                     </td>
-                                    @php
-                                        if ($nilai_akhir >= 90 && $nilai_akhir <= 100) {
-                                            $hasil = 'A';
-                                        } elseif ($nilai_akhir >= 80 && $nilai_akhir < 90) {
-                                            $hasil = 'B';
-                                        } elseif ($nilai_akhir >= 70 && $nilai_akhir < 80) {
-                                            $hasil = 'C';
-                                        } elseif ($nilai_akhir >= 1 && $nilai_akhir < 70) {
-                                            $hasil = 'D';
-                                        } else {
-                                            $hasil = '';
-                                        }
-                                    @endphp
-                                    <td style="text-align: center;">
-                                        {{ $hasil }}
+                                    <td style="padding: 3px">
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan'] : '' }}
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 3px">
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2'] : '' }}
+                                    </td>
+                                </tr>
                                 </tr>
                             @endforeach
                         @endif
@@ -218,16 +213,21 @@
             <br>
         </div>
         <div class="page">
-
-
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Nama Peserta Didik
+                    <td style="border-style : hidden;width: 14%;">Nama Siswa
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
                         {{ $siswa->pengguna->nm_pengguna }}
+                    </td>
+                    <td style="border-style : hidden;width: 24%;">Kelas
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
+                        {{ $kelas->nm_kelas }}
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
@@ -238,32 +238,42 @@
                     <td style="border-style : hidden;width: 35%;">
                         {{ $siswa->nisn_siswa . '/' . $siswa->nis_siswa }}
                     </td>
-
+                    <td style="border-style : hidden;width: 24%;">Fase
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
+                        E
+                    </td>
                 </tr>
                 <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Kelas
+                    <td style="border-style : hidden;width: 14%;">Sekolah
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
-                        {{ $kelas->nm_kelas }}
+                        {{ $auth_data->sekolah_data->nm_sekolah }}
                     </td>
-                </tr>
-                <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Semester
+                    <td style="border-style : hidden;width: 24%;">Semester
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;">
+                    <td style="border-style : hidden;width: 25%; ">
                         {{ $semester->nm_semester }}
                     </td>
                 </tr>
-                <tr>
-                    <td style="border-style : hidden;width: 14%;vertical-align: top;">Tahun Pelajaran
+                <tr style="border-style : hidden ;">
+                    <td style="border-style : hidden;width: 14%;">Alamat
                     </td>
-                    <td style="border-style : hidden;width: 1%;vertical-align: top;"> :
+                    <td style="border-style : hidden;width: 1%;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;vertical-align: top;">
+                    <td style="border-style : hidden;width: 35%;">Wadungasri Dalam No. 24
+                    </td>
+                    <td style="border-style : hidden;width: 24%;">Tahun Pelajaran
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
                         {{ $semester->tahun_ajaran }}
                     </td>
                 </tr>
@@ -349,8 +359,8 @@
                             {{ isset($tambahan['ketidakhadiran'][$siswa->id_siswa][$k->id_tambahan_rapor]) ? $tambahan['ketidakhadiran'][$siswa->id_siswa][$k->id_tambahan_rapor] . ' Hari' : ' - Hari' }}
                         </td>
                         <td
-                            style="width: 50%;border-right: hidden; 
-					border-bottom: hidden; 
+                            style="width: 50%;border-right: hidden;
+					border-bottom: hidden;
 					border-top: hidden;">
                         </td>
                     </tr>
