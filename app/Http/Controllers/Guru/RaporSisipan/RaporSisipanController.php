@@ -335,11 +335,6 @@ class RaporSisipanController extends Controller
                                 }
                             }
                         }
-
-                        return [
-                            'status' => 300, // FAILED
-                            'message' => 'Update Sukses',
-                        ];
                     } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
                         if ($rapor->kelas->tingkat == '1' || $rapor->kelas->tingkat == '2') {
                             $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
