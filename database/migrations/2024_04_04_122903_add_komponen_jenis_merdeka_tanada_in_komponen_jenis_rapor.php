@@ -20,8 +20,9 @@ class AddKomponenJenisMerdekaTanadaInKomponenJenisRapor extends Migration
     public function up()
     {
         Schema::table('komponen_jenis_rapor', function (Blueprint $table) {
-            DB::beginTransaction(); // Start transaction
             try {
+                DB::beginTransaction(); // Begin transaction
+
                 $now = Carbon::now();
                 $sekolah = Sekolah::first();
                 $jenis_rapor = JenisRapor::where('nm_jenis_rapor', 'Merdeka')->first();
@@ -88,12 +89,13 @@ class AddKomponenJenisMerdekaTanadaInKomponenJenisRapor extends Migration
                             'created_at' => $now,
                         ]
                     ]);
-
-                    DB::commit(); // Commit transaction
                 }
+
+                DB::commit(); // Commit transaction
             } catch (\Exception $e) {
                 DB::rollback(); // Rollback transaction
-                throw new \Exception('Migration failed: ' . $e->getMessage());
+
+                throw new \Exception($e->getMessage());
             }
         });
     }
