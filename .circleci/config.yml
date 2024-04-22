@@ -146,7 +146,7 @@ workflows:
       - deploy-to-smk-tanada
       - deploy-to-smk-ypm-1
       - deploy-to-smk-ypm-2
-      - deploy-to-smp-ypm-2
+      # - deploy-to-smp-ypm-2
       # - deploy-to-smk-pemuda
       # - deploy-to-smk-siti-aminah
       - deploy-to-smk-ypm-3
