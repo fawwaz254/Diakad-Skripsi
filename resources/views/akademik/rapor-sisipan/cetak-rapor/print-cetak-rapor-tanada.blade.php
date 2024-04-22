@@ -196,14 +196,14 @@
                                         </td>
                                     @endforeach
                                     <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? intval($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) : '' }}
+                                        {{ isset($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? round($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) : '' }}
                                     </td>
 
                                     <td style="text-align: center;font-weight: bold;">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'uts']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'uts'] : '' }}
                                     </td>
                                     <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa['rata_rata' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? intval($nilai_siswa['rata_rata' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) : '' }}
+                                        {{ isset($nilai_siswa['rata_rata' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? round($nilai_siswa['rata_rata' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) : '' }}
                                     </td>
                                     <td style="text-align: center;font-weight: bold;">
                                         {{ isset($nilai_siswa['kriteria' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]]) ? $nilai_siswa['kriteria' . $siswa->id_siswa . $data2['id_mata_pelajaran'][0]] : '' }}

@@ -157,11 +157,11 @@
                                 <tr>
                                     <td style="text-align: center;">{{ $key }}</td>
                                     <td>
-                                    @if ($kelas->tingkat == 2)
-                                        {{ preg_replace('/(IPA|IPS) - /', '', $data2['nm_point'][0]) }}
-                                    @else
-                                        {{ $data2['nm_point'][0] }}
-                                    @endif
+                                        @if ($kelas->tingkat == 2)
+                                            {{ preg_replace('/(IPA|IPS) - /', '', $data2['nm_point'][0]) }}
+                                        @else
+                                            {{ $data2['nm_point'][0] }}
+                                        @endif
                                     </td>
                                     <td style="text-align: center;">
                                         {{ isset($data2['kkm'][0]) ? $data2['kkm'][0] : '' }}
@@ -172,7 +172,7 @@
                                         </td>
                                     @endforeach
                                     <td style="text-align: center;">
-                                        {{ isset($rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]]) ? $rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]] : '' }}
+                                        {{ isset($rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]]) ? round($rata_rata_nilai[$siswa->id_siswa][$data2['id_mata_pelajaran'][0]]) : '' }}
                                     </td>
                                     <td style="text-align: center;">
                                         @php
