@@ -400,7 +400,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Sidoarjo, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
@@ -498,7 +498,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Sidoarjo, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
