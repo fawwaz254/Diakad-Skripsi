@@ -43,13 +43,12 @@ class RaporSisipanNonAkademikController extends Controller
             ->addColumn('pribadi_sisipan', function ($item) use ($kelompok_pribadi_sisipan) {
                 $nilai = [];
                 foreach ($kelompok_pribadi_sisipan as $k) {
-
                     foreach ($k->pribadi_sisipan as $pribadi_sisipan) {
-                        $cek = $item->nilai_pribadi_sisipan->firstWhere('id_pribadi_sisipan', $pribadi_sisipan->id_pribadi_sisipan);
+                        $cek = $item->nilai_pribadi_sisipan->firstWhere('id_pribadi_sisipan', $pribadi_sisipan->id_pribadi_sisipan); // cek apakah ada nilai siswa
                         if ($cek) {
-                            if ($k->nm_kelompok_pribadi_sisipan == 'Catatan Untuk Orang Tua') {
+                            if ($k->nm_kelompok_pribadi_sisipan == 'Catatan Untuk Orang Tua') { // jika kelompok catatan orang tua
                                 $nilai[$k->urutan][] =  $cek->nilai;
-                            } else {
+                            } else { // jika kelompok lain
                                 $nilai[$k->urutan][] = $pribadi_sisipan->nm_pribadi_sisipan . ' : ' . $cek->nilai;
                             }
                         }
