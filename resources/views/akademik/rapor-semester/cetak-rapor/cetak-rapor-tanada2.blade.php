@@ -278,8 +278,8 @@
                             {{ isset($tambahan['ketidakhadiran'][$siswa->id_siswa][$k->id_tambahan_rapor]) ? $tambahan['ketidakhadiran'][$siswa->id_siswa][$k->id_tambahan_rapor] . ' Hari' : ' - Hari' }}
                         </td>
                         <td
-                            style="width: 50%;border-right: hidden; 
-					border-bottom: hidden; 
+                            style="width: 50%;border-right: hidden;
+					border-bottom: hidden;
 					border-top: hidden;">
                         </td>
                     </tr>
@@ -300,7 +300,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Sidoarjo, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
@@ -348,7 +348,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ 'Sidoarjo, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
