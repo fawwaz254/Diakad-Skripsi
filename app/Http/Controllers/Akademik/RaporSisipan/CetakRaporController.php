@@ -748,7 +748,7 @@ class CetakRaporController extends Controller
 
                         // hitung rata-rata dan kriteria
                         if (isset($nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'uts'])) {
-                            $nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = ($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] + $nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'uts']) / 2; // nilai rata-rata = (nilai rata-rata tugas + nilai uts) / 2
+                            $nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] = ($nilai_siswa['rata_rata_nilai_tugas' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] + (int) $nilai_siswa[$siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran . 'uts']) / 2; // nilai rata-rata = (nilai rata-rata tugas + nilai uts) / 2
 
                             if ($nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] >= 90 &&  $nilai_siswa['rata_rata' . $siswa->id_siswa . $mata_pelajaran_rapor->id_mata_pelajaran] <= 100) {
                                 $hasil = 'A';
