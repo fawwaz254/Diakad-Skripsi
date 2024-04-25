@@ -36,6 +36,7 @@
         }
 
         .page {
+            margin-top: 5rem;
             width: 1200px;
         }
 
@@ -78,13 +79,14 @@
                 <tr>
                     <td style="border-style : hidden;width: 10%;"><img
                             src="{{ url('https://diakad.sgp1.digitaloceanspaces.com/smktanada/global/logo-sekolah') }}"
-                            alt="" style="width: 100px; height: 100px;"></td>
+                            alt="" style="width: 120px; height: 120px;"></td>
                     <td colspan="10" style="border-style : hidden">
 
                         <h2 align="center" style="margin-top: 3px">
                             LAPORAN PENILAIAN HASIL BELAJAR<br>
                             {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
                             TENGAH SEMESTER GENAP<br>
+                            TAHUN PELAJARAN {{ $semester->tahun_ajaran }}
                             @php
                                 // $nama = $list_nilai->first();
 
@@ -98,11 +100,11 @@
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NAMA SISWA
+                    <td style="border-style : hidden;width: 17%;font-weight: bold;">NAMA SISWA
                     </td>
                     <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">
+                    <td style="border-style : hidden;width: 32%;font-weight: bold;">
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
                     <td style="border-style : hidden;width: 24%;font-weight: bold;">BIDANG KEAHLIAN
@@ -115,11 +117,11 @@
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">NIS / NISN
+                    <td style="border-style : hidden;width: 17%;font-weight: bold;">NIS / NISN
                     </td>
                     <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">
+                    <td style="border-style : hidden;width: 32%;font-weight: bold;">
                         {{ $siswa->nis_siswa }} / {{ $siswa->nisn_siswa }}
                     </td>
                     <td style="border-style : hidden;width: 24%;font-weight: bold;">PROGRAM KEAHLIAN
@@ -132,11 +134,12 @@
                 </tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;font-weight: bold;">KELAS
+                    <td style="border-style : hidden;width: 17%;font-weight: bold;">KELAS / SEMESTER
                     </td>
                     <td style="border-style : hidden;width: 1%;font-weight: bold;"> :
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;">{{ $kelas->nm_kelas }}
+                    <td style="border-style : hidden;width: 32%;font-weight: bold;">{{ $kelas->nm_kelas }} /
+                        {{ $kelas->tingkat == '1' ? 'Dua' : 'Empat' }}
                     </td>
                     <td style="border-style : hidden;width: 24%;font-weight: bold;">
                         @if ($kelas->tingkat == '1')
@@ -318,14 +321,14 @@
                         @endif
                     </td>
                 </tr>
-                <td style=" width:25%; border-style : hidden;"></td>
+                {{-- <td style=" width:25%; border-style : hidden;"></td>
                 <td style="width:45%; border-style : hidden;text-align: center">Mengetahui, <br>
                     Kepala Sekolah,
                     <br><br><br><br><br><br><br>
                     <u><b>
                             {{ $auth_data->sekolah_data->nm_kepala_sekolah }}<b></u>
                 </td>
-                <td style="width:30%; border-style : hidden"> </td>
+                <td style="width:30%; border-style : hidden"> </td> --}}
             </table>
         </div>
     @endforeach
