@@ -10,6 +10,8 @@ use App\Models\KelompokPribadiSisipan;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Symfony\Component\ErrorHandler\Debug;
 
 class RaporSisipanNonAkademikController extends Controller
 {
@@ -54,12 +56,15 @@ class RaporSisipanNonAkademikController extends Controller
                         }
                     }
                 }
-                $data = array(
-                    'n1' => isset($nilai[1]) ? $nilai[1] : null,
-                    'n2' => isset($nilai[2]) ? $nilai[2] : null,
-                    'n3' => isset($nilai[3]) ? $nilai[3] : null,
-                    'n4' => isset($nilai[4]) ? $nilai[4] : null,
-                );
+                $jumlah_kelompok = count($kelompok_pribadi_sisipan);
+                $data = [];
+                for ($i = 1; $i <= $jumlah_kelompok; $i++) {
+                    if (isset($nilai[$i])) {
+                        $data['n' . $i] = $nilai[$i];
+                    } else {
+                        $data['n' . $i] = '';
+                    }
+                }
                 return $data;
             })->addColumn('action', function ($item) {
                 $data = array(
