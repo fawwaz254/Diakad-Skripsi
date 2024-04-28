@@ -259,18 +259,21 @@
                     </tr>
 
                     <tr>
-                        <td style="text-align: center;background-color: #99cccc;font-weight: bold;" colspan="2">
+                        <td style="text-align: center;background-color: #99cccc;font-weight: bold;" colspan="4">
                             PERMINATAN KHUSUS</td>
-                        <td style="text-align: center;background-color: #99cccc;font-weight: bold;" colspan="2">NILAI
                         </td>
                         <td style="text-align: center;font-weight: bold;" colspan="4" rowspan="2">Peringkat ke :
                             {{ array_search($siswa->id_siswa, array_keys($total_nilai)) + 1 }}
                             dari Siswa {{ $list_siswa->count() }}</td>
                     </tr>
-                    <tr>
-                        <td style="text-align: center;" colspan="2">----</td>
-                        <td style="text-align: center;" colspan="2">----</td>
-                    </tr>
+                    @foreach ($pribadi_sisipan_perminatan as $key => $k)
+                        <tr>
+                            <td style="text-align: center;" colspan="2">{{ $k->nm_pribadi_sisipan }}</td>
+                            <td style="text-align: center;" colspan="2">
+                                {{ isset($nilai_perminatan[$siswa->id_siswa . $k->id_pribadi_sisipan]) ? $nilai_perminatan[$siswa->id_siswa . $k->id_pribadi_sisipan] : '-' }}
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
             <br>
@@ -279,33 +282,24 @@
                 <td style="vertical-align: top;border-style : hidden">
                     <table>
                         <tr style="background-color: #9999cc">
-                            <th colspan="2">Ekstrakurikuler</th>
+                            <th>Ekstrakurikuler</th>
                             <th>Predikat</th>
                             <th>Keterangan</th>
-
                         </tr>
-
-                        @if (isset($nilai_ekskul[$siswa->id_siswa . 'ekskul']))
-                            @foreach ($nilai_ekskul[$siswa->id_siswa . 'ekskul'] as $key => $ekskul)
+                        @foreach ($pribadi_sisipan_ekskul as $key => $k)
+                            @if (isset($nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan . 'predikat']) &&
+                                    $nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan . 'keterangan'] != '-')
                                 <tr>
-                                    <td style="text-align: center;">{{ $key + 1 }}</td>
-                                    <td> {{ $ekskul }}</td>
+                                    <td style="text-align: center;">{{ $k->nm_pribadi_sisipan }}</td>
                                     <td style="text-align: center;">
-                                        {{ $nilai_ekskul[$siswa->id_siswa . 'nilai_ekskul'][$key] }}</td>
-                                    <td>
-                                        {{ $nilai_ekskul[$siswa->id_siswa . 'keterangan_ekskul'][$key] }}</td>
+                                        {{ $nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan . 'predikat'] ?? '-' }}
+                                    </td>
+                                    <td style="text-align: center;">
+                                        {{ $nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan . 'keterangan'] ?? '-' }}
+                                    </td>
                                 </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td style="text-align: center;">-</td>
-                                <td style="text-align: center;">-</td>
-                                <td style="text-align: center;">-</td>
-                                <td style="text-align: center;">-</td>
-                            </tr>
-                        @endif
-
-
+                            @endif
+                        @endforeach
                     </table>
                 </td>
 
@@ -324,7 +318,9 @@
                                     <td style="text-align: center;">
                                         @php
                                             $jumlah +=
-                                                $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan];
+                                                (int) $nilai_pengembangan_diri[
+                                                    $siswa->id_siswa . $k->id_pribadi_sisipan
+                                                ];
                                         @endphp
                                         {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] }}</td>
                                 @else

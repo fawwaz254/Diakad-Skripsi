@@ -50,6 +50,56 @@
         'rapor-sisipan-input-non-mapel/action-pengembangan-diri/delete';
     // var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/printAkhir/' + id_semester;
 
+    var columns = [{
+            data: null,
+            searchable: false,
+            orderable: false,
+            className: 'align-center'
+        },
+        {
+            data: 'nis_siswa',
+            name: 'nis_siswa',
+            className: 'align-center'
+        },
+        {
+            data: 'pengguna.nm_pengguna',
+            name: 'pengguna.nm_pengguna',
+            className: 'align-center'
+        },
+    ];
+
+    @foreach ($kelompok_pribadi_sisipan as $pribadi_sisipan)
+        columns.push({
+            data: 'pribadi_sisipan.n{{ $loop->iteration }}',
+            name: 'pribadi_sisipan.n{{ $loop->iteration }}',
+            render: function(data) {
+                let html = '';
+                if (data && data.length != 0) {
+                    data.forEach(element => {
+                        html += '- ' + element + ` <br>`;
+                    });
+                } else {
+                    html += '- ' + ` <br>`;
+                }
+                return html;
+            }
+        });
+    @endforeach
+
+    columns.push({
+        data: 'action',
+        name: 'action',
+        searchable: false,
+        orderable: false,
+        className: 'align-center',
+        render: function(data) {
+            return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                delete_url + '\', this)" data-id="' + data.id + '">' +
+                '    <i class="material-icons">delete_forever</i>' +
+                '</button>';
+        }
+    });
+
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
@@ -58,117 +108,7 @@
             url: datatable_url,
             type: 'GET'
         },
-        columns: [{
-                data: null,
-                searchable: false,
-                orderable: false,
-                className: 'align-center'
-            },
-            {
-                data: 'nis_siswa',
-                name: 'nis_siswa',
-                className: 'align-center'
-            },
-            {
-                data: 'pengguna.nm_pengguna',
-                name: 'pengguna.nm_pengguna',
-                className: 'align-center'
-            },
-            {
-                data: 'pribadi_sisipan',
-                name: 'pribadi_sisipan',
-                render: function(data) {
-                    let html = '';
-                    if (data.n1 && data.n1.length != 0) {
-                        data.n1.forEach(element => {
-                            html += '- ' +
-                                element + ` <br>`;
-                        });
-                    }
-                    return html;
-
-                }
-            },
-            {
-                data: 'pribadi_sisipan',
-                name: 'pribadi_sisipan',
-                render: function(data) {
-                    let html = '';
-                    if (data.n2 && data.n2.length != 0) {
-                        data.n2.forEach(element => {
-                            html += '- ' +
-                                element + ` <br>`;
-                        });
-                    }
-                    return html;
-
-                }
-            },
-            {
-                data: 'pribadi_sisipan',
-                name: 'pribadi_sisipan',
-                render: function(data) {
-                    let html = '';
-                    if (data.n3 && data.n3.length != 0) {
-                        data.n3.forEach(element => {
-                            html += '- ' +
-                                element + ` <br>`;
-                        });
-                    }
-                    return html;
-
-                }
-            },
-            {
-                data: 'pribadi_sisipan',
-                name: 'pribadi_sisipan',
-                render: function(data) {
-                    let html = '';
-                    if (data.n4 && data.n4.length != 0) {
-                        data.n4.forEach(element => {
-                            html += '- ' +
-                                element + ` <br>`;
-                        });
-                    }
-                    return html;
-
-                }
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                        delete_url + '\', this)" data-id="' + data.id + '">' +
-                        '    <i class="material-icons">delete_forever</i>' +
-                        '</button>';
-
-                }
-            },
-            // {
-            //     data: 'action',
-            //     name: 'action',
-            //     searchable: false,
-            //     orderable: false,
-            //     className: 'align-center',
-            //     render: function(data) {
-            //         if (data.jumlah != '0') {
-            //             return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-            //                 pdf_url + '/' + data.id_siswa + '"  target="_blank">' +
-            //                 '    <i class="material-icons">picture_as_pdf</i>' +
-            //                 '</a> ';
-            //         } else {
-            //             return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
-            //                 '    <i class="material-icons">picture_as_pdf</i>' +
-            //                 '</a> ';
-            //         }
-
-            //     }
-            // },
-        ]
+        columns: columns
     });
 
     primary_table.on('draw', function() {
@@ -180,4 +120,100 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+
+    // var primary_table = $('#primary_table').DataTable({
+    //     processing: true,
+    //     serverSide: true,
+    //     responsive: false,
+    //     ajax: {
+    //         url: datatable_url,
+    //         type: 'GET'
+    //     },
+    //     columns: [{
+    //             data: null,
+    //             searchable: false,
+    //             orderable: false,
+    //             className: 'align-center'
+    //         },
+    //         {
+    //             data: 'nis_siswa',
+    //             name: 'nis_siswa',
+    //             className: 'align-center'
+    //         },
+    //         {
+    //             data: 'pengguna.nm_pengguna',
+    //             name: 'pengguna.nm_pengguna',
+    //             className: 'align-center'
+    //         },
+    //         {
+    //             data: 'pribadi_sisipan',
+    //             name: 'pribadi_sisipan',
+    //             render: function(data) {
+    //                 let html = '';
+    //                 if (data.n1 && data.n1.length != 0) {
+    //                     data.n1.forEach(element => {
+    //                         html += '- ' +
+    //                             element + ` <br>`;
+    //                     });
+    //                 }
+    //                 return html;
+
+    //             }
+    //         },
+    //         {
+    //             data: 'pribadi_sisipan',
+    //             name: 'pribadi_sisipan',
+    //             render: function(data) {
+    //                 let html = '';
+    //                 if (data.n2 && data.n2.length != 0) {
+    //                     data.n2.forEach(element => {
+    //                         html += '- ' +
+    //                             element + ` <br>`;
+    //                     });
+    //                 }
+    //                 return html;
+
+    //             }
+    //         },
+    //         {
+    //             data: 'pribadi_sisipan',
+    //             name: 'pribadi_sisipan',
+    //             render: function(data) {
+    //                 let html = '';
+    //                 if (data.n3 && data.n3.length != 0) {
+    //                     data.n3.forEach(element => {
+    //                         html += '- ' +
+    //                             element + ` <br>`;
+    //                     });
+    //                 }
+    //                 return html;
+
+    //             }
+    //         },
+    //         {
+    //             data: 'action',
+    //             name: 'action',
+    //             searchable: false,
+    //             orderable: false,
+    //             className: 'align-center',
+    //             render: function(data) {
+    //                 return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+    //                     delete_url + '\', this)" data-id="' + data.id + '">' +
+    //                     '    <i class="material-icons">delete_forever</i>' +
+    //                     '</button>';
+
+    //             }
+    //         },
+    //     ]
+    // });
+
+    // primary_table.on('draw', function() {
+    //     primary_table.column(0, {
+    //         search: 'applied',
+    //         order: 'applied'
+    //     }).nodes().each(function(cell, i) {
+    //         var start = this.page.info().page * this.page.info().length;
+    //         cell.innerHTML = start + i + 1;
+    //     });
+    // }).draw();
 </script>
