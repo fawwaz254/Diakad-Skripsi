@@ -898,7 +898,7 @@ class CetakRaporController extends Controller
                             $nilai_siswa[$id_siswa][$id_mapel][$id_komponen] = 0;
                         }
 
-                        $nilai_siswa[$id_siswa][$id_mapel][$id_komponen] += (int)$nilai_rapor['nilai'];
+                        $nilai_siswa[$id_siswa][$id_mapel][$id_komponen] += (int) $nilai_rapor['nilai'];
                     }
                 }
             }
@@ -928,7 +928,7 @@ class CetakRaporController extends Controller
             foreach ($rata_rata_nilai as $id_siswa => $nilai_mapel) {
                 $total_nilai[$id_siswa] = 0;
                 foreach ($nilai_mapel as $id_mapel => $nilai) {
-                    $total_nilai[$id_siswa] += $nilai;
+                    $total_nilai[$id_siswa] += (int) $nilai;
                 }
             }
 
@@ -980,34 +980,39 @@ class CetakRaporController extends Controller
                 $query->where('nm_kelompok_pribadi_sisipan', 'Ekstra Kurikuler');
             })->get();
 
+            $pribadi_sisipan_perminatan = PribadiSisipan::whereHas('kelompok_pribadi_sisipan', function ($query) {
+                $query->where('nm_kelompok_pribadi_sisipan', 'Perminatan Khusus');
+            })->get();
+
             $nilai_pengembangan_diri = [];
             $nilai_ekskul = [];
+            $nilai_perminatan = [];
             foreach ($nilai_pribadi_siswa as $n) {
-
                 if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_kehadiran->pluck('id_pribadi_sisipan')->toArray())) {
                     $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
-                    // $nilai_pengembangan_diri[$n->id_siswa . 'ketidak_hadiran'][] = $n->pribadi_sisipan->nm_pribadi_sisipan;
-                    // $nilai_pengembangan_diri[$n->id_siswa . 'nilai_ketidak_hadiran'][] = $n->nilai;
                 } elseif (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_ekskul->pluck('id_pribadi_sisipan')->toArray())) {
-                    $nilai_ekskul[$n->id_siswa .  'ekskul'][] = $n->pribadi_sisipan->nm_pribadi_sisipan;
+                    $nilai_ekskul[$n->id_siswa .  $n->id_pribadi_sisipan] = $n->nilai;
+                    // predikat dan keterangan
                     if ($n->nilai >= 90 && $n->nilai <= 100) {
-                        $hasil = 'A';
-                        $keterangan = 'Sangat Aktif Mengikuti Extra Tersebut';
+                        $n->predikat = 'A';
+                        $n->keterangan = 'Sangat aktif mengikuti kegiatan ekstrakurikuler';
                     } elseif ($n->nilai >= 80 && $n->nilai < 90) {
-                        $hasil = 'B';
-                        $keterangan = 'Aktif Mengikuti Extra Tersebut';
+                        $n->predikat = 'B';
+                        $n->keterangan = 'Aktif mengikuti kegiatan ekstrakurikuler';
                     } elseif ($n->nilai >= 70 && $n->nilai < 80) {
-                        $hasil = 'C';
-                        $keterangan = 'Cukup Aktif Mengikuti Extra Tersebut';
+                        $n->predikat = 'C';
+                        $n->keterangan = 'Cukup aktif mengikuti kegiatan ekstrakurikuler';
                     } elseif ($n->nilai >= 0 && $n->nilai < 70) {
-                        $hasil = 'D';
-                        $keterangan = 'Kurang Aktif Mengikuti Extra Tersebut';
+                        $n->predikat = 'D';
+                        $n->keterangan = 'Kurang aktif mengikuti kegiatan ekstrakurikuler';
                     } else {
-                        $hasil = '';
-                        $keterangan = '';
+                        $n->predikat = '';
+                        $n->keterangan = '';
                     }
-                    $nilai_ekskul[$n->id_siswa . 'nilai_ekskul'][] = $hasil;
-                    $nilai_ekskul[$n->id_siswa . 'keterangan_ekskul'][] = $keterangan;
+                    $nilai_ekskul[$n->id_siswa . $n->id_pribadi_sisipan . 'predikat'] = $n->predikat;
+                    $nilai_ekskul[$n->id_siswa . $n->id_pribadi_sisipan . 'keterangan'] = $n->keterangan;
+                } else if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_perminatan->pluck('id_pribadi_sisipan')->toArray())) {
+                    $nilai_perminatan[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
                 } else {
                     $nilai_pengembangan_diri[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
                 }
@@ -1017,7 +1022,7 @@ class CetakRaporController extends Controller
 
             $jumlah_komponen = count($list_komponen);
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'nilai_pengembangan_diri', 'jumlah_komponen', 'rata_rata_nilai'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'pribadi_sisipan_perminatan', 'pribadi_sisipan_ekskul', 'nilai_pengembangan_diri', 'nilai_perminatan', 'jumlah_komponen', 'rata_rata_nilai'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smknu') {
 
             if ($kelas->tingkat == '1') {
@@ -1985,12 +1990,15 @@ class CetakRaporController extends Controller
                         }
                     }
                 }
-                $data = array(
-                    'n1' => isset($nilai[1]) ? $nilai[1] : null,
-                    'n2' => isset($nilai[2]) ? $nilai[2] : null,
-                    'n3' => isset($nilai[3]) ? $nilai[3] : null,
-                    'n4' => isset($nilai[4]) ? $nilai[4] : null,
-                );
+                $jumlah_kelompok = count($kelompok_pribadi_sisipan);
+                $data = [];
+                for ($i = 1; $i <= $jumlah_kelompok; $i++) {
+                    if (isset($nilai[$i])) {
+                        $data[$i] = $nilai[$i];
+                    } else {
+                        $data[$i] = '';
+                    }
+                }
                 return $data;
             })->addColumn('action', function ($item) {
                 $data = array(
@@ -2007,7 +2015,6 @@ class CetakRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
-
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
