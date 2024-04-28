@@ -287,12 +287,11 @@
                             <th>Keterangan</th>
                         </tr>
                         @foreach ($pribadi_sisipan_ekskul as $key => $k)
-                            @if (isset($nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan . 'predikat']) &&
-                                    $nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan . 'keterangan'] != '-')
+                            @if (isset($nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan]))
                                 <tr>
                                     <td style="text-align: center;">{{ $k->nm_pribadi_sisipan }}</td>
                                     <td style="text-align: center;">
-                                        {{ $nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan . 'predikat'] ?? '-' }}
+                                        {{ $nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan] ?? '-' }}
                                     </td>
                                     <td style="text-align: center;">
                                         {{ $nilai_ekskul[$siswa->id_siswa . $k->id_pribadi_sisipan . 'keterangan'] ?? '-' }}

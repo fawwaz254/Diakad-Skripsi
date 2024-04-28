@@ -993,23 +993,17 @@ class CetakRaporController extends Controller
                 } elseif (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_ekskul->pluck('id_pribadi_sisipan')->toArray())) {
                     $nilai_ekskul[$n->id_siswa .  $n->id_pribadi_sisipan] = $n->nilai;
                     // predikat dan keterangan
-                    if ($n->nilai >= 90 && $n->nilai <= 100) {
-                        $n->predikat = 'A';
+                    if ($n->nilai == 'A') {
                         $n->keterangan = 'Sangat aktif mengikuti kegiatan ekstrakurikuler';
-                    } elseif ($n->nilai >= 80 && $n->nilai < 90) {
-                        $n->predikat = 'B';
+                    } elseif ($n->nilai == 'B') {
                         $n->keterangan = 'Aktif mengikuti kegiatan ekstrakurikuler';
-                    } elseif ($n->nilai >= 70 && $n->nilai < 80) {
-                        $n->predikat = 'C';
+                    } elseif ($n->nilai == 'C') {
                         $n->keterangan = 'Cukup aktif mengikuti kegiatan ekstrakurikuler';
-                    } elseif ($n->nilai >= 0 && $n->nilai < 70) {
-                        $n->predikat = 'D';
+                    } elseif ($n->nilai == 'D') {
                         $n->keterangan = 'Kurang aktif mengikuti kegiatan ekstrakurikuler';
                     } else {
-                        $n->predikat = '';
                         $n->keterangan = '';
                     }
-                    $nilai_ekskul[$n->id_siswa . $n->id_pribadi_sisipan . 'predikat'] = $n->predikat;
                     $nilai_ekskul[$n->id_siswa . $n->id_pribadi_sisipan . 'keterangan'] = $n->keterangan;
                 } else if (in_array($n->id_pribadi_sisipan, $pribadi_sisipan_perminatan->pluck('id_pribadi_sisipan')->toArray())) {
                     $nilai_perminatan[$n->id_siswa . $n->id_pribadi_sisipan] = $n->nilai;
