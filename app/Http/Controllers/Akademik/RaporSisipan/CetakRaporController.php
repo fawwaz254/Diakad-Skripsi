@@ -435,7 +435,7 @@ class CetakRaporController extends Controller
                 //karna server tidak kuat terpaksa menggunakan cara ini
                 $nilai_rapors = NilaiRapor::where('id_rapor', $rapor->id_rapor)->where('nilai', '!=', '0')->get();
                 foreach ($nilai_rapors as  $nilai_rapor) {
-                    if ($nilai_rapor->id_komponen_jenis_rapor == $typeuts->id_komponen_jenis_rapor) {
+                    if ($nilai_rapor->id_komponen_jenis_rapor == $typeuts?->id_komponen_jenis_rapor) {
                         $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'sts'] = $nilai_rapor['nilai'];
                     } elseif (in_array($nilai_rapor->id_komponen_jenis_rapor, $sumatif->pluck('id_komponen_jenis_rapor')->toArray())) {
                         $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor']] = $nilai_rapor['nilai'];
