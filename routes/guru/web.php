@@ -87,6 +87,7 @@ use App\Http\Controllers\Guru\RaporAgama\InputNilaiRaporAgamaController;
 use App\Http\Controllers\Guru\RaporSemester\NilaiRaporSemesterController;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
+use App\Http\Controllers\Guru\WaliKelas\RaporPendukungController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSemesterController as AppRaporSemesterController;
 use App\Http\Controllers\Guru\WaliKelas\RaporSisipanNonAkademikController;
 use App\Http\Controllers\Guru\WaliKelas\RekapFormWaliController;
@@ -549,13 +550,12 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action-list-form/{mode}/{id}', [FormHarianController::class, 'actionInputFormHarian']);
             });
 
-            Route::get('custom-form',[CustomFormResponController::class, 'index']);
-            Route::get('custom-form/submitted/{id}',[CustomFormResponController::class, 'indexAllForm']);
+            Route::get('custom-form', [CustomFormResponController::class, 'index']);
+            Route::get('custom-form/submitted/{id}', [CustomFormResponController::class, 'indexAllForm']);
             Route::resource('custom-form.form', CustomFormResponController::class)->shallow();
-            Route::get('data/datatables',[CustomFormResponController::class,'indexDataTables']);
-            Route::post('data/siswa',[CustomFormResponController::class,'getDataSiswa']);
-            Route::get('data/all-datatables/{id}',[CustomFormResponController::class,'indexAllDataTables']);
-            
+            Route::get('data/datatables', [CustomFormResponController::class, 'indexDataTables']);
+            Route::post('data/siswa', [CustomFormResponController::class, 'getDataSiswa']);
+            Route::get('data/all-datatables/{id}', [CustomFormResponController::class, 'indexAllDataTables']);
         });
 
         Route::prefix('guru-kpi')->group(function () {
@@ -792,6 +792,28 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
             });
 
+            Route::prefix('rapor-pendukung')->group(function () {
+                Route::get('/', [RaporPendukungController::class, 'viewListRaporPendukung']);
+
+                // DATATABLES
+                Route::get('/datatables', [RaporPendukungController::class, 'datatablesRaporPendukung']);
+                Route::get('/komponen/datatables', [RaporPendukungController::class, 'datatablesKomponenRaporPendukung']);
+                Route::get('/indikator/datatables', [RaporPendukungController::class, 'datatablesIndikatorRaporPendukung']);
+                Route::get('/predikat/datatables', [RaporPendukungController::class, 'datatablesPredikatRaporPendukung']);
+
+                // KOMPONEN
+                Route::get('/komponen/{id_rapor_pendukung}', [RaporPendukungController::class, 'viewListKomponenRaporPendukung']);
+                Route::post('/komponen/{id_rapor_pendukung}/action', [RaporPendukungController::class, 'actionKomponenRaporPendukung']);
+                Route::post('/komponen/get', [RaporPendukungController::class, 'getKomponenRaporPendukung']);
+
+                // INDIKATOR
+                Route::get('/indikator/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'viewListIndikatorRaporPendukung']);
+                Route::post('/indikator/{id_rapor_pendukung}/action', [RaporPendukungController::class, 'actionIndikatorRaporPendukung']);
+                Route::post('/indikator/get', [RaporPendukungController::class, 'getIndikatorRaporPendukung']);
+
+                // PREDIKAT
+                Route::get('/predikat/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'viewListPredikatRaporPendukung']);
+            });
 
             Route::prefix('rapor-sisipan-input-non-mapel')->group(function () {
                 Route::get('/', [RaporSisipanNonAkademikController::class, 'viewPengembanganDiri']);
@@ -846,7 +868,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
                 Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
                 Route::get('pdf/{id_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
-                // Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']); //ini nanti diganti jadi rapor
+                Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']); //ini nanti diganti jadi rapor
                 Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
                 Route::get('inputNilai/{id}', [RaporSisipanController::class, 'inputNilai']);
