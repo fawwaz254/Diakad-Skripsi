@@ -198,6 +198,10 @@
                 render: function(data) {
                     if (data.status == '0') {
                         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            pdf_url + '/' + data.id + '"  target="_blank">' +
+                            '    <i class="material-icons">assessment</i>' +
+                            '</a> ' +
+                            '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                             print_url + '/' + data.id + '"  target="_blank">' +
                             '    <i class="material-icons">print</i>' +
                             '</a> ' +
