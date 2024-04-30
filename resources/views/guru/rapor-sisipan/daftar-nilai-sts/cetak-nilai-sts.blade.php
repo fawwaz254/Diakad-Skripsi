@@ -168,15 +168,30 @@
                         @endforeach
 
                         <td style="text-align: center;">
+                            @php
+                                $total_nilai_terisi = 0;
+                                if ($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] !== '0') {
+                                    $total_nilai_terisi += 1;
+                                }
+                                if ($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] !== '0') {
+                                    $total_nilai_terisi += 1;
+                                }
+                                if ($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] !== '0') {
+                                    $total_nilai_terisi += 1;
+                                }
+                                if ($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4'] !== '0') {
+                                    $total_nilai_terisi += 1;
+                                }
+                            @endphp
                             {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) && isset($nilai_komponen[$siswa->id_siswa . 'sts'])) --}}
-                            {{ round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4']) / 4) }}
+                            {{ $total_nilai_terisi !== 0 ? round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4']) / $total_nilai_terisi) : null }}
                             {{-- @endif --}}
                         </td>
                         <td style="text-align: center;">
                             {{ $nilai_komponen[$siswa->id_siswa . 'STS'] }}
                         </td>
                         <td style="text-align: center;">
-                            {{ round(round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4']) / 4) * 0.4 + $nilai_komponen[$siswa->id_siswa . 'STS'] * 0.6) }}
+                            {{ $total_nilai_terisi !== 0 ? round(round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4']) / $total_nilai_terisi) * 0.6 + $nilai_komponen[$siswa->id_siswa . 'STS'] * 0.4) : null }}
                         </td>
                     </tr>
                 @endforeach
