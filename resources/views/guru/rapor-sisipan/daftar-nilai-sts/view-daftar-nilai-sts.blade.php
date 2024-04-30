@@ -199,7 +199,7 @@
                     if (data.status == '0') {
                         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                             pdf_url + '/' + data.id + '"  target="_blank">' +
-                            '    <i class="material-icons">assessment</i>' +
+                            '    <i class="material-icons">insert_drive_file</i>' +
                             '</a> ' +
                             '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                             print_url + '/' + data.id + '"  target="_blank">' +
@@ -217,7 +217,7 @@
                     } else {
                         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                             pdf_url + '/' + data.id + '"  target="_blank">' +
-                            '    <i class="material-icons">picture_as_pdf</i>' +
+                            '    <i class="material-icons">insert_drive_file</i>' +
                             '</a> ';
                     }
                 }

@@ -169,14 +169,14 @@
 
                         <td style="text-align: center;">
                             {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) && isset($nilai_komponen[$siswa->id_siswa . 'sts'])) --}}
-                            {{ round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4'] + $nilai_komponen[$siswa->id_siswa . 'STS']) / 5) }}
+                            {{ round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4']) / 4) }}
                             {{-- @endif --}}
                         </td>
                         <td style="text-align: center;">
                             {{ $nilai_komponen[$siswa->id_siswa . 'STS'] }}
                         </td>
                         <td style="text-align: center;">
-                            {{-- {{ 2 * round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4'] + $nilai_komponen[$siswa->id_siswa . 'STS']) / 5) + $nilai_komponen[$siswa->id_siswa . 'STS'] }} --}}
+                            {{ round(round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4']) / 4) * 0.4 + $nilai_komponen[$siswa->id_siswa . 'STS'] * 0.6) }}
                         </td>
                     </tr>
                 @endforeach
