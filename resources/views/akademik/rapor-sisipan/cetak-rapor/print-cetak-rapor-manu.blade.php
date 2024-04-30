@@ -9,14 +9,34 @@
 
     <style>
         * {
+            box-sizing: border-box;
             font-family: 'Tahoma';
             letter-spacing: 1.5px;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            text-align: center;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
         }
 
         table,
         td,
         th {
             border: 1px solid;
+            padding: 10px;
+        }
+
+        table#kop,
+        table#kop td,
+        table#kop th {
+            border: none;
             padding: 10px;
         }
 
@@ -74,6 +94,23 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
+            <table id="kop" cellspacing="0" cellpadding="10"
+                style="width: 90%; margin: 0 auto; text-align:center; border-bottom: 1px solid black">
+                <tr>
+                    <td style="width: 10%">
+                        <img width="90px" src="https://diakad.sgp1.digitaloceanspaces.com/manu/global/logo-sekolah">
+                    </td>
+                    <td>
+                        <div style="font-weight: bold; font-size:2rem">MADRASAH ALIYAH NAHDLATUL ULAMA</div> <br>
+                        <div style="font-weight: bolder; font-size:3rem">(MA NU)</div>
+                        <div class="row" style="font-weight: bold">
+                            <div class="column" style="text-align: right; padding-right: 18px">NPSN: 20584457</div>
+                            <div class="column" style="text-align: left; padding-left: 18px">NSM: 131235140027</div>
+                        </div>
+                        <div style="font-weight: bold">Alamat Jl. kabupaten No. 72 Kecamatan Lekok, Kab. Pasuruan</div>
+                    </td>
+                </tr>
+            </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr>
                     <td colspan="10" style="border-style : hidden">
