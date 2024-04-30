@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Nilai Rapor STS</title>
+    <title>Rapor Sisipan STS ({{ $rapor->kelas->nm_kelas }} - {{ $rapor->mata_pelajaran->nm_mata_pelajaran }})</title>
 
 
     <style>
