@@ -308,7 +308,7 @@
                     </td>
                     <td style="width:45%; border-style : hidden"></td>
 
-                    <td style="width:30%" align="left">Surabaya, 31 Oktober 2023
+                    <td style="width:30%" align="left">Surabaya, 3 Mei 2024
                         {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
 
                         <br>
