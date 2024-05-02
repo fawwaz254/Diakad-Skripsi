@@ -422,7 +422,7 @@ class CetakRaporController extends Controller
             $typeuts = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'STS')->whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan');
             })->first();
-            $sumatif = KomponenJenisRapor::whereNotIn('nm_komponen_jenis_rapor', ['uts', 'uas', 'STS', 'SAS'])->whereHas('jenis_rapor', function ($query) {
+            $sumatif = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'like', '%SUMATIF%')->whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan');
             })->get();
 
