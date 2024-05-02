@@ -523,9 +523,9 @@ class RaporSisipanController extends Controller
             //     $q->where('nilai', '!=', '0');
             // }, 'pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester'])
             ->with('pengguna', 'mata_pelajaran.jenis_mata_pelajaran', 'kelas.siswa', 'semester')
-            // ->withCount(['nilai_rapor' => function ($q) {
-            //     $q->where('nilai', '!=', 0);
-            // }])
+            ->withCount(['nilai_rapor' => function ($q) {
+                $q->where('nilai', '!=', 0);
+            }])
             ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })->orderBy('created_at', 'desc');
@@ -545,21 +545,17 @@ class RaporSisipanController extends Controller
 
 
         return Datatables::of($list_data)
-            // ->addColumn('jumlah', function ($item) use ($komponen) {
-            //     $nilaiLengkap =  $item->kelas->siswa->count() * $komponen;
-            //     $nilaiTerisi = $item->nilai_rapor_count;
+            ->addColumn('jumlah', function ($item) use ($komponen) {
+                $nilaiLengkap = $item->kelas->siswa->count() * $komponen;
+                $nilaiTerisi = $item->nilai_rapor_count;
 
-            //     if ($nilaiLengkap == '0' || $nilaiTerisi == '0') {
-            //         return '0%';
-            //     } else {
-            //         $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2);
-            //         if ($hasil > 100) {
-            //             return '100%';
-            //         } else {
-            //             return $hasil . '%';
-            //         }
-            //     }
-            // })
+                if ($nilaiTerisi === 0 || $nilaiLengkap === 0) {
+                    return '0%';
+                }
+
+                $hasil = number_format(($nilaiTerisi / $nilaiLengkap) * 100, 2);
+                return min($hasil, 100) . '%';
+            })
             ->editColumn('semester', function ($item) {
                 return '(' . $item->semester->nm_semester . ') ' . $item->semester->tahun_ajaran;
             })

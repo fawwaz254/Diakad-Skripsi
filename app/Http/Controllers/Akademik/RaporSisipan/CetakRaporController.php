@@ -419,10 +419,10 @@ class CetakRaporController extends Controller
             }
         } else {
             $nilai_siswa = [];
-            $typeuts = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'uts')->whereHas('jenis_rapor', function ($query) {
+            $typeuts = KomponenJenisRapor::where('nm_komponen_jenis_rapor', 'STS')->whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan');
             })->first();
-            $sumatif = KomponenJenisRapor::whereNotIn('nm_komponen_jenis_rapor', ['uts', 'uas'])->whereHas('jenis_rapor', function ($query) {
+            $sumatif = KomponenJenisRapor::whereNotIn('nm_komponen_jenis_rapor', ['uts', 'uas', 'STS', 'SAS'])->whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan');
             })->get();
 

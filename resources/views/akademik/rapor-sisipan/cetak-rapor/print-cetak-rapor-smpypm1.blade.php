@@ -146,7 +146,7 @@
                     </td>
                     <td style="border-style : hidden;width: 25%;">Semester
                     </td>
-                    <td style="border-style : hidden;width: 25%;"> : I
+                    <td style="border-style : hidden;width: 25%;"> : II
 
 
                     </td>
@@ -169,8 +169,8 @@
 
                         <td colspan="2" rowspan="2" style="text-align: center;font-weight: bold;">MATA
                             PELAJARAN<br></td>
-                        <td colspan="4" style="text-align: center;font-weight: bold;">NILAI TUGAS</td>
                         <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
+                        <td colspan="4" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR <br> SISIPAN</td>
@@ -210,13 +210,13 @@
                                     @endforeach
 
                                     <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah'] != '0' ? number_format($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) : '' }}
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah'] != '0' ? round($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) : '' }}
                                     </td>
                                     <td style="text-align: center;font-weight: bold;">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts'] : '' }}
                                     </td>
                                     <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah'] != '0' ? number_format((($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) * 2 + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts']) / 3) : '' }}
+                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah'] != '0' ? round(($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) * 0.6 + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts'] * 0.4) : '' }}
 
 
                                     </td>
