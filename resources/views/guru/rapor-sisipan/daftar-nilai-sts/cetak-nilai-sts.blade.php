@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapor Sisipan STS ({{ $rapor->kelas->nm_kelas }} - {{ $rapor->mata_pelajaran->nm_mata_pelajaran }})</title>
+    <title>Rekap Rapor Sisipan STS ({{ $rapor->kelas->nm_kelas }} - {{ $rapor->mata_pelajaran->nm_mata_pelajaran }})
+    </title>
 
 
     <style>
@@ -188,7 +189,7 @@
                             {{-- @endif --}}
                         </td>
                         <td style="text-align: center;">
-                            {{ $nilai_komponen[$siswa->id_siswa . 'STS'] }}
+                            {{ isset($nilai_komponen[$siswa->id_siswa . 'STS']) ? $nilai_komponen[$siswa->id_siswa . 'STS'] : null }}
                         </td>
                         <td style="text-align: center;">
                             {{ $total_nilai_terisi !== 0 ? round(round(($nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF1'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF2'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF3'] + $nilai_komponen[$siswa->id_siswa . 'NILAISUMATIF4']) / $total_nilai_terisi) * 0.6 + $nilai_komponen[$siswa->id_siswa . 'STS'] * 0.4) : null }}
