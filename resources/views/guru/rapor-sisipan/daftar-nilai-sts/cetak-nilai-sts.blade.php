@@ -205,7 +205,7 @@
                         RAPOR =
                     </p>
                     <p align="center" style="display: inline" class="under-below">
-                        {(2 x RT2 SMT)+(STS)}
+                        (Rata - rata sumatif×0.6) + (STS×0.4)
                     </p>
 
                 </td>
