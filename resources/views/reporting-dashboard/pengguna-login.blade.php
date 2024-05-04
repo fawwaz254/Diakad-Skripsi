@@ -75,7 +75,7 @@
                         @forelse ($list_guru as $guru)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $guru->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }}x login</span>
+                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }} sesi</span>
                             </li>
                         @empty
                             TIDAK ADA DATA UNTUK SAAT INI
@@ -94,7 +94,7 @@
                         @forelse ($list_siswa as $siswa)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $siswa->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }}x login</span>
+                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }} sesi</span>
                             </li>
                         @empty
                             TIDAK ADA DATA UNTUK SAAT INI
@@ -113,7 +113,7 @@
                         @forelse ($list_wali_murid as $wali_murid)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $wali_murid->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }}x login</span>
+                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }} sesi</span>
                             </li>
                         @empty
                             TIDAK ADA DATA UNTUK SAAT INI
