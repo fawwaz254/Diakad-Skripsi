@@ -34,7 +34,7 @@ class Pengguna extends Authenticatable
         'id_pengguna',
         'id_status_pengguna',
         'id_sekolah',
-        'nm_pengguna',  
+        'nm_pengguna',
         'username',
         'password',
         'must_change_password',
@@ -164,6 +164,11 @@ class Pengguna extends Authenticatable
     public function shiftPenggunas()
     {
         return $this->hasMany(ShiftPengguna::class, 'id_pengguna', 'id_pengguna');
+    }
+
+    public function pengguna_login()
+    {
+        return $this->hasMany(PenggunaLogin::class, 'id_pengguna', 'id_pengguna');
     }
 
 

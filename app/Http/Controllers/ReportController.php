@@ -2,64 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use App\Models\Sekolah;
-use App\Models\PelanggaranSiswa;
-use App\Models\Role;
-use App\Models\Gedung;
-use App\Models\Ruangan;
-use App\Models\BukuAlat;
-use App\Models\LowonganKerja;
-use App\Models\Kerjasama;
-use App\Models\TagihanBiaya;
-use App\Models\PemasukanBiaya;
-use App\Models\PengeluaranBiaya;
-use App\Models\Guru;
-use App\Models\Staff;
-use App\Models\Kelas;
-use App\Models\WaliKelas;
-use App\Models\SekretarisKelas;
-use App\Models\Semester;
-use App\Models\RuanganKelas;
-use App\Models\JadwalKegiatan;
-use App\Models\Ekskul;
-use App\Models\PelatihEkskulSet;
-use App\Models\PembinaEkskulSet;
-use App\Models\PesertaEkskulSet;
-use App\Models\PresensiEkskul;
-use App\Models\ArsipDokumen;
-use App\Models\Penerimaan;
-use App\Models\CalonSiswaBaru;
-use App\Models\Kurikulum;
-use App\Models\KurikulumMp;
-use App\Models\KelasMp;
-use App\Models\PresensiMp;
-use App\Models\PresensiMpSiswa;
-use App\Models\JadwalKelasMp;
-
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\HomeVisit;
-use App\Models\KegiatanGuru;
-use App\Models\KegiatanSiswa;
-use App\Models\KomplainSarpras;
-use App\Models\LaporanKerjaHarian;
-use App\Models\LaporanKerjaHarianMGMP;
-use App\Models\MateriAjar;
-use App\Models\PaketSoal;
-use App\Models\PresensiMpPelanggaran;
-use App\Models\PrestasiGuru;
-use App\Models\PrestasiSiswa;
-use App\Models\RaporSisipan;
-use App\Models\Siswa;
-use Auth;
 use DB;
+use Auth;
+
 use Session;
 use Validator;
+use Carbon\Carbon;
+use App\Models\Guru;
+use App\Models\Role;
+use App\Models\Kelas;
+use App\Models\Siswa;
+use App\Models\Staff;
+use App\Models\Ekskul;
+use App\Models\Gedung;
+use App\Models\KelasMp;
+use App\Models\Ruangan;
+use App\Models\Sekolah;
+use App\Models\BukuAlat;
+use App\Models\Pengguna;
+use App\Models\Semester;
+use App\Models\HomeVisit;
+use App\Models\Kerjasama;
+use App\Models\Kurikulum;
+use App\Models\PaketSoal;
+use App\Models\WaliKelas;
+use App\Models\MateriAjar;
+use App\Models\Penerimaan;
+use App\Models\PresensiMp;
+use App\Models\KurikulumMp;
+use App\Models\ArsipDokumen;
+use App\Models\KegiatanGuru;
+use App\Models\PrestasiGuru;
+use App\Models\RaporSisipan;
+use App\Models\RuanganKelas;
+use App\Models\TagihanBiaya;
+use Illuminate\Http\Request;
+use App\Models\JadwalKelasMp;
+
+use App\Models\KegiatanSiswa;
+use App\Models\LowonganKerja;
+
+use App\Models\PrestasiSiswa;
+use App\Models\CalonSiswaBaru;
+use App\Models\JadwalKegiatan;
+use App\Models\PemasukanBiaya;
+use App\Models\PresensiEkskul;
+use App\Models\KomplainSarpras;
+use App\Models\PresensiMpSiswa;
+use App\Models\SekretarisKelas;
+use App\Models\PelanggaranSiswa;
+use App\Models\PelatihEkskulSet;
+use App\Models\PembinaEkskulSet;
+use App\Models\PengeluaranBiaya;
+use App\Models\PesertaEkskulSet;
+use Yajra\Datatables\Datatables;
+use App\Models\LaporanKerjaHarian;
+use App\Models\PresensiMpPelanggaran;
+use App\Models\LaporanKerjaHarianMGMP;
+use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\PenggunaLogin;
+use Illuminate\Routing\Controller as BaseController;
 
 class ReportController extends BaseController
 {
@@ -744,5 +746,68 @@ class ReportController extends BaseController
 
         $param['progres'] =  $total;
         return response()->json($param);
+    }
+
+    public function logPenggunaLogin(Request $request, $global = null, $filter_day = 1)
+    {
+        $rangeDate = Carbon::now()->subDays($filter_day);
+
+        $list_pengguna = PenggunaLogin::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
+            ->with('pengguna')
+            ->where('login_time', '>=', $rangeDate)
+            ->groupBy('id_pengguna')
+            ->orderBy('total_count', 'DESC')
+            ->get();
+
+        $list_guru = collect();
+        $list_siswa = collect();
+        $list_wali_murid = collect();
+
+        foreach ($list_pengguna as $penggunaLogin) {
+            switch ($penggunaLogin->pengguna->status_join_table) {
+                case 1:
+                case 2:
+                    $list_guru->push($penggunaLogin);
+                    break;
+                case 3:
+                    $list_siswa->push($penggunaLogin);
+                    break;
+                case 4:
+                    $list_wali_murid->push($penggunaLogin);
+                    break;
+            }
+        }
+
+        $totalPengguna = PenggunaLogin::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
+            ->where('login_time', '>=', $rangeDate)
+            ->groupBy('id_pengguna')
+            ->orderBy('total_count', 'DESC')
+            ->get()
+            ->count();
+
+        $totalPengguna1HariTerakhir = $this->getTotalPenggunaLogin(1);
+        $totalPengguna7HariTerakhir = $this->getTotalPenggunaLogin(7);
+        $totalPengguna30HariTerakhir = $this->getTotalPenggunaLogin(30);
+
+        return view('reporting-dashboard.pengguna-login', compact('list_pengguna', 'list_guru', 'list_siswa', 'list_wali_murid', 'totalPengguna', 'totalPengguna1HariTerakhir', 'totalPengguna7HariTerakhir', 'totalPengguna30HariTerakhir'));
+    }
+
+    private function getTotalPenggunaLogin($filter_day)
+    {
+        return PenggunaLogin::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
+            ->where('login_time', '>=', Carbon::now()->subDays($filter_day))
+            ->groupBy('id_pengguna')
+            ->orderBy('total_count', 'DESC')
+            ->get()
+            ->count();
+    }
+
+    public function filterLogPenggunaLogin(Request $request)
+    {
+        $input = (object) $request->input();
+        return [
+            'status' => 204,
+            'path' => 'log-pengguna/' . $input->filter_day
+        ];
     }
 }
