@@ -805,6 +805,7 @@ class ReportController extends BaseController
     public function filterLogPenggunaLogin(Request $request)
     {
         $input = (object) $request->input();
+
         return [
             'status' => 204,
             'path' => 'log-pengguna/' . $input->filter_day
