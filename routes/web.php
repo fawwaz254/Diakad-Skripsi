@@ -8,9 +8,9 @@ use App\Http\Controllers\SignInController;
 use App\Http\Controllers\AuthGlobalController;
 use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\PengisianAlumniController;
+use App\Http\Controllers\Publik\PimpinanController;
 use App\Http\Controllers\Administrator\WelcomeController;
 use UniSharp\LaravelFilemanager\Controllers\LfmController;
-use App\Http\Controllers\Publik\PimpinanController;
 use App\Http\Controllers\Publik\CustomFormResponController;
 use UniSharp\LaravelFilemanager\Controllers\CropController;
 use UniSharp\LaravelFilemanager\Controllers\DemoController;
@@ -21,6 +21,7 @@ use UniSharp\LaravelFilemanager\Controllers\RenameController;
 use UniSharp\LaravelFilemanager\Controllers\ResizeController;
 use UniSharp\LaravelFilemanager\Controllers\UploadController;
 use UniSharp\LaravelFilemanager\Controllers\DownloadController;
+use App\Http\Controllers\Guru\WaliKelas\RaporPendukungController;
 use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
 use App\Http\Controllers\Administrator\Device\FingerprintController;
 
@@ -166,5 +167,31 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('user-locked', [AuthGlobalController::class, 'actionLocked']);
 
         Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
+
+        Route::prefix('{global_modul}')->group(function () {
+            Route::prefix('rapor-pendukung')->group(function () {
+                Route::get('/', [RaporPendukungController::class, 'viewListRaporPendukung']);
+                Route::get('/cetak/{id_rapor_pendukung}', [RaporPendukungController::class, 'cetakRaporPendukung']);
+
+                // DATATABLES
+                Route::get('/datatables', [RaporPendukungController::class, 'datatablesRaporPendukung']);
+                Route::get('/komponen/{id_rapor_pendukung}/datatables', [RaporPendukungController::class, 'datatablesKomponenRaporPendukung']);
+                Route::get('/indikator/{id_komponen_rapor_pendukung}/datatables', [RaporPendukungController::class, 'datatablesIndikatorRaporPendukung']);
+
+                // KOMPONEN
+                Route::get('/komponen/{id_rapor_pendukung}', [RaporPendukungController::class, 'viewListKomponenRaporPendukung']);
+                Route::post('/komponen/{id_rapor_pendukung}/action', [RaporPendukungController::class, 'actionKomponenRaporPendukung']);
+                Route::post('/komponen/get', [RaporPendukungController::class, 'getKomponenRaporPendukung']);
+
+                // INDIKATOR
+                Route::get('/indikator/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'viewListIndikatorRaporPendukung']);
+                Route::post('/indikator/{id_rapor_pendukung}/action', [RaporPendukungController::class, 'actionIndikatorRaporPendukung']);
+                Route::post('/indikator/get', [RaporPendukungController::class, 'getIndikatorRaporPendukung']);
+
+                // PREDIKAT
+                Route::get('/predikat/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'viewInputPredikatRaporPendukung']);
+                Route::post('/predikat/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'actionInputPredikatRaporPendukung']);
+            });
+        });
     });
 });
