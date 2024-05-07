@@ -44,7 +44,8 @@
         <h1 style="font-size: 2.5rem; margin-top:0; padding:5px"><span id="title-filter-date">1</span> HARI TERAKHIR
         </h1>
 
-        <form id="form-validation" method="POST" action="{{ url(Request::segment(1) . '/' . Request::segment(2)) }}"
+        <form id="form-validation" method="POST"
+            action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3)) }}"
             style="display: inline;padding: 5px">
             {{ csrf_field() }}
             <div class="row clearfix">
