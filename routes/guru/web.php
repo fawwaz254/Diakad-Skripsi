@@ -792,29 +792,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
             });
 
-            Route::prefix('rapor-pendukung')->group(function () {
-                Route::get('/', [RaporPendukungController::class, 'viewListRaporPendukung']);
-
-                // DATATABLES
-                Route::get('/datatables', [RaporPendukungController::class, 'datatablesRaporPendukung']);
-                Route::get('/komponen/datatables', [RaporPendukungController::class, 'datatablesKomponenRaporPendukung']);
-                Route::get('/indikator/datatables', [RaporPendukungController::class, 'datatablesIndikatorRaporPendukung']);
-                Route::get('/predikat/datatables', [RaporPendukungController::class, 'datatablesPredikatRaporPendukung']);
-
-                // KOMPONEN
-                Route::get('/komponen/{id_rapor_pendukung}', [RaporPendukungController::class, 'viewListKomponenRaporPendukung']);
-                Route::post('/komponen/{id_rapor_pendukung}/action', [RaporPendukungController::class, 'actionKomponenRaporPendukung']);
-                Route::post('/komponen/get', [RaporPendukungController::class, 'getKomponenRaporPendukung']);
-
-                // INDIKATOR
-                Route::get('/indikator/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'viewListIndikatorRaporPendukung']);
-                Route::post('/indikator/{id_rapor_pendukung}/action', [RaporPendukungController::class, 'actionIndikatorRaporPendukung']);
-                Route::post('/indikator/get', [RaporPendukungController::class, 'getIndikatorRaporPendukung']);
-
-                // PREDIKAT
-                Route::get('/predikat/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'viewListPredikatRaporPendukung']);
-            });
-
             Route::prefix('rapor-sisipan-input-non-mapel')->group(function () {
                 Route::get('/', [RaporSisipanNonAkademikController::class, 'viewPengembanganDiri']);
                 Route::get('datatables/{thn_akademik_semester}/{id_kelas}', [RaporSisipanNonAkademikController::class, 'datatablesPengembanganDiri']);
