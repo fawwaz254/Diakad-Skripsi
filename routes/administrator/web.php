@@ -165,5 +165,11 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-feature-guru', [FeaturemenuController::class, 'index']);
             Route::post('action-setting-feature-guru', [FeaturemenuController::class, 'save']);
         });
+
+        Route::prefix('analisis-log')->group(function () {
+            // MENU ANALISIS LOG
+            Route::get('penggunaan-diakad/{filter_day?}', [ReportController::class, 'logPenggunaLogin']);
+            Route::post('penggunaan-diakad', [ReportController::class, 'filterLogPenggunaLogin']);
+        });
     });
 });
