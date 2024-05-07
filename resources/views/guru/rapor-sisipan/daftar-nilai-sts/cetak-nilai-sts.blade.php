@@ -205,8 +205,8 @@
                     <p align="center" style="display: inline">
                         RAPOR =
                     </p>
-                    <p align="center" style="display: inline" class="under-below">
-                        (Rata - rata sumatif×0.6) + (STS×0.4)
+                    <p align="center" style="display: inline">
+                        (RT2 SMT×0.6) + (STS×0.4)
                     </p>
 
                 </td>
