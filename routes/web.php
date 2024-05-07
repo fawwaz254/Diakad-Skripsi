@@ -170,13 +170,11 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('{global_modul}')->group(function () {
             Route::prefix('rapor-pendukung')->group(function () {
+                // RAPOR
                 Route::get('/', [RaporPendukungController::class, 'viewListRaporPendukung']);
+                Route::post('/action', [RaporPendukungController::class, 'actionRaporPendukung']);
+                Route::post('/get', [RaporPendukungController::class, 'getRaporPendukung']);
                 Route::get('/cetak/{id_rapor_pendukung}', [RaporPendukungController::class, 'cetakRaporPendukung']);
-
-                // DATATABLES
-                Route::get('/datatables', [RaporPendukungController::class, 'datatablesRaporPendukung']);
-                Route::get('/komponen/{id_rapor_pendukung}/datatables', [RaporPendukungController::class, 'datatablesKomponenRaporPendukung']);
-                Route::get('/indikator/{id_komponen_rapor_pendukung}/datatables', [RaporPendukungController::class, 'datatablesIndikatorRaporPendukung']);
 
                 // KOMPONEN
                 Route::get('/komponen/{id_rapor_pendukung}', [RaporPendukungController::class, 'viewListKomponenRaporPendukung']);
@@ -191,6 +189,11 @@ Route::middleware(['token_staff'])->group(function () {
                 // PREDIKAT
                 Route::get('/predikat/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'viewInputPredikatRaporPendukung']);
                 Route::post('/predikat/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'actionInputPredikatRaporPendukung']);
+
+                // DATATABLES
+                Route::get('/datatables', [RaporPendukungController::class, 'datatablesRaporPendukung']);
+                Route::get('/komponen/{id_rapor_pendukung}/datatables', [RaporPendukungController::class, 'datatablesKomponenRaporPendukung']);
+                Route::get('/indikator/{id_komponen_rapor_pendukung}/datatables', [RaporPendukungController::class, 'datatablesIndikatorRaporPendukung']);
             });
         });
     });

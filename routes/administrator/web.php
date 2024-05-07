@@ -34,7 +34,7 @@ Route::middleware(['token_staff'])->group(function () {
             }
         });
 
-        Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
+        Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad']);
         Route::get('/report-wali-kelas', [ReportController::class, 'viewReportWaliKelas'])->name('report.walikelas');
         Route::get('/report-guru', [ReportController::class, 'viewReportGuru'])->name('report.guru');
 

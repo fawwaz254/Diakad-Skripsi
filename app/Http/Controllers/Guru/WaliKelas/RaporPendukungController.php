@@ -6,14 +6,12 @@ use Validator;
 use Carbon\Carbon;
 use App\Models\Guru;
 use App\Models\Siswa;
-use App\Models\Pengguna;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\RaporPendukung;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use App\Libraries\SumberDaya\LibGuru;
-use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\KomponenRaporPendukung;
 use App\Models\IndikatorRaporPendukung;
 use App\Libraries\Pendidikan\LibDataAkademik;
@@ -40,6 +38,94 @@ class RaporPendukungController extends Controller
                 return $data;
             })
             ->make(true);
+    }
+
+    public function actionRaporPendukung(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'nm_rapor' => 'required',
+        ]);
+
+        if ($validator->fails() && $input->mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            $now = Carbon::now();
+
+            if ($input->mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                $rapor                               = new RaporPendukung();
+                $rapor->id_rapor_pendukung  = $id;
+                $rapor->nm_rapor                  = $input->nm_rapor;
+                $rapor->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $rapor->save();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/rapor-pendukung',
+                    'message' => 'Save Data Succesfully'
+                ];
+            } elseif ($input->mode == 'update') {
+                $rapor = RaporPendukung::findOrFail($input->id_rapor_pendukung);
+                $rapor->nm_rapor                  = $input->nm_rapor;
+                $rapor->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $rapor->save();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/rapor-pendukung',
+                    'message' => 'Save Data Succesfully'
+                ];
+            } elseif ($input->mode == 'delete') {
+                $rapor = RaporPendukung::findOrFail($input->id_rapor_pendukung);
+
+                foreach ($rapor->komponen_rapor_pendukung()->get() as $komponen) {
+
+                    foreach ($komponen->indikator_rapor_pendukung()->get() as $indikator) {
+
+                        foreach ($indikator->predikat_rapor_pendukung()->get() as $predikat) {
+
+                            $predikat->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                            $predikat->save();
+                            $predikat->delete();
+                        }
+
+                        $indikator->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                        $indikator->save();
+                        $indikator->delete();
+                    }
+
+                    $komponen->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                    $komponen->save();
+                    $komponen->delete();
+                }
+
+                $rapor->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $rapor->save();
+                $rapor->delete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Data Succesfully'
+                ];
+            }
+        }
+    }
+
+    public function getRaporPendukung(Request $request)
+    {
+        $item = RaporPendukung::select('id_rapor_pendukung', 'nm_rapor')->find($request->id_rapor_pendukung);
+
+        return response()->json([
+            'status_code'     => 200,
+            'status_text'     => 'Success',
+            "data" => $item
+        ]);
     }
 
     public function viewListKomponenRaporPendukung(Request $request, $global_role, $global_modul, $id_rapor_pendukung)
@@ -131,7 +217,7 @@ class RaporPendukungController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Data Jenis succesfully'
+                    'message' => 'Delete Data Succesfully'
                 ];
             }
         }
@@ -245,7 +331,7 @@ class RaporPendukungController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Data Jenis succesfully'
+                    'message' => 'Delete Data Succesfully'
                 ];
             }
         }

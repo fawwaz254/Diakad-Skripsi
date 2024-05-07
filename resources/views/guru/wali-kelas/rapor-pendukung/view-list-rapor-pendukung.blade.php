@@ -1,4 +1,12 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2 style="float: right; margin-bottom: 1rem">
+            <button class="btn bg-green waves-effect" onclick="showModalAction()"><i
+                    class="material-icons">add</i><span>Tambah Rapor</span></button>
+        </h2>
+        <div style="clear: right;"></div>
+    </div>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -7,7 +15,8 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -16,6 +25,7 @@
                                     <th>Komponen</th>
                                     <th>Predikat Nilai</th>
                                     <th>Cetak</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -25,7 +35,38 @@
         </div>
     </div>
 </div>
-<br>
+
+{{-- MODAL ACTION --}}
+<div class="modal" tabindex="-1" role="dialog" id="modal-action">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Rapor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-validation" method="POST"
+                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3)) . '/action' }}">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="id_rapor_pendukung">
+                    <input type="hidden" name="mode" value="add">
+
+                    <label for="nm_rapor">Nama Rapor</label>
+                    <input class="form-control" type="text" name="nm_rapor">
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success  waves-effect"
+                            onclick="hideModalCreate()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @include('scriptjs')
 <script>
@@ -90,6 +131,19 @@
                     </a>`;
                 }
             },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return `
+                    <button class="btn bg-blue waves-effect" onclick="showModalAction('${data.id}')"><i class="material-icons">edit</i><span>Edit</span></button>
+                    <button class="btn bg-red waves-effect" onclick="actionHapus('${data.id}')"><i class="material-icons">delete</i><span>Hapus</span></button>
+                    `;
+                }
+            },
 
         ]
     });
@@ -104,13 +158,84 @@
         });
     }).draw();
 
+    function showModalAction(id = null) {
+        $('.modal-title').text('Tambah Rapor');
+        $('input[name=mode]').val('add');
+        $('input[name=id_rapor_pendukung]').val('');
+        $('input[name=nm_rapor]').val('');
+
+
+        $('#modal-action').modal('show');
+
+        if (id !== null) {
+            $('.modal-title').text('Edit Rapor');
+
+            $.ajax({
+                type: "POST",
+                url: base_url + '/' + role_url + '/wali-kelas/rapor-pendukung/get',
+                data: {
+                    id_rapor_pendukung: id,
+                },
+                success: function(response) {
+                    $('input[name=mode]').val('update');
+                    $('input[name=id_rapor_pendukung]').val(id);
+                    $('input[name=nm_rapor]').val(response.data.nm_rapor);
+                },
+            });
+        }
+    }
+
+    function hideModalCreate() {
+        setTimeout(() => {
+            $('#modal-action').modal('hide');
+        }, 500);
+    }
+
+    function actionHapus(id_rapor_pendukung) {
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Apakah Anda yakin ingin menghapus?",
+            text: "ini akan menghapus semua nilai siswa yang sudah ditambahkan pada kelas ini!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, tetap hapus!",
+            cancelButtonText: "Cancel",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function(result) {
+            if (result) {
+                $.ajax({
+                    type: 'POST',
+                    url: `${base_url}/${role_url}/wali-kelas/rapor-pendukung/action`,
+                    data: {
+                        id_rapor_pendukung,
+                        mode: 'delete'
+                    },
+                    success: function(response) {
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
     $(document).ready(function() {
         var pathname = window.location.pathname;
         var segments = pathname.split('/');
         var role = segments[1];
 
         if (role == 'guru') {
+            $('.block-header').hide();
             primary_table.column(2).visible(false);
+            primary_table.column(5).visible(false);
         } else if (role == 'akademik') {
             primary_table.column(3).visible(false);
             primary_table.column(4).visible(false);
