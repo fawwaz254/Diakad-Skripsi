@@ -60,7 +60,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('pengguna-login:clear')
             ->daily()
-            ->at('00:00');
+            ->at('00:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
     }
 
     /**
