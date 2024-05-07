@@ -111,7 +111,7 @@ class RaporPendukungController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Data Jenis succesfully'
+                    'message' => 'Delete Data Succesfully'
                 ];
             }
         }
@@ -217,7 +217,7 @@ class RaporPendukungController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Data Jenis succesfully'
+                    'message' => 'Delete Data Succesfully'
                 ];
             }
         }
@@ -331,7 +331,7 @@ class RaporPendukungController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Data Jenis succesfully'
+                    'message' => 'Delete Data Succesfully'
                 ];
             }
         }
