@@ -748,7 +748,7 @@ class ReportController extends BaseController
         return response()->json($param);
     }
 
-    public function logPenggunaLogin(Request $request, $global = null, $filter_day = 1)
+    public function logPenggunaLogin(Request $request, $filter_day = 1)
     {
         $rangeDate = Carbon::now()->subDays($filter_day);
 
@@ -778,18 +778,11 @@ class ReportController extends BaseController
             }
         }
 
-        $totalPengguna = PenggunaLogin::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
-            ->where('login_time', '>=', $rangeDate)
-            ->groupBy('id_pengguna')
-            ->orderBy('total_count', 'DESC')
-            ->get()
-            ->count();
-
         $totalPengguna1HariTerakhir = $this->getTotalPenggunaLogin(1);
         $totalPengguna7HariTerakhir = $this->getTotalPenggunaLogin(7);
         $totalPengguna30HariTerakhir = $this->getTotalPenggunaLogin(30);
 
-        return view('reporting-dashboard.pengguna-login', compact('list_pengguna', 'list_guru', 'list_siswa', 'list_wali_murid', 'totalPengguna', 'totalPengguna1HariTerakhir', 'totalPengguna7HariTerakhir', 'totalPengguna30HariTerakhir'));
+        return view('reporting-dashboard.pengguna-login', compact('list_pengguna', 'list_guru', 'list_siswa', 'list_wali_murid', 'totalPengguna1HariTerakhir', 'totalPengguna7HariTerakhir', 'totalPengguna30HariTerakhir'));
     }
 
     private function getTotalPenggunaLogin($filter_day)
@@ -808,7 +801,7 @@ class ReportController extends BaseController
 
         return [
             'status' => 204,
-            'path' => 'log-pengguna/' . $input->filter_day
+            'path' => 'analisis-log/penggunaan-diakad/' . $input->filter_day
         ];
     }
 }

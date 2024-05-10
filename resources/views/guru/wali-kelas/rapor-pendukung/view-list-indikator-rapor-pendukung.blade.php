@@ -78,9 +78,20 @@
                     <label for="tingkat_kelas">Tingkat Kelas</label>
                     <select class="form-control show-tick" name="tingkat_kelas">
                         <option selected="" disabled="">Pilih Kelas</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
+                        @if ($auth_data->sekolah_data->id_bentuk_pendidikan == 2 || $auth_data->sekolah_data->id_bentuk_pendidikan == 4)
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="0">Semua Tingkat</option>
+                        @elseif($auth_data->sekolah_data->id_bentuk_pendidikan == 6 || $auth_data->sekolah_data->id_bentuk_pendidikan == 7)
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="0">Semua Tingkat</option>
+                        @else
+                            <option value="0">Semua Tingkat</option>
+                        @endif
+
                     </select>
 
                     <label for="nm_indikator">Nama Indikator</label>
