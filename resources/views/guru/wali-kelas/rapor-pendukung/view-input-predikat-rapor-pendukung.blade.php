@@ -80,6 +80,11 @@
                 });
             });
 
+            newData.data.push({
+                "id_indikator_rapor_pendukung": "catatan",
+                "nilai": item[list_nm_indikator.length + 2] || ""
+            });
+
             merged_data.push(newData);
         });
 
@@ -87,7 +92,7 @@
             url: base_url + '/' + role_url + '/wali-kelas/rapor-pendukung/predikat/' + rapor.id_rapor_pendukung,
             type: 'POST',
             data: {
-                data: merged_data,
+                data: JSON.stringify(merged_data),
             },
             success: function(response) {
                 vex.dialog.alert(response.message);
