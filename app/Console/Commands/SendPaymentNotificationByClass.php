@@ -42,7 +42,9 @@ class SendPaymentNotificationByClass extends Command
      */
     public function handle()
     {
+        $id_group_admin = Setting::where('key_setting', 'id_group_whatsapp_admin')->value('value');
         $url = env('WHATSAPP_API_SEND');
+
         if (empty($url)) {
             \Log::info("Notification Warning: Failed to send notification, API URL not found");
             return;
@@ -111,7 +113,7 @@ class SendPaymentNotificationByClass extends Command
                 }
 
                 $content_message = join("\n---------------------------------------------------------------------------------- \n", $siswa_kelas);
-                    
+
                 $template = $base_template;
                 $message = str_replace(
                     ['{{CLASS}}', '{{DATE}}', '{{SCHOOL}}', '{{STUDENTS}}', '\n'],
@@ -124,10 +126,19 @@ class SendPaymentNotificationByClass extends Command
                     'group_id' => $kelas[$key],
                 ];
 
-                $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                $response1 = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
                     ->post($url, $data);
 
-                $response_data = $response->json();
+                if ($id_group_admin !== '') {
+                    sleep(10);
+                    $response2 = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                        ->post($url, [
+                            'message' => $message,
+                            'group_id' => $id_group_admin,
+                        ]);
+                }
+
+                $response_data = $response1->json();
 
                 if ($response_data['response'] == 'Device is logged out') {
                     \Log::info("Notification Warning: Failed to send notification, Device is logged out");

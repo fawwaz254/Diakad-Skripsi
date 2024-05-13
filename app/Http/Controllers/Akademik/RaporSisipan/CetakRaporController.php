@@ -440,7 +440,7 @@ class CetakRaporController extends Controller
                     } elseif (in_array($nilai_rapor->id_komponen_jenis_rapor, $sumatif->pluck('id_komponen_jenis_rapor')->toArray())) {
                         $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . $nilai_rapor['id_komponen_jenis_rapor']] = $nilai_rapor['nilai'];
                         if (isset($nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_sumatif'])) {
-                            (int) $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_sumatif'] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_sumatif'] + (int) $nilai_rapor['nilai'];
+                            $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_sumatif'] = (int) $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_sumatif'] + (int) $nilai_rapor['nilai'];
                             $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'jumlah'] = $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'jumlah']  + 1;
                         } else {
                             $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'total_nilai_sumatif'] = $nilai_rapor['nilai'];
