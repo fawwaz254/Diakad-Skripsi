@@ -80,7 +80,11 @@
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <div class="card">
                 <div class="header bg-cyan">
-                    <h2>Guru & Tendik</h2>
+                    <h2 style="float: left">Guru & Tendik</h2>
+
+                    <span style="float: right">{{ $list_guru->count() }} Pengguna</span>
+
+                    <div style="clear: both"></div>
                 </div>
                 <div class="body" style="overflow-y: scroll;max-height:500px">
                     <ul class="list-group">
@@ -108,7 +112,11 @@
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <div class="card">
                 <div class="header bg-cyan">
-                    <h2>Siswa</h2>
+                    <h2 style="float: left">Siswa</h2>
+
+                    <span style="float: right">{{ $list_siswa->count() }} Pengguna</span>
+
+                    <div style="clear: both"></div>
                 </div>
                 <div class="body" style="overflow-y: scroll;max-height:500px">
                     <ul class="list-group">
@@ -128,7 +136,11 @@
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <div class="card">
                 <div class="header bg-cyan">
-                    <h2>Wali Murid</h2>
+                    <h2 style="float: left">Wali Murid</h2>
+
+                    <span style="float: right">{{ $list_wali_murid->count() }} Pengguna</span>
+
+                    <div style="clear: both"></div>
                 </div>
                 <div class="body" style="overflow-y: scroll;max-height:500px">
                     <ul class="list-group">
