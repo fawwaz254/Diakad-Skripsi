@@ -46,7 +46,9 @@ class SendAttendanceNotificationByClass extends Command
     public function handle()
     {
         try {
+            $id_group_admin = Setting::where('key_setting', 'id_group_whatsapp_admin')->value('value');
             $url = env('WHATSAPP_API_SEND');
+
             if (empty($url)) {
                 \Log::info("Notification Warning: Failed to send notification, API URL not found");
                 return;
@@ -103,12 +105,21 @@ class SendAttendanceNotificationByClass extends Command
                         'group_id' => $kelas[$key],
                     ];
 
-                    $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                    $response1 = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
                         ->post($url, $data);
 
-                    $response_data = $response->json();
+                    if ($id_group_admin !== null) {
+                        sleep(10);
+                        $response2 = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                            ->post($url, [
+                                'message' => $message,
+                                'group_id' => $id_group_admin,
+                            ]);
+                    }
 
-                    if ($response_data['response'] == 'Device is logged out') {
+                    $data = $response1->json();
+
+                    if ($data['response'] == 'Device is logged out') {
                         \Log::info("Notification Warning: Failed to send notification, device is logged out");
                     } else {
                         $notif_kehadiran = new WaNotifKehadiranSiswa();
@@ -170,12 +181,21 @@ class SendAttendanceNotificationByClass extends Command
                         'group_id' => $kelas[$key],
                     ];
 
-                    $response = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                    $response1 = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
                         ->post($url, $data);
 
-                    $response_data = $response->json();
+                    if ($id_group_admin !== null) {
+                        sleep(10);
+                        $response2 = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                            ->post($url, [
+                                'message' => $message,
+                                'group_id' => $id_group_admin,
+                            ]);
+                    }
 
-                    if ($response_data['response'] == 'Device is logged out') {
+                    $data = $response1->json();
+
+                    if ($data['response'] == 'Device is logged out') {
                         \Log::info("Notification Warning: Failed to send notification, device is logged out");
                     } else {
                         $notif_kehadiran = new WaNotifKehadiranSiswa();
