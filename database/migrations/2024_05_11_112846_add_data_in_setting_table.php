@@ -18,6 +18,7 @@ class AddDataInSettingTable extends Migration
             Setting::updateOrCreate(
                 ['key_setting' => 'id_group_whatsapp_admin'],
                 [
+                    'value' => '',
                     'keterangan' => 'ID WHATSAPP GROUP ADMIN UNTUK REKAP PESAN NOTIFIKASI TERKIRIM'
                 ]
             );

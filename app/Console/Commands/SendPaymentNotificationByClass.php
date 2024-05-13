@@ -129,7 +129,7 @@ class SendPaymentNotificationByClass extends Command
                 $response1 = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
                     ->post($url, $data);
 
-                if ($id_group_admin !== null) {
+                if ($id_group_admin !== '') {
                     sleep(10);
                     $response2 = Http::withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
                         ->post($url, [
