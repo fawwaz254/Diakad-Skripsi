@@ -748,12 +748,17 @@ class ReportController extends BaseController
         return response()->json($param);
     }
 
-    public function logPenggunaLogin(Request $request, $filter_day = 1)
+    public function logPenggunaLogin(Request $request, $filter_day = 1, $filter_pengguna = '0')
     {
         $rangeDate = Carbon::now()->subDays($filter_day);
 
         $list_pengguna = PenggunaLogin::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
             ->with('pengguna')
+            ->when($filter_pengguna !== "0", function ($q) use ($filter_pengguna) {
+                $q = $q->whereHas('pengguna', function ($q) use ($filter_pengguna) {
+                    $q->whereIn('pengguna.status_join_table',  explode('-', $filter_pengguna));
+                });
+            })
             ->where('login_time', '>=', $rangeDate)
             ->groupBy('id_pengguna')
             ->orderBy('total_count', 'DESC')
@@ -778,11 +783,17 @@ class ReportController extends BaseController
             }
         });
 
-        $totalPengguna1HariTerakhir = $this->getTotalPenggunaLogin(1);
-        $totalPengguna7HariTerakhir = $this->getTotalPenggunaLogin(7);
-        $totalPengguna30HariTerakhir = $this->getTotalPenggunaLogin(30);
+        $totalPengguna1HariTerakhir = $this->getTotalPenggunaLogin(1, $filter_pengguna);
+        $totalPengguna7HariTerakhir = $this->getTotalPenggunaLogin(7, $filter_pengguna);
+        $totalPengguna30HariTerakhir = $this->getTotalPenggunaLogin(30, $filter_pengguna);
 
         $chart_data = PenggunaLogin::selectRaw('DATE(login_time) as date, COUNT(DISTINCT id_pengguna) as count')
+            ->with('pengguna')
+            ->when($filter_pengguna !== "0", function ($q) use ($filter_pengguna) {
+                $q = $q->whereHas('pengguna', function ($q) use ($filter_pengguna) {
+                    $q->whereIn('pengguna.status_join_table',  explode('-', $filter_pengguna));
+                });
+            })
             ->where('login_time', '>=', $rangeDate)
             ->groupBy('date')
             ->pluck('count', 'date');
@@ -798,9 +809,15 @@ class ReportController extends BaseController
         return view('reporting-dashboard.pengguna-login', compact('list_pengguna', 'list_guru', 'list_siswa', 'list_wali_murid', 'totalPengguna1HariTerakhir', 'totalPengguna7HariTerakhir', 'totalPengguna30HariTerakhir', 'chart_label', 'chart_data'));
     }
 
-    private function getTotalPenggunaLogin($filter_day)
+    private function getTotalPenggunaLogin($filter_day, $filter_pengguna)
     {
         return PenggunaLogin::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
+            ->with('pengguna')
+            ->when($filter_pengguna !== "0", function ($q) use ($filter_pengguna) {
+                $q = $q->whereHas('pengguna', function ($q) use ($filter_pengguna) {
+                    $q->whereIn('pengguna.status_join_table',  explode('-', $filter_pengguna));
+                });
+            })
             ->where('login_time', '>=', Carbon::now()->subDays($filter_day))
             ->groupBy('id_pengguna')
             ->orderBy('total_count', 'DESC')
@@ -812,9 +829,12 @@ class ReportController extends BaseController
     {
         $input = (object) $request->input();
 
+        $day = $input->filter_day ?? 1;
+        $pengguna = $input->filter_pengguna ?? 0;
+
         return [
             'status' => 204,
-            'path' => 'analisis-log/penggunaan-diakad/' . $input->filter_day
+            'path' => 'analisis-log/penggunaan-diakad/' . $day . '/' . $pengguna
         ];
     }
 }
