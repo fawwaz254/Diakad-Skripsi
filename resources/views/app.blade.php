@@ -212,9 +212,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
 
 
+{{-- cart.js --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <!-- ApexChart.js #humas-chart -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-        
+
 
 <!-- Signature Pad -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
