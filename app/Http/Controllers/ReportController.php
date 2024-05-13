@@ -748,7 +748,7 @@ class ReportController extends BaseController
         return response()->json($param);
     }
 
-    public function logPenggunaLogin(Request $request, $filter_day = 1, $filter_pengguna = 0)
+    public function logPenggunaLogin(Request $request, $filter_day = 1, $filter_pengguna = '0')
     {
         $rangeDate = Carbon::now()->subDays($filter_day);
 
