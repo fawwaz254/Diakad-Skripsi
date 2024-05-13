@@ -76,18 +76,27 @@
         </div>
     </div>
 
-    <div class="row clearfix">
+    <div class="row clearfix" style="margin-bottom: 3rem">
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <div class="card">
                 <div class="header bg-cyan">
                     <h2>Guru & Tendik</h2>
                 </div>
-                <div class="body">
+                <div class="body" style="overflow-y: scroll;max-height:500px">
                     <ul class="list-group">
                         @forelse ($list_guru as $guru)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $guru->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }} sesi</span>
+                                @if ($guru->pengguna->status_join_table == 2)
+                                    {{ $guru->pengguna->fullname() }}
+                                    <span class="badge badge-primary badge-pill">{{ $guru->total_count }}
+                                        sesi</span><br>
+                                    <small>GURU</small>
+                                @else
+                                    {{ $guru->pengguna->fullname() }}
+                                    <span class="badge badge-primary badge-pill">{{ $guru->total_count }}
+                                        sesi</span><br>
+                                    <small>TENDIK</small>
+                                @endif
                             </li>
                         @empty
                             TIDAK ADA DATA UNTUK SAAT INI
@@ -101,12 +110,13 @@
                 <div class="header bg-cyan">
                     <h2>Siswa</h2>
                 </div>
-                <div class="body">
+                <div class="body" style="overflow-y: scroll;max-height:500px">
                     <ul class="list-group">
                         @forelse ($list_siswa as $siswa)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $siswa->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $siswa->total_count }} sesi</span>
+                                <span class="badge badge-primary badge-pill">{{ $siswa->total_count }} sesi</span><br>
+                                <small>{{ $siswa->pengguna->siswa->kelas->nm_kelas }}</small>
                             </li>
                         @empty
                             TIDAK ADA DATA UNTUK SAAT INI
@@ -120,7 +130,7 @@
                 <div class="header bg-cyan">
                     <h2>Wali Murid</h2>
                 </div>
-                <div class="body">
+                <div class="body" style="overflow-y: scroll;max-height:500px">
                     <ul class="list-group">
                         @forelse ($list_wali_murid as $wali_murid)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
