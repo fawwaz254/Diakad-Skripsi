@@ -763,26 +763,39 @@ class ReportController extends BaseController
         $list_siswa = collect();
         $list_wali_murid = collect();
 
-        foreach ($list_pengguna as $penggunaLogin) {
-            switch ($penggunaLogin->pengguna->status_join_table) {
+        $list_pengguna->each(function ($pengguna_login) use (&$list_guru, &$list_siswa, &$list_wali_murid) {
+            switch ($pengguna_login->pengguna->status_join_table) {
                 case 1:
                 case 2:
-                    $list_guru->push($penggunaLogin);
+                    $list_guru->push($pengguna_login);
                     break;
                 case 3:
-                    $list_siswa->push($penggunaLogin);
+                    $list_siswa->push($pengguna_login);
                     break;
                 case 4:
-                    $list_wali_murid->push($penggunaLogin);
+                    $list_wali_murid->push($pengguna_login);
                     break;
             }
-        }
+        });
 
         $totalPengguna1HariTerakhir = $this->getTotalPenggunaLogin(1);
         $totalPengguna7HariTerakhir = $this->getTotalPenggunaLogin(7);
         $totalPengguna30HariTerakhir = $this->getTotalPenggunaLogin(30);
 
-        return view('reporting-dashboard.pengguna-login', compact('list_pengguna', 'list_guru', 'list_siswa', 'list_wali_murid', 'totalPengguna1HariTerakhir', 'totalPengguna7HariTerakhir', 'totalPengguna30HariTerakhir'));
+        $chart_data = PenggunaLogin::selectRaw('DATE(login_time) as date, COUNT(DISTINCT id_pengguna) as count')
+            ->where('login_time', '>=', $rangeDate)
+            ->groupBy('date')
+            ->pluck('count', 'date');
+
+        $chart_label = $chart_data->keys()->map(function ($date) {
+            return Carbon::parse($date)->translatedFormat('l, d M Y');
+        });
+
+        $chart_data = $chart_data->values();
+
+        $chartDataString = implode(',', $chart_data->toArray());
+
+        return view('reporting-dashboard.pengguna-login', compact('list_pengguna', 'list_guru', 'list_siswa', 'list_wali_murid', 'totalPengguna1HariTerakhir', 'totalPengguna7HariTerakhir', 'totalPengguna30HariTerakhir', 'chart_label', 'chart_data'));
     }
 
     private function getTotalPenggunaLogin($filter_day)

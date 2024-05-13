@@ -41,7 +41,7 @@
     </div>
 
     <div class="block-header" style=" display: flex;justify-content: space-between;">
-        <h1 style="font-size: 2.5rem; margin-top:0; padding:5px"><span id="title-filter-date">1</span> HARI TERAKHIR
+        <h1 style="font-size: 2.5rem; margin-top:0; padding:5px"><span class="title-filter-date">1</span> HARI TERAKHIR
         </h1>
 
         <form id="form-validation" method="POST"
@@ -65,6 +65,17 @@
             </div>
         </form>
     </div>
+
+    <div class="row clearfix" style="margin-bottom:3rem">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="body">
+                    <canvas id="pengguna-chart" height="70"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <div class="card">
@@ -95,7 +106,7 @@
                         @forelse ($list_siswa as $siswa)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $siswa->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }} sesi</span>
+                                <span class="badge badge-primary badge-pill">{{ $siswa->total_count }} sesi</span>
                             </li>
                         @empty
                             TIDAK ADA DATA UNTUK SAAT INI
@@ -114,7 +125,7 @@
                         @forelse ($list_wali_murid as $wali_murid)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ $wali_murid->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $guru->total_count }} sesi</span>
+                                <span class="badge badge-primary badge-pill">{{ $wali_murid->total_count }} sesi</span>
                             </li>
                         @empty
                             TIDAK ADA DATA UNTUK SAAT INI
@@ -129,11 +140,40 @@
 @include('scriptjs')
 
 <script>
+    var label = @json($chart_label);
+    var data = @json($chart_data);
+
+
+    console.log(label);
+    console.log(data);
+    const ctx = document.getElementById('pengguna-chart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: label,
+            datasets: [{
+                label: '# Grafik Pengguna Login',
+                data: data,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<script>
     var currentUrl = window.location.href;
     var parts = currentUrl.split('/');
     var filter_value = parts[parts.length - 1];
 
     if (filter_value == 1 || filter_value == 7 || filter_value == 30) {
-        $('#title-filter-date').text(filter_value);
+        $('.title-filter-date').text(filter_value);
     }
 </script>
