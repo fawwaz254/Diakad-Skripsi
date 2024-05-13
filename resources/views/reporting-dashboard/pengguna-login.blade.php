@@ -41,7 +41,7 @@
     </div>
 
     <div class="block-header" style=" display: flex;justify-content: space-between;">
-        <h1 style="font-size: 2.5rem; margin-top:0; padding:5px"><span class="title-filter-date">1</span> HARI TERAKHIR
+        <h1 style="font-size: 2.5rem; margin-top:0; padding:5px"><span id="title-filter-date">1</span> HARI TERAKHIR
         </h1>
 
         <form id="form-validation" method="POST"
@@ -49,12 +49,21 @@
             style="display: inline;padding: 5px">
             {{ csrf_field() }}
             <div class="row clearfix">
-                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                     <select class="form-control show-tick" name="filter_day">
                         <option selected disabled>-- Pilih Filter --</option>
                         <option value="1">1 HARI TERAKHIR</option>
                         <option value="7">7 HARI TERAKHIR</option>
                         <option value="30">30 HARI TERAKHIR</option>
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <select class="form-control show-tick" name="filter_pengguna">
+                        <option selected disabled>-- Pilih Filter --</option>
+                        <option value="1-2">Guru & Tendik</option>
+                        <option value="3">Siswa</option>
+                        <option value="4">Wali Murid</option>
+                        <option value="0">Semua</option>
                     </select>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -67,87 +76,47 @@
     </div>
 
     <div class="row clearfix" style="margin-bottom:3rem">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
             <div class="card">
                 <div class="body">
-                    <canvas id="pengguna-chart" height="70"></canvas>
+                    <canvas id="pengguna-chart" height="185"></canvas>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row clearfix" style="margin-bottom: 3rem">
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
             <div class="card">
                 <div class="header bg-cyan">
-                    <h2 style="float: left">Guru & Tendik</h2>
+                    <h2 id="dynamic-title-card" style="float: left">Semua Pengguna</h2>
 
-                    <span style="float: right">{{ $list_guru->count() }} Pengguna</span>
+                    <span style="float: right">{{ $list_pengguna->count() }} Pengguna</span>
 
                     <div style="clear: both"></div>
                 </div>
                 <div class="body" style="overflow-y: scroll;max-height:500px">
                     <ul class="list-group">
-                        @forelse ($list_guru as $guru)
+                        @forelse ($list_pengguna as $pengguna)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                @if ($guru->pengguna->status_join_table == 2)
-                                    {{ $guru->pengguna->fullname() }}
-                                    <span class="badge badge-primary badge-pill">{{ $guru->total_count }}
-                                        sesi</span><br>
-                                    <small>GURU</small>
-                                @else
-                                    {{ $guru->pengguna->fullname() }}
-                                    <span class="badge badge-primary badge-pill">{{ $guru->total_count }}
+                                @if ($pengguna->pengguna->status_join_table == 1)
+                                    {{ $pengguna->pengguna->fullname() }}
+                                    <span class="badge badge-primary badge-pill">{{ $pengguna->total_count }}
                                         sesi</span><br>
                                     <small>TENDIK</small>
+                                @elseif ($pengguna->pengguna->status_join_table == 2)
+                                    {{ $pengguna->pengguna->fullname() }}
+                                    <span class="badge badge-primary badge-pill">{{ $pengguna->total_count }}
+                                        sesi</span><br>
+                                    <small>GURU</small>
+                                @elseif($pengguna->pengguna->status_join_table == 3)
+                                    {{ $pengguna->pengguna->nm_pengguna }}
+                                    <span class="badge badge-primary badge-pill">{{ $pengguna->total_count }}
+                                        sesi</span><br>
+                                    <small>Siswa kelas {{ $pengguna->pengguna->siswa->kelas->nm_kelas }}</small>
+                                @elseif($pengguna->pengguna->status_join_table == 4)
+                                    {{ $pengguna->pengguna->nm_pengguna }}
+                                    <span class="badge badge-primary badge-pill">{{ $pengguna->total_count }}
+                                        sesi</span><br>
+                                    <small>Wali Murid</small>
                                 @endif
-                            </li>
-                        @empty
-                            TIDAK ADA DATA UNTUK SAAT INI
-                        @endforelse
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            <div class="card">
-                <div class="header bg-cyan">
-                    <h2 style="float: left">Siswa</h2>
-
-                    <span style="float: right">{{ $list_siswa->count() }} Pengguna</span>
-
-                    <div style="clear: both"></div>
-                </div>
-                <div class="body" style="overflow-y: scroll;max-height:500px">
-                    <ul class="list-group">
-                        @forelse ($list_siswa as $siswa)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $siswa->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $siswa->total_count }} sesi</span><br>
-                                <small>{{ $siswa->pengguna->siswa->kelas->nm_kelas }}</small>
-                            </li>
-                        @empty
-                            TIDAK ADA DATA UNTUK SAAT INI
-                        @endforelse
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            <div class="card">
-                <div class="header bg-cyan">
-                    <h2 style="float: left">Wali Murid</h2>
-
-                    <span style="float: right">{{ $list_wali_murid->count() }} Pengguna</span>
-
-                    <div style="clear: both"></div>
-                </div>
-                <div class="body" style="overflow-y: scroll;max-height:500px">
-                    <ul class="list-group">
-                        @forelse ($list_wali_murid as $wali_murid)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ $wali_murid->pengguna->nm_pengguna }}
-                                <span class="badge badge-primary badge-pill">{{ $wali_murid->total_count }} sesi</span>
                             </li>
                         @empty
                             TIDAK ADA DATA UNTUK SAAT INI
@@ -165,9 +134,6 @@
     var label = @json($chart_label);
     var data = @json($chart_data);
 
-
-    console.log(label);
-    console.log(data);
     const ctx = document.getElementById('pengguna-chart');
 
     new Chart(ctx, {
@@ -175,7 +141,7 @@
         data: {
             labels: label,
             datasets: [{
-                label: '# Grafik Pengguna Login',
+                label: '# Pengguna Login',
                 data: data,
                 borderWidth: 1
             }]
@@ -193,9 +159,18 @@
 <script>
     var currentUrl = window.location.href;
     var parts = currentUrl.split('/');
-    var filter_value = parts[parts.length - 1];
+    var filter_pengguna = parts[parts.length - 1];
+    var filter_day = parts[parts.length - 2];
 
-    if (filter_value == 1 || filter_value == 7 || filter_value == 30) {
-        $('.title-filter-date').text(filter_value);
+    if (filter_day == 1 || filter_day == 7 || filter_day == 30) {
+        $('#title-filter-date').text(filter_day);
+    }
+
+    if (filter_pengguna == '1-2') {
+        $('#dynamic-title-card').text('Guru & Tendik');
+    } else if (filter_pengguna == 3) {
+        $('#dynamic-title-card').text('Siswa');
+    } else if (filter_pengguna == 4) {
+        $('#dynamic-title-card').text('Wali Murid');
     }
 </script>

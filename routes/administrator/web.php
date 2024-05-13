@@ -168,7 +168,7 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('analisis-log')->group(function () {
             // MENU ANALISIS LOG
-            Route::get('penggunaan-diakad/{filter_day?}', [ReportController::class, 'logPenggunaLogin']);
+            Route::get('penggunaan-diakad/{filter_day?}/{filter_pengguna?}', [ReportController::class, 'logPenggunaLogin']);
             Route::post('penggunaan-diakad', [ReportController::class, 'filterLogPenggunaLogin']);
         });
     });
