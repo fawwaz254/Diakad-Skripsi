@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping();
 
         $schedule->command('whatsapp:groups')
-            ->everyFourHours()
+            ->hourly()
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
