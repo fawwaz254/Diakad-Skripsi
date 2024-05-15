@@ -3,24 +3,24 @@
 namespace App\Console\Commands;
 
 use Carbon\Carbon;
-use App\Models\PenggunaLogin;
+use App\Models\LogSesiPengguna;
 use Illuminate\Console\Command;
 
-class PenggunaLoginLog extends Command
+class ClearSesiPengguna extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'pengguna-login:clear';
+    protected $signature = 'sesi-pengguna:clear';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Menghapus data lama pada tabel pengguna_login';
+    protected $description = 'Menghapus data > 30 hari terakhir pada tabel log_sesi_pengguna';
 
     /**
      * Create a new command instance.
@@ -40,8 +40,8 @@ class PenggunaLoginLog extends Command
     public function handle()
     {
         $tanggal_30_hari_yang_lalu = Carbon::now()->subDays(30);
-        PenggunaLogin::where('login_time', '<', $tanggal_30_hari_yang_lalu)->delete();
+        LogSesiPengguna::where('login_time', '<', $tanggal_30_hari_yang_lalu)->delete();
 
-        \Log::info("Data lama tabel pengguna_login berhasil dihapus " . date('Y-m-d H:i:s'));
+        \Log::info("Data log_sesi_pengguna > 30 hari terakhir berhasil dihapus " . date('Y-m-d H:i:s'));
     }
 }

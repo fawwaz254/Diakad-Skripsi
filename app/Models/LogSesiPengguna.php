@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PenggunaLogin extends Model
+class LogSesiPengguna extends Model
 {
-    protected $table = 'pengguna_login';
+    protected $table = 'log_sesi_pengguna';
 
-    protected $primaryKey = 'id_pengguna_login';
+    protected $primaryKey = 'id_log_sesi_pengguna';
 
     protected $keyType = 'string';
 
