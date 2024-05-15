@@ -19,13 +19,13 @@ class RaporSemesterController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first() ?? NULL;
+        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        $wali_kelas = !empty($guru) ? LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester) : NULL;
+        $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
         // $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
         $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
         $id_semester = $semester_aktif->id_semester;
-        $id_kelas = $wali_kelas->id_kelas ?? '';
+        $id_kelas = $wali_kelas->id_kelas;
         return view('guru/wali-kelas/rapor-semester/view-rapor-semester', compact('auth_data', 'id_semester', 'id_kelas', 'kelompok_tambahan_rapor'));
     }
 
