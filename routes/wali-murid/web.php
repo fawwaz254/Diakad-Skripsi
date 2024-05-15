@@ -71,7 +71,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('jadwal-kbm/datatables', [JadwalKBMController::class, 'datatablesJadwalKBM']);
 
             // MENU Lihat Nilai KBM
-            Route::get('lihat-nilai-kbm',[LihatNilaiWaliController::class,'index']);
+            Route::get('lihat-nilai-kbm', [LihatNilaiWaliController::class, 'index']);
 
             // MENU Jadwal Ujian
             Route::get('jadwal-ujian', [JadwalUjianController::class, 'viewJadwalUjian']);
