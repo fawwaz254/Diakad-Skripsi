@@ -1,3 +1,56 @@
+<style>
+    .lds-ring {
+        color: #00BCD4;
+    }
+
+    .lds-ring,
+    .lds-ring div {
+        box-sizing: border-box;
+    }
+
+    .lds-ring {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+    }
+
+    .lds-ring div {
+        box-sizing: border-box;
+        display: block;
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border: 8px solid currentColor;
+        border-radius: 50%;
+        animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        border-color: currentColor transparent transparent transparent;
+    }
+
+    .lds-ring div:nth-child(1) {
+        animation-delay: -0.45s;
+    }
+
+    .lds-ring div:nth-child(2) {
+        animation-delay: -0.3s;
+    }
+
+    .lds-ring div:nth-child(3) {
+        animation-delay: -0.15s;
+    }
+
+    @keyframes lds-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
 <div class="container-fluid">
     <div class="block-header" style=" display: flex;
     justify-content: space-between;">
@@ -45,7 +98,7 @@
         </h1>
 
         <form id="form-validation" method="POST"
-            action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3)) }}"
+            action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/filter') }}"
             style="display: inline;padding: 5px">
             {{ csrf_field() }}
             <div class="row clearfix">
@@ -67,7 +120,7 @@
                     </select>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                    <button class="btn btn-block form-control bg-blue waves-effect" type="submit">
+                    <button class="btn btn-block form-control bg-cyan waves-effect" type="submit">
                         Filter
                     </button>
                 </div>
@@ -95,7 +148,9 @@
                 <div class="body" style="overflow-y: scroll;max-height:500px">
                     <ul class="list-group">
                         @forelse ($list_pengguna as $pengguna)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <li style="cursor: pointer"
+                                class="list-group-item d-flex justify-content-between align-items-center"
+                                onclick="showModalDetail('{{ $pengguna->pengguna->id_pengguna }}')">
                                 @if ($pengguna->pengguna->status_join_table == 1)
                                     {{ $pengguna->pengguna->fullname() }}
                                     <span class="badge badge-primary badge-pill">{{ $pengguna->total_count }}
@@ -128,7 +183,42 @@
     </div>
 </div>
 
+{{-- MODAL ACTION --}}
+<div class="modal" tabindex="-1" role="dialog" id="modal-action">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+                <h1 style="font-size: 3rem" class="modal-title"></h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
 @include('scriptjs')
+
+<script>
+    var current_url = window.location.href;
+    var parts = current_url.split('/');
+    var filter_pengguna = parts[parts.length - 1];
+    var filter_day = parts[parts.length - 2];
+
+    if (filter_day == 1 || filter_day == 7 || filter_day == 30) {
+        $('#title-filter-date').text(filter_day);
+    }
+
+    if (filter_pengguna == '1-2') {
+        $('#dynamic-title-card').text('Guru & Tendik');
+    } else if (filter_pengguna == 3) {
+        $('#dynamic-title-card').text('Siswa');
+    } else if (filter_pengguna == 4) {
+        $('#dynamic-title-card').text('Wali Murid');
+    }
+</script>
 
 <script>
     var label = @json($chart_label);
@@ -144,7 +234,8 @@
                 label: '# Pengguna Login',
                 data: data,
                 borderWidth: 1
-            }]
+            }],
+            backgroundColor: '#00BCD4',
         },
         options: {
             scales: {
@@ -157,20 +248,81 @@
 </script>
 
 <script>
-    var currentUrl = window.location.href;
-    var parts = currentUrl.split('/');
-    var filter_pengguna = parts[parts.length - 1];
-    var filter_day = parts[parts.length - 2];
+    var loading_element =
+        `<div style="text-align:center"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>`;
 
-    if (filter_day == 1 || filter_day == 7 || filter_day == 30) {
-        $('#title-filter-date').text(filter_day);
+    function showModalDetail(id_pengguna) {
+        $('.modal-title').empty();
+        $('.modal-body').empty();
+        $('.modal-body').html(loading_element);
+        $('#modal-action').modal('show');
+
+        $.ajax({
+            type: "POST",
+            url: '{{ url()->current() }}',
+            data: {
+                _token: $("meta[name='csrf-token']").attr("content"),
+                id_pengguna,
+            },
+            success: function(response) {
+
+                $('.modal-title').empty();
+
+                var table_element = `
+                <table class="table table-striped" style="width: 100%">
+                    <tr>
+                        <th>No.</th>
+                        <th>Method</th>
+                        <th>Route</th>
+                        <th>Aktivitas</th>
+                    </tr>
+                `;
+
+                let total_activity_time_in_seconds = 0;
+
+                response.data.log.forEach((item, index) => {
+                    if (index > 0) {
+                        const current_created_at = new Date(item.created_at);
+                        const previous_created_at = new Date(response.data.log[index - 1]
+                            .created_at);
+
+                        const diff_in_milliseconds = current_created_at - previous_created_at;
+                        const diff_in_seconds = diff_in_milliseconds / 1000;
+                        const diff_in_minutes = diff_in_seconds / 60;
+
+                        if (diff_in_minutes <= 10) {
+                            total_activity_time_in_seconds += diff_in_seconds;
+                        }
+                    }
+
+                    var parts = item.route.split('/');
+
+                    table_element += `
+                        <tr>
+                            <td style="text-align:center">${index + 1}</td>
+                            <td style="text-align:center"><span class="badge" style="border-radius:15px;padding:.5rem 1rem;">${item.method}</span></td>
+                            <td>${item.route}</td>
+                            <td><span style="padding:.7rem" class="badge bg-cyan">${parts[4].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span> <span style="padding:.7rem" class="badge bg-teal">${parts[5] ? parts[5].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}</span></td>
+                        </tr>
+                        `;
+                });
+
+                table_element += `</table>`
+                $('.modal-body').html(table_element);
+
+                const total_activity_time = formatTime(total_activity_time_in_seconds);
+                $('.modal-title').html(
+                    `${response.data.nm_pengguna} <span style="text-align:center"><span class="badge" style="border-radius:15px;padding:.5rem 1rem;">${total_activity_time}</span>`
+                );
+            },
+        });
     }
 
-    if (filter_pengguna == '1-2') {
-        $('#dynamic-title-card').text('Guru & Tendik');
-    } else if (filter_pengguna == 3) {
-        $('#dynamic-title-card').text('Siswa');
-    } else if (filter_pengguna == 4) {
-        $('#dynamic-title-card').text('Wali Murid');
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+
+        return `${hours} jam ${minutes} menit ${remainingSeconds} detik`;
     }
 </script>

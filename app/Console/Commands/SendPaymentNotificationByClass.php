@@ -42,6 +42,8 @@ class SendPaymentNotificationByClass extends Command
      */
     public function handle()
     {
+        \Log::info("Notification Info: starting notification payment");
+
         $id_group_admin = Setting::where('key_setting', 'id_group_whatsapp_admin')->value('value');
         $url = env('WHATSAPP_API_SEND');
 
@@ -157,5 +159,7 @@ class SendPaymentNotificationByClass extends Command
         } catch (\Exception $e) {
             \Log::info("Notification Error: " . $e);
         }
+
+        \Log::info("Notification Info: end of notification payment");
     }
 }

@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\SendAttendanceNotificationByClass::class,
         Commands\SendPaymentNotificationByClass::class,
         Commands\FetchWhatsappGroups::class,
-        Commands\PenggunaLoginLog::class,
+        Commands\ClearSesiPengguna::class,
     ];
 
     protected function schedule(Schedule $schedule)
@@ -54,13 +54,12 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping();
 
         $schedule->command('whatsapp:groups')
-            ->hourly()
+            ->hourly(30)
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
-        $schedule->command('pengguna-login:clear')
-            ->daily()
-            ->at('00:00')
+        $schedule->command('sesi-pengguna:clear')
+            ->dailyAt('02:00')
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
     }

@@ -60,7 +60,8 @@ use App\Models\LaporanKerjaHarian;
 use App\Models\PresensiMpPelanggaran;
 use App\Models\LaporanKerjaHarianMGMP;
 use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\PenggunaLogin;
+use App\Models\LogAktivitasPengguna;
+use App\Models\LogSesiPengguna;
 use Illuminate\Routing\Controller as BaseController;
 
 class ReportController extends BaseController
@@ -748,11 +749,11 @@ class ReportController extends BaseController
         return response()->json($param);
     }
 
-    public function logPenggunaLogin(Request $request, $filter_day = 1, $filter_pengguna = '0')
+    public function logSesiPenggunaLogin(Request $request, $filter_day = 1, $filter_pengguna = '0')
     {
         $rangeDate = Carbon::now()->subDays($filter_day);
 
-        $list_pengguna = PenggunaLogin::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
+        $list_pengguna = LogSesiPengguna::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
             ->with('pengguna')
             ->when($filter_pengguna !== "0", function ($q) use ($filter_pengguna) {
                 $q = $q->whereHas('pengguna', function ($q) use ($filter_pengguna) {
@@ -768,26 +769,26 @@ class ReportController extends BaseController
         $list_siswa = collect();
         $list_wali_murid = collect();
 
-        $list_pengguna->each(function ($pengguna_login) use (&$list_guru, &$list_siswa, &$list_wali_murid) {
-            switch ($pengguna_login->pengguna->status_join_table) {
+        $list_pengguna->each(function ($log_sesi_pengguna) use (&$list_guru, &$list_siswa, &$list_wali_murid) {
+            switch ($log_sesi_pengguna->pengguna->status_join_table) {
                 case 1:
                 case 2:
-                    $list_guru->push($pengguna_login);
+                    $list_guru->push($log_sesi_pengguna);
                     break;
                 case 3:
-                    $list_siswa->push($pengguna_login);
+                    $list_siswa->push($log_sesi_pengguna);
                     break;
                 case 4:
-                    $list_wali_murid->push($pengguna_login);
+                    $list_wali_murid->push($log_sesi_pengguna);
                     break;
             }
         });
 
-        $totalPengguna1HariTerakhir = $this->getTotalPenggunaLogin(1, $filter_pengguna);
-        $totalPengguna7HariTerakhir = $this->getTotalPenggunaLogin(7, $filter_pengguna);
-        $totalPengguna30HariTerakhir = $this->getTotalPenggunaLogin(30, $filter_pengguna);
+        $totalPengguna1HariTerakhir = $this->getTotalSesiPenggunaLogin(1, $filter_pengguna);
+        $totalPengguna7HariTerakhir = $this->getTotalSesiPenggunaLogin(7, $filter_pengguna);
+        $totalPengguna30HariTerakhir = $this->getTotalSesiPenggunaLogin(30, $filter_pengguna);
 
-        $chart_data = PenggunaLogin::selectRaw('DATE(login_time) as date, COUNT(DISTINCT id_pengguna) as count')
+        $chart_data = LogSesiPengguna::selectRaw('DATE(login_time) as date, COUNT(DISTINCT id_pengguna) as count')
             ->with('pengguna')
             ->when($filter_pengguna !== "0", function ($q) use ($filter_pengguna) {
                 $q = $q->whereHas('pengguna', function ($q) use ($filter_pengguna) {
@@ -806,12 +807,12 @@ class ReportController extends BaseController
 
         $chartDataString = implode(',', $chart_data->toArray());
 
-        return view('reporting-dashboard.pengguna-login', compact('list_pengguna', 'list_guru', 'list_siswa', 'list_wali_murid', 'totalPengguna1HariTerakhir', 'totalPengguna7HariTerakhir', 'totalPengguna30HariTerakhir', 'chart_label', 'chart_data'));
+        return view('reporting-dashboard.log-sesi-pengguna', compact('list_pengguna', 'list_guru', 'list_siswa', 'list_wali_murid', 'totalPengguna1HariTerakhir', 'totalPengguna7HariTerakhir', 'totalPengguna30HariTerakhir', 'chart_label', 'chart_data'));
     }
 
-    private function getTotalPenggunaLogin($filter_day, $filter_pengguna)
+    private function getTotalSesiPenggunaLogin($filter_day, $filter_pengguna)
     {
-        return PenggunaLogin::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
+        return LogSesiPengguna::select('id_pengguna', DB::raw('COUNT(id_pengguna) as total_count'))
             ->with('pengguna')
             ->when($filter_pengguna !== "0", function ($q) use ($filter_pengguna) {
                 $q = $q->whereHas('pengguna', function ($q) use ($filter_pengguna) {
@@ -825,7 +826,7 @@ class ReportController extends BaseController
             ->count();
     }
 
-    public function filterLogPenggunaLogin(Request $request)
+    public function filterLogSesiPenggunaLogin(Request $request)
     {
         $input = (object) $request->input();
 
@@ -836,5 +837,26 @@ class ReportController extends BaseController
             'status' => 204,
             'path' => 'analisis-log/penggunaan-diakad/' . $day . '/' . $pengguna
         ];
+    }
+
+    public function detailLogAktivitasPengguna(Request $request, $filter_day = 1)
+    {
+        $pengguna = Pengguna::find($request->id_pengguna);
+
+        $log_sesi_pengguna = LogAktivitasPengguna::where('id_pengguna', $request->id_pengguna)
+            ->select('route', 'method', 'created_at', DB::raw('count(*) as total'))
+            ->where('created_at', '>=', Carbon::now()->subDays($filter_day))
+            ->groupBy('route', 'method', 'created_at')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return response()->json([
+            'status_code' => 200,
+            'status_text' => 'Success',
+            'data' => [
+                'nm_pengguna' => $pengguna->nm_pengguna,
+                'log' => $log_sesi_pengguna,
+            ]
+        ]);
     }
 }
