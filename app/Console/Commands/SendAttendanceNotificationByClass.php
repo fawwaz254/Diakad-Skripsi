@@ -45,6 +45,7 @@ class SendAttendanceNotificationByClass extends Command
      */
     public function handle()
     {
+        \Log::info("Notification Info: starting notification attendance");
         try {
             $id_group_admin = Setting::where('key_setting', 'id_group_whatsapp_admin')->value('value');
             $url = env('WHATSAPP_API_SEND');
@@ -212,5 +213,7 @@ class SendAttendanceNotificationByClass extends Command
         } catch (\Exception $e) {
             \Log::info("Notification Error: " . $e->getMessage());
         }
+
+        \Log::info("Notification Info: end of notification attendance");
     }
 }

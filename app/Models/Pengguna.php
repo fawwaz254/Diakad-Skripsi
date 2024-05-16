@@ -166,9 +166,14 @@ class Pengguna extends Authenticatable
         return $this->hasMany(ShiftPengguna::class, 'id_pengguna', 'id_pengguna');
     }
 
-    public function pengguna_login()
+    public function log_sesi_pengguna()
     {
-        return $this->hasMany(PenggunaLogin::class, 'id_pengguna', 'id_pengguna');
+        return $this->hasMany(LogSesiPengguna::class, 'id_pengguna', 'id_pengguna');
+    }
+
+    public function log_aktivitas_pengguna()
+    {
+        return $this->hasMany(LogAktivitasPengguna::class, 'id_pengguna', 'id_pengguna');
     }
 
 
