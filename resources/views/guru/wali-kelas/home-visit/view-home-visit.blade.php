@@ -63,6 +63,7 @@
                                     <th>Validasi Kesiswaan</th>
                                     <th>Guru Kesiswaan</th>
                                     <th>Dokumentasi</th>
+                                    <th>Tanggal Dibuat</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -143,6 +144,9 @@
                     }
 
                 }
+            },
+            {
+                data: 'created_at',
             },
             {
                 data: 'action',
