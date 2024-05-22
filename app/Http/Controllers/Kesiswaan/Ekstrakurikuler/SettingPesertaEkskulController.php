@@ -105,7 +105,8 @@ class SettingPesertaEkskulController extends BaseController
         $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
         $ekskul_pilih = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
         $semester = Semester::find($id_semester);
-        $semester_lalu =  Semester::where('thn_akademik_semester', $semester->thn_akademik_semester - 1)->first();
+        $semester_lalu =  Semester::where('kode_semester', (int) $semester->kode_semester - 1)->first();
+
         return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'ekskul_pilih', 'data_semester', 'selected_semester', 'id_semester', 'semester_lalu'));
     }
 
@@ -150,7 +151,7 @@ class SettingPesertaEkskulController extends BaseController
             // ->where('pengambilan_ekskul.id_siswa','=', 'peserta_ekskul_set.id_siswa')
             ->where('pengambilan_ekskul.id_ekskul', '=', $id_ekskul)
             ->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)
-            ->where('pengambilan_ekskul.id_semester', '=', $id_semester)
+            ->where('peserta_ekskul_set.id_semester', '=', $id_semester)
             ->get();
         // dd($list_data);
         return Datatables::of($list_data)
@@ -269,7 +270,7 @@ class SettingPesertaEkskulController extends BaseController
             // ->where('pengambilan_ekskul.id_siswa','=', 'peserta_ekskul_set.id_siswa')
             ->where('pengambilan_ekskul.id_ekskul', '=', $id_ekskul)
             ->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)
-            ->where('pengambilan_ekskul.id_semester', '=', $id_semester)
+            ->where('peserta_ekskul_set.id_semester', '=', $id_semester)
             ->get();
         // dd($list_data);
         return Datatables::of($list_data)
