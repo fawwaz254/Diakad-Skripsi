@@ -36,7 +36,7 @@
                                                 <th>Nomor HP Wali Murid</th>
                                                 <th>Alamat Wali Murid</th>
                                                 <th>Rangkuman Home Visit</th>
-                                                <th>Tanggal Home Visit</th>
+                                                <th>Tanggal Dibuat</th>
                                                 <th>Guru Kesiswaan</th>
                                                 <th>Action</th>
                                             </tr>
@@ -60,7 +60,7 @@
                                                 <th>Nomor HP Wali Murid</th>
                                                 <th>Alamat Wali Murid</th>
                                                 <th>Rangkuman Home Visit</th>
-                                                <th>Tanggal Home Visit</th>
+                                                <th>Tanggal Dibuat</th>
                                                 <th>Guru Kesiswaan</th>
                                                 <th>Action</th>
                                             </tr>
