@@ -143,6 +143,9 @@ class HomeVisitController extends BaseController
             ->addColumn('semester', function ($item) {
                 return $item->tahun_ajaran . " " . $item->nm_semester;
             })
+            ->editColumn('created_at', function ($item) {
+                return Carbon::parse($item->created_at)->translatedFormat('l, d M Y');
+            })
             ->addColumn('nm_guru', function ($item) {
                 if (!empty($item->gelar_depan_guru) && !empty($item->gelar_belakang_guru)) {
                     return $item->gelar_depan_guru . " " . $item->nm_guru . ", " . $item->gelar_belakang_guru;
