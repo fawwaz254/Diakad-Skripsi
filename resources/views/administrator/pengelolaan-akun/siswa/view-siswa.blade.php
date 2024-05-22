@@ -190,4 +190,16 @@
             }
         });
     }
+
+    $(document).ready(function() {
+        /* Select All Checkbox */
+        $('#checkbox_select_all_primary_table').change(function() {
+            var select_all_checked = this.checked;
+            var rows = primary_table.rows({
+                'search': 'applied'
+            }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+    });
 </script>
