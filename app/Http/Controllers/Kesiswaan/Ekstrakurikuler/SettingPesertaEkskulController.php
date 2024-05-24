@@ -105,7 +105,12 @@ class SettingPesertaEkskulController extends BaseController
         $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
         $ekskul_pilih = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
         $semester = Semester::find($id_semester);
-        $semester_lalu =  Semester::where('kode_semester', (int) $semester->kode_semester - 1)->first();
+
+        if ($selected_semester->nm_semester == 'Ganjil') {
+            $semester_lalu =  Semester::where('kode_semester', (int) $semester->kode_semester - 9)->first();
+        } else {
+            $semester_lalu =  Semester::where('kode_semester', (int) $semester->kode_semester - 1)->first();
+        }
 
         return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'ekskul_pilih', 'data_semester', 'selected_semester', 'id_semester', 'semester_lalu'));
     }
