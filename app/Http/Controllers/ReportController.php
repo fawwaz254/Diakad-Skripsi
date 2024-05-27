@@ -62,6 +62,7 @@ use App\Models\LaporanKerjaHarianMGMP;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\LogAktivitasPengguna;
 use App\Models\LogSesiPengguna;
+use App\Models\Rapor;
 use Illuminate\Routing\Controller as BaseController;
 
 class ReportController extends BaseController
@@ -657,7 +658,7 @@ class ReportController extends BaseController
         $kegiatan_gurus = KegiatanGuru::get();
         $prestasi_gurus = PrestasiGuru::get();
         $arsip_dokumens = ArsipDokumen::get();
-        $rapor_sisipans = RaporSisipan::where('id_semester', $id_semester)->get();
+        $rapor_sisipans = Rapor::where('id_semester', $id_semester)->where('nm_rapor', 'sisipan')->get();
         $materi_ajars = MateriAjar::get();
         $paket_soals = PaketSoal::get();
         $presensi_mps = PresensiMp::whereHas('kelas_mp', function ($query) use ($id_semester) {
