@@ -68,7 +68,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        Rekap Harian
+                        Rekap Form Detail
                         {{-- {{ $bulan->nm_bulan }} --}}
                         {{-- <a target="_blank"
                             href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/' . $bulan->id_bulan . '/' . $tahun . '/download') }}"
