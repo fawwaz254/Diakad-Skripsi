@@ -81,8 +81,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [RekapFormHarianController::class, 'viewListRekapFormHarian']);
                 Route::get('datatables', [RekapFormHarianController::class, 'datatablesListRekapFormHarian']);
 
-                Route::get('rekap-harian-form-harian/{id_form}', [RekapFormHarianController::class, 'viewHarianFormHarian']);
-                Route::get('rekap-harian-form-harian/{id_form}/{date}/{id_kelas}', [RekapFormHarianController::class, 'viewHarianFormHarian']);
+                Route::get('detail/{id_form}', [RekapFormHarianController::class, 'viewHarianFormHarian']);
+                Route::get('detail/{id_form}/{date}/{id_kelas}', [RekapFormHarianController::class, 'viewHarianFormHarian']);
 
                 Route::get('rekap-bulanan-form-harian/{id_form}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);
                 Route::get('rekap-bulanan-form-harian/{id_form}/{bulan}/{tahun}/{id_kelas}/{id_pertanyaan}', [RekapFormHarianController::class, 'viewRekapBulananFormHarian']);
@@ -90,15 +90,15 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('detail-jawaban/{id_form}', [RekapFormHarianController::class, 'viewDetailJawaban']);
             });
 
-            
-            Route::prefix('custom-form')->group(function () {
-                    Route::get('datatables', [CustomFormController::class, 'datatablesCustomForm']);
-            });
-            Route::resource('custom-form',CustomFormController::class);
 
-            Route::get('form-rekap/datatables',[CustomFormRekapController::class, 'indexDataTables']);
-            Route::post('form-rekap/datatables/filter',[CustomFormRekapController::class, 'filterRekapDatatables']);
-            Route::resource('form-rekap',CustomFormRekapController::class);
+            Route::prefix('custom-form')->group(function () {
+                Route::get('datatables', [CustomFormController::class, 'datatablesCustomForm']);
+            });
+            Route::resource('custom-form', CustomFormController::class);
+
+            Route::get('form-rekap/datatables', [CustomFormRekapController::class, 'indexDataTables']);
+            Route::post('form-rekap/datatables/filter', [CustomFormRekapController::class, 'filterRekapDatatables']);
+            Route::resource('form-rekap', CustomFormRekapController::class);
             // Route::resource('')
 
             //     Route::get('/', [CustomFormController::class, 'viewCustomForm']);
