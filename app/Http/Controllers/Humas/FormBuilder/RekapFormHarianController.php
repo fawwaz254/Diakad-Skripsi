@@ -28,7 +28,7 @@ class RekapFormHarianController extends Controller
     }
     public function datatablesListRekapFormHarian(Request $request)
     {
-        $list_data = Form::where('is_harian', '1')->with('role', 'jawaban_form');
+        $list_data = Form::with('role', 'jawaban_form');
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
