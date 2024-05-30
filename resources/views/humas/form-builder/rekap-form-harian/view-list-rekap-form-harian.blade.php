@@ -85,7 +85,7 @@
                 render: function(data) {
                     if (!data.is_harian) {
                         return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                            rekap_jawaban_harian_url + '/' + data.id + '">' +
+                            rekap_jawaban_harian_url + '/' + data.id + '/0">' +
                             '    <i class="material-icons">remove_red_eye</i>' +
                             '</a>';
                     } else {
