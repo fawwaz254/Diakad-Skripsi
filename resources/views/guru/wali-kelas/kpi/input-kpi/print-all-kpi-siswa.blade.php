@@ -163,12 +163,14 @@
                                 </td>
                                 @if ($point_kpi->jenis != 0)
                                     @php
-                                        $predikat = $siswa->predikat->where('id_point_kpi', $point_kpi->id_point_kpi)->first()->predikat;
+                                        $predikat = $siswa->predikat
+                                            ->where('id_point_kpi', $point_kpi->id_point_kpi)
+                                            ->first()?->predikat;
                                     @endphp
                                     <td style="text-align:center">{{ $predikat }}</td>
                                     <td>
                                         @php
-                                            $array = explode('<br>', $point_kpi->deskripsi[$predikat]);
+                                            $array = explode('<br>', $point_kpi->deskripsi[$predikat] ?? '');
                                         @endphp
                                         <table>
                                             @foreach ($array as $item)
@@ -219,7 +221,8 @@
             <tbody class="body">
                 @foreach ($siswa->dataMengaji as $point_mengaji)
                     @php
-                        $predikat_mengaji = $siswa->predikat->where('id_point_kpi', $point_kpi->id_point_kpi)->first()->predikat;
+                        $predikat_mengaji = $siswa->predikat->where('id_point_kpi', $point_kpi->id_point_kpi)->first()
+                            ?->predikat;
                     @endphp
                     <tr>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;
