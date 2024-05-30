@@ -200,7 +200,7 @@ class RekapFormHarianController extends Controller
         $list_pertanyaan = PertanyaanForm::where('id_form', $id_form)->orderBy('urutan', 'asc')->get();
 
         $roles = $form->id_role;
-        if (empty($date)) {
+        if ($date !== '0' || $date == null) {
             $date = Carbon::now()->format('Y-m-d');
         }
         if ($roles == '15') {
@@ -240,7 +240,9 @@ class RekapFormHarianController extends Controller
         $jawaban_form = JawabanForm::with('detail_jawaban_form.pertanyaan_form')->where('id_form', $id_form)
             // ->whereMonth('created_at', $bulan)
             // ->whereYear('created_at', $tahun)
-            ->whereDate('created_at', $date)
+            ->when($date !== '0', function ($q) use ($date) {
+                $q->whereDate('created_at', $date);
+            })
             ->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))
             ->get();
 
