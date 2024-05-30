@@ -109,7 +109,7 @@
             </tr>
         </table>
         <br>
-        
+
         @php
             $abjad = range('A', 'Z');
             $last_key = 0;
@@ -120,7 +120,7 @@
                 $last_key = $key;
             @endphp
 
-            
+
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
                 <tr>
                     <td> <b>{{ $abjad[$key] . '. ' . $unit_kelompok_kpi->nm_kelompok_kpi }}</b></td>
@@ -148,7 +148,6 @@
                         @foreach ($unit_kelompok_kpi['data'] as $key2 => $point_kpi)
                             @foreach ($point_kpi as $key3 => $p)
                                 @if ($key3 == '0')
-                                
                                     <tr @if ($key1 % 2 == 0) style="background-color: #e3e1e1" @endif>
                                         <td style="text-align:center" rowspan="{{ count($point_kpi) }}">
                                             {{ $key1 }}
@@ -189,68 +188,70 @@
             </tbody>
         </table>
     @endforeach
-        
+
     {{-- mengaji --}}
 
-    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
-        <tr>
-            <td> <b>{{ $abjad[$last_key + 1] . ". Tingkat Kemampuan Baca Al-Qur'an *)" }}</b></td>
-        </tr>
-    </table>
-
-    <table cellspacing="0" cellpadding="10"
-        style="width: 90%;  margin-top: 0;
-margin-bottom: 30px;
-margin-right: auto;
-margin-left: auto;">
-        <thead class="head">
-            <tr style="background-color: #e3e1e1">
-                <th colspan="2">
-                    Tingkat Al-Qur'an
-                </th>
-                <th colspan="5">Tingkat Pra Al-Qur'an (Sulamut Tilawah)</th>
-            </tr>
-            <tr style="background-color: #e3e1e1">
-                <th>Kategori</th>
-                <th>Nilai</th>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>4</th>
-                <th>Nilai</th>
-            </tr>
-        </thead>
-        <tbody class="body">
+    @if ($dataMengaji)
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
             <tr>
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ $dataMengaji['Sertifikasi'] == 'Y' ? '✔ ' : '- ' }} Tersertifikasi
-                </td>
-                <td style="text-align:center">
-                    {{ $dataMengaji['Sertifikasi'] == 'Y' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
-                <td style="text-align:center" rowspan="2">
-                    {{ $dataMengaji['Tingkat/Jilid'] == '1' ? '✔ ' : '- ' }}</td>
-                <td style="text-align:center" rowspan="2">
-                    {{ $dataMengaji['Tingkat/Jilid'] == '2' ? '✔ ' : '- ' }}</td>
-                <td style="text-align:center" rowspan="2">
-                    {{ $dataMengaji['Tingkat/Jilid'] == '3' ? '✔ ' : '- ' }}</td>
-                <td style="text-align:center" rowspan="2">
-                    {{ $dataMengaji['Tingkat/Jilid'] == '4' ? '✔ ' : '- ' }}</td>
-                <td style="text-align:center" rowspan="2">
-                    {{ $dataMengaji['Nilai'] }}</td>
+                <td> <b>{{ $abjad[$last_key + 1] . ". Tingkat Kemampuan Baca Al-Qur'an *)" }}</b></td>
             </tr>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ $dataMengaji['Sertifikasi'] == 'T' ? '✔ ' : '- ' }} Belum
-                </td>
-                <td style="text-align:center">
-                    {{ $dataMengaji['Sertifikasi'] == 'T' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
+        </table>
 
-            </tr>
+        <table cellspacing="0" cellpadding="10"
+            style="width: 90%;  margin-top: 0;
+                margin-bottom: 30px;
+                margin-right: auto;
+                margin-left: auto;">
+            <thead class="head">
+                <tr style="background-color: #e3e1e1">
+                    <th colspan="2">
+                        Tingkat Al-Qur'an
+                    </th>
+                    <th colspan="5">Tingkat Pra Al-Qur'an (Sulamut Tilawah)</th>
+                </tr>
+                <tr style="background-color: #e3e1e1">
+                    <th>Kategori</th>
+                    <th>Nilai</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>Nilai</th>
+                </tr>
+            </thead>
+            <tbody class="body">
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;
+                        {{ $dataMengaji['Sertifikasi'] == 'Y' ? '✔ ' : '- ' }} Tersertifikasi
+                    </td>
+                    <td style="text-align:center">
+                        {{ $dataMengaji['Sertifikasi'] == 'Y' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
+                    <td style="text-align:center" rowspan="2">
+                        {{ $dataMengaji['Tingkat/Jilid'] == '1' ? '✔ ' : '- ' }}</td>
+                    <td style="text-align:center" rowspan="2">
+                        {{ $dataMengaji['Tingkat/Jilid'] == '2' ? '✔ ' : '- ' }}</td>
+                    <td style="text-align:center" rowspan="2">
+                        {{ $dataMengaji['Tingkat/Jilid'] == '3' ? '✔ ' : '- ' }}</td>
+                    <td style="text-align:center" rowspan="2">
+                        {{ $dataMengaji['Tingkat/Jilid'] == '4' ? '✔ ' : '- ' }}</td>
+                    <td style="text-align:center" rowspan="2">
+                        {{ $dataMengaji['Nilai'] }}</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;
+                        {{ $dataMengaji['Sertifikasi'] == 'T' ? '✔ ' : '- ' }} Belum
+                    </td>
+                    <td style="text-align:center">
+                        {{ $dataMengaji['Sertifikasi'] == 'T' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
 
-        </tbody>
-    </table>
+                </tr>
+
+            </tbody>
+        </table>
+    @endif
     <br>
-    
+
 
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
         <tr>
