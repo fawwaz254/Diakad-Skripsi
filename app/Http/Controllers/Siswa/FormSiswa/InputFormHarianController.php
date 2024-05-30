@@ -29,7 +29,7 @@ class InputFormHarianController extends Controller
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $list_form = Form::with(['jawaban_form' => function ($q) use ($id_pengguna) {
             $q->where('created_by', $id_pengguna)->orderBy('created_at', 'desc');
-        }])->where('id_role', '3')->where('is_harian', '1');
+        }])->where('id_role', '3')->where('is_aktif', '1');
 
         return Datatables::of($list_form)
             ->addColumn('time', function ($item) {

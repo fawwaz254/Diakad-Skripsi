@@ -32,18 +32,17 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h2 class="card-inside-title">
-                                    Nama Form
-                                </h2>
-                                <div class="row clearfix">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nm_form" required=""
-                                            aria-required="true" aria-invalid="true" value="{{ $form->nm_form }}">
-                                    </div>
-                                </div>
+                        <h2 class="card-inside-title">
+                            Nama Form
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="nm_form" required=""
+                                    aria-required="true" aria-invalid="true" value="{{ $form->nm_form }}">
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
                                 <h2 class="card-inside-title">
                                     Jenis Form
@@ -55,6 +54,23 @@
                                                 Harian
                                             </option>
                                             <option value="0" {{ $form->is_harian == '0' ? 'selected' : '' }}>Bebas
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h2 class="card-inside-title">
+                                    Status Form
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <select class="form-control show-tick" name="is_aktif" required="">
+                                            <option value="1" {{ $form->is_aktif == '1' ? 'selected' : '' }}>
+                                                Aktif
+                                            </option>
+                                            <option value="0" {{ $form->is_aktif == '0' ? 'selected' : '' }}>
+                                                Tidak Aktif
                                             </option>
                                         </select>
                                     </div>

@@ -50,6 +50,7 @@ class ListFormController extends Controller
             'id_role'    => 'required',
             'nm_form'     => 'required',
             'is_harian'   => 'required',
+            'is_aktif'   => 'required',
             'start_time'   => 'required',
             'end_time'   => 'required',
         ];
@@ -71,7 +72,7 @@ class ListFormController extends Controller
                 $form->id_role                      = $input->id_role;
                 $form->nm_form                      = $input->nm_form;
                 $form->is_harian                    = $input->is_harian;
-                $form->is_aktif                     = '1';
+                $form->is_aktif                     = $input->is_aktif;
                 $form->start_time                   = $input->start_time;
                 $form->end_time                     = $input->end_time;
                 $form->created_by                   = $input->auth_data->pengguna->id_pengguna;
@@ -87,7 +88,7 @@ class ListFormController extends Controller
                 $form->id_role                      = $input->id_role;
                 $form->nm_form                      = $input->nm_form;
                 $form->is_harian                    = $input->is_harian;
-                $form->is_aktif                     = '1';
+                $form->is_aktif                     = $input->is_aktif;
                 $form->start_time                   = $input->start_time;
                 $form->end_time                     = $input->end_time;
                 $form->updated_by                   = $input->auth_data->pengguna->id_pengguna;
