@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,7 @@ class TrackingUserActivity
         if (auth()->check()) {
             if (url()->current() !== url('/') && url()->current() !== url('/') . '/' . $request->segment(1)) {
                 DB::table('log_aktivitas_pengguna')->insert([
-                    'id_log_aktivitas_pengguna' => strtotime(now()) . uniqid(),
+                    'id_log_aktivitas_pengguna' => Uuid::uuid4()->toString(),
                     'id_pengguna' => auth()->user()->id_pengguna,
                     'route' => url()->current(),
                     'method' => $request->method(),
