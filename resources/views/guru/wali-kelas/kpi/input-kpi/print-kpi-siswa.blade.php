@@ -191,36 +191,36 @@
 
     {{-- mengaji --}}
 
-    @if ($dataMengaji)
-        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
-            <tr>
-                <td> <b>{{ $abjad[$last_key + 1] . ". Tingkat Kemampuan Baca Al-Qur'an *)" }}</b></td>
-            </tr>
-        </table>
+    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+        <tr>
+            <td> <b>{{ $abjad[$last_key + 1] . ". Tingkat Kemampuan Baca Al-Qur'an *)" }}</b></td>
+        </tr>
+    </table>
 
-        <table cellspacing="0" cellpadding="10"
-            style="width: 90%;  margin-top: 0;
+    <table cellspacing="0" cellpadding="10"
+        style="width: 90%;  margin-top: 0;
                 margin-bottom: 30px;
                 margin-right: auto;
                 margin-left: auto;">
-            <thead class="head">
-                <tr style="background-color: #e3e1e1">
-                    <th colspan="2">
-                        Tingkat Al-Qur'an
-                    </th>
-                    <th colspan="5">Tingkat Pra Al-Qur'an (Sulamut Tilawah)</th>
-                </tr>
-                <tr style="background-color: #e3e1e1">
-                    <th>Kategori</th>
-                    <th>Nilai</th>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>Nilai</th>
-                </tr>
-            </thead>
-            <tbody class="body">
+        <thead class="head">
+            <tr style="background-color: #e3e1e1">
+                <th colspan="2">
+                    Tingkat Al-Qur'an
+                </th>
+                <th colspan="5">Tingkat Pra Al-Qur'an (Sulamut Tilawah)</th>
+            </tr>
+            <tr style="background-color: #e3e1e1">
+                <th>Kategori</th>
+                <th>Nilai</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>Nilai</th>
+            </tr>
+        </thead>
+        <tbody class="body">
+            @if ($dataMengaji)
                 <tr>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;
                         {{ $dataMengaji['Sertifikasi'] == 'Y' ? '✔ ' : '- ' }} Tersertifikasi
@@ -246,10 +246,9 @@
                         {{ $dataMengaji['Sertifikasi'] == 'T' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
 
                 </tr>
-
-            </tbody>
-        </table>
-    @endif
+            @endif
+        </tbody>
+    </table>
     <br>
 
 
