@@ -179,7 +179,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PRESENSI MP PELANGGARAN **/
-    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-')
+    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-', $filter_tanggal)
     {
         // get mode view
         if ($id == null) {
@@ -195,6 +195,9 @@ class LibDataPelanggaran
                 ->leftJoin('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
                 ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                 ->where('presensi_mp_pelanggaran.is_sudah_tindakan', '=', 0)
+                ->when($filter_tanggal !== 'null', function($q) use($filter_tanggal) {
+                    $q->whereBetween('presensi_mp_pelanggaran.created_at', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
+                })
                 ->orderBy('presensi_mp_pelanggaran.created_at', 'desc');
 
             if ($role == 'guru') {
@@ -226,7 +229,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PELANGGARAN **/
-    public static function fetchDataTindakanPelanggaran($auth_data, $status = null, $id = null, $is_datatable = null)
+    public static function fetchDataTindakanPelanggaran($auth_data, $status = null, $id = null, $is_datatable = null, $filter_tanggal = null)
     {
 
         // get mode view
@@ -245,6 +248,9 @@ class LibDataPelanggaran
                     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->where('pelanggaran_siswa.is_sudah_tindakan', '=', 0)
                     ->where('pelanggaran_siswa.deleted_at', null)
+                    ->when($filter_tanggal !== 'null', function($q) use($filter_tanggal) {
+                        $q->whereBetween('pelanggaran_siswa.tgl_pelanggaran', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
+                    })
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
                 if ($is_datatable == null) {
@@ -320,6 +326,9 @@ class LibDataPelanggaran
                     ->leftJoin('pengguna as p_guru_presensi', 'p_guru_presensi.id_pengguna', '=', 'presensi_mp_pelanggaran.created_by')
                     ->join('pengguna as p_tindakan', 'p_tindakan.id_pengguna', '=', 'tindakan_pelanggaran.created_by')
                     ->where('jenis_tindakan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->when($filter_tanggal !== 'null', function($q) use($filter_tanggal){
+                        $q->whereBetween('tindakan_pelanggaran.tgl_tindakan_pelanggaran', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
+                    })
                     ->where('pelanggaran_siswa.deleted_at', null)
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 

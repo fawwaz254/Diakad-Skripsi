@@ -19,6 +19,7 @@ use App\Http\Controllers\BK\DataPelanggaran\KesimpulanPelanggaranController;
 use App\Http\Controllers\BK\DataPelanggaran\SubkategoriPelanggaranController;
 use App\Http\Controllers\BK\JunalHarian\JurnalHarianBKController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as rekapKesehatanSiswa;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('bimbingan-konseling')->group(function () {
@@ -175,10 +176,10 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-input-pelanggaran/{mode}/{id}', [InputPelanggaranController::class, 'actionInputPelanggaran']);
 
             // MENU Tindakan Pelanggaran
-            Route::get('tindakan-pelanggaran', [TindakanPelanggaranController::class, 'viewTindakanPelanggaran']);
-            Route::get('tindakan-pelanggaran/datatables-belum-nonkbm', [TindakanPelanggaranController::class, 'datatablesBelumTindakanNonKBM']);
-            Route::get('tindakan-pelanggaran/datatables-belum-kbm', [TindakanPelanggaranController::class, 'datatablesBelumTindakanKBM']);
-            Route::get('tindakan-pelanggaran/datatables-sudah', [TindakanPelanggaranController::class, 'datatablesSudahTindakan']);
+            Route::get('tindakan-pelanggaran/{filter_tanggal?}', [TindakanPelanggaranController::class, 'viewTindakanPelanggaran']);
+            Route::get('tindakan-pelanggaran/datatables-belum-nonkbm/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesBelumTindakanNonKBM']);
+            Route::get('tindakan-pelanggaran/datatables-belum-kbm/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesBelumTindakanKBM']);
+            Route::get('tindakan-pelanggaran/datatables-sudah/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesSudahTindakan']);
             Route::get('tindakan-pelanggaran/add-nonkbm/{id}', [TindakanPelanggaranController::class, 'addTindakanPelanggaranNonKBM']);
             Route::get('tindakan-pelanggaran/add-kbm/{id}', [TindakanPelanggaranController::class, 'addTindakanPelanggaranKBM']);
             Route::get('tindakan-pelanggaran/edit/{id}', [TindakanPelanggaranController::class, 'editTindakanPelanggaran']);

@@ -7,9 +7,20 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                {{ csrf_field() }}
                 <div class="header">
                     <h2>DATA PELANGGARAN SISWA</h2>
+                </div>
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <h2 class="card-inside-title">
+                        Pilih tanggal
+                    </h2>
+                    <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY"
+                        value="#" name="tanggal" aria-required="true" aria-invalid="true" id="filter_tanggal">
+                </div>
+                <div>
+                    <button class="btn btn-block bg-red waves-effect" type="submit" onclick="filterAction()">
+                        <i class="material-icons">save</i><span>Tampilkan</span>
+                    </button>
                 </div>
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">
@@ -107,14 +118,21 @@
     </div>
 </div>
 <script>
+    var current_url = window.location.href;
+    var param_tanggal = current_url.split('/')[5] ?? null;
+
+    if (param_tanggal !== null) {
+        $('#filter_tanggal').val(param_tanggal)
+    }
+
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'penanganan-siswa';
     var datatable_url_belum_nonkbm = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-belum-nonkbm';
+        'tindakan-pelanggaran/datatables-belum-nonkbm/' + param_tanggal;
     var datatable_url_belum_kbm = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-belum-kbm';
+        'tindakan-pelanggaran/datatables-belum-kbm/' + param_tanggal;
     var datatable_url_sudah = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-sudah';
+        'tindakan-pelanggaran/datatables-sudah/' + param_tanggal;
     var add_url_nonkbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-nonkbm';
     var add_url_kbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-kbm';
     var edit_url = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/edit';
@@ -441,5 +459,10 @@
                 $('button').removeAttr('disabled', 'disabled');
             }
         });
+    }
+
+    function filterAction() {
+        var tanggal = $('#filter_tanggal').val();
+        window.location.href = "bimbingan-konseling#penanganan-siswa/tindakan-pelanggaran/" + tanggal;
     }
 </script>

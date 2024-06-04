@@ -103,11 +103,11 @@ class TindakanPelanggaranController extends BaseController
         return view('bk/penanganan-siswa/tindakan-pelanggaran/edit-tindakan-pelanggaran', compact('auth_data', 'data_jenis_tindakan', 'data_tindakan_pelanggaran', 'tgl_pelanggaran', 'tgl_tindakan_pelanggaran', 'id_pengguna'));
     }
 
-    public function datatablesBelumTindakanNonKBM(Request $request)
+    public function datatablesBelumTindakanNonKBM(Request $request, $filter_tanggal = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1");
+        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1", $filter_tanggal);
         // dd($list_data);
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
@@ -186,11 +186,11 @@ class TindakanPelanggaranController extends BaseController
             ->make(true);
     }
 
-    public function datatablesBelumTindakanKBM(Request $request)
+    public function datatablesBelumTindakanKBM(Request $request, $filter_tanggal = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1");
+        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1", "-", $filter_tanggal);
 
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
@@ -257,11 +257,11 @@ class TindakanPelanggaranController extends BaseController
         ];
     }
 
-    public function datatablesSudahTindakan(Request $request)
+    public function datatablesSudahTindakan(Request $request, $filter_tanggal)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1");
+        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1", $filter_tanggal);
 
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
