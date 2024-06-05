@@ -119,20 +119,20 @@
 </div>
 <script>
     var current_url = window.location.href;
-    var param_tanggal = current_url.split('/')[5] ?? null;
+    var param_tanggal = current_url.split('/')[6] ?? '0';
 
-    if (param_tanggal !== null) {
+    if (param_tanggal !== '0') {
         $('#filter_tanggal').val(param_tanggal)
     }
 
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'penanganan-siswa';
     var datatable_url_belum_nonkbm = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-belum-nonkbm/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-belum-nonkbm/1/' + param_tanggal;
     var datatable_url_belum_kbm = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-belum-kbm/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-belum-kbm/1/' + param_tanggal;
     var datatable_url_sudah = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-sudah/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-sudah/1/' + param_tanggal;
     var add_url_nonkbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-nonkbm';
     var add_url_kbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-kbm';
     var edit_url = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/edit';
@@ -463,6 +463,12 @@
 
     function filterAction() {
         var tanggal = $('#filter_tanggal').val();
-        window.location.href = "bimbingan-konseling#penanganan-siswa/tindakan-pelanggaran/" + tanggal;
+
+        if (tanggal == '') {
+            tanggal = '0';
+        }
+
+        console.log(tanggal);
+        window.location.href = "bimbingan-konseling#penanganan-siswa/tindakan-pelanggaran/1/" + tanggal;
     }
 </script>

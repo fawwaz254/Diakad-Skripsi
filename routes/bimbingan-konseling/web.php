@@ -176,10 +176,10 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-input-pelanggaran/{mode}/{id}', [InputPelanggaranController::class, 'actionInputPelanggaran']);
 
             // MENU Tindakan Pelanggaran
-            Route::get('tindakan-pelanggaran/{filter_tanggal?}', [TindakanPelanggaranController::class, 'viewTindakanPelanggaran']);
-            Route::get('tindakan-pelanggaran/datatables-belum-nonkbm/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesBelumTindakanNonKBM']);
-            Route::get('tindakan-pelanggaran/datatables-belum-kbm/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesBelumTindakanKBM']);
-            Route::get('tindakan-pelanggaran/datatables-sudah/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesSudahTindakan']);
+            Route::get('tindakan-pelanggaran/{status_siswa?}/{filter_tanggal?}', [TindakanPelanggaranController::class, 'viewTindakanPelanggaran']);
+            Route::get('tindakan-pelanggaran/datatables-belum-nonkbm/{status_siswa?}/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesBelumTindakanNonKBM']);
+            Route::get('tindakan-pelanggaran/datatables-belum-kbm/{status_siswa?}/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesBelumTindakanKBM']);
+            Route::get('tindakan-pelanggaran/datatables-sudah/{status_siswa?}/{filter_tanggal?}', [TindakanPelanggaranController::class, 'datatablesSudahTindakan']);
             Route::get('tindakan-pelanggaran/add-nonkbm/{id}', [TindakanPelanggaranController::class, 'addTindakanPelanggaranNonKBM']);
             Route::get('tindakan-pelanggaran/add-kbm/{id}', [TindakanPelanggaranController::class, 'addTindakanPelanggaranKBM']);
             Route::get('tindakan-pelanggaran/edit/{id}', [TindakanPelanggaranController::class, 'editTindakanPelanggaran']);

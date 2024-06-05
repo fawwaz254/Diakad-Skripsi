@@ -195,7 +195,7 @@ class LibDataPelanggaran
                 ->leftJoin('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
                 ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                 ->where('presensi_mp_pelanggaran.is_sudah_tindakan', '=', 0)
-                ->when($filter_tanggal !== 'null', function($q) use($filter_tanggal) {
+                ->when($filter_tanggal !== null, function ($q) use ($filter_tanggal) {
                     $q->whereBetween('presensi_mp_pelanggaran.created_at', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
                 })
                 ->orderBy('presensi_mp_pelanggaran.created_at', 'desc');
@@ -248,7 +248,7 @@ class LibDataPelanggaran
                     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->where('pelanggaran_siswa.is_sudah_tindakan', '=', 0)
                     ->where('pelanggaran_siswa.deleted_at', null)
-                    ->when($filter_tanggal !== 'null', function($q) use($filter_tanggal) {
+                    ->when($filter_tanggal !== null, function ($q) use ($filter_tanggal) {
                         $q->whereBetween('pelanggaran_siswa.tgl_pelanggaran', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
                     })
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
@@ -326,7 +326,7 @@ class LibDataPelanggaran
                     ->leftJoin('pengguna as p_guru_presensi', 'p_guru_presensi.id_pengguna', '=', 'presensi_mp_pelanggaran.created_by')
                     ->join('pengguna as p_tindakan', 'p_tindakan.id_pengguna', '=', 'tindakan_pelanggaran.created_by')
                     ->where('jenis_tindakan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->when($filter_tanggal !== 'null', function($q) use($filter_tanggal){
+                    ->when($filter_tanggal !== null, function ($q) use ($filter_tanggal) {
                         $q->whereBetween('tindakan_pelanggaran.tgl_tindakan_pelanggaran', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
                     })
                     ->where('pelanggaran_siswa.deleted_at', null)
