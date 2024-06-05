@@ -10,18 +10,37 @@
                 <div class="header">
                     <h2>DATA PELANGGARAN SISWA</h2>
                 </div>
-                <div class="col-md-4 col-sm-12 col-xs-12">
-                    <h2 class="card-inside-title">
-                        Pilih tanggal
-                    </h2>
-                    <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY"
-                        value="#" name="tanggal" aria-required="true" aria-invalid="true" id="filter_tanggal">
+                <div class="container" style="margin-top: 3rem">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12 col-xs-12 mb-3">
+                            <h4 class="card-inside-title">Pilih Tanggal</h4>
+                            <input type="date" class="form-control" id="filter_tanggal" name="tanggal"
+                                aria-required="true" aria-invalid="true">
+                        </div>
+
+                        <div class="col-md-4 col-sm-12 col-xs-12 mb-3">
+                            <h4 class="card-inside-title">Status Tampil Data Siswa</h4>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="aktif" name="status_siswa"
+                                    value="1" checked>
+                                <label class="form-check-label" for="aktif">Siswa Aktif</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="all" name="status_siswa"
+                                    value="0">
+                                <label class="form-check-label" for="all">Semua Siswa</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 3rem">
+                            <button class="btn btn-block btn-danger waves-effect align-items-start" type="button"
+                                onclick="filterAction()">
+                                <i class="material-icons">save</i> Tampilkan
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <button class="btn btn-block bg-red waves-effect" type="submit" onclick="filterAction()">
-                        <i class="material-icons">save</i><span>Tampilkan</span>
-                    </button>
-                </div>
+
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
@@ -119,6 +138,7 @@
 </div>
 <script>
     var current_url = window.location.href;
+    var param_status_siswa = current_url.split('/')[5] ?? '1';
     var param_tanggal = current_url.split('/')[6] ?? '0';
 
     if (param_tanggal !== '0') {
@@ -128,11 +148,11 @@
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'penanganan-siswa';
     var datatable_url_belum_nonkbm = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-belum-nonkbm/1/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-belum-nonkbm/' + param_status_siswa + '/' + param_tanggal;
     var datatable_url_belum_kbm = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-belum-kbm/1/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-belum-kbm/' + param_status_siswa + '/' + param_tanggal;
     var datatable_url_sudah = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-sudah/1/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-sudah/' + param_status_siswa + '/' + param_tanggal;
     var add_url_nonkbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-nonkbm';
     var add_url_kbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-kbm';
     var edit_url = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/edit';
@@ -463,12 +483,14 @@
 
     function filterAction() {
         var tanggal = $('#filter_tanggal').val();
+        var status_siswa = $('input[name="status_siswa"]:checked').val();
+
+        console.log(status_siswa);
 
         if (tanggal == '') {
             tanggal = '0';
         }
-
-        console.log(tanggal);
-        window.location.href = "bimbingan-konseling#penanganan-siswa/tindakan-pelanggaran/1/" + tanggal;
+        window.location.href = "bimbingan-konseling#penanganan-siswa/tindakan-pelanggaran/" + status_siswa + "/" +
+            tanggal;
     }
 </script>

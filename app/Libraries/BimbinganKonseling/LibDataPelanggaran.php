@@ -179,7 +179,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PRESENSI MP PELANGGARAN **/
-    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-', $filter_tanggal)
+    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-', $status_siswa = null, $filter_tanggal)
     {
         // get mode view
         if ($id == null) {
@@ -193,8 +193,12 @@ class LibDataPelanggaran
                 ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
                 ->leftJoin('subkategori_pelanggaran', 'subkategori_pelanggaran.id_subkategori_pelanggaran', '=', 'presensi_mp_pelanggaran.id_subkategori_pelanggaran')
                 ->leftJoin('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
+                ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
                 ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                 ->where('presensi_mp_pelanggaran.is_sudah_tindakan', '=', 0)
+                ->when($status_siswa !== null && $status_siswa !== '0', function ($q) {
+                    $q->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF');
+                })
                 ->when($filter_tanggal !== null, function ($q) use ($filter_tanggal) {
                     $q->whereBetween('presensi_mp_pelanggaran.created_at', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
                 })
@@ -229,7 +233,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PELANGGARAN **/
-    public static function fetchDataTindakanPelanggaran($auth_data, $status = null, $id = null, $is_datatable = null, $filter_tanggal = null)
+    public static function fetchDataTindakanPelanggaran($auth_data, $status = null, $id = null, $is_datatable = null, $status_siswa = null, $filter_tanggal = null)
     {
 
         // get mode view
@@ -240,6 +244,7 @@ class LibDataPelanggaran
                     ->join('siswa', 'siswa.id_siswa', '=', 'pelanggaran_siswa.id_siswa')
                     ->join('kelas', 'pelanggaran_siswa.id_kelas', '=', 'kelas.id_kelas')
                     ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
                     ->leftJoin('subkategori_pelanggaran', 'subkategori_pelanggaran.id_subkategori_pelanggaran', '=', 'pelanggaran_siswa.id_subkategori_pelanggaran')
                     ->leftJoin('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
                     ->leftJoin('guru', 'guru.id_guru', '=', 'pelanggaran_siswa.id_guru_input')
@@ -250,6 +255,9 @@ class LibDataPelanggaran
                     ->where('pelanggaran_siswa.deleted_at', null)
                     ->when($filter_tanggal !== null, function ($q) use ($filter_tanggal) {
                         $q->whereBetween('pelanggaran_siswa.tgl_pelanggaran', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
+                    })
+                    ->when($status_siswa !== null && $status_siswa !== '0', function ($q) {
+                        $q->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF');
                     })
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
@@ -325,7 +333,11 @@ class LibDataPelanggaran
                     ->leftJoin('pengguna as p_staff', 'p_staff.id_pengguna', '=', 'pelanggaran_siswa.created_by')
                     ->leftJoin('pengguna as p_guru_presensi', 'p_guru_presensi.id_pengguna', '=', 'presensi_mp_pelanggaran.created_by')
                     ->join('pengguna as p_tindakan', 'p_tindakan.id_pengguna', '=', 'tindakan_pelanggaran.created_by')
+                    ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
                     ->where('jenis_tindakan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->when($status_siswa !== null && $status_siswa !== '0', function ($q) {
+                        $q->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF');
+                    })
                     ->when($filter_tanggal !== null, function ($q) use ($filter_tanggal) {
                         $q->whereBetween('tindakan_pelanggaran.tgl_tindakan_pelanggaran', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
                     })

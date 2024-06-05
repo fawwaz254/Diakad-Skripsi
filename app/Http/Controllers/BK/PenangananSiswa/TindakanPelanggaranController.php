@@ -112,7 +112,7 @@ class TindakanPelanggaranController extends BaseController
             $filter_tanggal = null;
         }
 
-        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1", $filter_tanggal);
+        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1", $status_siswa, $filter_tanggal);
         // dd($list_data);
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
@@ -200,7 +200,7 @@ class TindakanPelanggaranController extends BaseController
             $filter_tanggal = null;
         }
 
-        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1", "-", $filter_tanggal);
+        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1", "-", $status_siswa, $filter_tanggal);
 
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
