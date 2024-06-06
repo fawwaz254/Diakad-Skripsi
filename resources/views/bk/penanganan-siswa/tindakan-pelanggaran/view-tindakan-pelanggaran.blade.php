@@ -139,20 +139,20 @@
 <script>
     var current_url = window.location.href;
     var param_status_siswa = current_url.split('/')[5] ?? '1';
-    var param_tanggal = current_url.split('/')[6] ?? '0';
+    var param_tanggal = '';
 
-    if (param_tanggal !== '0') {
-        $('#filter_tanggal').val(param_tanggal)
-    }
+    // if (param_tanggal !== '0') {
+    //     $('#filter_tanggal').val(param_tanggal)
+    // }
 
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'penanganan-siswa';
     var datatable_url_belum_nonkbm = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-belum-nonkbm/' + param_status_siswa + '/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-belum-nonkbm';
     var datatable_url_belum_kbm = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-belum-kbm/' + param_status_siswa + '/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-belum-kbm';
     var datatable_url_sudah = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'tindakan-pelanggaran/datatables-sudah/' + param_status_siswa + '/' + param_tanggal;
+        'tindakan-pelanggaran/datatables-sudah';
     var add_url_nonkbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-nonkbm';
     var add_url_kbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-kbm';
     var edit_url = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/edit';
@@ -168,7 +168,13 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_belum_nonkbm,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                // Tambahkan parameter tambahan di sini
+                d.filter_tanggal = '';
+                d.status_siswa = 1;
+            },
+            // dataType: 'JSON'
         },
         columns: [{
                 data: 'index_table',
@@ -256,7 +262,12 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_belum_kbm,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                // Tambahkan parameter tambahan di sini
+                d.filter_tanggal = '';
+                d.status_siswa = 1;
+            }, 
         },
         columns: [{
                 data: 'index_table',
@@ -346,7 +357,12 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_sudah,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                // Tambahkan parameter tambahan di sini
+                d.filter_tanggal = '';
+                d.status_siswa = 1;
+            }, 
         },
         columns: [{
                 data: 'index_table',
@@ -486,11 +502,26 @@
         var status_siswa = $('input[name="status_siswa"]:checked').val();
 
         console.log(status_siswa);
+        
+        var table = $('#primary_table_belum_nonkbm').DataTable();
+        table.settings()[0].ajax.data = function(d) {
+            d.filter_tanggal = tanggal;
+            d.status_siswa = status_siswa;
+        };
+        table.ajax.reload(null, false);
 
-        if (tanggal == '') {
-            tanggal = '0';
-        }
-        window.location.href = "bimbingan-konseling#penanganan-siswa/tindakan-pelanggaran/" + status_siswa + "/" +
-            tanggal;
+        var table = $('#primary_table_belum_kbm').DataTable();
+        table.settings()[0].ajax.data = function(d) {
+            d.filter_tanggal = tanggal;
+            d.status_siswa = status_siswa;
+        };
+        table.ajax.reload(null, false);
+
+        var table = $('#primary_table_sudah').DataTable();
+        table.settings()[0].ajax.data = function(d) {
+            d.filter_tanggal = tanggal;
+            d.status_siswa = status_siswa;
+        };
+        table.ajax.reload(null, false);
     }
 </script>
