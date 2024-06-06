@@ -179,7 +179,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PRESENSI MP PELANGGARAN **/
-    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-', $status_siswa = null, $filter_tanggal)
+    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-', $status_siswa = null, $filter_tanggal = null)
     {
         // get mode view
         if ($id == null) {
