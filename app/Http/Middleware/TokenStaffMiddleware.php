@@ -21,9 +21,11 @@ use App\Models\WaliKelas;
 use App\Models\WaliMurid;
 use Illuminate\Support\Facades\URL;
 
-use Auth;
+// use Auth;
 use Carbon\Carbon;
-use Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+// use Session;
 
 class TokenStaffMiddleware
 {

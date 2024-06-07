@@ -7,10 +7,40 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                {{ csrf_field() }}
                 <div class="header">
                     <h2>DATA PELANGGARAN SISWA</h2>
                 </div>
+                <div class="container" style="margin-top: 3rem">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12 col-xs-12 mb-3">
+                            <h4 class="card-inside-title">Pilih Tanggal</h4>
+                            <input type="date" class="form-control" id="filter_tanggal" name="tanggal"
+                                aria-required="true" aria-invalid="true">
+                        </div>
+
+                        <div class="col-md-4 col-sm-12 col-xs-12 mb-3">
+                            <h4 class="card-inside-title">Status Tampil Data Siswa</h4>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="aktif" name="status_siswa"
+                                    value="1" checked>
+                                <label class="form-check-label" for="aktif">Siswa Aktif</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="all" name="status_siswa"
+                                    value="0">
+                                <label class="form-check-label" for="all">Semua Siswa</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 3rem">
+                            <button class="btn btn-block btn-danger waves-effect align-items-start" type="button"
+                                onclick="filterAction()">
+                                <i class="material-icons">save</i> Tampilkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
@@ -107,6 +137,14 @@
     </div>
 </div>
 <script>
+    var current_url = window.location.href;
+    var param_status_siswa = current_url.split('/')[5] ?? '1';
+    var param_tanggal = '';
+
+    // if (param_tanggal !== '0') {
+    //     $('#filter_tanggal').val(param_tanggal)
+    // }
+
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'penanganan-siswa';
     var datatable_url_belum_nonkbm = base_url + '/' + role_url + '/' + modul_url + '/' +
@@ -130,7 +168,13 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_belum_nonkbm,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                // Tambahkan parameter tambahan di sini
+                d.filter_tanggal = '';
+                d.status_siswa = 1;
+            },
+            // dataType: 'JSON'
         },
         columns: [{
                 data: 'index_table',
@@ -218,7 +262,12 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_belum_kbm,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                // Tambahkan parameter tambahan di sini
+                d.filter_tanggal = '';
+                d.status_siswa = 1;
+            }, 
         },
         columns: [{
                 data: 'index_table',
@@ -308,7 +357,12 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_sudah,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                // Tambahkan parameter tambahan di sini
+                d.filter_tanggal = '';
+                d.status_siswa = 1;
+            }, 
         },
         columns: [{
                 data: 'index_table',
@@ -441,5 +495,33 @@
                 $('button').removeAttr('disabled', 'disabled');
             }
         });
+    }
+
+    function filterAction() {
+        var tanggal = $('#filter_tanggal').val();
+        var status_siswa = $('input[name="status_siswa"]:checked').val();
+
+        console.log(status_siswa);
+        
+        var table = $('#primary_table_belum_nonkbm').DataTable();
+        table.settings()[0].ajax.data = function(d) {
+            d.filter_tanggal = tanggal;
+            d.status_siswa = status_siswa;
+        };
+        table.ajax.reload(null, false);
+
+        var table = $('#primary_table_belum_kbm').DataTable();
+        table.settings()[0].ajax.data = function(d) {
+            d.filter_tanggal = tanggal;
+            d.status_siswa = status_siswa;
+        };
+        table.ajax.reload(null, false);
+
+        var table = $('#primary_table_sudah').DataTable();
+        table.settings()[0].ajax.data = function(d) {
+            d.filter_tanggal = tanggal;
+            d.status_siswa = status_siswa;
+        };
+        table.ajax.reload(null, false);
     }
 </script>
