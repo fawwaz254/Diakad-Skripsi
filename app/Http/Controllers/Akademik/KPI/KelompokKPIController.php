@@ -58,16 +58,21 @@ class KelompokKPIController extends Controller
     {
         $input = (object) $request->input();
 
-        $point_kpi = PointKPI::where('id_semester', $input->id_semester)->where('tingkat_kelas', $input->tingkat)->orWhereNull('tingkat_kelas')->with('kelompok_kpi');
-        return Datatables::of($point_kpi)->editColumn('jenis', function ($item) {
-            return $item->jenis == '0' ? 'Header' : 'Point';
-        })->editColumn('deskripsi', function ($item) {
-            if (!empty($item->deskripsi)) {
-                $deskripsiArray = $item->deskripsi;
-                return 'A = ' . $deskripsiArray['A'];
-            } else {
-                return '-';
-            }
-        })->make(true);
+        $point_kpi = PointKPI::where('id_semester', $input->id_semester)
+            ->where(function ($q) use ($input) {
+                $q->where('tingkat_kelas', $input->tingkat)->orWhereNull('tingkat_kelas');
+            })->with('kelompok_kpi');
+
+        return Datatables::of($point_kpi)
+            ->editColumn('jenis', function ($item) {
+                return $item->jenis == '0' ? 'Header' : 'Point';
+            })->editColumn('deskripsi', function ($item) {
+                if (!empty($item->deskripsi)) {
+                    $deskripsiArray = $item->deskripsi;
+                    return 'A = ' . $deskripsiArray['A'];
+                } else {
+                    return '-';
+                }
+            })->make(true);
     }
 }
