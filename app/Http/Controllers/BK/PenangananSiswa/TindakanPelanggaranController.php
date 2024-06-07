@@ -103,14 +103,16 @@ class TindakanPelanggaranController extends BaseController
         return view('bk/penanganan-siswa/tindakan-pelanggaran/edit-tindakan-pelanggaran', compact('auth_data', 'data_jenis_tindakan', 'data_tindakan_pelanggaran', 'tgl_pelanggaran', 'tgl_tindakan_pelanggaran', 'id_pengguna'));
     }
 
-    public function datatablesBelumTindakanNonKBM(Request $request, $status_siswa, $filter_tanggal = null)
+    public function datatablesBelumTindakanNonKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $filter_tanggal = null;
+        $status_siswa = $input->status_siswa;
 
-        if ($filter_tanggal == '0') {
-            $filter_tanggal = null;
+        if (!empty($input->filter_tanggal)) {
+            $filter_tanggal = $input->filter_tanggal;
         }
+        $auth_data = $input->auth_data;
 
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1", $status_siswa, $filter_tanggal);
         // dd($list_data);
@@ -191,14 +193,16 @@ class TindakanPelanggaranController extends BaseController
             ->make(true);
     }
 
-    public function datatablesBelumTindakanKBM(Request $request, $status_siswa, $filter_tanggal = null)
+    public function datatablesBelumTindakanKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $filter_tanggal = null;
+        $status_siswa = $input->status_siswa;
 
-        if ($filter_tanggal == '0') {
-            $filter_tanggal = null;
+        if (!empty($input->filter_tanggal)) {
+            $filter_tanggal = $input->filter_tanggal;
         }
+        $auth_data = $input->auth_data;
 
         $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1", "-", $status_siswa, $filter_tanggal);
 
@@ -267,16 +271,18 @@ class TindakanPelanggaranController extends BaseController
         ];
     }
 
-    public function datatablesSudahTindakan(Request $request, $status_siswa, $filter_tanggal = null)
+    public function datatablesSudahTindakan(Request $request)
     {
         $input = (object) $request->input();
+        $filter_tanggal = null;
+        $status_siswa = $input->status_siswa;
+
+        if (!empty($input->filter_tanggal)) {
+            $filter_tanggal = $input->filter_tanggal;
+        }
         $auth_data = $input->auth_data;
 
-        if ($filter_tanggal == '0') {
-            $filter_tanggal = null;
-        }
-
-        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1", $filter_tanggal);
+        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1", $status_siswa, $filter_tanggal);
 
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
