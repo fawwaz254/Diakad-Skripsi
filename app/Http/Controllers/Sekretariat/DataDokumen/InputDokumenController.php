@@ -220,19 +220,19 @@ class InputDokumenController extends BaseController
                     $arsip->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $arsip->save();
 
-                    $validasi = false;
-
-                    if (isset($input->status_pengguna) || isset($input->unit_kerja)) $validasi = true;
-
-                    if (!$validasi) {
-                        return [
-                            'status' => 300, // FAILED
-                            'message' => 'Anda harus mengisi status pengguna / unit kerja ketika anda memlih status akses dokumen terbatas'
-                        ];
-                    }
 
                     // is_public = 0
                     if ($input->is_publik == 0) {
+                        $validasi = false;
+
+                        if (isset($input->status_pengguna) || isset($input->unit_kerja)) $validasi = true;
+
+                        if (!$validasi) {
+                            return [
+                                'status' => 300, // FAILED
+                                'message' => 'Anda harus mengisi status pengguna / unit kerja ketika anda memlih status akses dokumen terbatas'
+                            ];
+                        }
 
                         if (isset($input->status_pengguna)) {
                             foreach ($input->status_pengguna as $status_pengguna) {
