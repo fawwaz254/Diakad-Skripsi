@@ -46,6 +46,7 @@ class HomeVisitController extends BaseController
             'home_visit.is_berkas_lengkap',
             'home_visit.id_guru_kesiswaan',
             'home_visit.id_guru_wali_kelas',
+            'home_visit.dokumentasi_home_visit',
             'semester.nm_semester',
             'semester.tahun_ajaran',
             'p1.nm_pengguna as nm_siswa',
@@ -241,11 +242,11 @@ class HomeVisitController extends BaseController
                     $id_guru_kesiswaan = null;
                 }
 
-                $homeVisit                         = HomeVisit::find($id);
-                $homeVisit->is_berkas_lengkap     = $input->is_berkas_lengkap;
-                $homeVisit->id_guru_kesiswaan     = $id_guru_kesiswaan;
-                $homeVisit->updated_at            = $now;
-                $homeVisit->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                $homeVisit = HomeVisit::find($id);
+                $homeVisit->is_berkas_lengkap = $input->is_berkas_lengkap;
+                $homeVisit->id_guru_kesiswaan = $id_guru_kesiswaan;
+                $homeVisit->updated_at = $now;
+                $homeVisit->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $homeVisit->save();
 
                 return [
