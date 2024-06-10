@@ -295,7 +295,13 @@
                         <td></td>
                         <td style="width: 30%">
                             {{ $auth_data->sekolah_data->alamat_kota == '136' ? 'Surabaya' : 'Sidoarjo' }}, ..........
+                            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                            22 Juni 2024 <br>
+                            @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
+                            22 Juni 2024 <br>
+                            @else
                             {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
+                            @endif
                             Kepala Sekolah <br><br><br><br><br><br><br>
 
                             {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
