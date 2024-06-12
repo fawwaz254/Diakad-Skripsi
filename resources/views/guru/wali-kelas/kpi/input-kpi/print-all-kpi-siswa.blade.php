@@ -219,80 +219,71 @@
                 </tr>
             </thead>
             <tbody class="body">
-                @foreach ($siswa->dataMengaji as $point_mengaji)
-                    @php
-                        $predikat_mengaji = $siswa->predikat->where('id_point_kpi', $point_kpi->id_point_kpi)->first()
-                            ?->predikat;
-                    @endphp
+                @if ($siswa->dataMengaji)
                     <tr>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                            {{ $point_mengaji->$predikat_mengaji == 'Y' ? '✔ ' : '- ' }} Tersertifikasi
+                            {{ $siswa->dataMengaji['Sertifikasi'] == 'Y' ? '✔ ' : '- ' }} Tersertifikasi
                         </td>
                         <td style="text-align:center">
-                            {{ $point_mengaji->$predikat_mengaji == 'Y' ? $point_mengaji->$predikat_mengaji : '- ' }}
+                            {{ $siswa->dataMengaji['Sertifikasi'] == 'Y' ? $siswa->dataMengaji['Nilai Sertifikasi'] : '-' }}
                         </td>
                         <td style="text-align:center" rowspan="2">
-                            {{ $point_mengaji->$predikat_mengaji == '1' ? '✔ ' : '- ' }}
-                        </td>
+                            {{ $siswa->dataMengaji['Tingkat/Jilid'] == '1' ? '✔ ' : '- ' }}</td>
                         <td style="text-align:center" rowspan="2">
-                            {{ $point_mengaji->$predikat_mengaji == '2' ? '✔ ' : '- ' }}
-                        </td>
+                            {{ $siswa->dataMengaji['Tingkat/Jilid'] == '2' ? '✔ ' : '- ' }}</td>
                         <td style="text-align:center" rowspan="2">
-                            {{ $point_mengaji->$predikat_mengaji == '3' ? '✔ ' : '- ' }}
-                        </td>
+                            {{ $siswa->dataMengaji['Tingkat/Jilid'] == '3' ? '✔ ' : '- ' }}</td>
                         <td style="text-align:center" rowspan="2">
-                            {{ $point_mengaji->$predikat_mengaji == '4' ? '✔ ' : '- ' }}
-                        </td>
+                            {{ $siswa->dataMengaji['Tingkat/Jilid'] == '4' ? '✔ ' : '- ' }}</td>
                         <td style="text-align:center" rowspan="2">
-                            {{ $point_mengaji->$predikat_mengaji == '4' ? '✔ ' : '- ' }}
-                        </td>
+                            {{ $siswa->dataMengaji['Nilai'] }}</td>
                     </tr>
                     <tr>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                            {{ $point_mengaji->$predikat_mengaji == 'T' ? '✔ ' : '- ' }} Belum
+                            {{ $siswa->dataMengaji['Sertifikasi'] == 'T' ? '✔ ' : '- ' }} Belum
                         </td>
                         <td style="text-align:center">
-                            {{ $point_mengaji->$predikat_mengaji == 'T' ? $point_mengaji->$predikat_mengaji : '-' }}
+                            {{ $siswa->dataMengaji['Sertifikasi'] == 'T' ? $siswa->dataMengaji['Nilai Sertifikasi'] : '-' }}
                         </td>
+
                     </tr>
-                @break
-            @endforeach
-        </tbody>
-    </table>
-    <br>
-
-
-    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
-        <tr>
-            <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali
-                Murid
-                <br><br><br><br><br><br>
-                ____________________
-            </td>
-            <td width="30%" style="border-style : hidden; "></td>
-            <td width="30%" style="border-style : hidden;text-align:center ">
-                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                Sidoarjo, 22 Juni 2024 <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-                Sidoarjo, 22 Juni 2024 <br>
-                @else
-                Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
                 @endif
-                {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
-                <br>
-                Wali Kelas
-                <br><br><br><br><br><br><u><b>
-                        {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</b></u>
-            </td>
-
-        </tr>
-    </table>
-@endforeach
+            </tbody>
+        </table>
+        <br>
 
 
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+            <tr>
+                <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali
+                    Murid
+                    <br><br><br><br><br><br>
+                    ____________________
+                </td>
+                <td width="30%" style="border-style : hidden; "></td>
+                <td width="30%" style="border-style : hidden;text-align:center ">
+                    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                        Sidoarjo, 22 Juni 2024 <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
+                        Sidoarjo, 22 Juni 2024 <br>
+                    @else
+                        Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
+                    @endif
+                    {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
+                    <br>
+                    Wali Kelas
+                    <br><br><br><br><br><br><u><b>
+                            {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</b></u>
+                </td>
+
+            </tr>
+        </table>
+    @endforeach
 
 
-</div>
+
+
+    </div>
 </body>
 <script>
     window.print();

@@ -45,7 +45,7 @@ class InputKPIController extends Controller
     }
 
 
-    public function datatablesInputKPI(Request  $request)
+    public function datatablesInputKPI(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -86,11 +86,13 @@ class InputKPIController extends Controller
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
         $kelas = Kelas::find($wali_kelas->id_kelas);
-        $data['kelompok_kpi']  = KelompokKPI::with(['point_kpi' => function ($q) use ($kelas, $semester_aktif) {
-            return $q->where('id_semester',  $semester_aktif->id_semester)->where('tingkat_kelas', $kelas->tingkat)->where('jenis', '1');
-        }])->get();
+        $data['kelompok_kpi'] = KelompokKPI::with([
+            'point_kpi' => function ($q) use ($kelas, $semester_aktif) {
+                return $q->where('id_semester', $semester_aktif->id_semester)->where('tingkat_kelas', $kelas->tingkat)->where('jenis', '1');
+            }
+        ])->get();
 
-        $data['mengaji'] = PointKPI::where('id_semester',  $semester_aktif->id_semester)->where('jenis', '3')->get();
+        $data['mengaji'] = PointKPI::where('id_semester', $semester_aktif->id_semester)->where('jenis', '3')->get();
 
         $data['list_siswa'] = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('pengguna')
             ->get();
@@ -131,10 +133,10 @@ class InputKPIController extends Controller
                     $list_siswa = Siswa::where('id_kelas', $wali_kelas->id_kelas)->get();
                     $sekolah = Sekolah::first();
 
-                    $pointKPIs = PointKPI::where('id_semester',  $semester_aktif->id_semester)->where('tingkat_kelas', $kelas->tingkat)->where('jenis', 1)->get();
+                    $pointKPIs = PointKPI::where('id_semester', $semester_aktif->id_semester)->where('tingkat_kelas', $kelas->tingkat)->where('jenis', 1)->get();
                     $predikatKPIs = PredikatKPI::whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->whereIn('id_point_kpi', $pointKPIs->pluck('id_point_kpi'))->with('siswa')->get();
 
-                    $pointMengajiKPIs = PointKPI::where('id_semester',  $semester_aktif->id_semester)->where('jenis', 3)->get();
+                    $pointMengajiKPIs = PointKPI::where('id_semester', $semester_aktif->id_semester)->where('jenis', 3)->get();
                     $predikatMengajiKPIs = PredikatKPI::whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->whereIn('id_point_kpi', $pointMengajiKPIs->pluck('id_point_kpi'))->with('siswa')->get();
                     foreach ($data as $row) {
                         foreach ($pointKPIs as $pointKPI) {
@@ -191,24 +193,24 @@ class InputKPIController extends Controller
                         }
                     }
                     return [
-                        'status'     => 300, // FAILED
-                        'message'     => "Behasil Input Data"
+                        'status' => 300, // FAILED
+                        'message' => "Behasil Input Data"
                     ];
                 }
                 return [
-                    'status'     => 300, // FAILED
-                    'message'     => "File Excel kosong"
+                    'status' => 300, // FAILED
+                    'message' => "File Excel kosong"
                 ];
             } catch (\Exception $e) {
                 return [
-                    'status'     => 200, // FAILED
-                    'message'     => $e->getMessage()
+                    'status' => 200, // FAILED
+                    'message' => $e->getMessage()
                 ];
             }
         } else {
             return [
-                'status'     => 300, // FAILED
-                'message'     => "File Excel tidak ditemukan"
+                'status' => 300, // FAILED
+                'message' => "File Excel tidak ditemukan"
             ];
         }
     }
@@ -220,35 +222,37 @@ class InputKPIController extends Controller
 
         $siswa = Siswa::where('id_siswa', $id_siswa)->with('kelas')->first();
         $semester = Semester::find($id_semester);
-        $kelompok_kpi  = KelompokKPI::with(['point_kpi' => function ($q) use ($siswa, $semester) {
-            return $q->where('id_semester',  $semester->id_semester)->where('tingkat_kelas', $siswa->kelas->tingkat);
-        }])->get();
+        $kelompok_kpi = KelompokKPI::with([
+            'point_kpi' => function ($q) use ($siswa, $semester) {
+                return $q->where('id_semester', $semester->id_semester)->where('tingkat_kelas', $siswa->kelas->tingkat);
+            }
+        ])->get();
 
-        $point_mengaji = PointKPI::where('id_semester',  $semester->id_semester)->whereNull('tingkat_kelas')->where('jenis', '3')->get();
+        $point_mengaji = PointKPI::where('id_semester', $semester->id_semester)->whereNull('tingkat_kelas')->where('jenis', '3')->get();
         $predikat_kpi = PredikatKPI::where('id_siswa', $id_siswa)->where('id_kelas', $siswa->id_kelas)->get();
 
         $data = [];
         $dataMengaji = [];
-        foreach ($kelompok_kpi as  $unit_kelompok_kpi) {
-            foreach ($unit_kelompok_kpi->point_kpi as  $point_kpi) {
+        foreach ($kelompok_kpi as $unit_kelompok_kpi) {
+            foreach ($unit_kelompok_kpi->point_kpi as $point_kpi) {
                 if ($point_kpi->jenis == '1') {
                     $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['nama'][] = $point_kpi->nm_point_kpi;
                     $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['jenis'][] = 1;
-                    $unit_predikat_kpi =  $predikat_kpi->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
+                    $unit_predikat_kpi = $predikat_kpi->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
 
                     if ($unit_predikat_kpi && in_array($unit_predikat_kpi->predikat, ['A', 'B', 'C', 'D'])) {
                         $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['predikat'][] = $unit_predikat_kpi->predikat;
                         if (isset($data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'])) {
                             $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] . ', <br>' . $point_kpi->deskripsi[$unit_predikat_kpi->predikat];
                         } else {
-                            $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] =  $point_kpi->deskripsi[$unit_predikat_kpi->predikat];
+                            $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $point_kpi->deskripsi[$unit_predikat_kpi->predikat];
                         }
                     } else {
                         $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['predikat'][] = 0;
                         if (isset($data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'])) {
                             $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] . ', ' . $point_kpi->deskripsi['D'];
                         } else {
-                            $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] =  $point_kpi->deskripsi['D'];
+                            $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $point_kpi->deskripsi['D'];
                         }
                     }
                 } else {
@@ -260,14 +264,13 @@ class InputKPIController extends Controller
         }
 
         foreach ($point_mengaji as $point_kpi) {
-            $unit_predikat_kpi =  $predikat_kpi->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
+            $unit_predikat_kpi = $predikat_kpi->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
             if ($unit_predikat_kpi) {
                 $dataMengaji[$point_kpi->nm_point_kpi] = $unit_predikat_kpi->predikat;
             } else {
                 $dataMengaji[$point_kpi->nm_point_kpi] = "-";
             }
         }
-
         return view('guru/wali-kelas/kpi/input-kpi/print-kpi-siswa', compact('auth_data', 'kelompok_kpi', 'siswa', 'data', 'semester', 'dataMengaji'));
     }
 
@@ -283,9 +286,11 @@ class InputKPIController extends Controller
         $list_siswa = Siswa::with('kelas')->where('id_kelas', $wali_kelas->id_kelas)
             ->get();
 
-        $kelompok_kpi  = KelompokKPI::with(['point_kpi' => function ($q) use ($kelas, $semester) {
-            return $q->where('id_semester',  $semester->id_semester)->where('tingkat_kelas', $kelas->tingkat);
-        }])->get();
+        $kelompok_kpi = KelompokKPI::with([
+            'point_kpi' => function ($q) use ($kelas, $semester) {
+                return $q->where('id_semester', $semester->id_semester)->where('tingkat_kelas', $kelas->tingkat);
+            }
+        ])->get();
 
         $predikat_kpi = PredikatKPI::whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_kelas', $wali_kelas->id_kelas)->get();
 
@@ -295,7 +300,17 @@ class InputKPIController extends Controller
             $predikat = $predikat_kpi->where('id_siswa', $siswa->id_siswa);
             $siswa->kelompok_kpi = $kelompok_kpi;
             $siswa->predikat = $predikat;
-            $siswa->dataMengaji = $point_mengaji;
+
+            $dataMengaji = [];
+            foreach ($point_mengaji as $point_kpi) {
+                $unit_predikat_kpi = $predikat->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
+                if ($unit_predikat_kpi) {
+                    $dataMengaji[$point_kpi->nm_point_kpi] = $unit_predikat_kpi->predikat;
+                } else {
+                    $dataMengaji[$point_kpi->nm_point_kpi] = "-";
+                }
+            }
+            $siswa->dataMengaji = $dataMengaji;
         }
 
         // foreach ($list_siswa as $siswa) {
@@ -334,13 +349,16 @@ class InputKPIController extends Controller
         //     }
         // }
 
-        return view('guru/wali-kelas/kpi/input-kpi/print-all-kpi-siswa', compact(
-            'auth_data',
-            'list_siswa',
-            'wali_kelas',
-            'semester',
-            'kelompok_kpi',
-            'point_mengaji',
-        ));
+        return view(
+            'guru/wali-kelas/kpi/input-kpi/print-all-kpi-siswa',
+            compact(
+                'auth_data',
+                'list_siswa',
+                'wali_kelas',
+                'semester',
+                'kelompok_kpi',
+                'point_mengaji',
+            )
+        );
     }
 }
