@@ -388,7 +388,7 @@
 
                     </td>
                     <td style="width: 35%;">
-                        {{ 'Surabaya, 6 Mei 2024' }}
+                        {{ 'Surabaya, 21 Juni 2024' }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
