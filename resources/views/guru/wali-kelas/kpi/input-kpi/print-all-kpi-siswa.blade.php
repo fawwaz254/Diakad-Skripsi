@@ -275,6 +275,12 @@
                 Sidoarjo, 22 Juni 2024 <br>
                 @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
                 Sidoarjo, 22 Juni 2024 <br>
+                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
+                Sidoarjo, 22 Juni 2024 <br>
+                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
+                Sidoarjo, 22 Juni 2024 <br>
+                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
+                Sidoarjo, 22 Juni 2024 <br>
                 @else
                 Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
                 @endif
