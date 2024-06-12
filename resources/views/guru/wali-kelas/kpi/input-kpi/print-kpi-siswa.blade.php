@@ -262,7 +262,7 @@
             <td width="30%" style="border-style : hidden; "></td>
             <td width="30%" style="border-style : hidden;text-align:center ">
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                Sidoarjo, 22 Juni 2024 <br>
+                    Sidoarjo, 22 Juni 2024 <br>
                 @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
                 Sidoarjo, 22 Juni 2024 <br>
                 @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
@@ -272,7 +272,7 @@
                 @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
                 Sidoarjo, 22 Juni 2024 <br>
                 @else
-                Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
+                    Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
                 @endif
                 {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
                 <br>
