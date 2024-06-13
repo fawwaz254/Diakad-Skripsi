@@ -282,7 +282,7 @@ class InputKPIController extends Controller
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester->id_semester);
-        $kelas = Kelas::find($wali_kelas->id_kelas)->first();
+        $kelas = Kelas::find($wali_kelas->id_kelas);
         $list_siswa = Siswa::with('kelas')->where('id_kelas', $wali_kelas->id_kelas)
             ->get();
 
