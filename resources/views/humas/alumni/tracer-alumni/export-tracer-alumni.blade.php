@@ -48,17 +48,27 @@
                                 </span>
                             </button>
                         </div>
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                            @if (!empty($id_kelas) && !empty($tahun_lulus))
+                        @if (!empty($id_kelas) && !empty($tahun_lulus))
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 text-center">
                                 <a href="humas/alumni/tracer-alumni/export-alumni/{{ $id_kelas }}/{{ $tahun_lulus }}"
                                     target="_blank" style="margin-top: 30px" class="btn bg-green waves-effect ">
-                                    <i class="material-icons">local_printshop</i> Cetak</a>
-                            @else
+                                    <i class="material-icons">local_printshop</i> Cetak Excel</a>
+
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                {{-- button to print pdf --}}
+                                <a href="humas/alumni/tracer-alumni/export-alumni-pdf/{{ $id_kelas }}/{{ $tahun_lulus }}"
+                                    target="_blank" style="margin-top: 30px" class="btn bg-green waves-effect ">
+                                    <i class="material-icons">local_printshop</i> Cetak PDF</a>
+                                </a>
+                            </div>
+                        @else
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                                 <a href="" target="_blank" style="margin-top: 30px; pointer-events: none;  "
                                     class="btn bg-grey waves-effect ">
                                     <i class="material-icons">local_printshop</i> Cetak</a>
-                            @endif
-                        </div>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>

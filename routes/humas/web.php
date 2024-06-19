@@ -288,12 +288,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
                 Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'editShiftAbsensi']);
-                Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);;
+                Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);
+                ;
             });
 
             Route::prefix('shift_siswa')->group(function () {
                 Route::get('/', [ShiftSiswaController::class, 'addShiftSiswa']);
-                Route::post('add',  [ShiftSiswaController::class, 'storeShiftSiswa']);
+                Route::post('add', [ShiftSiswaController::class, 'storeShiftSiswa']);
             });
 
             Route::prefix('manajemen-hari-libur')->group(function () {
@@ -604,6 +605,9 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::get('cetak2/datatables/{id_kelas}/{tahun}', [TracerAlumniController::class, 'datatablesCetakTracerAlumni2']);
                 Route::get('export-alumni/{id_kelas}/{tahun}', [TracerAlumniController::class, 'exportAlumnni']);
                 Route::get('export-alumni2/{id_kelas}/{tahun}', [TracerAlumniController::class, 'exportAlumnni2']);
+
+                Route::get('export-alumni-pdf/{id_kelas}/{tahun}', [TracerAlumniController::class, 'exportAlumnniPdf']);
+
             });
         });
 
