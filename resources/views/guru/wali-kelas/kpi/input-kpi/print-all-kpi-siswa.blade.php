@@ -51,6 +51,10 @@
             -ms-text-underline-position: below;
             text-underline-position: under;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 
     <style type="text/css" media="print">
@@ -253,42 +257,38 @@
         <br>
 
 
-    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
-        <tr>
-            <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali
-                Murid
-                <br><br><br><br><br><br>
-                ____________________
-            </td>
-            <td width="30%" style="border-style : hidden; "></td>
-            <td width="30%" style="border-style : hidden;text-align:center ">
-                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                Sidoarjo, 22 Juni 2024 <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-                Sidoarjo, 22 Juni 2024 <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
-                Sidoarjo, 22 Juni 2024 <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
-                Sidoarjo, 22 Juni 2024 <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
-                Sidoarjo, 22 Juni 2024 <br>
-                @else
-                Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
-                @endif
-                {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
-                <br>
-                Wali Kelas
-                <br><br><br><br><br><br><u><b>
-                        {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</b></u>
-            </td>
-
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+            <tr>
+                <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali
+                    Murid
+                    <br><br><br><br><br><br>
+                    ____________________
+                </td>
+                <td width="30%" style="border-style : hidden; "></td>
+                <td width="30%" style="border-style : hidden;text-align:center ">
+                    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                        Sidoarjo, 22 Juni 2024 <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
+                        Sidoarjo, 22 Juni 2024 <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
+                        Sidoarjo, 22 Juni 2024 <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
+                        Sidoarjo, 22 Juni 2024 <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
+                        Sidoarjo, 22 Juni 2024 <br>
+                    @else
+                        Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
+                    @endif
+                    {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
+                    <br>
+                    Wali Kelas
+                    <br><br><br><br><br><br><u><b>
+                            {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</b></u>
+                </td>
             </tr>
         </table>
+        <div class="page-break"></div>
     @endforeach
-
-
-
-
     </div>
 </body>
 <script>
