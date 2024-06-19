@@ -112,10 +112,10 @@ class InputPelanggaranController extends BaseController
         $auth_data  = $input->auth_data;
 
         // dd($input->siswa);
-        $PecahSiswa = explode("/", $input->siswa);
-        $sekolah_data = $auth_data->sekolah_data;
+        $id_siswa = explode("/", $input->siswa);
+        // $sekolah_data = $auth_data->sekolah_data;
 
-        $siswa      = LibSiswa::fetchDataSiswa($auth_data, $PecahSiswa[1], $PecahSiswa[1]);
+        $siswa      = LibSiswa::fetchDataSiswa($auth_data, null, $id_siswa);
 
         $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
             ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
@@ -124,7 +124,7 @@ class InputPelanggaranController extends BaseController
             ->leftJoin('tindakan_pelanggaran', 'tindakan_pelanggaran.id_pelanggaran_siswa', '=', 'pelanggaran_siswa.id_pelanggaran_siswa')
             ->leftJoin('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', '=', 'tindakan_pelanggaran.id_jenis_tindakan')
             ->where('siswa.id_siswa', '=', $siswa->id_siswa)
-            ->groupBy('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran')
+            ->groupBy('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran')
             ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc')
             ->get();
 
@@ -261,16 +261,16 @@ class InputPelanggaranController extends BaseController
             if ($mode == 'add') {
 
 
-                $PecahSiswa = explode("/", $input->id_siswa);
+                $id_siswa = $input->id_siswa;
 
                 $time = Carbon::parse($input->tgl_pelanggaran)->toDateString();
-                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran', $time)->where('id_semester', $input->id_semester)->where('id_siswa', $PecahSiswa[1])->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
+                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran', $time)->where('id_semester', $input->id_semester)->where('id_siswa', $id_siswa)->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
 
                 $users = DB::table('siswa')
                     ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
-                    ->where('id_siswa', $PecahSiswa[1])
+                    ->where('id_siswa', $id_siswa)
                     ->first();
-
+                
                 if ($pelanggaran) {
                     return [
                         'status' => 300, // FAILED
@@ -291,14 +291,15 @@ class InputPelanggaranController extends BaseController
 
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                $idSiswa = $input->id_siswa;
-                $PecahStr = explode("/", $idSiswa);
+                // $idSiswa = $input->id_siswa;
+                // $PecahStr = explode("/", $idSiswa);
+                // dd($PecahStr);
 
-                $siswa = Siswa::where('id_siswa', '=', $PecahStr[1])->first();
+                $siswa = Siswa::where('id_siswa', '=', $id_siswa)->first();
 
                 $pelanggaranSiswa                               = new PelanggaranSiswa;
                 $pelanggaranSiswa->id_pelanggaran_siswa         = $id;
-                $pelanggaranSiswa->id_siswa                     = $PecahStr[1];
+                $pelanggaranSiswa->id_siswa                     = $id_siswa;
                 $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
                 $pelanggaranSiswa->id_guru_input                = $id_guru_input;
                 $pelanggaranSiswa->id_semester                  = $input->id_semester;
