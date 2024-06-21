@@ -183,6 +183,7 @@ Route::middleware(['token_staff'])->group(function () {
 
                 // INDIKATOR
                 Route::get('/indikator/{id_komponen_rapor_pendukung}', [RaporPendukungController::class, 'viewListIndikatorRaporPendukung']);
+                Route::get('/indikator/{id_rapor_pendukung}/template', [RaporPendukungController::class, 'viewTemplateRaporPendukung']);
                 Route::post('/indikator/{id_rapor_pendukung}/action', [RaporPendukungController::class, 'actionIndikatorRaporPendukung']);
                 Route::post('/indikator/get', [RaporPendukungController::class, 'getIndikatorRaporPendukung']);
 
