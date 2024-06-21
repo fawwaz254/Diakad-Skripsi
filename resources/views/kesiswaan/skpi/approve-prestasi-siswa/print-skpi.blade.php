@@ -262,9 +262,9 @@
             <h5 class="text-center"><b>Diploma Supplement</b></h5>
             <h5 class="text-center">Nomor :
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                    411/C-3/WH2/V/2023
+                    429/C-3/WH-2/V/2024
                 @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                    421.3/649/E/404.3.1.15.4.4/VI/2023
+                    421.3/090/E/404.3.1.15.4.4/VI/2024
                 @endif
             </h5>
 
@@ -783,16 +783,17 @@
                 </td>
                 <td>Pramuka
                     @if (in_array($auth_data->sekolah_data->nm_singkat_sekolah, ['smpypm1', 'smpypm2']))
-                    dan Kemah Wisata
+                        dan Kemah Wisata
                     @endif
                     <br> (Kedisiplinan, kemandirian, kerjasama dan tanggung jawab)
                     {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
-                    <br><i>Scouting 
-                    @if (in_array($auth_data->sekolah_data->nm_singkat_sekolah, ['smpypm1', 'smpypm2']))
-                    and Tourism Camp
-                    @endif
-                    <br> (Discipline, independence, cooperation and
-                        responsibility)</i>
+                    <br><i>Scouting
+                        @if (in_array($auth_data->sekolah_data->nm_singkat_sekolah, ['smpypm1', 'smpypm2']))
+                            and Tourism Camp
+                        @endif
+                        <br> (Discipline, independence, cooperation and
+                        responsibility)
+                    </i>
                     {{-- @endif --}}
                 </td>
             </tr>
@@ -859,11 +860,13 @@
                     {{-- @endif --}}
                     <td style="border: none;">Kab. Sidoarjo,
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                        8 Mei 2023
+                            8 Mei 2023
                         @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
-                        5 Mei 2023
+                            5 Mei 2023
+                        @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                            11 Juni 2024
                         @else
-                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                            {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                         @endif
                     </td>
                 </tr>
