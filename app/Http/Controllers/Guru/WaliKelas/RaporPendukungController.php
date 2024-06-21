@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Guru\WaliKelas;
 
+use App\Exports\TemplateExcel;
 use Validator;
 use Carbon\Carbon;
 use App\Models\Guru;
@@ -18,12 +19,60 @@ use App\Models\PredikatRaporPendukung;
 use App\Models\IndikatorRaporPendukung;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RaporPendukungController extends Controller
 {
     public function viewListRaporPendukung()
     {
         return view('guru/wali-kelas/rapor-pendukung/view-list-rapor-pendukung');
+    }
+
+    public function viewTemplateRaporPendukung(Request $request, $global_role, $global_modul, $id_rapor_pendukung)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
+        $kelas = Kelas::findOrFail($wali_kelas->id_kelas);
+
+        $list_siswa = Siswa::whereHas('pengguna.status_pengguna', function ($q) {
+            $q->where('aktif_status_pengguna', 1);
+        })
+            ->with('kelas', 'pengguna')
+            ->where('id_kelas', $kelas->id_kelas)
+            ->orderBy('nis_siswa')
+            ->get();
+
+        $komponen_rapor = KomponenRaporPendukung::with(['indikator_rapor_pendukung' => function ($q) use ($kelas, $semester_aktif) {
+            $q->where('tingkat_kelas', $kelas->tingkat)->where('id_semester', $semester_aktif->id_semester);
+        }])
+            ->where('id_rapor_pendukung', $id_rapor_pendukung)
+            ->orderBy('urutan')
+            ->get();
+
+        // $list_catatan_siswa = PredikatRaporPendukung::where('id_rapor_pendukung', $id_rapor_pendukung)->whereNull('id_indikator_rapor_pendukung')->get();
+
+        $header = [
+            'Komponen',
+            'Indikator',
+        ];
+
+        $headers = array_merge($header, $list_siswa->pluck('nis_siswa')->toArray());
+        $bodies = [];
+
+        foreach ($komponen_rapor->sortBy('urutan')->values() as $komponen) {
+            foreach ($komponen->indikator_rapor_pendukung->sortBy('urutan')->values() as $key => $indikator) {
+                $temp = [];
+                $temp[] = $komponen->nm_komponen;
+                $temp[] = $indikator->urutan . '. ' . $indikator->nm_indikator;
+                $bodies[] = $temp;
+            }
+        }
+
+        return Excel::download(new TemplateExcel($headers, $bodies), 'Template Excel pengisian rapor pendukung Kelas ' . $kelas->nm_kelas . ' Semester ' . $semester_aktif->kode_semester . '.xlsx');
     }
 
     public function datatablesRaporPendukung()
