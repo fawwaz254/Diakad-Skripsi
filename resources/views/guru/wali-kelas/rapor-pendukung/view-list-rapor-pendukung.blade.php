@@ -1,8 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2 style="float: right; margin-bottom: 1rem">
-            <button class="btn bg-green waves-effect" onclick="showModalAction()"><i
-                    class="material-icons">add</i><span>Tambah Rapor</span></button>
+            <button class="btn bg-green waves-effect" onclick="showModalAction()"><i class="material-icons">add</i><span>Tambah Rapor</span></button>
         </h2>
         <div style="clear: right;"></div>
     </div>
@@ -15,9 +14,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                            id="primary_table">
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -48,8 +45,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="form-validation" method="POST"
-                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3)) . '/action' }}">
+                <form id="form-validation" method="POST" action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3)) . '/action' }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="id_rapor_pendukung">
                     <input type="hidden" name="mode" value="add">
@@ -59,8 +55,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success  waves-effect"
-                            onclick="hideModalCreate()">Submit</button>
+                        <button type="submit" class="btn btn-success  waves-effect" onclick="hideModalCreate()">Submit</button>
                     </div>
                 </form>
             </div>
@@ -112,10 +107,16 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return `
-                    <a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="${base_url}/${role_url}#${modul_url}/rapor-pendukung/predikat/${data.id}">
+                    // var html = `<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" disabled="true" href="${base_url}/${role_url}#${modul_url}/rapor-pendukung/predikat/${data.id}">
+                    var html = `<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" disabled="true">
                         <i class="material-icons">add</i>
                     </a>`;
+
+                    html += `<a class="btn" target="_blank" href="${base_url}/${role_url}/${modul_url}/rapor-pendukung/indikator/${data.id}/template">
+                        Template Excel
+                    </a>`;
+
+                    return html;
                 }
             },
             {
