@@ -31,28 +31,46 @@
 <body>
     @foreach ($siswa as $siswa)
         @php
+            $catatan_sekolah =
+                'Mohon orang tua untuk mempertahankan dan meningkatkan perilaku siswa untuk lebih positif, sehingga tidak melakukan pelanggaran tata tertib sekolah.';
+            $kategori_pelanggaran = 'Tidak Ada';
+            $deskripsi_perilaku_1 = 'Tidak ada permasalahan yang tercatat di BK';
+            $deskripsi_perilaku_2 = '';
+
             if ($list_data->count() > 0) {
-                $total_poin = $list_data->where('id_siswa', $siswa->id_siswa)->sum('jumlah_poin');
+                $check_siswa = $list_data->where('id_siswa', $siswa->id_siswa);
+                if ($check_siswa->count() > 0) {
+                    $total_poin = $list_data->where('id_siswa', $siswa->id_siswa)->sum('jumlah_poin');
 
-                $data = App\Models\KesimpulanPelanggaran::where('poin_bawah_kesimpulan_pelanggaran', '<=', $total_poin)
-                    ->where('poin_atas_kesimpulan_pelanggaran', '>=', $total_poin)
-                    ->first();
+                    $data = App\Models\KesimpulanPelanggaran::where(
+                        'poin_bawah_kesimpulan_pelanggaran',
+                        '<=',
+                        $total_poin,
+                    )
+                        ->where('poin_atas_kesimpulan_pelanggaran', '>=', $total_poin)
+                        ->first();
 
-                if ($data) {
-                    $kategori_pelanggaran = strip_tags($data->deskripsi_kesimpulan_pelanggaran_2);
-                    $deskripsi_perilaku_1 = strip_tags($data->deskripsi_kesimpulan_pelanggaran_1);
-                    if ($data->nm_kesimpulan_pelanggaran) {
-                        $kategori_pelanggaran = $data->nm_kesimpulan_pelanggaran;
+                    if ($data) {
+                        $kategori_pelanggaran = strip_tags($data->deskripsi_kesimpulan_pelanggaran_2);
+                        $deskripsi_perilaku_1 = strip_tags($data->deskripsi_kesimpulan_pelanggaran_1);
+                        if ($data->nm_kesimpulan_pelanggaran) {
+                            $kategori_pelanggaran = $data->nm_kesimpulan_pelanggaran;
+                        }
                     }
-                }
 
-                $total_pelanggaran_yang_dilakukan = $list_data->where('id_siswa', $siswa->id_siswa)->sum('frekuensi');
-                if ($total_pelanggaran_yang_dilakukan == 1) {
-                    $deskripsi_perilaku_2 = 'Ada perubahan perilaku siswa yang lebih baik setelah ditangani sekolah.';
-                } elseif ($total_pelanggaran_yang_dilakukan == 2) {
-                    $deskripsi_perilaku_2 = 'Ada perubahan perilaku siswa yang cukup baik setelah ditangani sekolah.';
-                } else {
-                    $deskripsi_perilaku_2 = 'Belum ada perubahan perilaku siswa setelah ditangani sekolah.';
+                    $total_pelanggaran_yang_dilakukan = $list_data
+                        ->where('id_siswa', $siswa->id_siswa)
+                        ->sum('frekuensi');
+
+                    if ($total_pelanggaran_yang_dilakukan == 1) {
+                        $deskripsi_perilaku_2 =
+                            'Ada perubahan perilaku siswa yang lebih baik setelah ditangani sekolah.';
+                    } elseif ($total_pelanggaran_yang_dilakukan == 2) {
+                        $deskripsi_perilaku_2 =
+                            'Ada perubahan perilaku siswa yang cukup baik setelah ditangani sekolah.';
+                    } else {
+                        $deskripsi_perilaku_2 = 'Belum ada perubahan perilaku siswa setelah ditangani sekolah.';
+                    }
                 }
             }
         @endphp
@@ -236,7 +254,7 @@
                     <div class="col-md-4" style="margin-top:50px;">
                         Sidoarjo,
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                        22 Juni 2024
+                            22 Juni 2024
                         @else
                             {{ now('Asia/Jakarta')->format('d M Y') }}
                         @endif
