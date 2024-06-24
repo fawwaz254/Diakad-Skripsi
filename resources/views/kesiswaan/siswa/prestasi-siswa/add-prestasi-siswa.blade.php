@@ -119,11 +119,11 @@
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
-                                Peringkat Prestasi <small><b>* Misal: Juara I maka diisi 1, Juara Harapan 1 maka diisi 4</b></small>
+                                Peringkat Prestasi 
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="number" class="form-control" name="peringkat_prestasi_siswa" required="" aria-required="true"
+                                    <input type="text" class="form-control" name="peringkat_prestasi_siswa" required="" aria-required="true"
                                     aria-invalid="true">
                                 </div>
                             </div>
