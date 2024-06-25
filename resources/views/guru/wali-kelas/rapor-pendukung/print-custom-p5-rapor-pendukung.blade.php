@@ -191,7 +191,6 @@
                 </tr>
 
                 @php
-
                     $filter_komponen = $list_komponen_rapor
                         ->filter(function ($komponen) {
                             return str_contains($komponen->nm_komponen, 'Projek 1');
@@ -205,18 +204,20 @@
                     </tr>
 
                     @foreach ($komponen->indikator_rapor_pendukung as $indikator)
+                        @php
+                            $nilai = '';
+                        @endphp
+                        @foreach ($indikator->predikat_rapor_pendukung as $predikat)
+                            @if ($predikat->id_siswa == $siswa->id_siswa)
+                                @php
+                                    $nilai = $predikat->nilai;
+                                @endphp
+                            @endif
+                        @endforeach
                         <tr>
                             <td style="font-weight: bold">
-                                {{ $indikator->nm_indikator }}</td>
-
-                            @php
-                                $nilai = '';
-                                foreach ($indikator->predikat_rapor_pendukung as $predikat) {
-                                    if ($predikat->id_siswa == $siswa->id_siswa) {
-                                        $nilai = $predikat->nilai;
-                                    }
-                                }
-                            @endphp
+                                {{ $indikator->nm_indikator }}
+                            </td>
                             <td style="text-align: center">
                                 @if ($nilai == 'BB')
                                     &#10003;
@@ -241,13 +242,14 @@
                     @endforeach
                 @endforeach
             </table>
+
             {{-- PROJEK 2 --}}
             <h3 style="width: 90%; margin: 2rem auto;">Projek 2 | “WIRAUSAHA MUDA BERKARYA SECARA INOVATIF & KOMPETITIF”
             </h3>
             <table style="width: 90%; margin: 2rem auto;">
                 <tr>
-                    <th style="font-weight: bold;background-color: #f7b2ab">Bhinneka Tunggal Ika | “SEKOLAHKU NYAMAN, NO
-                        BULLYING!”</th>
+                    <th style="font-weight: bold;background-color: #f7b2ab">WIRAUSAHA MUDA BERKARYA SECARA INOVATIF &
+                        KOMPETITIF</th>
                     <th style="font-weight: bold;background-color: #abb9f7">BB</th>
                     <th style="font-weight: bold;background-color: #abb9f7">MB</th>
                     <th style="font-weight: bold;background-color: #abb9f7">BSH</th>
@@ -255,32 +257,33 @@
                 </tr>
 
                 @php
-
                     $filter_komponen = $list_komponen_rapor
                         ->filter(function ($komponen) {
-                            return str_contains($komponen->nm_komponen, 'Projek 1');
+                            return str_contains($komponen->nm_komponen, 'Projek 2');
                         })
                         ->values();
                 @endphp
                 @foreach ($filter_komponen as $komponen)
                     <tr style="background-color: #f7ebab">
                         <td colspan="5" style="font-weight: bold">
-                            {{ str_replace('Projek 1:', '', $komponen->nm_komponen) }}</td>
+                            {{ str_replace('Projek 2:', '', $komponen->nm_komponen) }}</td>
                     </tr>
 
                     @foreach ($komponen->indikator_rapor_pendukung as $indikator)
+                        @php
+                            $nilai = '';
+                        @endphp
+                        @foreach ($indikator->predikat_rapor_pendukung as $predikat)
+                            @if ($predikat->id_siswa == $siswa->id_siswa)
+                                @php
+                                    $nilai = $predikat->nilai;
+                                @endphp
+                            @endif
+                        @endforeach
                         <tr>
                             <td style="font-weight: bold">
-                                {{ $indikator->nm_indikator }}</td>
-
-                            @php
-                                $nilai = '';
-                                foreach ($indikator->predikat_rapor_pendukung as $predikat) {
-                                    if ($predikat->id_siswa == $siswa->id_siswa) {
-                                        $nilai = $predikat->nilai;
-                                    }
-                                }
-                            @endphp
+                                {{ $indikator->nm_indikator }}
+                            </td>
                             <td style="text-align: center">
                                 @if ($nilai == 'BB')
                                     &#10003;
@@ -305,13 +308,14 @@
                     @endforeach
                 @endforeach
             </table>
+
             {{-- PROJEK 3 --}}
-            <h3 style="width: 90%; margin: 2rem auto;">Projek 3 | GAYA HIDUP BERKELANJUTAN| “PENGHIJAUAN DISEKITAR
+            <h3 style="width: 90%; margin: 2rem auto;">Projek 3 | GAYA HIDUP BERKELANJUTAN | “PENGHIJAUAN DISEKITAR
                 SEKOLAHKU”</h3>
             <table style="width: 90%; margin: 2rem auto;">
                 <tr>
-                    <th style="font-weight: bold;background-color: #f7b2ab">Bhinneka Tunggal Ika | “SEKOLAHKU NYAMAN, NO
-                        BULLYING!”</th>
+                    <th style="font-weight: bold;background-color: #f7b2ab">GAYA HIDUP BERKELANJUTAN | “PENGHIJAUAN
+                        DISEKITAR SEKOLAHKU”</th>
                     <th style="font-weight: bold;background-color: #abb9f7">BB</th>
                     <th style="font-weight: bold;background-color: #abb9f7">MB</th>
                     <th style="font-weight: bold;background-color: #abb9f7">BSH</th>
@@ -319,32 +323,33 @@
                 </tr>
 
                 @php
-
                     $filter_komponen = $list_komponen_rapor
                         ->filter(function ($komponen) {
-                            return str_contains($komponen->nm_komponen, 'Projek 1');
+                            return str_contains($komponen->nm_komponen, 'Projek 3');
                         })
                         ->values();
                 @endphp
                 @foreach ($filter_komponen as $komponen)
                     <tr style="background-color: #f7ebab">
                         <td colspan="5" style="font-weight: bold">
-                            {{ str_replace('Projek 1:', '', $komponen->nm_komponen) }}</td>
+                            {{ str_replace('Projek 3:', '', $komponen->nm_komponen) }}</td>
                     </tr>
 
                     @foreach ($komponen->indikator_rapor_pendukung as $indikator)
+                        @php
+                            $nilai = '';
+                        @endphp
+                        @foreach ($indikator->predikat_rapor_pendukung as $predikat)
+                            @if ($predikat->id_siswa == $siswa->id_siswa)
+                                @php
+                                    $nilai = $predikat->nilai;
+                                @endphp
+                            @endif
+                        @endforeach
                         <tr>
                             <td style="font-weight: bold">
-                                {{ $indikator->nm_indikator }}</td>
-
-                            @php
-                                $nilai = '';
-                                foreach ($indikator->predikat_rapor_pendukung as $predikat) {
-                                    if ($predikat->id_siswa == $siswa->id_siswa) {
-                                        $nilai = $predikat->nilai;
-                                    }
-                                }
-                            @endphp
+                                {{ $indikator->nm_indikator }}
+                            </td>
                             <td style="text-align: center">
                                 @if ($nilai == 'BB')
                                     &#10003;
@@ -369,52 +374,10 @@
                     @endforeach
                 @endforeach
             </table>
-
-            <div style="width: 90%; margin: 0 auto; padding: 15px;border:3px solid black">
-                @php
-                    $catatan_siswa = $list_catatan_siswa->where('id_siswa', $siswa->id_siswa)->first()->nilai;
-                @endphp
-                <strong>Catatan Proses:</strong> <br><br>
-                {{ $catatan_siswa }}
-            </div>
-
-            <table style="width: 90%; margin: 2rem auto;">
-                <tr style="background-color: #ccc">
-                    <th>BB <br> Belum Berkembang</th>
-                    <th>MB <br> Mulai Berkembang</th>
-                    <th>BSH <br> Berkembang Sesuai Harapan</th>
-                    <th>SB <br> Sangat Berkembang</th>
-                </tr>
-                <tr>
-                    <td>Peserta didik masih membutuhkan bimbingan dalam memgembangkan kemampuan</td>
-                    <td>Peserta didik mulai mengembangkan kemampuan namun masih belum ajek</td>
-                    <td>Peserta didik telah mengembangkan kemampuan hingga berada dalam tahap ajek</td>
-                    <td>Peserta didik mengembangkan kemampuannya melampui harapan</td>
-                </tr>
-            </table>
-
-            <div style="width: 90%; margin: 0 auto;">
-                <table id="ttd" style="border: none !impartant">
-                    <tr>
-                        <td>
-                            Mengetahui, <br>
-                            Orang Tua/Wali Murid <br><br><br><br><br><br><br>
-
-                            <u>................................</u>
-                        </td>
-                        <td style="width: 30%">
-                            {{ $auth_data->sekolah_data->alamat_kota == '136' ? 'Surabaya' : 'Sidoarjo' }},
-                            {{ \Carbon\Carbon::now()->translatedFormat('d M Y') }} <br>
-                            Wali Kelas <br><br><br><br><br><br><br>
-
-                            <u>{{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</u>
-                        </td>
-                    </tr>
-                </table>
-            </div>
         </div>
     @endforeach
 </body>
+
 <script>
     window.print();
 </script>
