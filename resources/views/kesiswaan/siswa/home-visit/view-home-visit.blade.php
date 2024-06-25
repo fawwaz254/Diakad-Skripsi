@@ -6,6 +6,20 @@
                     <h2>
                         Data Home Visit
                     </h2>
+                    <br>
+                    <h4>Kelas</h4>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <select name="id-kelas" id="id-kelas" class="form-control" onchange="filterKelas()">
+                                <option value="">-- Pilih Kelas --</option>
+                                @forelse ($data_kelas as $row)
+                                    <option value="{{ $row->id_kelas }}">{{ $row->nm_kelas }}</option>
+                                @empty
+                                    <option value="">Tidak ada data</option>
+                                @endforelse
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">
@@ -32,6 +46,7 @@
                                                 <th>NIS</th>
                                                 <th>NISN</th>
                                                 <th>Guru Wali Kelas</th>
+                                                <th>Kelas</th>
                                                 <th>Semester</th>
                                                 <th>Nomor HP Wali Murid</th>
                                                 <th>Alamat Wali Murid</th>
@@ -56,6 +71,7 @@
                                                 <th>NIS</th>
                                                 <th>NISN</th>
                                                 <th>Guru Wali Kelas</th>
+                                                <th>Kelas</th>
                                                 <th>Semester</th>
                                                 <th>Nomor HP Wali Murid</th>
                                                 <th>Alamat Wali Murid</th>
@@ -95,7 +111,8 @@
             { data: 'nm_siswa', name: 'p1.nm_pengguna' },
             { data: 'nis_siswa', name: 'siswa.nis_siswa' },
             { data: 'nisn_siswa', name: 'siswa.nisn_siswa' },  
-            { data: 'nm_wali_kelas', name: 'p2.nm_pengguna' },  
+            { data: 'nm_wali_kelas', name: 'p2.nm_pengguna' },
+            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'semester', name: 'semester.tahun_ajaran' },  
             { data: 'nomor_hp_wali_murid', name: 'home_visit.nomor_hp_wali_murid' },  
             { data: 'alamat_wali_murid', name: 'home_visit.alamat_wali_murid' },  
@@ -133,6 +150,7 @@
             { data: 'nis_siswa', name: 'siswa.nis_siswa' },
             { data: 'nisn_siswa', name: 'siswa.nisn_siswa' },  
             { data: 'nm_wali_kelas', name: 'p2.nm_pengguna' },  
+            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'semester', name: 'semester.tahun_ajaran' },  
             { data: 'nomor_hp_wali_murid', name: 'home_visit.nomor_hp_wali_murid' },  
             { data: 'alamat_wali_murid', name: 'home_visit.alamat_wali_murid' },  
@@ -155,4 +173,14 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+    function filterKelas() {
+        let id_kelas = $('#id-kelas').val();
+
+        var primary_table_belum_lengkap = $('#primary_table_belum_lengkap').DataTable();
+        primary_table_belum_lengkap.settings()[0].ajax.data = function(d) {
+            d.id_kelas = id_kelas;
+        };
+        primary_table_belum_lengkap.ajax.reload(null, false);
+    }
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Kesiswaan\Siswa;
 
+use App\Libraries\Pendidikan\LibKelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller as BaseController;
@@ -13,7 +14,7 @@ use App\Libraries\Pendidikan\LibSiswa;
 
 use App\Models\HomeVisit as HomeVisit;
 use App\Models\Guru as Guru;
-
+use App\Models\HomeVisitView;
 use Auth;
 use DB;
 use Session;
@@ -26,8 +27,10 @@ class HomeVisitController extends BaseController
         # code..
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        // dd($data_kelas);
 
-        return view('kesiswaan/siswa/home-visit/view-home-visit', compact('auth_data'));
+        return view('kesiswaan/siswa/home-visit/view-home-visit', compact('auth_data', 'data_kelas'));
     }
 
     public function editHomeVisit(Request $request, $id)
@@ -84,6 +87,11 @@ class HomeVisitController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        // dd($auth_data->pengguna->id_sekolah);
+        $id_kelas = '';
+        if (!empty($input->id_kelas)) {
+            $id_kelas = $input->id_kelas;
+        }
 
         if ($id == 1) {
             $list_data = HomeVisit::select(
@@ -110,18 +118,25 @@ class HomeVisitController extends BaseController
                 'home_visit.created_at',
                 'p4.nm_pengguna as nm_tendik_kesiswaan',
                 'p4.gelar_depan as gelar_depan_tendik_kesiswaan',
-                'p4.gelar_belakang as gelar_belakang_tendik_kesiswaan'
+                'p4.gelar_belakang as gelar_belakang_tendik_kesiswaan',
+                'kelas.nm_kelas',
+                'p2.id_sekolah',
+                'kelas.id_kelas'
             )
                 ->join('semester', 'semester.id_semester', '=', 'home_visit.id_semester')
                 ->join('siswa', 'siswa.id_siswa', '=', 'home_visit.id_siswa')
                 ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
                 ->join('guru as g1', 'g1.id_guru', '=', 'home_visit.id_guru_wali_kelas')
                 ->join('pengguna as p2', 'p2.id_pengguna', '=', 'g1.id_pengguna')
+                ->join('kelas', 'kelas.id_kelas', '=', 'home_visit.id_kelas')
                 ->leftJoin('guru as g2', 'g2.id_guru', '=', 'home_visit.id_guru_kesiswaan')
                 ->leftJoin('pengguna as p3', 'p3.id_pengguna', '=', 'g2.id_pengguna')
                 ->leftJoin('pengguna as p4', 'p4.id_pengguna', '=', 'home_visit.updated_by')
                 ->where('p2.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                 ->where('home_visit.is_berkas_lengkap', '=', $id)
+                ->when(!empty($id_kelas), function ($q) use ($id_kelas) {
+                    $q->where('kelas.id_kelas', $id_kelas);
+                })
                 ->orderBy('home_visit.updated_at', 'desc');
         } else {
             $list_data = HomeVisit::select(
@@ -148,18 +163,25 @@ class HomeVisitController extends BaseController
                 'home_visit.created_at',
                 'p4.nm_pengguna as nm_tendik_kesiswaan',
                 'p4.gelar_depan as gelar_depan_tendik_kesiswaan',
-                'p4.gelar_belakang as gelar_belakang_tendik_kesiswaan'
+                'p4.gelar_belakang as gelar_belakang_tendik_kesiswaan',
+                'kelas.nm_kelas',
+                'p2.id_sekolah',
+                'kelas.id_kelas'
             )
                 ->join('semester', 'semester.id_semester', '=', 'home_visit.id_semester')
                 ->join('siswa', 'siswa.id_siswa', '=', 'home_visit.id_siswa')
                 ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
                 ->join('guru as g1', 'g1.id_guru', '=', 'home_visit.id_guru_wali_kelas')
                 ->join('pengguna as p2', 'p2.id_pengguna', '=', 'g1.id_pengguna')
+                ->join('kelas', 'kelas.id_kelas', '=', 'home_visit.id_kelas')
                 ->leftJoin('guru as g2', 'g2.id_guru', '=', 'home_visit.id_guru_kesiswaan')
                 ->leftJoin('pengguna as p3', 'p3.id_pengguna', '=', 'g2.id_pengguna')
                 ->leftJoin('pengguna as p4', 'p4.id_pengguna', '=', 'home_visit.updated_by')
                 ->where('p2.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                 ->where('home_visit.is_berkas_lengkap', '=', $id)
+                ->when(!empty($id_kelas), function ($q) use ($id_kelas) {
+                    $q->where('kelas.id_kelas', $id_kelas);
+                })
                 ->orderBy('home_visit.created_at', 'desc');
         }
 
