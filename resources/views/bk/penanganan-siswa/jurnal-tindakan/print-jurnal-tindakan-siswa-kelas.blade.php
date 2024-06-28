@@ -169,14 +169,14 @@
                                 <td colspan="5" align="center"><b>TOTAL</b></td>
                                 <td align="center"><b>{{ $jumlah }}</b></td>
                             </tr>
-                            @if ($setting_bk)
-                                <tr>
-                                    <td colspan="5" align="center"><b>KATEGORI PELANGGARAN</b></td>
-                                    <td align="center">
-                                        <b>{{ $jumlah == '0' ? 'TIDAK ADA' : $kategori_pelanggaran }}</b>
-                                    </td>
-                                </tr>
-                            @endif
+                            <tr>
+                                <td colspan="5" align="center"><b>KATEGORI PELANGGARAN</b></td>
+                                <td align="center">
+                                    <b>{{ $jumlah == '0' ? 'TIDAK ADA' : $kategori_pelanggaran }}</b>
+                                </td>
+                            </tr>
+                            {{-- @if ($setting_bk)
+                            @endif --}}
                         </table>
                     </div>
 
@@ -184,26 +184,26 @@
 
                     <div class="col-md-12">
                         <h6 style="margin-top:15px;text-align: left;">B. Deskripsi Perilaku Siswa</h6>
-                        @if ($setting_bk)
-                            <table border="1" style="width:100%" cellspacing="0" cellpadding="10">
-                                <tr>
-                                    <th style="width:5%">No.</th>
-                                    <th>Deskripsi</th>
-                                </tr>
-                                <tr>
-                                    <td style="width:5%">1</td>
-                                    <td align="left">{{ $deskripsi_perilaku_1 }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="width:5%">2</td>
-                                    <td align="left">{{ $deskripsi_perilaku_2 }}</td>
-                                </tr>
-                            </table>
-                        @else
+                        <table border="1" style="width:100%" cellspacing="0" cellpadding="10">
+                            <tr>
+                                <th style="width:5%">No.</th>
+                                <th>Deskripsi</th>
+                            </tr>
+                            <tr>
+                                <td style="width:5%">1</td>
+                                <td align="left">{{ $deskripsi_perilaku_1 }}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:5%">2</td>
+                                <td align="left">{{ $deskripsi_perilaku_2 }}</td>
+                            </tr>
+                        </table>
+                        {{-- @if ($setting_bk)
+                        @else --}}
                             <fieldset style="height: 100px;border:1px solid">
                                 <p></p>
                             </fieldset>
-                        @endif
+                        {{-- @endif --}}
                     </div>
 
                     <!-- Deskripsi Catatan Sekolah -->

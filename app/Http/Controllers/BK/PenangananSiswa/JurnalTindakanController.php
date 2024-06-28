@@ -93,7 +93,7 @@ class JurnalTindakanController extends BaseController
 
         $semester   = Semester::find($id_semester);
 
-        // $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $siswa->id_pengguna);
+        $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $siswa->id_pengguna);
         $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
             ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
             ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
@@ -110,24 +110,20 @@ class JurnalTindakanController extends BaseController
             $list_data = $list_data->where('siswa.id_siswa', '=', $siswa->id_siswa)->get();
         }
 
-        $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
         $is_ypm = Setting::where('key_setting', 'is_ypm')->first()->value;
         $kategori_pelanggaran = null;
         $deskripsi_perilaku_1 = null;
         $deskripsi_perilaku_2 = null;
         $catatan_sekolah = null;
-
-        if ($setting_bk) {
-            $catatan_sekolah = 'Mohon orang tua untuk mempertahankan dan meningkatkan perilaku siswa untuk lebih positif, sehingga tidak melakukan pelanggaran tata tertib sekolah.';
-            $kategori_pelanggaran = 'Tidak Ada';
-            $deskripsi_perilaku_1 = 'Tidak ada permasalahan yang tercatat di BK';
-            $deskripsi_perilaku_2 = '';
-        }
+        $catatan_sekolah = 'Mohon orang tua untuk mempertahankan dan meningkatkan perilaku siswa untuk lebih positif, sehingga tidak melakukan pelanggaran tata tertib sekolah.';
+        $kategori_pelanggaran = 'Tidak Ada';
+        $deskripsi_perilaku_1 = 'Tidak ada permasalahan yang tercatat di BK';
+        $deskripsi_perilaku_2 = '';
 
         if ($id_siswa == '0') {
-            return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan-siswa-kelas', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'auth_data'));
+            return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan-siswa-kelas', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'auth_data'));
         }
 
-        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'setting_bk', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'jenis_kelamin', 'auth_data', 'is_ypm'));
+        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'jenis_kelamin', 'auth_data', 'is_ypm'));
     }
 }
