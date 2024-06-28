@@ -26,9 +26,7 @@ class KesimpulanPelanggaranController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
-
-        return view('bk/data-pelanggaran/kesimpulan-pelanggaran/view-kesimpulan-pelanggaran', compact('auth_data', 'setting_bk'));
+        return view('bk/data-pelanggaran/kesimpulan-pelanggaran/view-kesimpulan-pelanggaran', compact('auth_data'));
     }
 
     public function addKesimpulanPelanggaran(Request $request)
@@ -40,11 +38,9 @@ class KesimpulanPelanggaranController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
-
         $id_kesimpulan_pelanggaran = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('bk/data-pelanggaran/kesimpulan-pelanggaran/add-kesimpulan-pelanggaran', compact('auth_data', 'id_kesimpulan_pelanggaran', 'setting_bk'));
+        return view('bk/data-pelanggaran/kesimpulan-pelanggaran/add-kesimpulan-pelanggaran', compact('auth_data', 'id_kesimpulan_pelanggaran'));
     }
 
     public function editKesimpulanPelanggaran($id, Request $request)
@@ -53,11 +49,11 @@ class KesimpulanPelanggaranController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
+        // $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
 
         $data_kesimpulan_pelanggaran = LibDataPelanggaran::fetchDataKesimpulanPelanggaran($auth_data, $id);
 
-        return view('bk/data-pelanggaran/kesimpulan-pelanggaran/edit-kesimpulan-pelanggaran', compact('auth_data', 'data_kesimpulan_pelanggaran', 'setting_bk'));
+        return view('bk/data-pelanggaran/kesimpulan-pelanggaran/edit-kesimpulan-pelanggaran', compact('auth_data', 'data_kesimpulan_pelanggaran'));
     }
 
     public function datatablesKesimpulanPelanggaran(Request $request)
@@ -92,28 +88,13 @@ class KesimpulanPelanggaranController extends BaseController
 
         $input = (object) $request->input();
 
-        $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
-
-        if ($setting_bk == 1) {
-
-            $validator = Validator::make($request->all(), [
-                'nm_kesimpulan_pelanggaran' => 'required',
-                'poin_bawah_kesimpulan_pelanggaran' => 'required',
-                'poin_atas_kesimpulan_pelanggaran' => 'required',
-                'deskripsi_kesimpulan_pelanggaran_1' => 'required'
-            ]);
-        } else {
-
-            $validator = Validator::make($request->all(), [
-                'nm_kesimpulan_pelanggaran' => 'required',
-                'poin_bawah_kesimpulan_pelanggaran' => 'required',
-                'poin_atas_kesimpulan_pelanggaran' => 'required',
-                // 'deskripsi_kesimpulan_pelanggaran_1' => 'required'
-                /*'deskripsi_kesimpulan_pelanggaran_2' => 'required',
-                'deskripsi_kesimpulan_pelanggaran_3' => 'required'*/
-            ]);
-        }
-
+        $validator = Validator::make($request->all(), [
+            'nm_kesimpulan_pelanggaran' => 'required',
+            'poin_bawah_kesimpulan_pelanggaran' => 'required',
+            'poin_atas_kesimpulan_pelanggaran' => 'required',
+            'deskripsi_kesimpulan_pelanggaran_1' => 'required'
+        ]);
+        
         if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
@@ -131,11 +112,9 @@ class KesimpulanPelanggaranController extends BaseController
                 $kesimpulanPelanggaran->nm_kesimpulan_pelanggaran           = $input->nm_kesimpulan_pelanggaran;
                 $kesimpulanPelanggaran->poin_bawah_kesimpulan_pelanggaran   = $input->poin_bawah_kesimpulan_pelanggaran;
                 $kesimpulanPelanggaran->poin_atas_kesimpulan_pelanggaran    = $input->poin_atas_kesimpulan_pelanggaran;
-                if ($setting_bk == 1) {
-                    $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
-                    $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
-                    $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
-                }
+                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
+                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
+                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
                 $kesimpulanPelanggaran->id_sekolah                          = $input->auth_data->pengguna->id_sekolah;
                 $kesimpulanPelanggaran->created_by                          = $input->auth_data->pengguna->id_pengguna;
                 $kesimpulanPelanggaran->save();
@@ -151,11 +130,9 @@ class KesimpulanPelanggaranController extends BaseController
                 $kesimpulanPelanggaran->nm_kesimpulan_pelanggaran           = $input->nm_kesimpulan_pelanggaran;
                 $kesimpulanPelanggaran->poin_bawah_kesimpulan_pelanggaran   = $input->poin_bawah_kesimpulan_pelanggaran;
                 $kesimpulanPelanggaran->poin_atas_kesimpulan_pelanggaran    = $input->poin_atas_kesimpulan_pelanggaran;
-                if ($setting_bk == 1) {
-                    $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
-                    $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
-                    $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
-                }
+                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
+                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
+                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
                 $kesimpulanPelanggaran->updated_by                          = $input->auth_data->pengguna->id_pengguna;
                 $kesimpulanPelanggaran->updated_at                          = $now;
                 $kesimpulanPelanggaran->save();

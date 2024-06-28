@@ -182,5 +182,11 @@
             d.id_kelas = id_kelas;
         };
         primary_table_belum_lengkap.ajax.reload(null, false);
+
+        var primary_table_sudah_lengkap = $('#primary_table_sudah_lengkap').DataTable();
+        primary_table_sudah_lengkap.settings()[0].ajax.data = function(d) {
+            d.id_kelas = id_kelas;
+        };
+        primary_table_sudah_lengkap.ajax.reload(null, false);
     }
 </script>
