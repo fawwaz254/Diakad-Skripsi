@@ -48,13 +48,19 @@ class WelcomeController extends BaseController{
                                     ->pluck('nm_kelas')
                                     ->toArray();
 
-            $pelanggaran = PelanggaranSiswa::where('created_by',$pengguna->id_pengguna)->whereIn('id_kelas',$bk_kelas)->where('id_semester',$semester_aktif->id_semester)->get();
+            // $pelanggaran = PelanggaranSiswa::where('created_by',$pengguna->id_pengguna)->whereIn('id_kelas',$bk_kelas)->where('id_semester',$semester_aktif->id_semester)->get();
+            $pelanggaran = PelanggaranSiswa::where('id_guru_input', null)
+                                            ->where('id_semester',$semester_aktif->id_semester)
+                                            ->get();
             $pelanggaran_belum_ditindak = $pelanggaran->where('is_sudah_tindakan',0)->count();
             $pelanggaran_sudah_ditindak = $pelanggaran->where('is_sudah_tindakan',1)->count();
 
             $pelanggaran = $pelanggaran->count();
 
-            $pelanggaran_orang_lain = PelanggaranSiswa::where('created_by','!=',$pengguna->id_pengguna)->whereIn('id_kelas',$bk_kelas)->where('id_semester',$semester_aktif->id_semester)->get();
+            // $pelanggaran_orang_lain = PelanggaranSiswa::where('created_by','!=',$pengguna->id_pengguna)->whereIn('id_kelas',$bk_kelas)->where('id_semester',$semester_aktif->id_semester)->get();
+            $pelanggaran_orang_lain = PelanggaranSiswa::whereNotNull('id_guru_input')
+                                                    ->where('id_semester',$semester_aktif->id_semester)
+                                                    ->get();
             $pelanggaran_orang_lain_belum_ditindak = $pelanggaran_orang_lain->where('is_sudah_tindakan',0)->count();
             $pelanggaran_orang_lain_sudah_ditindak = $pelanggaran_orang_lain->where('is_sudah_tindakan',1)->count();
 

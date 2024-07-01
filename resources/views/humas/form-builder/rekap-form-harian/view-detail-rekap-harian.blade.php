@@ -155,10 +155,48 @@
 
 
 <script>
+    // Custom header print PDF humas datatables
+    var header_pdf = '{{ $auth_data->sekolah_data->nm_sekolah }}'
+    var nm_form = '{{ $form->nm_form }}'
+    var buttonConfigHumas = {
+            buttons: [{
+                extend: "pageLength",
+                className: "bg-amber waves-effect"
+            }, {
+                extend: "print",
+                text: "PDF",
+                title: header_pdf + '<br>' + nm_form,
+                className: "bg-pink waves-effect",
+                orientation: "landscape",
+                exportOptions: {
+                    columns: ":visible"
+                },
+                customize: function(e) {
+                    $(e.document.body).css("font-size", "10pt"), $(e.document.body).find("table").addClass(
+                        "compact").css("font-size", "inherit")
+                }
+            }, {
+                extend: "excelHtml5",
+                className: "bg-green waves-effect",
+                exportOptions: {
+                    columns: ":visible"
+                }
+            }, {
+                extend: "colvis",
+                text: "Kolom yang ditampilkan",
+                className: "bg-blue waves-effect"
+            }],
+            dom: {
+                button: {
+                    className: "btn"
+                }
+            }
+        }
+
     var primary_table = $('#primary_table').DataTable({
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
-        buttons: dtButtonConfig,
+        buttons: buttonConfigHumas,
         lengthMenu: [
             [-1],
             ['All'],
@@ -170,11 +208,6 @@
             '{{ $form->id_form }}' + '/' + $('input[name=date]').val() + '/' + $('select[name=id_kelas]')
             .val());
     }
-
-    // var primary_table = $('#primary_table').DataTable({
-    //     ordering: false,
-    //     paging: false
-    // });
 
     $("input").on("change", function() {
         this.setAttribute(
