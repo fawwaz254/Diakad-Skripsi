@@ -159,7 +159,7 @@ class ManajemenMateriAjarController extends BaseController
 
                     foreach ($nm_file as $key => $value) {
                         if (isset(request()->file[$key])) {
-                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', request()->file[$key], 'public');
+                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar', request()->file[$key], 'public');
 
                             $materi_ajar_file                        = new MateriAjarFile;
                             $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -217,7 +217,7 @@ class ManajemenMateriAjarController extends BaseController
                     foreach ($nm_file as $key => $value) {
                         if ($value) {
                             if (isset(request()->file[$key])) {
-                                $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', request()->file[$key], 'public');
+                                $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar', request()->file[$key], 'public');
                                 $materi_ajar_file                        = new MateriAjarFile;
                                 $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $materi_ajar_file->id_materi_ajar        = $id;
