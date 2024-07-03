@@ -46,16 +46,16 @@
                                     <th>Mata Pelajaran</th>
                                     <th>Jenis Mata Pelajaran</th>
                                     <th>Kelas</th>
-                                    <th>Nilai Siswa Terisi</th>
-                                    {{-- <th>Nilai SAS Terisi Lengkap</th> --}}
                                     <th>Semester</th>
+                                    {{-- <th>Nilai SAS Terisi Lengkap</th> --}}
+                                    <th>Input Nilai</th>
 
                                     {{-- <th>Nilai</th>
                                     <th>Template Excel</th>
                                     <th>Action</th> --}}
-                                    <th>Input Nilai</th>
                                     <th>Action</th>
                                     <th>Pembuat</th>
+                                    {{-- <th>Pembuat</th> --}}
                                 </tr>
                             </thead>
                         </table>

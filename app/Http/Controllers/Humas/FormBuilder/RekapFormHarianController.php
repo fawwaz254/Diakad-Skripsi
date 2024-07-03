@@ -11,6 +11,7 @@ use App\Models\JawabanForm;
 use App\Models\Kelas;
 use App\Models\Pengguna;
 use App\Models\PertanyaanForm;
+use App\Models\Sekolah;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
