@@ -38,11 +38,11 @@ class LibGuru
                 'guru.nip_guru',
                 'unit_kerja.nm_unit_kerja',
                 'status_pengguna.nm_status_pengguna',
-                DB::raw("(SELECT COUNT(*) FROM pengampu_mp 
-                            JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengampu_mp.id_kelas_mp 
-                            JOIN semester ON semester.id_semester = kelas_mp.id_semester 
-                            WHERE pengampu_mp.id_guru = guru.id_guru 
-                            AND semester.is_aktif_semester = 1 AND pengampu_mp.deleted_at IS NULL) 
+                DB::raw("(SELECT COUNT(*) FROM pengampu_mp
+                            JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengampu_mp.id_kelas_mp
+                            JOIN semester ON semester.id_semester = kelas_mp.id_semester
+                            WHERE pengampu_mp.id_guru = guru.id_guru
+                            AND semester.is_aktif_semester = 1 AND pengampu_mp.deleted_at IS NULL)
                             AS jml_mengajar_semester_aktif")
             )
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
