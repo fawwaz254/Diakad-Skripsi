@@ -356,11 +356,15 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('laporan-akademik')->group(function () {
 
             Route::prefix('jurnal-guru')->group(function () {
+                Route::get('print-pdf/{id_kelas_mp}', [JurnalGuruController::class, 'printPdfJurnalGuru']);
+
                 Route::get('/', [JurnalGuruController::class, 'viewJurnalGuru']);
                 Route::get('/{id_guru}/{id_semester}', [JurnalGuruController::class, 'viewJurnalGuru']);
                 Route::get('datatables/{id_guru}/{id_semester}', [JurnalGuruController::class, 'datatablesJurnalGuru']);
+
             });
             Route::prefix('jurnal-kelas')->group(function () {
+                Route::get('print-pdf/{id_kelas_mp}', [JurnalKelasController::class, 'printPdfJurnalKelas']);
 
                 Route::get('/', [JurnalKelasController::class, 'viewJurnalKelas']);
                 Route::get('/{id_kelas}/{id_semester}', [JurnalKelasController::class, 'viewJurnalKelas']);
