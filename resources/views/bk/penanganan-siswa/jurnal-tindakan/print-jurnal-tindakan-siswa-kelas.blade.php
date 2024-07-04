@@ -14,6 +14,11 @@
         td p {
             margin: 0;
         }
+        .signature-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
     </style>
 
     <style type="text/css" media="print">
@@ -23,6 +28,10 @@
                 width: auto;
                 min-height: initial;
                 page-break-before: always;
+            }
+            .signature-container {
+                display: flex;
+                justify-content: space-around;
             }
         }
     </style>
@@ -200,9 +209,9 @@
                         </table>
                         {{-- @if ($setting_bk)
                         @else --}}
-                            <fieldset style="height: 100px;border:1px solid">
+                            {{-- <fieldset style="height: 100px;border:1px solid">
                                 <p></p>
-                            </fieldset>
+                            </fieldset> --}}
                         {{-- @endif --}}
                     </div>
 
@@ -215,6 +224,9 @@
                         </fieldset>
                     </div>
 
+                    
+                </div>
+                <div class="signature-container">
                     <div class="col-md-4" style="margin-top:50px;">
                         Mengetahui <br> Kepala Sekolah,
                         <br>
@@ -242,15 +254,16 @@
                             <br>
                             <br>
                             <br>
+                            <br>
                         @endif
                         <div>{{ $sekolah_data->nm_kepala_sekolah }}</div>
                     </div>
-
+    
                     <div class="col-md-4" style="margin-top:75px;">
                         Orang Tua / Wali Peserta Didik,
                         <div style="margin-top:100px;">...........................</div>
                     </div>
-
+    
                     <div class="col-md-4" style="margin-top:50px;">
                         Sidoarjo,
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
