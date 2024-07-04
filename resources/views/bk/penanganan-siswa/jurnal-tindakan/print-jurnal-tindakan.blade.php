@@ -16,6 +16,19 @@
         td p {
             margin: 0;
         }
+
+        .signature-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+
+        @media print {
+            .signature-container {
+                display: flex;
+                justify-content: space-around;
+            }
+        }
     </style>
 </head>
 
@@ -185,8 +198,10 @@
                     <p>{{ $catatan_sekolah }}</p>
                 </fieldset>
             </div>
-
-            <div class="col-md-4" style="margin-top:50px;">
+        </div>
+        {{-- Tanda Tangan --}}
+        <div class="signature-container">
+            <div class="signature" style="margin-top:50px;">
                 Mengetahui <br> Kepala Sekolah,
                 <br>
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
@@ -213,16 +228,17 @@
                     <br>
                     <br>
                     <br>
+                    <br>
                 @endif
                 <div>{{ $sekolah_data->nm_kepala_sekolah }}</div>
             </div>
 
-            <div class="col-md-4" style="margin-top:75px;">
+            <div class="signature" style="margin-top:75px;">
                 Orang Tua / Wali Peserta Didik,
                 <div style="margin-top:100px;">...........................</div>
             </div>
 
-            <div class="col-md-4" style="margin-top:50px;">
+            <div class="signature" style="margin-top:50px;">
                 Sidoarjo,
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                     22 Juni 2024
