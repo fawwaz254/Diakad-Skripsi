@@ -1,3 +1,6 @@
+<style>
+
+</style>
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
@@ -29,8 +32,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>NIS</th>
-                                        <th>Nama</th>
-                                        <th>Alasan</th>
+                                        <th>Kehadiran siswa</th>
+                                        <th>Nilai Karakter</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -68,7 +71,7 @@
                                 @if ($presensi_mp_aktif)
                                     <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ $presensi_mp_aktif->uraian_materi }}</textarea>
                                 @else
-                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ $data_kelas->uraian_materi }}</textarea>
+                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ !empty($mapel_rpp_detail)? $mapel_rpp_detail->deskripsi : ''  }}</textarea>
                                 @endif
                             </div>
                         </div>
@@ -164,25 +167,15 @@
             {
                 data: 'nis_siswa',
                 name: 'siswa.nis_siswa',
-                render: function(data) {
-                    if (data.status_pengguna.status == 1) {
-                        return data.nis_siswa + '<br><input type="hidden" name="id_siswa[]" value="' +
-                            data.id_siswa + '" >';
-                    } else {
-                        return '';
-                    }
-                }
-            },
-            {
-                data: 'nm_pengguna',
-                name: 'pengguna.nm_pengguna'
+                visible: false,
             },
             {
                 data: 'alasan',
-                name: 'alasan',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
+                name: 'pengguna.nm_pengguna',
+                render: function(data, type, row) {
+                    var data_siswa = `${row.nis_siswa.nis_siswa}<br/>
+                    ${row.nm_pengguna}<br/>`;
+
                     if (data.status_pengguna.status == 1) {
                         var html = '';
                         $.each(data.options, function(index, item) {
@@ -194,12 +187,31 @@
                                     '</option>';
                             }
                         })
-                        return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">' +
+                        return data_siswa + '<br><input type="hidden" name="id_siswa[]" value="' + row.nis_siswa.id_siswa + '"/><select class="form-control show-tick" style="width:85px;" name="alasan[]">' +
                             html +
                             '</select>';
                     } else {
-                        return '<p class="font-underline col-orange font-24">' + data.status_pengguna
+                        return data_siswa + '<p class="font-underline col-orange font-24">' + data.status_pengguna
                             .nm_status + '</p>';
+                    }
+                }
+            },
+            {
+                data: 'nilai_karakter',
+                searchable: false,
+                orderable: false,
+                render: function(data, type, row) {
+                    if (data.status_pengguna.status == 1) {
+                        var html = '';
+                        var i = 0;
+                        $.each(data.options, function(index, item) {
+                            html += `<span><input id="ck-${row.nis_siswa.id_siswa}-${i}" type="checkbox" name="id_karakter_siswa[${row.nis_siswa.id_siswa}][]" checked class="filled-in" value="${item}">
+                                        <label for="ck-${row.nis_siswa.id_siswa}-${i}">${item}</label></span><br/>`;
+                            i++;
+                        })
+                        return html;
+                    } else {
+                        return '';
                     }
                 }
             },

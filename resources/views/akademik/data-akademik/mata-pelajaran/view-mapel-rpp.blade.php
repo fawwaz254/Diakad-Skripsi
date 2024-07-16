@@ -1,15 +1,15 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#data-akademik/mata-pelajaran/add') }}"><i
-                    class="material-icons">note_add</i><span>Tambah Mata Pelajaran</span></a></h2>
+            href="{{ url(Request::segment(1) . '#data-akademik/mata-pelajaran/rpp/add?id='. $mata_pelajaran->id_mata_pelajaran) }}"><i
+                    class="material-icons">note_add</i><span>Tambah RPP</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>DATA MATA PELAJARAN</h2>
+                    <h2>DATA RPP untuk Mata Pelajaran {{$mata_pelajaran->nm_mata_pelajaran}} ({{$mata_pelajaran->kd_mata_pelajaran}})</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -19,12 +19,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Jurusan</th>
                                     <th>Kode Mapel</th>
                                     <th>Nama Mapel</th>
-                                    <th>Jenis Mapel</th>
-                                    <th>RPP</th>
-                                    <th>Status</th>
+                                    <th>RPP Semester</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -39,10 +36,9 @@
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'data-akademik';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'mata-pelajaran/datatables';
-    var edit_url = role_url + '#' + modul_url + '/' + 'mata-pelajaran/edit';
-    var rpp_url = role_url + '#' + modul_url + '/' + 'mata-pelajaran/rpp';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-mata-pelajaran/delete';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'mata-pelajaran/rpp/datatables?id={{$mata_pelajaran->id_mata_pelajaran}}';
+    var edit_url = role_url + '#' + modul_url + '/' + 'mata-pelajaran/rpp/edit';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'mata-pelajaran/rpp/action/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -58,54 +54,27 @@
                 orderable: false
             },
             {
-                data: 'nm_jurusan',
-                name: 'jurusan.nm_jurusan'
+                data: 'mata_pelajaran.kd_mata_pelajaran'
             },
             {
-                data: 'kd_mata_pelajaran',
-                name: 'mata_pelajaran.kd_mata_pelajaran'
+                data: 'mata_pelajaran.nm_mata_pelajaran',
             },
             {
-                data: 'nm_mata_pelajaran',
-                name: 'mata_pelajaran.nm_mata_pelajaran'
-            },
-            {
-                data: 'nm_jenis_mata_pelajaran',
-                name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran'
+                data: 'semester.kode_semester',
             },
             {
                 data: 'action',
-                name: 'action',
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        rpp_url + '?id=' + data.id + '">' +
-                        '    <i class="material-icons">file_upload</i>' +
-                        '</a> ';
-                }
-            },
-            {
-                data: 'status',
-                name: 'status'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        edit_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">edit</i>' +
-                        '</a> ' +
-                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
                         delete_url + '\', this)" data-id="' + data.id + '">' +
                         '    <i class="material-icons">delete_forever</i>' +
                         '</button>';
                 }
             }
-        ]
+        ],
+        order: [[3, 'desc']]
     });
 
     primary_table.on('draw', function() {
