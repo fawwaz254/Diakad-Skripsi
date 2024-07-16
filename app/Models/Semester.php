@@ -42,7 +42,15 @@ class Semester extends Model
         }
     }
 
+    public function isAktif(){
+        if($this->is_aktif_semester == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
-
-
+    public function semesterLengkap(){
+        return $this->tahun_ajaran . ' ('. $this->nm_semester . ')';
+    }
 }

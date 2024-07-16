@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\App;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
+use App\Models\MapelRPP;
+use App\Models\MapelRPPDetail;
+use App\Models\RewardSiswa;
 use App\Models\Setting;
 use Auth;
 use DB;
@@ -127,14 +130,22 @@ class AbsensiSiswaController extends BaseController
 
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
 
-        return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'pertemuan_ke', 'presensi_mp_aktif', 'id_jadwal_kelas_mp', 'data'));
+        if($mapel_rpp = MapelRPP::where('id_semester', $semester_aktif->id_semester)->where('id_mata_pelajaran', $data_kelas->id_mata_pelajaran)->first()){
+            $mapel_rpp_detail = MapelRPPDetail::where('id_mapel_rpp', $mapel_rpp->id_mapel_rpp)->where('pertemuan_ke', $pertemuan_ke)->first();
+        }else{
+            $mapel_rpp_detail = null;
+        }
+
+        return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'pertemuan_ke', 'presensi_mp_aktif', 'id_jadwal_kelas_mp', 'data', 'mapel_rpp_detail'));
     }
 
     public function datatablesKBMAbsensiSiswa(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke)
     {
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
 
         $list_data = LibSiswa::fetchDataSiswaKelasMpTanpaPloting($auth_data, $id_jadwal_kelas_mp, $pertemuan_ke);
 
@@ -145,6 +156,13 @@ class AbsensiSiswaController extends BaseController
         } else {
             $data_presensi_mp_siswa = null;
         }
+
+        if($mapel_rpp = MapelRPP::where('id_semester', $semester_aktif->id_semester)->where('id_mata_pelajaran', $data_kelas->id_mata_pelajaran)->first()){
+            $mapel_rpp_detail = MapelRPPDetail::where('id_mapel_rpp', $mapel_rpp->id_mapel_rpp)->where('pertemuan_ke', $pertemuan_ke)->first();
+        }else{
+            $mapel_rpp_detail = null;
+        }
+
         return Datatables::of($list_data)
             ->editColumn('nis_siswa', function ($item) {
                 $data = array(
@@ -171,6 +189,21 @@ class AbsensiSiswaController extends BaseController
                 $data = array(
                     'options' => $options,
                     'kehadiran' => $kehadiran,
+                    'status_pengguna' => array(
+                        'status' => $item->aktif_status_pengguna,
+                        'nm_status' => $item->nm_status_pengguna
+                    )
+                );
+                return $data;
+            })
+            ->addColumn('nilai_karakter', function ($item) use ($mapel_rpp_detail) {
+                if(!empty($mapel_rpp_detail)){
+                    $options = explode('#', $mapel_rpp_detail->nilai_karakter);
+                }else{
+                    $options = [];
+                }
+                $data = array(
+                    'options' => $options,
                     'status_pengguna' => array(
                         'status' => $item->aktif_status_pengguna,
                         'nm_status' => $item->nm_status_pengguna
@@ -414,6 +447,29 @@ class AbsensiSiswaController extends BaseController
                         $presensi_mp_siswa->save();
                     }
 
+                    if(isset($input->id_karakter_siswa)){
+                        $data_karakter_siswa = $input->id_karakter_siswa;
+                        foreach ($input->id_siswa as $id_siswa) {
+                            RewardSiswa::where('model_event', 'PresensiMp')->where('id_event', $presensi_mp->id_presensi_mp)->delete();
+                            // make id
+
+                            foreach($data_karakter_siswa[$id_siswa] as $karakter_siswa){
+                                $id_reward_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+    
+                                $reward_siswa                           = new RewardSiswa();
+                                $reward_siswa->id_reward_siswa          = $id_reward_siswa;
+                                $reward_siswa->model_event              = 'PresensiMp';
+                                $reward_siswa->id_event                 = $presensi_mp->id_presensi_mp;
+                                $reward_siswa->id_kelas                 = $id_siswa;
+                                $reward_siswa->id_siswa                 = $presensi_mp->kelas_mp->id_kelas;
+                                $reward_siswa->nm_reward_siswa          = $karakter_siswa;
+                                $reward_siswa->id_pengguna_reward_siswa = $input->auth_data->pengguna->id_pengguna;
+                                $reward_siswa->created_by               = $input->auth_data->pengguna->id_pengguna;
+                                $reward_siswa->save();
+                            }
+                        }
+                    }
+
                     DB::commit();
                     // all good
 
@@ -426,6 +482,7 @@ class AbsensiSiswaController extends BaseController
                     DB::rollback();
                     // something went wrong
 
+                    dd($e);
                     return [
                         'status' => 203, // GAGAL
                         'message' => 'Absensi KBM Gagal!'

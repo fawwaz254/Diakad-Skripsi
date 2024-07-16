@@ -10,6 +10,7 @@ use App\Http\Controllers\Akademik\AktivitasSemester\UsulanMataAjarController;
 use App\Http\Controllers\Akademik\DataAkademik\AktivasiKurikulumController;
 use App\Http\Controllers\Akademik\DataAkademik\DataJenisMataPelajaranController;
 use App\Http\Controllers\Akademik\DataAkademik\KurikulumController;
+use App\Http\Controllers\Akademik\DataAkademik\MapelRppController;
 use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
 use App\Http\Controllers\Akademik\DataAkademik\SetupMapelKurikulumController;
 use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
@@ -167,8 +168,16 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('mata-pelajaran/datatables', [MataPelajaranController::class, 'datatablesMataPelajaran']);
             Route::get('mata-pelajaran/add', [MataPelajaranController::class, 'addMataPelajaran']);
             Route::get('mata-pelajaran/edit/{id}', [MataPelajaranController::class, 'editMataPelajaran']);
-
             Route::post('action-mata-pelajaran/{mode}/{id}', [MataPelajaranController::class, 'actionMataPelajaran']);
+
+            Route::prefix('mata-pelajaran/rpp')->group(function () {
+                Route::get('/', [MapelRppController::class, 'viewList']);
+                Route::get('add', [MapelRppController::class, 'viewAdd']);
+
+                Route::get('datatables', [MapelRppController::class, 'actionDatatables']);
+                Route::post('action/{mode}/{id}', [MapelRppController::class, 'actionItem']);
+            });
+
 
             //MENU Data Jenis Mata Pelajaran
             Route::get('jenis-mata-pelajaran', [DataJenisMataPelajaranController::class, 'viewDataJenisMataPelajaran']);
