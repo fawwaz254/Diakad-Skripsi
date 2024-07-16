@@ -165,7 +165,7 @@ class BiayaSiswaController extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_kelompok_biaya'     => 'required'
+            'id_kelompok_biaya' => 'required'
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
@@ -186,8 +186,8 @@ class BiayaSiswaController extends BaseController
 
                 foreach ($id_siswa_collection->chunk(25) as $chunk_id_siswa) {
                     foreach ($chunk_id_siswa as $id_siswa) {
-                        $siswa                          = Siswa::find($id_siswa);
-                        $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
+                        $siswa = Siswa::find($id_siswa);
+                        $siswa->id_kelompok_biaya = $input->id_kelompok_biaya;
                         $siswa->save();
                     }
                 }
@@ -203,8 +203,8 @@ class BiayaSiswaController extends BaseController
 
                     foreach ($id_siswa_collection->chunk(25) as $chunk_id_siswa) {
                         foreach ($chunk_id_siswa as $id_siswa) {
-                            $siswa                          = Siswa::find($id_siswa);
-                            $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
+                            $siswa = Siswa::find($id_siswa);
+                            $siswa->id_kelompok_biaya = $input->id_kelompok_biaya;
                             $siswa->save();
                         }
                     }
@@ -223,8 +223,8 @@ class BiayaSiswaController extends BaseController
 
                 foreach ($id_siswa_collection->chunk(25) as $chunk_id_siswa) {
                     foreach ($chunk_id_siswa as $id_siswa) {
-                        $siswa                          = Siswa::find($id_siswa);
-                        $siswa->id_kelompok_biaya       = null;
+                        $siswa = Siswa::find($id_siswa);
+                        $siswa->id_kelompok_biaya = null;
                         $siswa->save();
                     }
                 }
@@ -243,7 +243,7 @@ class BiayaSiswaController extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_kelompok_biaya'     => 'required'
+            'id_kelompok_biaya' => 'required'
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
@@ -257,8 +257,8 @@ class BiayaSiswaController extends BaseController
 
             if ($mode == 'set') {
                 // make object to find id
-                $siswa                          = Siswa::find($id);
-                $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
+                $siswa = Siswa::find($id);
+                $siswa->id_kelompok_biaya = $input->id_kelompok_biaya;
                 $siswa->save();
 
                 return [
@@ -268,13 +268,13 @@ class BiayaSiswaController extends BaseController
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
-                $siswa                          = Siswa::find($id);
+                $siswa = Siswa::find($id);
                 isset($input->ganti_kelompok_biaya);
                 if (isset($input->ganti_kelompok_biaya) && $input->ganti_kelompok_biaya == '1') {
                     $auth_data = $input->auth_data;
                     $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-                    //validasi 
+                    //validasi
                     $validasi_pembayaran = TagihanBiaya::where('is_tagih', '0')->where('id_siswa', $siswa->id_siswa)->whereHas('detail_biaya.biaya_sekolah', function ($query) use ($siswa, $semester_aktif) {
                         $query->where('id_kelompok_biaya', '=', $siswa->id_kelompok_biaya)->whereHas('semester', function ($query) use ($semester_aktif) {
                             $query->where('thn_akademik_semester', '=', $semester_aktif->thn_akademik_semester);
@@ -302,7 +302,7 @@ class BiayaSiswaController extends BaseController
                         $p->delete();
                     }
 
-                    foreach ($tagihan_biaya_lama  as $t) {
+                    foreach ($tagihan_biaya_lama as $t) {
                         $t->forceDelete();
                     }
 
@@ -327,23 +327,23 @@ class BiayaSiswaController extends BaseController
                         }
 
                         if (empty($detail_biaya->deleted_at)) {
-                            $tagihanBiaya                       = new TagihanBiaya;
-                            $tagihanBiaya->id_tagihan_biaya     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $tagihanBiaya->id_siswa             = $siswa->id_siswa;
-                            $tagihanBiaya->id_kelas             = $siswa->id_kelas;
-                            $tagihanBiaya->id_detail_biaya      = $detail_biaya->id_detail_biaya;
-                            $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
-                            $tagihanBiaya->denda_biaya          = 0;
-                            $tagihanBiaya->is_tagih             = 1;
-                            $tagihanBiaya->keterangan           = $detail_biaya->keterangan_biaya;
-                            $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
+                            $tagihanBiaya = new TagihanBiaya;
+                            $tagihanBiaya->id_tagihan_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $tagihanBiaya->id_siswa = $siswa->id_siswa;
+                            $tagihanBiaya->id_kelas = $siswa->id_kelas;
+                            $tagihanBiaya->id_detail_biaya = $detail_biaya->id_detail_biaya;
+                            $tagihanBiaya->besar_biaya = $detail_biaya->besar_biaya;
+                            $tagihanBiaya->denda_biaya = 0;
+                            $tagihanBiaya->is_tagih = 1;
+                            $tagihanBiaya->keterangan = $detail_biaya->keterangan_biaya;
+                            $tagihanBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
                             $tagihanBiaya->save();
                         }
                     }
                 }
 
 
-                $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
+                $siswa->id_kelompok_biaya = $input->id_kelompok_biaya;
                 $siswa->save();
 
                 return [
@@ -353,8 +353,8 @@ class BiayaSiswaController extends BaseController
                 ];
             } elseif ($mode == 'delete') {
                 // make object to find id
-                $siswa                          = Siswa::find($id);
-                $siswa->id_kelompok_biaya       = null;
+                $siswa = Siswa::find($id);
+                $siswa->id_kelompok_biaya = null;
                 $siswa->save();
 
                 return [
