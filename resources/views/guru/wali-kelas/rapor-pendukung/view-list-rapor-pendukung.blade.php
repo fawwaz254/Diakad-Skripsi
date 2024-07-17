@@ -107,14 +107,13 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    // var html = `<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" disabled="true" href="${base_url}/${role_url}#${modul_url}/rapor-pendukung/predikat/${data.id}">
-                    var html = `<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" disabled="true">
+                    var html = `<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="${base_url}/${role_url}#${modul_url}/rapor-pendukung/predikat/${data.id}">
                         <i class="material-icons">add</i>
                     </a>`;
 
-                    html += `<a class="btn" target="_blank" href="${base_url}/${role_url}/${modul_url}/rapor-pendukung/indikator/${data.id}/template">
-                        Template Excel
-                    </a>`;
+                    // html += `<a class="btn" target="_blank" href="${base_url}/${role_url}/${modul_url}/rapor-pendukung/indikator/${data.id}/template">
+                    //     Template Excel
+                    // </a>`;
 
                     return html;
                 }
