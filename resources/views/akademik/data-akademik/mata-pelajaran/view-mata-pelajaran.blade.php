@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#data-akademik/mata-pelajaran/add') }}"><i
+                href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/mata-pelajaran/add') }}"><i
                     class="material-icons">note_add</i><span>Tambah Mata Pelajaran</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -38,7 +38,7 @@
 </div>
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var modul_url = 'data-akademik';
+    var modul_url = '{{Request::segment(2)}}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'mata-pelajaran/datatables';
     var edit_url = role_url + '#' + modul_url + '/' + 'mata-pelajaran/edit';
     var rpp_url = role_url + '#' + modul_url + '/' + 'mata-pelajaran/rpp';
