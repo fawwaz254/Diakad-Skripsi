@@ -64,6 +64,8 @@ use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
 use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
+use App\Http\Controllers\Akademik\DataAkademik\MapelRppController;
+use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
 use App\Http\Controllers\Akademik\RaporAgama\CetakRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
@@ -339,6 +341,21 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}', [SetJadwalKelasGuruController::class, 'viewTambahJadwalKelas']);
             Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasGuruController::class, 'actionTambahJadwalKelas']);
             Route::post('getMataPelajaran', [SetJadwalKelasGuruController::class, 'getMataPelajaran']);
+
+             // MENU Data Mata Pelajaran
+            Route::get('mata-pelajaran', [MataPelajaranController::class, 'viewMataPelajaran']);
+            Route::get('mata-pelajaran/datatables', [MataPelajaranController::class, 'datatablesMataPelajaran']);
+            Route::get('mata-pelajaran/add', [MataPelajaranController::class, 'addMataPelajaran']);
+            Route::get('mata-pelajaran/edit/{id}', [MataPelajaranController::class, 'editMataPelajaran']);
+            Route::post('action-mata-pelajaran/{mode}/{id}', [MataPelajaranController::class, 'actionMataPelajaran']);
+
+            Route::prefix('mata-pelajaran/rpp')->group(function () {
+                Route::get('/', [MapelRppController::class, 'viewList']);
+                Route::get('add', [MapelRppController::class, 'viewAdd']);
+
+                Route::get('datatables', [MapelRppController::class, 'actionDatatables']);
+                Route::post('action/{mode}/{id}', [MapelRppController::class, 'actionItem']);
+            });
         });
 
         // Route::prefix('aktivitas-semester')->group(function () {
