@@ -300,7 +300,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Sidoarjo, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        Sidoarjo, {{ $tanggal_cetak }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>

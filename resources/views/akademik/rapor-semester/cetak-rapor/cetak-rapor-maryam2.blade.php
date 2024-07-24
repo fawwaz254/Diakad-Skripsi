@@ -317,7 +317,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        {{ 'Surabaya, 21 Juni 2024' }}
+                        Surabaya, {{ $tanggal_cetak }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>

@@ -249,7 +249,7 @@
                         @endif
                     </td>
                     <td style="border-style : hidden;width: 33%;position: relative;">
-                        Sidoarjo, 16 Maret 2024<br><br>
+                        Sidoarjo, {{ $tanggal_cetak }}<br><br>
                         Kepala Sekolah,<br><br><br><br><br><br><br><br><br>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                             <img style="position: absolute; top: 5%; margin-left:-20px; margin-top:35px"
