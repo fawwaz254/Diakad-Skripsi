@@ -20,6 +20,7 @@ use App\Models\NilaiTambahanRapor;
 use App\Models\PribadiSisipan;
 use App\Models\Rapor;
 use App\Models\Semester;
+use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\TambahanRapor;
 use App\Models\WaliKelas;
@@ -27,6 +28,7 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Carbon\Carbon;
 
 class CetakRaporSemesterController extends Controller
 {
@@ -36,8 +38,48 @@ class CetakRaporSemesterController extends Controller
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if (isset($tanggal)) {
+            $tanggal_cetak = $tanggal->value;
+        } else {
+            $tanggal_cetak = date('Y-m-d');
+        }
 
-        return view('akademik/rapor-semester/cetak-rapor/view-cetak-rapor', compact('auth_data', 'semester_aktif', 'data_semester'));
+        return view('akademik/rapor-semester/cetak-rapor/view-cetak-rapor', compact('auth_data', 'semester_aktif', 'data_semester', 'tanggal_cetak'));
+    }
+
+    public function saveTanggalCetakSemester(Request $request)
+    {
+        $input = (object) $request->input();
+        $tanggal = $input->tanggal;
+
+        if (empty($tanggal)) {
+            $data = [
+                'code'    => 400,
+                'sukses'  => 0,
+                'message' => 'Tanggal harus di set!'
+            ];
+            return json_encode($data);
+        }
+
+        $set_tanggal_cetak_rapor_semester = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        $set_tanggal_cetak_rapor_semester->value = $tanggal;
+
+        if ($set_tanggal_cetak_rapor_semester->save()) {
+            $data = [
+                'code'      => 200,
+                'sukses'    => 1,
+                'message'   => 'Data Berhasil Disimpan!'
+            ];
+        } else {
+            $data = [
+                'code'      => 300,
+                'sukses'    => 0,
+                'message'   => 'Data Gagal Disimpan!'
+            ];
+        }
+
+        return json_encode($data);
     }
 
     public function datatablesCetakRaporSemester(Request $request)
@@ -250,7 +292,14 @@ class CetakRaporSemesterController extends Controller
                 }
             }
 
-            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'ekskul_tambahan_rapor', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'kehadiran_tambahan_rapor', 'tambahan',  'wali_kelas'));
+            $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+                if (isset($tanggal)) {
+                    $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+                } else {
+                    $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+                }
+
+            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-sitiaminah', compact('auth_data', 'ekskul_tambahan_rapor', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'kehadiran_tambahan_rapor', 'tambahan',  'wali_kelas', 'tanggal_cetak'));
         } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
 
             foreach ($kelompok_mapel_rapor as $k) {
@@ -329,7 +378,14 @@ class CetakRaporSemesterController extends Controller
                     }
                 }
 
-                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor'));
+                $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+                if (isset($tanggal)) {
+                    $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+                } else {
+                    $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+                }
+
+                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'tanggal_cetak'));
             } else {
 
                 $nilaiRapors = NilaiRapor::where('nilai', '>', 0)->whereIn('id_rapor', $rapors->pluck('id_rapor'))
@@ -415,7 +471,14 @@ class CetakRaporSemesterController extends Controller
                     }
                 }
 
-                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor'));
+                $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+                if (isset($tanggal)) {
+                    $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+                } else {
+                    $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+                }
+
+                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-maryam2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'tanggal_cetak'));
             }
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
             $nilaiRapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))
@@ -520,8 +583,14 @@ class CetakRaporSemesterController extends Controller
                 }
             }
 
+            $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+                if (isset($tanggal)) {
+                    $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+                } else {
+                    $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+                }
 
-            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor'));
+            return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'tanggal_cetak'));
         } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smktanada') {
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
@@ -617,7 +686,14 @@ class CetakRaporSemesterController extends Controller
                     }
                 }
 
-                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'pengembangan_karakter_tambahan_rapor'));
+                $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+                if (isset($tanggal)) {
+                    $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+                } else {
+                    $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+                }
+
+                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-tanada', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'pengembangan_karakter_tambahan_rapor', 'tanggal_cetak'));
             } else {
 
                 foreach ($rapors as $rapor) {
@@ -673,7 +749,14 @@ class CetakRaporSemesterController extends Controller
                     }
                 }
 
-                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-tanada2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'pengembangan_karakter_tambahan_rapor'));
+                $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+                if (isset($tanggal)) {
+                    $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+                } else {
+                    $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+                }
+
+                return view('akademik/rapor-semester/cetak-rapor/cetak-rapor-tanada2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tambahan', 'ekskul_tambahan_rapor', 'kehadiran_tambahan_rapor', 'pengembangan_karakter_tambahan_rapor', 'tanggal_cetak'));
             }
         }
 

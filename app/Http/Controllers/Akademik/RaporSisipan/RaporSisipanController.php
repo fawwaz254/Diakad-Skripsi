@@ -40,6 +40,40 @@ class RaporSisipanController extends Controller
         return view('akademik/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'semester_aktif', 'data_semester'));
     }
 
+    public function saveTanggalCetakSisipan(Request $request)
+    {
+        $input = (object) $request->input();
+        $tanggal = $input->tanggal;
+
+        if (empty($tanggal)) {
+            $data = [
+                'code'    => 400,
+                'sukses'  => 0,
+                'message' => 'Tanggal harus di set!'
+            ];
+            return json_encode($data);
+        }
+        
+        $set_tanggal_cetak_rapor_sisipan = Setting::where('key_setting', 'set_tanggal_cetak_rapor_sisipan')->first();
+        $set_tanggal_cetak_rapor_sisipan->value = $tanggal;
+
+        if ($set_tanggal_cetak_rapor_sisipan->save()) {
+            $data = [
+                'code'      => 200,
+                'sukses'    => 1,
+                'message'   => 'Data Berhasil Disimpan!'
+            ];
+        } else {
+            $data = [
+                'code'      => 300,
+                'sukses'    => 0,
+                'message'   => 'Data Gagal Disimpan!'
+            ];
+        }
+        
+        return json_encode($data);
+    }
+
     public function datatablesDaftarNilaiSTS(Request $request)
     {
 

@@ -424,7 +424,7 @@
                 </tr>
                 <tr>
                     <td style="width: 70%; border-style : hidden;"></td>
-                    <td>Tanggal : 4 April 2024</td>
+                    <td>Tanggal : {{ $tanggal_cetak }}</td>
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">

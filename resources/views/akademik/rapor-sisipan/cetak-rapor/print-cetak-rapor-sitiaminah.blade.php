@@ -351,7 +351,7 @@
                             {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u>
                     </td>
                     <td style="width: 30%;font-weight: bold;">
-                        {{ 'Surabaya, ' . indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        Surabaya, {{ $tanggal_cetak }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>

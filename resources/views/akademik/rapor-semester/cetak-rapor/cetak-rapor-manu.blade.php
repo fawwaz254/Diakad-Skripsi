@@ -308,7 +308,7 @@
 
                     </td>
                     <td style="width: 30%;">
-                        Pasuruan, 23 Desember 2023
+                        Pasuruan, {{ $tanggal_cetak }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>

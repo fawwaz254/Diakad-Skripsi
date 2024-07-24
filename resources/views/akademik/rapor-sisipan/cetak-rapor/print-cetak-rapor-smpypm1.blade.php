@@ -300,7 +300,7 @@
                     <td style="width:40%; border-style : hidden"></td>
 
                     <td style="width:25%;border-style : hidden;">Sidoarjo,
-                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        {{ $tanggal_cetak }}
                         <br>
 
                         Wali Kelas

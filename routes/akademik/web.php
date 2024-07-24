@@ -525,6 +525,8 @@ Route::middleware(['token_staff'])->group(function () {
 
 
                 Route::get('printAkhir/{thn_akademik_semester}/{id_siswa}', [CetakRaporController::class, 'printCetakRaporAkhir']);
+                // save tanggal cetak rapor sisipan
+                Route::post('save-tanggal-cetak-sisipan', [RaporSisipanController::class, 'saveTanggalCetakSisipan']);
             });
 
             Route::prefix('komponen-mata-pelajaran')->group(function () {
@@ -566,6 +568,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/print/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'printCetakRaporSemester']);
                 Route::get('/leger/{id_semester}/{id_kelas}', [CetakRaporSemesterController::class, 'legerCetakRaporSemester']);
                 Route::get('datatables/', [CetakRaporSemesterController::class, 'datatablesCetakRaporSemester']);
+                Route::post('save-tanggal-cetak-semester', [CetakRaporSemesterController::class, 'saveTanggalCetakSemester']);
 
                 //pengembangan diri
                 Route::prefix('view-data-tambahan')->group(function () {

@@ -308,7 +308,7 @@
                     </td>
                     <td style="width:45%; border-style : hidden"></td>
 
-                    <td style="width:30%" align="left">Surabaya, 3 Mei 2024
+                    <td style="width:30%" align="left">Surabaya, {{ $tanggal_cetak }}
                         {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
 
                         <br>
