@@ -233,8 +233,8 @@ class BankController extends BaseController
                 $pembayaran_trs->tgl_pembayaran     = null;
                 $pembayaran_trs->keterangan         = 'tagihan kbbs';
                 $pembayaran_trs->fee_admin          = 0;
-                $pembayaran_trs->payment_code =  $kode_tagihan;
-                $pembayaran_trs->payment_channel = 'KBBS';
+                $pembayaran_trs->payment_code       =  $kode_tagihan;
+                $pembayaran_trs->payment_channel    = 'KBBS';
                 $pembayaran_trs->save();
 
                 //detail pembayaran

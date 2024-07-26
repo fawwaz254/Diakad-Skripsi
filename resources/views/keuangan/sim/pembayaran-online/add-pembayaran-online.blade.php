@@ -45,23 +45,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <h2 class="card-inside-title">
-                                Dibayar melalui
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control show-tick" name="payment_channel" required="">
-                                        <option value="" disabled selected >-- Pilih Metode Pembayaran --</option>
-                                        @foreach($grup_payment_channel as $name => $data_payment_channel)
-                                        <optgroup label="{{$name}}">
-                                            @foreach($data_payment_channel as $data)
-                                                <option value="{{$data->payment_code}}">{{$data->payment_name}} ({{$data->payment_description}})</option>
-                                            @endforeach
-                                        </optgroup>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 </div>

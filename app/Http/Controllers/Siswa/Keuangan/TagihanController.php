@@ -10,7 +10,7 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibSiswa;
-use App\Libraries\WinpayPHP\Winpay;
+use App\Libraries\WinpayPHP\WinpayCheckout;
 use App\Models\PembayaranTrs;
 use App\Models\PembayaranTrsDetail;
 use App\Models\TagihanBiaya;
@@ -32,18 +32,9 @@ class TagihanController extends BaseController
 
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
-        $cek_winpay = env("WINPAY_PRIVATE_KEY1");
-
-        if ($cek_winpay == "") {
-            $grup_payment_channel = null;
-        } else {
-            $winpay = new Winpay;
-            $grup_payment_channel = $winpay->getPaymentChannel();
-        }
-
         $pembayaran_aktif = PembayaranTrs::with('siswa', 'siswa.pengguna')->where('id_siswa', $siswa->id_siswa)->where('status_pembayaran', 0)->orderBy('created_at', 'desc')->get();
 
-        return view('siswa/keuangan/tagihan/view-tagihan', compact('auth_data', 'grup_payment_channel', 'pembayaran_aktif'));
+        return view('siswa/keuangan/tagihan/view-tagihan', compact('auth_data', 'pembayaran_aktif'));
     }
 
     public function datatablesTagihan(Request $request)
@@ -128,7 +119,7 @@ class TagihanController extends BaseController
                 $wali_murid_email = '';
             }
 
-            $winpay = new Winpay;
+            $winpay_checkout = new WinpayCheckout;
 
             $pembayaran_trs = new PembayaranTrs;
             $pembayaran_trs->id_pembayaran_trs = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -179,10 +170,8 @@ class TagihanController extends BaseController
 
                 $items[] = array(
                     "name" => $item_title,
-                    "sku" => $tagihan_biaya->id_jenis_detail_biaya,
                     "qty" => 1,
-                    "unitPrice" => $tagihan_biaya->besar_biaya,
-                    "desc" => $tagihan_biaya->detail_biaya->biaya->nm_biaya
+                    "price" => $tagihan_biaya->besar_biaya
                 );
             }
 
@@ -192,35 +181,33 @@ class TagihanController extends BaseController
             $pembayaran_trs->save();
 
             if (empty($wali_murid_phone)) {
-                $wali_murid_phone = '085155226781';
+                $wali_murid_phone = '0859106809904';
             }
 
             if (empty($wali_murid_email)) {
-                $wali_murid_email = 'tech@solusimaster.co.id';
+                $wali_murid_email = 'admin@edumate.id';
             }
 
-            $params = array(
-                'callback' => url('payment/callback/' . $pembayaran_trs->id_pembayaran_trs),
-                'listener' => url('payment/notification/' . $pembayaran_trs->id_pembayaran_trs),
-                'order_id' => $pembayaran_trs->nomor_transaksi,
-                'usr_phone' => $wali_murid_phone,
-                'usr_email' => $wali_murid_email,
-                'usr_name' => $tagihan_biaya->siswa->pengguna->nm_pengguna,
-                'items' => $items,
-                'amount' => $pembayaran_trs->besar_pembayaran,
-                'exp_date' => $now->addDays(1)->format('YmdHis'),
-            );
+            $array_payload = [
+                "customer" => [
+                    "name" => $tagihan_biaya->siswa->pengguna->nm_pengguna,
+                    "email" => $wali_murid_email,
+                    "phone" => $wali_murid_phone,
+                ],
+                "invoice" => [
+                    "ref" => $pembayaran_trs->nomor_transaksi,
+                    "products" => $items
+                ],
+                "back_url" => "https://edumate.id",
+                "interval" => 120
+            ];
 
-            $return_array = $winpay->checkout($input->payment_channel, $params);
+            $response = $winpay_checkout->process($array_payload);
 
-            $url = $return_array->data->url_payment;
-            $parts = parse_url($url);
-            parse_str($parts['query'], $query);
-
-            $pembayaran_trs->token = $query['payid'];
-            $pembayaran_trs->payment_channel = $return_array->data->payment_method;
-            $pembayaran_trs->payment_code = $return_array->data->payment_method_code;
-            $pembayaran_trs->fee_admin = $return_array->data->fee_admin;
+            $pembayaran_trs->token = $response->responseData->id;
+            // $pembayaran_trs->payment_channel = $return_array->data->payment_method;
+            // $pembayaran_trs->payment_code = $return_array->data->payment_method_code;
+            // $pembayaran_trs->fee_admin = $return_array->data->fee_admin;
             $pembayaran_trs->save();
 
             DB::commit();
@@ -229,7 +216,7 @@ class TagihanController extends BaseController
                 'status'     => 202,
                 'message' => 'Success',
                 'path' => 'keuangan/tagihan',
-                'data' => json_encode($return_array)
+                'data' => json_encode($response)
             ]);
         } catch (\Exception $e) {
             DB::rollback();

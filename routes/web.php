@@ -24,9 +24,44 @@ use UniSharp\LaravelFilemanager\Controllers\DownloadController;
 use App\Http\Controllers\Guru\WaliKelas\RaporPendukungController;
 use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
 use App\Http\Controllers\Administrator\Device\FingerprintController;
+use App\Libraries\WinpayPHP\WinpayCheckout;
 
 // Only for deploy to other prod server, 
 // Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
+
+Route::get('co-win', function(){
+    $items[] = array(
+        "name" => "SPP Juni",
+        "qty" => 1,
+        "price" => 350000
+    );
+
+    $winpay_checkout = new WinpayCheckout;
+    $array_payload = [
+        "customer" => [
+            "name" => "Harin Nisa",
+            "email" => "",
+            "phone" => "0859106809904"
+        ],
+        "invoice" => [
+            "ref" => "TR20240726000001",
+            "products" => $items
+        ],
+        "back_url" => "https://edumate.id",
+        "interval" => 120
+    ];
+
+    $response = $winpay_checkout->process($array_payload);
+
+    dd($response);
+});
+
+Route::get('find-win', function(){
+    $winpay_checkout = new WinpayCheckout;
+    $response = $winpay_checkout->find('a53caafc-3bdd-4e41-9ce2-dfa7355b937f');
+
+    dd($response);
+});
 
 Route::get('pimpinan', [PimpinanController::class, 'index']);
 Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
@@ -105,12 +140,6 @@ Route::post('reset-password-action', [ForgetPasswordController::class, 'resetPas
 
 Route::get('payment/detail/{id}', [PembayaranOnlineController::class, 'viewDetail']);
 Route::post('payment/notification/{id}', [PembayaranOnlineController::class, 'actionPayment']);
-Route::post('payment/callback/{id}', [PembayaranOnlineController::class, 'actionCallback']);
-
-Route::get('payment/detail/{id}', [PembayaranOnlineController::class, 'viewDetail']);
-Route::post('payment/notification/{id}', [PembayaranOnlineController::class, 'actionPayment']);
-Route::post('payment/callback/{id}', [PembayaranOnlineController::class, 'actionCallback']);
-
 Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionCheckExp']);
 
 Route::get('forms', [CustomFormResponController::class, 'landingPage']);
