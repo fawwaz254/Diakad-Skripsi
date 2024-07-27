@@ -87,15 +87,15 @@ class TagihanController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'payment_channel' => 'required',
+            // 'payment_channel' => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'     => 300,
-                'message' => $validator->errors()->first(),
-            ]);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'status'     => 300,
+        //         'message' => $validator->errors()->first(),
+        //     ]);
+        // }
 
         if (empty($input->id_tagihan_biaya)) {
             return response()->json([
