@@ -267,9 +267,9 @@
                     <div class="col-md-4" style="margin-top:50px;">
                         Sidoarjo,
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                            22 Juni 2024
+                            {{ $tanggal_cetak }}
                         @else
-                            {{ now('Asia/Jakarta')->format('d M Y') }}
+                            {{ $tanggal_cetak }}
                         @endif
                         <br> Wali Kelas,
                         <div style="margin-top:100px;">

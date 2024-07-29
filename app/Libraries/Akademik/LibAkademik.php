@@ -7,6 +7,7 @@ use App\Models\KelasMp as KelasMp;
 use App\Models\MataPelajaran as MataPelajaran;
 use App\Models\JadwalJam as JadwalJam;
 use App\Models\JadwalKelasMp as JadwalKelasMp;
+use App\Models\PredikatRaporPendukung;
 use App\Models\Semester;
 
 use Illuminate\Support\Facades\Cookie;
@@ -231,4 +232,12 @@ class LibAkademik
         }
     }
     /** ========== **/
+
+    public static function catatanProsesSiswa($id_siswa, $id_rapor_pendukung) {
+        $catatan_siswa = PredikatRaporPendukung::where(
+            'id_rapor_pendukung',
+            $id_rapor_pendukung,
+        )->where('id_siswa', $id_siswa)->whereNull('id_indikator_rapor_pendukung')->get()->first();
+        return $catatan_siswa->nilai;
+    }
 }
