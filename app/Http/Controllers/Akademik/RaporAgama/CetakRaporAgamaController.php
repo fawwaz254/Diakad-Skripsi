@@ -10,8 +10,10 @@ use App\Models\KelompokMapelRapor;
 use App\Models\KomponenJenisRapor;
 use App\Models\Rapor;
 use App\Models\Semester;
+use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\WaliKelas;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 
@@ -137,6 +139,13 @@ class CetakRaporAgamaController extends Controller
             }
         ])->orderBy('urutan')->get();
 
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if (isset($tanggal)) {
+            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        } else {
+            $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+        }
+
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
 
             $kkm = 0;
@@ -157,7 +166,7 @@ class CetakRaporAgamaController extends Controller
             }
 
 
-            return view('akademik/rapor-agama/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas'));
+            return view('akademik/rapor-agama/cetak-rapor/cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester',  'wali_kelas', 'tanggal_cetak'));
         }
 
         return 'Sekolah anda tidak menggunakan Rapor';

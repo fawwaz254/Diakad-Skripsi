@@ -296,11 +296,11 @@
                     <td></td>
                     <td style="width: 30%">
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                        {{ $auth_data->sekolah_data->alamat_kota == '136' ? 'Surabaya' : 'Sidoarjo' }}, 22 Juni 2024 <br>
+                        {{ $auth_data->sekolah_data->alamat_kota == '136' ? 'Surabaya' : 'Sidoarjo' }}, {{ $tanggal_cetak }} <br>
                         @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-                        {{ $auth_data->sekolah_data->alamat_kota == '136' ? 'Surabaya' : 'Sidoarjo' }}, 22 Juni 2024 <br>
+                        {{ $auth_data->sekolah_data->alamat_kota == '136' ? 'Surabaya' : 'Sidoarjo' }}, {{ $tanggal_cetak }} <br>
                         @else
-                        {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
+                        {{ $tanggal_cetak }} <br>
                         @endif
                         Kepala Sekolah <br><br><br><br><br><br><br>
 

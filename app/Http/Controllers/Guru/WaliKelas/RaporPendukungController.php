@@ -18,6 +18,7 @@ use App\Models\KomponenRaporPendukung;
 use App\Models\PredikatRaporPendukung;
 use App\Models\IndikatorRaporPendukung;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\Setting;
 use DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -553,6 +554,14 @@ class RaporPendukungController extends Controller
             ->orderBy('urutan')
             ->get();
 
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if (isset($tanggal)) {
+            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        } else {
+            $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+        }
+
+
         if (str_contains($rapor->nm_rapor, 'P5')) {
             $list_catatan_siswa = PredikatRaporPendukung::where(
                 'id_rapor_pendukung',
@@ -561,7 +570,7 @@ class RaporPendukungController extends Controller
                 ->whereNull('id_indikator_rapor_pendukung')
                 ->get();
 
-            return view('guru/wali-kelas/rapor-pendukung/print-custom-p5-rapor-pendukung', compact('auth_data', 'semester_aktif', 'kelas', 'list_siswa', 'rapor', 'list_komponen_rapor', 'list_catatan_siswa'));
+            return view('guru/wali-kelas/rapor-pendukung/print-custom-p5-rapor-pendukung', compact('auth_data', 'semester_aktif', 'kelas', 'list_siswa', 'rapor', 'list_komponen_rapor', 'list_catatan_siswa', 'tanggal_cetak', 'wali_kelas'));
         } else {
 
             $predikat_rapor_pendukung = DB::select("select prp.id_siswa, irp.id_indikator_rapor_pendukung, prp.tipe, prp.nilai 
@@ -573,7 +582,7 @@ class RaporPendukungController extends Controller
 
             $predikat_rapor_pendukung = collect($predikat_rapor_pendukung);
 
-            return view('guru/wali-kelas/rapor-pendukung/print-rapor-pendukung', compact('auth_data', 'semester_aktif', 'kelas', 'list_siswa', 'rapor', 'list_komponen_rapor', 'predikat_rapor_pendukung'));
+            return view('guru/wali-kelas/rapor-pendukung/print-rapor-pendukung', compact('auth_data', 'semester_aktif', 'kelas', 'list_siswa', 'rapor', 'list_komponen_rapor', 'predikat_rapor_pendukung', 'tanggal_cetak'));
         }
     }
 }

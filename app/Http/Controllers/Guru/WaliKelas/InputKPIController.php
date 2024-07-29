@@ -23,6 +23,7 @@ use App\Models\Pengguna;
 use App\Models\PredikatKPI;
 use App\Models\Sekolah;
 use App\Models\Semester;
+use App\Models\Setting;
 use App\Models\WaliKelas;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -271,7 +272,15 @@ class InputKPIController extends Controller
                 $dataMengaji[$point_kpi->nm_point_kpi] = "-";
             }
         }
-        return view('guru/wali-kelas/kpi/input-kpi/print-kpi-siswa', compact('auth_data', 'kelompok_kpi', 'siswa', 'data', 'semester', 'dataMengaji'));
+
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if (isset($tanggal)) {
+            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        } else {
+            $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+        }
+
+        return view('guru/wali-kelas/kpi/input-kpi/print-kpi-siswa', compact('auth_data', 'kelompok_kpi', 'siswa', 'data', 'semester', 'dataMengaji', 'tanggal_cetak'));
     }
 
     public function printAllKPI(Request $request)
@@ -349,6 +358,13 @@ class InputKPIController extends Controller
         //     }
         // }
 
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if (isset($tanggal)) {
+            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        } else {
+            $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+        }
+
         return view(
             'guru/wali-kelas/kpi/input-kpi/print-all-kpi-siswa',
             compact(
@@ -358,6 +374,7 @@ class InputKPIController extends Controller
                 'semester',
                 'kelompok_kpi',
                 'point_mengaji',
+                'tanggal_cetak'
             )
         );
     }
