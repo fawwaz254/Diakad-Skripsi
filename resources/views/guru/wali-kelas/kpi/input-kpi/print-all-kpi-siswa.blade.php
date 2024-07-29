@@ -267,15 +267,15 @@
                 <td width="30%" style="border-style : hidden; "></td>
                 <td width="30%" style="border-style : hidden;text-align:center ">
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                        Sidoarjo, 22 Juni 2024 <br>
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
                     @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-                        Sidoarjo, 22 Juni 2024 <br>
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
                     @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
-                        Sidoarjo, 22 Juni 2024 <br>
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
                     @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
-                        Sidoarjo, 22 Juni 2024 <br>
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
                     @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
-                        Sidoarjo, 22 Juni 2024 <br>
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
                     @else
                         Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
                     @endif

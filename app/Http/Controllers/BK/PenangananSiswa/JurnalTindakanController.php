@@ -112,16 +112,16 @@ class JurnalTindakanController extends BaseController
 
         if ($id_siswa == '0') {
             $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
-            ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
-            ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
-            ->join('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
-            ->leftJoin('tindakan_pelanggaran', 'tindakan_pelanggaran.id_pelanggaran_siswa', '=', 'pelanggaran_siswa.id_pelanggaran_siswa')
-            ->leftJoin('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', '=', 'tindakan_pelanggaran.id_jenis_tindakan')
-            ->where('pelanggaran_siswa.deleted_at', null)
-            ->groupBy('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran')
-            ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc')
-            ->where('siswa.id_kelas', '=', $id_kelas)
-            ->get();
+                ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
+                ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
+                ->join('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
+                ->leftJoin('tindakan_pelanggaran', 'tindakan_pelanggaran.id_pelanggaran_siswa', '=', 'pelanggaran_siswa.id_pelanggaran_siswa')
+                ->leftJoin('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', '=', 'tindakan_pelanggaran.id_jenis_tindakan')
+                ->where('pelanggaran_siswa.deleted_at', null)
+                ->groupBy('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran')
+                ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc')
+                ->where('siswa.id_kelas', '=', $id_kelas)
+                ->get();
         } else {
             $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
                 ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
@@ -146,10 +146,17 @@ class JurnalTindakanController extends BaseController
         $deskripsi_perilaku_1 = 'Tidak ada permasalahan yang tercatat di BK';
         $deskripsi_perilaku_2 = '';
 
-        if ($id_siswa == '0') {
-            return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan-siswa-kelas', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'auth_data'));
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if (isset($tanggal)) {
+            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        } else {
+            $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
         }
 
-        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'jenis_kelamin', 'auth_data', 'is_ypm'));
+        if ($id_siswa == '0') {
+            return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan-siswa-kelas', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'auth_data', 'tanggal_cetak'));
+        }
+
+        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data', 'kategori_pelanggaran', 'deskripsi_perilaku_1', 'deskripsi_perilaku_2', 'catatan_sekolah', 'wali_kelas', 'jenis_kelamin', 'auth_data', 'is_ypm', 'tanggal_cetak'));
     }
 }

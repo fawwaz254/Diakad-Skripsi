@@ -374,21 +374,21 @@
             </table>
             <br>
 
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden; text-align:center">
                 <tr>
-                    <td style="border-style : hidden; width:35%;" align="left">
+                    <td style="border-style : hidden; width:35%;">
                         Mengetahui, <br>
                         Orang Tua/Wali
-                        <br><br><br><br><br><br><br>
-                        <p style="width: 250px;
-								border-bottom: 1px solid   black;">
+                        <br><br><br><br><br><br><br><br>
+                        <p style="width: 230px;
+								border-bottom: 1px solid   black; margin-left: 20%">
                         </p>
                     </td>
-                    <td style="width:30%; border-style : hidden;" align="left">
+                    <td style="width:30%; border-style : hidden;">
 
                     </td>
                     <td style="width: 35%;">
-                        {{ 'Surabaya, 21 Juni 2024' }}
+                        Surabaya, {{ $tanggal_cetak }}
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
@@ -410,7 +410,7 @@
                 <tr>
                     <td style="border-style : hidden; width:35%;" align="left">
                     </td>
-                    <td style="width:30%; border-style : hidden;" align="left">
+                    <td style="width:30%; border-style : hidden; text-align:center">
                         Mengetahui, <br>
                         Kepala Sekolah
                         <br><br><br><br><br><br><br>

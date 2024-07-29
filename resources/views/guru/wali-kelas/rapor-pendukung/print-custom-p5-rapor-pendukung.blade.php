@@ -89,6 +89,16 @@
             font-weight: 400;
             font-style: normal;
         }
+
+        .signature-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+
+        .signature {
+            text-align: center;
+        }
     </style>
 
     <style type="text/css" media="print">
@@ -112,6 +122,11 @@
 
             .page {
                 page-break-after: always;
+            }
+
+            .signature-container {
+                display: flex;
+                justify-content: space-around;
             }
         }
     </style>
@@ -144,7 +159,8 @@
                         Alamat
                     </td>
                     <td style="width: 40%">
-                        : {{ $auth_data->sekolah_data->alamat_jalan }}
+                        {{-- : {{ $auth_data->sekolah_data->alamat_jalan }} --}}
+                        : JL. MANYAR SAMBONGAN 119
                     </td>
                     <td style="width: 20%">
                         Fase
@@ -374,6 +390,58 @@
                     @endforeach
                 @endforeach
             </table>
+
+            {{-- CATATAN PROSES --}}
+            <table style="width: 90%; margin: 2rem auto;">
+                <tr style="text-align: left">
+                    <th>Catatan Proses:</th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ App\Libraries\Akademik\LibAkademik::catatanProsesSiswa($siswa->id_siswa, $rapor->id_rapor_pendukung); }}
+                    </td>
+                </tr>
+            </table>
+
+            {{-- KETERANGAN --}}
+            <table style="width: 90%; margin: 2rem auto" class="tabel-keterangan">
+                <thead style="background-color: #f2f2f2;">
+                    <th>BB<br>Belum Berkembang</th>
+                    <th>MB<br>Mulai Berkembang</th>
+                    <th>BSH<br>Berkembang Sesuai Harapan</th>
+                    <th>SB<br>Sangat Berkembang</th>
+                </thead>
+                <tr>
+                    <td colspan="1">Peserta didik masih membutuhkan bimbingan dalam mengembangkan kemampuan</td>
+                    <td colspan="1">Peserta didik mulai mengembangkan kemampuan namun masih belum ajek</td>
+                    <td colspan="1">Peserta didik telah mengembangkan kemampuan hingga berada dalam tahap ajek</td>
+                    <td colspan="1">Peserta didik mengembangkan kemampuannya melampaui harapan</td>
+                </tr>
+            </table>
+
+            {{-- TANDA TANGAN --}}
+            <div class="signature-container">
+                <div class="signature" style="margin-top:50px;">
+                    Mengetahui,
+                    <br>Orang Tua/Wali Murid
+                    <div style="margin-top:115px; width: 200px; border-top: 1px solid #000;"></div>
+                </div>
+
+                <div class="signature" style="margin-top:50px;">
+                    Sidoarjo,
+                    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                        {{ $tanggal_cetak }}
+                    @else
+                        {{ $tanggal_cetak }}
+                    @endif
+                    <br> Wali Kelas,
+                    <div style="margin-top:100px;">
+                        {{ $wali_kelas->gelar_depan }} {{ $wali_kelas->nm_wali_kelas }}
+                        {{ $wali_kelas->gelar_belakang }}
+                    </div>
+                </div>
+            </div>
+
         </div>
     @endforeach
 </body>
