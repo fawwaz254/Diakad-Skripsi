@@ -908,6 +908,8 @@
                             <br>
                             <br>
                             <br>
+                            <br>
+                            <br>
                         @endif
                         {{-- @if ($siswa->keterangan_kelas == 'Internasional')
                         <br>

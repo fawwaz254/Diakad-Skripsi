@@ -28,7 +28,7 @@ use App\Models\Kelas;
 use App\Models\LogKelasSiswa;
 use App\Models\Pengguna;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Validator;
 
@@ -512,13 +512,15 @@ class ApprovePrestasiSiswaController extends BaseController
 
     public function datatablesApprovePrestasiSiswa(Request $request)
     {
-
+        # Param 0 = siswa yang memiliki prestasi
+        # Param 1 = siswa yang menunggu approval
+        # Param 2 = Data dkpi semua siswa
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $param = $input->param;
         $param_semua_siswa = $input->param_semua_siswa;
         $alumni = $input->alumni;
-
+        $search = $input->search['value'];
 
         //------------------------Fungsi menampilkan data alumni--------------------//
         if ($alumni == 1) {
@@ -629,100 +631,76 @@ class ApprovePrestasiSiswaController extends BaseController
             } else {
 
                 if ($param_semua_siswa == 0) {
+                    if ($param == 1) {
+                        $data = DB::table(DB::raw('(
+                            SELECT id_siswa, id_kelas, status, "kegiatan_siswa" AS source
+                            FROM kegiatan_siswa
+                            WHERE deleted_at is null
+                            UNION ALL
+                            SELECT id_siswa, id_kelas, status, "prestasi_siswa" AS source
+                            FROM prestasi_siswa
+                            WHERE deleted_at is null
+                            UNION ALL
+                            SELECT id_siswa, id_kelas, status, "informasi_tambahan" AS source
+                            FROM informasi_tambahan
+                            WHERE deleted_at is null
+                        ) AS combined'))
+                            ->join('siswa as s', 'combined.id_siswa', '=', 's.id_siswa')
+                            ->join('kelas as k', 'combined.id_kelas', '=', 'k.id_kelas')
+                            ->join('pengguna as p', 's.id_pengguna', '=', 'p.id_pengguna')
+                            ->where('combined.status', 0)
+                            ->whereNull('s.id_kelas')
+                            ->where(function ($query) use ($search) {
+                                $query->where('s.nis_siswa', 'like', "%$search%")
+                                    ->orWhere('p.nm_pengguna', 'like', "%$search%");
+                            })
+                            ->select('s.id_siswa', 'p.nm_pengguna', 's.nis_siswa', 's.id_kelas', 'k.nm_kelas', DB::raw('count(combined.status) as jumlah'))
+                            ->groupBy('id_siswa', 's.nis_siswa', 'p.nm_pengguna', 'k.nm_kelas')->get();
+                    } else if($param == 0) {
+                        $data = DB::table(DB::raw('(
+                            SELECT id_siswa, id_kelas, status, "kegiatan_siswa" AS source
+                            FROM kegiatan_siswa
+                            WHERE deleted_at is null
+                            UNION ALL
+                            SELECT id_siswa, id_kelas, status, "prestasi_siswa" AS source
+                            FROM prestasi_siswa
+                            WHERE deleted_at is null
+                            UNION ALL
+                            SELECT id_siswa, id_kelas, status, "informasi_tambahan" AS source
+                            FROM informasi_tambahan
+                            WHERE deleted_at is null
+                        ) AS combined'))
+                            ->join('siswa as s', 'combined.id_siswa', '=', 's.id_siswa')
+                            ->join('kelas as k', 'combined.id_kelas', '=', 'k.id_kelas')
+                            ->join('pengguna as p', 's.id_pengguna', '=', 'p.id_pengguna')
+                            ->whereIn('combined.status', [1, 10])
+                            ->whereNull('s.id_kelas')
+                            ->where(function ($query) use ($search) {
+                                $query->where('s.nis_siswa', 'like', "%$search%")
+                                    ->orWhere('p.nm_pengguna', 'like', "%$search%");
+                            })
+                            ->select('s.id_siswa', 'p.nm_pengguna', 's.nis_siswa', 's.id_kelas', 'k.nm_kelas', DB::raw('count(combined.status) as jumlah'))
+                            ->groupBy('id_siswa', 's.nis_siswa', 'p.nm_pengguna', 'k.nm_kelas')->get();
 
-                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
-                        // ->with('logKelasSiswa.kelas')
-                        ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param) {
-                            if ($param == 0) {
-                                $q->where('status', '!=', 0);
-                            } else {
-                                $q->where('status', 0);
-                            }
-                        })
-                        ->orWhereHas('prestasi_siswa', function ($q) use ($auth_data, $param) {
-                            if ($param == 0) {
-                                $q->where('status', '!=', 0);
-                            } else {
-                                $q->where('status', 0);
-                            }
-                        })
-                        ->orWhereHas('informasi_tambahan', function ($q) use ($auth_data, $param) {
-                            if ($param == 0) {
-                                $q->where('status', '!=', 0);
-                            } else {
-                                $q->where('status', 0);
-                            }
-                        })->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                        ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                        // ->join('kelas', 'log_kelas_siswa.id_kelas', 'kelas.id_kelas')
-                        // ->join('log_kelas_siswa','log_kelas_siswa.id_siswa','siswa.id_siswa')
-                        // ->groupBy('log_kelas_siswa.created_at')
-                        // ->orderBy('log_kelas_siswa', 'des')
-                        //  ->join('kelas', 'siswa.logKelasSiswa.id_kelas', 'kelas.id_kelas')
-                        //  ->where('kelas.tingkat','=','12')
-                        ->withCount([
-                            'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'kegiatan_siswa as kegiatan_siswa_approved' => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'kegiatan_siswa as kegiatan_siswa_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                            'prestasi_siswa as prestasi_siswa_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'prestasi_siswa as prestasi_siswa_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                            'prestasi_siswa as prestasi_siswa_approved' => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'informasi_tambahan as informasi_tambahan_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'informasi_tambahan as informasi_tambahan_approved'  => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'informasi_tambahan as informasi_tambahan_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                        ]);
+                    }
                 } else {
-                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
-                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                        ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                        ->withCount([
-                            'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'kegiatan_siswa as kegiatan_siswa_approved' => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'kegiatan_siswa as kegiatan_siswa_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                            'prestasi_siswa as prestasi_siswa_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'prestasi_siswa as prestasi_siswa_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                            'prestasi_siswa as prestasi_siswa_approved' => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'informasi_tambahan as informasi_tambahan_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'informasi_tambahan as informasi_tambahan_approved'  => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'informasi_tambahan as informasi_tambahan_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
+                    $query = "
+                        SELECT siswa.*, pengguna.*, kelas.*
+                        FROM siswa
+                        LEFT JOIN pengguna ON siswa.id_pengguna = pengguna.id_pengguna
+                        LEFT JOIN kelas ON siswa.id_kelas = kelas.id_kelas
+                        WHERE (
+                            siswa.nis_siswa LIKE ? OR 
+                            pengguna.nm_pengguna LIKE ?
+                        )
+                        AND siswa.id_kelas IS NULL
+                        AND siswa.deleted_at IS NULL
+                        LIMIT 10
+                    ";
 
-                        ]);
+                    $params = ["%$search%", "%$search%"];
+
+                    $data = DB::select(DB::raw($query), $params);
                 }
             }
         } else {
@@ -832,153 +810,164 @@ class ApprovePrestasiSiswaController extends BaseController
                         ]);
                 }
             } else {
-
                 if ($param_semua_siswa == 0) {
-
-                    $data = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
-                        ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param) {
-                            if ($param == 0) {
-                                $q->where('status', '!=', 0);
-                            } else {
-                                $q->where('status', 0);
-                            }
-                        })
-                        ->orWhereHas('prestasi_siswa', function ($q) use ($auth_data, $param) {
-                            if ($param == 0) {
-                                $q->where('status', '!=', 0);
-                            } else {
-                                $q->where('status', 0);
-                            }
-                        })
-                        ->orWhereHas('informasi_tambahan', function ($q) use ($auth_data, $param) {
-                            if ($param == 0) {
-                                $q->where('status', '!=', 0);
-                            } else {
-                                $q->where('status', 0);
-                            }
-                        })
-                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                        ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                        ->join('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
-                        ->withCount([
-                            'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'kegiatan_siswa as kegiatan_siswa_approved' => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'kegiatan_siswa as kegiatan_siswa_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                            'prestasi_siswa as prestasi_siswa_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'prestasi_siswa as prestasi_siswa_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                            'prestasi_siswa as prestasi_siswa_approved' => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'informasi_tambahan as informasi_tambahan_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'informasi_tambahan as informasi_tambahan_approved'  => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'informasi_tambahan as informasi_tambahan_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                        ]);
+                    if ($param == 1) {
+                        $data = DB::table(DB::raw('(
+                            SELECT id_siswa, id_kelas, status, "kegiatan_siswa" AS source
+                            FROM kegiatan_siswa
+                            WHERE deleted_at is null
+                            UNION ALL
+                            SELECT id_siswa, id_kelas, status, "prestasi_siswa" AS source
+                            FROM prestasi_siswa
+                            WHERE deleted_at is null
+                            UNION ALL
+                            SELECT id_siswa, id_kelas, status, "informasi_tambahan" AS source
+                            FROM informasi_tambahan
+                            WHERE deleted_at is null
+                        ) AS combined'))
+                            ->join('siswa as s', 'combined.id_siswa', '=', 's.id_siswa')
+                            ->join('kelas as k', 'combined.id_kelas', '=', 'k.id_kelas')
+                            ->join('pengguna as p', 's.id_pengguna', '=', 'p.id_pengguna')
+                            ->where('combined.status', '=', 0)
+                            ->whereNotNull('s.id_kelas')
+                            ->where(function ($query) use ($search) {
+                                $query->where('s.nis_siswa', 'like', "%$search%")
+                                    ->orWhere('p.nm_pengguna', 'like', "%$search%");
+                            })
+                            ->select('s.id_siswa', 'p.nm_pengguna', 's.nis_siswa', 's.id_kelas', 'k.nm_kelas', DB::raw('count(combined.status) as jumlah'))
+                            ->groupBy('id_siswa', 's.nis_siswa', 'p.nm_pengguna', 'k.nm_kelas')->get();
+                    } else if ($param == 0) {
+                        $data = DB::table(DB::raw('(
+                            SELECT id_siswa, id_kelas, status, "kegiatan_siswa" AS source
+                            FROM kegiatan_siswa
+                            WHERE deleted_at is null
+                            UNION ALL
+                            SELECT id_siswa, id_kelas, status, "prestasi_siswa" AS source
+                            FROM prestasi_siswa
+                            WHERE deleted_at is null
+                            UNION ALL
+                            SELECT id_siswa, id_kelas, status, "informasi_tambahan" AS source
+                            FROM informasi_tambahan
+                            WHERE deleted_at is null
+                        ) AS combined'))
+                            ->join('siswa as s', 'combined.id_siswa', '=', 's.id_siswa')
+                            ->join('kelas as k', 'combined.id_kelas', '=', 'k.id_kelas')
+                            ->join('pengguna as p', 's.id_pengguna', '=', 'p.id_pengguna')
+                            ->whereIn('combined.status', [1, 10])
+                            ->whereNotNull('s.id_kelas')
+                            ->where(function ($query) use ($search) {
+                                $query->where('s.nis_siswa', 'like', "%$search%")
+                                    ->orWhere('p.nm_pengguna', 'like', "%$search%");
+                            })
+                            ->select('s.id_siswa', 'p.nm_pengguna', 's.nis_siswa', 's.id_kelas', 'k.nm_kelas', DB::raw('count(combined.status) as jumlah'))
+                            ->groupBy('id_siswa', 's.nis_siswa', 'p.nm_pengguna', 'k.nm_kelas')->get();
+                    }
                 } else {
+                    $query = "
+                        SELECT siswa.*, pengguna.*, kelas.*
+                        FROM siswa
+                        LEFT JOIN pengguna ON siswa.id_pengguna = pengguna.id_pengguna
+                        LEFT JOIN kelas ON siswa.id_kelas = kelas.id_kelas
+                        WHERE (
+                            siswa.nis_siswa LIKE ? OR 
+                            pengguna.nm_pengguna LIKE ?
+                        )
+                        AND siswa.id_kelas IS NOT NULL
+                        AND siswa.deleted_at IS NULL
+                        LIMIT 10
+                    ";
 
-                    $data = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
-                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                        ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                        ->join('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
-                        ->withCount([
-                            'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'kegiatan_siswa as kegiatan_siswa_approved' => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'kegiatan_siswa as kegiatan_siswa_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                            'prestasi_siswa as prestasi_siswa_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'prestasi_siswa as prestasi_siswa_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
-                            'prestasi_siswa as prestasi_siswa_approved' => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'informasi_tambahan as informasi_tambahan_reject' => function ($q) {
-                                $q->where('status', 10);
-                            },
-                            'informasi_tambahan as informasi_tambahan_approved'  => function ($q) {
-                                $q->where('status', 1);
-                            },
-                            'informasi_tambahan as informasi_tambahan_not_approved' => function ($q) {
-                                $q->where('status', 0);
-                            },
+                    $params = ["%$search%", "%$search%"];
 
-                        ]);
+                    $data = DB::select(DB::raw($query), $params);
                 }
             }
         }
 
         if ($alumni == 1) {
-            if ($param == 0) {
+            if ($param == 0 || $param == 2) {
                 return Datatables::of($data)
                     ->addColumn('prestasi', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->prestasi_siswa_reject . ' reject</button>
-                                    <button class="btn bg-teal">' . $item->prestasi_siswa_approved . ' approved</button>';
+                        $approved = '<button class="btn bg-teal">0 approved</button>';
+                        $reject = '<button class="btn bg-pink">0 reject</button>';
+
+                        $dataApprove = PrestasiSiswa::where('id_siswa', $item->id_siswa)->where('status', 1)->count();
+                        $dataReject = PrestasiSiswa::where('id_siswa', $item->id_siswa)->where('status', 10)->count();
+
+                        if ($dataApprove > 0) {
+                            $approved = "<button class='btn bg-teal'>$dataApprove approved</button>";
+                        }
+                        if ($dataReject > 0) {
+                            $reject = "<button class='btn bg-pink'>$dataReject reject</button>";
+                        }
+
+                        return $approved . ' ' . $reject;
                     })
                     ->addColumn('kegiatan', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->kegiatan_siswa_reject . ' reject</button>
-                                    <button class="btn bg-teal">' . $item->kegiatan_siswa_approved . ' approved</button>';
+                        $approved = '<button class="btn bg-teal">0 approved</button>';
+                        $reject = '<button class="btn bg-pink">0 reject</button>';
+
+                        $dataApprove = KegiatanSiswa::where('id_siswa', $item->id_siswa)->where('status', 1)->count();
+                        $dataReject = KegiatanSiswa::where('id_siswa', $item->id_siswa)->where('status', 10)->count();
+
+                        if ($dataApprove > 0) {
+                            $approved = "<button class='btn bg-teal'>$dataApprove approved</button>";
+                        }
+                        if ($dataReject > 0) {
+                            $reject = "<button class='btn bg-pink'>$dataReject reject</button>";
+                        }
+
+                        return $approved . ' ' . $reject;
                     })
                     ->addColumn('informasi_tambahan', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->informasi_tambahan_reject . ' reject</button>
-                                   <button class="btn bg-teal">' . $item->informasi_tambahan_approved . ' approved</button>';
+                        $approved = '<button class="btn bg-teal">0 approved</button>';
+                        $reject = '<button class="btn bg-pink">0 reject</button>';
+
+                        $dataApprove = InformasiTambahan::where('id_siswa', $item->id_siswa)->where('status', 1)->count();
+                        $dataReject = InformasiTambahan::where('id_siswa', $item->id_siswa)->where('status', 10)->count();
+
+                        if ($dataApprove > 0) {
+                            $approved = "<button class='btn bg-teal'>$dataApprove approved</button>";
+                        }
+                        if ($dataReject > 0) {
+                            $reject = "<button class='btn bg-pink'>$dataReject reject</button>";
+                        }
+
+                        return $approved . ' ' . $reject;
                     })
                     ->addColumn('action', function ($item) {
                         $data = array(
-                            'id' => $item->id_siswa,
-                            'id2' => 1
+                            'id' => $item->id_siswa
                         );
                         return $data;
-                    })->addColumn('nm_kelas', function ($item) {
-                        $id_kelas = LogKelasSiswa::where('id_siswa', $item->id_siswa)->with('kelas')->orderBy('created_at', 'desc')->first();
-                        // $kelas = Kelas::where('id_kelas',$id_kelas->id_id_kelas)->first();
-                        if (isset($id_kelas->kelas->nm_kelas)) {
-                            return $id_kelas->kelas->nm_kelas;
-                        } else {
-                            return 'Kosong';
-                        }
                     })
                     ->rawColumns(['prestasi', 'kegiatan', 'informasi_tambahan'])
                     ->make(true);
             } else {
                 return Datatables::of($data)
                     ->addColumn('prestasi', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->prestasi_siswa_not_approved . ' belum di approve</button>';
+                        $dataPrestasi = PrestasiSiswa::where('id_siswa', $item->id_siswa)->where('status', 0)->get();
+                        $hasil = '<button class="btn bg-pink">0 belum di approve</button>';
+                        if (!empty($dataPrestasi)) {
+                            $hasil = '<button class="btn bg-pink">' . count($dataPrestasi) . ' belum di approve</button>';
+                        }
+                        return $hasil;
                     })
                     ->addColumn('kegiatan', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->kegiatan_siswa_not_approved . ' belum di approve</button>';
+                        $dataKegiatan = KegiatanSiswa::where('id_siswa', $item->id_siswa)->where('status', 0)->get();
+                        $hasil = '<button class="btn bg-pink">0 belum di approve</button>';
+                        if (!empty($dataKegiatan)) {
+                            $hasil = '<button class="btn bg-pink">' . count($dataKegiatan) . ' belum di approve</button>';
+                        }
+                        return $hasil;
                     })
                     ->addColumn('informasi_tambahan', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->informasi_tambahan_not_approved . ' belum di approve</button>';
-                    })->addColumn('nm_kelas', function ($item) {
-                        $id_kelas = LogKelasSiswa::where('id_siswa', $item->id_siswa)->with('kelas')->orderBy('created_at', 'desc')->first();
-                        // $kelas = Kelas::where('id_kelas',$id_kelas->id_id_kelas)->first();
-                        if (isset($id_kelas->kelas->nm_kelas)) {
-                            return $id_kelas->kelas->nm_kelas;
-                        } else {
-                            return 'Kosong';
+                        $dataInformasi = InformasiTambahan::where('id_siswa', $item->id_siswa)->where('status', 0)->get();
+                        $hasil = '<button class="btn bg-pink">0 belum di approve</button>';
+                        if (!empty($dataInformasi)) {
+                            $hasil = '<button class="btn bg-pink">' . count($dataInformasi) . ' belum di approve</button>';
                         }
+                        return $hasil;
                     })
                     ->addColumn('action', function ($item) {
                         $data = array(
@@ -990,24 +979,59 @@ class ApprovePrestasiSiswaController extends BaseController
                     ->make(true);
             }
         } else {
-            if ($param == 0) {
+            if ($param == 0 || $param == 2) {
                 return Datatables::of($data)
                     ->addColumn('prestasi', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->prestasi_siswa_reject . ' reject</button>
-                                    <button class="btn bg-teal">' . $item->prestasi_siswa_approved . ' approved</button>';
+                        $approved = '<button class="btn bg-teal">0 approved</button>';
+                        $reject = '<button class="btn bg-pink">0 reject</button>';
+
+                        $dataApprove = PrestasiSiswa::where('id_siswa', $item->id_siswa)->where('status', 1)->count();
+                        $dataReject = PrestasiSiswa::where('id_siswa', $item->id_siswa)->where('status', 10)->count();
+
+                        if ($dataApprove > 0) {
+                            $approved = "<button class='btn bg-teal'>$dataApprove approved</button>";
+                        }
+                        if ($dataReject > 0) {
+                            $reject = "<button class='btn bg-pink'>$dataReject reject</button>";
+                        }
+
+                        return $approved . ' ' . $reject;
                     })
                     ->addColumn('kegiatan', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->kegiatan_siswa_reject . ' reject</button>
-                                    <button class="btn bg-teal">' . $item->kegiatan_siswa_approved . ' approved</button>';
+                        $approved = '<button class="btn bg-teal">0 approved</button>';
+                        $reject = '<button class="btn bg-pink">0 reject</button>';
+
+                        $dataApprove = KegiatanSiswa::where('id_siswa', $item->id_siswa)->where('status', 1)->count();
+                        $dataReject = KegiatanSiswa::where('id_siswa', $item->id_siswa)->where('status', 10)->count();
+
+                        if ($dataApprove > 0) {
+                            $approved = "<button class='btn bg-teal'>$dataApprove approved</button>";
+                        }
+                        if ($dataReject > 0) {
+                            $reject = "<button class='btn bg-pink'>$dataReject reject</button>";
+                        }
+
+                        return $approved . ' ' . $reject;
                     })
                     ->addColumn('informasi_tambahan', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->informasi_tambahan_reject . ' reject</button>
-                                   <button class="btn bg-teal">' . $item->informasi_tambahan_approved . ' approved</button>';
+                        $approved = '<button class="btn bg-teal">0 approved</button>';
+                        $reject = '<button class="btn bg-pink">0 reject</button>';
+
+                        $dataApprove = InformasiTambahan::where('id_siswa', $item->id_siswa)->where('status', 1)->count();
+                        $dataReject = InformasiTambahan::where('id_siswa', $item->id_siswa)->where('status', 10)->count();
+
+                        if ($dataApprove > 0) {
+                            $approved = "<button class='btn bg-teal'>$dataApprove approved</button>";
+                        }
+                        if ($dataReject > 0) {
+                            $reject = "<button class='btn bg-pink'>$dataReject reject</button>";
+                        }
+
+                        return $approved . ' ' . $reject;
                     })
                     ->addColumn('action', function ($item) {
                         $data = array(
-                            'id' => $item->id_siswa,
-                            'id2' => 1
+                            'id' => $item->id_siswa
                         );
                         return $data;
                     })
@@ -1016,13 +1040,28 @@ class ApprovePrestasiSiswaController extends BaseController
             } else {
                 return Datatables::of($data)
                     ->addColumn('prestasi', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->prestasi_siswa_not_approved . ' belum di approve</button>';
+                        $dataPrestasi = PrestasiSiswa::where('id_siswa', $item->id_siswa)->where('status', 0)->get();
+                        $hasil = '<button class="btn bg-pink">0 belum di approve</button>';
+                        if (!empty($dataPrestasi)) {
+                            $hasil = '<button class="btn bg-pink">' . count($dataPrestasi) . ' belum di approve</button>';
+                        }
+                        return $hasil;
                     })
                     ->addColumn('kegiatan', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->kegiatan_siswa_not_approved . ' belum di approve</button>';
+                        $dataKegiatan = KegiatanSiswa::where('id_siswa', $item->id_siswa)->where('status', 0)->get();
+                        $hasil = '<button class="btn bg-pink">0 belum di approve</button>';
+                        if (!empty($dataKegiatan)) {
+                            $hasil = '<button class="btn bg-pink">' . count($dataKegiatan) . ' belum di approve</button>';
+                        }
+                        return $hasil;
                     })
                     ->addColumn('informasi_tambahan', function ($item) {
-                        return '<button class="btn bg-pink">' . $item->informasi_tambahan_not_approved . ' belum di approve</button>';
+                        $dataInformasi = InformasiTambahan::where('id_siswa', $item->id_siswa)->where('status', 0)->get();
+                        $hasil = '<button class="btn bg-pink">0 belum di approve</button>';
+                        if (!empty($dataInformasi)) {
+                            $hasil = '<button class="btn bg-pink">' . count($dataInformasi) . ' belum di approve</button>';
+                        }
+                        return $hasil;
                     })
                     ->addColumn('action', function ($item) {
                         $data = array(
