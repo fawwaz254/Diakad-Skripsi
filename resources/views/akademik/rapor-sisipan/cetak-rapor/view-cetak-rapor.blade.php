@@ -35,7 +35,7 @@
                 <div class="header bg-cyan">
                     <h2>Cetak Rapor</h2>
                 </div>
-                <div class="container">
+                <div class="container-fluid">
                     <div style="margin-top: 1.5rem">
                         <label for="tanggal_cetak">Set Tanggal Cetak Rapor</label>
                         <input type="date" class="form-control" id="set_tanggal_cetak" name="set_tanggal_cetak"
