@@ -4,10 +4,10 @@
             <button type="button" id="button2" onclick="datatable(2)" class="btn btn-default">
                 Data SKPI Semua Siswa
             </button>
-            <button type="button" id="button0" onclick="datatable(0)" class="btn btn-primary">
+            <button type="button" id="button0" onclick="datatable(0)" class="btn btn-default">
                 Siswa yang memiliki prestasi / kegiatan
             </button>
-            <button type="button" id="button1" onclick="datatable(1)" class="btn btn-default"
+            <button type="button" id="button1" onclick="datatable(1)" class="btn btn-primary"
                 style="margin-right: 10px">
                 Siswa yang menunggu approval
             </button>
@@ -37,7 +37,7 @@
             <input type="checkbox" id="data_alumni" class="checkbox">
             <label for="data_alumni"> Tampilkan Data Alumni</label>
 
-            <input type="hidden" id="param" value="0">
+            <input type="hidden" id="param" value="1">
             <input type="hidden" id="param_semua_siswa" value="0">
             <input type="hidden" id="alumni" value="0">
             <input type="hidden" name="role" id="role" value="{{ Request::segment(1) }}">
@@ -149,7 +149,7 @@
             },
             {
                 data: 'nm_pengguna',
-                name: 'pengguna.nm_pengguna'
+                name: 'nm_pengguna'
             },
             {
                 data: 'nm_kelas',
