@@ -72,6 +72,9 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('akademik')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('/datatable', [WelcomeController::class, 'datatableReportRpp']);
+        Route::get('detail-rpp/{id}', [WelcomeController::class, 'modalDetailRpp']);
+
 
         Route::prefix('kpi')->group(function () {
             Route::prefix('komponen-kpi')->group(function () {
