@@ -39,7 +39,6 @@ class WelcomeController extends BaseController
         }
         $role_aktif = $auth_data->role_aktif;
 
-
         $totalUpload1HariTerakhir = DB::table('mapel_rpp')
             ->where('created_at', '>=', Carbon::now()->subDay())
             ->count();
@@ -59,14 +58,29 @@ class WelcomeController extends BaseController
     public function datatableReportRpp(Request $request)
     {
         $query = Pengguna::select('pengguna.id_pengguna', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang')
+            ->where('pengguna.username', '!=', 'yayasan')
             ->join('guru', function ($q) {
                 $q->on('guru.id_pengguna', '=', 'pengguna.id_pengguna')
-                    ->whereNull('guru.deleted_at');
+                    ->whereNull('guru.deleted_at')
+                    ->whereNull('guru.alasan_keluar');
+            })
+            ->join('status_pengguna', function ($q) {
+                $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                    ->where('status_pengguna.nm_status_pengguna', 'AKTIF');
             })
             ->addSelect([
                 'jumlah_rpp' => MapelRPP::selectRaw('count(*)')
                     ->whereColumn('created_by', 'pengguna.id_pengguna')
             ]);
+
+        if ($request->has('search') && $request->search['value'] != '') {
+            $searchValue = $request->search['value'];
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('pengguna.nm_pengguna', 'like', "%{$searchValue}%")
+                    ->orWhere('pengguna.gelar_depan', 'like', "%{$searchValue}%")
+                    ->orWhere('pengguna.gelar_belakang', 'like', "%{$searchValue}%");
+            });
+        }
 
         return Datatables::of($query)
             ->addColumn('nm_pengguna', function ($item) {
