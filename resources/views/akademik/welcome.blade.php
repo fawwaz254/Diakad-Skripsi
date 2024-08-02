@@ -133,7 +133,6 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: false,
         pageLength: 50,
         ajax: {
             url: datatable_url,
@@ -147,12 +146,13 @@
             },
             {
                 data: 'nm_pengguna',
-                name: 'nm_pengguna'
+                name: 'nm_pengguna',
+                searchable: true
             },
             {
                 data: 'jumlah_rpp',
                 name: 'jumlah_rpp',
-                className: 'text-center'
+                className: 'text-center',
             },
             {
                 data: 'action',
