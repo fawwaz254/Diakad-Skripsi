@@ -106,7 +106,7 @@ class ManajemenMateriAjarController extends BaseController
                 'judul_materi'      => 'required',
                 'id_mata_pelajaran' => 'required',
                 'id_jurusan'        => 'required',
-                'kelas'              => 'required',
+                'kelas'             => 'required',
                 'status'            => 'required',
                 // 'nm_file'           => 'required|array',
                 // 'nm_file.*'         => 'required',
@@ -115,11 +115,11 @@ class ManajemenMateriAjarController extends BaseController
             ]);
         } elseif ($mode == 'edit') {
             $validator = Validator::make($request->all(), [
-                'judul_materi'  => 'required',
-                'status'        => 'required',
+                'judul_materi'      => 'required',
+                'status'            => 'required',
                 'id_mata_pelajaran' => 'required',
                 'id_jurusan'        => 'required',
-                'kelas'           => 'required',
+                'kelas'             => 'required',
             ]);
         }
 

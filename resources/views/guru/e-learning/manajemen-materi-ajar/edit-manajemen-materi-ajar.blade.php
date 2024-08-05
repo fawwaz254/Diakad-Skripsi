@@ -259,9 +259,6 @@ $(document).ready(function() {
                 console.log(data);
                 $('#kelas').empty();
 
-                $('#kelas').append($("<option>")
-                    .text("-- Pilih Kelas --")
-                );
                 $.each(data, function(index, kelas) {
                     $('#kelas').append($("<option>")
                         .attr("value", kelas.id_kelas)
