@@ -156,6 +156,9 @@
 
                 $('#kelas').append($("<option>")
                     .text("-- Pilih Kelas --")
+                    .attr("value", "")
+                    .attr("disabled", "disabled")
+                    .attr("selected", "selected")
                 );
                 $.each(data, function(index, kelas) {
                     $('#kelas').append($("<option>")
