@@ -285,6 +285,8 @@
                         429/C-3/WH-2/V/2024
                     @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                         421.3/090/E/404.3.1.15.4.4/VI/2024
+                    @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
+                        394/C/SMK YPM 2/V/2024
                     @endif
                 </h5>
 
@@ -878,7 +880,7 @@
                             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                                 8 Mei 2023
                             @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
-                                5 Mei 2023
+                                8 Mei 2024
                             @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                                 11 Juni 2024
                             @else
