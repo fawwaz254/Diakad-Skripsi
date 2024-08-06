@@ -185,7 +185,8 @@
             </h4>
             <h5 class="text-center"><b>Diploma Supplement</b></h5>
             <h5 class="text-center">Nomor :
-                {{ $siswa->pengajuan_wisuda ? $siswa->pengajuan_wisuda->nomor_sk_kelulusan : '' }}
+                {{-- {{ $siswa->pengajuan_wisuda ? $siswa->pengajuan_wisuda->nomor_sk_kelulusan : '' }} --}}
+                394/C/SMK YPM 2/V/2024
             </h5>
 
         </table>
@@ -677,7 +678,7 @@
                 <tr style="background-color: white;border:none;">
                     <td style="width: 70%; border: none;"></td>
                     <td style="border: none;"></td>
-                    <td style="border: none">pada tanggal 5 Mei 2023
+                    <td style="border: none">pada tanggal 8 Mei 2024
                     </td>
                 </tr>
                 <tr>
