@@ -151,15 +151,17 @@
             },
             {
                 data: 'nm_kelas',
-                name: 'kelas.nm_kelas'
+                name: 'kelas.nm_kelas',
+                searchable: false
             },
             {
                 data: 'nm_siswa',
-                name: 'pengguna.nm_pengguna'
+                name: 'nm_siswa'
             },
             {
                 data: 'nm_wali_murid',
-                name: 'pengguna.nm_pengguna'
+                name: 'pengguna.nm_pengguna',
+                searchable: false
             },
             {
                 data: 'nomor_hp_wali_murid',
