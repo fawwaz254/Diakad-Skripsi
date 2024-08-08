@@ -398,7 +398,7 @@
                 </tr>
                 <tr>
                     <td>
-                        {{ App\Libraries\Akademik\LibAkademik::catatanProsesSiswa($siswa->id_siswa, $rapor->id_rapor_pendukung); }}
+                        {{ App\Libraries\Akademik\LibAkademik::catatanProsesSiswa($siswa->id_siswa, $rapor->id_rapor_pendukung) }}
                     </td>
                 </tr>
             </table>
