@@ -23,7 +23,8 @@ use App\Models\Pengguna as Pengguna;
 use App\Models\RolePengguna as RolePengguna;
 use Maatwebsite\Excel\Facades\Excel;
 use Auth;
-use DB;
+// use DB;
+use Illuminate\Support\Facades\DB;
 // use Excel;
 use Session;
 use Validator;
@@ -184,20 +185,36 @@ class SettingWaliMuridController extends BaseController
     public function datatablesWaliMurid(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        // $auth_data = $input->auth_data;
+        $search = $input->search['value'];
 
-        $list_data = Siswa::select()->addSelect('pwm.gelar_depan AS gd', 'pwm.gelar_belakang AS gb', 'pengguna.nm_pengguna AS nm_siswa')
+        // $list_data = Siswa::select()->addSelect('pwm.gelar_depan AS gd', 'pwm.gelar_belakang AS gb', 'pengguna.nm_pengguna AS nm_siswa')
+        //     ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+        //     ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
+        //     ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
+        //     ->leftjoin('pengguna AS pwm', 'pwm.id_pengguna', '=', 'wali_murid.id_pengguna')
+        //     ->when($id_jurusan != '0', function ($q) use ($id_jurusan) {
+        //         $q->where('kelas.id_jurusan', $id_jurusan);
+        //     })
+        //     ->when($id_kelas != '0', function ($q) use ($id_kelas) {
+        //         $q->where('siswa.id_kelas', $id_kelas);
+        //     })->orderBy('nis_siswa', 'asc')->get();
+        
+        $list_data = DB::table('siswa')
+            ->select('siswa.*', 'pwm.gelar_depan AS gd', 'pwm.gelar_belakang AS gb', 'pengguna.nm_pengguna AS nm_siswa', 'wali_murid.*', 'kelas.*')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-            ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
+            ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
             ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
-            ->leftjoin('pengguna AS pwm', 'pwm.id_pengguna', '=', 'wali_murid.id_pengguna')
-            ->when($id_jurusan != '0', function ($q) use ($id_jurusan) {
-                $q->where('kelas.id_jurusan', $id_jurusan);
+            ->leftJoin('pengguna AS pwm', 'pwm.id_pengguna', '=', 'wali_murid.id_pengguna')
+            ->when($id_jurusan != '0', function ($query) use ($id_jurusan) {
+                return $query->where('kelas.id_jurusan', $id_jurusan);
             })
-            ->when($id_kelas != '0', function ($q) use ($id_kelas) {
-                $q->where('siswa.id_kelas', $id_kelas);
-            })->orderBy('nis_siswa', 'asc')->get();;
-
+            ->when($id_kelas != '0', function ($query) use ($id_kelas) {
+                return $query->where('siswa.id_kelas', $id_kelas);
+            })
+            ->orderBy('nis_siswa', 'asc')
+            // ->limit(10)
+            ->get();
 
         return Datatables::of($list_data)
             ->editColumn('nm_wali_murid', function ($item) {
@@ -206,14 +223,14 @@ class SettingWaliMuridController extends BaseController
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_siswa,
-                    'wali_murid' => $item->wali_murid ? $item->wali_murid->id_wali_murid : null
+                    'wali_murid' => $item->id_wali_murid ? $item->id_wali_murid : null
                 );
                 return $data;
             })
             ->addColumn('checkbox', function ($item) {
                 $data = array(
                     'id_siswa' => $item->id_siswa,
-                    'wali_murid' => $item->wali_murid ? $item->wali_murid->id_wali_murid : null
+                    'wali_murid' => $item->id_wali_murid ? $item->id_wali_murid : null
                 );
                 return $data;
             })
