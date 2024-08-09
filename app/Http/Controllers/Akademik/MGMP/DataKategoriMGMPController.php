@@ -283,7 +283,7 @@ class DataKategoriMGMPController extends BaseController
         $input = (object) $request->input();
         // $auth_data = $input->auth_data;
 
-        $list_data = LaporanKerjaHarianMGMP::with('mapel', 'pengguna')->orderBy('created_at', 'desc');
+        $list_data = LaporanKerjaHarianMGMP::with('mapel', 'pengguna')->orderBy('created_at', 'desc')->get();
 
         return Datatables::of($list_data)
             ->editColumn('tanggal', function ($item) {
@@ -311,6 +311,9 @@ class DataKategoriMGMPController extends BaseController
                     'note'      => $item->mapel,
                 );
                 return $data;
+            })
+            ->addColumn('nm_pengguna', function($item) {
+                return $item->pengguna->nm_pengguna;
             })
             ->make(true);
     }

@@ -153,7 +153,10 @@
             },
             {
                 data: 'keterangan_progres',
-                name: 'keterangan_progres'
+                name: 'keterangan_progres',
+                render: function(data, type, row) {
+                    return '<span style="white-space:normal">' + data + "</span>";
+                } // tampilan wrap text
             },
             {
                 data: 'action',
@@ -187,9 +190,8 @@
                 }
             },
             {
-                data: 'pengguna.nm_pengguna',
-                name: 'action',
-                searchable: false,
+                data: 'nm_pengguna',
+                name: 'nm_pengguna',
                 orderable: false
             }
         ]
