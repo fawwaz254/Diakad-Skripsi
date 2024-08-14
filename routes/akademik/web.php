@@ -66,6 +66,7 @@ use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Models\PaketSoal;
 use App\Models\RaporSisipan;
+use Illuminate\Support\Facades\Route;
 
 // ROLE AKADEMIK
 Route::middleware(['token_staff'])->group(function () {
@@ -176,6 +177,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('mata-pelajaran/rpp')->group(function () {
                 Route::get('/', [MapelRppController::class, 'viewList']);
                 Route::get('add', [MapelRppController::class, 'viewAdd']);
+                Route::get('previewRPP', [MapelRppController::class, 'previewRPP']);
 
                 Route::get('datatables', [MapelRppController::class, 'actionDatatables']);
                 Route::post('action/{mode}/{id}', [MapelRppController::class, 'actionItem']);
