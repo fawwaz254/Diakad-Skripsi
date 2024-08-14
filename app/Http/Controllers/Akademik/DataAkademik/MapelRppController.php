@@ -22,6 +22,7 @@ use App\Models\MapelRPP;
 use App\Models\MapelRPPDetail;
 use App\Models\Semester;
 use Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Session;
@@ -32,7 +33,6 @@ class MapelRppController extends BaseController
 
     public function viewList(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -43,7 +43,6 @@ class MapelRppController extends BaseController
 
     public function viewAdd(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -155,5 +154,19 @@ class MapelRppController extends BaseController
                 'message'   => "File Excel Tidak Ditemukan"
             ];
         }
+    }
+
+    public function previewRPP(Request $request)
+    {
+        $input = (object) $request->input();
+        $id_mapel_rpp = $input->id;
+        
+        $mapel_rpp = MapelRPP::where('id_mapel_rpp', $id_mapel_rpp)->get()->first();
+
+        $detail_rpp = MapelRPPDetail::where('id_mapel_rpp', $id_mapel_rpp)->get();
+
+        $pdf = Pdf::loadView('akademik/data-akademik/mata-pelajaran/previewRPP', compact('mapel_rpp', 'detail_rpp'));
+        
+        return $pdf->stream('rpp_mapel.pdf');
     }
 }

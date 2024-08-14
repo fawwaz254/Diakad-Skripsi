@@ -70,7 +70,13 @@ class MataPelajaranController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibAkademik::fetchDataMataPelajaran($auth_data, null, "1");
+        $status = $input->semuaStatus;
+
+        if ($status == 1) {
+            $list_data = LibAkademik::fetchDataMataPelajaran($auth_data, null, "1");
+        } else {
+            $list_data = LibAkademik::fetchDataMataPelajaran($auth_data, null);
+        }    
 
         return Datatables::of($list_data)
             ->addColumn('status', function ($item) {
