@@ -90,6 +90,7 @@ class MapelRppController extends BaseController
         if ($request->hasFile('file')) {
             $data_excel = Excel::toArray(new DataImportExcel, $request->file('file'));
             $worksheet1 = $data_excel[0];
+            $role = $input->role;
 
             if (count($worksheet1)) {
                 DB::beginTransaction();
@@ -131,7 +132,7 @@ class MapelRppController extends BaseController
                     DB::commit();
                     return [
                         'status'    => 202, // SUCCESS AND LOAD CONTENT
-                        'path'      => 'data-akademik/mata-pelajaran/rpp?id=' . $mata_pelajaran->id_mata_pelajaran,
+                        'path'      => ($role == 'akademik') ? 'data-akademik/mata-pelajaran/rpp?id=' . $mata_pelajaran->id_mata_pelajaran : 'jadwal/mata-pelajaran/rpp?id=' . $mata_pelajaran->id_mata_pelajaran,
                         'message'   => 'Upload Data Successfully'
                     ];
                 } catch (\Exception $e) {
