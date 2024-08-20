@@ -287,9 +287,6 @@ Route::middleware(['token_staff'])->group(function () {
             // Route::post('post-view-jadwal-kelas', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);
 
 
-
-
-
             // menu view jadwal kelas
             Route::get('view-jadwal-kelas', [UsulanMataAjarController::class, 'viewUsulanMataAjar']);
             Route::post('post-view-jadwal-kelas', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);
@@ -319,6 +316,17 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('getMataPelajaran', [SetJadwalKelasController::class, 'getMataPelajaran']);
             Route::get('remove-kelas-kosong', [SetJadwalKelasController::class, 'removeKelasKosong']);
 
+            //Set KBM Tanpa Jadwal////////////////////////////////////////////////////////////////////////
+            Route::get('set-kbm-tanpa-jadwal', [SetJadwalKelasController::class, 'viewSetKBMTanpaJadwal']);
+            Route::post('set-kbm-tanpa-jadwal', [SetJadwalKelasController::class, 'actionSetKBMTanpaJadwal']);
+            Route::get('set-kbm-tanpa-jadwal/view-detail/{id_kelas}/{id_semester}', [SetJadwalKelasController::class, 'viewKBMTanpaJadwal']);
+            Route::get('set-kbm-tanpa-jadwal/datatables/{id_kelas}/{id_semester}', [SetJadwalKelasController::class, 'datatablesKBMTanpaJadwal']);
+            Route::get('set-kbm-tanpa-jadwal/view-add/{id_kelas}/{id_semester}', [SetJadwalKelasController::class, 'addKBMTanpaJadwal']);
+            Route::get('set-kbm-tanpa-jadwal/view-edit/{id_kelas}/{id}', [SetJadwalKelasController::class, 'editKBMTanpaJadwal']);
+
+            Route::post('action-set-kbm-tanpa-jadwal/{mode}/{id}', [SetJadwalKelasController::class, 'actionInputKBMTanpaJadwal']);
+
+            Route::post('getMapelKbmTanpaJadwal', [SetJadwalKelasController::class, 'getMapelKbmTanpaJadwal']);
 
 
             // MENU Monitoring Kelas

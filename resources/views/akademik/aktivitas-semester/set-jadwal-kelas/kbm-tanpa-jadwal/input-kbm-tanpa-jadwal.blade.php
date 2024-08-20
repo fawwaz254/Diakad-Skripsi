@@ -2,7 +2,7 @@
     <div class="block-header">
         <h2>
             <a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#jadwal/set-kbm-tanpa-jadwal/view-detail/' . $id_kelas . '/' . $id_semester) }}">
+                href="{{ url(Request::segment(1) . '#aktivitas-semester/set-kbm-tanpa-jadwal/view-detail/' . $id_kelas . '/' . $id_semester) }}">
                 <i class="material-icons">backspace</i>
                 <span>Kembali</span>
             </a>
@@ -18,7 +18,7 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-set-kbm-tanpa-jadwal/edit/' . $kelas_mp->id_kelas_mp) }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-set-kbm-tanpa-jadwal/add/0') }}">
                         {{ csrf_field() }}
                         <div class="demo-color-box bg-success">
                             Informasi Kelas dan Mata Pelajaran
@@ -58,14 +58,13 @@
                                         <optgroup label="{{ $jenis_mata_pelajaran->nm_jenis_mata_pelajaran }}"
                                             style="color: red">
                                             @foreach ($jenis_mata_pelajaran->mapel as $mapel)
-                                                <option value="{{ $mapel->id_mata_pelajaran }}" style="color: black"
-                                                    @if ($mapel->id_mata_pelajaran == $kelas_mp->mata_pelajaran->id_mata_pelajaran) selected @endif>
-                                                    {{ $mapel->nm_mata_pelajaran }} ({{ $mapel->kd_mata_pelajaran }})
+                                                <option value="{{ $mapel->id_mata_pelajaran }}" style="color: black">
+                                                    {{ $mapel->nm_mata_pelajaran }}
+                                                    ({{ $mapel->kd_mata_pelajaran }})
                                                 </option>
                                             @endforeach
                                         </optgroup>
                                     @endforeach
-
                                 </select>
                             </div>
                         </div>
@@ -84,6 +83,7 @@
                                     value="{{ $semester->nm_semester }}  {{ $semester->tahun_ajaran }}">
                                 <input type="hidden" name="id_semester" value="{{ $semester->id_semester }}">
                             </div>
+                            {{-- guru --}}
                             <div class="col-md-4">
                                 <label>Guru</label>
                                 <select class="form-control show-tick" name="id_guru">

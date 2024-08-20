@@ -104,6 +104,7 @@ class SetJadwalKelasGuruController extends Controller
             ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
             ->whereNull('pengampu_mp.pjmp_uts')
             ->whereNull('pengampu_mp.pjmp_uas')
+            ->where('jadwal_kelas_mp.id_jadwal_hari', '!=', '0')
             ->where('jadwal_kelas_mp.id_jadwal_jam', '!=', '0')
             ->where('jadwal_kelas_mp.id_jadwal_jam_selesai', '!=', '0')
             // ->where('kelas_mp.id_kelas_mp', '=', 'D4Ka21611379707600bb3fb69ca0')
@@ -374,7 +375,7 @@ class SetJadwalKelasGuruController extends Controller
         return $data;
     }
 
-    ///////////////////////////////////////////////// KBM TANPA JADWAL ////////////////////////////////////////////////////////
+    ///////////////////////////////// KBM TANPA JADWAL ///////////////////////////////////
 
     public function viewSetKBMTanpaJadwal(Request $request)
     {
@@ -439,7 +440,8 @@ class SetJadwalKelasGuruController extends Controller
             ->join('pengguna', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
             ->where('kelas_mp.id_kelas', $id_kelas)
             ->where('kelas_mp.id_semester', $id_semester)
-            ->where('id_jadwal_jam', '0')
+            ->where('jadwal_kelas_mp.id_jadwal_hari', '0')
+            ->where('jadwal_kelas_mp.id_jadwal_jam', '0')
             ->where('id_jadwal_jam_selesai', '0')
             ->get();
 
@@ -471,6 +473,7 @@ class SetJadwalKelasGuruController extends Controller
         $auth_data = $input->auth_data;
         $kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $id_semester = $semester->id_semester;
         $list_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
         $id_guru = $list_guru->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()->id_guru;
 
@@ -502,7 +505,7 @@ class SetJadwalKelasGuruController extends Controller
             $id_jurusan = null;
         }
 
-        return view('guru/jadwal/set-jadwal-kelas/kbm-tanpa-jadwal/input-kbm-tanpa-jadwal', compact('auth_data', 'id_kelas', 'kelas', 'list_guru', 'id_guru', 'semester', 'id_jurusan', 'data_jenis_mata_pelajaran', 'list_jurusan', 'list_jenis_mata_pelajaran'));
+        return view('guru/jadwal/set-jadwal-kelas/kbm-tanpa-jadwal/input-kbm-tanpa-jadwal', compact('auth_data', 'id_kelas', 'kelas', 'list_guru', 'id_guru', 'semester', 'id_jurusan', 'data_jenis_mata_pelajaran', 'list_jurusan', 'list_jenis_mata_pelajaran', 'id_semester'));
     }
 
     public function editKBMTanpaJadwal(Request $request, $id_kelas, $id)
@@ -511,14 +514,12 @@ class SetJadwalKelasGuruController extends Controller
         $auth_data = $input->auth_data;
         $kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $id_semester = $semester->id_semester;
         $list_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
-        $id_guru = $list_guru->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()->id_guru;
-        // dd($id_guru);
-        // $id_guru = PengampuMp::where('id_guru', $auth_data->pengguna->id_pengguna)->first()->id_guru;
-        // dd($id_guru);
+
+        $id_guru = PengampuMp::where('id_kelas_mp', $id)->first()->id_guru;
         $kelas_mp = KelasMp::find($id);
-        // $mata_pelajaran = MataPelajaran::find($kelas_mp->id_mata_pelajaran);
-        // dd($mata_pelajaran);
+
         $jadwal_kelas_mp = JadwalKelasMp::where('id_kelas_mp', $id)->first();
         $pengampu_mp = PengampuMp::where('id_kelas_mp', $id)->first();
 
@@ -548,8 +549,7 @@ class SetJadwalKelasGuruController extends Controller
 
         if (MataPelajaran::where('id_jurusan', $id_jurusan)->first()) {
         }
-        // dd($list_jenis_mata_pelajaran);
-        return view('guru/jadwal/set-jadwal-kelas/kbm-tanpa-jadwal/edit-kbm-tanpa-jadwal', compact('auth_data', 'id_kelas', 'kelas', 'list_guru', 'id_guru', 'semester', 'id_jurusan', 'data_jenis_mata_pelajaran', 'list_jurusan', 'list_jenis_mata_pelajaran', 'kelas_mp', 'jadwal_kelas_mp', 'pengampu_mp'));
+        return view('guru/jadwal/set-jadwal-kelas/kbm-tanpa-jadwal/edit-kbm-tanpa-jadwal', compact('auth_data', 'id_kelas', 'kelas', 'list_guru', 'id_guru', 'semester', 'id_jurusan', 'data_jenis_mata_pelajaran', 'list_jurusan', 'list_jenis_mata_pelajaran', 'kelas_mp', 'jadwal_kelas_mp', 'pengampu_mp', 'id_semester'));
     }
 
     public function actionInputKBMTanpaJadwal(Request $request, $mode, $id = null)
@@ -605,8 +605,6 @@ class SetJadwalKelasGuruController extends Controller
             $kelas_mp->created_at = $now;
             $kelas_mp->save();
 
-            // $ruang = Ruangan::where('id_kelas', $input->id_kelas)->first();
-
             $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $jadwal_kelas_mp = new JadwalKelasMp;
             $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -614,7 +612,6 @@ class SetJadwalKelasGuruController extends Controller
             $jadwal_kelas_mp->id_jadwal_hari = '0';
             $jadwal_kelas_mp->id_jadwal_jam = '0';
             $jadwal_kelas_mp->id_jadwal_jam_selesai = '0';
-            // $jadwal_kelas_mp->id_ruangan = $input->ruangan;
             $jadwal_kelas_mp->id_ruangan = '0';
             $jadwal_kelas_mp->created_at = $now;
             $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
@@ -634,54 +631,8 @@ class SetJadwalKelasGuruController extends Controller
                 'path' => 'jadwal/set-kbm-tanpa-jadwal/view-detail/' . $input->id_kelas . '/' . $input->id_semester,
                 'message' => 'Save Successfully'
             ];
-        } elseif ($mode = 'edit') {
-            // $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $mapel = MataPelajaran::find($input->id_mata_pelajaran);
-            $kelas = Kelas::find($input->id_kelas);
-
-            $kelas_mp = KelasMp::find($id);
-            // dd($kelas_mp);
-            // $kelas_mp = new KelasMp;
-            // $kelas_mp->id_kelas_mp = $id;
-            // $kelas_mp->id_semester = $input->id_semester;
-            // $kelas_mp->id_kelas = $input->id_kelas;
-            $kelas_mp->id_mata_pelajaran = $input->id_mata_pelajaran;
-            $kelas_mp->nm_kelas_mp = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
-            // $kelas_mp->jml_pertemuan_kelas_mp = '0';
-            $kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
-            $kelas_mp->updated_at = $now;
-            $kelas_mp->save();
-
-            $jadwal_kelas_mp = JadwalKelasMp::where('id_kelas_mp', $id)->first();
-            // dd($jadwal_kelas_mp);
-            // $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-            // $jadwal_kelas_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp;
-            $jadwal_kelas_mp->id_jadwal_hari = '0';
-            $jadwal_kelas_mp->id_jadwal_jam = '0';
-            $jadwal_kelas_mp->id_jadwal_jam_selesai = '0';
-            $jadwal_kelas_mp->id_ruangan = '0';
-            $jadwal_kelas_mp->updated_at = $now;
-            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
-            $jadwal_kelas_mp->save();
-
-            // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-            $pengampu_mp = PengampuMp::where('id_kelas_mp', $id)->first();
-            // $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-            // $pengampu_mp->id_kelas_mp       = $kelas_mp->id_kelas_mp;
-            $pengampu_mp->id_guru = $input->id_guru;
-            // $pengampu_mp->pjmp_pengampu_mp  = 1;
-            // $pengampu_mp->pjmp_uts          = 1;
-            // $pengampu_mp->pjmp_uas          = 1;
-            $jadwal_kelas_mp->updated_at = $now;
-            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
-            $pengampu_mp->save();
-            return [
-                'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'jadwal/set-kbm-tanpa-jadwal/view-detail/' . $input->id_kelas . '/' . $input->id_semester,
-                'message' => 'Save Successfully'
-            ];
         } elseif ($mode == 'delete') {
-            dd("delete");
+            // dd("delete");
             if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                 return [
                     'status_code' => 300, // SUCCESS AND LOAD TABLE
@@ -690,6 +641,9 @@ class SetJadwalKelasGuruController extends Controller
             } else {
                 DB::beginTransaction();
                 try {
+                    $id_kelas = KelasMp::where('id_kelas_mp', $id)->first()->id_kelas;
+                    $id_semester = KelasMp::where('id_kelas_mp', $id)->first()->id_semester;
+
                     JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
@@ -701,18 +655,44 @@ class SetJadwalKelasGuruController extends Controller
                     DB::commit();
                     return [
                         'status_code' => 202, // SUCCESS AND LOAD TABLE
-                        'path' => 'jadwal/set-kbm-tanpa-jadwal/view-detail/' . $input->id_kelas . '/' . $input->id_semester,
+                        'path' => 'jadwal/set-kbm-tanpa-jadwal/view-detail/' . $id_kelas . '/' . $id_semester,
                         'message' => 'Delete Jadwal Mata Ajar Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
                     return [
                         'status_code' => 202, // SUCCESS AND LOAD TABLE
-                        'path' => 'jadwal/set-kbm-tanpa-jadwal/view-detail/' . $input->id_kelas . '/' . $input->id_semester,
+                        'path' => 'jadwal/set-kbm-tanpa-jadwal/view-detail/' . $id_kelas . '/' . $id_semester,
                         'message' => 'Delete Jadwal Mata Ajar Gagal'
                     ];
                 }
             }
+        } elseif ($mode = 'edit') {
+            $mapel = MataPelajaran::find($input->id_mata_pelajaran);
+            $kelas = Kelas::find($input->id_kelas);
+
+            $kelas_mp = KelasMp::find($id);
+            $kelas_mp->id_mata_pelajaran = $input->id_mata_pelajaran;
+            $kelas_mp->nm_kelas_mp = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
+            $kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $kelas_mp->updated_at = $now;
+            $kelas_mp->save();
+
+            $jadwal_kelas_mp = JadwalKelasMp::where('id_kelas_mp', $id)->first();
+            $jadwal_kelas_mp->updated_at = $now;
+            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $jadwal_kelas_mp->save();
+
+            $pengampu_mp = PengampuMp::where('id_kelas_mp', $id)->first();
+            $pengampu_mp->id_guru = $input->id_guru;
+            $jadwal_kelas_mp->updated_at = $now;
+            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $pengampu_mp->save();
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'jadwal/set-kbm-tanpa-jadwal/view-detail/' . $input->id_kelas . '/' . $input->id_semester,
+                'message' => 'Save Successfully'
+            ];
         }
 
     }
