@@ -74,7 +74,7 @@ class UsulanMataAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $semester   = Semester::where('id_semester', '=', $id)->first();
+        $semester = Semester::where('id_semester', '=', $id)->first();
 
         $kelas_mp = KelasMp::where('kelas_mp.id_semester', '=', $semester->id_semester)->first();
 
@@ -86,37 +86,37 @@ class UsulanMataAjarController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $semester   = Semester::where('id_semester', '=', $id)->first();
+        $semester = Semester::where('id_semester', '=', $id)->first();
         return view('akademik/aktivitas-semester/usulan-mata-ajar/view-kelas-tambah-usulan-mata-ajar', compact('auth_data', 'id', 'semester'));
     }
 
     public function addUsulanMataAjar(Request $request, $id_semester, $id_mata_pelajaran)
     {
-        $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-        $mapel      = MataPelajaran::leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+        $mapel = MataPelajaran::leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
             ->join('jenis_mata_pelajaran', function ($join) {
                 $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
                     ->whereNull('jenis_mata_pelajaran.deleted_at');
             })
             ->where('mata_pelajaran.id_mata_pelajaran', '=', $id_mata_pelajaran)
             ->first();
-        $kelas      = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.is_aktif', 1)->get();
+        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.is_aktif', 1)->get();
 
-        $semester   = Semester::where('id_semester', '=', $id_semester)->first();
+        $semester = Semester::where('id_semester', '=', $id_semester)->first();
 
         return view('akademik/aktivitas-semester/usulan-mata-ajar/add-usulan-mata-ajar', compact('auth_data', 'kelas', 'id_semester', 'id_mata_pelajaran', 'mapel', 'semester'));
     }
 
     public function copyUsulanMataAjar(Request $request, $id_kelas_mp)
     {
-        $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-        $kelas_mp   = KelasMp::with('kelas')->where('id_kelas_mp', '=', $id_kelas_mp)->first();
+        $kelas_mp = KelasMp::with('kelas')->where('id_kelas_mp', '=', $id_kelas_mp)->first();
 
-        $mapel      = MataPelajaran::leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+        $mapel = MataPelajaran::leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
             ->join('jenis_mata_pelajaran', function ($join) {
                 $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
                     ->whereNull('jenis_mata_pelajaran.deleted_at');
@@ -127,7 +127,7 @@ class UsulanMataAjarController extends BaseController
         $id_semester = $kelas_mp->id_semester;
         $id_mata_pelajaran = $kelas_mp->id_mata_pelajaran;
 
-        $kelas      = Kelas::join('jurusan', function ($q) {
+        $kelas = Kelas::join('jurusan', function ($q) {
             $q->on('jurusan.id_jurusan', '=', 'kelas.id_jurusan')
                 ->whereNull('jurusan.deleted_at');
         })
@@ -145,17 +145,17 @@ class UsulanMataAjarController extends BaseController
             ->orderBy('kelas.nm_kelas')
             ->get();
 
-        $semester   = Semester::where('id_semester', '=', $kelas_mp->id_semester)->first();
+        $semester = Semester::where('id_semester', '=', $kelas_mp->id_semester)->first();
 
         return view('akademik/aktivitas-semester/usulan-mata-ajar/copy-kelas-usulan-mata-ajar', compact('auth_data', 'kelas', 'id_semester', 'id_mata_pelajaran', 'mapel', 'kelas_mp', 'semester'));
     }
 
     public function editUsulanMataAjar(Request $request, $id)
     {
-        $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-        $kelas_mp   = KelasMp::select('mata_pelajaran.id_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester')
+        $kelas_mp = KelasMp::select('mata_pelajaran.id_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester')
             ->leftJoin('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
             ->leftJoin('jadwal_hari', 'jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
             ->leftJoin('jadwal_jam', 'jadwal_jam.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
@@ -171,21 +171,21 @@ class UsulanMataAjarController extends BaseController
             ->where('kelas_mp.id_kelas_mp', '=', $id)
             ->first();
 
-        $jadwal     = JadwalKelasMp::where('id_kelas_mp', '=', $id)
+        $jadwal = JadwalKelasMp::where('id_kelas_mp', '=', $id)
             ->orderBy('id_jadwal_hari', 'asc')
             ->get();
         $jml_jadwal = count($jadwal);
 
-        $pengampu_mp_pj   = PengampuMp::where('id_kelas_mp', '=', $id)->where('pjmp_pengampu_mp', '=', 1)->first();
-        $anggota          = PengampuMp::where('id_kelas_mp', '=', $id)->where('pjmp_pengampu_mp', '=', 2)
+        $pengampu_mp_pj = PengampuMp::where('id_kelas_mp', '=', $id)->where('pjmp_pengampu_mp', '=', 1)->first();
+        $anggota = PengampuMp::where('id_kelas_mp', '=', $id)->where('pjmp_pengampu_mp', '=', 2)
             ->orderBy('id_guru', 'asc')
             ->get();
-        $jml_anggota        = count($anggota);
+        $jml_anggota = count($anggota);
 
-        $hari       = JadwalHari::get();
-        $jam        = JadwalJam::orderBy('jam_ke', 'asc')->get();
-        $pjma       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
-        $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
+        $hari = JadwalHari::get();
+        $jam = JadwalJam::orderBy('jam_ke', 'asc')->get();
+        $pjma = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
+        $ruangan = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
 
         return view('akademik/aktivitas-semester/usulan-mata-ajar/edit-usulan-mata-ajar', compact('auth_data', 'id', 'pjma', 'hari', 'ruangan', 'jam', 'kelas_mp', 'jadwal', 'jml_jadwal', 'pengampu_mp_pj', 'anggota', 'jml_anggota'));
     }
@@ -236,9 +236,9 @@ class UsulanMataAjarController extends BaseController
             ->where('id_semester', '=', $id_semester);
         return Datatables::of($list_data)
             ->addColumn('jam_ruang', function ($item) {
-                $jadwal_kelas =  $item->jadwal_kelas_mp_single;
+                $jadwal_kelas = $item->jadwal_kelas_mp_single;
                 $jadwal_kelas ?
-                    $jadwal =  $jadwal_kelas->jadwal_jam_mulai->jam_mulai . ':' . $jadwal_kelas->jadwal_jam_mulai->menit_mulai . '-' . $jadwal_kelas->jadwal_jam_selesai->jam_mulai . ':' . $jadwal_kelas->jadwal_jam_selesai->menit_mulai . ', ' . $jadwal_kelas->ruangan->nm_ruangan : $jadwal = null;
+                    $jadwal = $jadwal_kelas->jadwal_jam_mulai->jam_mulai . ':' . $jadwal_kelas->jadwal_jam_mulai->menit_mulai . '-' . $jadwal_kelas->jadwal_jam_selesai->jam_mulai . ':' . $jadwal_kelas->jadwal_jam_selesai->menit_mulai . ', ' . $jadwal_kelas->ruangan->nm_ruangan : $jadwal = null;
                 return $jadwal;
             })
             ->addColumn('action', function ($item) {
@@ -257,7 +257,7 @@ class UsulanMataAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $semester   = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
+        $semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
 
         $now = (int) $semester->thn_akademik_semester + 1;
 
@@ -281,16 +281,16 @@ class UsulanMataAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $jadwal               = JadwalKelasMp::find($id);
+        $jadwal = JadwalKelasMp::find($id);
         $kelas_mp = $jadwal->id_kelas_mp;
-        $jadwal->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+        $jadwal->deleted_by = $input->auth_data->pengguna->id_pengguna;
         $jadwal->save();
 
         $jadwal->delete();
 
         return [
-            'status'  => 202, // SUCCESS AND LOAD TABLE
-            'path'    => 'aktivitas-semester/usulan-mata-ajar/edit/' . $kelas_mp,
+            'status' => 202, // SUCCESS AND LOAD TABLE
+            'path' => 'aktivitas-semester/usulan-mata-ajar/edit/' . $kelas_mp,
             'message' => 'Delete Jadwal Kelas Successfully'
         ];
     }
@@ -462,56 +462,56 @@ class UsulanMataAjarController extends BaseController
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 // $semester    = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->where('is_aktif_semester','=','1')->first();
-                $kelas                              = Kelas::where('id_kelas', '=', $input->id_kelas)->first();
-                $mapel                              = MataPelajaran::where('id_mata_pelajaran', '=', $input->id_mata_pelajaran)->first();
-                $nm_kelas_mp                        = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
+                $kelas = Kelas::where('id_kelas', '=', $input->id_kelas)->first();
+                $mapel = MataPelajaran::where('id_mata_pelajaran', '=', $input->id_mata_pelajaran)->first();
+                $nm_kelas_mp = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
                 // ADA BUG DI NAMA_KELAS_MP entah add/copy
 
-                $kelas_mp                           = new KelasMp;
-                $kelas_mp->id_kelas_mp              = $id;
-                $kelas_mp->id_semester              = $input->id_semester;
-                $kelas_mp->id_kelas                 = $input->id_kelas;
-                $kelas_mp->id_mata_pelajaran        = $input->id_mata_pelajaran;
-                $kelas_mp->nm_kelas_mp              = $nm_kelas_mp;
-                $kelas_mp->jml_pertemuan_kelas_mp   = $input->jml_pertemuan_kelas_mp;
-                $kelas_mp->created_by               = $input->auth_data->pengguna->id_pengguna;
-                $kelas_mp->created_at               = $now;
+                $kelas_mp = new KelasMp;
+                $kelas_mp->id_kelas_mp = $id;
+                $kelas_mp->id_semester = $input->id_semester;
+                $kelas_mp->id_kelas = $input->id_kelas;
+                $kelas_mp->id_mata_pelajaran = $input->id_mata_pelajaran;
+                $kelas_mp->nm_kelas_mp = $nm_kelas_mp;
+                $kelas_mp->jml_pertemuan_kelas_mp = $input->jml_pertemuan_kelas_mp;
+                $kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
+                $kelas_mp->created_at = $now;
                 $kelas_mp->save();
 
                 return [
-                    'status'    =>  202, // SUCCESS AND LOAD CONTENT
-                    'message'   =>  'Save Usulan Mata Ajar Successfully',
-                    'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/' . $input->id_semester
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Save Usulan Mata Ajar Successfully',
+                    'path' => 'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/' . $input->id_semester
                 ];
             } elseif ($mode == 'copy') {
                 $batch_insert_kelas_mp = [];
                 foreach ($input->id_kelas as $id_kelas) {
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                    $kelas                              = Kelas::where('id_kelas', '=', $input->id_kelas)->first();
-                    $mapel                              = MataPelajaran::where('id_mata_pelajaran', '=', $input->id_mata_pelajaran)->first();
-                    $nm_kelas_mp                        = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
+                    $kelas = Kelas::where('id_kelas', '=', $input->id_kelas)->first();
+                    $mapel = MataPelajaran::where('id_mata_pelajaran', '=', $input->id_mata_pelajaran)->first();
+                    $nm_kelas_mp = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
 
                     $batch_insert_kelas_mp[] = array(
-                        'id_kelas_mp'              => $id,
-                        'id_semester'              => $input->id_semester,
-                        'id_kelas'                 => $id_kelas,
-                        'id_mata_pelajaran'        => $input->id_mata_pelajaran,
-                        'nm_kelas_mp'              => $nm_kelas_mp,
-                        'jml_pertemuan_kelas_mp'   => $input->jml_pertemuan_kelas_mp,
-                        'created_by'               => $input->auth_data->pengguna->id_pengguna,
-                        'created_at'               => $now,
-                        'updated_by'               => $input->auth_data->pengguna->id_pengguna,
-                        'updated_at'               => $now,
+                        'id_kelas_mp' => $id,
+                        'id_semester' => $input->id_semester,
+                        'id_kelas' => $id_kelas,
+                        'id_mata_pelajaran' => $input->id_mata_pelajaran,
+                        'nm_kelas_mp' => $nm_kelas_mp,
+                        'jml_pertemuan_kelas_mp' => $input->jml_pertemuan_kelas_mp,
+                        'created_by' => $input->auth_data->pengguna->id_pengguna,
+                        'created_at' => $now,
+                        'updated_by' => $input->auth_data->pengguna->id_pengguna,
+                        'updated_at' => $now,
                     );
                 }
 
                 \App\Jobs\CopyUsulanMataAjar::dispatch($batch_insert_kelas_mp);
 
                 return [
-                    'status'    =>  202, // SUCCESS AND LOAD CONTENT
-                    'message'   =>  'Save Usulan Mata Ajar Successfully',
-                    'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/' . $input->id_semester
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Save Usulan Mata Ajar Successfully',
+                    'path' => 'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/' . $input->id_semester
                 ];
             } elseif ($mode == 'copy-jadwal-semester') {
                 // semester paste
@@ -531,21 +531,21 @@ class UsulanMataAjarController extends BaseController
                     $batch_insert_jadwal_kelas_mp = [];
                     $batch_insert_pengampu_mp = [];
                     foreach ($kelas_mp_set as $kelas_mp) {
-                        $id_kelas_mp                = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $id_kelas                   = $kelas_mp->id_kelas;
-                        $id_mata_pelajaran          = $kelas_mp->id_mata_pelajaran;
-                        $nm_kelas_mp                = $kelas_mp->nm_kelas_mp;
-                        $jml_pertemuan_kelas_mp     = $kelas_mp->jml_pertemuan_kelas_mp;
+                        $id_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_kelas = $kelas_mp->id_kelas;
+                        $id_mata_pelajaran = $kelas_mp->id_mata_pelajaran;
+                        $nm_kelas_mp = $kelas_mp->nm_kelas_mp;
+                        $jml_pertemuan_kelas_mp = $kelas_mp->jml_pertemuan_kelas_mp;
 
                         $batch_insert_kelas_mp[] = array(
-                            'id_kelas_mp'               => $id_kelas_mp,
-                            'id_semester'               => $id_semester,
-                            'id_kelas'                  => $id_kelas,
-                            'id_mata_pelajaran'         => $id_mata_pelajaran,
-                            'nm_kelas_mp'               => $nm_kelas_mp,
-                            'jml_pertemuan_kelas_mp'    => $jml_pertemuan_kelas_mp,
-                            'created_by'                => $input->auth_data->pengguna->id_pengguna,
-                            'created_at'                => $now
+                            'id_kelas_mp' => $id_kelas_mp,
+                            'id_semester' => $id_semester,
+                            'id_kelas' => $id_kelas,
+                            'id_mata_pelajaran' => $id_mata_pelajaran,
+                            'nm_kelas_mp' => $nm_kelas_mp,
+                            'jml_pertemuan_kelas_mp' => $jml_pertemuan_kelas_mp,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            'created_at' => $now
                         );
 
                         // proses tabel jadwal_kelas_mp
@@ -553,21 +553,21 @@ class UsulanMataAjarController extends BaseController
                             ->get();
 
                         foreach ($jadwal_kelas_mp_set as $jadwal_kelas_mp) {
-                            $id_jadwal_kelas_mp         = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $id_ruangan                 = $jadwal_kelas_mp->id_ruangan;
-                            $id_jadwal_hari             = $jadwal_kelas_mp->id_jadwal_hari;
-                            $id_jadwal_jam              = $jadwal_kelas_mp->id_jadwal_jam;
-                            $id_jadwal_jam_selesai      = $jadwal_kelas_mp->id_jadwal_jam_selesai;
+                            $id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_ruangan = $jadwal_kelas_mp->id_ruangan;
+                            $id_jadwal_hari = $jadwal_kelas_mp->id_jadwal_hari;
+                            $id_jadwal_jam = $jadwal_kelas_mp->id_jadwal_jam;
+                            $id_jadwal_jam_selesai = $jadwal_kelas_mp->id_jadwal_jam_selesai;
 
                             $batch_insert_jadwal_kelas_mp[] = array(
-                                'id_jadwal_kelas_mp'        => $id_jadwal_kelas_mp,
-                                'id_kelas_mp'               => $id_kelas_mp,
-                                'id_ruangan'                => $id_ruangan,
-                                'id_jadwal_hari'            => $id_jadwal_hari,
-                                'id_jadwal_jam'             => $id_jadwal_jam,
-                                'id_jadwal_jam_selesai'     => $id_jadwal_jam_selesai,
-                                'created_by'                => $input->auth_data->pengguna->id_pengguna,
-                                'created_at'                => $now
+                                'id_jadwal_kelas_mp' => $id_jadwal_kelas_mp,
+                                'id_kelas_mp' => $id_kelas_mp,
+                                'id_ruangan' => $id_ruangan,
+                                'id_jadwal_hari' => $id_jadwal_hari,
+                                'id_jadwal_jam' => $id_jadwal_jam,
+                                'id_jadwal_jam_selesai' => $id_jadwal_jam_selesai,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna,
+                                'created_at' => $now
                             );
                         }
 
@@ -577,25 +577,25 @@ class UsulanMataAjarController extends BaseController
                             ->get();
 
                         foreach ($pengampu_mp_set as $pengampu_mp) {
-                            $id_pengampu_mp             = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $id_guru                    = $pengampu_mp->id_guru;
-                            $pjmp_pengampu_mp           = $pengampu_mp->pjmp_pengampu_mp;
-                            $pjmp_uts                   = $pengampu_mp->pjmp_uts;
-                            $pjmp_uas                   = $pengampu_mp->pjmp_uas;
-                            $nomor_sk_mengajar          = $pengampu_mp->nomor_sk_mengajar;
-                            $tgl_sk_mengajar            = $pengampu_mp->tgl_sk_mengajar;
+                            $id_pengampu_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_guru = $pengampu_mp->id_guru;
+                            $pjmp_pengampu_mp = $pengampu_mp->pjmp_pengampu_mp;
+                            $pjmp_uts = $pengampu_mp->pjmp_uts;
+                            $pjmp_uas = $pengampu_mp->pjmp_uas;
+                            $nomor_sk_mengajar = $pengampu_mp->nomor_sk_mengajar;
+                            $tgl_sk_mengajar = $pengampu_mp->tgl_sk_mengajar;
 
                             $batch_insert_pengampu_mp[] = array(
-                                'id_pengampu_mp'            => $id_pengampu_mp,
-                                'id_kelas_mp'               => $id_kelas_mp,
-                                'id_guru'                   => $id_guru,
-                                'pjmp_pengampu_mp'          => $pjmp_pengampu_mp,
-                                'pjmp_uts'                  => $pjmp_uts,
-                                'pjmp_uas'                  => $pjmp_uas,
-                                'nomor_sk_mengajar'         => $nomor_sk_mengajar,
-                                'tgl_sk_mengajar'           => $tgl_sk_mengajar,
-                                'created_by'                => $input->auth_data->pengguna->id_pengguna,
-                                'created_at'                => $now
+                                'id_pengampu_mp' => $id_pengampu_mp,
+                                'id_kelas_mp' => $id_kelas_mp,
+                                'id_guru' => $id_guru,
+                                'pjmp_pengampu_mp' => $pjmp_pengampu_mp,
+                                'pjmp_uts' => $pjmp_uts,
+                                'pjmp_uas' => $pjmp_uas,
+                                'nomor_sk_mengajar' => $nomor_sk_mengajar,
+                                'tgl_sk_mengajar' => $tgl_sk_mengajar,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna,
+                                'created_at' => $now
                             );
                         }
                     }
@@ -620,9 +620,9 @@ class UsulanMataAjarController extends BaseController
                     // all good
 
                     return [
-                        'status'    =>  202, // SUCCESS AND LOAD CONTENT
-                        'message'   =>  'Save Copy Usulan Mata Ajar Successfully',
-                        'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/' . $id_semester
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'message' => 'Save Copy Usulan Mata Ajar Successfully',
+                        'path' => 'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/' . $id_semester
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -640,33 +640,33 @@ class UsulanMataAjarController extends BaseController
                 try {
                     $kelasMp = KelasMp::where('id_kelas_mp', '=', $input->id_kelas_mp)->first();
 
-                    $kelas                              = Kelas::where('id_kelas', '=', $kelasMp->id_kelas)->first();
-                    $mapel                              = MataPelajaran::where('id_mata_pelajaran', '=', $input->id_mata_pelajaran)->first();
-                    $nm_kelas_mp                        = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
+                    $kelas = Kelas::where('id_kelas', '=', $kelasMp->id_kelas)->first();
+                    $mapel = MataPelajaran::where('id_mata_pelajaran', '=', $input->id_mata_pelajaran)->first();
+                    $nm_kelas_mp = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
 
                     $kelasMp->nm_kelas_mp = $nm_kelas_mp;
                     $kelasMp->save();
 
                     //input jadwal 1
                     if (!empty($input->id_jadwal_kelas_mp_1)) {
-                        $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_1);
-                        $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal1;
-                        $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal1;
+                        $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_1);
+                        $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal1;
+                        $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal1;
                         $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai1;
-                        $jadwal_kelas_mp->id_ruangan            = $input->ruangan1;
-                        $jadwal_kelas_mp->updated_at            = $now;
-                        $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                        $jadwal_kelas_mp->id_ruangan = $input->ruangan1;
+                        $jadwal_kelas_mp->updated_at = $now;
+                        $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                         $jadwal_kelas_mp->save();
                     } else {
-                        $jadwal_kelas_mp                        = new JadwalKelasMp;
-                        $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $jadwal_kelas_mp->id_kelas_mp           = $id;
-                        $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal1;
-                        $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal1;
+                        $jadwal_kelas_mp = new JadwalKelasMp;
+                        $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $jadwal_kelas_mp->id_kelas_mp = $id;
+                        $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal1;
+                        $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal1;
                         $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai1;
-                        $jadwal_kelas_mp->id_ruangan            = $input->ruangan1;
-                        $jadwal_kelas_mp->created_at            = $now;
-                        $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                        $jadwal_kelas_mp->id_ruangan = $input->ruangan1;
+                        $jadwal_kelas_mp->created_at = $now;
+                        $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                         $jadwal_kelas_mp->save();
                     }
 
@@ -674,34 +674,34 @@ class UsulanMataAjarController extends BaseController
                     //input jadwal 2
                     if (!empty($input->id_jadwal_kelas_mp_2)) {
                         if ($input->jam_jadwal2 != null && $input->jam_jadwal_selesai2 != null && $input->hari_jadwal2 != null && $input->ruangan2 != null) {
-                            $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal2;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal2;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal2;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal2;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2) ? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan2;
-                            $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan2;
+                            $jadwal_kelas_mp->updated_at = $now;
+                            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal2 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal2 != null or $input->ruangan2 != null) {
                         } else {
                             // make object to find id
-                            $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
-                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
+                            $jadwal_kelas_mp->deleted_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
                         }
                     } else {
                         if ($input->jam_jadwal2 != null && $input->jam_jadwal_selesai2 != null && $input->hari_jadwal2 != null && $input->ruangan2 != null) {
-                            $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $jadwal_kelas_mp->id_kelas_mp           = $id;
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal2;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal2;
+                            $jadwal_kelas_mp = new JadwalKelasMp;
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_kelas_mp = $id;
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal2;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal2;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2) ? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan2;
-                            $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan2;
+                            $jadwal_kelas_mp->created_at = $now;
+                            $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -709,34 +709,34 @@ class UsulanMataAjarController extends BaseController
                     //input jadwal 3
                     if (!empty($input->id_jadwal_kelas_mp_3)) {
                         if ($input->jam_jadwal3 != null && $input->jam_jadwal_selesai3 != null && $input->hari_jadwal3 != null && $input->ruangan3 != null) {
-                            $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal3;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal3;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal3;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal3;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3) ? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan3;
-                            $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan3;
+                            $jadwal_kelas_mp->updated_at = $now;
+                            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal3 != null or $input->jam_jadwal_selesai3 != null or $input->hari_jadwal3 != null or $input->ruangan3 != null) {
                         } else {
                             // make object to find id
-                            $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
-                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
+                            $jadwal_kelas_mp->deleted_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
                         }
                     } else {
                         if ($input->jam_jadwal3 != null && $input->jam_jadwal_selesai3 != null && $input->hari_jadwal3 != null && $input->ruangan3 != null) {
-                            $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $jadwal_kelas_mp->id_kelas_mp           = $id;
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal3;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal3;
+                            $jadwal_kelas_mp = new JadwalKelasMp;
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_kelas_mp = $id;
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal3;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal3;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3) ? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan3;
-                            $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan3;
+                            $jadwal_kelas_mp->created_at = $now;
+                            $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -744,34 +744,34 @@ class UsulanMataAjarController extends BaseController
                     //input jadwal 4
                     if (!empty($input->id_jadwal_kelas_mp_4)) {
                         if ($input->jam_jadwal4 != null && $input->jam_jadwal_selesai4 != null && $input->hari_jadwal4 != null && $input->ruangan4 != null) {
-                            $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal4;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal4;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal4;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal4;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4) ? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
-                            $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan4;
+                            $jadwal_kelas_mp->updated_at = $now;
+                            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai4 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) {
                         } else {
                             // make object to find id
-                            $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
-                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
+                            $jadwal_kelas_mp->deleted_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
                         }
                     } else {
                         if ($input->jam_jadwal4 != null && $input->jam_jadwal_selesai4 != null && $input->hari_jadwal4 != null && $input->ruangan4 != null) {
-                            $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $jadwal_kelas_mp->id_kelas_mp           = $id;
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal4;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal4;
+                            $jadwal_kelas_mp = new JadwalKelasMp;
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_kelas_mp = $id;
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal4;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal4;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4) ? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
-                            $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan4;
+                            $jadwal_kelas_mp->created_at = $now;
+                            $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -779,34 +779,34 @@ class UsulanMataAjarController extends BaseController
                     //input jadwal 5
                     if (!empty($input->id_jadwal_kelas_mp_5)) {
                         if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
-                            $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal5;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal5;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5) ? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
-                            $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan5;
+                            $jadwal_kelas_mp->updated_at = $now;
+                            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai5 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) {
                         } else {
                             // make object to find id
-                            $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
-                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
+                            $jadwal_kelas_mp->deleted_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
                         }
                     } else {
                         if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
-                            $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $jadwal_kelas_mp->id_kelas_mp           = $id;
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
+                            $jadwal_kelas_mp = new JadwalKelasMp;
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_kelas_mp = $id;
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal5;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal5;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5) ? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
-                            $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan5;
+                            $jadwal_kelas_mp->created_at = $now;
+                            $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -814,58 +814,58 @@ class UsulanMataAjarController extends BaseController
                     //input jadwal 6
                     if (!empty($input->id_jadwal_kelas_mp_6)) {
                         if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
-                            $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal6;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal6;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6) ? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
-                            $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan6;
+                            $jadwal_kelas_mp->updated_at = $now;
+                            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai6 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) {
                         } else {
                             // make object to find id
-                            $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
-                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
+                            $jadwal_kelas_mp->deleted_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
                         }
                     } else {
                         if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
-                            $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $jadwal_kelas_mp->id_kelas_mp           = $id;
-                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
-                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
+                            $jadwal_kelas_mp = new JadwalKelasMp;
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_kelas_mp = $id;
+                            $jadwal_kelas_mp->id_jadwal_hari = $input->hari_jadwal6;
+                            $jadwal_kelas_mp->id_jadwal_jam = $input->jam_jadwal6;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6) ? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
-                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
-                            $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->id_ruangan = $input->ruangan6;
+                            $jadwal_kelas_mp->created_at = $now;
+                            $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
 
                     //input pjma
                     if (!empty($input->id_pengampu_mp_pj)) {
-                        $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp_pj);
-                        $pengampu_mp->id_guru           = $input->pjma;
-                        $pengampu_mp->pjmp_pengampu_mp  = 1;
-                        $pengampu_mp->pjmp_uts          = 1;
-                        $pengampu_mp->pjmp_uas          = 1;
-                        $pengampu_mp->updated_at        = $now;
-                        $pengampu_mp->updated_by        = $input->auth_data->pengguna->id_pengguna;
+                        $pengampu_mp = PengampuMp::find($input->id_pengampu_mp_pj);
+                        $pengampu_mp->id_guru = $input->pjma;
+                        $pengampu_mp->pjmp_pengampu_mp = 1;
+                        $pengampu_mp->pjmp_uts = 1;
+                        $pengampu_mp->pjmp_uas = 1;
+                        $pengampu_mp->updated_at = $now;
+                        $pengampu_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                         $pengampu_mp->save();
                     } else {
-                        $pengampu_mp                    = new PengampuMp;
-                        $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $pengampu_mp->id_kelas_mp       = $id;
-                        $pengampu_mp->id_guru           = $input->pjma;
-                        $pengampu_mp->pjmp_pengampu_mp  = 1;
-                        $pengampu_mp->pjmp_uts          = 1;
-                        $pengampu_mp->pjmp_uas          = 1;
-                        $pengampu_mp->created_at        = $now;
-                        $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
+                        $pengampu_mp = new PengampuMp;
+                        $pengampu_mp->id_pengampu_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pengampu_mp->id_kelas_mp = $id;
+                        $pengampu_mp->id_guru = $input->pjma;
+                        $pengampu_mp->pjmp_pengampu_mp = 1;
+                        $pengampu_mp->pjmp_uts = 1;
+                        $pengampu_mp->pjmp_uas = 1;
+                        $pengampu_mp->created_at = $now;
+                        $pengampu_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                         $pengampu_mp->save();
                     }
 
@@ -873,33 +873,33 @@ class UsulanMataAjarController extends BaseController
                     // tim pjma 1
                     if (!empty($input->id_pengampu_mp_1)) {
                         if ($input->pjma_tim1 != null) {
-                            $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp_1);
-                            $pengampu_mp->id_guru           = $input->pjma_tim1;
-                            $pengampu_mp->pjmp_pengampu_mp  = 2;
-                            $pengampu_mp->pjmp_uts          = 0;
-                            $pengampu_mp->pjmp_uas          = 0;
-                            $pengampu_mp->updated_at        = $now;
-                            $pengampu_mp->updated_by        = $input->auth_data->pengguna->id_pengguna;
+                            $pengampu_mp = PengampuMp::find($input->id_pengampu_mp_1);
+                            $pengampu_mp->id_guru = $input->pjma_tim1;
+                            $pengampu_mp->pjmp_pengampu_mp = 2;
+                            $pengampu_mp->pjmp_uts = 0;
+                            $pengampu_mp->pjmp_uas = 0;
+                            $pengampu_mp->updated_at = $now;
+                            $pengampu_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
                         } else {
                             // make object to find id
-                            $pengampu_mp               = PengampuMp::find($input->id_pengampu_mp_1);
-                            $pengampu_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $pengampu_mp = PengampuMp::find($input->id_pengampu_mp_1);
+                            $pengampu_mp->deleted_by = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
 
                             $pengampu_mp->delete();
                         }
                     } else {
                         if ($input->pjma_tim1 != null) {
-                            $pengampu_mp                    = new PengampuMp;
-                            $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $pengampu_mp->id_kelas_mp       = $id;
-                            $pengampu_mp->id_guru           = $input->pjma_tim1;
-                            $pengampu_mp->pjmp_pengampu_mp  = 2;
-                            $pengampu_mp->pjmp_uts          = 0;
-                            $pengampu_mp->pjmp_uas          = 0;
-                            $pengampu_mp->created_at        = $now;
-                            $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
+                            $pengampu_mp = new PengampuMp;
+                            $pengampu_mp->id_pengampu_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $pengampu_mp->id_kelas_mp = $id;
+                            $pengampu_mp->id_guru = $input->pjma_tim1;
+                            $pengampu_mp->pjmp_pengampu_mp = 2;
+                            $pengampu_mp->pjmp_uts = 0;
+                            $pengampu_mp->pjmp_uas = 0;
+                            $pengampu_mp->created_at = $now;
+                            $pengampu_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
                         }
                     }
@@ -907,33 +907,33 @@ class UsulanMataAjarController extends BaseController
                     // tim pjma 2
                     if (!empty($input->id_pengampu_mp_2)) {
                         if ($input->pjma_tim2 != null) {
-                            $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp_2);
-                            $pengampu_mp->id_guru           = $input->pjma_tim2;
-                            $pengampu_mp->pjmp_pengampu_mp  = 2;
-                            $pengampu_mp->pjmp_uts          = 0;
-                            $pengampu_mp->pjmp_uas          = 0;
-                            $pengampu_mp->updated_at        = $now;
-                            $pengampu_mp->updated_by        = $input->auth_data->pengguna->id_pengguna;
+                            $pengampu_mp = PengampuMp::find($input->id_pengampu_mp_2);
+                            $pengampu_mp->id_guru = $input->pjma_tim2;
+                            $pengampu_mp->pjmp_pengampu_mp = 2;
+                            $pengampu_mp->pjmp_uts = 0;
+                            $pengampu_mp->pjmp_uas = 0;
+                            $pengampu_mp->updated_at = $now;
+                            $pengampu_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
                         } else {
                             // make object to find id
-                            $pengampu_mp               = PengampuMp::find($input->id_pengampu_mp_2);
-                            $pengampu_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $pengampu_mp = PengampuMp::find($input->id_pengampu_mp_2);
+                            $pengampu_mp->deleted_by = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
 
                             $pengampu_mp->delete();
                         }
                     } else {
                         if ($input->pjma_tim2 != null) {
-                            $pengampu_mp                    = new PengampuMp;
-                            $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $pengampu_mp->id_kelas_mp       = $id;
-                            $pengampu_mp->id_guru           = $input->pjma_tim2;
-                            $pengampu_mp->pjmp_pengampu_mp  = 2;
-                            $pengampu_mp->pjmp_uts          = 0;
-                            $pengampu_mp->pjmp_uas          = 0;
-                            $pengampu_mp->created_at        = $now;
-                            $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
+                            $pengampu_mp = new PengampuMp;
+                            $pengampu_mp->id_pengampu_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $pengampu_mp->id_kelas_mp = $id;
+                            $pengampu_mp->id_guru = $input->pjma_tim2;
+                            $pengampu_mp->pjmp_pengampu_mp = 2;
+                            $pengampu_mp->pjmp_uts = 0;
+                            $pengampu_mp->pjmp_uas = 0;
+                            $pengampu_mp->created_at = $now;
+                            $pengampu_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
                         }
                     }
@@ -944,7 +944,7 @@ class UsulanMataAjarController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'message' => 'Update Usulan Mata Ajar Successfully',
-                        'path'      =>  'aktivitas-semester/usulan-mata-ajar/edit/' . $id
+                        'path' => 'aktivitas-semester/usulan-mata-ajar/edit/' . $id
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -963,8 +963,8 @@ class UsulanMataAjarController extends BaseController
                     ];
                 } else {
                     // make object to find id
-                    $kelas_mp               = KelasMp::find($id);
-                    $kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $kelas_mp = KelasMp::find($id);
+                    $kelas_mp->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $kelas_mp->save();
                     $kelas_mp->delete();
 
