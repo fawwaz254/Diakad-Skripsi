@@ -318,6 +318,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::get('jadwal-kbm', [JadwalKBMController::class, 'viewJadwalKBM']);
             Route::get('jadwal-kbm/datatables', [JadwalKBMController::class, 'datatablesJadwalKBM']);
+            Route::get('kbm-tanpa-jadwal/datatables', [JadwalKBMController::class, 'datatablesKBMTanpaJadwal']);
 
             Route::get('jadwal-ujian', [JadwalUjianController::class, 'viewJadwalUjian']);
             Route::get('jadwal-ujian/datatables-uts', [JadwalUjianController::class, 'datatablesJadwalUTS']);
@@ -342,7 +343,19 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasGuruController::class, 'actionTambahJadwalKelas']);
             Route::post('getMataPelajaran', [SetJadwalKelasGuruController::class, 'getMataPelajaran']);
 
-             // MENU Data Mata Pelajaran
+            /////////////////////////////////////////New Set KBM Tanpa Jadwal///////////////////////////
+            Route::get('set-kbm-tanpa-jadwal', [SetJadwalKelasGuruController::class, 'viewSetKBMTanpaJadwal']);
+            Route::post('set-kbm-tanpa-jadwal', [SetJadwalKelasGuruController::class, 'actionSetKBMTanpaJadwal']);
+            Route::get('set-kbm-tanpa-jadwal/view-detail/{id_kelas}/{id_semester}', [SetJadwalKelasGuruController::class, 'viewKBMTanpaJadwal']);
+            Route::get('set-kbm-tanpa-jadwal/datatables/{id_kelas}/{id_semester}', [SetJadwalKelasGuruController::class, 'datatablesKBMTanpaJadwal']);
+            Route::get('set-kbm-tanpa-jadwal/view-add/{id_kelas}/{id_semester}', [SetJadwalKelasGuruController::class, 'addKBMTanpaJadwal']);
+            Route::get('set-kbm-tanpa-jadwal/view-edit/{id_kelas}/{id}', [SetJadwalKelasGuruController::class, 'editKBMTanpaJadwal']);
+
+            Route::post('action-set-kbm-tanpa-jadwal/{mode}/{id}', [SetJadwalKelasGuruController::class, 'actionInputKBMTanpaJadwal']);
+
+            Route::post('getMapelKbmTanpaJadwal', [SetJadwalKelasGuruController::class, 'getMapelKbmTanpaJadwal']);
+
+            // MENU Data Mata Pelajaran
             Route::get('mata-pelajaran', [MataPelajaranController::class, 'viewMataPelajaran']);
             Route::get('mata-pelajaran/datatables', [MataPelajaranController::class, 'datatablesMataPelajaran']);
             Route::get('mata-pelajaran/add', [MataPelajaranController::class, 'addMataPelajaran']);
@@ -401,11 +414,14 @@ Route::middleware(['token_staff'])->group(function () {
 
             // MENU Absensi Tanpa Jadwal
             Route::get('absensi-tanpa-jadwal', [AbsensiTanpaJadwalController::class, 'viewAbsensiTanpaJadwal']);
-            Route::get('absensi-tanpa-jadwal/view-kbm/{id_guru}/{id_mata_pelajaran}/{id_kelas}/{opsi}', [AbsensiTanpaJadwalController::class, 'viewKBMAbsensiTanpaJadwal']);
-            Route::get('absensi-tanpa-jadwal/datatables-kbm/{id_guru}/{id_mata_pelajaran}/{id_kelas}', [AbsensiTanpaJadwalController::class, 'datatablesKBMAbsensiTanpaJadwal']);
+            Route::get('absensi-tanpa-jadwal/view-kbm/{id_guru}/{id_jadwal_kelas_mp}/{opsi}', [AbsensiTanpaJadwalController::class, 'viewKBMAbsensiTanpaJadwal']);
+            Route::get('absensi-tanpa-jadwal/datatables-kbm/{id_jadwal_kelas_mp}/{pertemuan_ke}', [AbsensiTanpaJadwalController::class, 'datatablesKBMAbsensiTanpaJadwal']);
+
+            // AJAX GET PERTEMUAN BY KELAS_MP
+            // Route::post('pertemuan-byjadwalkelasmp-kbmtanpaJadwal', [AbsensiSiswaController::class, 'ajaxGetPertemuanByJadwalKelasMpKbmTanpaJadwal']);
 
             Route::post('absensi-tanpa-jadwal/view-kbm', [AbsensiTanpaJadwalController::class, 'actionViewKBMAbsensiTanpaJadwal']);
-            Route::post('action-absensi-tanpa-jadwal/{mode}/{id_guru}/{id_mata_pelajaran}/{id_kelas}', [AbsensiTanpaJadwalController::class, 'actionAbsensiTanpaJadwal']);
+            Route::post('action-absensi-tanpa-jadwal/{mode}/{id_jadwal_kelas_mp}/{pertemuan_ke}', [AbsensiTanpaJadwalController::class, 'actionAbsensiTanpaJadwal']);
 
             // MENU Rekap Absen Tanpa Jadwal
             Route::get('rekap-absen-tanpa-jadwal', [RekapAbsenTanpaJadwalController::class, 'viewRekapAbsenTanpaJadwal']);
@@ -795,7 +811,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('prestasi-siswa/action/{mode}/{id}', [WaliKelasSKPIController::class, 'actionDataPrestasiSiswa']);
                 Route::get('prestasi-siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewPrestasiSiswa']);
 
-                Route::get('print/{id_siswa}',  [ApprovePrestasiSiswaController::class, 'printSkpi']);
+                Route::get('print/{id_siswa}', [ApprovePrestasiSiswaController::class, 'printSkpi']);
             });
 
 
