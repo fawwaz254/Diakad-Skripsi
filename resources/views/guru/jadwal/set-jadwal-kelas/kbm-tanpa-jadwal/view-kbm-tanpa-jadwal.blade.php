@@ -1,27 +1,13 @@
 <div class="container-fluid">
-
+    {{-- <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#jadwal/input-jadwal')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div> --}}
     <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card" style="margin-top: 10px">
                 <div class="header">
                     <h2>
-                        SET KBM TANPA JADWAL
-                    </h2>
-                </div>
-                <div class="body">
-                    <div class="text-center">
-                        <a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/set-kbm-tanpa-jadwal') }}"
-                            class="btn btn-danger btn-block">
-                            <i class="material-icons">save</i>
-                            <span>Tampilkan</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="card" style="margin-top: 10px">
-                <div class="header">
-                    <h2>
-                        SET JADWAL KELAS
+                        SET JADWAL KELAS (KBM Tanpa Jadwal)
                     </h2>
                 </div>
                 <div class="body">
@@ -69,6 +55,5 @@
         </div>
     </div>
 </div>
-<br>
-
+</div>
 @include('scriptjs')

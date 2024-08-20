@@ -37,18 +37,17 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="id_mata_pelajaran">
+                                        <select class="form-control show-tick" name="id_jadwal_kelas_mp">
                                             <option value="" disabled selected>-- Pilih Mata Pelajaran --</option>
-                                            @foreach ($pengampu_mapel as $mapel)
-                                                @if (!empty($mapel))
-                                                    <option value="{{ $mapel->id_mata_pelajaran }}">
-                                                        {{ $mapel->nm_mata_pelajaran }}</option>
-                                                @endif
+                                            @foreach ($jadwal_kelas_mp as $kelas_mp)
+                                                <option value="{{ $kelas_mp->id_jadwal_kelas_mp }}">
+                                                    {{ $kelas_mp->nm_kelas_mp }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <h2 class="card-inside-title">
+                                {{-- <h2 class="card-inside-title">
                                     Kelas
                                 </h2>
                                 <div class="row clearfix">
@@ -60,8 +59,19 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                                <h2 class="card-inside-title">
+                                </div> --}}
+                                {{-- <h2 class="card-inside-title">
+                                    Pertemuan pekan ke
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <select class="form-control show-tick" name="pertemuan_ke">
+                                            <option value="" disabled selected>-- Pilih Pertemuan pekan ke --
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div> --}}
+                                {{-- <h2 class="card-inside-title">
                                     Opsi Hadir
                                 </h2>
                                 <div class="row clearfix">
@@ -76,7 +86,8 @@
                                             <option value="6">Perempuan</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
+                                <input type="hidden" name="opsi" value="0">
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     </div>
