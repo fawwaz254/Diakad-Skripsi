@@ -56,7 +56,6 @@
             url: datatable_url,
             type: 'GET',
             data: function(d) {
-                // Tambahkan parameter tambahan di sini
                 d.semuaStatus = 0;
             },
         },
@@ -67,19 +66,19 @@
             },
             {
                 data: 'nm_jurusan',
-                name: 'jurusan.nm_jurusan'
+                name: 'nm_jurusan'
             },
             {
                 data: 'kd_mata_pelajaran',
-                name: 'mata_pelajaran.kd_mata_pelajaran'
+                name: 'kd_mata_pelajaran'
             },
             {
                 data: 'nm_mata_pelajaran',
-                name: 'mata_pelajaran.nm_mata_pelajaran'
+                name: 'nm_mata_pelajaran'
             },
             {
                 data: 'nm_jenis_mata_pelajaran',
-                name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran'
+                name: 'nm_jenis_mata_pelajaran'
             },
             {
                 data: 'action',
