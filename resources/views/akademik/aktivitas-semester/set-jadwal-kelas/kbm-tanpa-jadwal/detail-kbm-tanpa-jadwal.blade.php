@@ -101,7 +101,7 @@
     var id_kelas = {!! json_encode($id_kelas) !!};
     var id_semester = {!! json_encode($id_semester) !!};
 
-    var modul_url = 'jadwal';
+    var modul_url = 'aktivitas-semester';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'set-kbm-tanpa-jadwal/datatables/' +
         id_kelas + '/' + id_semester;
 
