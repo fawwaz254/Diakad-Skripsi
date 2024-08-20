@@ -365,6 +365,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('mata-pelajaran/rpp')->group(function () {
                 Route::get('/', [MapelRppController::class, 'viewList']);
                 Route::get('add', [MapelRppController::class, 'viewAdd']);
+                Route::get('previewRPP', [MapelRppController::class, 'previewRPP']);
 
                 Route::get('datatables', [MapelRppController::class, 'actionDatatables']);
                 Route::post('action/{mode}/{id}', [MapelRppController::class, 'actionItem']);

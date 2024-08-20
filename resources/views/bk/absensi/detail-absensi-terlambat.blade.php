@@ -28,6 +28,10 @@
         color: black;
         opacity: 1;
     }
+
+    .dataTables_filter input[type="search"] {
+        color: black;
+    }
 </style>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -187,7 +191,7 @@
     </div>
 </div>
 @include('scriptjs')
-<script type="text/javascript">
+<script>
     $id_kelas = '{{ $id_kelas }}';
     $date = '{{ $date }}';
     $("input").on("change", function() {
@@ -207,8 +211,6 @@
             ],
         });
     });
-
-
 
     function editAbsensi(id_presensi_pengguna) {
         window.open(base_url +

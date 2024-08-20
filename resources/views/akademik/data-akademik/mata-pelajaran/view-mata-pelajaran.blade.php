@@ -1,8 +1,12 @@
 <div class="container-fluid">
-    <div class="block-header">
+    <div class="block-header" style="display:flex; justify-content: space-between; align-items:center">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#'.Request::segment(2).'/mata-pelajaran/add') }}"><i
-                    class="material-icons">note_add</i><span>Tambah Mata Pelajaran</span></a></h2>
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/mata-pelajaran/add') }}"><i
+                    class="material-icons">note_add</i><span>Tambah Mata Pelajaran</span>
+            </a>
+        </h2>
+        <input type="checkbox" id="semuaStatus" name="semuaStatus" class="checkbox" style="margin-top: 5px" value="1" onchange="filterStatus()">
+        <label for="semuaStatus">Semua Status</label>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -38,7 +42,7 @@
 </div>
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var modul_url = '{{Request::segment(2)}}';
+    var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'mata-pelajaran/datatables';
     var edit_url = role_url + '#' + modul_url + '/' + 'mata-pelajaran/edit';
     var rpp_url = role_url + '#' + modul_url + '/' + 'mata-pelajaran/rpp';
@@ -50,7 +54,10 @@
         responsive: false,
         ajax: {
             url: datatable_url,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                d.semuaStatus = 0;
+            },
         },
         columns: [{
                 data: null,
@@ -59,19 +66,19 @@
             },
             {
                 data: 'nm_jurusan',
-                name: 'jurusan.nm_jurusan'
+                name: 'nm_jurusan'
             },
             {
                 data: 'kd_mata_pelajaran',
-                name: 'mata_pelajaran.kd_mata_pelajaran'
+                name: 'kd_mata_pelajaran'
             },
             {
                 data: 'nm_mata_pelajaran',
-                name: 'mata_pelajaran.nm_mata_pelajaran'
+                name: 'nm_mata_pelajaran'
             },
             {
                 data: 'nm_jenis_mata_pelajaran',
-                name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran'
+                name: 'nm_jenis_mata_pelajaran'
             },
             {
                 data: 'action',
@@ -117,4 +124,14 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+
+    function filterStatus() {
+        var status = $('input[name="semuaStatus"]:checked').val();
+
+        var table = $('#primary_table').DataTable();
+        table.settings()[0].ajax.data = function(d) {
+            d.semuaStatus = status !== undefined ? 1 : 0;;
+        };
+        table.ajax.reload(null, false);
+    }
 </script>

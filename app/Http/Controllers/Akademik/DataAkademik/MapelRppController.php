@@ -22,6 +22,7 @@ use App\Models\MapelRPP;
 use App\Models\MapelRPPDetail;
 use App\Models\Semester;
 use Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Session;
@@ -32,7 +33,6 @@ class MapelRppController extends BaseController
 
     public function viewList(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -43,7 +43,6 @@ class MapelRppController extends BaseController
 
     public function viewAdd(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -91,6 +90,7 @@ class MapelRppController extends BaseController
         if ($request->hasFile('file')) {
             $data_excel = Excel::toArray(new DataImportExcel, $request->file('file'));
             $worksheet1 = $data_excel[0];
+            $role = $input->role;
 
             if (count($worksheet1)) {
                 DB::beginTransaction();
@@ -132,7 +132,7 @@ class MapelRppController extends BaseController
                     DB::commit();
                     return [
                         'status'    => 202, // SUCCESS AND LOAD CONTENT
-                        'path'      => 'data-akademik/mata-pelajaran/rpp?id=' . $mata_pelajaran->id_mata_pelajaran,
+                        'path'      => ($role == 'akademik') ? 'data-akademik/mata-pelajaran/rpp?id=' . $mata_pelajaran->id_mata_pelajaran : 'jadwal/mata-pelajaran/rpp?id=' . $mata_pelajaran->id_mata_pelajaran,
                         'message'   => 'Upload Data Successfully'
                     ];
                 } catch (\Exception $e) {
@@ -155,5 +155,19 @@ class MapelRppController extends BaseController
                 'message'   => "File Excel Tidak Ditemukan"
             ];
         }
+    }
+
+    public function previewRPP(Request $request)
+    {
+        $input = (object) $request->input();
+        $id_mapel_rpp = $input->id;
+        
+        $mapel_rpp = MapelRPP::where('id_mapel_rpp', $id_mapel_rpp)->get()->first();
+
+        $detail_rpp = MapelRPPDetail::where('id_mapel_rpp', $id_mapel_rpp)->get();
+
+        $pdf = Pdf::loadView('akademik/data-akademik/mata-pelajaran/previewRPP', compact('mapel_rpp', 'detail_rpp'));
+        
+        return $pdf->stream('rpp_mapel.pdf');
     }
 }
