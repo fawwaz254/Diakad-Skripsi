@@ -189,7 +189,6 @@ class SetJadwalKelasGuruController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now();
-        dd($input);
         //validasi waktu
         if ($mode == 'add') {
             $validator = Validator::make($request->all(), [
