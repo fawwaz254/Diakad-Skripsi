@@ -455,8 +455,8 @@ class PembayaranOnlineController extends BaseController
         DB::beginTransaction();
         try {
             $exp_trs = [];
-            foreach (PembayaranTrs::where('status_pembayaran', 0)->get() as $trs) {
-                $exp_date = $trs->created_at->addDays(1);
+            foreach (PembayaranTrs::where('status_pembayaran', 0)->where('payment_channel', 'UNPAID')->get() as $trs) {
+                $exp_date = $trs->created_at->addHours(2);
 
                 if ($now > $exp_date) {
                     $trs->status_pembayaran = 10;
