@@ -148,12 +148,11 @@
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
                         edit_url + '/' + data.id_kelas + '/' + data.id + '">' +
                         '    <i class="material-icons">edit</i>' +
-                        '</a> '
-                    // +
-                    // '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                    // delete_url + '\', this)" data-id="' + data.id + '">' +
-                    // '    <i class="material-icons">delete_forever</i>' +
-                    // '</button>';
+                        '</a> ' +
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                        delete_url + '\', this)" data-id="' + data.id + '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
                 }
             }
         ]
