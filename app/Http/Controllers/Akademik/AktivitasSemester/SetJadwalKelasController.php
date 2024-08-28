@@ -746,9 +746,6 @@ class SetJadwalKelasController extends Controller
             } else {
                 DB::beginTransaction();
                 try {
-                    $id_kelas = KelasMp::where('id_kelas_mp', $id)->first()->id_kelas;
-                    $id_semester = KelasMp::where('id_kelas_mp', $id)->first()->id_semester;
-
                     JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
@@ -759,15 +756,13 @@ class SetJadwalKelasController extends Controller
                     KelasMp::where('id_kelas_mp', $id)->delete();
                     DB::commit();
                     return [
-                        'status_code' => 202, // SUCCESS AND LOAD TABLE
-                        'path' => 'aktivitas-semester/set-kbm-tanpa-jadwal/view-detail/' . $input->id_kelas . '/' . $input->id_semester,
+                        'status' => 203, // SUCCESS AND LOAD TABLE
                         'message' => 'Delete Jadwal Mata Ajar Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
                     return [
-                        'status_code' => 202, // SUCCESS AND LOAD TABLE
-                        'path' => 'aktivitas-semester/set-kbm-tanpa-jadwal/view-detail/' . $input->id_kelas . '/' . $input->id_semester,
+                        'status_code' => 300,
                         'message' => 'Delete Jadwal Mata Ajar Gagal'
                     ];
                 }
