@@ -667,7 +667,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absen-tanpa-jadwal/view-kbm/{id_kelas_mp}', [GuruPiketRekapAbsenTanpaJadwalController::class, 'viewKBMRekapAbsenTanpaJadwal']);
 
             Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', [GuruPiketRekapAbsenTanpaJadwalController::class, 'printKBMRekapAbsenTanpaJadwal']);
-            
+
             // MENU Catat Siswa Terlambat
             Route::get('catat-siswa-terlambat', [SiswaTerlambatController::class, 'viewSiswaTerlambat']);
             Route::post('catat-siswa-terlambat/filter-siswa-terlambat', [SiswaTerlambatController::class, 'filterSiswaTerlambat']);
@@ -678,7 +678,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::get('catat-siswa-terlambat/editnotes/{id_presensi_pengguna}/{id_kelas}/{date}', [SiswaTerlambatController::class, 'viewEditNotes']);
             Route::post('catat-siswa-terlambat/editnotes/{id_presensi_pengguna}', [SiswaTerlambatController::class, 'ActionEditnotes']);
-            
+
             Route::get('catat-siswa-terlambat/print/{id}', [SiswaTerlambatController::class, 'PrintTerlambat']);
         });
 
