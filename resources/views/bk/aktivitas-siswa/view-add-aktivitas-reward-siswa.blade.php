@@ -16,15 +16,7 @@
                     <form id="form-upload" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/action-aktivitas-reward-siswa/add') }}">
                         @csrf
-                        <h2 class="card-inside-title">
-                            Tanggal
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="date" class="datepicker form-control" name="tanggal" required="" id="tanggal"
-                                    aria-required="true" aria-invalid="true">
-                            </div>
-                        </div>
+
                         <h2 class="card-inside-title">
                             Jenis Aktivitas Reward Siswa
                         </h2>
@@ -44,11 +36,11 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control" id="">
-                                    <option selected disabled>Pilih Penilai</option>
-                                    <option value="1">Guru</option>
-                                    <option value="2">Pengurus Kelas</option>
-                                </select>
+                                <input type="checkbox" id="guru" name="guru" value="guru">
+                                <label for="guru">Guru</label>
+                                <br>
+                                <input type="checkbox" id="sekretaris" name="sekretaris" value="sekretaris">
+                                <label for="sekretaris">Sekretaris Kelas</label>
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -171,8 +163,8 @@
 </div>
 @include('scriptjs')
 <script>
-    $(document).ready(function () {
-        $('#tanggal').on('change', function () {
+    $(document).ready(function() {
+        $('#tanggal').on('change', function() {
             let tanggal = $(this).val();
             console.log(tanggal);
         });

@@ -221,6 +221,9 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('aktivitas-siswa')->group(function () {
             Route::get('aktivitas-reward-siswa', [AktivitasRewardSiswaController::class, 'viewAktivitasRewardSiswa']);
+
+            Route::get('aktivitas-reward-siswa/datatables', [AktivitasRewardSiswaController::class, 'datatablesAktivitasRewardSiswa']);
+            
             Route::get('aktivitas-reward-siswa/add', [AktivitasRewardSiswaController::class, 'addAktivitasRewardSiswa']);
         });
     });
