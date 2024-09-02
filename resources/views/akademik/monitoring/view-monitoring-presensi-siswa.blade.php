@@ -101,7 +101,7 @@
                                 @foreach ($data_siswa as $siswa)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>{{ $siswa->pengguna->nm_pengguna }}</td>
+                                        <td>{{ $siswa->pengguna->nm_pengguna ?? $siswa->nis_siswa }}</td>
                                         @foreach ($dates as $date)
                                             @php
                                                 $presensi1 = null;
@@ -109,14 +109,50 @@
                                                 $presensi3 = null;
                                                 $presensi4 = null;
 
-                                                if (isset($data_array_presensi[$siswa->id_siswa . $date->format('Y-m-d') . '1'])) {
-                                                    $presensi1 = $data_array_presensi[$siswa->id_siswa . $date->format('Y-m-d') . '1'];
-                                                } elseif (isset($data_array_presensi[$siswa->id_siswa . $date->format('Y-m-d') . '2'])) {
-                                                    $presensi2 = $data_array_presensi[$siswa->id_siswa . $date->format('Y-m-d') . '2'];
-                                                } elseif (isset($data_array_presensi[$siswa->id_siswa . $date->format('Y-m-d') . '3'])) {
-                                                    $presensi3 = $data_array_presensi[$siswa->id_siswa . $date->format('Y-m-d') . '3'];
-                                                } elseif (isset($data_array_presensi[$siswa->id_siswa . $date->format('Y-m-d') . '4'])) {
-                                                    $presensi4 = $data_array_presensi[$siswa->id_siswa . $date->format('Y-m-d') . '4'];
+                                                if (
+                                                    isset(
+                                                        $data_array_presensi[
+                                                            $siswa->id_siswa . $date->format('Y-m-d') . '1'
+                                                        ],
+                                                    )
+                                                ) {
+                                                    $presensi1 =
+                                                        $data_array_presensi[
+                                                            $siswa->id_siswa . $date->format('Y-m-d') . '1'
+                                                        ];
+                                                } elseif (
+                                                    isset(
+                                                        $data_array_presensi[
+                                                            $siswa->id_siswa . $date->format('Y-m-d') . '2'
+                                                        ],
+                                                    )
+                                                ) {
+                                                    $presensi2 =
+                                                        $data_array_presensi[
+                                                            $siswa->id_siswa . $date->format('Y-m-d') . '2'
+                                                        ];
+                                                } elseif (
+                                                    isset(
+                                                        $data_array_presensi[
+                                                            $siswa->id_siswa . $date->format('Y-m-d') . '3'
+                                                        ],
+                                                    )
+                                                ) {
+                                                    $presensi3 =
+                                                        $data_array_presensi[
+                                                            $siswa->id_siswa . $date->format('Y-m-d') . '3'
+                                                        ];
+                                                } elseif (
+                                                    isset(
+                                                        $data_array_presensi[
+                                                            $siswa->id_siswa . $date->format('Y-m-d') . '4'
+                                                        ],
+                                                    )
+                                                ) {
+                                                    $presensi4 =
+                                                        $data_array_presensi[
+                                                            $siswa->id_siswa . $date->format('Y-m-d') . '4'
+                                                        ];
                                                 }
 
                                                 $maxValue = max($presensi1, $presensi2, $presensi3, $presensi4);
