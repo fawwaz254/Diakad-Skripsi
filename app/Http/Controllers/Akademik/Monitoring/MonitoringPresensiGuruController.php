@@ -59,14 +59,14 @@ class MonitoringPresensiGuruController extends Controller
 
         $p = PresensiMp::find($id_presensi_mp);
         if ($p) {
-            $p->deleted_by =     $auth_data->pengguna->id_pengguna;
+            $p->deleted_by = $auth_data->pengguna->id_pengguna;
             $p->save();
             $p->delete();
         }
         return $id_presensi_mp;
     }
 
-    public function viewDetailPresensiGuru(Request $request, $day,  $id_bulan, $tahun, $id_pengguna)
+    public function viewDetailPresensiGuru(Request $request, $day, $id_bulan, $tahun, $id_pengguna)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -82,9 +82,26 @@ class MonitoringPresensiGuruController extends Controller
             ->whereDay('tgl_presensi', $day)
             ->whereMonth('tgl_presensi', $id_bulan)
             ->whereYear('tgl_presensi', $tahun)
+            ->join('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', 'kelas_mp.id_kelas_mp')
+            ->where('jadwal_kelas_mp.id_jadwal_jam', '!=', '0')
             ->get();
 
-        return view('akademik/monitoring/view-detail-presensi-guru', compact('data_presensi', 'id_bulan', 'tahun'));
+        $data_presensi_kbmTanpaJadwal = PresensiMp::select('nm_pengguna', 'pengguna.id_pengguna', 'nip_guru', 'pertemuan_ke', 'uraian_materi', 'waktu_mulai', 'waktu_selesai', 'tgl_presensi', 'nm_kelas_mp', 'id_presensi_mp', )
+            ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'presensi_mp.id_kelas_mp')
+            ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', 'kelas_mp.id_kelas_mp')
+            ->join('guru', 'guru.id_guru', 'pengampu_mp.id_guru')
+            ->join('pengguna', 'pengguna.id_pengguna', 'guru.id_pengguna')
+            ->join('status_pengguna', 'status_pengguna.id_status_pengguna', 'pengguna.id_status_pengguna')
+            ->where('pengguna.id_pengguna', $id_pengguna)
+            ->where('nm_status_pengguna', 'AKTIF')
+            ->whereDay('tgl_presensi', $day)
+            ->whereMonth('tgl_presensi', $id_bulan)
+            ->whereYear('tgl_presensi', $tahun)
+            ->join('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', 'kelas_mp.id_kelas_mp')
+            ->where('jadwal_kelas_mp.id_jadwal_jam', '0')
+            ->get();
+        // dd($data_presensi_kbmTanpaJadwal);
+        return view('akademik/monitoring/view-detail-presensi-guru', compact('data_presensi', 'id_bulan', 'tahun', 'data_presensi_kbmTanpaJadwal'));
     }
     public function printViewMonitoringPresensiGuru(Request $request, $id_bulan, $tahun)
     {

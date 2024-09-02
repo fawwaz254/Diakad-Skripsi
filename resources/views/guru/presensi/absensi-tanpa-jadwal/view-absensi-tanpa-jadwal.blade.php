@@ -23,7 +23,7 @@
                                             readonly>
                                     </div>
                                 </div>
-                                <h2 class="card-inside-title">
+                                {{-- <h2 class="card-inside-title">
                                     Tanggal
                                 </h2>
                                 <div class="row clearfix">
@@ -31,36 +31,24 @@
                                         <input type="text" class="form-control" name=""
                                             value="{{ $tanggal_id }}" readonly>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <h2 class="card-inside-title">
                                     Mata Pelajaran
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="id_jadwal_kelas_mp">
+                                        <select class="form-control show-tick" name="id_jadwal_kelas_mp"
+                                            onchange="changeKelas(this)">
                                             <option value="" disabled selected>-- Pilih Mata Pelajaran --</option>
-                                            @foreach ($jadwal_kelas_mp as $kelas_mp)
-                                                <option value="{{ $kelas_mp->id_jadwal_kelas_mp }}">
-                                                    {{ $kelas_mp->nm_kelas_mp }}
+                                            @foreach ($jadwal_kelas_mp as $data)
+                                                <option value="{{ $data->id_jadwal_kelas_mp }}">
+                                                    {{ $data->nm_kelas_mp }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                {{-- <h2 class="card-inside-title">
-                                    Kelas
-                                </h2>
-                                <div class="row clearfix">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="id_kelas">
-                                            <option value="" disabled selected>-- Pilih Kelas --</option>
-                                            @foreach ($kelas as $k)
-                                                <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div> --}}
-                                {{-- <h2 class="card-inside-title">
+                                <h2 class="card-inside-title">
                                     Pertemuan pekan ke
                                 </h2>
                                 <div class="row clearfix">
@@ -70,7 +58,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                </div> --}}
+                                </div>
                                 {{-- <h2 class="card-inside-title">
                                     Opsi Hadir
                                 </h2>
@@ -107,3 +95,24 @@
     </div>
 </div>
 @include('scriptjs')
+
+<script>
+    function changeKelas(el) {
+        $.ajax({
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/selectPertemuan-byjadwalkelasmp') }}',
+            type: 'POST',
+            data: {
+                id_jadwal_kelas_mp: $('select[name=id_jadwal_kelas_mp]').val()
+            },
+            success: function(result) {
+                $('select[name=pertemuan_ke]').html('');
+                $('select[name=pertemuan_ke]').append(
+                    '<option value="" disabled selected >-- Pilih Pertemuan pekan ke --</option>');
+                $.each(result, function(key, item) {
+                    $('select[name=pertemuan_ke]').append('<option value="' + item.value + '">' +
+                        item.text + '</option>');
+                });
+            }
+        });
+    }
+</script>
