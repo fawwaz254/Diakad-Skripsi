@@ -627,13 +627,18 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('monitoring')->group(function () {
             Route::get('status-entri-nilai', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
+
+            // MENU Monitoring Presensi Guru
             Route::get('monitoring-presensi-guru', [MonitoringPresensiGuruController::class, 'viewMonitoringPresensiGuru']);
             Route::post('monitoring-presensi-guru/action-delete/{id_presensi_mp}', [MonitoringPresensiGuruController::class, 'actionDeletePresensiGuru']);
             Route::get('monitoring-presensi-guru/{bulan}/{tahun}', [MonitoringPresensiGuruController::class, 'viewMonitoringPresensiGuru']);
             Route::get('monitoring-presensi-guru/print/{bulan}/{tahun}', [MonitoringPresensiGuruController::class, 'printViewMonitoringPresensiGuru']);
             Route::get('monitoring-presensi-guru/{day}/{bulan}/{tahun}/{id_pengguna}', [MonitoringPresensiGuruController::class, 'viewDetailPresensiGuru']);
+
+            // MENU Monitoring Presensi Siswa
             Route::get('monitoring-presensi', [MonitoringPresensiSiswaController::class, 'viewMonitoringPresensiSiswa']);
-            Route::get('monitoring-presensi/{id_kelas}/{bulan}/{tahun}', [MonitoringPresensiSiswaController::class, 'viewMonitoringPresensiSiswa']);
+            Route::get('monitoring-presensi/{id_kelas}/{bulan}/{tahun}', [MonitoringPresensiSiswaController::class, 'viewDetailMonitoringPresensiSiswa']);
+
             Route::get('monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
             Route::get('rekap-monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewRekapMonitoringKelasKosong']);
         });

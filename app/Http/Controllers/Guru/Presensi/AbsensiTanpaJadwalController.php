@@ -51,7 +51,9 @@ class AbsensiTanpaJadwalController extends BaseController
 
         $jadwal_kelas_mp = JadwalKelasMp::with('kelas_mp')
             ->join('kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+            ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
             ->where('jadwal_kelas_mp.id_jadwal_hari', '=', '0')
+            ->where('pengampu_mp.id_guru', '=', $id_guru)
             ->get();
 
         $kelas = LibKelas::fetchDataKelas($auth_data, $id = null);
@@ -59,36 +61,36 @@ class AbsensiTanpaJadwalController extends BaseController
         return view('guru/presensi/absensi-tanpa-jadwal/view-absensi-tanpa-jadwal', compact('auth_data', 'semester_aktif', 'tanggal', 'tanggal_id', 'kelas', 'jadwal_kelas_mp'));
     }
 
-    // public function ajaxGetPertemuanByJadwalKelasMpKbmTanpaJadwal(Request $request)
-    // {
-    //     # code...
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
+    public function ajaxGetChangePertemuanByJadwalKelasMp(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // dd("masuk");
+        $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
 
-    //     $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
+        $data_pertemuan = array();
+        $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->get();
 
-    //     $data_pertemuan = array();
-    //     $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->get();
+        for ($i = 1; $i < 26; $i++) {
+            $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
+            if ($presensiMp) {
+                $pertemuan = array(
+                    'text' => $i . " (Sudah)",
+                    'value' => $i
+                );
+            } else {
+                $pertemuan = array(
+                    'text' => $i,
+                    'value' => $i
+                );
+            }
 
-    //     for ($i = 1; $i < 26; $i++) {
-    //         $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
-    //         if ($presensiMp) {
-    //             $pertemuan = array(
-    //                 'text' => $i . " (Sudah)",
-    //                 'value' => $i
-    //             );
-    //         } else {
-    //             $pertemuan = array(
-    //                 'text' => $i,
-    //                 'value' => $i
-    //             );
-    //         }
+            $data_pertemuan[] = $pertemuan;
+        }
 
-    //         $data_pertemuan[] = $pertemuan;
-    //     }
-
-    //     return $data_pertemuan;
-    // }
+        return $data_pertemuan;
+    }
 
 
     public function actionViewKBMAbsensiTanpaJadwal(Request $request)
@@ -96,9 +98,10 @@ class AbsensiTanpaJadwalController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
+        // dd()
         $validator = Validator::make($request->all(), [
             'id_jadwal_kelas_mp' => 'required',
+            'pertemuan_ke' => 'required',
             'opsi' => 'required'
         ]);
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
@@ -117,12 +120,12 @@ class AbsensiTanpaJadwalController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'presensi/absensi-tanpa-jadwal/view-kbm/' . $guru->id_guru . '/' . $input->id_jadwal_kelas_mp . '/' . $opsi
+                'path' => 'presensi/absensi-tanpa-jadwal/view-kbm/' . $input->id_jadwal_kelas_mp . '/' . $input->pertemuan_ke . '/' . $opsi
             ];
         }
     }
 
-    public function viewKBMAbsensiTanpaJadwal(Request $request, $id_guru, $id_jadwal_kelas_mp, $opsi = null)
+    public function viewKBMAbsensiTanpaJadwal(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke, $opsi = null)
     {
         # code...
         $input = (object) $request->input();
@@ -131,17 +134,10 @@ class AbsensiTanpaJadwalController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tanggal = $now->format('Y-m-d');
 
-        $pertemuan = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)
-            ->orderBy('pertemuan_ke', 'desc')
-            ->first();
-        if ($pertemuan) {
-            $pertemuan_ke = $pertemuan->pertemuan_ke + 1;
-        } else {
-            $pertemuan_ke = 1;
-        }
         $data = PresensiMp::where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)
             ->where('pertemuan_ke', $pertemuan_ke)
             ->first();
+
         $id_kelas_mp = JadwalKelasMp::where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->value('id_kelas_mp');
         $kelas_mp = KelasMp::with('kelas', 'mata_pelajaran')->where('id_kelas_mp', $id_kelas_mp)->first();
 
@@ -155,7 +151,7 @@ class AbsensiTanpaJadwalController extends BaseController
 
         $data_kelas = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
-        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'opsi', 'tanggal', 'data_kelas', 'pertemuan_ke', 'opsi', 'semester_aktif', 'kelas_mp', 'id_jadwal_kelas_mp', 'pertemuan_ke', 'presensi_mp_aktif', 'mapel_rpp_detail'));
+        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'data', 'opsi', 'tanggal', 'data_kelas', 'pertemuan_ke', 'opsi', 'semester_aktif', 'kelas_mp', 'id_jadwal_kelas_mp', 'presensi_mp_aktif', 'mapel_rpp_detail'));
     }
 
     public function datatablesKBMAbsensiTanpaJadwal(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke)
@@ -368,6 +364,21 @@ class AbsensiTanpaJadwalController extends BaseController
                         'message' => 'Absensi KBM Gagal!'
                     ];
                 }
+            } elseif ($mode == 'delete-kbm') {
+                $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp', $id)
+                    ->where('pertemuan_ke', $pertemuan_ke)->get();
+
+                foreach ($presensi_mp as $data) {
+                    $data->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                    $data->save();
+                    $data->delete();
+                }
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'presensi/absensi-tanpa-jadwal/',
+                    'message' => 'Delete Absensi KBM Siswa Successfully'
+                ];
             }
         }
     }
