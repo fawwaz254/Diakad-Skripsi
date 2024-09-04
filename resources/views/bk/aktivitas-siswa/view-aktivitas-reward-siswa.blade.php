@@ -22,8 +22,9 @@
                                     <th style="vertical-align : middle;text-align:center;">No</th>
                                     <th style="vertical-align : middle;text-align:center;">Nama Aktivitas Reward</th>
                                     <th style="vertical-align : middle;text-align:center;">Jenis Aktivitas</th>
+                                    <th style="vertical-align : middle;text-align:center;">Nilai Aktivitas</th>
                                     <th style="vertical-align : middle;text-align:center;">Status</th>
-                                    <th style="vertical-align : middle;text-align:center;">Action</th>
+                                    {{-- <th style="vertical-align : middle;text-align:center;">Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,25 +64,29 @@
                     name: 'jenis_aktivitas'
                 },
                 {
+                    data: 'nilai_aktivitas',
+                    name: 'nilai_aktivitas'
+                },
+                {
                     data: 'status',
                     name: 'status'
                 },
-                {
-                    data: null,
-                    name: 'action',
-                    orderable: false,
-                    searchable: false,
-                    render: function(data, type, row) {
-                        let editButton = '<a href="' + edit_url + '/' + row
-                            .id_aktivitas_reward_siswa +
-                            '" class="edit btn btn-primary btn-sm">Edit</a>';
-                        let deleteButton = '<a href="' + delete_url + '/' + row
-                            .id_aktivitas_reward_siswa +
-                            '" class="delete btn btn-danger btn-sm">Delete</a>';
-                        return editButton + ' ' + deleteButton;
+                // {
+                //     data: null,
+                //     name: 'action',
+                //     orderable: false,
+                //     searchable: false,
+                //     render: function(data, type, row) {
+                //         let editButton = '<a href="' + edit_url + '/' + row
+                //             .id_aktivitas_reward_siswa +
+                //             '" class="edit btn btn-primary btn-sm">Edit</a>';
+                //         let deleteButton = '<a href="' + delete_url + '/' + row
+                //             .id_aktivitas_reward_siswa +
+                //             '" class="delete btn btn-danger btn-sm">Delete</a>';
+                //         return editButton + ' ' + deleteButton;
 
-                    }
-                }
+                //     }
+                // }
             ],
             columnDefs: [{
                 targets: 0,
@@ -91,31 +96,31 @@
             }]
         });
 
-        $(document).on('click', '.delete', function() {
-            let id = $(this).data('id');
-            let url = delete_url + '/' + id;
+        // $(document).on('click', '.delete', function() {
+        //     let id = $(this).data('id');
+        //     let url = delete_url + '/' + id;
 
-            if (confirm('Yakin data ini akan dihapus?')) {
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: {
-                        _method: 'DELETE',
-                        _token: csrf_token
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $('#list_data_aktivitas_reward_siswa').DataTable().ajax.reload();
-                            alert('Data berhasil dihapus.');
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        alert('Error: ' + xhr.responseText);
-                    }
-                });
-            }
-        });
+        //     if (confirm('Yakin data ini akan dihapus?')) {
+        //         $.ajax({
+        //             url: url,
+        //             type: 'POST',
+        //             data: {
+        //                 _method: 'DELETE',
+        //                 _token: csrf_token
+        //             },
+        //             success: function(response) {
+        //                 if (response.success) {
+        //                     $('#list_data_aktivitas_reward_siswa').DataTable().ajax.reload();
+        //                     alert('Data berhasil dihapus.');
+        //                 } else {
+        //                     alert('Error: ' + response.message);
+        //                 }
+        //             },
+        //             error: function(xhr) {
+        //                 alert('Error: ' + xhr.responseText);
+        //             }
+        //         });
+        //     }
+        // });
     });
 </script>

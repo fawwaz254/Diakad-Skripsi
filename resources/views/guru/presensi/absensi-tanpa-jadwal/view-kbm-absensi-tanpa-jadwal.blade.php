@@ -30,81 +30,109 @@
                 <div class="body">
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-absensi-tanpa-jadwal/add-kbm/' . $id_jadwal_kelas_mp . '/' . $pertemuan_ke) }}">
-
-                        <form action="">
-                            {{ csrf_field() }}
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable display nowrap"
-                                    id="primary_table" style="overflow-x: scroll;">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>NIS</th>
-                                            <th>Kehadiran siswa</th>
-                                            <th>Nilai Karakter</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                        {{ csrf_field() }}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable display nowrap"
+                                id="primary_table" style="overflow-x: scroll;">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>NIS</th>
+                                        <th>Kehadiran siswa</th>
+                                        <th>Nilai Karakter</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Pertemuan ke
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="number" class="form-control" name="pertemuan_ke" required=""
+                                    aria-required="true" aria-invalid="true" value="{{ $pertemuan_ke }}" readonly>
                             </div>
-                            <h2 class="card-inside-title">
-                                Pertemuan ke
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="number" class="form-control" name="pertemuan_ke" required=""
-                                        aria-required="true" aria-invalid="true" value="{{ $pertemuan_ke }}" readonly>
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Tanggal
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                @if ($presensi_mp_aktif)
+                                    <input type="text" class="datepicker form-control" name="tgl_presensi"
+                                        required="" aria-required="true" aria-invalid="true"
+                                        value="{{ $presensi_mp_aktif->tgl_presensi }}">
+                                @else
+                                    <input type="text" class="datepicker form-control" name="tgl_presensi"
+                                        required="" aria-required="true" aria-invalid="true"
+                                        value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
+                                @endif
                             </div>
-                            <h2 class="card-inside-title">
-                                Tanggal
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input class="form-control" type="text" name="tgl_presensi" readonly
-                                        value="{{ $tanggal }}">
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Uraian Materi
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                @if ($presensi_mp_aktif)
+                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ $presensi_mp_aktif->uraian_materi }}</textarea>
+                                @else
+                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ !empty($mapel_rpp_detail) ? $mapel_rpp_detail->deskripsi : '' }}</textarea>
+                                @endif
                             </div>
-                            <h2 class="card-inside-title">
-                                Uraian Materi
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    @if ($presensi_mp_aktif)
-                                        <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ $presensi_mp_aktif->uraian_materi }}</textarea>
-                                    @else
-                                        <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{ !empty($mapel_rpp_detail) ? $mapel_rpp_detail->deskripsi : '' }}</textarea>
-                                    @endif
-                                </div>
-                            </div>
-                            <h2 class="card-inside-title">
-                                Waktu Mulai
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        </div>
+                        <h2 class="card-inside-title">
+                            Waktu Mulai
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                @if ($presensi_mp_aktif)
+                                    <input type="text" class="datepicker-time form-control" name="waktu_mulai"
+                                        required="" aria-required="true" aria-invalid="true"
+                                        value="{{ $presensi_mp_aktif->waktu_mulai }}">
+                                @else
                                     <input type="text" class="datepicker-time form-control" name="waktu_mulai"
                                         required="" aria-required="true" aria-invalid="true" value="">
-                                </div>
+                                @endif
                             </div>
-                            <h2 class="card-inside-title">
-                                Waktu Selesai
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        </div>
+                        <h2 class="card-inside-title">
+                            Waktu Selesai
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                @if ($presensi_mp_aktif)
+                                    <input type="text" class="datepicker-time form-control" name="waktu_selesai"
+                                        required="" aria-required="true" aria-invalid="true"
+                                        value="{{ $presensi_mp_aktif->waktu_selesai }}">
+                                @else
                                     <input type="text" class="datepicker-time form-control" name="waktu_selesai"
                                         required="" aria-required="true" aria-invalid="true" value="">
-                                </div>
+                                @endif
                             </div>
-                            <div class="row clearfix">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             </div>
-                            <div class="row clearfix">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                            class="material-icons">save</i><span>Save</span></button>
-                                </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                                style="margin-bottom: 30px; margin-left: 20">
+                                <button class="btn btn-block bg-green waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
-                        </form>
+                        </div>
+                    </form>
+                    @if ($data)
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-6 col-xs-6" style="margin-top: -25px">
+                                <button class="btn btn-block bg-red waves-effect delete-record"><i
+                                        class="material-icons">delete
+                                    </i><span>Delete</span></button>
+                            </div>
+                        </div>
+                    @else
+                    @endif
                 </div>
             </div>
         </div>
@@ -262,34 +290,34 @@
     //     }
     // }).draw();
 
-    function getArrayForSettingTable(count, is_last) {
-        if (count % 2 == 0) {
-            var half_count = count / 2;
-            if (is_last) {
-                var start = half_count + 1;
-                var end = count;
-            } else {
-                var start = 1;
-                var end = half_count;
-            }
-        } else {
-            var half_count = Math.floor(count / 2);
-            if (is_last) {
-                var start = half_count + 1;
-                var end = count;
-            } else {
-                var start = 1;
-                var end = half_count;
-            }
-        }
+    // function getArrayForSettingTable(count, is_last) {
+    //     if (count % 2 == 0) {
+    //         var half_count = count / 2;
+    //         if (is_last) {
+    //             var start = half_count + 1;
+    //             var end = count;
+    //         } else {
+    //             var start = 1;
+    //             var end = half_count;
+    //         }
+    //     } else {
+    //         var half_count = Math.floor(count / 2);
+    //         if (is_last) {
+    //             var start = half_count + 1;
+    //             var end = count;
+    //         } else {
+    //             var start = 1;
+    //             var end = half_count;
+    //         }
+    //     }
 
-        var array = [];
-        for (var i = start; i <= end; i++) {
-            array.push(':nth-child(' + i + ')');
-        }
+    //     var array = [];
+    //     for (var i = start; i <= end; i++) {
+    //         array.push(':nth-child(' + i + ')');
+    //     }
 
-        return array;
-    }
+    //     return array;
+    // }
 
     $(function() {
         $('.datepicker-time').bootstrapMaterialDatePicker({
@@ -307,5 +335,42 @@
             weekStart: 1,
             time: false
         });
+    });
+
+    $(".delete-record").click(function() {
+        var token = $("meta[name='csrf-token']").attr("content");
+        var pertemuan_id = $('#pertemuan-id').val();
+        var data_id = $('#data-id').val();
+
+        swal({
+                title: "Are you sure?",
+                showCancelButton: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $('.delete-record').attr("disabled", true);
+                    //swall
+
+                    $.ajax({
+                        url: '{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-absensi-tanpa-jadwal/delete-kbm/' +
+                            data_id + '/' + pertemuan_id,
+                        type: "post",
+
+                        data: {
+                            _token: token,
+                        },
+                        success: function(response) {
+                            swal({
+                                title: "Delete Success",
+                                text: "data berhasil dihapus",
+                                icon: "success",
+                            });
+                            loadURI(response.path);
+                        },
+                    });
+                }
+                return;
+            }
+        );
     });
 </script>

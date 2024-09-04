@@ -27,7 +27,7 @@ class AktivitasRewardSiswaController extends Controller
 
         if ($request->ajax()) {
             $data = AktivitasRewardSiswa::with('jenisAktivitasReward')
-                ->select(['id_aktivitas_reward_siswa', 'id_jenis_aktivitas_reward', 'nm_aktivitas_reward_siswa', 'is_aktif']);
+                ->select(['id_aktivitas_reward_siswa', 'id_jenis_aktivitas_reward', 'nm_aktivitas_reward_siswa', 'is_aktif', 'nilai_aktivitas']);
 
             return DataTables::of($data)
                 ->addColumn('jenis_aktivitas', function ($row) {
@@ -41,7 +41,7 @@ class AktivitasRewardSiswaController extends Controller
                 //     $btn .= '<a href="delete/' . $row->id . '" class="delete btn btn-danger btn-sm">Delete</a>';
                 //     return $btn;
                 // })
-                ->rawColumns(['action'])
+                // ->rawColumns(['action'])
                 ->make(true);
         }
     }
@@ -76,23 +76,23 @@ class AktivitasRewardSiswaController extends Controller
         return redirect('/bimbingan-konseling#aktivitas-siswa/aktivitas-reward-siswa');
     }
 
-    public function deleteAktivitasRewardSiswa(Request $request, $id_aktivitas_reward_siswa)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+    // public function deleteAktivitasRewardSiswa(Request $request, $id_aktivitas_reward_siswa)
+    // {
+    //     $input = (object) $request->input();
+    //     $auth_data = $input->auth_data;
 
-        $data = AktivitasRewardSiswa::find($id_aktivitas_reward_siswa);
-        if ($data) {
-            $data->delete();
+    //     $data = AktivitasRewardSiswa::find($id_aktivitas_reward_siswa);
+    //     if ($data) {
+    //         $data->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil dihapus'
-            ]);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'Data tidak ditemukan.'
-        ], 404);
-    }
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Data berhasil dihapus'
+    //         ]);
+    //     }
+    //     return response()->json([
+    //         'success' => false,
+    //         'message' => 'Data tidak ditemukan.'
+    //     ], 404);
+    // }
 }
