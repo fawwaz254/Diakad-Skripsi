@@ -552,6 +552,7 @@
         //     pengguna.push($(this).val());
         // });
 
+        // untuk NON-AKTIFKAN set jadwal kelas //
         var isJadwalTutup = true;
 
         if (isJadwalTutup) {
