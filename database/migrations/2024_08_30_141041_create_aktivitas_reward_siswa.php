@@ -18,8 +18,8 @@ class CreateAktivitasRewardSiswa extends Migration
             
             $table->increments('id_aktivitas_reward_siswa');
             $table->integer('id_jenis_aktivitas_reward');
-            $table->text('nm_jenis_aktivitas_reward');
-            $table->longText('deskripsi');
+            $table->longText('nm_aktivitas_reward_siswa');
+            $table->integer('nilai_aktivitas');
             $table->longText('nilai_karakter');
             $table->boolean('is_guru');
             $table->boolean('is_sekretaris');

@@ -225,6 +225,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('aktivitas-reward-siswa/datatables', [AktivitasRewardSiswaController::class, 'datatablesAktivitasRewardSiswa']);
             
             Route::get('aktivitas-reward-siswa/add', [AktivitasRewardSiswaController::class, 'addAktivitasRewardSiswa']);
+            Route::post('aktivitas-reward-siswa/save-add-aktivitas-reward-siswa', [AktivitasRewardSiswaController::class, 'saveAktivitasRewardSiswa']);
+            Route::post('aktivitas-reward-siswa/delete/{id_aktivitas_reward_siswa}', [AktivitasRewardSiswaController::class, 'deleteAktivitasRewardSiswa']);
         });
     });
 });

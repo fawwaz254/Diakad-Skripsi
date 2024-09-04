@@ -1,9 +1,55 @@
+<style>
+    .block-header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+
 <div class="container-fluid">
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i
-                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    <div class="block-header-container">
+        <div class="block-header">
+            <h2><a class="btn bg-blue waves-effect target-link"
+                    href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i
+                        class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        </div>
+        <div class="block-header">
+            <button class="btn bg-blue waves-effect target-link" data-toggle="modal" data-target="#massUploadModal">
+                <i class="material-icons">file_upload</i><span>Mass Upload</span>
+            </button>
+        </div>
     </div>
+
+    {{-- Modal upload file --}}
+    <div id="massUploadModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Mass Upload</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Silakan unduh template dan unggah file yang sudah diisi:</p>
+                    <a href="#" class="btn btn-default">
+                        <i class="material-icons">cloud_download</i> Download Template
+                    </a>
+                    <hr>
+                    <form action="#" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="uploadFile">Pilih file untuk diunggah:</label>
+                            <input type="file" id="uploadFile" name="uploadFile" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- BODY --}}
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -14,7 +60,7 @@
                 </div>
                 <div class="body">
                     <form id="form-upload" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/action-aktivitas-reward-siswa/add') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/save-add-aktivitas-reward-siswa') }}">
                         @csrf
 
                         <h2 class="card-inside-title">
@@ -22,12 +68,15 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control" id="">
-                                    <option selected disabled>Pilih Jenis</option>
-                                    <option value="1">Harian</option>
-                                    <option value="2">Mingguan</option>
-                                    <option value="3">Bulanan</option>
-                                    <option value="4">Insidentil</option>
+                                <select class="form-control" id="jenis_aktivitas_reward" name="jenis_aktivitas_reward">
+                                    <option value="" selected disabled>-- Pilih Jenis Aktivitas Reward Siswa --
+                                    </option>
+                                    @forelse ($data_jenis_aktivitas as $row)
+                                        <option value="{{ $row->id_jenis_aktivitas_reward }}">
+                                            {{ $row->nm_jenis_aktivitas_reward }}</option>
+                                    @empty
+                                        <option value="">Tidak ada data</option>
+                                    @endforelse
                                 </select>
                             </div>
                         </div>
@@ -36,11 +85,31 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="checkbox" id="guru" name="guru" value="guru">
+                                <input type="checkbox" id="guru" name="guru" value="1">
                                 <label for="guru">Guru</label>
                                 <br>
-                                <input type="checkbox" id="sekretaris" name="sekretaris" value="sekretaris">
+                                <input type="checkbox" id="sekretaris" name="sekretaris" value="1">
                                 <label for="sekretaris">Sekretaris Kelas</label>
+                            </div>
+                        </div>
+                        <input type="hidden" id="is_guru" name="is_guru">
+                        <input type="hidden" id="is_sekretaris" name="is_sekretaris">
+                        <h2 class="card-inside-title">
+                            Nama Aktivitas Reward Siswa
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="nm_aktivitas_reward" required=""
+                                    aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Nilai Aktivitas
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="number" class="form-control" name="nilai_aktivitas" required=""
+                                    aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -48,40 +117,44 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="checkbox" id="disiplin" name="disiplin" value="disiplin">
+                                <input type="checkbox" id="disiplin" name="nilai_karakter" value="Disiplin">
                                 <label for="disiplin">Disiplin</label>
                                 <br>
-                                <input type="checkbox" id="religius" name="religius" value="religius">
+                                <input type="checkbox" id="religius" name="nilai_karakter" value="Religius">
                                 <label for="religius">Religius</label>
                                 <br>
-                                <input type="checkbox" id="tangguh" name="tangguh" value="tangguh">
+                                <input type="checkbox" id="tangguh" name="nilai_karakter"
+                                    value="Tangguh dan Tanggung Jawab">
                                 <label for="tangguh">Tangguh dan Tanggung Jawab</label>
                                 <br>
-                                <input type="checkbox" id="peduli" name="peduli" value="peduli">
+                                <input type="checkbox" id="peduli" name="nilai_karakter" value="Peduli">
                                 <label for="peduli">Peduli</label>
                                 <br>
-                                <input type="checkbox" id="komunikasi" name="komunikasi" value="komunikasi">
+                                <input type="checkbox" id="komunikasi" name="nilai_karakter" value="Komunikasi">
                                 <label for="komunikasi">Komunikasi</label>
                                 <br>
-                                <input type="checkbox" id="kolaborasi" name="kolaborasi" value="kolaborasi">
+                                <input type="checkbox" id="kolaborasi" name="nilai_karakter" value="Kolaborasi">
                                 <label for="kolaborasi">Kolaborasi</label>
                                 <br>
-                                <input type="checkbox" id="kritis" name="kritis" value="kritis">
+                                <input type="checkbox" id="kritis" name="nilai_karakter"
+                                    value="Kritis dan Pemecahan Masalah">
                                 <label for="kritis">Kritis dan Pemecahan Masalah</label>
                                 <br>
-                                <input type="checkbox" id="kreatif" name="kreatif" value="kreatif">
+                                <input type="checkbox" id="kreatif" name="nilai_karakter"
+                                    value="Kreatif dan Inovatif">
                                 <label for="kreatif">Kreatif dan Inovatif</label>
                                 <br>
-                                <input type="checkbox" id="jujur" name="jujur" value="jujur">
+                                <input type="checkbox" id="jujur" name="nilai_karakter" value="Kejujuran">
                                 <label for="jujur">Kejujuran</label>
                             </div>
                         </div>
+                        <input type="hidden" id="nilai_karakter_checked" name="nilai_karakter">
                         <h2 class="card-inside-title">
                             Status
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control" id="">
+                                <select class="form-control" id="status" name="status">
                                     <option selected disabled>Pilih Status</option>
                                     <option value="1">Aktif</option>
                                     <option value="0">Non Aktif</option>
@@ -98,132 +171,42 @@
                                         class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
-
-                        {{-- <h2 class="card-inside-title">
-                            Siswa yang bersangkutan ( Opsional )
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control selectpicker show-tick" data-show-subtext="true"
-                                    data-live-search="true" name="id_siswa" data-size="5">
-                                    <option value="" selected>-- Pilih Siswa --</option>
-                                    @foreach ($all_siswa as $item)
-                                        <option value="{{ $item->id_siswa }}">
-                                            {{ $item->pengguna->nm_pengguna . ' ( ' . $item->kelas->nm_kelas . ' ) ' }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <h2 class="card-inside-title">
-                            Status
-                        </h2>
-                        <div class="demo-radio-button">
-                            <input name="status" type="radio" value="1" id="target_1" />
-                            <label for="target_1">Selesai</label>
-                            <input name="status" type="radio" value="0" id="target_2" />
-                            <label for="target_2">Belum Selesai</label>
-                        </div>
-
-                        <h2 class="card-inside-title">
-                            File Pendukung ( pdf , pptx , docx , doc , xlsx , png , jpg , jpeg | max 5 mb )
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label>
-                                    <input type="file" class="form-control" name="file" />
-                                </label>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Uraian Kegiatan
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea rows="4" cols="50" class="form-control" name="keterangan" required="" aria-required="true"
-                                    aria-invalid="true"></textarea>
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                        class="material-icons">save</i><span>Save</span></button>
-                            </div>
-                        </div> --}}
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @include('scriptjs')
+
 <script>
     $(document).ready(function() {
-        $('#tanggal').on('change', function() {
-            let tanggal = $(this).val();
-            console.log(tanggal);
+        $('#form-upload').on('submit', function() {
+            // handle input penilai
+            if ($('#guru').is(':checked')) {
+                $('#is_guru').val(1);
+            } else {
+                $('#is_guru').val(0);
+            }
+
+            if ($('#sekretaris').is(':checked')) {
+                $('#is_sekretaris').val(1);
+            } else {
+                $('#is_sekretaris').val(0);
+            }
+
+            // handle input nilai karakter
+            var karakter = [];
+
+            $('input[name="nilai_karakter"]:checked').each(function() {
+                karakter.push($(this).val());
+            });
+
+            $('#nilai_karakter_checked').val(karakter.join('#'));
+
+            return true;
         });
+
     });
 </script>
-
-
-{{-- <script>
-    $('#form-upload').validate({
-        rules: {
-            'checkbox': {
-                required: true
-            },
-            'gender': {
-                required: true
-            }
-        },
-        highlight: function(input) {
-            $(input).parents('.form-group').addClass('error');
-        },
-        unhighlight: function(input) {
-            $(input).parents('.form-group').removeClass('error');
-        },
-        errorPlacement: function(error, element) {
-            $(element).parents('.form-group').append(error);
-        },
-        submitHandler: function(form) {
-            $('button').attr('disabled', 'disabled');
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                enctype: 'multipart/form-data',
-                data: new FormData($('#form-upload')[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    if (response.status == 200) {
-                        vex.dialog.alert(response.message);
-                    } else if (response.status == 201) {
-                        vex.dialog.alert(response.message);
-                        window.location.href = response.link;
-                    } else if (response.status == 202) {
-                        vex.dialog.alert(response.message);
-                        loadURI(response.path);
-                    } else if (response.status == 203) {
-                        vex.dialog.alert(response.message);
-                        primary_table.ajax.reload(null, false);
-                    } else if (response.status == 204) {
-                        loadURI(response.path);
-                    } else if (response.status == 300) {
-                        vex.dialog.alert(response.message);
-                    }
-                },
-                complete: function() {
-                    $('input').removeAttr('readonly', 'readonly');
-                    $('button').removeAttr('disabled');
-                }
-            });
-        }
-    });
-</script> --}}

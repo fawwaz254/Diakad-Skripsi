@@ -551,6 +551,16 @@
         // $("input:checkbox[name=id_pengguna]:checked").each(function(){
         //     pengguna.push($(this).val());
         // });
+
+        // untuk NON-AKTIFKAN set jadwal kelas //
+        var isJadwalTutup = true;
+
+        if (isJadwalTutup) {
+            vex.dialog.alert('Set jadwal kelas sudah ditutup');
+            $('button').removeAttr('disabled');
+            return;
+        }
+
         $.ajax({
             url: base_url +
                 '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/add/0',
