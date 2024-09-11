@@ -220,13 +220,20 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('aktivitas-siswa')->group(function () {
-            Route::get('aktivitas-reward-siswa', [AktivitasRewardSiswaController::class, 'viewAktivitasRewardSiswa']);
+            Route::prefix('aktivitas-reward-siswa')->group(function () {
+                Route::get('/', [AktivitasRewardSiswaController::class, 'viewAktivitasRewardSiswa']);
+                Route::get('datatables', [AktivitasRewardSiswaController::class, 'datatablesAktivitasRewardSiswa']);
 
-            Route::get('aktivitas-reward-siswa/datatables', [AktivitasRewardSiswaController::class, 'datatablesAktivitasRewardSiswa']);
-            
-            Route::get('aktivitas-reward-siswa/add', [AktivitasRewardSiswaController::class, 'addAktivitasRewardSiswa']);
-            Route::post('aktivitas-reward-siswa/save-add-aktivitas-reward-siswa', [AktivitasRewardSiswaController::class, 'saveAktivitasRewardSiswa']);
-            Route::post('aktivitas-reward-siswa/delete/{id_aktivitas_reward_siswa}', [AktivitasRewardSiswaController::class, 'deleteAktivitasRewardSiswa']);
+                Route::get('add', [AktivitasRewardSiswaController::class, 'addAktivitasRewardSiswa']);
+                Route::post('save-add-aktivitas-reward-siswa', [AktivitasRewardSiswaController::class, 'saveAktivitasRewardSiswa']);
+                Route::post('delete', [AktivitasRewardSiswaController::class, 'deleteAktivitasRewardSiswa']);
+                Route::get('edit/{id_aktivitas_reward_siswa}', [AktivitasRewardSiswaController::class, 'editAktivitasRewardSiswa']);
+                Route::post('update-aktivitas-reward-siswa', [AktivitasRewardSiswaController::class, 'updateAktivitasRewardSiswa']);
+
+                Route::get('download-template', [AktivitasRewardSiswaController::class, 'downloadTemplate'])->name('downloadTemplate');
+                Route::post('upload-file', [AktivitasRewardSiswaController::class, 'uploadAktivitas']);
+
+            });
         });
     });
 });
