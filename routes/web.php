@@ -113,6 +113,7 @@ Route::post('reset-password-action', [ForgetPasswordController::class, 'resetPas
 
 Route::get('payment/detail/{id}', [PembayaranOnlineController::class, 'viewDetail']);
 Route::post('payment/notification/{id}', [PembayaranOnlineController::class, 'actionPayment']);
+Route::get('winpay/trx/check', [PembayaranOnlineController::class, 'actionWinpayChecTrx']);
 Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionCheckExp']);
 
 Route::get('forms', [CustomFormResponController::class, 'landingPage']);

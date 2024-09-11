@@ -4,6 +4,7 @@ use App\Libraries\WinpayPHP\WinpayCheckout;
 use App\Models\PembayaranBiaya;
 use App\Models\PembayaranTrs;
 use App\Models\PembayaranTrsDetail;
+use App\Models\Semester;
 use App\Models\TagihanBiaya;
 use Carbon\Carbon;
 use Illuminate\Foundation\Inspiring;
@@ -26,7 +27,8 @@ Artisan::command('inspire', function () {
 Artisan::command('trx:check', function () {
     set_time_limit(-1);
 
-    $list_data = PembayaranTrs::whereNull('payment_channel')->where('created_at', '<', '2024-08-23 09:08:20')->get();
+    $semester_aktif = Semester::where('is_aktif_semester', 1)->first();
+    $list_data = PembayaranTrs::whereNull('payment_channel')->where('created_at', '<', '2024-09-10 17:36:56')->get();
     $winpay_checkout = new WinpayCheckout;
     
     foreach ($list_data as $i => $trx) {
@@ -46,7 +48,7 @@ Artisan::command('trx:check', function () {
         if($trx->payment_channel == 'PAID'){
             $now = Carbon::parse($response->responseData->payment->created_at);
             $trx->status_pembayaran = 1;
-            $trx->id_semester_bayar = 'Pm62h16992595806548a4bc86cff';
+            $trx->id_semester_bayar = $semester_aktif->id_semester;
             $trx->tgl_pembayaran = $now;
             $trx->fee_admin = $response->responseData->payment->fee;
             $trx->save();
