@@ -5,60 +5,12 @@
         align-items: center;
     }
 </style>
-
 <div class="container-fluid">
     <div class="block-header-container">
         <div class="block-header">
             <h2><a class="btn bg-blue waves-effect target-link"
                     href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i
                         class="material-icons">backspace</i><span>Kembali</span></a></h2>
-        </div>
-        <div class="block-header">
-            <button class="btn bg-blue waves-effect target-link" data-toggle="modal" data-target="#massUploadModal">
-                <i class="material-icons">file_upload</i><span>Upload Excel</span>
-            </button>
-        </div>
-    </div>
-
-    {{-- Modal upload file --}}
-    <div id="massUploadModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title">Upload Excel</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Silakan unduh template dan unggah file yang sudah diisi:</p>
-                    <a href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/download-template') }}"
-                        class="btn btn-success">
-                        <i class="material-icons">cloud_download</i> Download Template
-                    </a>
-                    <hr>
-                    <p>
-                        Petunjuk pengisian:
-                    </p>
-                    <ul>
-                        <li>Kolom Jenis Aktivitas diisi dengan: Harian, Mingguan, Bulanan atau Insidentil</li>
-                        <li>Nilai Aktivitas diisi dengan angka</li>
-                        <li>Nilai Karakter yang lebih dari satu dipisahkan dengan koma</li>
-                        <li>Jika dinilai oleh Guru maka kolom guru diisi angka 1</li>
-                        <li>Jika dinilai oleh Sekretaris Kelas maka kolom sekretaris diisi 1, jika tidak maka diisi 0
-                        </li>
-                    </ul>
-                    <form id="form-simpan-excel"
-                        method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label for="uploadFile">Pilih file untuk diunggah:</label>
-                            <input type="file" id="uploadFile" name="file" class="form-control">
-                        </div>
-                        <button type="button" onclick="prosesUpload()" class="btn btn-primary">Upload</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -73,8 +25,9 @@
                 </div>
                 <div class="body">
                     <form id="form-upload" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/save-add-aktivitas-reward-siswa') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/update-aktivitas-reward-siswa') }}">
                         @csrf
+                        <input type="hidden" id="id_aktivitas_reward_siswa" name="id_aktivitas_reward_siswa">
 
                         <h2 class="card-inside-title">
                             Jenis Aktivitas Reward Siswa
@@ -112,8 +65,9 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_aktivitas_reward" required=""
-                                    aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="nm_aktivitas_reward_siswa"
+                                    id="nm_aktivitas_reward_siswa" required="" aria-required="true"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -121,8 +75,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="number" class="form-control" name="nilai_aktivitas" required=""
-                                    aria-required="true" aria-invalid="true">
+                                <input type="number" class="form-control" name="nilai_aktivitas" id="nilai_aktivitas"
+                                    required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -246,6 +200,8 @@
                     success: function(response) {
                         if (response.status == 200) {
                             vex.dialog.alert(response.message);
+                            console.log("Redirecting to:", response.path);
+                            loadURI(response.path);
                         } else if (response.status == 201) {
                             vex.dialog.alert(response.message);
                             window.location.href = response.link;
@@ -272,43 +228,61 @@
         }
     });
 
-    function prosesUpload() {
-        let file = $('#uploadFile').val()
-        let url = "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/upload-file') }}"
-        let data = new FormData($('#form-simpan-excel')[0]);
-        
-        $.ajax({
-            url: url,
-            type: 'POST',
-            enctype: 'multipart/form-data',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                if (response.status == 200) {
-                    vex.dialog.alert(response.message);
-                } else if (response.status == 201) {
-                    vex.dialog.alert(response.message);
-                    window.location.href = response.link;
-                } else if (response.status == 202) {
-                    vex.dialog.alert(response.message);
-                    console.log("Redirecting to:", response.path);
-                    loadURI(response.path);
-                    window.location.reload();
-                } else if (response.status == 203) {
-                    vex.dialog.alert(response.message);
-                    primary_table.ajax.reload(null, false);
-                } else if (response.status == 204) {
-                    loadURI(response.path);
-                } else if (response.status == 300) {
-                    vex.dialog.alert(response.message);
-                }
-                console.log('Server response:', response);
-            },
-            complete: function() {
-                $('button').removeAttr('disabled');
+
+    function setData() {
+        let id_jenis_aktivitas_reward = '{{ $aktifitas_reward->id_jenis_aktivitas_reward }}'
+        let is_guru = '{{ $aktifitas_reward->is_guru }}'
+        let is_sekretaris = '{{ $aktifitas_reward->is_sekretaris }}'
+        let nm_aktivitas_reward_siswa = '{{ $aktifitas_reward->nm_aktivitas_reward_siswa }}'
+        let nilai_aktivitas = '{{ $aktifitas_reward->nilai_aktivitas }}'
+        let dataKarakter = JSON.parse(@json($dataKarakter));
+        let status = '{{ $aktifitas_reward->is_aktif }}'
+        let id_aktivitas_reward_siswa = '{{ $aktifitas_reward->id_aktivitas_reward_siswa }}'
+
+        $('#jenis_aktivitas_reward').val(id_jenis_aktivitas_reward)
+        if (is_guru == 1) {
+            $('#guru').prop('checked', true)
+        }
+        if (is_sekretaris == 1) {
+            $('#sekretaris').prop('checked', true)
+        }
+        $('#nm_aktivitas_reward_siswa').val(nm_aktivitas_reward_siswa)
+        $('#nilai_aktivitas').val(nilai_aktivitas)
+        $('#status').val(status)
+        $('#id_aktivitas_reward_siswa').val(id_aktivitas_reward_siswa)
+
+        dataKarakter.forEach(function(item) {
+            if (item == 'Disiplin') {
+                $('#disiplin').prop('checked', true)
             }
-        });
+            if (item == 'Religius') {
+                $('#religius').prop('checked', true)
+            }
+            if (item == 'Tangguh dan Tanggung Jawab') {
+                $('#tangguh').prop('checked', true)
+            }
+            if (item == 'Peduli') {
+                $('#peduli').prop('checked', true)
+            }
+            if (item == 'Komunikasi') {
+                $('#komunikasi').prop('checked', true)
+            }
+            if (item == 'Kolaborasi') {
+                $('#kolaborasi').prop('checked', true)
+            }
+            if (item == 'Kritis dan Pemecahan Masalah') {
+                $('#kritis').prop('checked', true)
+            }
+            if (item == 'Kreatif dan Inovatif') {
+                $('#kreatif').prop('checked', true)
+            }
+            if (item == 'Kejujuran') {
+                $('#jujur').prop('checked', true)
+            }
+        })
     }
+
+    $(document).ready(function() {
+        setData()
+    });
 </script>
