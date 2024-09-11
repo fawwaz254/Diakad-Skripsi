@@ -7,6 +7,7 @@ use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\BK\Absensi\HistoriSiswaTerlambatController;
+use App\Http\Controllers\BK\AktivitasSiswa\AktivitasRewardSiswaController;
 use App\Http\Controllers\BK\PenangananSiswa\JenisTindakanController;
 use App\Http\Controllers\BK\PenangananSiswa\JurnalTindakanController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
@@ -216,6 +217,23 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('tagihan-siswa/datatables/{thn_masuk_siswa}/{id_semester}/{id_kelompok_biaya}/{id_jalur}/{is_insert_replace}', [TagihanSiswaController::class, 'datatablesTagihanSiswa']);
 
             Route::post('action-tagihan-siswa/{mode}', [TagihanSiswaController::class, 'actionTagihanSiswa']);
+        });
+
+        Route::prefix('aktivitas-siswa')->group(function () {
+            Route::prefix('aktivitas-reward-siswa')->group(function () {
+                Route::get('/', [AktivitasRewardSiswaController::class, 'viewAktivitasRewardSiswa']);
+                Route::get('datatables', [AktivitasRewardSiswaController::class, 'datatablesAktivitasRewardSiswa']);
+
+                Route::get('add', [AktivitasRewardSiswaController::class, 'addAktivitasRewardSiswa']);
+                Route::post('save-add-aktivitas-reward-siswa', [AktivitasRewardSiswaController::class, 'saveAktivitasRewardSiswa']);
+                Route::post('delete', [AktivitasRewardSiswaController::class, 'deleteAktivitasRewardSiswa']);
+                Route::get('edit/{id_aktivitas_reward_siswa}', [AktivitasRewardSiswaController::class, 'editAktivitasRewardSiswa']);
+                Route::post('update-aktivitas-reward-siswa', [AktivitasRewardSiswaController::class, 'updateAktivitasRewardSiswa']);
+
+                Route::get('download-template', [AktivitasRewardSiswaController::class, 'downloadTemplate'])->name('downloadTemplate');
+                Route::post('upload-file', [AktivitasRewardSiswaController::class, 'uploadAktivitas']);
+
+            });
         });
     });
 });

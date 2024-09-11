@@ -69,6 +69,7 @@ use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
 use App\Http\Controllers\Akademik\RaporAgama\CetakRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
+use App\Http\Controllers\BK\Absensi\HistoriSiswaTerlambatController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaDikunciController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaTerkunciController;
 use App\Http\Controllers\Guru\Faq\FaqController;
@@ -80,6 +81,7 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Guru\GuruPiket\SiswaTerlambatController;
 use App\Http\Controllers\Guru\KetidaksesuaianSOP\InputKetidaksesuaianController;
 use App\Http\Controllers\Guru\KetidaksesuaianSOP\KetidaksesuaianSOPController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
@@ -413,13 +415,14 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::get('rekap-absen/print/{id_jadwal_kelas_mp}', [RekapAbsenController::class, 'printKBMRekapAbsen']);
 
-            // MENU Absensi Tanpa Jadwal
+            // MENU Absensi Tanpa Jadwal //////////////////
+
             Route::get('absensi-tanpa-jadwal', [AbsensiTanpaJadwalController::class, 'viewAbsensiTanpaJadwal']);
-            Route::get('absensi-tanpa-jadwal/view-kbm/{id_guru}/{id_jadwal_kelas_mp}/{opsi}', [AbsensiTanpaJadwalController::class, 'viewKBMAbsensiTanpaJadwal']);
+            Route::get('absensi-tanpa-jadwal/view-kbm/{id_jadwal_kelas_mp}/{pertemuanKe}/{opsi}', [AbsensiTanpaJadwalController::class, 'viewKBMAbsensiTanpaJadwal']);
             Route::get('absensi-tanpa-jadwal/datatables-kbm/{id_jadwal_kelas_mp}/{pertemuan_ke}', [AbsensiTanpaJadwalController::class, 'datatablesKBMAbsensiTanpaJadwal']);
 
             // AJAX GET PERTEMUAN BY KELAS_MP
-            // Route::post('pertemuan-byjadwalkelasmp-kbmtanpaJadwal', [AbsensiSiswaController::class, 'ajaxGetPertemuanByJadwalKelasMpKbmTanpaJadwal']);
+            Route::post('selectPertemuan-byjadwalkelasmp', [AbsensiTanpaJadwalController::class, 'ajaxGetChangePertemuanByJadwalKelasMp']);
 
             Route::post('absensi-tanpa-jadwal/view-kbm', [AbsensiTanpaJadwalController::class, 'actionViewKBMAbsensiTanpaJadwal']);
             Route::post('action-absensi-tanpa-jadwal/{mode}/{id_jadwal_kelas_mp}/{pertemuan_ke}', [AbsensiTanpaJadwalController::class, 'actionAbsensiTanpaJadwal']);
@@ -665,6 +668,19 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absen-tanpa-jadwal/view-kbm/{id_kelas_mp}', [GuruPiketRekapAbsenTanpaJadwalController::class, 'viewKBMRekapAbsenTanpaJadwal']);
 
             Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', [GuruPiketRekapAbsenTanpaJadwalController::class, 'printKBMRekapAbsenTanpaJadwal']);
+
+            // MENU Catat Siswa Terlambat
+            Route::get('catat-siswa-terlambat', [SiswaTerlambatController::class, 'viewSiswaTerlambat']);
+            Route::post('catat-siswa-terlambat/filter-siswa-terlambat', [SiswaTerlambatController::class, 'filterSiswaTerlambat']);
+            Route::get('catat-siswa-terlambat/detail/{id_kelas}/{date}', [SiswaTerlambatController::class, 'detailSiswaTerlambat']);
+
+            Route::get('catat-siswa-terlambat/addnotes/{id_presensi_pengguna}/{id_kelas}/{date}', [SiswaTerlambatController::class, 'viewAddNotes']);
+            Route::post('catat-siswa-terlambat/addnotes/{id_presensi_pengguna}', [SiswaTerlambatController::class, 'ActionAddnotes']);
+
+            Route::get('catat-siswa-terlambat/editnotes/{id_presensi_pengguna}/{id_kelas}/{date}', [SiswaTerlambatController::class, 'viewEditNotes']);
+            Route::post('catat-siswa-terlambat/editnotes/{id_presensi_pengguna}', [SiswaTerlambatController::class, 'ActionEditnotes']);
+
+            Route::get('catat-siswa-terlambat/print/{id}', [SiswaTerlambatController::class, 'PrintTerlambat']);
         });
 
         Route::prefix('wali-kelas')->group(function () {
