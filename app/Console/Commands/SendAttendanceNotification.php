@@ -130,6 +130,10 @@ class SendAttendanceNotification extends Command
                     ->whereHas('pengguna.status_pengguna', function ($q) {
                         $q->where('aktif_status_pengguna', 1)->where('nm_status_pengguna', 'AKTIF');
                     })
+                    ->wherehas('pengguna.shiftPengguna', function ($q) use ($now){
+                        $q->where('date', $now)
+                        ->whereNotNull('shiftPengguna.id_shift_pengguna');
+                    })
                     ->whereHas('wali_murid', function ($q) {
                         $q->whereNotNull('nomor_hp_wali_murid');
                     })
