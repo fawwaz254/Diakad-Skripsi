@@ -326,6 +326,9 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('action-insert-update-siswa/{mode}/{id}', [InsertUpdateSiswaController::class, 'actionInsertUpdateSiswa']);
 
+            //add kota
+            Route::post('add-kota', [InsertUpdateSiswaController::class, 'addKota']);
+
             //MENU Setting Wali Murid
             Route::get('setting-wali-murid', [SettingWaliMuridController::class, 'viewSettingWaliMurid']);
             //batch hapus data walimurid yang salah
