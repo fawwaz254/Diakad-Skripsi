@@ -206,11 +206,11 @@
             .val() + '/' + $('select[name=id_kelas]').val() + '/' + $('select[name=id_pertanyaan]').val());
     }
 
-    var primary_table = $('#primary_table').DataTable({
-        ordering: false,
+    // var primary_table = $('#primary_table').DataTable({
+    //     ordering: false,
 
-        paging: false
-    });
+    //     paging: false
+    // });
 
     function cekJawaban(el) {
         var item = $(el);
@@ -247,6 +247,52 @@
                 $('#myModal').modal('show');
             }
         });
-
     };
+
+    var header_pdf = '{{ $auth_data->sekolah_data->nm_sekolah }}'
+    var nm_form = '{{ $form->nm_form }}'
+    var nm_pertanyaan = '{{ $nm_pertanyaan }}'
+    
+    var nm_bulan = '{{ $bulan->nm_bulan }}'
+    var buttonConfigHumas = {
+            buttons: [{
+                extend: "pageLength",
+                className: "bg-amber waves-effect"
+            }, {
+                extend: "print",
+                text: "PDF",
+                title: header_pdf + '<br>' + nm_form + '<br>' + 'Bulan : ' + nm_bulan + '<br>' + 'Pertanyaan : ' +nm_pertanyaan,
+                className: "bg-pink waves-effect",
+                orientation: "landscape",
+                exportOptions: {
+                    columns: ":visible"
+                },
+                customize: function(e) {
+                    $(e.document.body).css("font-size", "10pt"), $(e.document.body).find("table").addClass(
+                        "compact").css("font-size", "inherit")
+                }
+            }, {
+                extend: "excelHtml5",
+                className: "bg-green waves-effect",
+                exportOptions: {
+                    columns: ":visible"
+                }
+            },
+        ],
+            dom: {
+                button: {
+                    className: "btn"
+                }
+            }
+        }
+
+    var primary_table = $('#primary_table').DataTable({
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: buttonConfigHumas,
+        lengthMenu: [
+            [-1],
+            ['All'],
+        ],
+    })
 </script>
