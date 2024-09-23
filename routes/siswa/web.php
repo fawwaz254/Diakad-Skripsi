@@ -53,9 +53,6 @@ Route::middleware(['token_staff'])->group(function () {
             });
         });
 
-
-
-
         Route::prefix('tracer-alumni')->group(function () {
             Route::get('/', [TracerAlumniSiswaController::class, 'viewTracerAlumni']);
             //because this controller also used in role alumni
@@ -136,6 +133,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('data-siswa', [DataSiswaController::class, 'viewDataSiswa']);
             Route::get('data-siswa/view-print-siswa/{nis_nama_siswa}', [DataSiswaController::class, 'viewPrintSiswa']);
             Route::post('data-siswa/{id}', [DataSiswaController::class, 'actionUpdateSiswa']);
+
+            Route::post('add-kota', [DataSiswaController::class, 'addKota']);
         });
 
         Route::prefix('skpi')->group(function () {
