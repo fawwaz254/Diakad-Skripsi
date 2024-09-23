@@ -164,10 +164,15 @@
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
                                                 Tempat Lahir <span class="is-required">*</span>
+                                                <small>Jika kota tempat lahir tidak ada pada list, anda bisa
+                                                    menambahkannya terlebih dahulu.
+                                                </small>
+                                                <a href="#" data-toggle="modal" data-target="#myModal2"
+                                                    class=" bg-blue waves-effect btn mt-2">Tambah Kota</a>
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                            <select class="form-control show-tick" name="id_kota_lahir"
+                                            <select class="form-control show-tick select2" name="id_kota_lahir"
                                                 id="id_kota_lahir" required>
                                                 <option
                                                     value="{{ isset($kotaLahir->id_kota) ? $kotaLahir->id_kota : '' }}"
@@ -1893,15 +1898,14 @@
                                     <div class="row clearfix">
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                             <h2 class="card-inside-title">
-                                                Tanggal Mutasi <span class="is-required">*</span>
+                                                Tanggal Mutasi
                                             </h2>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <input type="text" class="datepicker form-control"
                                                 name="tanggal_mutasi_masuk" aria-required="true"
                                                 aria-invalid="true"
-                                                value="{{ isset($siswa->tanggal_mutasi_masuk) ? date('d F Y', strtotime($siswa->tanggal_mutasi_masuk)) : '' }}"
-                                                required>
+                                                value="{{ isset($siswa->tanggal_mutasi_masuk) ? date('d F Y', strtotime($siswa->tanggal_mutasi_masuk)) : '' }}">
                                         </div>
                                     </div>
                                     <br>
@@ -2037,9 +2041,57 @@
         </div>
     </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal2">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title">Form Tambah Kota </h5>
+            </div>
+            <form id="form-validation2" method="POST"
+                action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/add-kota') }}">
+                {{ csrf_field() }}
+                <div class="modal-body">
+                    <small>Jika provinsi di luar negara indonesia, pilih lainnya</small>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Provinsi
+                            </label>
+                            <select class="form-control show-tick" name="id_provinsi" id="id_provinsi">
+                                @foreach ($provinsi as $r)
+                                    <option value="{{ $r->id_provinsi }}">{{ $r->nm_provinsi }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>
+                                Kota
+                            </label>
+                            <input type="text" class="form-control" id="nm_kota" name="nm_kota"
+                                required="" aria-required="true" aria-invalid="true">
+                        </div>
+                    </div>
+                    <input type="hidden" name="nis_siswa" value="{{ $siswa->nis_siswa }}">
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" onclick="hideModalCreate()">Tambah
+                            Kota</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @include('scriptjs')
 <script type="text/javascript">
+    $('.select2').select2();
+
     $('#thn_penerima_beasiswa').select2();
+
     $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'DD MMMM YYYY',
@@ -2047,6 +2099,29 @@
             clearButton: true,
             weekStart: 1,
             time: false,
+        });
+    });
+
+    $(document).ready(function() {
+        $('#form-validation2').on('submit', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.status === 202) {
+                        location.reload();
+                        alert(response.message);
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    alert('An error occurred. Please try again.');
+                }
+            });
         });
     });
 </script>
