@@ -547,11 +547,17 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('reward-siswa')->group(function () {
             Route::get('input-reward-siswa', [InputRewardSiswaController::class, 'viewInputRewardSiswa']);
             Route::post('post-input-reward-siswa', [InputRewardSiswaController::class, 'actionViewInputRewardSiswa']);
-            Route::get('input-reward-siswa/view-kelas/{id_kelas}', [InputRewardSiswaController::class, 'viewKelasInputRewardSiswa']);
+            Route::get('input-reward-siswa/view-kelas/{id_kelas}/{aktivitas_reward}', [InputRewardSiswaController::class, 'viewKelasInputRewardSiswa']);
+
+            Route::post('save-reward-siswa', [InputRewardSiswaController::class, 'saveRewardSiswa']);
+
             Route::get('input-reward-siswa/add/{id_siswa}', [InputRewardSiswaController::class, 'addInputRewardSiswa']);
             Route::get('input-reward-siswa/edit/{id}', [InputRewardSiswaController::class, 'editInputRewardSiswa']);
 
-            Route::get('input-reward-siswa/datatables/{id_kelas}', [InputRewardSiswaController::class, 'datatablesInputRewardSiswa']);
+            // AJAX GET aktivitas reward
+            Route::get('ajax-get-aktivitas-reward', [InputRewardSiswaController::class, 'ajaxGetAktivitasReward']);
+
+            Route::get('input-reward-siswa/datatables', [InputRewardSiswaController::class, 'datatablesInputRewardSiswa']);
             Route::post('action-input-reward-siswa/{mode}/{id}', [InputRewardSiswaController::class, 'actionInputRewardSiswa']);
 
             Route::get('rekap-input-reward-siswa', [InputRewardSiswaController::class, 'viewRekapInputRewardSiswa']);
