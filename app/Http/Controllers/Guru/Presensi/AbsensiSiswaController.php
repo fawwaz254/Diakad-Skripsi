@@ -386,23 +386,27 @@ class AbsensiSiswaController extends BaseController
             // ACTION ADD
             if ($mode == 'add-kbm') {
                 $id_jadwal_kelas_mp = $id;
-
-                $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
+            
+                $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)
+                    ->where('pertemuan_ke', '=', $pertemuan_ke)
+                    ->first();
+                
                 if (isset($input->pertemuan_id)) {
                     $pertemuan_ke = $input->pertemuan_id;
                 }
+            
                 DB::beginTransaction();
                 try {
                     if ($presensi_mp) {
                         $presensi_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                     } else {
-                        // make id
+                        // Buat ID baru
                         $id_presensi_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
+            
                         $auth_data = $input->auth_data;
                         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
                         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
-
+            
                         $presensi_mp = new PresensiMp;
                         $presensi_mp->id_presensi_mp = $id_presensi_mp;
                         $presensi_mp->id_kelas_mp = $data_kelas->id_kelas_mp;
@@ -410,81 +414,91 @@ class AbsensiSiswaController extends BaseController
                         $presensi_mp->pertemuan_ke = $pertemuan_ke;
                         $presensi_mp->tgl_entry = $now;
                         $presensi_mp->created_by = $input->auth_data->pengguna->id_pengguna;
-                    }
+                        $presensi_mp->is_task = $input->is_task ?? 0;
+                        $presensi_mp->jenis_materi = 1;
 
+                    }
+            
                     $presensi_mp->uraian_materi = $input->uraian_materi;
                     $presensi_mp->waktu_mulai = $input->waktu_mulai;
                     $presensi_mp->waktu_selesai = $input->waktu_selesai;
                     $presensi_mp->tgl_presensi = $input->tgl_presensi;
                     $presensi_mp->save();
-
+            
                     // PresensiMpSiswa
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        if (!empty($alasan)) {
-                            $kehadiran = $alasan;
-                        } else {
-                            $kehadiran = 1;
-                        }
-
-                        if ($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp->id_presensi_mp)->where('id_siswa', '=', $id_siswa)->first()) {
-                            $presensi_mp_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
-                        } else {
-                            // make id
-                            $id_presensi_mp_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
-                            $presensi_mp_siswa = new PresensiMpSiswa;
-                            $presensi_mp_siswa->id_presensi_mp_siswa = $id_presensi_mp_siswa;
-                            $presensi_mp_siswa->id_presensi_mp = $presensi_mp->id_presensi_mp;
-                            $presensi_mp_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
-                            $presensi_mp_siswa->id_siswa = $id_siswa;
-                        }
-
-                        $presensi_mp_siswa->kehadiran = $kehadiran;
-                        $presensi_mp_siswa->save();
+                        $kehadiran = !empty($alasan) ? $alasan : 1;
+            
+                        $presensi_mp_siswa_data = [];
+                        $presensi_mp_siswa_data[] = [
+                            'id_presensi_mp_siswa' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id_presensi_mp' => $presensi_mp->id_presensi_mp,
+                            'id_siswa' => $id_siswa,
+                            'kehadiran' => $kehadiran,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            'updated_by' => $input->auth_data->pengguna->id_pengguna,
+                        ];
+            
+                        // Batch insert semua record siswa
+                        PresensiMpSiswa::insert($presensi_mp_siswa_data);
                     }
-                    if (isset($input->id_karakter_siswa)) {
-                        $data_karakter_siswa = $input->id_karakter_siswa;
-
-                        foreach ($input->id_siswa as $id_siswa) {
-                            RewardSiswa::where('model_event', 'PresensiMp')->where('id_event', $presensi_mp->id_presensi_mp)->delete();
-                            // make id
-
-                            if (isset($data_karakter_siswa[$id_siswa])) {
-                                foreach ($data_karakter_siswa[$id_siswa] as $karakter_siswa) {
-
-                                    $id_reward_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
-                                    $reward_siswa = new RewardSiswa();
-                                    $reward_siswa->id_reward_siswa = $id_reward_siswa;
-                                    $reward_siswa->model_event = 'PresensiMp';
-                                    $reward_siswa->id_event = $presensi_mp->id_presensi_mp;
-                                    $reward_siswa->id_kelas = $id_siswa;
-                                    $reward_siswa->id_siswa = $presensi_mp->kelas_mp->id_kelas;
-                                    $reward_siswa->nm_reward_siswa = $karakter_siswa;
-                                    $reward_siswa->id_pengguna_reward_siswa = $input->auth_data->pengguna->id_pengguna;
-                                    $reward_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
-                                    $reward_siswa->save();
+            
+                    try {
+                        RewardSiswa::where('model_event', 'PresensiMp')
+                            ->where('id_event', $presensi_mp->id_presensi_mp)
+                            ->delete();
+            
+                        $rewardData = [];
+            
+                        if (isset($input->id_karakter_siswa)) {
+                            $data_karakter_siswa = $input->id_karakter_siswa;
+            
+                            foreach ($input->id_siswa as $id_siswa) {
+                                if (isset($data_karakter_siswa[$id_siswa])) {
+                                    foreach ($data_karakter_siswa[$id_siswa] as $karakter_siswa) {
+                                        // Buat data untuk batch insert
+                                        $rewardData[] = [
+                                            'id_reward_siswa'   => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                            'model_event'       => 'PresensiMp',
+                                            'id_event'          => $presensi_mp->id_presensi_mp,
+                                            'id_kelas'          => $id_siswa,
+                                            'id_siswa'          => $presensi_mp->kelas_mp->id_kelas,
+                                            'nm_reward_siswa'   => $karakter_siswa,
+                                            'id_pengguna_reward_siswa' => $input->auth_data->pengguna->id_pengguna,
+                                            'created_by'        => $input->auth_data->pengguna->id_pengguna,
+                                            'created_at'        => $now,
+                                            'updated_at'        => $now,
+                                        ];
+                                    }
                                 }
                             }
                         }
+            
+                        if (!empty($rewardData)) {
+                            RewardSiswa::insert($rewardData);
+                        }
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        // Log error or handle accordingly
+                        return [
+                            'status' => 203,
+                            'message' => 'Proses reward siswa gagal!'
+                        ];
                     }
-
+            
                     DB::commit();
-                    // all good
-
+            
                     return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'status' => 202,
                         'path' => 'presensi/absensi-siswa',
                         'message' => 'Save Absensi KBM Siswa Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
-
-                    dd($e);
                     return [
-                        'status' => 203, // GAGAL
-                        'message' => 'Absensi KBM Gagal!'
+                        'status' => 203,
+                        'message' => 'Absensi KBM Gagal!' . $e -> getMessage()
                     ];
                 }
             } elseif ($mode == 'delete-kbm') {
