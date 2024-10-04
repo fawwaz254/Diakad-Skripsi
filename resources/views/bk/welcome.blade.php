@@ -74,21 +74,21 @@
                             </tr>
                             <tr>
                                 <th style="text-align: center;">BK</th>
-                                <th style="text-align: center;">{{$pelanggaran}}</th>
-                                <th style="text-align: center;">{{$pelanggaran_belum_ditindak}}</th>
-                                <th style="text-align: center;">{{$pelanggaran_sudah_ditindak}}</th>
+                                <th style="text-align: center;">{{$pelanggaran_bk_count}}</th>
+                                <th style="text-align: center;">{{$pelanggaran_bk_belum_ditindak}}</th>
+                                <th style="text-align: center;">{{$pelanggaran_bk_sudah_ditindak}}</th>
                             </tr>
                             <tr>
                                 <th style="text-align: center;">Guru</th>
-                                <th style="text-align: center;">{{$pelanggaran_orang_lain}}</th>
+                                <th style="text-align: center;">{{$pelanggaran_orang_lain_count}}</th>
                                 <th style="text-align: center;">{{$pelanggaran_orang_lain_belum_ditindak}}</th>
                                 <th style="text-align: center;">{{$pelanggaran_orang_lain_sudah_ditindak}}</th>
                             </tr>
                             <tr>
                                 <th style="text-align: center;" class="bg-pink">Total</th>
-                                <th style="text-align: center;">{{$pelanggaran +  $pelanggaran_orang_lain}}</th>
-                                <th style="text-align: center;">{{$pelanggaran_belum_ditindak +  $pelanggaran_orang_lain_belum_ditindak}}</th>
-                                <th style="text-align: center;">{{$pelanggaran_sudah_ditindak +  $pelanggaran_orang_lain_sudah_ditindak}}</th>
+                                <th style="text-align: center;">{{$pelanggaran_bk_count +  $pelanggaran_orang_lain_count}}</th>
+                                <th style="text-align: center;">{{$pelanggaran_bk_belum_ditindak +  $pelanggaran_orang_lain_belum_ditindak}}</th>
+                                <th style="text-align: center;">{{$pelanggaran_bk_sudah_ditindak +  $pelanggaran_orang_lain_sudah_ditindak}}</th>
                             </tr>
                         </thead>
                     </table>
