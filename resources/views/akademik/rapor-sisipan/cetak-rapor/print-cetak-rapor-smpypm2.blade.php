@@ -252,8 +252,8 @@
                         Sidoarjo, {{ $tanggal_cetak }}<br><br>
                         Kepala Sekolah,<br><br><br><br><br><br><br><br><br>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                            <img style="position: absolute; top: 5%; margin-left:-20px; margin-top:35px"
-                                src="{{ asset('media/ttd/smpypm22.png') }}" alt="TTD" width="200px"
+                            <img style="position: absolute; top: 5%; margin-left:-20px; margin-top:10px"
+                                src="{{ asset('media/ttd/08102024smpypm2.png') }}" alt="TTD" width="200px"
                                 height="200px" class="ttd">
                         @endif
                         <strong><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></strong>

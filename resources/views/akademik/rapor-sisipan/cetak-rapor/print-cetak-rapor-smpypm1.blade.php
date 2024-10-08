@@ -146,7 +146,7 @@
                     </td>
                     <td style="border-style : hidden;width: 25%;">Semester
                     </td>
-                    <td style="border-style : hidden;width: 25%;"> : II
+                    <td style="border-style : hidden;width: 25%;"> : I
 
 
                     </td>
