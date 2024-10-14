@@ -53,6 +53,7 @@ class RekapFormHarianController extends Controller
     public function viewRekapBulananFormHarian(Request $request, $id_form, $bulan = null, $tahun = null, $id_kelas = null, $id_pertanyaan = '0')
     {
         $input = (object) $request->input();
+        // dd($input);
         $auth_data = $input->auth_data;
         $now = Carbon::now();
 
@@ -109,16 +110,21 @@ class RekapFormHarianController extends Controller
 
         $dataJawaban = [];
 
+        $nm_pertanyaan = '';
+
         if ($id_pertanyaan == '0') {
             foreach ($jawaban_form as $j) {
                 $date = Carbon::parse($j->created_at)->format('Y-m-d');
                 $dataJawaban[$j->created_by . $date] = $j->id_jawaban_form;
             }
         } else {
+            $nm_pertanyaan = PertanyaanForm::find($id_pertanyaan)->nm_pertanyaan_form;
+            // dd('masuk sini');
             // $detail_jawaban_form = DetailJawabanForm::with('pertanyaan_form')->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))->whereIn('id_jawaban_form', $jawaban_form->pluck('id_jawaban_form'))->where('id_pertanyaan_form', $id_pertanyaan)->get();
             foreach ($jawaban_form as $data_jawaban_form) {
                 foreach ($data_jawaban_form->detail_jawaban_form as $j) {
                     if ($j->id_pertanyaan_form == $id_pertanyaan) {
+                        // dd($id_pertanyaan);
                         $date = Carbon::parse($j->created_at)->format('Y-m-d');
                         if ($j->pertanyaan_form->jenis_pertanyaan == '4') {
                             $data_opsi = [];
@@ -150,7 +156,6 @@ class RekapFormHarianController extends Controller
                             }
                             $dataJawaban[$j->created_by . $date] = $data;
                         } else if ($j->pertanyaan_form->jenis_pertanyaan == '3') {
-
                             $warna = '#d4ffdf';
                             if (!empty($j->jawaban)) {
                                 $options = json_decode($j->pertanyaan_form->options, true);
@@ -172,6 +177,7 @@ class RekapFormHarianController extends Controller
         }
 
         $list_pertanyaan = PertanyaanForm::where('id_form', $id_form)->orderBy('urutan', 'asc')->get();
+        // dd($list_pertanyaan);
         // $list_kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat')->orderBy('nm_kelas')->get();
         $start_month = Carbon::create($tahun, $bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun, $bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
@@ -180,7 +186,7 @@ class RekapFormHarianController extends Controller
         $bulan = Bulan::find($bulan);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        return view('humas/form-builder/rekap-form-harian/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month',  'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan'));
+        return view('humas/form-builder/rekap-form-harian/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month',  'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan', 'nm_pertanyaan'));
     }
 
 

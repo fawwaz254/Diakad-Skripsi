@@ -95,7 +95,7 @@
                             {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}
                         </span>
                         <br>
-                        <span style="margin-top: -10px; font-family: 'Impact'; font-size:25px">
+                        {{-- <span style="margin-top: -10px; font-family: 'Impact'; font-size:25px">
                             {{ $auth_data->sekolah_data->akreditasi }}
                         </span>
                         <br>
@@ -104,7 +104,7 @@
                         </span>
                         <span style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
                             {{ 'NPSN : ' . $auth_data->sekolah_data->npsn_sekolah }}
-                        </span>
+                        </span> --}}
                     </td>
                 </tr>
             </table>
@@ -139,7 +139,7 @@
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;">Nama Pst. Didik
+                    <td style="border-style : hidden;width: 15%;">Nama 
                     </td>
                     <td class="capitalize" style="border-style : hidden;width: 35%;"> :
                         {{ $siswa->pengguna->nm_pengguna }}
@@ -152,7 +152,7 @@
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;">No. Induk/NISN
+                    <td style="border-style : hidden;width: 15%;">No. Induk
                     </td>
                     <td style="border-style : hidden;width: 35%;"> : {{ $siswa->nis_siswa }}
                     </td>
@@ -166,93 +166,41 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #C2D69B">
                     <tr>
-
                         <td colspan="2" rowspan="2" style="text-align: center;font-weight: bold;">MATA
                             PELAJARAN<br></td>
-                        <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
-                        <td colspan="4" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR <br> SISIPAN</td>
-
-
+                        <td colspan="6" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">SUMATIF<br>TENGAH<br>SEMESTER <br> (STS)</td>
                     </tr>
                     <tr>
-                        <td style="text-align: center;font-weight: bold;">1</td>
-                        <td style="text-align: center;font-weight: bold;">2</td>
-                        <td style="text-align: center;font-weight: bold;">3</td>
-                        <td style="text-align: center;font-weight: bold;">4</td>
-                        <td style="text-align: center;font-weight: bold;">1</td>
-                        <td style="text-align: center;font-weight: bold;">2</td>
-                        <td style="text-align: center;font-weight: bold;">3</td>
-                        <td style="text-align: center;font-weight: bold;">4</td>
+                        <td style="text-align: center;font-weight: bold;">UH/TP 1</td>
+                        <td style="text-align: center;font-weight: bold;">UH/TP 2</td>
+                        <td style="text-align: center;font-weight: bold;">UH/TP 3</td>
+                        <td style="text-align: center;font-weight: bold;">UH/TP 1</td>
+                        <td style="text-align: center;font-weight: bold;">UH/TP 2</td>
+                        <td style="text-align: center;font-weight: bold;">UH/TP 3</td>
                     </tr>
                 </thead>
                 <br>
                 <tbody class="body">
                     @foreach ($data as $kelompok)
-                        <tr>
-                            <td colspan="2" style="font-weight: bold;">
-                                {{ isset($kelompok['nama']) ? $kelompok['nama'] : '' }}</td>
-                        </tr>
                         @if (isset($kelompok['data']))
                             @foreach ($kelompok['data'] as $key => $data2)
-                                @php
-                                    $jumlah = count($data2['nm_point']);
-                                @endphp
                                 <tr>
                                     <td style="text-align: center;">{{ $key }}</td>
                                     <td>{{ $data2['nm_point'][0] }}</td>
+                                    {{-- @dd($list_komponen) --}}
                                     @foreach ($list_komponen as $komponen)
                                         <td style="text-align: center;font-weight: bold;">
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] : '' }}
                                         </td>
                                     @endforeach
-
-                                    <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah'] != '0' ? round($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) : '' }}
-                                    </td>
-                                    <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts'] : '' }}
-                                    </td>
-                                    <td style="text-align: center;font-weight: bold;">
-                                        {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah'] != '0' ? round(($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) * 0.6 + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts'] * 0.4) : '' }}
-
-
-                                    </td>
-                                </tr>
-                                @for ($i = 1; $i < $jumlah; $i++)
-                                    <tr>
-                                        <td></td>
-                                        <td>{{ $data2['nm_point'][$i] }}</td>
-                                        @foreach ($list_komponen as $komponen)
-                                            <td style="text-align: center;font-weight: bold;">
-                                                {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor] : '' }}
-                                            </td>
-                                        @endforeach
-
-                                        <td style="text-align: center;font-weight: bold;">
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah'] != '0' ? number_format($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah']) : '' }}
-                                        </td>
-                                        <td style="text-align: center;font-weight: bold;">
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts'] : '' }}
-
-                                        </td>
-                                        <td style="text-align: center;font-weight: bold;">
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah'] != '0' ? number_format((($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah']) * 2 + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts']) / 3) : '' }}
-                                        </td>
-                                    </tr>
-                                @endfor
                                 </tr>
                             @endforeach
                         @endif
                     @endforeach
-                    </tr>
-
-
                 </tbody>
-
             </table>
+            
             <table style="width: 90%; margin-left:10%; margin-top:20px">
                 <tr style="font-weight:bold;border-style : hidden;">
                     <td width="20%" style="border-style : hidden;">
@@ -280,8 +228,8 @@
                         {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '3']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '3'] : '0' }}
                         hari</td>
                     <td style="border-style : hidden;"><br>
-                        <p style="width: 300px;
-                    border-bottom: 2px dotted  black;"></p><br>
+                        <p>Siswa yang nilainya dibawah (75) mohon perhatian khusus dari orang tua.</p>
+                        <br>
                         <p style="width: 300px;
                         border-bottom: 2px dotted  black;"></p>
                     </td>
@@ -316,9 +264,9 @@
                     <td></td>
                     <td align="center" style="border-style : hidden; position: relative;">Mengetahui<br>Kepala
                         Sekolah,
-                        <img style="position: absolute; margin-left:-140px "
+                        {{-- <img style="position: absolute; margin-left:-140px "
                             src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="200px" height="200px"
-                            class="ttd">
+                            class="ttd"> --}}
                         <br><br><br><br><br>
                         <br>
                         <br>
