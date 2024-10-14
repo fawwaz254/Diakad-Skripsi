@@ -469,17 +469,23 @@ class CetakRaporController extends Controller
         ])->orderBy('urutan')->get();
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
-            if ($kelas->tingkat == '3') {
-                $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
-                    $query->where('nm_jenis_rapor', 'sisipan');
-                })->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
-                // $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
-            } else {
-                // $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
-                $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
-                    $query->where('nm_jenis_rapor', 'sisipan');
-                })->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
-            }
+            // if ($kelas->tingkat == '3') {
+            //     $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            //         $query->where('nm_jenis_rapor', 'sisipan');
+            //     })->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
+            //     // $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
+            // } else {
+            //     // $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
+            //     $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            //         $query->where('nm_jenis_rapor', 'sisipan');
+            //     })->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
+            // }
+
+            $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+                $query->where('nm_jenis_rapor', 'sisipan');
+            })->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])
+              ->orderBy('urutan', 'asc')
+              ->get();
 
 
             foreach ($kelompok_mapel_rapor as $k) {
@@ -581,11 +587,15 @@ class CetakRaporController extends Controller
                 $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
             }
 
-            if ($kelas->tingkat == '3') {
-                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas', 'tanggal_cetak'));
-            } else {
-                return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas', 'tanggal_cetak'));
-            }
+            // if ($kelas->tingkat == '3') {
+            //     return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas', 'tanggal_cetak'));
+            // } else {
+            //     return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas', 'tanggal_cetak'));
+            // }
+
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas', 'tanggal_cetak'));
+
+
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;

@@ -336,11 +336,12 @@ class RaporSisipanController extends Controller
                             }
                         }
                     } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
-                        if ($rapor->kelas->tingkat == '1' || $rapor->kelas->tingkat == '2') {
-                            $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
-                        } else {
-                            $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
-                        }
+                        // if ($rapor->kelas->tingkat == '1' || $rapor->kelas->tingkat == '2') {
+                        //     $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
+                        // } else {
+                        //     $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
+                        // }
+                        $urutan = [11, 12, 13, 14, 15, 16, 17];
 
                         $list_komponen = $list_komponen->whereIn('urutan', $urutan);
 
@@ -601,11 +602,13 @@ class RaporSisipanController extends Controller
 
             $list_data = $list_data->whereIn('urutan', $urutan);
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
-            if ($rapor->kelas->tingkat == '1' || $rapor->kelas->tingkat == '2') {
-                $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
-            } else {
-                $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
-            }
+            // if ($rapor->kelas->tingkat == '1' || $rapor->kelas->tingkat == '2') {
+            //     $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
+            // } else {
+            //     $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
+            // }
+
+            $urutan = [11, 12, 13, 14, 15, 16, 17];
 
             $list_data = $list_data->whereIn('urutan', $urutan);
         }
@@ -665,11 +668,12 @@ class RaporSisipanController extends Controller
                 $data = array();
                 $data['nis_siswa'] = $item->nis_siswa;
                 $data['nm_pengguna'] = $item->pengguna->nm_pengguna;
-                if ($item->kelas->tingkat == '1' || $item->kelas->tingkat == '2') {
-                    $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
-                } else {
-                    $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
-                }
+                // if ($item->kelas->tingkat == '1' || $item->kelas->tingkat == '2') {
+                //     $urutan = [11, 12, 13, 14, 15, 16, 17]; // urutan komponen yang di include untuk kelas 10 & 11
+                // } else {
+                //     $urutan = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // urutan komponen yang di include untuk kelas 12
+                // }
+                $urutan = [11, 12, 13, 14, 15, 16, 17];
                 $nilai_rapors = NilaiRapor::where('id_siswa', $item->id_siswa)->where('id_rapor', $id_rapor)
                     ->whereHas('komponen_jenis_rapor', function ($query) use ($urutan) {
                         $query->where('nm_komponen_jenis_rapor', "!=", 'uas')->whereIn('urutan', $urutan);
@@ -711,18 +715,21 @@ class RaporSisipanController extends Controller
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smamaryamsby') {
-            if ($rapor->kelas->tingkat == '3') {
-                // $list_data = KomponenNilaiRapor::where('status', 1)->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
-                $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
-                    $query->where('nm_jenis_rapor', 'sisipan');
-                })->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
-            } else {
-                $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
-                    $query->where('nm_jenis_rapor', 'sisipan');
-                })->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
-                // $list_data = KomponenNilaiRapor::where('status', 1)->where('nm_komponen_jenis_rapor', '!=', 'uas')
-                //     ->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
-            }
+            // if ($rapor->kelas->tingkat == '3') {
+            //     // $list_data = KomponenNilaiRapor::where('status', 1)->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
+            //     $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            //         $query->where('nm_jenis_rapor', 'sisipan');
+            //     })->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
+            // } else {
+            //     $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+            //         $query->where('nm_jenis_rapor', 'sisipan');
+            //     })->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
+            //     // $list_data = KomponenNilaiRapor::where('status', 1)->where('nm_komponen_jenis_rapor', '!=', 'uas')
+            //     //     ->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
+            // }
+            $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+                $query->where('nm_jenis_rapor', 'sisipan');
+            })->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
         } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smknu') {
             if ($rapor->kelas->tingkat == '1') {
                 $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
@@ -846,7 +853,7 @@ class RaporSisipanController extends Controller
                 // $list_data = KomponenNilaiRapor::where('status', 1)->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
                 $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
                     $query->where('nm_jenis_rapor', 'sisipan');
-                })->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->orderBy('urutan', 'asc')->get();
+                })->where('nm_komponen_jenis_rapor', '!=', 'uas')->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])->orderBy('urutan', 'asc')->get();
 
                 $list_nilai = NilaiRapor::where('id_rapor', $id_rapor)->where('nilai', '!=', '0')->get();
                 $nilai_siswa = [];
