@@ -500,6 +500,8 @@ class CetakRaporController extends Controller
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] =  $mata_pelajaran_rapor->mata_pelajaran->nm_mata_pelajaran;
                         if ($kelas->tingkat == '3') {
                             $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] = '78';
+                        } else if ($kelas->tingkat == '2') {
+                            $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] = '76';
                         } else {
 
                             $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] = '75';
