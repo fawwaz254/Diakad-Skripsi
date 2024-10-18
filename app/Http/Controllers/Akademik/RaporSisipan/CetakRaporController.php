@@ -484,8 +484,8 @@ class CetakRaporController extends Controller
             $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan');
             })->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])
-              ->orderBy('urutan', 'asc')
-              ->get();
+                ->orderBy('urutan', 'asc')
+                ->get();
 
 
             foreach ($kelompok_mapel_rapor as $k) {
@@ -596,8 +596,6 @@ class CetakRaporController extends Controller
             // }
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas', 'tanggal_cetak'));
-
-
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
@@ -1402,11 +1400,9 @@ class CetakRaporController extends Controller
             $list_komponen = KomponenJenisRapor::whereNotIn('nm_komponen_jenis_rapor', ['uts', 'uas'])->whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan'); //ini
             })
-                ->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8])
+                ->whereIn('urutan', [1, 2, 3, 4, 5, 6, 9])
                 ->orderBy('urutan', 'asc')
                 ->get();
-
-                // dd($list_komponen);
 
             $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_sisipan')->first();
             if (isset($tanggal)) {
