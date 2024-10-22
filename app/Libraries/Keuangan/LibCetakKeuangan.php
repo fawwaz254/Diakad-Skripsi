@@ -361,7 +361,10 @@ class LibCetakKeuangan
                                 } else {
                                     $temp_data_pengembangan_pendidikan[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
                                 }
-                                $total_bayar_pengembangan_pendidikan += $x->besar_biaya;
+
+                                if($x->subkategori_rapb->kode_subkategori_rapb == 'K.5.4'){
+                                    $total_bayar_pengembangan_pendidikan += $x->besar_biaya;
+                                }
                             } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
                             } else {
                                 if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
@@ -657,6 +660,7 @@ class LibCetakKeuangan
         $temp_data_bayar_non_kbm = [];
         $total_bayar_non_kbm = 0;
         $temp_data_subkategori_rapb = [];
+        $total_bayar_pengembangan_pendidikan = 0;
 
         foreach ($pembayaran_non_kbm as $data) {
             // Get Biaya Internal (kelompok_biaya_internal)
@@ -673,6 +677,10 @@ class LibCetakKeuangan
                             $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] = $x->besar_biaya;
                         } else {
                             $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] += $x->besar_biaya;
+                        }
+
+                        if($x->subkategori_rapb->kode_subkategori_rapb == 'K.5.4'){
+                            $total_bayar_pengembangan_pendidikan += $x->besar_biaya;
                         }
                     } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
                     } else {
@@ -696,6 +704,7 @@ class LibCetakKeuangan
             'tutup_buku_bulanan_biaya' => $tutup_buku_bulanan_biaya,
             'spp_tahun_lalu' => $spp_tahun_lalu,
             'total_bayar_non_kbm' => $total_bayar_non_kbm,
+            'total_bayar_pengembangan_pendidikan' => $total_bayar_pengembangan_pendidikan,
         ];
     }
 

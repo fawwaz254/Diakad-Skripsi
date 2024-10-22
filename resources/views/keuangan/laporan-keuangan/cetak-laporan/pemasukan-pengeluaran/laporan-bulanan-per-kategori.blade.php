@@ -83,6 +83,7 @@
     $tutup_buku_bulanan_biaya = $data_laporan['tutup_buku_bulanan_biaya'];
     $subkategori = $data_laporan['subkategori'];
     $total_bayar_non_kbm = $data_laporan['total_bayar_non_kbm'];
+    $total_bayar_pengembangan_pendidikan = $data_laporan['total_bayar_pengembangan_pendidikan'];
     $subkategori_in = $subkategori->where('kategori.tipe_kategori_rapb', 1)->values();
     $subkategori_out = $subkategori->where('kategori.tipe_kategori_rapb', 2)->values();
 
@@ -273,7 +274,7 @@
                 <td></td>
                 <td class="text-bold">Tunggakan SPP Tahun Lalu yang masuk</td>
                 @foreach ($subkategori_in as $data_subkategori)
-                    @if ($data_subkategori->deskripsi_subkategori_rapb == 'Lain-Lain')
+                    @if ($data_subkategori->kode_subkategori_rapb == 'M.1.1')
                         <td class="text-bold text-right">
                             {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu) }}
                         </td>
@@ -286,6 +287,7 @@
                     @endif
                 @endforeach
                 <td class="text-bold text-right">
+                    <!-- IN -->
                     {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu) }}
                 </td>
                 @foreach ($subkategori_out as $data_subkategori)
@@ -298,7 +300,7 @@
                 <td></td>
                 <td class="text-bold">Subsidi BOS</td>
                 @foreach ($subkategori_in as $data_subkategori)
-                    @if ($data_subkategori->deskripsi_subkategori_rapb == 'Subsidi BOS')
+                    @if ($data_subkategori->kode_subkategori_rapb == 'M.3.1')
                         <td class="text-bold text-right">{{ number_format($subsidi_bos) }}</td>
                         @php
                             $total_all[$data_subkategori->id_subkategori_rapb] += $subsidi_bos;
@@ -308,6 +310,7 @@
                         <td></td>
                     @endif
                 @endforeach
+                <!-- IN -->
                 <td class="text-bold text-right">{{ number_format($subsidi_bos) }}</td>
                 @foreach ($subkategori_out as $data_subkategori)
                     <td></td>
@@ -323,7 +326,7 @@
                 @endforeach
                 <td class="text-bold text-right"></td>
                 @foreach ($subkategori_out as $data_subkategori)
-                    @if ($data_subkategori->deskripsi_subkategori_rapb == 'Pembelajaran Non KBM')
+                    @if ($data_subkategori->kode_subkategori_rapb == 'K.5.3')
                         <td class="text-bold text-right" style="font-size:9px">
                             {{ number_format($total_bayar_non_kbm) }}</td>
                         @php
@@ -333,7 +336,30 @@
                         <td></td>
                     @endif
                 @endforeach
+                <!-- OUT -->
                 <td class="text-bold text-right">{{ number_format($total_bayar_non_kbm) }}</td>
+                <td class="text-bold text-right"></td>
+            </tr>
+            <tr valign=middle>
+                <td></td>
+                <td class="text-bold">Dana Pembangunan, Dana Khusus</td>
+                @foreach ($subkategori_in as $data_subkategori)
+                    <td></td>
+                @endforeach
+                <td class="text-bold text-right"></td>
+                @foreach ($subkategori_out as $data_subkategori)
+                    @if ($data_subkategori->kode_subkategori_rapb == 'K.5.4')
+                        <td class="text-bold text-right" style="font-size:9px">
+                            {{ number_format($total_bayar_pengembangan_pendidikan) }}</td>
+                        @php
+                            $total_all[$data_subkategori->id_subkategori_rapb] += $total_bayar_pengembangan_pendidikan;
+                        @endphp
+                    @else
+                        <td></td>
+                    @endif
+                @endforeach
+                <!-- OUT -->
+                <td class="text-bold text-right">{{ number_format($total_bayar_pengembangan_pendidikan) }}</td>
                 <td class="text-bold text-right"></td>
             </tr>
             <tr valign=middle>
@@ -347,9 +373,9 @@
                 @foreach ($subkategori_out as $data_subkategori)
                     <td class="bg-grey"></td>
                 @endforeach
-                <td class="bg-grey text-bold text-right">{{ number_format($total_bayar_non_kbm) }}</td>
+                <td class="bg-grey text-bold text-right">{{ number_format($total_bayar_non_kbm + $total_bayar_pengembangan_pendidikan) }}</td>
                 <td class="bg-grey text-bold text-right">
-                    {{ number_format($jumlah_in_per_date - $jumlah_out_per_date - $total_bayar_non_kbm) }}</td>
+                    {{ number_format($jumlah_in_per_date - $jumlah_out_per_date - $total_bayar_non_kbm - $total_bayar_pengembangan_pendidikan) }}</td>
             </tr>
             <tr>
                 <td colspan="{{ $length_column }}" style="height: 16px;">
