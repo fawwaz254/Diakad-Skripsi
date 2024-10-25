@@ -265,9 +265,9 @@
                     <td></td>
                     <td align="center" style="border-style : hidden; position: relative;">Mengetahui<br>Kepala
                         Sekolah,
-                        {{-- <img style="position: absolute; margin-left:-140px "
-                            src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="200px" height="200px"
-                            class="ttd"> --}}
+                        <img style="position: absolute; margin-left:-140px; margin-top: 10px "
+                            src="{{ asset('media/ttd/251024_kepsek_smawh2.png') }}" alt="TTD" width="200px" height="100px"
+                            class="ttd">
                         <br><br><br><br><br>
                         <br>
                         <br>
