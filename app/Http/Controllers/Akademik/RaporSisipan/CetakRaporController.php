@@ -484,8 +484,8 @@ class CetakRaporController extends Controller
             $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan');
             })->whereIn('urutan', [11, 12, 13, 14, 15, 16, 17])
-              ->orderBy('urutan', 'asc')
-              ->get();
+                ->orderBy('urutan', 'asc')
+                ->get();
 
 
             foreach ($kelompok_mapel_rapor as $k) {
@@ -500,6 +500,8 @@ class CetakRaporController extends Controller
                         $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] =  $mata_pelajaran_rapor->mata_pelajaran->nm_mata_pelajaran;
                         if ($kelas->tingkat == '3') {
                             $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] = '78';
+                        } else if ($kelas->tingkat == '2') {
+                            $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] = '76';
                         } else {
 
                             $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] = '75';
@@ -594,8 +596,6 @@ class CetakRaporController extends Controller
             // }
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-maryam-merdeka', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'nilai_pengembangan_diri', 'kelompok_pribadi_sisipan', 'nilai_ekskul', 'semester', 'wali_kelas', 'tanggal_cetak'));
-
-
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smksitiaminah') {
             foreach ($kelompok_mapel_rapor as $k) {
                 $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
@@ -1400,11 +1400,9 @@ class CetakRaporController extends Controller
             $list_komponen = KomponenJenisRapor::whereNotIn('nm_komponen_jenis_rapor', ['uts', 'uas'])->whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan'); //ini
             })
-                ->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8])
+                ->whereIn('urutan', [1, 2, 3, 4, 5, 6, 9])
                 ->orderBy('urutan', 'asc')
                 ->get();
-
-                // dd($list_komponen);
 
             $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_sisipan')->first();
             if (isset($tanggal)) {
@@ -1413,8 +1411,49 @@ class CetakRaporController extends Controller
                 $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
             }
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smawh2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'tanggal_cetak'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smawh2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'tanggal_cetak', 'nilai_pengembangan_diri'));
+        } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2') {
+            $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
+                $query->where('nm_jenis_rapor', 'sisipan');
+            })->where('nm_komponen_jenis_rapor', '!=', 'UAS')->orderByRaw('CAST(urutan AS SIGNED)')->get();
+            foreach ($kelompok_mapel_rapor as $k) {
+                $data[$k->urutan]['nama'] = $k->nm_kelompok_mapel_rapor;
+                foreach ($k->mata_pelajaran_rapor as $mata_pelajaran_rapor) {
+                    if ($mata_pelajaran_rapor->jenis == '0') {
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] = $mata_pelajaran_rapor->keterangan;
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] = null;
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
+                    } else {
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['nm_point'][] =  $mata_pelajaran_rapor->mata_pelajaran->nm_mata_pelajaran;
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['kkm'][] =  $mata_pelajaran_rapor->mata_pelajaran->nilai_kkm;
+                        $data[$k->urutan]['data'][$mata_pelajaran_rapor->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_rapor->id_mata_pelajaran;
+                    }
+                }
+
+                // foreach ($kelompok_mapel_rapor->sub_kelompok_sisipan as $sub_kelompok_sisipan) {
+                //     $data[$kelompok_mapel_rapor->urutan + $sub_kelompok_sisipan->urutan]['nama'] = $sub_kelompok_sisipan->nm_sub_kelompok_sisipan;
+                //     foreach ($sub_kelompok_sisipan->mata_pelajaran_sisipan as $mata_pelajaran_sisipan) {
+                //         if ($mata_pelajaran_sisipan->jenis == '0') {
+                //             $data[$kelompok_mapel_rapor->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->keterangan;
+                //             $data[$kelompok_mapel_rapor->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = null;
+                //             $data[$kelompok_mapel_rapor->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                //         } else {
+                //             $data[$kelompok_mapel_rapor->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['nm_point'][] = $mata_pelajaran_sisipan->mata_pelajaran->nm_mata_pelajaran;
+                //             $data[$kelompok_mapel_rapor->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['kkm'][] = $mata_pelajaran_sisipan->mata_pelajaran->nilai_kkm;
+                //             $data[$kelompok_mapel_rapor->urutan + $sub_kelompok_sisipan->urutan]['data'][$mata_pelajaran_sisipan->urutan]['id_mata_pelajaran'][] = $mata_pelajaran_sisipan->id_mata_pelajaran;
+                //         }
+                //     }
+                // }
+            }
+
+            $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_sisipan')->first();
+            if (isset($tanggal)) {
+                $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+            } else {
+                $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+            }
         }
+        return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smkypm2', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'tanggal_cetak'));
     }
 
 

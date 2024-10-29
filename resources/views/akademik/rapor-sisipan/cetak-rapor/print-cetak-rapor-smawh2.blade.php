@@ -139,7 +139,7 @@
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;">Nama 
+                    <td style="border-style : hidden;width: 15%;">Nama
                     </td>
                     <td class="capitalize" style="border-style : hidden;width: 35%;"> :
                         {{ $siswa->pengguna->nm_pengguna }}
@@ -169,7 +169,8 @@
                         <td colspan="2" rowspan="2" style="text-align: center;font-weight: bold;">MATA
                             PELAJARAN<br></td>
                         <td colspan="6" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold;">SUMATIF<br>TENGAH<br>SEMESTER <br> (STS)</td>
+                        <td rowspan="2" style="text-align: center;font-weight: bold;">SUMATIF<br>TENGAH<br>SEMESTER
+                            <br> (STS)</td>
                     </tr>
                     <tr>
                         <td style="text-align: center;font-weight: bold;">UH/TP 1</td>
@@ -188,7 +189,6 @@
                                 <tr>
                                     <td style="text-align: center;">{{ $key }}</td>
                                     <td>{{ $data2['nm_point'][0] }}</td>
-                                    {{-- @dd($list_komponen) --}}
                                     @foreach ($list_komponen as $komponen)
                                         <td style="text-align: center;font-weight: bold;">
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] : '' }}
@@ -198,9 +198,10 @@
                             @endforeach
                         @endif
                     @endforeach
+                    
                 </tbody>
             </table>
-            
+
             <table style="width: 90%; margin-left:10%; margin-top:20px">
                 <tr style="font-weight:bold;border-style : hidden;">
                     <td width="20%" style="border-style : hidden;">
@@ -264,9 +265,9 @@
                     <td></td>
                     <td align="center" style="border-style : hidden; position: relative;">Mengetahui<br>Kepala
                         Sekolah,
-                        {{-- <img style="position: absolute; margin-left:-140px "
-                            src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="200px" height="200px"
-                            class="ttd"> --}}
+                        <img style="position: absolute; margin-left:-140px; margin-top: 10px "
+                            src="{{ asset('media/ttd/251024_kepsek_smawh2.png') }}" alt="TTD" width="200px" height="100px"
+                            class="ttd">
                         <br><br><br><br><br>
                         <br>
                         <br>
