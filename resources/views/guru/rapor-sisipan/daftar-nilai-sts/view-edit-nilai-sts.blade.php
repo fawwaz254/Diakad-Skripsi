@@ -1,3 +1,8 @@
+<style>
+     #spreadsheet tbody td:nth-child(2), #spreadsheet tbody td:nth-child(3) {
+        background-color: black; color: white;
+    }
+</style>
 <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
 <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
 
