@@ -385,7 +385,10 @@ class CetakRaporController extends Controller
             $q->where('id_semester', $id_semester)->where('nilai', '!=', 0);
         }, 'nilai_pribadi_sisipan.pribadi_sisipan'])->where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
-        })->orderBy('nis_siswa')->get();
+        })->when(!empty($input->id_siswa), function($q) use ($input){
+            $q->where('id_siswa', $input->id_siswa);
+        })
+        ->orderBy('nis_siswa')->get();
         $nilai_siswa = [];
         $data = [];
 
