@@ -184,6 +184,10 @@
                 </thead>
                 <br>
                 <tbody class="body">
+                    @php
+                        $jumlah_nilai = [];
+                        $count_nilai = [];
+                    @endphp
                     @foreach ($data as $kelompok)
                         <tr>
                             <td colspan="{{ 2 + count($list_komponen) }}" style="font-weight: bold;">
@@ -200,7 +204,21 @@
                                     <td>{{ $data2['nm_point'][0] }}</td>
                                     @foreach ($list_komponen as $komponen)
                                         <td style="text-align: center; font-weight: bold;">
-                                            {{ $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] ?? '' }}
+                                            @php
+                                                $nilai_satuan = isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor])? (int) $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] : 0;
+                                                if(array_key_exists($komponen->id_komponen_jenis_rapor, $jumlah_nilai)) {
+                                                    $jumlah_nilai[$komponen->id_komponen_jenis_rapor] += $nilai_satuan;
+                                                }else {
+                                                    $jumlah_nilai[$komponen->id_komponen_jenis_rapor] = $nilai_satuan;
+                                                }
+
+                                                if(array_key_exists($komponen->id_komponen_jenis_rapor, $count_nilai)) {
+                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] += ($nilai_satuan > 0)? 1 : 0;
+                                                }else {
+                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] = ($nilai_satuan > 0)? 1 : 0;
+                                                }
+                                            @endphp
+                                            {{ ($nilai_satuan > 0)? $nilai_satuan : '' }}
                                         </td>
                                     @endforeach
                                 </tr>
@@ -220,6 +238,41 @@
                     @endforeach
                 </tbody>
 
+                <tfoot>
+                    <tr>
+                        <td colspan=2 style="font-weight: bold; text-align:center;">
+                            JUMLAH
+                        </td>
+                        @foreach ($list_komponen as $komponen)
+                            <td style="text-align: center; font-weight: bold;">
+                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor])? $jumlah_nilai[$komponen->id_komponen_jenis_rapor] : '0' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td colspan=2 style="font-weight: bold; text-align:center;">
+                            RATA-RATA
+                        </td>
+                        @foreach ($list_komponen as $komponen)
+                            <td style="text-align: center; font-weight: bold;">
+                                @if($count_nilai[$komponen->id_komponen_jenis_rapor] > 0)
+                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor])? round($jumlah_nilai[$komponen->id_komponen_jenis_rapor]/$count_nilai[$komponen->id_komponen_jenis_rapor]) : '0' }}
+                                @else
+                                0
+                                @endif
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td colspan=2 style="font-weight: bold; text-align:center;">
+                            RANGKING
+                        </td>
+                        @foreach ($list_komponen as $komponen)
+                            <td style="text-align: center; font-weight: bold;">
+                            </td>
+                        @endforeach
+                    </tr>
+                </tfoot>
             </table>
 
             <table style="width: 90%; margin-left:10%; margin-top:20px">
@@ -294,8 +347,6 @@
                             src="{{ asset('media/ttd/qr_kepsek_smawh2.png') }}" alt="TTD" width="100px"
                             height="100px" class="ttd">
                         <br><br><br><br><br>
-                        <br>
-                        <br>
                         <br>
                         <br>
                         <u><b>

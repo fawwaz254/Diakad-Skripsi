@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\WaliMurid\Akademik\JadwalKBMController;
 use App\Http\Controllers\WaliMurid\Akademik\JadwalUjianController;
 use App\Http\Controllers\WaliMurid\Akademik\KalenderAkademikController;
 use App\Http\Controllers\WaliMurid\Akademik\MagangController;
+use App\Http\Controllers\WaliMurid\Akademik\RaporController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiEkskulController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiKehadiranSiswaController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiPKLController;
@@ -56,6 +58,7 @@ Route::middleware(['token_staff'])->group(function () {
 
         /** ==== MODUL AKADEMIK ==== **/
         Route::prefix('akademik')->group(function () {
+            Route::get('rapor-sisipan/cetak-rapor/print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
 
             // MENU Kalender Akademik
             Route::get('kalender-akademik', [KalenderAkademikController::class, 'viewKalenderAkademik']);
@@ -81,6 +84,8 @@ Route::middleware(['token_staff'])->group(function () {
             // MENU Magang
             Route::get('magang', [MagangController::class, 'viewMagang']);
             Route::get('magang/datatables', [MagangController::class, 'datatablesMagang']);
+
+            Route::get('rapor-sisipan', [RaporController::class, 'viewSisipan']);
         });
 
         Route::prefix('keuangan')->group(function () {
