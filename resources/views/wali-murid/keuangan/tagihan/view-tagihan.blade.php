@@ -63,10 +63,12 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        @if(!empty(env('WINPAY_KEY', '')))
                                         <th>
                                             <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
                                             <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label>
                                         </th>
+                                        @endif
                                         <th>Biaya</th>
                                         <th>-</th>
                                         <th>Semester</th>
@@ -76,9 +78,11 @@
                                 </thead>
                             </table>
                         </div>
+                        @if(!empty(env('WINPAY_KEY', '')))
                         <button class="btn bg-blue waves-effect" type="submit">
                             <span>Bayar yang dicentang</span>
                         </button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -165,6 +169,7 @@
                 searchable: false,
                 orderable: false
             },
+            @if(!empty(env('WINPAY_KEY', '')))
             {
                 data: 'action',
                 name: 'action',
@@ -178,6 +183,7 @@
 
                 }
             },
+            @endif
             {
                 data: 'nm_biaya',
                 name: 'nm_biaya'
