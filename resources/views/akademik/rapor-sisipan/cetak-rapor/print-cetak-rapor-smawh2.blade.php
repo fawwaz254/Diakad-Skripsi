@@ -78,7 +78,7 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
+            {{-- <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
 
                 <tr style="border-style : hidden">
                     <td width="15%" align="center" style="margin-right: 10px" style="border-style : hidden">
@@ -105,23 +105,23 @@
                         <span style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
                             {{ 'NPSN : ' . $auth_data->sekolah_data->npsn_sekolah }}
                         </span> --}}
-                    </td>
-                </tr>
-            </table>
+            {{-- </td> --}}
+            {{-- </tr> --}}
+            {{-- </table> --}}
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr width="90%" style="background-color: black;color:white">
-                    <td align="center" style="border-style : hidden">Alamat :
-                        {{ $auth_data->sekolah_data->alamat_jalan .', ' .$auth_data->sekolah_data->alamat_kelurahan .', ' .substr($auth_data->sekolah_data->nomor_telp_sekolah, 0, 3) .' ' .substr($auth_data->sekolah_data->nomor_telp_sekolah, 3, 7) .' - ' .substr($auth_data->sekolah_data->nomor_fax_sekolah, 3, 7) .' ' .$auth_data->sekolah_data->alamat_kecamatan .' - ' .App\Models\Kota::where('id_kota', $auth_data->sekolah_data->alamat_kota)->pluck('nm_kota')->first() .' ' .$auth_data->sekolah_data->alamat_kodepos .' ' .App\Models\Provinsi::where('id_provinsi', $auth_data->sekolah_data->alamat_provinsi)->pluck('nm_provinsi')->first() }}
-                    </td>
+                    <img src="{{ asset('media/ttd/kop_surat_smawh2.png') }}" alt="kop_surat" style="width: 100%">
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr>
                     <td colspan="10" style="border-style : hidden">
                         <br>
-                        <h2 align="center"
-                            style="margin-top: 3px; font-family:'Times New Roman', Times, serif; font-size:30px">
-                            PENCAPAIAN KOMPETENSI PESERTA DIDIK<br>
+                        <h2
+                            style="margin-top: 3px; font-family:'Times New Roman', Times, serif; font-size:30px; text-align:center">
+                            LAPORAN HASIL BELAJAR SISWA MURNI <br><u>SEMESTER GASAL</u>
+                            {{-- <h2 style="font-family:'Times New Roman', Times, serif; font-size:30px; text-align:center">
+                                SEMESTER GASAL</h2> --}}
                     </td>
                 <tr>
 
@@ -170,7 +170,8 @@
                             PELAJARAN<br></td>
                         <td colspan="6" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">SUMATIF<br>TENGAH<br>SEMESTER
-                            <br> (STS)</td>
+                            <br> (STS)
+                        </td>
                     </tr>
                     <tr>
                         <td style="text-align: center;font-weight: bold;">UH/TP 1</td>
@@ -183,23 +184,95 @@
                 </thead>
                 <br>
                 <tbody class="body">
+                    @php
+                        $jumlah_nilai = [];
+                        $count_nilai = [];
+                    @endphp
                     @foreach ($data as $kelompok)
-                        @if (isset($kelompok['data']))
+                        <tr>
+                            <td colspan="{{ 2 + count($list_komponen) }}" style="font-weight: bold;">
+                                {{ $kelompok['nama'] ?? '' }}
+                            </td>
+                        </tr>
+                        @if (!empty($kelompok['data']))
                             @foreach ($kelompok['data'] as $key => $data2)
+                                @php
+                                    $jumlah = count($data2['nm_point']);
+                                @endphp
                                 <tr>
                                     <td style="text-align: center;">{{ $key }}</td>
                                     <td>{{ $data2['nm_point'][0] }}</td>
                                     @foreach ($list_komponen as $komponen)
-                                        <td style="text-align: center;font-weight: bold;">
-                                            {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor]) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] : '' }}
+                                        <td style="text-align: center; font-weight: bold;">
+                                            @php
+                                                $nilai_satuan = isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor])? (int) $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] : 0;
+                                                if(array_key_exists($komponen->id_komponen_jenis_rapor, $jumlah_nilai)) {
+                                                    $jumlah_nilai[$komponen->id_komponen_jenis_rapor] += $nilai_satuan;
+                                                }else {
+                                                    $jumlah_nilai[$komponen->id_komponen_jenis_rapor] = $nilai_satuan;
+                                                }
+
+                                                if(array_key_exists($komponen->id_komponen_jenis_rapor, $count_nilai)) {
+                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] += ($nilai_satuan > 0)? 1 : 0;
+                                                }else {
+                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] = ($nilai_satuan > 0)? 1 : 0;
+                                                }
+                                            @endphp
+                                            {{ ($nilai_satuan > 0)? $nilai_satuan : '' }}
                                         </td>
                                     @endforeach
                                 </tr>
+                                @for ($i = 1; $i < $jumlah; $i++)
+                                    <tr>
+                                        <td></td>
+                                        <td>{{ $data2['nm_point'][$i] }}</td>
+                                        @foreach ($list_komponen as $komponen)
+                                            <td style="text-align: center; font-weight: bold;">
+                                                {{ $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . $komponen->id_komponen_jenis_rapor] ?? '' }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @endfor
                             @endforeach
                         @endif
                     @endforeach
-                    
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan=2 style="font-weight: bold; text-align:center;">
+                            JUMLAH
+                        </td>
+                        @foreach ($list_komponen as $komponen)
+                            <td style="text-align: center; font-weight: bold;">
+                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor])? $jumlah_nilai[$komponen->id_komponen_jenis_rapor] : '0' }}
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td colspan=2 style="font-weight: bold; text-align:center;">
+                            RATA-RATA
+                        </td>
+                        @foreach ($list_komponen as $komponen)
+                            <td style="text-align: center; font-weight: bold;">
+                                @if($count_nilai[$komponen->id_komponen_jenis_rapor] > 0)
+                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor])? round($jumlah_nilai[$komponen->id_komponen_jenis_rapor]/$count_nilai[$komponen->id_komponen_jenis_rapor]) : '0' }}
+                                @else
+                                0
+                                @endif
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td colspan=2 style="font-weight: bold; text-align:center;">
+                            RANGKING
+                        </td>
+                        @foreach ($list_komponen as $komponen)
+                            <td style="text-align: center; font-weight: bold;">
+                            </td>
+                        @endforeach
+                    </tr>
+                </tfoot>
             </table>
 
             <table style="width: 90%; margin-left:10%; margin-top:20px">
@@ -228,11 +301,16 @@
                         :
                         {{ isset($nilai_pengembangan_diri[$siswa->id_siswa . '3']) ? $nilai_pengembangan_diri[$siswa->id_siswa . '3'] : '0' }}
                         hari</td>
-                    <td style="border-style : hidden;"><br>
-                        <p>Siswa yang nilainya dibawah (75) mohon perhatian khusus dari orang tua.</p>
-                        <br>
-                        <p style="width: 300px;
-                        border-bottom: 2px dotted  black;"></p>
+                    <td style="border-style : hidden;">
+                        @foreach ($pribadi_sisipan_catatan_orang_tua as $key => $k)
+                            <p>
+                                @if (isset($nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan]))
+                                    {{ $nilai_pengembangan_diri[$siswa->id_siswa . $k->id_pribadi_sisipan] }}
+                                @else
+                                    -
+                                @endif
+                            </p>
+                        @endforeach
                     </td>
                 </tr>
             </table>
@@ -265,11 +343,10 @@
                     <td></td>
                     <td align="center" style="border-style : hidden; position: relative;">Mengetahui<br>Kepala
                         Sekolah,
-                        {{-- <img style="position: absolute; margin-left:-140px "
-                            src="{{ asset('media/ttd/smpypm1.png') }}" alt="TTD" width="200px" height="200px"
-                            class="ttd"> --}}
+                        <img style="position: absolute; margin-left:-113px; margin-top: 20px "
+                            src="{{ asset('media/ttd/qr_kepsek_smawh2.png') }}" alt="TTD" width="100px"
+                            height="100px" class="ttd">
                         <br><br><br><br><br>
-                        <br>
                         <br>
                         <br>
                         <u><b>
@@ -283,8 +360,8 @@
         </div>
     @endforeach
 </body>
-<script>
+{{-- <script>
     window.print();
-</script>
+</script> --}}
 
 </html>
