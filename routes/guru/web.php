@@ -70,6 +70,7 @@ use App\Http\Controllers\Akademik\RaporAgama\CetakRaporAgamaController;
 use App\Http\Controllers\Akademik\RaporSemester\CetakRaporSemesterController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\BK\Absensi\HistoriSiswaTerlambatController;
+use App\Http\Controllers\BK\AktivitasSiswa\AktivitasRewardSiswaController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaDikunciController;
 use App\Http\Controllers\Guru\ELearningSoal\PenggunaTerkunciController;
 use App\Http\Controllers\Guru\Faq\FaqController;
@@ -103,6 +104,7 @@ use App\Http\Controllers\Humas\FormBuilder\CustomFormController;
 use App\Http\Controllers\Keuangan\SIM\SppController;
 use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
+use App\Http\Controllers\Siswa\RewardSiswa\RewardSiswaController;
 use App\Models\WaliMurid;
 
 
@@ -1121,6 +1123,14 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-nilai-ekskul', [RekapNilaiEkskulController::class, 'viewRekapNilaiEkskul']);
             Route::get('rekap-nilai-ekskul/detail/{id_semester}/{id_ekskul}', [RekapNilaiEkskulController::class, 'viewDetailRekapNilaiEkskul']);
             Route::get('rekap-nilai-ekskul/print/{id_semester}/{id_ekskul}', [RekapNilaiEkskulController::class, 'printRekapNilaiEkskul']);
+        });
+
+        // Modul Reward Siswa
+        Route::prefix('reward-siswa')->group(function () {
+            Route::get('/approve-reward-siswa', [AktivitasRewardSiswaController::class, 'viewApproveRewardSiswa']);
+            Route::get('/datatableApprovePestasi', [AktivitasRewardSiswaController::class, 'datatableApprovePestasi']);
+
+            Route::get('/input-capaian-karakter', [AktivitasRewardSiswaController::class, 'viewInputCapaianKarakter']);
         });
     });
 });

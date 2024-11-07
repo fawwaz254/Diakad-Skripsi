@@ -21,11 +21,15 @@ class RewardSiswa extends Model
     public $incrementing = false;
     
     protected $fillable = [
+        'id_reward_siswa',
         'id_siswa',
+        'id_event',
+        'model_event',
         'id_kelas',
         'id_pengguna_reward_siswa',
         'nm_reward_siswa',
         'deskripsi_reward_siswa',
+        'is_aproved',
         'created_by',
         'updated_by',
         'deleted_by'
