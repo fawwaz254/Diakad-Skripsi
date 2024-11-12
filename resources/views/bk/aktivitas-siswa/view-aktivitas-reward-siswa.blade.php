@@ -39,7 +39,7 @@
 </div>
 
 <script>
-    let modul_url = 'aktivitas-siswa';
+    let modul_url = 'reward-siswa';
     let datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'aktivitas-reward-siswa/datatables';
     let delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'aktivitas-reward-siswa/delete';
     let edit_url = base_url + '/' + role_url + '#' + modul_url + '/' + 'aktivitas-reward-siswa/edit';

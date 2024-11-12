@@ -45,7 +45,7 @@
                         <li>Nilai Aktivitas diisi dengan angka</li>
                         <li>Nilai Karakter yang lebih dari satu dipisahkan dengan koma</li>
                         <li>Jika dinilai oleh Guru maka kolom guru diisi angka 1</li>
-                        <li>Jika dinilai oleh Sekretaris Kelas maka kolom sekretaris diisi 1, jika tidak maka diisi 0
+                        <li>Jika dinilai oleh Siswa maka kolom siswa diisi 1, jika tidak maka diisi 0
                         </li>
                     </ul>
                     <form id="form-simpan-excel"
@@ -101,12 +101,12 @@
                                 <input type="checkbox" id="guru" name="guru" value="1">
                                 <label for="guru">Guru</label>
                                 <br>
-                                <input type="checkbox" id="sekretaris" name="sekretaris" value="1">
-                                <label for="sekretaris">Sekretaris Kelas</label>
+                                <input type="checkbox" id="siswa" name="siswa" value="1">
+                                <label for="siswa">Siswa</label>
                             </div>
                         </div>
                         <input type="hidden" id="is_guru" name="is_guru">
-                        <input type="hidden" id="is_sekretaris" name="is_sekretaris">
+                        <input type="hidden" id="is_siswa" name="is_siswa">
                         <h2 class="card-inside-title">
                             Nama Aktivitas Reward Siswa
                         </h2>
@@ -216,10 +216,10 @@
                 $('#is_guru').val(0);
             }
 
-            if ($('#sekretaris').is(':checked')) {
-                $('#is_sekretaris').val(1);
+            if ($('#siswa').is(':checked')) {
+                $('#is_siswa').val(1);
             } else {
-                $('#is_sekretaris').val(0);
+                $('#is_siswa').val(0);
             }
 
             // handle input nilai karakter

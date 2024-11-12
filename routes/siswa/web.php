@@ -33,6 +33,7 @@ use App\Http\Controllers\Siswa\Akademik\LihatNilaiController;
 use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Siswa\Pelanggaran\RiwayatPelanggaranController;
+use App\Http\Controllers\Siswa\RewardSiswa\RewardSiswaController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use Illuminate\Support\Facades\Route;
 
@@ -295,6 +296,23 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('histori-absensi')->group(function () {
                 Route::get('/', [HistoriAbsensiSiswaController::class, 'viewHistoriAbsensi']);
                 Route::get('/{start_date}/{end_date}', [HistoriAbsensiSiswaController::class, 'viewHistoriAbsensi']);
+            });
+        });
+
+        Route::prefix('reward-siswa')->group(function () {
+            Route::prefix('input-aktivitas-reward')->group(function () {
+                Route::get('/', [RewardSiswaController::class, 'viewInputRewardSiswa']);
+                Route::post('/get-aktivitas-by-jenis', [RewardSiswaController::class, 'ajaxGetAktivitasById']);
+                Route::post('/save-input-aktivitas-reward', [RewardSiswaController::class, 'saveInputAKtivitasReward']);
+            });
+            
+            Route::prefix('aktivitas-reward-saya')->group(function () {
+                Route::get('/', [RewardSiswaController::class, 'viewAktivitasRewardSaya']);
+                Route::get('/datatable', [RewardSiswaController::class, 'datatableAktivitasRewardSaya']);
+            });
+            
+            Route::prefix('rekap-aktivitas-reward')->group(function () {
+                Route::get('/', [RewardSiswaController::class, 'viewRekapRewardSiswa']);
             });
         });
     });

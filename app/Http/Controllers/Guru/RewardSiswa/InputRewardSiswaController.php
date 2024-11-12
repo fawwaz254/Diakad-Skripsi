@@ -22,11 +22,14 @@ use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
-
-use Auth;
+use App\Models\AktivitasRewardSiswa;
+use App\Models\JenisAktivitasReward;
+// use Auth;
 use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Session;
-use Validator;
+// use Validator;
 
 class InputRewardSiswaController extends BaseController
 {
@@ -36,9 +39,26 @@ class InputRewardSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        $data_jenis_aktivitas = JenisAktivitasReward::all();
+        $data_aktivitas_reward = AktivitasRewardSiswa::all();
+
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
-        return view('guru/reward-siswa/input-reward-siswa/view-input-reward-siswa', compact('auth_data', 'data_kelas'));
+        return view('guru/reward-siswa/input-reward-siswa/view-input-reward-siswa', compact('auth_data', 'data_kelas', 'data_jenis_aktivitas', 'data_aktivitas_reward'));
+    }
+
+    public function ajaxGetAktivitasReward(Request $request)
+    {
+        $selectedJenisAktivitas = $request->input('jenis_aktivitas');
+        // dd($selectedJenisAktivitas);
+
+        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $selectedJenisAktivitas)->get();
+        $html = '<option value="" selected disabled>-- Pilih Aktivitas Reward --</option>';
+        foreach ($data_aktivitas_reward as $data) {
+            $html .= '<option value="' . $data->id_aktivitas_reward_siswa . '">' . $data->nm_aktivitas_reward_siswa . '</option>';
+        }
+
+        return $html;
     }
 
     public function viewRekapInputRewardSiswa(Request $request)
@@ -54,10 +74,14 @@ class InputRewardSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
+        // dd($input);
+        // dd($input->id_aktivitas_reward);
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_kelas' => 'required',
+            'jenis_aktivitas'   => 'required',
+            'aktivitas_reward'  => 'required',
+            'id_kelas'          => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -67,40 +91,85 @@ class InputRewardSiswaController extends BaseController
             ];
         } else {
             return [
-                'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'reward-siswa/input-reward-siswa/view-kelas/' . $input->id_kelas
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'message' => 'Data berhasil disimpan',
+                'path' => "reward-siswa/input-reward-siswa/view-kelas/$input->id_kelas/$input->aktivitas_reward",
             ];
+            // return redirect("guru/reward-siswa/input-reward-siswa/view-kelas/$input->id_kelas/$input->aktivitas_reward");
         }
     }
 
-    public function viewKelasInputRewardSiswa(Request $request, $id_kelas)
+    public function viewKelasInputRewardSiswa(Request $request, $id_kelas, $aktivitas_reward)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        // dd($id_kelas, $aktivitas_reward);
+        // dd($request->input('id_kelas'));
+        // $auth_data = Auth::user();
+        // dd($auth_data);
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
-        return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas'));
+        // $data_jenis_aktivitas = JenisAktivitasReward::all();
+        $data_aktivitas_reward = AktivitasRewardSiswa::find($aktivitas_reward);
+        // dd($data_aktivitas_reward);
+
+        return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_aktivitas_reward'));
     }
 
-    public function datatablesInputRewardSiswa(Request $request, $id_kelas)
+    public function datatablesInputRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
+        $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
+
+        $data_aktivitas_reward = AktivitasRewardSiswa::find($input->id_aktivitas_reward_siswa);
+
+        // dd($input);
+        // dd($request->all());
 
         return Datatables::of($list_data)
-            ->addColumn('action', function ($item) {
-                $data = array(
-                    'id' => $item->id_siswa
-                );
-                return $data;
+            ->addColumn('nilai_karakter', function ($item) use ($data_aktivitas_reward) {
+                // dd($data_aktivitas_reward);
+                $karakter = explode('#', $data_aktivitas_reward->nilai_karakter);
+                // dd($karakter);
+                return [
+                    'options' => $karakter,
+                ];
             })
             ->make(true);
+    }
+
+    public function saveRewardSiswa(Request $request)
+    {
+        // dd('masuk save');
+        $input = (object) $request->input();
+        dd($request)->all();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now();
+        $validator = Validator::make($request->all(), [
+            // 'uraian_materi' => 'required',
+            // 'waktu_mulai' => 'required',
+            // 'waktu_selesai' => 'required',
+            // 'tgl_presensi' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            $id_reward_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+            $reward_siswa = new RewardSiswa();
+            $reward_siswa->id_reward_siswa = $id_reward_siswa;
+            $reward_siswa->model_event = 'NonKBM';
+        }
     }
 
     public function datatablesRekapInputRewardSiswa(Request $request)
