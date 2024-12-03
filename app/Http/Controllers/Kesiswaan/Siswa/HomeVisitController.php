@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Kesiswaan\Siswa;
 
-use App\Libraries\Pendidikan\LibKelas;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Routing\Controller as BaseController;
-
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-
-use App\Libraries\Pendidikan\LibSiswa;
-
-use App\Models\HomeVisit as HomeVisit;
-use App\Models\Guru as Guru;
-use App\Models\HomeVisitView;
 use Auth;
-use DB;
 use Session;
 use Validator;
+use Carbon\Carbon;
+
+use App\Models\Guru as Guru;
+use Illuminate\Http\Request;
+
+use App\Models\HomeVisitView;
+
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Models\HomeVisit as HomeVisit;
+use Illuminate\Routing\Controller as BaseController;
 
 class HomeVisitController extends BaseController
 {
-    public function viewHomeVisit(Request $request)
+    public function viewHomeVisit(Request $request, $id = null)
     {
         # code..
         $input = (object) $request->input();
@@ -30,7 +30,7 @@ class HomeVisitController extends BaseController
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         // dd($data_kelas);
 
-        return view('kesiswaan/siswa/home-visit/view-home-visit', compact('auth_data', 'data_kelas'));
+        return view('kesiswaan/siswa/home-visit/view-home-visit', compact('auth_data', 'data_kelas', 'id'));
     }
 
     public function editHomeVisit(Request $request, $id)
@@ -186,6 +186,12 @@ class HomeVisitController extends BaseController
         }
 
         return Datatables::of($list_data)
+            ->addColumn('check', function ($item) {
+                $data = array(
+                    'id' => $item->id_home_visit
+                );
+                return $data;
+            })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_home_visit
@@ -239,7 +245,6 @@ class HomeVisitController extends BaseController
 
     public function actionHomeVisit(Request $request, $mode, $id = null)
     {
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now();
@@ -276,6 +281,51 @@ class HomeVisitController extends BaseController
                     'path' => 'data-kesiswaan/home-visit',
                     'message' => 'Save Data Home Visit Successfully'
                 ];
+            } else if ($mode == 'checkapprove') {
+                $selectedIds = $input->selected_ids;
+                DB::transaction();
+                try {
+                    foreach ($selectedIds as $id_visit) {
+                        $homeVisit = HomeVisit::where('id_home_visit', $id_visit);
+                        if ($input->auth_data->pengguna->status_join_table == 2) {
+                            // get id_guru
+                            $guru = Guru::select('id_guru')
+                                ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                                ->first();
+
+                            $id_guru_kesiswaan = $guru->id_guru;
+                        } else {
+                            $id_guru_kesiswaan = null;
+                        }
+                        if (!$homeVisit) {
+                            DB::rollback();
+                            return [
+                                'status' => 404, // NOT fOUND HOMEVISIT
+                                'path' => 'data-kesiswaan/home-visit',
+                                'message' => 'Home Visit Not Found'
+                            ];
+                        }
+                        $homeVisit->update([
+                            'is_berkas_lengkap' => true,
+                            'id_guru_kesiswaan' => $id_guru_kesiswaan,
+                            'updated_at' => $now,
+                            'updated_by' => $input->auth_data->pengguna->id_pengguna,
+                        ]);
+                    }
+                    DB::commit();
+                    return [
+                        'status' => 202, // ACCEPTED 
+                        'path' => 'data-kesiswaan/home-visit',
+                        'message' => 'Home Visit Approve'
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return [
+                        'status' => 203, // GAGAL
+                        'path' => 'data-kesiswaan/home-visit',
+                        'message' => 'Home Visit Gagal Dilakukan'
+                    ];
+                }
             }
         }
     }
