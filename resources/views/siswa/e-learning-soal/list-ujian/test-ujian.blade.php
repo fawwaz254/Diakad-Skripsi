@@ -418,8 +418,7 @@
                     </div>
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <button type="button" onclick="endAction(this)"
-                                class="btn btn-block bg-cyan waves-effect">Selesai</button>
+                            <button id="end_button" disabled="disabled" type="button" onclick="endAction(this)" class="btn btn-block bg-cyan waves-effect">Selesai</button>
                         </div>
                     </div>
                 </div>
@@ -440,45 +439,48 @@
         var minutes = Math.floor((distance % (1 * 60 * 60)) / (1 * 60));
         var seconds = Math.floor((distance % (1 * 60)) / 1);
 
-        document.getElementById("timeleft").innerHTML = "Waktu tersisa: " + hours + "h " +
-            minutes + "m " + seconds + "s ";
+        document.getElementById("timeleft").innerHTML = "Waktu tersisa: " + hours + "h " + minutes + "m " + seconds + "s ";
 
         if (distance <= 0) {
             clearInterval(x);
             loadURI(timeout);
         } else {
+            if(hours == 0 && minutes <= 15){
+                $('#end_button').removeAttr('disabled');
+            }
             distance--
         }
     }, 1000);
 
     function endAction(item) {
-
         var item = $(item);
-        vex.dialog.confirm({
-            message: 'Apakah yakin sudah selesai mengerjakan.??',
-            callback: function(value) {
-                if (value) {
-                    $.ajax({
-                        type: "POST",
-                        url: var_url,
-                        data: {
-                            paket_soal: id_paket_soal
-                        },
-                        success: function(response) {
-                            clearInterval(x);
-                            vex.dialog.alert(response.message);
-                            setTimeout(() => {
-                                loadURI(response.path);
-                            }, 2000);
-                        },
-                        error: function(xhr, status, error) {
-                            console.log(xhr.responseText);
-                        }
-                    });
-                } else {
-                    item.prop('disabled', false);
+        if(!item.is('[disabled=disabled]')){
+            vex.dialog.confirm({
+                message: 'Apakah yakin sudah selesai mengerjakan.??',
+                callback: function(value) {
+                    if (value) {
+                        $.ajax({
+                            type: "POST",
+                            url: var_url,
+                            data: {
+                                paket_soal: id_paket_soal
+                            },
+                            success: function(response) {
+                                clearInterval(x);
+                                vex.dialog.alert(response.message);
+                                setTimeout(() => {
+                                    loadURI(response.path);
+                                }, 2000);
+                            },
+                            error: function(xhr, status, error) {
+                                console.log(xhr.responseText);
+                            }
+                        });
+                    } else {
+                        item.prop('disabled', false);
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 </script>
