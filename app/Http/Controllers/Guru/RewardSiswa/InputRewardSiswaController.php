@@ -127,7 +127,7 @@ class InputRewardSiswaController extends BaseController
 
         $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
 
-        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->id_jenis_aktivitas_reward)->where('is_guru', 1)->get();
+        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->id_jenis_aktivitas_reward)->where('is_guru', 1)->where('is_aktif', 1)->get();
 
         return Datatables::of($list_data)
             ->addColumn('aktivitas_reward', function ($item) use ($data_aktivitas_reward) {
@@ -145,9 +145,7 @@ class InputRewardSiswaController extends BaseController
 
     public function saveRewardSiswa(Request $request)
     {
-        // dd('masuk save');
         $input = (object) $request->input();
-        dd($request)->all();
         $auth_data = $input->auth_data;
         $now = Carbon::now();
         $validator = Validator::make($request->all(), [
@@ -163,11 +161,31 @@ class InputRewardSiswaController extends BaseController
                 'message' => $validator->errors()->first()
             ];
         } else {
-            $id_reward_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $data_master_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->jenis_aktivitas_reward)->where('is_guru', 1)->where('is_aktif', 1)->get();
+            foreach($input->id_aktivitas_reward_siswa as $id_siswa => $data_aktivitas_reward){
+                foreach($data_aktivitas_reward as $id_aktivitas_reward){
+                    $id_reward_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        
+                    $reward_siswa = new RewardSiswa();
+                    $reward_siswa->id_reward_siswa = $id_reward_siswa;
+                    $reward_siswa->model_event = 'NonKBM';
 
-            $reward_siswa = new RewardSiswa();
-            $reward_siswa->id_reward_siswa = $id_reward_siswa;
-            $reward_siswa->model_event = 'NonKBM';
+                    $reward_siswa->id_event = $id_aktivitas_reward;
+                    $reward_siswa->id_kelas = $input->id_kelas;
+                    $reward_siswa->id_siswa = $id_siswa;
+
+                    $reward_siswa->nm_reward_siswa = $data_master_aktivitas_reward->firstWhere('id_aktivitas_reward_siswa', $id_aktivitas_reward)?->nilai_karakter;
+                    $reward_siswa->id_pengguna_reward_siswa = $input->auth_data->pengguna->id_pengguna;
+                    $reward_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $reward_siswa->save();
+                }
+            }
+
+            return [
+                'status' => 202, // Berhasil
+                'path' => 'reward-siswa/rekap-input-reward-siswa', // Berhasil
+                'message' => 'Input reward siswa berhasil'
+            ];
         }
     }
 

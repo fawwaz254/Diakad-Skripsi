@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#reward-siswa/input-reward-siswa') }}"><i
+                href="{{ url(Request::segment(1) . '#reward-siswa/'.Request::segment(3)) }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -16,6 +16,8 @@
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/save-reward-siswa') }}">
                         @csrf
+                        <input name="id_kelas" type="hidden" value="{{ $data_kelas->id_kelas }}" />
+                        <input name="jenis_aktivitas_reward" type="hidden" value="{{ $aktivitas_reward }}" />
                         <div class="table-responsive">
                             <table
                                 class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
@@ -106,4 +108,48 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+
+    $('#form-validation').validate({
+        highlight: function(input) {
+            $(input).parents('.form-group').addClass('error');
+        },
+        unhighlight: function(input) {
+            $(input).parents('.form-group').removeClass('error');
+        },
+        errorPlacement: function(error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if (response.status == 200) {
+                        vex.dialog.alert(response.message);
+                    } else if (response.status == 201) {
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    } else if (response.status == 202) {
+                        vex.dialog.alert(response.message);
+                        loadURI(response.path);
+                    } else if (response.status == 203) {
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    } else if (response.status == 204) {
+                        loadURI(response.path);
+                    } else if (response.status == 205) {
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    } else if (response.status == 300) {
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled');
+                }
+            });
+        }
+    });
 </script>
