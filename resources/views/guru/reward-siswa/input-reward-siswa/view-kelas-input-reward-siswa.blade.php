@@ -11,13 +11,11 @@
                 <div class="header">
                     <h2>KELAS {{ $data_kelas->nm_kelas }}<br>
                         SEMESTER {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</h2>
-                    <p>Penilaian aktivitas : {{ $data_aktivitas_reward->nm_aktivitas_reward_siswa }}</p>
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/save-reward-siswa') }}">
                         @csrf
-                        <input type="hidden" name="id_aktivitas_reward" value="{{ $data_aktivitas_reward->id_aktivitas_reward_siswa }}">
                         <div class="table-responsive">
                             <table
                                 class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
@@ -27,7 +25,7 @@
                                         <th>No</th>
                                         <th>NIS</th>
                                         <th>Nama</th>
-                                        <th>Nilai Karakter</th>
+                                        <th>Aktivitas</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -48,8 +46,6 @@
 </div>
 <script>
     var id_kelas = {!! json_encode($data_kelas->id_kelas) !!};
-    var id_aktivitas_reward = {!! json_encode($data_aktivitas_reward->id_aktivitas_reward_siswa) !!}
-    console.log(id_aktivitas_reward)
 
     var modul_url = 'reward-siswa';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-reward-siswa/datatables';
@@ -64,7 +60,7 @@
             url: datatable_url,
             data: function(d) {
                 d.id_kelas = id_kelas;
-                d.id_aktivitas_reward_siswa = id_aktivitas_reward;
+                d.id_jenis_aktivitas_reward = '{{$aktivitas_reward}}';
             },
             type: 'GET'
         },
@@ -82,17 +78,19 @@
                 name: 'nm_pengguna'
             },
             {
-                data: 'nilai_karakter',
+                data: 'aktivitas_reward',
+                name: 'aktivitas_reward',
                 searchable: false,
                 orderable: false,
                 render: function(data, type, row) {
                     var html = '';
                     var i = 0;
-                    $.each(data.options, function(index, item) {
-                        html += `<span><input id="ck-${row.id_siswa}-${i}" type="checkbox" name="id_karakter_siswa[${row.id_siswa}][]" checked class="filled-in" value="${item}">
-                                    <label for="ck-${row.id_siswa}-${i}">${item}</label></span><br/>`;
+                    for(index in data.list) {
+                        var item = data.list[index];
+                        html += `<span><input id="ck-${row.id_siswa}-${i}" type="checkbox" name="id_aktivitas_reward_siswa[${row.id_siswa}][${item.id_aktivitas_reward_siswa}]" checked class="filled-in" value="${item.id_aktivitas_reward_siswa}">
+                                    <label for="ck-${row.id_siswa}-${i}">${item.nm_aktivitas_reward_siswa}</label></span><br/>`;
                         i++;
-                    });
+                    };
                     return html;
                 }
             }

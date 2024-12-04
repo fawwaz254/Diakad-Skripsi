@@ -19,9 +19,18 @@ class RewardSiswaController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_jenis_aktivitas = JenisAktivitasReward::all();
+        if($request->segment(3) == 'input-aktivitas-harian'){
+            $jenis = 1;
+            $title = 'Input Aktivitas Harian';
+        }else if($request->segment(3) == 'input-aktivitas-mingguan'){
+            $jenis = 2;
+            $title = 'Input Aktivitas Mingguan';
+        }else if($request->segment(3) == 'input-aktivitas-bulanan'){
+            $jenis = 3;
+            $title = 'Input Aktivitas Bulanan';
+        }
 
-        return view('siswa.reward-siswa.input-reward-siswa', compact('data_jenis_aktivitas'));
+        return view('siswa.reward-siswa.input-reward-siswa', compact('jenis', 'title'));
     }
 
     public function ajaxGetAktivitasById(Request $request)
@@ -38,8 +47,10 @@ class RewardSiswaController extends Controller
 
 
         $tr = '';
+        $no = 1;
         foreach ($aktivitas_reward as $value) {
-            $tr .= view('siswa.reward-siswa.view-input-aktivitas', compact('value'))->render();
+            $tr .= view('siswa.reward-siswa.view-input-aktivitas', compact('value', 'no'))->render();
+            $no++;
         }
 
         return response()->json($tr);

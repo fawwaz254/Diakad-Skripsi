@@ -547,7 +547,9 @@ Route::middleware(['token_staff'])->group(function () {
 
 
         Route::prefix('reward-siswa')->group(function () {
-            Route::get('input-reward-siswa', [InputRewardSiswaController::class, 'viewInputRewardSiswa']);
+            Route::get('input-reward-harian', [InputRewardSiswaController::class, 'viewInputRewardSiswa']);
+            Route::get('input-reward-bulanan', [InputRewardSiswaController::class, 'viewInputRewardSiswa']);
+            Route::get('input-reward-mingguan', [InputRewardSiswaController::class, 'viewInputRewardSiswa']);
             Route::post('post-input-reward-siswa', [InputRewardSiswaController::class, 'actionViewInputRewardSiswa']);
             Route::get('input-reward-siswa/view-kelas/{id_kelas}/{aktivitas_reward}', [InputRewardSiswaController::class, 'viewKelasInputRewardSiswa']);
 
