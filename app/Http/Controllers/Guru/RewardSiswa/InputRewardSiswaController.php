@@ -39,12 +39,20 @@ class InputRewardSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_jenis_aktivitas = JenisAktivitasReward::all();
-        $data_aktivitas_reward = AktivitasRewardSiswa::all();
+        // $data_jenis_aktivitas = JenisAktivitasReward::all();
+        // $data_aktivitas_reward = AktivitasRewardSiswa::all();
+
+        if ($request->segment(3) == "input-reward-harian") {
+            $jenis = 1;
+        }else if ($request->segment(3) == "input-reward-mingguan") {
+            $jenis = 2;
+        }else if ($request->segment(3) == "input-reward-bulanan") {
+            $jenis = 3;
+        }
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
-        return view('guru/reward-siswa/input-reward-siswa/view-input-reward-siswa', compact('auth_data', 'data_kelas', 'data_jenis_aktivitas', 'data_aktivitas_reward'));
+        return view('guru/reward-siswa/input-reward-siswa/view-input-reward-siswa', compact('auth_data', 'data_kelas', 'jenis'));
     }
 
     public function ajaxGetAktivitasReward(Request $request)
@@ -78,25 +86,25 @@ class InputRewardSiswaController extends BaseController
         // dd($input->id_aktivitas_reward);
         $auth_data = $input->auth_data;
 
-        $validator = Validator::make($request->all(), [
-            'jenis_aktivitas'   => 'required',
-            'aktivitas_reward'  => 'required',
-            'id_kelas'          => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'jenis_aktivitas'   => 'required',
+        //     'aktivitas_reward'  => 'required',
+        //     'id_kelas'          => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
-        } else {
+        // if ($validator->fails()) {
+        //     return [
+        //         'status' => 300, // FAILED
+        //         'message' => $validator->errors()->first()
+        //     ];
+        // } else {
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'message' => 'Data berhasil disimpan',
-                'path' => "reward-siswa/input-reward-siswa/view-kelas/$input->id_kelas/$input->aktivitas_reward",
+                'message' => 'Lanjut proses data siswa',
+                'path' => "reward-siswa/input-reward-siswa/view-kelas/$input->id_kelas/$input->jenis_aktivitas",
             ];
             // return redirect("guru/reward-siswa/input-reward-siswa/view-kelas/$input->id_kelas/$input->aktivitas_reward");
-        }
+        // }
     }
 
     public function viewKelasInputRewardSiswa(Request $request, $id_kelas, $aktivitas_reward)
@@ -104,20 +112,12 @@ class InputRewardSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        // dd($id_kelas, $aktivitas_reward);
-        // dd($request->input('id_kelas'));
-        // $auth_data = Auth::user();
-        // dd($auth_data);
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
-        // $data_jenis_aktivitas = JenisAktivitasReward::all();
-        $data_aktivitas_reward = AktivitasRewardSiswa::find($aktivitas_reward);
-        // dd($data_aktivitas_reward);
-
-        return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_aktivitas_reward'));
+        return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'aktivitas_reward'));
     }
 
     public function datatablesInputRewardSiswa(Request $request)
@@ -127,19 +127,18 @@ class InputRewardSiswaController extends BaseController
 
         $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
 
-        $data_aktivitas_reward = AktivitasRewardSiswa::find($input->id_aktivitas_reward_siswa);
-
-        // dd($input);
-        // dd($request->all());
+        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->id_jenis_aktivitas_reward)->where('is_guru', 1)->get();
 
         return Datatables::of($list_data)
-            ->addColumn('nilai_karakter', function ($item) use ($data_aktivitas_reward) {
-                // dd($data_aktivitas_reward);
-                $karakter = explode('#', $data_aktivitas_reward->nilai_karakter);
-                // dd($karakter);
-                return [
-                    'options' => $karakter,
-                ];
+            ->addColumn('aktivitas_reward', function ($item) use ($data_aktivitas_reward) {
+                return array(
+                    'list' => $data_aktivitas_reward->map(function($x){
+                        return [
+                            'id_aktivitas_reward_siswa' => $x->id_aktivitas_reward_siswa,
+                            'nm_aktivitas_reward_siswa' => $x->nm_aktivitas_reward_siswa
+                        ];
+                    })
+                );
             })
             ->make(true);
     }
