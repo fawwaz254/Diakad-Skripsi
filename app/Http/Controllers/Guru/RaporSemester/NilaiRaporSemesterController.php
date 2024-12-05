@@ -102,6 +102,7 @@ class NilaiRaporSemesterController extends Controller
             })
             ->make(true);
     }
+
     public function addNilaiRaporSemester(Request $request)
     {
         $input = (object) $request->input();
@@ -189,7 +190,6 @@ class NilaiRaporSemesterController extends Controller
             }
         }
 
-
         $now = Carbon::now();
         if ($mode == 'add') {
             DB::beginTransaction();
@@ -233,13 +233,13 @@ class NilaiRaporSemesterController extends Controller
                             $keterangan_rapor->keterangan_b = 'Menunjukkan penguasaan yang baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->keterangan_c = 'Menunjukkan penguasaan yang Cukup baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->keterangan_d = 'Menunjukkan penguasaan yang Kurang baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
-                            $keterangan_rapor->keterangan2 = 'Perlu meningkatkan penguasaan dalam  ' . $input->keterangan2[$komponen_jenis_rapor->id_komponen_jenis_rapor];
+                            // $keterangan_rapor->keterangan2 = 'Perlu meningkatkan penguasaan dalam  ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->save();
                         }
                     }
                 }
 
-                $rapor->created_by          = $input->auth_data->pengguna->id_pengguna;
+                $rapor->created_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor->save();
 
                 $siswa = Siswa::where('id_kelas', $input->id_kelas)
@@ -267,19 +267,14 @@ class NilaiRaporSemesterController extends Controller
                     }
                 }
                 CreateNilaiRapor::dispatch($list_data);
-
                 DB::Commit();
-
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapor-semester/tambah-nilai-rapor-semester',
                     'message' => 'Save Tambah Nilai Successfully'
                 ];
             } catch (\Exception $e) {
-
                 DB::rollback();
-
-
                 return [
                     'status' => 300, // GAGAL
                     'message' => $e->getMessage()
@@ -359,7 +354,6 @@ class NilaiRaporSemesterController extends Controller
         }
     }
 
-
     public function inputNilai(Request $request, $id_rapor)
     {
         $input = (object) $request->input();
@@ -370,7 +364,8 @@ class NilaiRaporSemesterController extends Controller
             [
                 'title' => 'NIS',
                 'width' => 150,
-            ], [
+            ],
+            [
 
                 'title' => 'Nama',
                 'width' => 300,
@@ -406,7 +401,6 @@ class NilaiRaporSemesterController extends Controller
 
     public function templateExcel(Request $request, $id_rapor)
     {
-
         set_time_limit(-1);
 
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
@@ -451,6 +445,7 @@ class NilaiRaporSemesterController extends Controller
         $nm_mata_pelajaran = str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", $rapor->mata_pelajaran->nm_mata_pelajaran);
         return Excel::download(new TemplateNilaiRapor($data), 'Template Excel Rapor (' . $rapor->kelas->nm_kelas . ' - ' . $nm_mata_pelajaran . ').xlsx');
     }
+
     public function imporExcel(Request $request)
     {
         $input = (object) $request->input();
@@ -480,6 +475,7 @@ class NilaiRaporSemesterController extends Controller
             ];
         }
     }
+
     public function printRekap(Request $request, $id_rapor)
     {
         // set_time_limit(1800);
