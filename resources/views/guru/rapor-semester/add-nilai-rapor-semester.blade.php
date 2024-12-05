@@ -1,8 +1,12 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-semester/tambah-nilai-rapor-semester') }}"><i
-                    class="material-icons">keyboard_backspace</i><span>Kembali</span></a></h2>
+        <h2>
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#rapor-semester/tambah-nilai-rapor-semester') }}">
+                <i class="material-icons">keyboard_backspace</i>
+                <span>Kembali</span>
+            </a>
+        </h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -13,12 +17,10 @@
                     </h2>
                 </div>
                 <div class="body">
-
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/tambah-nilai-rapor-semester/action/add/0') }}">
                         {{ csrf_field() }}
                         <div class="row clearfix">
-
                             <div class="col-md-12">
                                 <label>Kelas</label>
                                 <select class="form-control show-tick" name="id_kelas" onchange="changeKelas(this)"
@@ -30,7 +32,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
                             <div class="col-md-12">
                                 <label>Mata Pelajaran</label>
                                 <select class="form-control show-tick" name="id_mata_pelajaran" required>
@@ -50,24 +51,20 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                </select>
                             </div>
                         </div>
 
                         <div id="place">
                         </div>
-
-
-
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-indigo waves-effect" type="submit"><i
-                                        class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-indigo waves-effect" type="submit">
+                                    <i class="material-icons">save</i>
+                                    <span>Save</span>
+                                </button>
                             </div>
                         </div>
-
                     </form>
-
                 </div>
             </div>
         </div>
@@ -135,7 +132,7 @@
                         if (item.nm_komponen_jenis_rapor !== 'STS' && item
                             .nm_komponen_jenis_rapor !== 'SAS') {
                             html += '<div class="col-md-12">' +
-                                '<label>Keterangan ' + item.nm_komponen_jenis_rapor + ' tertinggi' +
+                                '<label>Keterangan ' + item.nm_komponen_jenis_rapor +
                                 '</label>' +
                                 '</div>' +
                                 '<div class="row clearfix">' +
@@ -149,28 +146,11 @@
                                 item.id_komponen_jenis_rapor +
                                 ']" aria-required="true" aria-invalid="true"></textarea>' +
                                 '</div></div>' +
-                                '<div class="col-md-12">' +
-                                '<label>Keterangan ' + item.nm_komponen_jenis_rapor + ' terendah' +
-                                '</label>' +
-                                '</div>' +
-                                '<div class="row clearfix">' +
-                                '<div class="col-md-3">' +
-                                '<pre>' +
-                                'Perlu meningkatkan penguasaan dalam ' +
-                                '</pre>' +
-                                '</div>' +
-                                '<div class="col-md-9">' +
-                                '<textarea rows="1" cols="50" class="form-control" name="keterangan2[' +
-                                item.id_komponen_jenis_rapor + ']" aria-required="true"' +
-                                'aria-invalid="true"></textarea>' +
-                                '</div></div>';
+                                '</div>';
                         }
                     });
                     $('#place').html(html);
-
                 }
-
-
             }
         });
     }

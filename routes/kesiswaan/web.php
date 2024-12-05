@@ -422,7 +422,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('home-visit/datatables/{id}', [HomeVisitController::class, 'datatablesHomeVisit']);
             Route::get('home-visit/edit/{id}', [HomeVisitController::class, 'editHomeVisit']);
 
-            Route::post('action-home-visit/{mode}/{id}', [HomeVisitController::class, 'actionHomeVisit']);
+            Route::post('action-home-visit/{mode}/{id?}', [HomeVisitController::class, 'actionHomeVisit']);
 
             //approve skpi
             Route::get('approve-prestasi-siswa', [ApprovePrestasiSiswaController::class, 'viewApprovePrestasiSiswa']);

@@ -57,7 +57,7 @@
                                 <th>Semester</th>
                                 <th>Status</th>
                                 <th>Template Excel</th>
-                                <th>Input Nilai</th>
+                                {{-- <th>Input Nilai</th> --}}
                                 <th>Action</th>
                                 <th>Pembuat</th>
                             </tr>
@@ -178,23 +178,23 @@
                     }
                 }
             },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    if (data.status == '0') {
-                        return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            input_nilai + '/' + data.id + '" >' +
-                            '    <i class="material-icons">add_box</i>' +
-                            '</a> ';
-                    } else {
-                        return '';
-                    }
-                }
-            },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         if (data.status == '0') {
+            //             return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //                 input_nilai + '/' + data.id + '" >' +
+            //                 '    <i class="material-icons">add_box</i>' +
+            //                 '</a> ';
+            //         } else {
+            //             return '';
+            //         }
+            //     }
+            // },
             {
                 data: 'action',
                 name: 'action',
