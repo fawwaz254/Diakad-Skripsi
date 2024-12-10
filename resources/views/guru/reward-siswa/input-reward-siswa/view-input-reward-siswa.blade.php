@@ -13,26 +13,26 @@
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">
                         <input type="hidden" name="jenis_aktivitas" id="jenis_aktivitas" value="{{$jenis}}"/>
-                        <!-- <h2 class="card-inside-title">
-                            Pilih Aktivitas
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="aktivitas_reward" required=""
-                                    id="aktivitas_reward">
-                                </select>
-                            </div>
-                        </div> -->
                         <h2 class="card-inside-title">
                             Kelas
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_kelas" required="">
+                                <select class="form-control show-tick" name="id_kelas" required="" onchange="changeKelas()">
                                     <option value="" selected disabled>-- Pilih Kelas --</option>
                                     @foreach ($data_kelas as $data)
                                         <option value="{{ $data->id_kelas }}">{{ $data->nm_kelas }}</option>
                                     @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Aktivitas yang diinput
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="aktivitas_reward" required="" id="aktivitas_reward">
+                                    <option value="" selected disabled>-- Pilih Aktivitas --</option>
                                 </select>
                             </div>
                         </div>
@@ -103,18 +103,17 @@
         }
     });
 
-    // function changeJenisAktivitas() {
-    //     var selectedJenisAktivitas = $('#jenis_aktivitas').val();
-
-    //     $.ajax({
-    //         url: fetch_aktivitas_url,
-    //         type: "GET",
-    //         data: {
-    //             jenis_aktivitas: selectedJenisAktivitas
-    //         },
-    //         success: function(response) {
-    //             $('#aktivitas_reward').html(response);
-    //         }
-    //     });
-    // }
+    function changeKelas() {
+        $.ajax({
+            url: fetch_aktivitas_url,
+            type: "GET",
+            data: {
+                jenis_aktivitas: $('input[name=jenis_aktivitas]').val(),
+                id_kelas: $('select[name=id_kelas]').val()
+            },
+            success: function(response) {
+                $('#aktivitas_reward').html(response);
+            }
+        });
+    }
 </script>

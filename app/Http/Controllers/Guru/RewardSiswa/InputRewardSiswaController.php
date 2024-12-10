@@ -39,9 +39,6 @@ class InputRewardSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // $data_jenis_aktivitas = JenisAktivitasReward::all();
-        // $data_aktivitas_reward = AktivitasRewardSiswa::all();
-
         if ($request->segment(3) == "input-reward-harian") {
             $jenis = 1;
         }else if ($request->segment(3) == "input-reward-mingguan") {
@@ -57,13 +54,20 @@ class InputRewardSiswaController extends BaseController
 
     public function ajaxGetAktivitasReward(Request $request)
     {
-        $selectedJenisAktivitas = $request->input('jenis_aktivitas');
-        // dd($selectedJenisAktivitas);
+        $date_now = Carbon::now('Asia/Jakarta');
+        $id_jenis_aktivitas_reward = $request->input('jenis_aktivitas');
+        $id_kelas = $request->input('id_kelas');
 
-        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $selectedJenisAktivitas)->get();
-        $html = '<option value="" selected disabled>-- Pilih Aktivitas Reward --</option>';
+        $data_reward_siswa = RewardSiswa::where('id_kelas', $id_kelas)->whereDate('created_at', $date_now->format('Y-m-d'))->get();
+
+        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $id_jenis_aktivitas_reward)->where('is_aktif', 1)->where('is_guru', 1)->get();
+        $html = '<option value="" selected disabled>-- Pilih Aktivitas --</option>';
         foreach ($data_aktivitas_reward as $data) {
-            $html .= '<option value="' . $data->id_aktivitas_reward_siswa . '">' . $data->nm_aktivitas_reward_siswa . '</option>';
+            if($data_reward_siswa->firstWhere('id_event', $data->id_aktivitas_reward_siswa)){
+                $html .= '<option value="' . $data->id_aktivitas_reward_siswa . '" disabled>' . $data->nm_aktivitas_reward_siswa . ' (Sudah diinput)</option>';
+            }else{
+                $html .= '<option value="' . $data->id_aktivitas_reward_siswa . '">' . $data->nm_aktivitas_reward_siswa . '</option>';
+            }
         }
 
         return $html;
@@ -101,7 +105,7 @@ class InputRewardSiswaController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'message' => 'Lanjut proses data siswa',
-                'path' => "reward-siswa/input-reward-siswa/view-kelas/$input->id_kelas/$input->jenis_aktivitas",
+                'path' => "reward-siswa/input-reward-siswa/view-kelas/$input->id_kelas/$input->aktivitas_reward",
             ];
             // return redirect("guru/reward-siswa/input-reward-siswa/view-kelas/$input->id_kelas/$input->aktivitas_reward");
         // }
@@ -117,7 +121,9 @@ class InputRewardSiswaController extends BaseController
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
-        return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'aktivitas_reward'));
+        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_aktivitas_reward_siswa', $aktivitas_reward)->where('is_guru', 1)->where('is_aktif', 1)->first();
+
+        return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'aktivitas_reward', 'data_aktivitas_reward'));
     }
 
     public function datatablesInputRewardSiswa(Request $request)
@@ -127,7 +133,7 @@ class InputRewardSiswaController extends BaseController
 
         $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
 
-        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->id_jenis_aktivitas_reward)->where('is_guru', 1)->where('is_aktif', 1)->get();
+        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_aktivitas_reward_siswa', $input->id_aktivitas_reward_siswa)->where('is_guru', 1)->where('is_aktif', 1)->get();
 
         return Datatables::of($list_data)
             ->addColumn('aktivitas_reward', function ($item) use ($data_aktivitas_reward) {
@@ -174,7 +180,9 @@ class InputRewardSiswaController extends BaseController
                     $reward_siswa->id_kelas = $input->id_kelas;
                     $reward_siswa->id_siswa = $id_siswa;
 
-                    $reward_siswa->nm_reward_siswa = $data_master_aktivitas_reward->firstWhere('id_aktivitas_reward_siswa', $id_aktivitas_reward)?->nilai_karakter;
+                    // dd($id_aktivitas_reward);
+
+                    $reward_siswa->nm_reward_siswa = $data_master_aktivitas_reward->firstWhere('id_aktivitas_reward_siswa', $id_aktivitas_reward)->nilai_karakter;
                     $reward_siswa->id_pengguna_reward_siswa = $input->auth_data->pengguna->id_pengguna;
                     $reward_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
                     $reward_siswa->save();
@@ -194,7 +202,9 @@ class InputRewardSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = RewardSiswa::with('siswa', 'siswa.pengguna', 'kelas', 'pemberi_reward');
+        $date = Carbon::now()->subMonths(3)->format('Y-m-d'); 
+
+        $list_data = RewardSiswa::with('siswa', 'siswa.pengguna', 'kelas', 'pemberi_reward')->where('created_at', '>=', $date.' 00:00:00')->orderBy('created_at', 'desc');
 
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {

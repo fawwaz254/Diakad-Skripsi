@@ -10,14 +10,16 @@
                 {{-- {{ csrf_field() }} --}}
                 <div class="header">
                     <h2>KELAS {{ $data_kelas->nm_kelas }}<br>
-                        SEMESTER {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</h2>
+                        SEMESTER {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}<br/>
+                        AKTIVITAS {{ $data_aktivitas_reward->nm_aktivitas_reward_siswa }}
+                    </h2>
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/save-reward-siswa') }}">
                         @csrf
                         <input name="id_kelas" type="hidden" value="{{ $data_kelas->id_kelas }}" />
-                        <input name="jenis_aktivitas_reward" type="hidden" value="{{ $aktivitas_reward }}" />
+                        <input name="jenis_aktivitas_reward" type="hidden" value="{{ $data_aktivitas_reward->id_jenis_aktivitas_reward }}" />
                         <div class="table-responsive">
                             <table
                                 class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
@@ -27,7 +29,7 @@
                                         <th>No</th>
                                         <th>NIS</th>
                                         <th>Nama</th>
-                                        <th>Aktivitas</th>
+                                        <th>Mengikut Aktivitas</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -62,7 +64,7 @@
             url: datatable_url,
             data: function(d) {
                 d.id_kelas = id_kelas;
-                d.id_jenis_aktivitas_reward = '{{$aktivitas_reward}}';
+                d.id_aktivitas_reward_siswa = '{{$aktivitas_reward}}';
             },
             type: 'GET'
         },
@@ -90,7 +92,7 @@
                     for(index in data.list) {
                         var item = data.list[index];
                         html += `<span><input id="ck-${row.id_siswa}-${i}" type="checkbox" name="id_aktivitas_reward_siswa[${row.id_siswa}][${item.id_aktivitas_reward_siswa}]" checked class="filled-in" value="${item.id_aktivitas_reward_siswa}">
-                                    <label for="ck-${row.id_siswa}-${i}">${item.nm_aktivitas_reward_siswa}</label></span><br/>`;
+                                    <label for="ck-${row.id_siswa}-${i}">Ya</label></span><br/>`;
                         i++;
                     };
                     return html;
