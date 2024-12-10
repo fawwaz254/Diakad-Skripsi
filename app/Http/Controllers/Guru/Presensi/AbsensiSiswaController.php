@@ -205,6 +205,14 @@ class AbsensiSiswaController extends BaseController
 
                 if($data_kelas->jam_mulai < 8){
                     $options[] = 'Membaca doa awal belajar';
+                    $options[] = 'Membaca shalawat';
+                    $options[] = 'Membaca surat-surat pendek/ doa-doa';
+                    $options[] = 'Mengaji / membaca al-Qur’an / Diba';
+                }
+
+                if($data_kelas->jam_mulai >= 13){
+                    $options[] = 'Membaca doa akhir belajar';
+                    $options[] = 'Melaksanakan shalat tepat waktu';
                 }
                 $data = array(
                     'options' => $options,
