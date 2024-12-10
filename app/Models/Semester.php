@@ -16,11 +16,12 @@ class Semester extends Model
 
     protected $primaryKey = 'id_semester';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
+        'id_semester',
         'nm_semester',
         'thn_akademik_semester',
         'tahun_ajaran',
@@ -34,23 +35,26 @@ class Semester extends Model
 
     protected $guarded = [];
 
-    public function is_aktif_to_text(){
-        if($this->is_aktif_semester == 1){
+    public function is_aktif_to_text()
+    {
+        if ($this->is_aktif_semester == 1) {
             return 'Aktif';
-        }else{
+        } else {
             return 'Non-Aktif';
         }
     }
 
-    public function isAktif(){
-        if($this->is_aktif_semester == 1){
+    public function isAktif()
+    {
+        if ($this->is_aktif_semester == 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function semesterLengkap(){
-        return $this->tahun_ajaran . ' ('. $this->nm_semester . ')';
+    public function semesterLengkap()
+    {
+        return $this->tahun_ajaran . ' (' . $this->nm_semester . ')';
     }
 }

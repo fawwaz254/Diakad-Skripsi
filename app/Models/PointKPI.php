@@ -18,6 +18,7 @@ class PointKPI extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'id_point_kpi',
         'id_kelompok_kpi',
         'id_semester',
         'nm_point_kpi',
@@ -40,6 +41,6 @@ class PointKPI extends Model
     {
         return $this->belongsTo(KelompokKPI::class, 'id_kelompok_kpi')->withDefault([
             'nm_kelompok_kpi' => '-'
-        ]);;
+        ]);
     }
 }

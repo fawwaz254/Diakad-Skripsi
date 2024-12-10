@@ -33,7 +33,7 @@
                                         <th>No</th>
                                         <th>NIS</th>
                                         <th>Kehadiran siswa</th>
-                                        <th>Nilai Karakter</th>
+                                        <th>Nilai Karakter/Kegiatan</th>
                                     </tr>
                                 </thead>
                             </table>
