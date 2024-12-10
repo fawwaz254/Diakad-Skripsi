@@ -1,5 +1,4 @@
 <div class="container-fluid">
-
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card" style="margin-top: 10px">
@@ -37,56 +36,65 @@
                                             {{ $semester->tahun_ajaran }} {{ $semester->nm_semester }} @if ($semester->is_aktif_semester == 1)
                                                 (Aktif)
                                             @endif
-
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
-
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                        class="material-icons">save</i><span>Tampilkan</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit">
+                                    <i class="material-icons">save</i>
+                                    <span>Tampilkan</span>
+                                </button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-
-
-
         </div>
     </div>
+
     <br>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card">
-                <div class="header bg-cyan">
-                    <h2>List Point KPI</h2>
-                </div>
-                <div class="body">
-                    <div class="table-responsive">
-                        <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                            id="primary_table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama</th>
-                                    <th>Kelompok KPI</th>
-                                    <th>Urutan</th>
-                                    <th>Jenis</th>
-                                    <th>Deskripsi</th>
-
-                                </tr>
-                            </thead>
-                        </table>
+            <div class="block-header">
+                <h2>
+                    <a class="btn bg-blue waves-effect target-link" style="margin-left:10px"
+                        href="{{ url(Request::segment(1) . '#kpi/komponen-kpi/copy/' . $tingkat . '/' . $id_semester) }}">
+                        <i class="material-icons">content_copy</i>
+                        <span>Copy Komponen KPI</span>
+                    </a>
+                </h2>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="header bg-cyan">
+                        <h2>List Point KPI</h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table
+                                class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                                id="primary_table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Kelompok KPI</th>
+                                        <th>Urutan</th>
+                                        <th>Jenis</th>
+                                        <th>Deskripsi</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <br>
 </div>
-<br>
 
 @include('scriptjs')
 <script>
@@ -110,7 +118,6 @@
                 searchable: false,
                 orderable: false
             },
-
             {
                 data: 'nm_point_kpi',
                 name: 'nm_point_kpi'
@@ -131,7 +138,6 @@
                 data: 'deskripsi',
                 name: 'deskripsi'
             }
-
         ]
     });
 
