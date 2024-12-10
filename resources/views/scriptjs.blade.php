@@ -49,6 +49,8 @@
                         primary_table.ajax.reload(null, false);
                     } else if (response.status == 300) {
                         vex.dialog.alert(response.message);
+                    } else {
+                        vex.dialog.alert(response.message);
                     }
                 },
                 complete: function() {

@@ -76,13 +76,14 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('/datatable', [WelcomeController::class, 'datatableReportRpp']);
         Route::get('detail-rpp/{id}', [WelcomeController::class, 'modalDetailRpp']);
 
-
         Route::prefix('kpi')->group(function () {
             Route::prefix('komponen-kpi')->group(function () {
                 Route::get('/', [KelompokKPIController::class, 'viewKelompokKPI']);
                 Route::post('/', [KelompokKPIController::class, 'postKelompokKPI']);
+                Route::get('/copy/{tingkat}/{id_semester}', [KelompokKPIController::class, 'copyKomponenKPI']);
                 Route::get('/detail/{tingkat}/{id_semester}', [KelompokKPIController::class, 'detailKelompokKPI']);
                 Route::get('/detail/datatables', [KelompokKPIController::class, 'datatablesKelompokKPI']);
+                Route::post('action-kpi/{mode}/{tingkat}/{id_semester}', [KelompokKPIController::class, 'actionKomponenKPI']);
             });
             Route::prefix('cetak-kpi')->group(function () {
                 Route::get('/', [CetakKPIController::class, 'viewCetakKPI']);
@@ -204,7 +205,6 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('kegiatan-harian')->group(function () {
-
             Route::prefix('mengisi-form-kesehatan')->group(function () {
                 // MENU Mengisi form kesehatan
                 Route::get('/', [FormKesehatanController::class, 'viewFormKesehatan']);
