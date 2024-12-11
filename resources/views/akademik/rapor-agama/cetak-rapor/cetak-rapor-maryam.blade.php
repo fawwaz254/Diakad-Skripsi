@@ -106,7 +106,7 @@
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
-                        {{ $siswa->calon_siswa->alamat_jalan }}
+                        JL. MANYAR SAMBONGAN 119
                     </td>
                     <td style="border-style : hidden;width: 24%;">Semester
                     </td>
