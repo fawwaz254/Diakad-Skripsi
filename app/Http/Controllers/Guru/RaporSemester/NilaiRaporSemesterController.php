@@ -62,6 +62,7 @@ class NilaiRaporSemesterController extends Controller
         if ($status == '0') {
             $list_data = $list_data->where('created_by', $auth_data->pengguna->id_pengguna);
         }
+
         $komponen_jenis_rapor = KomponenJenisRapor::get();
         $kelas_rapors = KelasRapor::whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
             $q->where('nm_rapor', 'semester');
@@ -204,24 +205,7 @@ class NilaiRaporSemesterController extends Controller
                 $rapor->nm_rapor            = 'semester';
 
                 if ($kelas = Kelas::find($input->id_kelas)) {
-                    if ($kelas->type_rapor == '1') {
-                        $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->get();
-                        foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
-                            $keterangan_rapor = new KeteranganRapor;
-                            $keterangan_rapor->id_keterangan_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $keterangan_rapor->id_rapor = $rapor->id_rapor;
-                            $keterangan_rapor->id_komponen_jenis_rapor = $komponen_jenis_rapor->id_komponen_jenis_rapor;
-
-                            $keterangan_rapor->keterangan_a = str_replace("...", "Sangat", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
-                            $keterangan_rapor->keterangan_b = str_replace("... ", "", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
-                            $keterangan_rapor->keterangan_c = str_replace("...", "Cukup", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
-                            $keterangan_rapor->keterangan_d = str_replace("...", "Kurang", $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]);
-                            $keterangan_rapor->save();
-                        }
-                    } elseif ($kelas->type_rapor == '2') {
-                        $rapor->keterangan          = $input->keterangan;
-                        $rapor->keterangan2         = $input->keterangan2;
-                    } elseif ($kelas->type_rapor == '3') {
+                    if ($kelas->type_rapor == '1' | $kelas->type_rapor == '3') {
                         $komponen_jenis_rapors = KomponenJenisRapor::where('id_jenis_rapor', $kelas->id_jenis_rapor)->where('nm_komponen_jenis_rapor', '!=', 'UAS')->where('nm_komponen_jenis_rapor', '!=', 'SAS')->where('nm_komponen_jenis_rapor', '!=', 'STS')->get();
                         foreach ($komponen_jenis_rapors as $komponen_jenis_rapor) {
                             $keterangan_rapor = new KeteranganRapor;
@@ -236,6 +220,9 @@ class NilaiRaporSemesterController extends Controller
                             // $keterangan_rapor->keterangan2 = 'Perlu meningkatkan penguasaan dalam  ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->save();
                         }
+                    } elseif ($kelas->type_rapor == '2') {
+                        $rapor->keterangan          = $input->keterangan;
+                        $rapor->keterangan2         = $input->keterangan2;
                     }
                 }
 
@@ -366,7 +353,6 @@ class NilaiRaporSemesterController extends Controller
                 'width' => 150,
             ],
             [
-
                 'title' => 'Nama',
                 'width' => 300,
             ]
@@ -376,7 +362,7 @@ class NilaiRaporSemesterController extends Controller
                 'title' => $data->nm_komponen_jenis_rapor,
             ]);
         }
-        return view('guru/rapor-semester/view-edit-rapor-semester', compact('auth_data', 'id_rapor',  'dynamicColumns'));
+        return view('guru/rapor-semester/view-edit-rapor-semester', compact('auth_data', 'id_rapor', 'dynamicColumns'));
     }
 
     public function getNilai(Request $request, $id_rapor)
@@ -527,8 +513,6 @@ class NilaiRaporSemesterController extends Controller
         //         $list_kd_aktif[$key]['nm_nilai'] =   $data->nm_nilai;
         //     }
         // }
-
-
 
         $data['nilai_siswa'] = $nilai_siswa;
         // $data['nilai_komponen'] = $nilai_komponen;

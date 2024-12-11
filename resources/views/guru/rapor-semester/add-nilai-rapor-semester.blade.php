@@ -98,35 +98,7 @@
                 $('select[name=id_mata_pelajaran]').html(html);
                 $('#place').html('');
 
-                if (result['kelas'].type_rapor == '1') {
-                    var html = '';
-                    $.each(result['kelas'].jenis_rapor.komponen_jenis_rapor, function(key, item) {
-                        html += '<div class="col-md-12">' +
-                            '<label>Keterangan ' + item.nm_komponen_jenis_rapor +
-                            '</label>' +
-                            '</div>' +
-                            '<div class="col-md-12">' +
-                            '<pre>' +
-                            ' wajib tambahkan tanda titik 3 (...) tanpa tanda kurung, untuk keterangan dinamis [sangat, cukup, kurang] ' +
-                            '</pre>' +
-                            '<textarea rows="1" cols="50" class="form-control" name="keterangan_rapor[' +
-                            item
-                            .id_komponen_jenis_rapor +
-                            ']" aria-required="true" aria-invalid="true"></textarea>' +
-                            '</div>';
-                    });
-                    $('#place').html(html);
-                } else if (result['kelas'].type_rapor == '2') {
-                    $('#place').append(`<div class="col-md-12">
-                            <label>Keterangan1</label>
-                            <textarea rows="1" cols="50" class="form-control" name="keterangan" aria-required="true" aria-invalid="true"></textarea>
-                        </div>
-                        <div class="col-md-12">
-                            <label>Keterangan2</label>
-                            <textarea rows="1" cols="50" class="form-control" name="keterangan2" aria-required="true"
-                                aria-invalid="true"></textarea>
-                        </div>`);
-                } else if (result['kelas'].type_rapor == '3') {
+                if (result['kelas'].type_rapor == '1' | result['kelas'].type_rapor == '3') {
                     var html = '';
                     $.each(result['kelas'].jenis_rapor.komponen_jenis_rapor, function(key, item) {
                         if (item.nm_komponen_jenis_rapor !== 'STS' && item
@@ -150,6 +122,16 @@
                         }
                     });
                     $('#place').html(html);
+                } else if (result['kelas'].type_rapor == '2') {
+                    $('#place').append(`<div class="col-md-12">
+                            <label>Keterangan1</label>
+                            <textarea rows="1" cols="50" class="form-control" name="keterangan" aria-required="true" aria-invalid="true"></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Keterangan2</label>
+                            <textarea rows="1" cols="50" class="form-control" name="keterangan2" aria-required="true"
+                                aria-invalid="true"></textarea>
+                        </div>`);
                 }
             }
         });
