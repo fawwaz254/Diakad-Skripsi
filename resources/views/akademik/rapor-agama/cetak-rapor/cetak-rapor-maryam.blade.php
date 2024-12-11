@@ -74,51 +74,23 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
-                <tr style="border-style : hidden">
-                    <td width="15%" align="center" style="margin-right: 10px" style="border-style : hidden">
-                        <img id="logo"
-                            src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
-                            height="110">
-                    </td>
-                    <td width="70%" style="border-style : hidden;text-align: center;">
-                        <span style="margin-top: -10px; font-size:17px">
-                            {{ ' S E K O L A H  M E N E N G A H A T A S' }}
-                            <br>
-                            {{ 'S M A  M A R Y A M' }}
-                            <br>
-                            Status : Terakreditasi "A"
-                            <br>
-                            Jl. Manyar Sambongan No.119 Telp.(031) 5017539 Gubeng, Surabaya 60282
-                            <br>
-                            NSS : 304056007134 NPSN : 20532170
-                            <br>
-                            E-Mail : maryamonline@ymail.com Website : www.smamaryam.sch.id
-                            <br>
-                        </span>
-
-                    </td>
-                    <td width="15%"></td>
-                </tr>
-                <tr></tr>
-            </table>
+            <img src="{{ asset('media/ttd/kop_atas_maryam.jpg') }}" alt="" style="width: 100%">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
                     <th colspan="10" style="border-style : hidden">
                         <br>
                         <p align="center" style="margin-top: 3px;  font-size:20px">
-                            NILAI PENDIDIKAN AGAMA ISLAM DAN PENGEMBANGAN DIRI <br>
-                            TAHUN PELAJARAN {{ $semester->tahun_ajaran }}
+                            RAPORT PENDIDIKAN AGAMA ISLAM DAN PENGEMBANGAN DIRI
                         </p>
                     </th>
-                <tr>
+                </tr>
                 <tr style="border-style : hidden ;">
-                    <td style="border-style : hidden;width: 14%;">Nama
+                    <td style="border-style : hidden;width: 14%;">Nama Sekolah
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
-                        {{ $siswa->pengguna->nm_pengguna }}
+                        SMA MARYAM SURABAYA
                     </td>
                     <td style="border-style : hidden;width: 24%;">Kelas
                     </td>
@@ -128,13 +100,13 @@
                         {{ $kelas->nm_kelas }}
                     </td>
                 </tr>
-                <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 14%;">No Induk / NISN
+                <tr style="border-style : hidden ;">
+                    <td style="border-style : hidden;width: 14%;">Alamat
                     </td>
                     <td style="border-style : hidden;width: 1%;"> :
                     </td>
                     <td style="border-style : hidden;width: 35%;">
-                        {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
+                        JL. MANYAR SAMBONGAN 119
                     </td>
                     <td style="border-style : hidden;width: 24%;">Semester
                     </td>
@@ -142,6 +114,31 @@
                     </td>
                     <td style="border-style : hidden;width: 25%; ">
                         {{ $semester->nm_semester }}
+                    </td>
+                </tr>
+                <tr style="border-style : hidden ;">
+                    <td style="border-style : hidden;width: 14%;">Nama Siswa
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 35%;">
+                        {{ $siswa->pengguna->nm_pengguna }}
+                    </td>
+                    <td style="border-style : hidden;width: 24%;">Tahun Pelajaran
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 25%; ">
+                        {{ $semester->tahun_ajaran }}
+                    </td>
+                </tr>
+                <tr style="border-style : hidden">
+                    <td style="border-style : hidden;width: 14%;">No Induk / NISN
+                    </td>
+                    <td style="border-style : hidden;width: 1%;"> :
+                    </td>
+                    <td style="border-style : hidden;width: 35%;">
+                        {{ $siswa->nis_siswa . '/' . $siswa->nisn_siswa }}
                     </td>
                 </tr>
             </table>
@@ -421,6 +418,7 @@
                     </td>
                 </tr>
             </table>
+            <img src="{{ asset('media/ttd/kop_bawah_maryam.jpg') }}" alt="" style="width: 100%;">
 
         </div>
     @endforeach
