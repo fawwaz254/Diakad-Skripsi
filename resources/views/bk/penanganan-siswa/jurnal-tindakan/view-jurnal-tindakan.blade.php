@@ -55,8 +55,10 @@
                     </div>
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-red waves-effect" onclick="printJurnalTindakan()"><i
-                                    class="material-icons">print</i><span>Cetak</span></button>
+                            <button class="btn btn-block bg-red waves-effect" onclick="printJurnalTindakan()">
+                                <i class="material-icons">print</i>
+                                <span>Cetak</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -88,8 +90,17 @@
     }
 
     function printJurnalTindakan() {
-        window.open(base_url + '/{{ Request::segment(1) }}/penanganan-siswa/jurnal-tindakan/print/' + $(
-            'select[name=id_semester]').val() + '/' + $('select[name=id_kelas]').val() + '/' + $(
-            'select[name=id_siswa]').val(), '_blank');
+        id_siswa = $('select[name=id_siswa]').val();
+        id_kelas = $('select[name=id_kelas]').val();
+        if (id_siswa | id_kelas == null) {
+            swal({
+                title: "Pilih data kelas dan siswa",
+                type: "warning",
+            });
+        } else {
+            window.open(base_url + '/{{ Request::segment(1) }}/penanganan-siswa/jurnal-tindakan/print/' + $(
+                'select[name=id_semester]').val() + '/' + $('select[name=id_kelas]').val() + '/' + $(
+                'select[name=id_siswa]').val(), '_blank');
+        }
     }
 </script>
