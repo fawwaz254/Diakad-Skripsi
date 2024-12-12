@@ -236,6 +236,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('rekap-reward-siswa')->group(function () {
                 Route::get('/', [AktivitasRewardSiswaController::class, 'viewRekapRewardSiswa']);
+                Route::get('datatables', [AktivitasRewardSiswaController::class, 'datatablesAktivitasRewardSiswa']);
             });
 
             Route::get('approve-reward-siswa', [AktivitasRewardSiswaController::class, 'viewApproveRewardSiswa']);
