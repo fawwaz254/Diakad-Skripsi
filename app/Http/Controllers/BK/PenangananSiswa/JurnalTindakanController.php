@@ -2,39 +2,38 @@
 
 namespace App\Http\Controllers\BK\PenangananSiswa;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use App\Models\Guru;
-use App\Models\Siswa;
-use App\Models\Kelas;
-use App\Models\Semester;
-use App\Models\PelanggaranSiswa;
-use App\Models\TindakanPelanggaran;
-use App\Models\KategoriPelanggaran;
-use App\Models\KesimpulanPelanggaran;
-use App\Models\JenisTindakan;
-use App\Models\Setting;
-
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Libraries\Pendidikan\LibSiswa;
-use App\Libraries\Pendidikan\LibKelas;
-use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
-use App\Libraries\SumberDaya\LibGuru;
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-
 use Auth;
-use DB;
 use Session;
+
 use Validator;
+use Carbon\Carbon;
+use App\Models\Guru;
+use App\Models\Kelas;
+use App\Models\Siswa;
+use App\Models\Setting;
+use App\Models\Semester;
+use Illuminate\Http\Request;
+use App\Models\JenisTindakan;
+use App\Models\PelanggaranSiswa;
+
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
+use App\Models\KategoriPelanggaran;
+use App\Models\TindakanPelanggaran;
+use App\Libraries\SumberDaya\LibGuru;
+use App\Models\KesimpulanPelanggaran;
+use App\Libraries\Pendidikan\LibKelas;
+
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\Pendidikan\LibDataAkademik;
+use Illuminate\Routing\Controller as BaseController;
+use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 
 class JurnalTindakanController extends BaseController
 {
 
     public function viewJurnalTindakan(Request $request)
     {
-        # code...
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
@@ -47,7 +46,6 @@ class JurnalTindakanController extends BaseController
 
     public function actionPostJurnalTindakan(Request $request)
     {
-        # code...
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
@@ -70,7 +68,6 @@ class JurnalTindakanController extends BaseController
         }
     }
 
-
     public function printJurnalTindakan(Request $request, $id_semester, $id_kelas, $id_siswa)
     {
         $input      = (object) $request->input();
@@ -92,7 +89,6 @@ class JurnalTindakanController extends BaseController
         }
 
         $semester   = Semester::find($id_semester);
-
         // $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $siswa->id_pengguna);
         // $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
         //     ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
@@ -123,7 +119,17 @@ class JurnalTindakanController extends BaseController
                 ->where('siswa.id_kelas', '=', $id_kelas)
                 ->get();
         } else {
-            $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
+            $list_data = Siswa::select(
+                'siswa.id_siswa',
+                'subkategori_pelanggaran.id_subkategori_pelanggaran',
+                'subkategori_pelanggaran.poin_subkategori_pelanggaran',
+                'subkategori_pelanggaran.nm_subkategori_pelanggaran',
+                'subkategori_pelanggaran.keterangan_subkategori_pelanggaran',
+                'pelanggaran_siswa.tgl_pelanggaran',
+                'kategori_pelanggaran.nm_kategori_pelanggaran',
+                DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'),
+                DB::raw('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin')
+            )
                 ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
                 ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
                 ->join('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
@@ -134,6 +140,7 @@ class JurnalTindakanController extends BaseController
                 ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc')
                 ->where('siswa.id_siswa', '=', $siswa->id_siswa)
                 ->get();
+            // unique dan sum dilakuka di view
         }
 
         $is_ypm = Setting::where('key_setting', 'is_ypm')->first()->value;
