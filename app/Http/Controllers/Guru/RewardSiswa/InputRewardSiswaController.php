@@ -39,17 +39,27 @@ class InputRewardSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        $date_input = '';
+        $pengisian_kegiatan_harian = false;
+
+        $now = Carbon::now();
+
         if ($request->segment(3) == "input-reward-harian") {
             $jenis = 1;
+            $date_input = 'tanggal '.Carbon::now('Asia/Jakarta')->isoFormat('D MMM Y');
         }else if ($request->segment(3) == "input-reward-mingguan") {
             $jenis = 2;
+            
+            $date_input = 'minggu ini tanggal ('.Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('D MMM Y').' - '.Carbon::now('Asia/Jakarta')->endOfWeek()->isoFormat('D MMM Y').')';
         }else if ($request->segment(3) == "input-reward-bulanan") {
             $jenis = 3;
+
+            $date_input = 'bulan '.Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('MMMM');
         }
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
-        return view('guru/reward-siswa/input-reward-siswa/view-input-reward-siswa', compact('auth_data', 'data_kelas', 'jenis'));
+        return view('guru/reward-siswa/input-reward-siswa/view-input-reward-siswa', compact('auth_data', 'data_kelas', 'jenis', 'date_input'));
     }
 
     public function ajaxGetAktivitasReward(Request $request)
@@ -123,7 +133,15 @@ class InputRewardSiswaController extends BaseController
 
         $data_aktivitas_reward = AktivitasRewardSiswa::where('id_aktivitas_reward_siswa', $aktivitas_reward)->where('is_guru', 1)->where('is_aktif', 1)->first();
 
-        return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'aktivitas_reward', 'data_aktivitas_reward'));
+        if ($data_aktivitas_reward->id_jenis_aktivitas_reward == 1) {
+            $date_input = 'tanggal '.Carbon::now('Asia/Jakarta')->isoFormat('D MMM Y');
+        }else if ($data_aktivitas_reward->id_jenis_aktivitas_reward == 2) {
+            $date_input = 'minggu ini tanggal ('.Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('D MMM Y').' - '.Carbon::now('Asia/Jakarta')->endOfWeek()->isoFormat('D MMM Y').')';
+        }else if ($data_aktivitas_reward->id_jenis_aktivitas_reward == 3) {
+            $date_input = 'bulan '.Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('MMMM');
+        }
+
+        return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'aktivitas_reward', 'data_aktivitas_reward', 'date_input'));
     }
 
     public function datatablesInputRewardSiswa(Request $request)
@@ -179,8 +197,6 @@ class InputRewardSiswaController extends BaseController
                     $reward_siswa->id_event = $id_aktivitas_reward;
                     $reward_siswa->id_kelas = $input->id_kelas;
                     $reward_siswa->id_siswa = $id_siswa;
-
-                    // dd($id_aktivitas_reward);
 
                     $reward_siswa->nm_reward_siswa = $data_master_aktivitas_reward->firstWhere('id_aktivitas_reward_siswa', $id_aktivitas_reward)->nilai_karakter;
                     $reward_siswa->id_pengguna_reward_siswa = $input->auth_data->pengguna->id_pengguna;
