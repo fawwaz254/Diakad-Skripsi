@@ -217,7 +217,7 @@ class NilaiRaporSemesterController extends Controller
                             $keterangan_rapor->keterangan_b = 'Menunjukkan penguasaan yang baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->keterangan_c = 'Menunjukkan penguasaan yang Cukup baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->keterangan_d = 'Menunjukkan penguasaan yang Kurang baik dalam ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
-                            // $keterangan_rapor->keterangan2 = 'Perlu meningkatkan penguasaan dalam  ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
+                            $keterangan_rapor->keterangan2 = 'Perlu meningkatkan penguasaan dalam  ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->save();
                         }
                     } elseif ($kelas->type_rapor == '2') {
@@ -284,6 +284,7 @@ class NilaiRaporSemesterController extends Controller
                             $keterangan_rapor->keterangan_b =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_b'];
                             $keterangan_rapor->keterangan_c =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_c'];
                             $keterangan_rapor->keterangan_d =  $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor]['keterangan_d'];
+                            $keterangan_rapor->keterangan2 = 'Perlu meningkatkan penguasaan dalam  ' . $input->keterangan_rapor[$komponen_jenis_rapor->id_komponen_jenis_rapor];
                             $keterangan_rapor->save();
                         }
                     } elseif ($kelas->type_rapor == '3') {
