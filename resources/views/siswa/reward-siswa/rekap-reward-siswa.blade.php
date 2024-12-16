@@ -1,6 +1,6 @@
 <div class="row clearfix">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="card">
+        <div class="card is-gap">
             <div class="header">
                 <h2>Rekap Aktivitas Reward</h2>
             </div>
@@ -84,6 +84,43 @@
                                 @else
                                 <td></td>
                                 @endif
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="header">
+                <h2>Poin</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table
+                        class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        id="table_rekap_reward_siswa">
+                        <thead>
+                            <tr>
+                                <th style="vertical-align : middle;text-align:center;">Disiplin</th>
+                                <th style="vertical-align : middle;text-align:center;">Religius</th>
+                                <th style="vertical-align : middle;text-align:center;">Tangguh dan Tanggung Jawab</th>
+                                <th style="vertical-align : middle;text-align:center;">Peduli</th>
+                                <th style="vertical-align : middle;text-align:center;">Komunikasi</th>
+                                <th style="vertical-align : middle;text-align:center;">Kritis dan Pemecahan Masalah</th>
+                                <th style="vertical-align : middle;text-align:center;">Kreatif dan Inovatif</th>
+                                <th style="vertical-align : middle;text-align:center;">Kejujuran</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="vertical-align : middle;text-align:center;">
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
                             </tr>
                         </tbody>
                     </table>

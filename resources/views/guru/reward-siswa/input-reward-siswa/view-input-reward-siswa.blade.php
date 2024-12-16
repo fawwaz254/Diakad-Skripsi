@@ -8,6 +8,7 @@
                     </h2>
                 </div>
                 <div class="body">
+                    <h4 class="title" style="color:red;">Inputan {{$date_input}}</h4>
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-input-reward-siswa') }}">
                         {{ csrf_field() }}

@@ -7,7 +7,7 @@
                 </h2>
             </div>
             <div class="body">
-                <h4 class="title">Inputan {{$date_input}}</h4>
+                <h4 class="title" style="color:red;">Inputan {{$date_input}}</h4>
                 @if(!$pengisian_kegiatan_harian)
                 <form id="form_input_aktivitas">
                     @csrf
