@@ -49,6 +49,15 @@
                             </select>
                         </div>
                     </div>
+                    <h2 class="card-inside-title">
+                        Tanggal Cetak Jurnal
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <input type="date" class="form-control" name="set_tanggal" aria-required="true"
+                                aria-invalid="true" value="{{ $tanggal_cetak }}">
+                        </div>
+                    </div>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         </div>
@@ -90,6 +99,6 @@
     function printJurnalTindakan() {
         window.open(base_url + '/{{ Request::segment(1) }}/penanganan-siswa/jurnal-tindakan/print/' + $(
             'select[name=id_semester]').val() + '/' + $('select[name=id_kelas]').val() + '/' + $(
-            'select[name=id_siswa]').val(), '_blank');
+            'select[name=id_siswa]').val() + '/' + $('input[name=set_tanggal]').val(), '_blank');
     }
 </script>

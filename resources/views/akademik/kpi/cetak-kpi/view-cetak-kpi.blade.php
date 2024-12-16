@@ -16,7 +16,18 @@
                 <div class="header bg-cyan">
                     <h2>List Kelas</h2>
                 </div>
-                <div class="body">
+                <div class="container-fluid">
+                    <div style="margin-top: 1.5rem">
+                        <label for="tanggal_cetak">Set Tanggal Cetak KPI</label>
+                        <input type="date" class="form-control" id="set_tanggal_cetak" name="set_tanggal_cetak"
+                            aria-required="true" aria-invalid="true" value="{{ $tanggal_cetak }}">
+                        <button class="btn btn-block btn-primary waves-effect align-items-start" type="submit"
+                            onclick="setTanggalCetak()" style="margin-top: 1rem">
+                            <i class="material-icons">save</i>Simpan
+                        </button>
+                    </div>
+                </div>
+                <div class="body" style="margin-top: 1rem">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
@@ -43,6 +54,7 @@
     var modul_url = 'kpi';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-kpi/datatables';
     var detail_url = role_url + '#' + modul_url + '/cetak-kpi/detail';
+    var saveTanggalCetakSemester_url = base_url + '/' + role_url + '/' + 'rapor-semester/cetak-rapor/save-tanggal-cetak-semester';
 
     $(document).ready(function() {
         var primary_table = $('#primary_table').DataTable({
@@ -97,4 +109,30 @@
             });
         }).draw();
     });
+
+    function setTanggalCetak() {
+        let inputTanggal = $('#set_tanggal_cetak').val();
+
+        $.ajax({
+            url: saveTanggalCetakSemester_url,
+            type: 'POST',
+            data: {
+                tanggal: inputTanggal
+            },
+            dataType: 'JSON',
+            success: function(response) {
+                console.log(response)
+                if (response.code == 200) {
+                    vex.dialog.alert(response.message);
+                } else if (response.code == 300) {
+                    vex.dialog.alert(response.message);
+                } else if (response.code == 400) {
+                    vex.dialog.alert(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                vex.dialog.alert('Terjadi kesalahan pada server: ' + error);
+            }
+        });
+    }
 </script>
