@@ -49,6 +49,15 @@
                             </select>
                         </div>
                     </div>
+                    <h2 class="card-inside-title">
+                        Tanggal Cetak Jurnal
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <input type="date" class="form-control" name="set_tanggal" aria-required="true"
+                                aria-invalid="true" value="{{ $tanggal_cetak }}">
+                        </div>
+                    </div>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         </div>

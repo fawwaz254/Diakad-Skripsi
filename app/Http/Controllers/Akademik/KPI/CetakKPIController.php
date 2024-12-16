@@ -8,6 +8,7 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Kelas;
 use App\Models\PointKPI;
 use App\Models\PredikatKPI;
+use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\WaliKelas;
 use Yajra\Datatables\Datatables;
@@ -18,8 +19,14 @@ class CetakKPIController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if ($tanggal->value != null) {
+            $tanggal_cetak = $tanggal->value;
+        } else {
+            $tanggal_cetak = date('Y-m-d');
+        }
 
-        return view('akademik/kpi/cetak-kpi/view-cetak-kpi', compact('auth_data'));
+        return view('akademik/kpi/cetak-kpi/view-cetak-kpi', compact('auth_data', 'tanggal_cetak'));
     }
 
     public function datatablesViewCetakKPI(Request $request)
