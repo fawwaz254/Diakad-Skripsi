@@ -9,8 +9,9 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\PresensiMp as PresensiMp;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
-use App\Models\Siswa as Siswa;
+use App\Models\Siswa;
 use App\Models\WaliMurid;
+use App\Models\Kelas;
 use App\Models\RewardSiswa;
 
 use Carbon\Carbon;
@@ -24,6 +25,8 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\AktivitasRewardSiswa;
 use App\Models\JenisAktivitasReward;
+use App\Models\PengisianKegiatanHarian;
+use Carbon\CarbonPeriod;
 // use Auth;
 use DB;
 use Illuminate\Support\Facades\Auth;
@@ -89,7 +92,28 @@ class InputRewardSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('guru/reward-siswa/input-reward-siswa/rekap-input-reward-siswa', compact('auth_data'));
+        $now = Carbon::now();
+
+        $startOfMonth = Carbon::now('Asia/Jakarta')->startOfMonth();
+        $endOfMonth = Carbon::now('Asia/Jakarta')->endOfMonth();
+        $data_pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->whereBetween('tgl_pengisian', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])->get();
+
+        $dates = CarbonPeriod::create($startOfMonth, $endOfMonth);
+
+        $week_dates = array();
+
+        $i = $startOfMonth;
+        while($i < $endOfMonth){
+            $week['start'] = $i;
+            $week['end'] = Carbon::parse($i)->endOfWeek();
+
+            $week_dates[] = $week;
+            $i = Carbon::parse($week['end'])->addDay();
+        }
+
+        $list_data = LibSiswa::fetchDataSiswa($auth_data, Kelas::first()->id_kelas);
+
+        return view('guru/reward-siswa/input-reward-siswa/rekap-input-reward-siswa', compact('auth_data', 'dates', 'week_dates', 'data_pengisian_kegiatan_harian', 'list_data', 'now'));
     }
 
     public function actionViewInputRewardSiswa(Request $request)
