@@ -300,6 +300,9 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('reward-siswa')->group(function () {
+            Route::get('input-aktivitas-harian', [RewardSiswaController::class, 'viewInputRewardSiswa']);
+            Route::get('input-aktivitas-mingguan', [RewardSiswaController::class, 'viewInputRewardSiswa']);
+            Route::get('input-aktivitas-bulanan', [RewardSiswaController::class, 'viewInputRewardSiswa']);
             Route::prefix('input-aktivitas-reward')->group(function () {
                 Route::get('/', [RewardSiswaController::class, 'viewInputRewardSiswa']);
                 Route::post('/get-aktivitas-by-jenis', [RewardSiswaController::class, 'ajaxGetAktivitasById']);

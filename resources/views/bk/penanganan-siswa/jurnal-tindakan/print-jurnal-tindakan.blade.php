@@ -101,7 +101,6 @@
     </div>
 
     <div class="container text-center" style="margin-top:20px;">
-
         <h3>LAPORAN PRIBADI SISWA <br> {{ strtoupper($sekolah_data->nm_sekolah) }}</h3>
         <hr>
         <div class="row" style="margin-top: 15px;">
@@ -127,7 +126,6 @@
                         <td style="font-weight: 700">Tahun Pelajaran</td>
                         <td>: {{ $semester->tahun_ajaran }}</td>
                     </tr>
-
                 </tbody>
             </table>
 
@@ -145,8 +143,16 @@
                     @php
                         $no = 1;
                         $jumlah = 0;
+                        // sum frekuensi dan jumlah_data terpisah dari controller
+                        $list_data->groupBy('nm_subkategori_pelanggaran')->map(function ($group) {
+                            $first = $group->first();
+                            $first->frekuensi = $group->sum('frekuensi');
+                            $first->jumlah_poin = $group->sum('jumlah_poin');
+                            return $first;
+                        });
                     @endphp
-                    @foreach ($list_data as $data)
+                    {{-- unique diletakan disini karena jika tidak maka data tidak ter-sum --}}
+                    @foreach ($list_data->unique('nm_subkategori_pelanggaran') as $data)
                         <tr>
                             <td style="width:5%">{{ $no++ }}.</td>
                             <td align="left">{!! $data->nm_subkategori_pelanggaran !!}</td>
@@ -171,7 +177,6 @@
             </div>
 
             <!-- Deskripsi Perilaku Siswa -->
-
             <div class="col-md-12">
                 <h6 style="margin-top:15px;text-align: left;">B. Deskripsi Perilaku Siswa</h6>
                 <table border="1" style="width:100%" cellspacing="0" cellpadding="10">
@@ -191,7 +196,6 @@
             </div>
 
             <!-- Deskripsi Catatan Sekolah -->
-
             <div class="col-md-12">
                 <h6 style="margin-top:15px;text-align: left;">C. Catatan Sekolah</h6>
                 <fieldset style="height: 100px;border:1px solid;text-align:left;padding:0 5px">
@@ -199,6 +203,7 @@
                 </fieldset>
             </div>
         </div>
+
         {{-- Tanda Tangan --}}
         <div class="signature-container">
             <div class="signature" style="margin-top:50px;">

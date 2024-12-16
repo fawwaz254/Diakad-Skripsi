@@ -166,7 +166,9 @@
                                 @php
                                     $jumlah = count($data2['nm_point']);
                                 @endphp
-                                @if (!isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata']) && $kelas->tingkat == '2')
+                                @if (
+                                    !isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'rata-rata']) ||
+                                        ($kelas->tingkat == '2' && $kelas->tingkat == '3'))
                                     @continue
                                 @endif
                                 <tr>
@@ -190,7 +192,6 @@
                                     <td style="padding: 3px">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'keterangan2'] : '' }}
                                     </td>
-                                </tr>
                                 </tr>
                             @endforeach
                         @endif

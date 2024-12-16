@@ -196,11 +196,23 @@ class AbsensiSiswaController extends BaseController
                 );
                 return $data;
             })
-            ->addColumn('nilai_karakter', function ($item) use ($mapel_rpp_detail) {
+            ->addColumn('nilai_karakter', function ($item) use ($mapel_rpp_detail, $data_kelas) {
                 if (!empty($mapel_rpp_detail)) {
                     $options = explode('#', $mapel_rpp_detail->nilai_karakter);
                 } else {
                     $options = [];
+                }
+
+                if($data_kelas->jam_mulai < 8){
+                    $options[] = 'Membaca doa awal belajar';
+                    $options[] = 'Membaca shalawat';
+                    $options[] = 'Membaca surat-surat pendek/ doa-doa';
+                    $options[] = 'Mengaji / membaca al-Qur’an / Diba';
+                }
+
+                if($data_kelas->jam_mulai >= 13){
+                    $options[] = 'Membaca doa akhir belajar';
+                    $options[] = 'Melaksanakan shalat tepat waktu';
                 }
                 $data = array(
                     'options' => $options,

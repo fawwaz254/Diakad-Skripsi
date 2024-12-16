@@ -43,4 +43,9 @@ class PointKPI extends Model
             'nm_kelompok_kpi' => '-'
         ]);
     }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester');
+    }
 }
