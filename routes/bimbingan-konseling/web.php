@@ -166,7 +166,7 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('penanganan-siswa')->group(function () {
             // MENU Data Jurnal Tindakan
             Route::get('jurnal-tindakan', [JurnalTindakanController::class, 'viewJurnalTindakan']);
-            Route::get('jurnal-tindakan/print/{id_semester}/{id_kelas}/{id_siswa}/{set_tanggal}', [JurnalTindakanController::class, 'printJurnalTindakan']);
+            Route::get('jurnal-tindakan/print/{id_semester}/{id_kelas}/{id_siswa}/{set_tanggal?}', [JurnalTindakanController::class, 'printJurnalTindakan']);
 
             // MENU Input Pelanggaran Siswa
             Route::get('input-pelanggaran', [InputPelanggaranController::class, 'viewInputPelanggaran']);

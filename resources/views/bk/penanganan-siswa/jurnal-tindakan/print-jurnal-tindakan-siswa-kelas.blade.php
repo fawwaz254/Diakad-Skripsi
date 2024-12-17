@@ -280,8 +280,8 @@
                         @endif
                         <br> Wali Kelas,
                         <div style="margin-top:100px;">
-                            {{ $wali_kelas->gelar_depan }} {{ $wali_kelas->nm_wali_kelas }}
-                            {{ $wali_kelas->gelar_belakang }}
+                            {{ $wali_kelas?->gelar_depan }} {{ $wali_kelas?->nm_wali_kelas }}
+                            {{ $wali_kelas?->gelar_belakang }}
                         </div>
                     </div>
                 </div>

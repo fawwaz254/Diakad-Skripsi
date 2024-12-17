@@ -99,17 +99,19 @@
     }
 
     function printJurnalTindakan() {
+        id_semester = $('select[name=id_semester]').val();
         id_siswa = $('select[name=id_siswa]').val();
         id_kelas = $('select[name=id_kelas]').val();
-        if (!id_kelas || !id_siswa) {
+        set_tanggal = $('input[name=set_tanggal]').val();
+
+        if (!id_kelas || !id_siswa || !set_tanggal) {
             swal({
-                title: "Pilih data kelas dan siswa",
+                title: "Pilih data kelas, siswa dan tanggal",
                 type: "warning",
             });
         } else {
-            window.open(base_url + '/{{ Request::segment(1) }}/penanganan-siswa/jurnal-tindakan/print/' + $(
-                'select[name=id_semester]').val() + '/' + $('select[name=id_kelas]').val() + '/' + $(
-                'select[name=id_siswa]').val(), '_blank');
+            window.open(base_url + '/{{ Request::segment(1) }}/penanganan-siswa/jurnal-tindakan/print/' + id_semester +
+                '/' + id_kelas + '/' + id_siswa + '/' + set_tanggal);
         }
     }
 </script>
