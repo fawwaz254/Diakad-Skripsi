@@ -30,7 +30,12 @@
                                         <th>No</th>
                                         <th>NIS</th>
                                         <th>Nama</th>
-                                        <th>Mengikut Aktivitas</th>
+                                        <th>
+                                            Mengikuti Aktivitas
+                                            <br/>
+                                            <input id="checkbox_select_all" type="checkbox" name="select_all" checked class="filled-in">
+                                            <label for="checkbox_select_all" style="margin-bottom: -10px;"><small>Select all</small></label>
+                                        </th>
                                     </tr>
                                 </thead>
                             </table>
@@ -154,5 +159,14 @@
                 }
             });
         }
+    });
+
+    $('input[name="select_all"]').change(function() {
+        var select_all_checked = this.checked;
+        var rows = primary_table.rows({
+            'search': 'applied'
+        }).nodes();
+
+        $('input[type="checkbox"]', rows).prop('checked', this.checked);
     });
 </script>
