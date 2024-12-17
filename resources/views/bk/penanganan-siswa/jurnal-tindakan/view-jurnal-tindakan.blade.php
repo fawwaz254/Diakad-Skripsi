@@ -87,8 +87,8 @@
             },
             success: function(result) {
                 $('select[name=id_siswa]').html('');
-                var html = `<option disabled selected>-- Pilih Siswa --</option>
-                            <option value="0" style="font-weight:bold">SEMUA SISWA KELAS</option>`;
+                var html = `<option disabled>-- Pilih Siswa --</option>
+                            <option value="0" style="font-weight:bold" selected>SEMUA SISWA KELAS</option>`;
                 $.each(result, function(key, item) {
                     html += '<option value="' + item.id_siswa + '">' + item.nm_pengguna + ' (' +
                         item.nis_siswa + ')</option>'
@@ -101,7 +101,7 @@
     function printJurnalTindakan() {
         id_siswa = $('select[name=id_siswa]').val();
         id_kelas = $('select[name=id_kelas]').val();
-        if (id_siswa | id_kelas == null) {
+        if (!id_kelas || !id_siswa) {
             swal({
                 title: "Pilih data kelas dan siswa",
                 type: "warning",
