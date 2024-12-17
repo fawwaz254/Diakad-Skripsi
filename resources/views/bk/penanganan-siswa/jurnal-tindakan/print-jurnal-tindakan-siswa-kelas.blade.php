@@ -14,7 +14,9 @@
         td p {
             margin: 0;
         }
+
         .signature-container {
+            position: relative;
             display: flex;
             justify-content: space-around;
             margin-top: 50px;
@@ -29,7 +31,9 @@
                 min-height: initial;
                 page-break-before: always;
             }
+
             .signature-container {
+                position: relative;
                 display: flex;
                 justify-content: space-around;
             }
@@ -69,6 +73,14 @@
 
                     $total_pelanggaran_yang_dilakukan = $list_data
                         ->where('id_siswa', $siswa->id_siswa)
+                        // sum frekuensi dan jumlah_data terpisah dari controller
+                        ->groupBy('nm_subkategori_pelanggaran')
+                        ->map(function ($group) {
+                            $first = $group->first();
+                            $first->frekuensi = $group->sum('frekuensi');
+                            $first->jumlah_poin = $group->sum('jumlah_poin');
+                            return $first;
+                        })
                         ->sum('frekuensi');
 
                     if ($total_pelanggaran_yang_dilakukan == 1) {
@@ -105,7 +117,6 @@
             </div>
 
             <div class="container text-center" style="margin-top:20px;">
-
                 <h3>LAPORAN PRIBADI SISWA <br> {{ strtoupper($sekolah_data->nm_sekolah) }}</h3>
                 <hr>
                 <div class="row" style="margin-top: 15px;">
@@ -140,7 +151,6 @@
                                 <td style="font-weight: 700">Tahun Pelajaran</td>
                                 <td>: {{ $semester->tahun_ajaran }}</td>
                             </tr>
-
                         </tbody>
                     </table>
 
@@ -159,7 +169,8 @@
                                 $no = 1;
                                 $jumlah = 0;
                             @endphp
-                            @foreach ($list_data as $data)
+                            {{-- where dilakukan lagi karena data tidak menjerumus kepada siswa dan unique diletakan disini karena jika tidak maka data tidak ter-sum --}}
+                            @foreach ($list_data->where('id_siswa', $siswa->id_siswa)->unique('nm_subkategori_pelanggaran') as $data)
                                 @if ($siswa->id_siswa == $data->id_siswa)
                                     <tr>
                                         <td style="width:5%">{{ $no++ }}.</td>
@@ -190,7 +201,6 @@
                     </div>
 
                     <!-- Deskripsi Perilaku Siswa -->
-
                     <div class="col-md-12">
                         <h6 style="margin-top:15px;text-align: left;">B. Deskripsi Perilaku Siswa</h6>
                         <table border="1" style="width:100%" cellspacing="0" cellpadding="10">
@@ -209,22 +219,19 @@
                         </table>
                         {{-- @if ($setting_bk)
                         @else --}}
-                            {{-- <fieldset style="height: 100px;border:1px solid">
+                        {{-- <fieldset style="height: 100px;border:1px solid">
                                 <p></p>
                             </fieldset> --}}
                         {{-- @endif --}}
                     </div>
 
                     <!-- Deskripsi Catatan Sekolah -->
-
                     <div class="col-md-12">
                         <h6 style="margin-top:15px;text-align: left;">C. Catatan Sekolah</h6>
                         <fieldset style="height: 100px;border:1px solid;text-align:left;padding:0 5px">
                             <p>{{ $catatan_sekolah }}</p>
                         </fieldset>
                     </div>
-
-                    
                 </div>
                 <div class="signature-container">
                     <div class="col-md-4" style="margin-top:50px;">
@@ -258,12 +265,12 @@
                         @endif
                         <div>{{ $sekolah_data->nm_kepala_sekolah }}</div>
                     </div>
-    
+
                     <div class="col-md-4" style="margin-top:75px;">
                         Orang Tua / Wali Peserta Didik,
                         <div style="margin-top:100px;">...........................</div>
                     </div>
-    
+
                     <div class="col-md-4" style="margin-top:50px;">
                         Sidoarjo,
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
@@ -277,7 +284,6 @@
                             {{ $wali_kelas->gelar_belakang }}
                         </div>
                     </div>
-
                 </div>
             </div>
     @endforeach
