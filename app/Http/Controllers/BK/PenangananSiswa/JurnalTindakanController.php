@@ -74,8 +74,7 @@ class JurnalTindakanController extends BaseController
         }
     }
 
-
-    public function printJurnalTindakan(Request $request, $id_semester, $id_kelas, $id_siswa, $set_tanggal)
+    public function printJurnalTindakan(Request $request, $id_semester, $id_kelas, $id_siswa, $set_tanggal = null)
     {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
@@ -171,12 +170,10 @@ class JurnalTindakanController extends BaseController
         $deskripsi_perilaku_2 = '';
 
         $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
-        $tanggal->value = $set_tanggal;
-        if ($tanggal->save()) {
-            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        if (isset($set_tanggal)) {
+            $tanggal_cetak = Carbon::parse($set_tanggal)->translatedFormat('j F Y');
         } else {
-            $tanggal_cetak = Carbon::parse($set_tanggal)->locale('id')->translatedFormat('j F Y');
-            // $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+            $tanggal_cetak = Carbon::now()->translatedFormat('j F Y');
         }
 
         if ($id_siswa == '0') {
