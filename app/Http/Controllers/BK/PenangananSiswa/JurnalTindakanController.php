@@ -107,7 +107,17 @@ class JurnalTindakanController extends BaseController
         // }
 
         if ($id_siswa == '0') {
-            $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
+            $list_data = Siswa::select(
+                'siswa.id_siswa',
+                'subkategori_pelanggaran.id_subkategori_pelanggaran',
+                'subkategori_pelanggaran.poin_subkategori_pelanggaran',
+                'subkategori_pelanggaran.nm_subkategori_pelanggaran',
+                'subkategori_pelanggaran.keterangan_subkategori_pelanggaran',
+                'pelanggaran_siswa.tgl_pelanggaran',
+                'kategori_pelanggaran.nm_kategori_pelanggaran',
+                DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'),
+                DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin')
+            )
                 ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
                 ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
                 ->join('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')

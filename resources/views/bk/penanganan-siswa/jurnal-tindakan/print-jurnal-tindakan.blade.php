@@ -18,6 +18,7 @@
         }
 
         .signature-container {
+            position: relative;
             display: flex;
             justify-content: space-around;
             margin-top: 50px;
@@ -25,6 +26,7 @@
 
         @media print {
             .signature-container {
+                position: relative;
                 display: flex;
                 justify-content: space-around;
             }
@@ -40,7 +42,6 @@
             $data = App\Models\KesimpulanPelanggaran::where('poin_bawah_kesimpulan_pelanggaran', '<=', $total_poin)
                 ->where('poin_atas_kesimpulan_pelanggaran', '>=', $total_poin)
                 ->first();
-
             if ($data) {
                 $kategori_pelanggaran = strip_tags($data->deskripsi_kesimpulan_pelanggaran_2);
                 $deskripsi_perilaku_1 = strip_tags($data->deskripsi_kesimpulan_pelanggaran_1);
@@ -50,7 +51,18 @@
                 }
             }
 
-            $total_pelanggaran_yang_dilakukan = $list_data->where('id_siswa', $siswa->id_siswa)->sum('frekuensi');
+            // sum frekuensi dan jumlah_data terpisah dari controller
+            $total_pelanggaran_yang_dilakukan = $list_data
+                ->where('id_siswa', $siswa->id_siswa)
+                ->groupBy('nm_subkategori_pelanggaran')
+                ->map(function ($group) {
+                    $first = $group->first();
+                    $first->frekuensi = $group->sum('frekuensi');
+                    $first->jumlah_poin = $group->sum('jumlah_poin');
+                    return $first;
+                })
+                ->sum('frekuensi');
+
             if ($total_pelanggaran_yang_dilakukan == 1) {
                 $deskripsi_perilaku_2 = 'Ada perubahan perilaku siswa yang lebih baik setelah ditangani sekolah.';
             } elseif ($total_pelanggaran_yang_dilakukan == 2) {
@@ -143,13 +155,6 @@
                     @php
                         $no = 1;
                         $jumlah = 0;
-                        // sum frekuensi dan jumlah_data terpisah dari controller
-                        $list_data->groupBy('nm_subkategori_pelanggaran')->map(function ($group) {
-                            $first = $group->first();
-                            $first->frekuensi = $group->sum('frekuensi');
-                            $first->jumlah_poin = $group->sum('jumlah_poin');
-                            return $first;
-                        });
                     @endphp
                     {{-- unique diletakan disini karena jika tidak maka data tidak ter-sum --}}
                     @foreach ($list_data->unique('nm_subkategori_pelanggaran') as $data)
@@ -222,7 +227,7 @@
                     <br>
                     <br>
                 @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                    <img style="position: absolute; top: 5%; margin-left:-70px; margin-top:17px"
+                    <img style="position: absolute; top: 25%; margin-left:-70px; margin-top:17px"
                         src="{{ asset('media/ttd/smpypm2.png') }}" alt="TTD" width="160px" height="160px"
                         class="ttd">
                     <br>
