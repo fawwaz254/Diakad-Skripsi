@@ -58,6 +58,10 @@ class InputRewardSiswaController extends BaseController
             $jenis = 3;
 
             $date_input = 'bulan '.Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('MMMM');
+        }else if ($request->segment(3) == "input-reward-insidentil") {
+            $jenis = 4;
+
+            $date_input = 'tanggal '.Carbon::now('Asia/Jakarta')->isoFormat('D MMM Y');
         }
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);

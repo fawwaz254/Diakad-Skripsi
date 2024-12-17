@@ -8,6 +8,15 @@
             </div>
             <div class="body">
                 <h4 class="title" style="color:red;">Inputan {{$date_input}}</h4>
+                @php
+                    $batas_pengisian = \Carbon\Carbon::now('Asia/Jakarta');
+                    $batas_pengisian->hour(15);
+                    $batas_pengisian->minute(0);
+                    $batas_pengisian->second(0);
+                @endphp
+                @if($jenis == 1 && \Carbon\Carbon::now('Asia/Jakarta')->lt($batas_pengisian))
+                <h4 style="color:red;">Kembali lagi setelah sholat ashar</h4>
+                @endif
                 @if(!$pengisian_kegiatan_harian)
                 <form id="form_input_aktivitas">
                     @csrf
@@ -27,7 +36,9 @@
                                 <tbody id="pertanyaan_aktivitas">
                                 </tbody>
                             </table>
+                            @if($jenis != 1 || \Carbon\Carbon::now('Asia/Jakarta')->gt($batas_pengisian))
                             <button type="submit" class="btn btn-primary">Simpan Jawaban</button>
+                            @endif
                         </div>
                     </div>
                 </form>
