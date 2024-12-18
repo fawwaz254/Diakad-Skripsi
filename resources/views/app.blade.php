@@ -224,8 +224,8 @@
 
 
 {{-- jexcel --}}
-<script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
-<script src="https://jsuites.net/v4/jsuites.js"></script>
+<script src="{{ asset('js/jexcel/jexcel.js') }}"></script>
+<script src="{{ asset('js/jexcel/jsuites.js') }}"></script>
 
 <script>
     $(function() {

@@ -105,4 +105,41 @@
             });
         });
     });
+    
+    function onChecklist(el){
+        var id_aktivitas = $(el).attr('data-id');
+
+        if(id_aktivitas == '69'){ // Haid
+            if($(el).is(':checked')){
+                $('#checkbox-60').removeAttr('checked');
+                $('#checkbox-60').attr('disabled', true);
+                $('#checkbox-61').removeAttr('checked');
+                $('#checkbox-61').attr('disabled', true);
+                $('#checkbox-62').removeAttr('checked');
+                $('#checkbox-62').attr('disabled', true);
+                $('#checkbox-63').removeAttr('checked');
+                $('#checkbox-63').attr('disabled', true);
+                $('#checkbox-64').removeAttr('checked');
+                $('#checkbox-64').attr('disabled', true);
+                $('#checkbox-65').removeAttr('checked');
+                $('#checkbox-65').attr('disabled', true);
+            }else{
+                $('#checkbox-60').attr('disabled', false);
+                $('#checkbox-61').attr('disabled', false);
+                $('#checkbox-62').attr('disabled', false);
+                $('#checkbox-63').attr('disabled', false);
+                $('#checkbox-64').attr('disabled', false);
+                $('#checkbox-65').attr('disabled', false);
+            }
+        }
+
+        if(['60', '61', '62', '63', '64', '65'].includes(id_aktivitas)){ // Sholat
+            if($(el).is(':checked')){
+                $('#checkbox-69').removeAttr('checked');
+                $('#checkbox-69').attr('disabled', true);
+            }else{
+                $('#checkbox-69').attr('disabled', false);
+            }
+        }
+    }
 </script>
