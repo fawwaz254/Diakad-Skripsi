@@ -1,28 +1,30 @@
 <?php
 
-use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
-use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
-use App\Http\Controllers\ManajemenFile\DataFileController;
-use App\Http\Controllers\ManajemenFile\DataKategoriController;
-use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
-use App\Http\Controllers\WaliMurid\Akademik\LihatNilaiWaliController;
-use App\Http\Controllers\WaliMurid\Akademik\AbsensiController;
-use App\Http\Controllers\WaliMurid\Akademik\JadwalKBMController;
-use App\Http\Controllers\WaliMurid\Akademik\JadwalUjianController;
-use App\Http\Controllers\WaliMurid\Akademik\KalenderAkademikController;
-use App\Http\Controllers\WaliMurid\Akademik\MagangController;
-use App\Http\Controllers\WaliMurid\Akademik\RaporController;
-use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiEkskulController;
-use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiKehadiranSiswaController;
-use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiPKLController;
-use App\Http\Controllers\WaliMurid\Kesiswaan\BeasiswaController;
-use App\Http\Controllers\WaliMurid\Kesiswaan\NilaiEkskulController;
-use App\Http\Controllers\WaliMurid\Kesiswaan\PrestasiController;
-use App\Http\Controllers\WaliMurid\Keuangan\RiwayatBayarController;
-use App\Http\Controllers\WaliMurid\Keuangan\TagihanController;
-use App\Http\Controllers\WaliMurid\Pelanggaran\RiwayatPelanggaranController;
-use App\Http\Controllers\WaliMurid\RaporSisipan\RaporSisipanSTSController;
 use App\Http\Controllers\WaliMurid\WelcomeController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
+use App\Http\Controllers\WaliMurid\Akademik\RaporController;
+use App\Http\Controllers\WaliMurid\Akademik\MagangController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\WaliMurid\Akademik\AbsensiController;
+use App\Http\Controllers\WaliMurid\Keuangan\TagihanController;
+use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
+use App\Http\Controllers\WaliMurid\Akademik\JadwalKBMController;
+use App\Http\Controllers\WaliMurid\Kesiswaan\BeasiswaController;
+use App\Http\Controllers\WaliMurid\Kesiswaan\PrestasiController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\WaliMurid\Akademik\JadwalUjianController;
+use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiPKLController;
+use App\Http\Controllers\WaliMurid\Kesiswaan\NilaiEkskulController;
+use App\Http\Controllers\WaliMurid\Keuangan\RiwayatBayarController;
+use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
+use App\Http\Controllers\WaliMurid\Akademik\LihatNilaiWaliController;
+use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiEkskulController;
+use App\Http\Controllers\WaliMurid\Akademik\KalenderAkademikController;
+use App\Http\Controllers\WaliMurid\Akademik\KpiController;
+use App\Http\Controllers\WaliMurid\RaporSisipan\RaporSisipanSTSController;
+use App\Http\Controllers\WaliMurid\Pelanggaran\RiwayatPelanggaranController;
+use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiKehadiranSiswaController;
 
 Route::middleware(['token_staff'])->group(function () {
 
@@ -58,8 +60,6 @@ Route::middleware(['token_staff'])->group(function () {
 
         /** ==== MODUL AKADEMIK ==== **/
         Route::prefix('akademik')->group(function () {
-            Route::get('rapor-sisipan/cetak-rapor/print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
-
             // MENU Kalender Akademik
             Route::get('kalender-akademik', [KalenderAkademikController::class, 'viewKalenderAkademik']);
             Route::get('kalender-akademik/datatables', [KalenderAkademikController::class, 'datatablesKalenderAkademik']);
@@ -85,7 +85,17 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('magang', [MagangController::class, 'viewMagang']);
             Route::get('magang/datatables', [MagangController::class, 'datatablesMagang']);
 
-            Route::get('rapor-sisipan', [RaporController::class, 'viewSisipan']);
+            // Sisipan
+            Route::prefix('rapor-sisipan')->group(function () {
+                Route::get('/', [RaporController::class, 'viewSisipan']);
+                Route::get('cetak-rapor/print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+            });
+
+            // Kpi
+            Route::prefix('kpi')->group(function () {
+                Route::get('/', [KpiController::class, 'viewKpi']);
+                Route::get('print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
+            });
         });
 
         Route::prefix('keuangan')->group(function () {
@@ -130,14 +140,12 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('pelanggaran')->group(function () {
-
             Route::get('riwayat-pelanggaran', [RiwayatPelanggaranController::class, 'viewRiwayatPelanggaran']);
             Route::get('riwayat-pelanggaran/datatables-non-kbm', [RiwayatPelanggaranController::class, 'datatablesPelanggaranNonKBM']);
             Route::get('riwayat-pelanggaran/datatables-kbm', [RiwayatPelanggaranController::class, 'datatablesPelanggaranKBM']);
         });
 
         Route::prefix('kesekretariatan')->group(function () {
-
             Route::prefix('dokumen')->group(function () {
                 Route::get('/', [DokumenController::class, 'viewDokumen']);
                 Route::get('detail/{id}', [DokumenController::class, 'viewDetailDokumen']);
@@ -146,7 +154,6 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('rapor-sisipan')->group(function () {
-
             Route::prefix('nilai-sts')->group(function () {
                 Route::get('/', [RaporSisipanSTSController::class, 'viewRaporSisipanSTS']);
                 Route::post('datatables', [RaporSisipanSTSController::class, 'datatablesRaporSisipan']);
