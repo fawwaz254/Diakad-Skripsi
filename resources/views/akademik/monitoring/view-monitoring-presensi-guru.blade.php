@@ -67,8 +67,9 @@
                                 <tr>
                                     <th rowspan="2">No.</th>
                                     <th rowspan="2">Nama</th>
-                                    <th rowspan="2">Total Presensi</th>
+                                    <th rowspan="2">Jam Mengajar<br/>/Minggu</th>
                                     <th colspan="{{ $dates->count() }}">Tanggal</th>
+                                    <th rowspan="2">Total Presensi</th>
                                 </tr>
                                 <tr>
                                     @foreach ($dates as $date)
@@ -85,8 +86,10 @@
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $guru->nm_pengguna }}</td>
-                                        <td class="text-center">
-                                            {{ $data_presensi->where('id_pengguna', $guru->id_pengguna)->count() }}
+                                        <td>
+                                            @if($jam_mengajar = $data_jam_mengajar->firstWhere('id_pengguna', $guru->id_pengguna))
+                                            {{ $jam_mengajar->total_jam_seminggu }} jam
+                                            @endif
                                         </td>
                                         @foreach ($dates as $date)
                                             @php
@@ -142,6 +145,9 @@
                                                 @endif
                                             @endif
                                         @endforeach
+                                        <td class="text-center">
+                                            {{ $data_presensi->where('id_pengguna', $guru->id_pengguna)->count() }}x
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
