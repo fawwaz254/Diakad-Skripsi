@@ -74,8 +74,8 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
-            <img src="{{ asset('media/ttd/kop_atas_maryam.jpg') }}" alt="" style="width: 100%">
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+            {{-- <img src="{{ asset('media/ttd/kop_atas_maryam.jpg') }}" alt="" style="width: 100%"> --}}
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 128px auto 0; border-style : hidden">
                 <tr>
                     <th colspan="10" style="border-style : hidden">
                         <br>
@@ -371,7 +371,8 @@
             </table>
             <br>
 
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden; text-align:center">
+            <table cellspacing="0" cellpadding="10"
+                style="width: 90%; margin: 0 auto; border-style : hidden; text-align:center">
                 <tr>
                     <td style="border-style : hidden; width:35%;">
                         Mengetahui, <br>
@@ -418,7 +419,7 @@
                     </td>
                 </tr>
             </table>
-            <img src="{{ asset('media/ttd/kop_bawah_maryam.jpg') }}" alt="" style="width: 100%;">
+            {{-- <img src="{{ asset('media/ttd/kop_bawah_maryam.jpg') }}" alt="" style="width: 100%;"> --}}
 
         </div>
     @endforeach
