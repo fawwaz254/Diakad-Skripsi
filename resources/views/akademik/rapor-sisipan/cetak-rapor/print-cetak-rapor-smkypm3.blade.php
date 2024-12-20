@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Nilai Rapor Tengah Semester</title>
-
-
     <style>
         * {
             font-family: 'Tahoma';
@@ -40,7 +38,6 @@
         }
 
         .body {
-
             border: 5px double;
             border-top-style: none;
         }
@@ -50,6 +47,10 @@
             -webkit-text-underline-position: under;
             -ms-text-underline-position: below;
             text-underline-position: under;
+        }
+
+        .signature-container {
+            position: relative;
         }
     </style>
 
@@ -66,12 +67,15 @@
             .page {
                 page-break-after: always;
             }
+
+            .signature-container {
+                position: relative;
+            }
         }
     </style>
 </head>
 
 <body>
-
     @foreach ($list_siswa as $siswa)
         <div class="page">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
@@ -87,7 +91,6 @@
                                 // dd($nama->rapor_sisipan->semester->tahun_ajaran);
                                 echo isset($nama->rapor_sisipan->semester->tahun_ajaran) ? 'TAHUN AJARAN ' . $nama->rapor_sisipan->semester->tahun_ajaran : '';
                             @endphp --}}
-
                         </h2>
                         <hr>
                         <br>
@@ -161,7 +164,6 @@
                 </thead>
                 <br>
                 <tbody class="body">
-
                     @foreach ($data as $kelompok)
                         <tr>
                             <td colspan="2" style="font-weight: bold;">
@@ -198,8 +200,6 @@
                             @endforeach
                         @endif
                     @endforeach
-
-
                 </tbody>
             </table>
             {{-- <table style="width: 30%; margin-left:10%; margin-top:20px">
@@ -215,14 +215,20 @@
             </tr> 
         </table> --}}
             <br><br>
+
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
-                    <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="center">
+                    <td class="signature-container"
+                        style="border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="center">
                         Mengetahui,
                         <br>
                         Kepala Sekolah
+                        <img style="position: absolute; top: 20%; left:27%" src="{{ asset('media/ttd/smkypm3.png') }}"
+                            alt="TTD" width="120px" height="120px">
                         <br><br><br><br><br><br><br>
-                        {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
+                        <div>
+                            {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
+                        </div>
                     </td>
                     <td style="width:50%; border-style : hidden"></td>
 
@@ -241,11 +247,8 @@
                         @endif
                         {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
                     </td>
-
                 </tr>
-
             </table>
-
         </div>
     @endforeach
 </body>
