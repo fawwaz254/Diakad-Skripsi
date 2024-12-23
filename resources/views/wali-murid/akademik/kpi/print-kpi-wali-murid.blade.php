@@ -281,7 +281,9 @@
                 <br><br><br><br><br><br>
                 <u>
                     <b>
-                        {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}
+                        {{ $wali_kelas->pengguna->gelar_depan }}
+                        {{ $wali_kelas->pengguna->nm_pengguna }}
+                        {{ $wali_kelas->pengguna->gelar_belakang }}
                     </b>
                 </u>
             </td>
