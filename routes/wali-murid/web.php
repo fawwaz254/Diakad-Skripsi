@@ -94,7 +94,7 @@ Route::middleware(['token_staff'])->group(function () {
             // Kpi
             Route::prefix('kpi')->group(function () {
                 Route::get('/', [KpiController::class, 'viewKpi']);
-                Route::get('print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
+                Route::get('print/{id_semester}/{id_siswa}', [KpiController::class, 'printKpi']);
             });
         });
 
