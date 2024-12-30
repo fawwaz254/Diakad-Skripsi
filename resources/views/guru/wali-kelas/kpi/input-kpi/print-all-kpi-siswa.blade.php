@@ -259,8 +259,7 @@
 
         <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
             <tr>
-                <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali
-                    Murid
+                <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali Murid
                     <br><br><br><br><br><br>
                     ____________________
                 </td>
@@ -284,6 +283,18 @@
                     Wali Kelas
                     <br><br><br><br><br><br><u><b>
                             {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</b></u>
+                </td>
+            </tr>
+        </table>
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+            <tr>
+                <td width="30%" style="border-style : hidden; text-align:center">
+                </td>
+                <td width="30%" style="border-style : hidden; text-align:center"><br>Kepala Sekolah,
+                    <br><br><br><br><br><br>
+                    <div>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</div>
+                </td>
+                <td width="30%" style="border-style : hidden;text-align:center ">
                 </td>
             </tr>
         </table>
