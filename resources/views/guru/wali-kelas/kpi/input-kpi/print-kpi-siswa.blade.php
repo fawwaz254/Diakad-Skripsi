@@ -55,6 +55,10 @@
             -ms-text-underline-position: below;
             text-underline-position: under;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 
     <style type="text/css" media="print">
@@ -121,6 +125,50 @@
         @endphp
 
         @foreach ($kelompok_kpi as $key => $unit_kelompok_kpi)
+            <!-- dimunculkan per 3 kategori -->
+            @if($key == 3)
+            <div class="page-break"></div>
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                    <img id="kop" src="{{ asset('media/kop-surat-logo-sma-wh-2.png') }}">
+                @endif
+                <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 20px  auto;" style="border-style : hidden">
+                    <tr>
+                        <td colspan="10" style="border-style : hidden">
+                            <h2 align="center" style="margin-top: 3px">
+                                LAPORAN KECAKAPAN PENERAPAN IBADAH (KPI)<br>
+                                <br>
+                            </h2>
+                        </td>
+                    <tr>
+                        <br>
+
+                    <tr style="border-style : hidden">
+                        <td style="border-style : hidden; width: 10%;">Nama Siswa
+                        </td>
+                        <td style="border-style : hidden;  width: 60%;">: <b>{{ $siswa->pengguna->nm_pengguna }}</b>
+                        </td>
+
+                        <td style="border-style : hidden; width: 10%;">Semester
+                        </td>
+                        <td style="border-style : hidden;  width: 20%;">: <b>
+                                {{ $semester->tahun_ajaran . ' ' . $semester->nm_semester }}</b>
+                        </td>
+                    </tr>
+                    <tr style="border-style : hidden;">
+                        <td style="border-style : hidden; width: 10%;">NIS
+                        </td>
+                        <td style="border-style : hidden;  width: 60%;">: <b>{{ $siswa->nis_siswa }}</b></td>
+
+                        <td style="border-style : hidden; width: 10%;">Kelas
+                        </td>
+                        <td style="border-style : hidden;  width: 20%;">: <b>{{ $siswa->kelas->nm_kelas }}</b>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+            @endif
+            <!-- dimunculkan per 3 kategori -->
+            
             @php
                 $last_key = $key;
             @endphp
@@ -132,10 +180,7 @@
             </table>
 
             <table cellspacing="0" cellpadding="10"
-                style="width: 90%;  margin-top: 0;
-			margin-bottom: 20px;
-			margin-right: auto;
-			margin-left: auto;">
+                style="width: 90%;  margin-top: 0;margin-bottom: 20px;margin-right: auto;margin-left: auto;">
                 <thead class="head">
                     <tr style="background-color: #e3e1e1">
                         <th>
@@ -190,116 +235,117 @@
                 @endforeach
             </tbody>
         </table>
-    @endforeach
+        @endforeach
+        {{-- mengaji --}}
+    
 
-    {{-- mengaji --}}
-    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
-        <tr>
-            <td> <b>{{ $abjad[$last_key + 1] . ". Tingkat Kemampuan Baca Al-Qur'an *)" }}</b></td>
-        </tr>
-    </table>
-
-    <table cellspacing="0" cellpadding="10"
-        style="width: 90%;  margin-top: 0;
-                margin-bottom: 30px;
-                margin-right: auto;
-                margin-left: auto;">
-        <thead class="head">
-            <tr style="background-color: #e3e1e1">
-                <th colspan="2">
-                    Tingkat Al-Qur'an
-                </th>
-                <th colspan="5">Tingkat Pra Al-Qur'an (Sulamut Tilawah)</th>
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+            <tr>
+                <td> <b>{{ $abjad[$last_key + 1] . ". Tingkat Kemampuan Baca Al-Qur'an *)" }}</b></td>
             </tr>
-            <tr style="background-color: #e3e1e1">
-                <th>Kategori</th>
-                <th>Nilai</th>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>4</th>
-                <th>Nilai</th>
-            </tr>
-        </thead>
-        <tbody class="body">
-            @if ($dataMengaji)
-                <tr>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        {{ $dataMengaji['Sertifikasi'] == 'Y' ? '✔ ' : '- ' }} Tersertifikasi
-                    </td>
-                    <td style="text-align:center">
-                        {{ $dataMengaji['Sertifikasi'] == 'Y' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
-                    <td style="text-align:center" rowspan="2">
-                        {{ $dataMengaji['Tingkat/Jilid'] == '1' ? '✔ ' : '- ' }}</td>
-                    <td style="text-align:center" rowspan="2">
-                        {{ $dataMengaji['Tingkat/Jilid'] == '2' ? '✔ ' : '- ' }}</td>
-                    <td style="text-align:center" rowspan="2">
-                        {{ $dataMengaji['Tingkat/Jilid'] == '3' ? '✔ ' : '- ' }}</td>
-                    <td style="text-align:center" rowspan="2">
-                        {{ $dataMengaji['Tingkat/Jilid'] == '4' ? '✔ ' : '- ' }}</td>
-                    <td style="text-align:center" rowspan="2">
-                        {{ $dataMengaji['Nilai'] }}</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;
-                        {{ $dataMengaji['Sertifikasi'] == 'T' ? '✔ ' : '- ' }} Belum
-                    </td>
-                    <td style="text-align:center">
-                        {{ $dataMengaji['Sertifikasi'] == 'T' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}
-                    </td>
-                </tr>
-            @endif
-        </tbody>
-    </table>
-    <br>
+        </table>
 
-    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
-        <tr>
-            <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali Murid
-                <br><br><br><br><br><br>
-                ____________________    
-            </td>
-            <td width="30%" style="border-style : hidden; text-align:center">
-            </td>
-            <td width="30%" style="border-style : hidden;text-align:center ">
-                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                    Sidoarjo, {{ $tanggal_cetak }} <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-                    Sidoarjo, {{ $tanggal_cetak }} <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
-                    Sidoarjo, {{ $tanggal_cetak }} <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
-                    Sidoarjo, {{ $tanggal_cetak }} <br>
-                @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
-                    Sidoarjo, {{ $tanggal_cetak }} <br>
-                @else
-                    Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
+        <table cellspacing="0" cellpadding="10"
+            style="width: 90%;  margin-top: 0;
+                    margin-bottom: 30px;
+                    margin-right: auto;
+                    margin-left: auto;">
+            <thead class="head">
+                <tr style="background-color: #e3e1e1">
+                    <th colspan="2">
+                        Tingkat Al-Qur'an
+                    </th>
+                    <th colspan="5">Tingkat Pra Al-Qur'an (Sulamut Tilawah)</th>
+                </tr>
+                <tr style="background-color: #e3e1e1">
+                    <th>Kategori</th>
+                    <th>Nilai</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>Nilai</th>
+                </tr>
+            </thead>
+            <tbody class="body">
+                @if ($dataMengaji)
+                    <tr>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;
+                            {{ $dataMengaji['Sertifikasi'] == 'Y' ? '✔ ' : '- ' }} Tersertifikasi
+                        </td>
+                        <td style="text-align:center">
+                            {{ $dataMengaji['Sertifikasi'] == 'Y' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}</td>
+                        <td style="text-align:center" rowspan="2">
+                            {{ $dataMengaji['Tingkat/Jilid'] == '1' ? '✔ ' : '- ' }}</td>
+                        <td style="text-align:center" rowspan="2">
+                            {{ $dataMengaji['Tingkat/Jilid'] == '2' ? '✔ ' : '- ' }}</td>
+                        <td style="text-align:center" rowspan="2">
+                            {{ $dataMengaji['Tingkat/Jilid'] == '3' ? '✔ ' : '- ' }}</td>
+                        <td style="text-align:center" rowspan="2">
+                            {{ $dataMengaji['Tingkat/Jilid'] == '4' ? '✔ ' : '- ' }}</td>
+                        <td style="text-align:center" rowspan="2">
+                            {{ $dataMengaji['Nilai'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;
+                            {{ $dataMengaji['Sertifikasi'] == 'T' ? '✔ ' : '- ' }} Belum
+                        </td>
+                        <td style="text-align:center">
+                            {{ $dataMengaji['Sertifikasi'] == 'T' ? $dataMengaji['Nilai Sertifikasi'] : '-' }}
+                        </td>
+                    </tr>
                 @endif
-                {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
-                <br>
-                Wali Kelas
-                <br><br><br><br><br><br>
-                <u>
-                    <b>
-                        {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}
-                    </b>
-                </u>
-            </td>
-        </tr>
-    </table>
-    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
-        <tr>
-            <td width="30%" style="border-style : hidden; text-align:center">
-            </td>
-            <td width="30%" style="border-style : hidden; text-align:center"><br>Kepala Sekolah,
-                <br><br><br><br><br><br>
-                <div>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</div>
-            </td>
-            <td width="30%" style="border-style : hidden;text-align:center ">
-            </td>
-        </tr>
-    </table>
-</div>
+            </tbody>
+        </table>
+        <br>
+
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+            <tr>
+                <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali Murid
+                    <br><br><br><br><br><br>
+                    ____________________    
+                </td>
+                <td width="30%" style="border-style : hidden; text-align:center">
+                </td>
+                <td width="30%" style="border-style : hidden;text-align:center ">
+                    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman')
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
+                        Sidoarjo, {{ $tanggal_cetak }} <br>
+                    @else
+                        Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('M Y') }} <br>
+                    @endif
+                    {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
+                    <br>
+                    Wali Kelas
+                    <br><br><br><br><br><br>
+                    <u>
+                        <b>
+                            {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}
+                        </b>
+                    </u>
+                </td>
+            </tr>
+        </table>
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+            <tr>
+                <td width="30%" style="border-style : hidden; text-align:center">
+                </td>
+                <td width="30%" style="border-style : hidden; text-align:center"><br>Kepala Sekolah,
+                    <br><br><br><br><br><br>
+                    <div>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</div>
+                </td>
+                <td width="30%" style="border-style : hidden;text-align:center ">
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 <script>
     window.print();
