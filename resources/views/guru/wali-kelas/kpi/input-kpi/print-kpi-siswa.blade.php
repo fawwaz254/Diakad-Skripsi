@@ -40,9 +40,7 @@
         }
 
         .page {
-            width: 210mm;
-            height: 329mm;
-            /* width: 1200px; */
+            width: 1200px;
         }
 
         .body {
@@ -65,7 +63,7 @@
     <style type="text/css" media="print">
         @page {
             /* margin: 125mm 125mm 125mm 125mm;    */
-            size: portrait;
+            /* size: portrait; */
             size: 210mm 330mm;
             margin: 0mm;
         }
@@ -73,7 +71,6 @@
         @media print {
             .break {
                 page-break-after: always;
-
             }
         }
     </style>
@@ -231,10 +228,18 @@
                                     </tr>
                                 @endif
                             @endforeach
-                        @break
+                            {{-- @break --}}
+                        @endforeach
                     @endforeach
-                @endforeach
-            </tbody>
+                </tbody>
+            </table>
+        @endforeach
+
+        {{-- mengaji --}}
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
+            <tr>
+                <td> <b>{{ $abjad[$last_key + 1] . ". Tingkat Kemampuan Baca Al-Qur'an *)" }}</b></td>
+            </tr>
         </table>
         @endforeach
         {{-- mengaji --}}
