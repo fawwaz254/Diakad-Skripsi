@@ -40,9 +40,7 @@
         }
 
         .page {
-            width: 210mm;
-            height: 329mm;
-            /* width: 1200px; */
+            width: 1200px;
         }
 
         .body {
@@ -62,7 +60,7 @@
     <style type="text/css" media="print">
         @page {
             /* margin: 125mm 125mm 125mm 125mm;    */
-            size: portrait;
+            /* size: portrait; */
             size: 210mm 330mm;
             margin: 0mm;
         }
