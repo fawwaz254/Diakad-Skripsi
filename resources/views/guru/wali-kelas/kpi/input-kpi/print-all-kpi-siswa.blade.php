@@ -60,10 +60,9 @@
     <style type="text/css" media="print">
         @page {
             /* margin: 125mm 125mm 125mm 125mm;    */
-            size: portrait;
-            size: auto;
+            /* size: portrait; */
+            size: 210mm 330mm;
             margin: 0mm;
-
         }
 
         @media print {
