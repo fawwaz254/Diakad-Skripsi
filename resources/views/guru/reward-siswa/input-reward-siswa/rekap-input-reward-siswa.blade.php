@@ -2,11 +2,102 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card is-gap">
             <div class="header">
+                <h2>Filter Data</h2>
+            </div>
+            <div class="body">
+                <div class="row clearfix">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <h4>
+                            Kelas
+                        </h4>
+                        <select class="form-control show-tick" name="id_kelas" required="">
+                            <option value="" selected disabled>-- Pilih Kelas --</option>
+                            @foreach ($data_kelas as $data)
+                                <option value="{{ $data->id_kelas }}" {{ !empty(Request::input('id_kelas')) && $data->id_kelas == Request::input('id_kelas')? 'selected' : '' }}>{{ $data->nm_kelas }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <h4>
+                            Jenis Aktivitas
+                        </h4>
+                        <select class="form-control show-tick" name="jenis_aktivitas_reward" required="" onchange="changeJenis()">
+                            <option value="" selected disabled>-- Pilih Jenis Aktivitas --</option>
+                            @foreach ($data_jenis_aktivitas as $jenis_aktivitas)
+                            <option value="{{ $jenis_aktivitas->id_jenis_aktivitas_reward }}" {{ !empty(Request::input('jenis')) && $jenis_aktivitas->id_jenis_aktivitas_reward == Request::input('jenis')? 'selected' : '' }}>{{ $jenis_aktivitas->nm_jenis_aktivitas_reward }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <h4>
+                            Aktivitas yang diinput
+                        </h4>
+                        <select class="form-control show-tick" name="aktivitas_reward" required="" id="aktivitas_reward">
+                            <option value="" selected disabled>-- Pilih Aktivitas --</option>
+                            @foreach ($data_aktivitas_reward as $aktivitas_reward)
+                            <option value="{{ $aktivitas_reward->id_aktivitas_reward_siswa }}" {{ !empty(Request::input('id_aktivitas_reward')) && $aktivitas_reward->id_aktivitas_reward_siswa == Request::input('id_aktivitas_reward')? 'selected' : '' }}>{{ $aktivitas_reward->nm_aktivitas_reward_siswa }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    @php
+                        $data_month = [
+                            (object) [ 'id' => 1, 'name' => 'Januari'],
+                            (object) [ 'id' => 2, 'name' => 'Februari'],
+                            (object) [ 'id' => 3, 'name' => 'Maret'],
+                            (object) [ 'id' => 4, 'name' => 'April'],
+                            (object) [ 'id' => 5, 'name' => 'Mei'],
+                            (object) [ 'id' => 6, 'name' => 'Juni'],
+                            (object) [ 'id' => 7, 'name' => 'Juli'],
+                            (object) [ 'id' => 8, 'name' => 'Agustus'],
+                            (object) [ 'id' => 9, 'name' => 'September'],
+                            (object) [ 'id' => 10, 'name' => 'Oktober'],
+                            (object) [ 'id' => 11, 'name' => 'November'],
+                            (object) [ 'id' => 12, 'name' => 'Desember'],
+                        ];
+                        $data_year = [2025, 2024, 2023];
+                    @endphp
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <h4>
+                            Bulan
+                        </h4>
+                        <select class="form-control show-tick" name="month" required="">
+                            @foreach ($data_month as $month)
+                            <option value="{{ $month->id }}" {{ $month->id == $now->month? 'selected' : '' }}>{{ $month->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <h4>
+                            Tahun
+                        </h4>
+                        <select class="form-control show-tick" name="year" required="">
+                            @foreach ($data_year as $year)
+                            <option value="{{ $year }}" {{ $year == $now->year? 'selected' : '' }}>{{ $year }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <h4>
+                            Action
+                        </h4>
+                        <button class="btn bg-red waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if(!empty(Request::input('jenis')))
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card is-gap">
+            <div class="header">
                 <h2>Rekap Aktivitas Reward</h2>
             </div>
             <div class="body">
                 <h3>Bulan {{ $now->isoFormat('MMMM Y') }}</h3>
-                <h4>Input Aktivitas Harian</h4>
+                @if(!empty(Request::input('jenis')) && Request::input('jenis') == 1)
+                <h4>Rekap Aktivitas Harian</h4>
                 <div class="table-responsive">
                     <table
                         class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
@@ -43,8 +134,10 @@
                         </tbody>
                     </table>
                 </div>
+                @endif
 
-                <h4>Input Aktivitas Mingguan</h4>
+                @if(!empty(Request::input('jenis')) && Request::input('jenis') == 2)
+                <h4>Rekap Aktivitas Mingguan</h4>
                 <div class="table-responsive">
                     <table
                         class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
@@ -81,8 +174,10 @@
                         </tbody>
                     </table>
                 </div>
+                @endif
 
-                <h4>Input Aktivitas Bulanan</h4>
+                @if(!empty(Request::input('jenis')) && Request::input('jenis') == 3)
+                <h4>Rekap Aktivitas Bulanan</h4>
                 <div class="table-responsive">
                     <table
                         class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
@@ -112,7 +207,32 @@
                         </tbody>
                     </table>
                 </div>
+                @endif
             </div>
         </div>
     </div>
+    @endif
 </div>
+
+<script>
+    let modul_url = 'reward-siswa';
+    let fetch_aktivitas_url = base_url + '/' + role_url + '/' + modul_url + '/ajax-get-aktivitas-reward';
+    
+    function changeJenis() {
+        $.ajax({
+            url: fetch_aktivitas_url,
+            type: "GET",
+            data: {
+                jenis_aktivitas: $('select[name=jenis_aktivitas_reward]').val(),
+                id_kelas: ''
+            },
+            success: function(response) {
+                $('#aktivitas_reward').html(response);
+            }
+        });
+    }
+
+    function filterAction(){
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}?jenis=' + $('select[name=jenis_aktivitas_reward]').val() + '&id_aktivitas_reward=' + $('select[name=aktivitas_reward]').val() + '&id_kelas=' + $('select[name=id_kelas]').val() + '&month=' + $('select[name=month]').val() + '&year=' + $('select[name=year]').val());
+    }
+</script>

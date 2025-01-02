@@ -40,6 +40,7 @@
                                 <label>File RPP *</label>
                                 <a href="{{ url('excel/ContohUploadRPP.xls') }}">Download template di sini</a>
                                 <input type="file" class="form-control show-tick" name="file" />
+                                <small style="color:red">Perhatian: nilai karakter yang diinput hanya bisa 4C (Komunikasi, Kolaborasi, Berpikir kritis, Kreatif)</small>
                             </div>
                         </div>
                         <div class="row clearfix">

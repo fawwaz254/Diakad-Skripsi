@@ -8,6 +8,15 @@
             </div>
             <div class="body">
                 <h4 class="title" style="color:red;">Inputan {{$date_input}}</h4>
+                @php
+                    $batas_pengisian = \Carbon\Carbon::now('Asia/Jakarta');
+                    $batas_pengisian->hour(15);
+                    $batas_pengisian->minute(0);
+                    $batas_pengisian->second(0);
+                @endphp
+                @if($jenis == 1 && \Carbon\Carbon::now('Asia/Jakarta')->lt($batas_pengisian))
+                <h4 style="color:red;">Kembali lagi setelah sholat ashar</h4>
+                @endif
                 @if(!$pengisian_kegiatan_harian)
                 <form id="form_input_aktivitas">
                     @csrf
@@ -27,7 +36,9 @@
                                 <tbody id="pertanyaan_aktivitas">
                                 </tbody>
                             </table>
+                            @if($jenis != 1 || \Carbon\Carbon::now('Asia/Jakarta')->gt($batas_pengisian))
                             <button type="submit" class="btn btn-primary">Simpan Jawaban</button>
+                            @endif
                         </div>
                     </div>
                 </form>
@@ -94,4 +105,41 @@
             });
         });
     });
+    
+    function onChecklist(el){
+        var id_aktivitas = $(el).attr('data-id');
+
+        if(id_aktivitas == '69'){ // Haid
+            if($(el).is(':checked')){
+                $('#checkbox-60').removeAttr('checked');
+                $('#checkbox-60').attr('disabled', true);
+                $('#checkbox-61').removeAttr('checked');
+                $('#checkbox-61').attr('disabled', true);
+                $('#checkbox-62').removeAttr('checked');
+                $('#checkbox-62').attr('disabled', true);
+                $('#checkbox-63').removeAttr('checked');
+                $('#checkbox-63').attr('disabled', true);
+                $('#checkbox-64').removeAttr('checked');
+                $('#checkbox-64').attr('disabled', true);
+                $('#checkbox-65').removeAttr('checked');
+                $('#checkbox-65').attr('disabled', true);
+            }else{
+                $('#checkbox-60').attr('disabled', false);
+                $('#checkbox-61').attr('disabled', false);
+                $('#checkbox-62').attr('disabled', false);
+                $('#checkbox-63').attr('disabled', false);
+                $('#checkbox-64').attr('disabled', false);
+                $('#checkbox-65').attr('disabled', false);
+            }
+        }
+
+        if(['60', '61', '62', '63', '64', '65'].includes(id_aktivitas)){ // Sholat
+            if($(el).is(':checked')){
+                $('#checkbox-69').removeAttr('checked');
+                $('#checkbox-69').attr('disabled', true);
+            }else{
+                $('#checkbox-69').attr('disabled', false);
+            }
+        }
+    }
 </script>

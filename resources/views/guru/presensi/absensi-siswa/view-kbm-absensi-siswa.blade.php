@@ -33,7 +33,18 @@
                                         <th>No</th>
                                         <th>NIS</th>
                                         <th>Kehadiran siswa</th>
-                                        <th>Nilai Karakter/Kegiatan</th>
+                                        <th>
+                                            Nilai Karakter
+                                            <br/>
+                                            <input id="checkbox_select_all_karakter" type="checkbox" name="select_all" checked class="filled-in" data-type="is-karakter">
+                                            <label for="checkbox_select_all_karakter" style="margin-bottom: -10px;"><small>Select all</small></label>
+                                        </th>
+                                        <th>
+                                            Kegiatan
+                                            <br/>
+                                            <input id="checkbox_select_all_kegiatan" type="checkbox" name="select_all" checked class="filled-in" data-type="is-kegiatan">
+                                            <label for="checkbox_select_all_kegiatan" style="margin-bottom: -10px;"><small>Select all</small></label>
+                                        </th>
                                     </tr>
                                 </thead>
                             </table>
@@ -205,8 +216,27 @@
                         var html = '';
                         var i = 0;
                         $.each(data.options, function(index, item) {
-                            html += `<span><input id="ck-${row.nis_siswa.id_siswa}-${i}" type="checkbox" name="id_karakter_siswa[${row.nis_siswa.id_siswa}][]" checked class="filled-in" value="${item}">
+                            html += `<span><input id="ck-${row.nis_siswa.id_siswa}-${i}" type="checkbox" name="id_karakter_siswa[${row.nis_siswa.id_siswa}][]" checked class="is-karakter filled-in" value="${item}">
                                         <label for="ck-${row.nis_siswa.id_siswa}-${i}">${item}</label></span><br/>`;
+                            i++;
+                        })
+                        return html;
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            {
+                data: 'reward_kegiatan',
+                searchable: false,
+                orderable: false,
+                render: function(data, type, row) {
+                    if (data.status_pengguna.status == 1) {
+                        var html = '';
+                        var i = 0;
+                        $.each(data.options, function(index, item) {
+                            html += `<span><input id="ars-${row.nis_siswa.id_siswa}-${i}" type="checkbox" name="aktivitas_reward[${row.nis_siswa.id_siswa}][]" checked class="is-kegiatan filled-in" value="${item}">
+                                        <label for="ars-${row.nis_siswa.id_siswa}-${i}">${item}</label></span><br/>`;
                             i++;
                         })
                         return html;
@@ -287,5 +317,15 @@
                 return;
             }
         );
+    });
+
+    $('input[name="select_all"]').change(function() {
+        var select_all_checked = this.checked;
+        var rows = primary_table.rows({
+            'search': 'applied'
+        }).nodes();
+
+        console.log($(this).attr('data-type'));
+        $('.' + $(this).attr('data-type'), rows).prop('checked', this.checked);
     });
 </script>
