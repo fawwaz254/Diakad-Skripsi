@@ -29,7 +29,8 @@
                 </div>
                 <div class="body" style="margin-top: 1rem">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -54,7 +55,8 @@
     var modul_url = 'kpi';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-kpi/datatables';
     var detail_url = role_url + '#' + modul_url + '/cetak-kpi/detail';
-    var saveTanggalCetakSemester_url = base_url + '/' + role_url + '/' + 'rapor-semester/cetak-rapor/save-tanggal-cetak-semester';
+    var saveTanggalCetakSemester_url = base_url + '/' + role_url + '/' +
+        'rapor-semester/cetak-rapor/save-tanggal-cetak-semester';
 
     $(document).ready(function() {
         var primary_table = $('#primary_table').DataTable({
@@ -70,7 +72,6 @@
                     searchable: false,
                     orderable: false
                 },
-
                 {
                     data: 'kelas.nm_kelas',
                     name: 'kelas.nm_kelas'
@@ -95,7 +96,6 @@
                             '</a> ';
                     }
                 }
-
             ]
         });
 
