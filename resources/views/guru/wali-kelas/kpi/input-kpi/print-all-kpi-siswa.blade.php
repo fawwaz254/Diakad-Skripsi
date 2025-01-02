@@ -36,7 +36,9 @@
         }
 
         .page {
-            width: 1200px;
+            /* width: 1200px; */
+            width: 210mm;
+            height: 329mm;
         }
 
         .body {
@@ -61,9 +63,8 @@
         @page {
             /* margin: 125mm 125mm 125mm 125mm;    */
             size: portrait;
-            size: auto;
+            size: 210mm 330mm;
             margin: 0mm;
-
         }
 
         @media print {
