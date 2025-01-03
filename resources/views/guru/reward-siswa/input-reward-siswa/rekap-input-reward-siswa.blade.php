@@ -121,7 +121,7 @@
                                 <td>{{$siswa->nis_siswa}}</td>
                                 <td>{{$siswa->nm_kelas}}</td>
                                 @foreach($dates as $d)
-                                @if($data_pengisian_kegiatan_harian->where('id_kegiatan_harian', 'reward-siswa-harian')->where('tgl_pengisian', $d->format('Y-m-d'))->first())
+                                @if($data_reward_siswa->where('id_siswa', $siswa->id_siswa)->where('created_at', '>=', $d)->where('created_at', '<=', $d->endOfDay())->first())
                                 <td style="background-color: #bffa85;"> 
                                     1x
                                 </td>
@@ -161,7 +161,7 @@
                                 <td>{{$siswa->nis_siswa}}</td>
                                 <td>{{$siswa->nm_kelas}}</td>
                                 @foreach($week_dates as $d)
-                                @if($data_pengisian_kegiatan_harian->where('id_kegiatan_harian', 'reward-siswa-mingguan')->whereBetween('tgl_pengisian', [$d['start']->format('Y-m-d'), $d['end']->format('Y-m-d')])->first())
+                                @if($data_reward_siswa->where('id_siswa', $siswa->id_siswa)->where('created_at', '>=', $d['start'])->where('created_at', '<=', $d['end'])->first())
                                 <td style="background-color: #bffa85;"> 
                                     1x
                                 </td>
@@ -195,7 +195,7 @@
                                 <td>{{$siswa->nm_pengguna}}</td>
                                 <td>{{$siswa->nis_siswa}}</td>
                                 <td>{{$siswa->nm_kelas}}</td>
-                                @if($data_pengisian_kegiatan_harian->where('id_kegiatan_harian', 'reward-siswa-bulanan')->first())
+                                @if($data_reward_siswa->where('id_siswa', $siswa->id_siswa)->first())
                                 <td style="background-color: #bffa85;"> 
                                     1x
                                 </td>

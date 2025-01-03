@@ -36,9 +36,7 @@
                                 <tbody id="pertanyaan_aktivitas">
                                 </tbody>
                             </table>
-                            @if($jenis != 1 || \Carbon\Carbon::now('Asia/Jakarta')->gt($batas_pengisian))
                             <button type="submit" class="btn btn-primary">Simpan Jawaban</button>
-                            @endif
                         </div>
                     </div>
                 </form>
