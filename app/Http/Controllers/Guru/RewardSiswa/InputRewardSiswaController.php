@@ -116,20 +116,19 @@ class InputRewardSiswaController extends BaseController
         }
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
-
-        $list_data = LibSiswa::fetchDataSiswa($auth_data, $data_kelas->first()->id_kelas);
-
         $data_jenis_aktivitas = JenisAktivitasReward::get();
-
+        
         if(!empty($input->jenis)){
+            $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
             $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->jenis)->get();
+            $data_reward_siswa = RewardSiswa::whereBetween('created_at', [$startOfMonth, $endOfMonth])->where('id_event', $input->id_aktivitas_reward)->get();
         }else{
             $data_aktivitas_reward = [];
+            $data_reward_siswa = [];
+            $list_data = [];
         }
 
-        $data_pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->whereBetween('tgl_pengisian', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])->get();
-
-        return view('guru/reward-siswa/input-reward-siswa/rekap-input-reward-siswa', compact('auth_data', 'dates', 'week_dates', 'data_pengisian_kegiatan_harian', 'data_jenis_aktivitas', 'data_aktivitas_reward', 'list_data', 'data_kelas', 'now'));
+        return view('guru/reward-siswa/input-reward-siswa/rekap-input-reward-siswa', compact('auth_data', 'dates', 'week_dates', 'data_reward_siswa', 'data_jenis_aktivitas', 'data_aktivitas_reward', 'list_data', 'data_kelas', 'now'));
     }
 
     public function actionViewInputRewardSiswa(Request $request)
