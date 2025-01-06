@@ -134,10 +134,10 @@
                 searchable: false,
                 orderable: false,
                 render: function(data, type, full, meta) {
-                    return `<input id="checkbox-${data.id}" 
-                            type="checkbox" 
-                            name="selected_ids[]" 
-                            class="filled-in" 
+                    return `<input id="checkbox-${data.id}"
+                            type="checkbox"
+                            name="selected_ids[]"
+                            class="filled-in"
                             value="${data.id}">
                             <label for="checkbox-${data.id}"></label>`;
                 }
@@ -331,7 +331,7 @@
                 $('input[type="checkbox"]:checked').each(function() {
                     selectedIds.push($(this).val());
                 });
-                if (selectedIds.length == 0) {
+                if (!selectedIds.length) {
                     swal({
                         title: 'Pilih lebih dari satu',
                     });
@@ -369,6 +369,8 @@
                                     $('button').removeAttr('disabled', 'disabled');
                                 }
                             });
+                        } else {
+                            selectedIds = [];
                         }
                     });
                 }
