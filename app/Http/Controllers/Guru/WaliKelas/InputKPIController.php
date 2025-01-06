@@ -221,56 +221,38 @@ class InputKPIController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $siswa = Siswa::where('id_siswa', $id_siswa)->with('kelas')->first();
-        $semester = Semester::find($id_semester);
+        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester->id_semester);
+        $kelas = Kelas::find($wali_kelas->id_kelas);
+        $list_siswa = Siswa::with('kelas')->where('id_kelas', $wali_kelas->id_kelas)->where('id_siswa', $id_siswa)
+            ->get();
+
         $kelompok_kpi = KelompokKPI::with([
-            'point_kpi' => function ($q) use ($siswa, $semester) {
-                return $q->where('id_semester', $semester->id_semester)->where('tingkat_kelas', $siswa->kelas->tingkat);
+            'point_kpi' => function ($q) use ($kelas, $semester) {
+                return $q->where('id_semester', $semester->id_semester)->where('tingkat_kelas', $kelas->tingkat);
             }
         ])->get();
 
+        $predikat_kpi = PredikatKPI::whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_kelas', $wali_kelas->id_kelas)->get();
+
         $point_mengaji = PointKPI::where('id_semester', $semester->id_semester)->whereNull('tingkat_kelas')->where('jenis', '3')->get();
-        $predikat_kpi = PredikatKPI::where('id_siswa', $id_siswa)->where('id_kelas', $siswa->id_kelas)->get();
 
-        $data = [];
-        $dataMengaji = [];
-        foreach ($kelompok_kpi as $unit_kelompok_kpi) {
-            foreach ($unit_kelompok_kpi->point_kpi as $point_kpi) {
-                if ($point_kpi->jenis == '1') {
-                    $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['nama'][] = $point_kpi->nm_point_kpi;
-                    $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['jenis'][] = 1;
-                    $unit_predikat_kpi = $predikat_kpi->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
+        foreach ($list_siswa as $siswa) {
+            $predikat = $predikat_kpi->where('id_siswa', $siswa->id_siswa);
+            $siswa->kelompok_kpi = $kelompok_kpi;
+            $siswa->predikat = $predikat;
 
-                    if ($unit_predikat_kpi && in_array($unit_predikat_kpi->predikat, ['A', 'B', 'C', 'D'])) {
-                        $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['predikat'][] = $unit_predikat_kpi->predikat;
-                        if (isset($data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'])) {
-                            $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] . ', <br>' . $point_kpi->deskripsi[$unit_predikat_kpi->predikat];
-                        } else {
-                            $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $point_kpi->deskripsi[$unit_predikat_kpi->predikat];
-                        }
-                    } else {
-                        $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['predikat'][] = 0;
-                        if (isset($data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'])) {
-                            $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] . ', ' . $point_kpi->deskripsi['D'];
-                        } else {
-                            $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $point_kpi->deskripsi['D'];
-                        }
-                    }
+            $dataMengaji = [];
+            foreach ($point_mengaji as $point_kpi) {
+                $unit_predikat_kpi = $predikat->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
+                if ($unit_predikat_kpi) {
+                    $dataMengaji[$point_kpi->nm_point_kpi] = $unit_predikat_kpi->predikat;
                 } else {
-                    $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['nama'][] = $point_kpi->nm_point_kpi;
-                    $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['predikat'][] = null;
-                    $data[$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['jenis'][] = 0;
+                    $dataMengaji[$point_kpi->nm_point_kpi] = "-";
                 }
             }
-        }
-
-        foreach ($point_mengaji as $point_kpi) {
-            $unit_predikat_kpi = $predikat_kpi->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
-            if ($unit_predikat_kpi) {
-                $dataMengaji[$point_kpi->nm_point_kpi] = $unit_predikat_kpi->predikat;
-            } else {
-                $dataMengaji[$point_kpi->nm_point_kpi] = "-";
-            }
+            $siswa->dataMengaji = $dataMengaji;
         }
 
         $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
@@ -280,7 +262,18 @@ class InputKPIController extends Controller
             $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
         }
 
-        return view('guru/wali-kelas/kpi/input-kpi/print-kpi-siswa', compact('auth_data', 'kelompok_kpi', 'siswa', 'data', 'semester', 'dataMengaji', 'tanggal_cetak'));
+        return view(
+            'guru/wali-kelas/kpi/input-kpi/print-all-kpi-siswa',
+            compact(
+                'auth_data',
+                'list_siswa',
+                'wali_kelas',
+                'semester',
+                'kelompok_kpi',
+                'point_mengaji',
+                'tanggal_cetak'
+            )
+        );
     }
 
     public function printAllKPI(Request $request)
@@ -321,42 +314,6 @@ class InputKPIController extends Controller
             }
             $siswa->dataMengaji = $dataMengaji;
         }
-
-        // foreach ($list_siswa as $siswa) {
-        //     $siswa->kelompok_kpi = $kelompok_kpi;
-        //     foreach ($siswa->kelompok_kpi as $unit_kelompok_kpi) {
-        //         foreach ($unit_kelompok_kpi->point_kpi as  $point_kpi) {
-        //             if ($point_kpi->jenis == '1') {
-        //                 $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['nama'][] = $point_kpi->nm_point_kpi;
-        //                 $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['jenis'][] = 1;
-
-        //                 $predikat_kpi =  $predikat_kpi->whereIn('id_point_kpi', $point_kpi->pluck('id_point_kpi'))->take(5);
-        //                 foreach ($predikat_kpi as $unit_predikat_kpi) {
-        //                     // dd($unit_predikat_kpi);
-        //                     if ($unit_predikat_kpi && in_array($unit_predikat_kpi->predikat, ['A', 'B', 'C', 'D'])) {
-        //                         $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['predikat'][] = $unit_predikat_kpi->predikat;
-        //                         if (isset($data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'])) {
-        //                             $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $data[$unit_predikat_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] . ', <br>' . $point_kpi->deskripsi[$unit_predikat_kpi->predikat];
-        //                         }
-        //                     } else {
-        //                         $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['predikat'][] = 0;
-        //                         if (isset($data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'])) {
-        //                             $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] = $data[$unit_predikat_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] . ', ' . $point_kpi->deskripsi['D'];
-        //                         } else {
-        //                             $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['deskripsi'] =  $point_kpi->deskripsi['D'];
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //             // dd($data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]);
-        //             else {
-        //                 $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['nama'][] = $point_kpi->nm_point_kpi;
-        //                 $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['predikat'][] = null;
-        //                 $data[$unit_kelompok_kpi->id_siswa][$unit_kelompok_kpi->id_kelompok_kpi][$point_kpi->urutan]['data']['jenis'][] = 0;
-        //             }
-        //         }
-        //     }
-        // }
 
         $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
         if (isset($tanggal)) {

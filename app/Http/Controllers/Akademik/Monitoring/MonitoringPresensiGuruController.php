@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\Pengguna;
 use App\Models\PresensiMp;
+use App\Models\Semester;
+use DB;
 
 class MonitoringPresensiGuruController extends Controller
 {
@@ -36,6 +38,25 @@ class MonitoringPresensiGuruController extends Controller
 
         $data_guru = LibGuru::fetchDataAllGuru($auth_data);
 
+        $semester_aktif = Semester::where('is_aktif_semester', 1)->first();
+
+        $data_jam_mengajar = DB::select("
+            select g.id_pengguna, sum(jjs.jam_ke - jjm.jam_ke + 1) total_jam_seminggu
+            from kelas_mp kmp
+            join pengampu_mp pmp on pmp.id_kelas_mp = kmp.id_kelas_mp and pmp.deleted_at is null
+            join guru g on g.id_guru = pmp.id_guru and g.deleted_at is null
+            join jadwal_kelas_mp jkmp on jkmp.id_kelas_mp = kmp.id_kelas_mp and jkmp.deleted_at is null
+            join jadwal_jam jjm on jjm.id_jadwal_jam = jkmp.id_jadwal_jam and jjm.deleted_at is null
+            join jadwal_jam jjs on jjs.id_jadwal_jam = jkmp.id_jadwal_jam_selesai and jjs.deleted_at is null
+
+            where kmp.deleted_at is null
+            and kmp.id_semester = '$semester_aktif->id_semester'
+
+            group by g.id_pengguna
+        ");
+
+        $data_jam_mengajar = collect($data_jam_mengajar);
+
         $data_presensi = PresensiMp::select('nm_pengguna', 'pengguna.id_pengguna', 'tgl_presensi')
             ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'presensi_mp.id_kelas_mp')
             ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', 'kelas_mp.id_kelas_mp')
@@ -48,7 +69,7 @@ class MonitoringPresensiGuruController extends Controller
             ->whereIn('pengguna.id_pengguna', $data_guru->pluck('id_pengguna'))
             ->get();
 
-        return view('akademik/monitoring/view-monitoring-presensi-guru', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'tahun', 'data_guru', 'data_presensi'));
+        return view('akademik/monitoring/view-monitoring-presensi-guru', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'tahun', 'data_guru', 'data_presensi', 'data_jam_mengajar'));
     }
 
 

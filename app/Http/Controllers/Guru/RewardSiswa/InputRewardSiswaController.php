@@ -58,6 +58,10 @@ class InputRewardSiswaController extends BaseController
             $jenis = 3;
 
             $date_input = 'bulan '.Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('MMMM');
+        }else if ($request->segment(3) == "input-reward-insidentil") {
+            $jenis = 4;
+
+            $date_input = 'tanggal '.Carbon::now('Asia/Jakarta')->isoFormat('D MMM Y');
         }
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
@@ -72,11 +76,12 @@ class InputRewardSiswaController extends BaseController
         $id_kelas = $request->input('id_kelas');
 
         $data_reward_siswa = RewardSiswa::where('id_kelas', $id_kelas)->whereDate('created_at', $date_now->format('Y-m-d'))->get();
-
-        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $id_jenis_aktivitas_reward)->where('is_aktif', 1)->where('is_guru', 1)->get();
+        $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $id_jenis_aktivitas_reward)->when(!empty($id_kelas), function($q){
+            $q->where('is_aktif', 1)->where('is_guru', 1);
+        })->get();
         $html = '<option value="" selected disabled>-- Pilih Aktivitas --</option>';
         foreach ($data_aktivitas_reward as $data) {
-            if($data_reward_siswa->firstWhere('id_event', $data->id_aktivitas_reward_siswa)){
+            if(!empty($id_kelas) && $data_reward_siswa->firstWhere('id_event', $data->id_aktivitas_reward_siswa)){
                 $html .= '<option value="' . $data->id_aktivitas_reward_siswa . '" disabled>' . $data->nm_aktivitas_reward_siswa . ' (Sudah diinput)</option>';
             }else{
                 $html .= '<option value="' . $data->id_aktivitas_reward_siswa . '">' . $data->nm_aktivitas_reward_siswa . '</option>';
@@ -96,7 +101,6 @@ class InputRewardSiswaController extends BaseController
 
         $startOfMonth = Carbon::now('Asia/Jakarta')->startOfMonth();
         $endOfMonth = Carbon::now('Asia/Jakarta')->endOfMonth();
-        $data_pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->whereBetween('tgl_pengisian', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])->get();
 
         $dates = CarbonPeriod::create($startOfMonth, $endOfMonth);
 
@@ -111,9 +115,20 @@ class InputRewardSiswaController extends BaseController
             $i = Carbon::parse($week['end'])->addDay();
         }
 
-        $list_data = LibSiswa::fetchDataSiswa($auth_data, Kelas::first()->id_kelas);
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_jenis_aktivitas = JenisAktivitasReward::get();
+        
+        if(!empty($input->jenis)){
+            $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
+            $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->jenis)->get();
+            $data_reward_siswa = RewardSiswa::whereBetween('created_at', [$startOfMonth, $endOfMonth])->where('id_event', $input->id_aktivitas_reward)->get();
+        }else{
+            $data_aktivitas_reward = [];
+            $data_reward_siswa = [];
+            $list_data = [];
+        }
 
-        return view('guru/reward-siswa/input-reward-siswa/rekap-input-reward-siswa', compact('auth_data', 'dates', 'week_dates', 'data_pengisian_kegiatan_harian', 'list_data', 'now'));
+        return view('guru/reward-siswa/input-reward-siswa/rekap-input-reward-siswa', compact('auth_data', 'dates', 'week_dates', 'data_reward_siswa', 'data_jenis_aktivitas', 'data_aktivitas_reward', 'list_data', 'data_kelas', 'now'));
     }
 
     public function actionViewInputRewardSiswa(Request $request)

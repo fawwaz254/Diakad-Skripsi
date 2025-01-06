@@ -121,6 +121,19 @@ class MapelRppController extends BaseController
 
                             $nilai_karater = '';
                             foreach(explode(',', $row_excel->karakter_yang_ditanamkan) as $kk){
+                                if (in_array(strtolower(rtrim(ltrim($kk))), [
+                                    'kolaborasi',
+                                    'berpikir kritis',
+                                    'kreatif',
+                                    'komunikasi'
+                                ])) {
+                                    
+                                }else{
+                                    return [
+                                        'status'    => 203, // GAGAL
+                                        'message'   => 'Terdapat karakter di luar Komunikasi, Kolaborasi, Berpikir kritis, Kreatif : '.strtolower($kk)
+                                    ];
+                                }
                                 $nilai_karater .= rtrim(ltrim($kk)).'#';
                             }
                             $mapel_rpp_detail->nilai_karakter   = rtrim($nilai_karater, '#');
