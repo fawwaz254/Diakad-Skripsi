@@ -136,9 +136,9 @@
                                             {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_mata_pelajaran'] }}
                                             ({{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }})
                                         </span><br>
-                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_depan'] }}
-                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}
-                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_belakang'] }}
+                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_depan'] ?? '' }}
+                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] ?? '' }}
+                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_belakang'] ?? '' }}
 
                                     </td>
                                     <td style="font-size:9px;background-color:white">
@@ -146,7 +146,7 @@
                                             <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna'] }}"
                                                 alt="img" height="50" />
                                         @else
-                                            <img src="https://ui-avatars.com/api/?size=100&name={{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}"
+                                            <img src="https://ui-avatars.com/api/?size=100&name={{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] ?? '' }}"
                                                 height="50" />
                                         @endif
                                     </td>
@@ -281,7 +281,9 @@
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">
-                                    {{ $guru->pengguna->gelar_depan }}{{ $guru->pengguna->nm_pengguna }}{{ $guru->pengguna->gelar_belakang }}
+                                    {{ $guru->pengguna->gelar_depan ?? '' }}
+                                    {{ $guru->pengguna->nm_pengguna ?? '' }}
+                                    {{ $guru->pengguna->gelar_belakang ?? '' }}
                                 </option>
                             @endforeach
                         </select>
@@ -374,7 +376,9 @@
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">
-                                    {{ $guru->pengguna->gelar_depan }}{{ $guru->pengguna->nm_pengguna }}{{ $guru->pengguna->gelar_belakang }}
+                                    {{ $guru->pengguna->gelar_depan ?? '' }}
+                                    {{ $guru->pengguna->nm_pengguna ?? '' }}
+                                    {{ $guru->pengguna->gelar_belakang ?? '' }}
                                 </option>
                             @endforeach
                         </select>
@@ -440,7 +444,7 @@
                             <option value="" selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
-                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
+                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna ?? '' }}
                                 </option>
                             @endforeach
 
@@ -455,7 +459,7 @@
                             <option value="" selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
-                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
+                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna ?? '' }}
                                 </option>
                             @endforeach
 
@@ -470,7 +474,7 @@
                             <option value="" selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
-                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
+                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna ?? '' }}
                                 </option>
                             @endforeach
 
