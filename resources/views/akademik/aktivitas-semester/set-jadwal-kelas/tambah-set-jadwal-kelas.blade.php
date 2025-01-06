@@ -281,7 +281,9 @@
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">
-                                    {{ $guru->pengguna->gelar_depan ?? '' }}{{ $guru->pengguna->nm_pengguna ?? '' }}{{ $guru->pengguna->gelar_belakang ?? '' }}
+                                    {{ $guru->pengguna->gelar_depan ?? '' }}
+                                    {{ $guru->pengguna->nm_pengguna ?? '' }}
+                                    {{ $guru->pengguna->gelar_belakang ?? '' }}
                                 </option>
                             @endforeach
                         </select>
@@ -374,7 +376,9 @@
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">
-                                    {{ $guru->pengguna->gelar_depan ?? '' }}{{ $guru->pengguna->nm_pengguna ?? '' }}{{ $guru->pengguna->gelar_belakang ?? '' }}
+                                    {{ $guru->pengguna->gelar_depan ?? '' }}
+                                    {{ $guru->pengguna->nm_pengguna ?? '' }}
+                                    {{ $guru->pengguna->gelar_belakang ?? '' }}
                                 </option>
                             @endforeach
                         </select>
