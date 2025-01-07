@@ -283,7 +283,7 @@ class HomeVisitController extends BaseController
                 ];
             } else if ($mode == 'checkapprove') {
                 $selectedIds = $input->selected_ids;
-                DB::transaction();
+                DB::beginTransaction();
                 try {
                     foreach ($selectedIds as $id_visit) {
                         $homeVisit = HomeVisit::where('id_home_visit', $id_visit);

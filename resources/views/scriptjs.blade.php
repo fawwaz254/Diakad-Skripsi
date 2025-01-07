@@ -49,7 +49,7 @@
                         primary_table.ajax.reload(null, false);
                     } else if (response.status == 300) {
                         vex.dialog.alert(response.message);
-                    } else {
+                    } else if (response.status == 404) {
                         vex.dialog.alert(response.message);
                     }
                 },

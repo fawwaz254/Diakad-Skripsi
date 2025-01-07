@@ -332,43 +332,49 @@
                     selectedIds.push($(this).val());
                 });
 
-                swal({
-                    title: 'Apakah Yakin Untuk Approve Home Visit?',
-                    showCancelButton: true
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            url: "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-home-visit/checkapprove') }}",
-                            type: "POST",
-                            data: {
-                                'selected_ids': selectedIds,
-                            },
-                            success: function(response) {
-                                if (response.status == 200) {
-                                    vex.dialog.alert(response.message);
-                                } else if (response.status == 201) {
-                                    vex.dialog.alert(response.message);
-                                    window.location.href = response.link;
-                                } else if (response.status == 202) {
-                                    vex.dialog.alert(response.message);
-                                    loadURI(response.path);
-                                } else if (response.status == 203) {
-                                    vex.dialog.alert(response.message);
-                                    primary_table_belum_lengkap.ajax.reload(null, false);
-                                } else if (response.status == 204) {
-                                    loadURI(response.path);
-                                } else if (response.status == 300) {
-                                    vex.dialog.alert(response.message);
+                if (!selectedIds.length) {
+                    swal({
+                        title: 'Pilih satu atau lebih siswa',
+                    })
+                } else {
+                    swal({
+                        title: 'Apakah Yakin Untuk Approve Home Visit?',
+                        showCancelButton: true
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                url: "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-home-visit/checkapprove') }}",
+                                type: "POST",
+                                data: {
+                                    'selected_ids': selectedIds,
+                                },
+                                success: function(response) {
+                                    if (response.status == 200) {
+                                        vex.dialog.alert(response.message);
+                                    } else if (response.status == 201) {
+                                        vex.dialog.alert(response.message);
+                                        window.location.href = response.link;
+                                    } else if (response.status == 202) {
+                                        vex.dialog.alert(response.message);
+                                        loadURI(response.path);
+                                    } else if (response.status == 203) {
+                                        vex.dialog.alert(response.message);
+                                        primary_table_belum_lengkap.ajax.reload(null, false);
+                                    } else if (response.status == 204) {
+                                        loadURI(response.path);
+                                    } else if (response.status == 300) {
+                                        vex.dialog.alert(response.message);
+                                    }
+                                },
+                                complete: function() {
+                                    $('button').removeAttr('disabled', 'disabled');
                                 }
-                            },
-                            complete: function() {
-                                $('button').removeAttr('disabled', 'disabled');
-                            }
-                        });
-                    } else {
-                        selectedIds = [];
-                    }
-                });
+                            });
+                        } else {
+                            selectedIds = [];
+                        }
+                    });
+                }
             }
         )
 </script>
