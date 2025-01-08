@@ -27,9 +27,10 @@ class RekapFormHarianController extends Controller
 
         return view('humas/form-builder/rekap-form-harian/view-list-rekap-form-harian', compact('auth_data'));
     }
+
     public function datatablesListRekapFormHarian(Request $request)
     {
-        $list_data = Form::with('role', 'jawaban_form');
+        $list_data = Form::with('role')->withCount('jawaban_form');
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
@@ -151,7 +152,8 @@ class RekapFormHarianController extends Controller
                                 }
 
                                 $data = array(
-                                    $data_opsi, $data_warna
+                                    $data_opsi,
+                                    $data_warna
                                 );
                             }
                             $dataJawaban[$j->created_by . $date] = $data;
