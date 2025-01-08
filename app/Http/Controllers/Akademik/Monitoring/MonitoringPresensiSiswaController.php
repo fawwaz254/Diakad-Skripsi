@@ -58,15 +58,15 @@ class MonitoringPresensiSiswaController extends Controller
         $dates = CarbonPeriod::create($start_month, $end_month);
 
         $bulan = Bulan::find($id_bulan);
-        $data_bulan = Bulan::orderBy('id_bulan')->get();
+        $data_bulan = Bulan::orderBy('id_bulan', 'ASC')->get();
 
         $data_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna')->get();
         $data_kelas = Kelas::where('is_aktif', '1')->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
 
-        $data_presensi = PresensiMp::with('presensi_mp_siswa')
-            ->whereHas('kelas_mp', function ($q) use ($id_kelas) {
-                $q->where('id_kelas', $id_kelas);
-            })
+        // with('presensi_mp_siswa')
+        $data_presensi = PresensiMp::whereHas('kelas_mp', function ($q) use ($id_kelas) {
+            $q->where('id_kelas', $id_kelas);
+        })
             ->whereMonth('tgl_presensi', $id_bulan)
             ->whereYear('tgl_presensi', $tahun)
             ->get();
@@ -85,4 +85,3 @@ class MonitoringPresensiSiswaController extends Controller
         return view('akademik/monitoring/view-monitoring-presensi-siswa-detail', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'tahun', 'data_siswa', 'data_kelas', 'data_array_presensi', 'id_kelas'));
     }
 }
-
