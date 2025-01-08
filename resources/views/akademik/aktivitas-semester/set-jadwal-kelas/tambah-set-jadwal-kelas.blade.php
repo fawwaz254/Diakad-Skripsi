@@ -557,7 +557,7 @@
         // });
 
         // untuk NON-AKTIFKAN set jadwal kelas //
-        var isJadwalTutup = true;
+        var isJadwalTutup = false;
 
         if (isJadwalTutup) {
             vex.dialog.alert('Set jadwal kelas sudah ditutup');
