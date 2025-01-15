@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers\Guru\RewardSiswa;
 
-use DB;
 use Session;
-
 use Carbon\Carbon;
 
 use App\Models\Kelas;
+
 use App\Models\Siswa;
 use Carbon\CarbonPeriod;
 use App\Models\WaliMurid;
 use App\Models\JawabanForm;
 use App\Models\RewardSiswa;
-
 use App\Libraries\LibGlobal;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Models\AktivitasRewardSiswa;
 use App\Models\JenisAktivitasReward;
@@ -119,28 +119,44 @@ class InputRewardSiswaController extends BaseController
         $data_jenis_aktivitas = JenisAktivitasReward::get();
 
         if (!empty($input->jenis)) {
+            $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
+            $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->jenis)->get();
+
+            // match pengganti if dan switch
+            $jenis_kegiatan = match ($input->jenis) {
+                '1' => 'reward-siswa-harian',
+                '2' => 'reward-siswa-mingguan',
+                '3' => 'reward-siswa-bulanan',
+                // default => [
+                //     'status' => 500, // FAILED 
+                //     'message' => 'Pilih jenis aktifitas',
+                //     'path' => "reward-siswa/rekap-input-reward-siswa?jenis=$input->jenis&id_aktivitas_reward=$input->id_aktifitas_reward&id_kelas=$input->id_kelas&month=$input->month&year=$input->year",
+                // ],
+            };
+
             if ($input->id_aktivitas_reward == '0') {
-                $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
-                $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->jenis)->get();
-                $data_reward_siswa = RewardSiswa::select('id_siswa', 'created_at')
-                    ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-                    ->get()
-                    ->mapWithKeys(function ($item) {
-                        return [
-                            $item->id_siswa . '_' . $item->created_at->format('Y-m-d') => $item
-                        ];
-                    });
+                // aktifitas input semua
+                $data_reward_siswa = DB::table('pengisian_kegiatan_harian')
+                    ->whereBetween('tgl_pengisian', [$startOfMonth, $endOfMonth])
+                    ->where('id_kegiatan_harian', $jenis_kegiatan)
+                    ->get();
             } else {
-                $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
-                $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->jenis)->get();
-                $data_reward_siswa = RewardSiswa::select('id_siswa', 'created_at')
-                    ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-                    ->where('id_event', $input->id_aktivitas_reward)->get()
-                    ->mapWithKeys(function ($item) {
-                        return [
-                            $item->id_siswa . '_' . $item->created_at->format('Y-m-d') => $item
-                        ];
-                    });
+                // aktifitas input berdasarkan id_event
+                $data_reward_siswa = DB::table('pengisian_kegiatan_harian')
+                    ->select(
+                        'pengisian_kegiatan_harian.id_pengguna_pengisi',
+                        'pengisian_kegiatan_harian.id_kegiatan_harian',
+                        'pengisian_kegiatan_harian.id_pengisian_kegiatan_harian',
+                        'pengisian_kegiatan_harian.tgl_pengisian',
+                        'pengisian_kegiatan_harian.created_by'
+                    )
+                    // join dengan mencari id_siswa tersebut
+                    // yaitu dengan id_pengguna_pengisi dan id_pengguna_reward_siswa
+                    ->join('reward_siswa', 'pengisian_kegiatan_harian.id_pengguna_pengisi', '=', 'reward_siswa.id_pengguna_reward_siswa')
+                    ->where('pengisian_kegiatan_harian.id_kegiatan_harian', $jenis_kegiatan)
+                    ->where('reward_siswa.id_event', $input->id_aktivitas_reward)
+                    ->whereBetween('pengisian_kegiatan_harian.tgl_pengisian', [$startOfMonth, $endOfMonth])
+                    ->get();
             }
         } else {
             $data_aktivitas_reward = [];
