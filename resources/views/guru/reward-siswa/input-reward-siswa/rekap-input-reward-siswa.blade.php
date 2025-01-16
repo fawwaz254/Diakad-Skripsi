@@ -276,6 +276,7 @@
         buttons: buttonConfigReward,
     })
 
+
     function changeJenis() {
         $.ajax({
             url: fetch_aktivitas_url,
