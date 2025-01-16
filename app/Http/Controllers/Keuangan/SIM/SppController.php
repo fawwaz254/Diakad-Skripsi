@@ -2,41 +2,41 @@
 
 namespace App\Http\Controllers\Keuangan\SIM;
 
-use App\Imports\DataImportExcel;
-use App\Libraries\Keuangan\LibCetakKeuangan;
-use App\Libraries\Keuangan\LibDataKeuangan;
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Libraries\Pendidikan\LibKelas;
-use App\Models\Biaya;
-use App\Models\BiayaSekolah;
-use App\Models\Bulan;
-use App\Models\DetailBiaya;
+use Excel;
+use Validator;
+use Carbon\Carbon;
 use App\Models\Guru;
-use App\Models\JenisDetailBiaya;
-use App\Models\Kelas;
-use App\Models\KelompokBiaya;
-use App\Models\KelompokBiayaInternal;
-use App\Models\PembayaranBiaya;
-use App\Models\PembayaranTunggakan;
 use App\Models\Rapb;
-use App\Models\Realisasi;
-use App\Models\Semester;
+use App\Models\Biaya;
+use App\Models\Bulan;
+use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Staff;
-use App\Models\SubkategoriRapb;
-use App\Models\TagihanBiaya;
-use App\Models\TunggakanAlumni;
-use App\Models\TutupBukuBulananBiaya;
-use App\Models\TutupBukuBulananKas;
-use App\Models\TutupBukuTahunanBiaya;
-use Carbon\Carbon;
+use App\Models\Semester;
 use Carbon\CarbonPeriod;
-use DB;
-use Excel;
+use App\Models\Realisasi;
+use App\Models\DetailBiaya;
+use App\Models\BiayaSekolah;
+use App\Models\TagihanBiaya;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-use Validator;
+use App\Models\KelompokBiaya;
+use App\Models\PembayaranBiaya;
+use App\Models\SubkategoriRapb;
+use App\Models\TunggakanAlumni;
+use App\Imports\DataImportExcel;
+use App\Models\JenisDetailBiaya;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
+use App\Models\PembayaranTunggakan;
+use App\Models\TutupBukuBulananKas;
+use App\Models\KelompokBiayaInternal;
+use App\Models\TutupBukuBulananBiaya;
+use App\Models\TutupBukuTahunanBiaya;
+use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Keuangan\LibDataKeuangan;
+use App\Libraries\Keuangan\LibCetakKeuangan;
+use App\Libraries\Pendidikan\LibDataAkademik;
+use Illuminate\Routing\Controller as BaseController;
 
 class SppController extends BaseController
 {
@@ -1097,8 +1097,6 @@ class SppController extends BaseController
             return $data;
         }
     }
-
-
 
     public function viewMenuPenerimaan(Request $request, $tahun_akademik_semester = null)
     {
@@ -2253,6 +2251,51 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/print-pembayaran-spp', compact('auth_data', 'pembayaran', 'terbilang'));
     }
 
+    public function printPembayaranAll(Request $request, $id_siswa)
+    {
+        $auth_data = $request->auth_data;
+
+        $startYear = Carbon::now()->startOfYear();
+        $endYear = Carbon::now()->endOfYear();
+
+        if (!$id_siswa) {
+            return abort(404);
+        } else {
+            $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna')
+                ->leftJoin('tagihan_biaya as tb', 'pembayaran_biaya.id_tagihan_biaya', '=', 'tb.id_tagihan_biaya')
+                ->leftJoin('detail_biaya as db', 'tb.id_detail_biaya', '=', 'db.id_detail_biaya')
+                ->leftJoin('biaya as b', 'db.id_biaya', '=', 'b.id_biaya')
+                ->select([
+                    'pembayaran_biaya.id_pembayaran_biaya',
+                    'pembayaran_biaya.id_tagihan_biaya',
+                    'pembayaran_biaya.id_staff_bayar',
+                    'pembayaran_biaya.besar_pembayaran',
+                    'pembayaran_biaya.tgl_pembayaran',
+                    'pembayaran_biaya.id_bank',
+                    'pembayaran_biaya.id_bank_via',
+                    'pembayaran_biaya.nomor_transaksi',
+                    'pembayaran_biaya.is_tarik',
+                    'pembayaran_biaya.created_at',
+                    'pembayaran_biaya.created_by',
+                    'db.id_bulan',
+                    'b.id_biaya',
+                    'b.nm_biaya',
+                    'tb.is_tagih'
+                ])
+                ->where('tb.id_siswa', $id_siswa)
+                ->whereBetween('pembayaran_biaya.tgl_pembayaran', [$startYear, $endYear])
+                ->get();
+            $totalPembayaran = $pembayaran->sum('besar_pembayaran');
+
+            $pembayaranByDate = $pembayaran->groupBy(function ($item) {
+                return $item->tgl_pembayaran->toDateString();
+            });
+        }
+
+        // dump($pembayaran, $id_siswa, $pembayaranByDate);
+        return view('keuangan/sim/spp/print-pembayaran-spp', compact('auth_data', 'pembayaran', 'pembayaranByDate', 'id_siswa'));
+    }
+
     public function getJumlahTunggakanPembayaran(Request $request)
     {
         $input = (object) $request->input();
@@ -2327,7 +2370,6 @@ class SppController extends BaseController
         return $data_tagihan_siswa_semester_lalu;
     }
 
-
     public function deleteDataTungakanTahunLalu(Request $request, $id)
     {
         $input = (object) $request->input();
@@ -2342,7 +2384,6 @@ class SppController extends BaseController
             return false;
         }
     }
-
 
     public function viewMenuUploadTunggakanAlumni(Request $request)
     {
@@ -2439,7 +2480,6 @@ class SppController extends BaseController
             'selisih' => $selisih,
         ];
     }
-
 
     public function tunggakanSudahDihapus(Request $request)
     {

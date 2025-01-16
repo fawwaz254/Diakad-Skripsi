@@ -151,9 +151,10 @@
                             </h2>
                             <select class="form-control show-tick" name="tahun_akademik_semester">
                                 @foreach ($data_semester as $semester)
-                                <option value="{{ $semester->thn_akademik_semester }}" @if ($semester->thn_akademik_semester == $tahun_akademik_semester) selected @endif>
-                                    {{ $semester->tahun_ajaran }}
-                                </option>
+                                    <option value="{{ $semester->thn_akademik_semester }}"
+                                        @if ($semester->thn_akademik_semester == $tahun_akademik_semester) selected @endif>
+                                        {{ $semester->tahun_ajaran }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -164,14 +165,16 @@
                             <select class="form-control show-tick" name="kelas">
                                 <option value="">Pilih kelas</option>
                                 @foreach ($data_kelas as $data)
-                                <option value="{{ $data->id_kelas }}" @if (!empty($id_kelas) && $id_kelas==$data->id_kelas) selected @endif>
-                                    {{ $data->nm_kelas }}
-                                </option>
+                                    <option value="{{ $data->id_kelas }}"
+                                        @if (!empty($id_kelas) && $id_kelas == $data->id_kelas) selected @endif>
+                                        {{ $data->nm_kelas }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Tahun Ajaran/kelas</span></button>
+                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i
+                                    class="material-icons">save</i><span>Ubah Tahun Ajaran/kelas</span></button>
                         </div>
                     </div>
                 </div>
@@ -184,19 +187,22 @@
                 </div>
                 <div class="body">
                     @php
-                    $now = Carbon\Carbon::now();
-                    $currentYear = $now->format('Y');
-                    $cutoff = new DateTime($now->format('Y') . '/07/31 23:59:59');
+                        $now = Carbon\Carbon::now();
+                        $currentYear = $now->format('Y');
+                        $cutoff = new DateTime($now->format('Y') . '/07/31 23:59:59');
 
-                    $ganjil = false;
-                    if ($now > $cutoff) {
-                    $ganjil = true;
-                    }
+                        $ganjil = false;
+                        if ($now > $cutoff) {
+                            $ganjil = true;
+                        }
                     @endphp
-                    <a href="/keuangan/utility/pembayaran-by-kelas/print/{{ $tahun_akademik_semester }}/{{ $id_kelas }}" target="_blank" class="btn btn-success">Print Pembayaran Siswa</a>
-                    <a href="/keuangan/utility/pembayaran-by-kelas/print/0/{{ $tahun_akademik_semester }}/{{ $id_kelas }}" target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Ini</a>
+                    <a href="/keuangan/utility/pembayaran-by-kelas/print/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
+                        target="_blank" class="btn btn-success">Print Pembayaran Siswa</a>
+                    <a href="/keuangan/utility/pembayaran-by-kelas/print/0/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
+                        target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Ini</a>
                     @if ($ganjil)
-                    <a href="/keuangan/utility/pembayaran-by-kelas/print/1/{{ $tahun_akademik_semester }}/{{ $id_kelas }}" target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Depan</a>
+                        <a href="/keuangan/utility/pembayaran-by-kelas/print/1/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
+                            target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Depan</a>
                     @endif
 
                     <h2 class="card-inside-title">
@@ -204,7 +210,8 @@
                     </h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <input type="text" class="datepicker form-control" name="tgl_pembayaran" value="{{ $date_filter }}">
+                            <input type="text" class="datepicker form-control" name="tgl_pembayaran"
+                                value="{{ $date_filter }}">
 
                         </div>
                     </div>
@@ -214,10 +221,12 @@
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="radio" name="action" id="lunas" class="filled-in with-gap" checked="" value="1">
+                                <input type="radio" name="action" id="lunas" class="filled-in with-gap"
+                                    checked="" value="1">
                                 <label for="lunas">Langsung Lunas</label>
 
-                                <input type="radio" name="action" id="cicilan" class="filled-in with-gap" value="2">
+                                <input type="radio" name="action" id="cicilan" class="filled-in with-gap"
+                                    value="2">
                                 <label for="cicilan" class="m-l-20">Cicilan</label>
                             </div>
                         </div>
@@ -227,187 +236,218 @@
                     <br>
 
                     <div class="table-responsive">
-                        <table class="table is-fixed table-bordered table-striped table-hover dataTable" id="primary_table">
+                        <table class="table is-fixed table-bordered table-striped table-hover dataTable"
+                            id="primary_table">
                             <thead>
                                 <tr>
                                     <th rowspan="2">No</th>
-                                    <th onclick="filterAction('nis')" style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="Urutkan berdasarkan nis" rowspan="2">
-                                        NIS&nbsp;<i class="small material-icons btn-sort-nis" style="color:darkgrey;display:inline;cursor:pointer;">sort
+                                    <th onclick="filterAction('nis')" style="cursor:pointer" data-toggle="tooltip"
+                                        data-placement="top" title="Urutkan berdasarkan nis" rowspan="2">
+                                        NIS&nbsp;<i class="small material-icons btn-sort-nis"
+                                            style="color:darkgrey;display:inline;cursor:pointer;">sort
                                         </i></th>
-                                    <th onclick="filterAction('nama')" style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="Urutkan berdasarkan nama" rowspan="2">
-                                        Nama&nbsp;<i class="small material-icons btn-sort-nama" style="color:darkgrey;display:inline;cursor:pointer;">sort
+                                    <th onclick="filterAction('nama')" style="cursor:pointer" data-toggle="tooltip"
+                                        data-placement="top" title="Urutkan berdasarkan nama" rowspan="2">
+                                        Nama&nbsp;<i class="small material-icons btn-sort-nama"
+                                            style="color:darkgrey;display:inline;cursor:pointer;">sort
                                         </i></th>
                                     @if (count($data_bulan_tagihan) > 0)
-                                    <th class="text-center" colspan="{{ count($data_bulan_tagihan) }}">
-                                        {{ $data_bulan_tagihan[0]->nm_biaya }}
-                                    </th>
+                                        <th class="text-center" colspan="{{ count($data_bulan_tagihan) }}">
+                                            {{ $data_bulan_tagihan[0]->nm_biaya }}
+                                        </th>
                                     @endif
                                     @if (count($data_ket_tagihan) > 0)
-                                    <th class="text-center" colspan="{{ count($data_ket_tagihan) }}">
-                                        {{ $data_ket_tagihan[0]->nm_biaya }}
-                                    </th>
+                                        <th class="text-center" colspan="{{ count($data_ket_tagihan) }}">
+                                            {{ $data_ket_tagihan[0]->nm_biaya }}
+                                        </th>
                                     @endif
                                 </tr>
                                 <tr>
                                     @foreach ($data_bulan_tagihan as $bulan)
-                                    @if (!empty($bulan->id_bulan))
-                                    @php
-                                    $groupedData = $data_tagihan
-                                    ->where('id_bulan', $bulan->id_bulan)
-                                    ->groupBy('id_siswa')
-                                    ->map(function ($item, $key) {
-                                    return [
-                                    'id_siswa' => $key,
-                                    'totalTagihan' => $item->count(),
-                                    ];
-                                    });
+                                        @if (!empty($bulan->id_bulan))
+                                            @php
+                                                $groupedData = $data_tagihan
+                                                    ->where('id_bulan', $bulan->id_bulan)
+                                                    ->groupBy('id_siswa')
+                                                    ->map(function ($item, $key) {
+                                                        return [
+                                                            'id_siswa' => $key,
+                                                            'totalTagihan' => $item->count(),
+                                                        ];
+                                                    });
 
-                                    $siswaWithMaxCount = $groupedData->max('totalTagihan');
+                                                $siswaWithMaxCount = $groupedData->max('totalTagihan');
 
-                                    if ($siswaWithMaxCount) {
-                                    $col_span = $siswaWithMaxCount;
-                                    } else {
-                                    $col_span = 1;
-                                    }
-                                    @endphp
-                                    <th class="tdbg-{{ $bulan->id_bulan }}" colspan="{{ $col_span }}" style="text-align: center">
-                                        {{ $bulan->nm_bulan }}
-                                    </th>
-                                    @else
-                                    <th class="tdbg">{{ $bulan->nm_biaya }}</th>
-                                    @endif
+                                                if ($siswaWithMaxCount) {
+                                                    $col_span = $siswaWithMaxCount;
+                                                } else {
+                                                    $col_span = 1;
+                                                }
+                                            @endphp
+                                            <th class="tdbg-{{ $bulan->id_bulan }}" colspan="{{ $col_span }}"
+                                                style="text-align: center">
+                                                {{ $bulan->nm_bulan }}
+                                            </th>
+                                        @else
+                                            <th class="tdbg">{{ $bulan->nm_biaya }}</th>
+                                        @endif
                                     @endforeach
                                     @foreach ($data_ket_tagihan as $ket)
-                                    <td class="tdbg-13" style="vertical-align: bottom;">
-                                        {{ $ket->keterangan }}
-                                    </td>
+                                        <td class="tdbg-13" style="vertical-align: bottom;">
+                                            {{ $ket->keterangan }}
+                                        </td>
                                     @endforeach
                                 </tr>
                             </thead>
                             @php
-                            $no = 1;
+                                $no = 1;
                             @endphp
                             <tbody>
                                 @foreach ($data_siswa as $siswa)
-                                @if ($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
-                                <tr>
-                                    @else
-                                <tr style="background-color: #ffc109;">
+                                    @if ($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
+                                        <tr>
+                                        @else
+                                        <tr style="background-color: #ffc109;">
                                     @endif
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $siswa->nis_siswa }}</td>
                                     <td>{{ $siswa->pengguna->nm_pengguna }}
                                         @if ($siswa->pengguna->status_pengguna->aktif_status_pengguna != 1)
-                                        <br>(Mutasi/Keluar)
+                                            <br>(Mutasi/Keluar)
                                         @endif
                                         <div id="tunggakan-{{ $siswa->id_siswa }}">
                                         </div>
+                                        <a target="_blank"
+                                            href="keuangan/sim/spp/print-pembayaran-all/{{ $siswa->id_siswa }}">
+                                            <b style="color: #4caf50;">Print <br> {{ $now->format('d/m') }}
+                                            </b>
+                                        </a>
                                     </td>
                                     @foreach ($data_bulan_tagihan as $bulan)
-                                    @php
-                                    $tagihan_bulanan = $data_tagihan
-                                    ->where('id_siswa', $siswa->id_siswa)
-                                    ->where('id_bulan', $bulan->id_bulan)
-                                    ->values();
-                                    @endphp
+                                        @php
+                                            $tagihan_bulanan = $data_tagihan
+                                                ->where('id_siswa', $siswa->id_siswa)
+                                                ->where('id_bulan', $bulan->id_bulan)
+                                                ->values();
+                                        @endphp
 
-                                    @if ($tagihan_bulanan->count() < $col_span) @for ($i=0; $i < $col_span - $tagihan_bulanan->count(); $i++)
-                                        <td></td>
-                                        @endfor
+                                        @if ($tagihan_bulanan->count() < $col_span)
+                                            @for ($i = 0; $i < $col_span - $tagihan_bulanan->count(); $i++)
+                                                <td></td>
+                                            @endfor
                                         @endif
 
                                         @foreach ($tagihan_bulanan as $tagihan)
-                                        @if (!empty($tagihan))
-                                        @if ($tagihan->is_tagih == 1)
-                                        @php
-                                        $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                                        @endphp
-                                        <td>
-                                            @if ($tagihan->is_request == 0)
-                                            <div @if (!empty($bulan->id_bulan)) class="bbg-{{ $bulan->id_bulan }}" @endif>
-                                                <button class="btn btn-block bg-black waves-effect" data-toggle="tooltip" data-html="true" title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $bulan->nm_bulan }}" data-placement="top" onclick="takeAction(this)" data-id="{{ $tagihan->id_tagihan_biaya }}" data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
-                                            </div>
+                                            @if (!empty($tagihan))
+                                                @if ($tagihan->is_tagih == 1)
+                                                    @php
+                                                        $tagihan_bulanan =
+                                                            $tagihan->besar_biaya +
+                                                            $tagihan->denda_biaya -
+                                                            $tagihan->besar_pembayaran;
+                                                    @endphp
+                                                    <td>
+                                                        @if ($tagihan->is_request == 0)
+                                                            <div
+                                                                @if (!empty($bulan->id_bulan)) class="bbg-{{ $bulan->id_bulan }}" @endif>
+                                                                <button class="btn btn-block bg-black waves-effect"
+                                                                    data-toggle="tooltip" data-html="true"
+                                                                    title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $bulan->nm_bulan }}"
+                                                                    data-placement="top" onclick="takeAction(this)"
+                                                                    data-id="{{ $tagihan->id_tagihan_biaya }}"
+                                                                    data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
+                                                            </div>
+                                                        @else
+                                                            Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
+                                                        @endif
+                                                    </td>
+                                                @elseif($tagihan->is_tagih == 0)
+                                                    <td
+                                                        class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}">
+                                                        <a target="_blank"
+                                                            href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b
+                                                                style="color: #4caf50;">Print
+                                                                {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
+                                                        @if ($tagihan->is_request == 0 && \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->updated_at)
+                                                            <br>
+                                                            <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
+                                                                onclick="deleteActionKhusus(this)"
+                                                                data-id="{{ $tagihan->id_tagihan_biaya }}">
+                                                                Batal
+                                                            </a>
+                                                        @endif
+                                                        @if ($tagihan->is_request == 1)
+                                                            <br> <b>Online</b>
+                                                        @endif
+                                                    </td>
+                                                @endif
                                             @else
-                                            Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
+                                                <td></td>
                                             @endif
-                                        </td>
-                                        @elseif($tagihan->is_tagih == 0)
-                                        <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}">
-                                            <a target="_blank" href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b style="color: #4caf50;">Print
-                                                    {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
-                                            @if (
-                                            $tagihan->is_request == 0 &&
-                                            \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->updated_at)
-                                                <br>
-                                                <a style="margin-top: 2px; color: #e91e63; cursor: pointer;" onclick="deleteActionKhusus(this)" data-id="{{ $tagihan->id_tagihan_biaya }}">
-                                                    Batal
-                                                </a>
-                                                @endif
-                                                @if ($tagihan->is_request == 1)
-                                                <br> <b>Online</b>
-                                                @endif
-                                        </td>
-                                        @endif
-                                        @else
-                                        <td></td>
-                                        @endif
                                         @endforeach
-                                        @endforeach
-                                        @if (!empty($data_tagihan_non_bulanan))
+                                    @endforeach
+                                    @if (!empty($data_tagihan_non_bulanan))
                                         @foreach ($data_ket_tagihan as $ket)
-                                        @php
-                                        $tagihan = $data_tagihan_non_bulanan
-                                        ->where('id_siswa', $siswa->id_siswa)
-                                        ->where('keterangan', $ket->keterangan)
-                                        // ->where('nm_biaya', $ket->nm_biaya)
-                                        ->first();
-                                        @endphp
-                                        @if (!empty($tagihan) > 0)
-                                        @if ($tagihan->is_tagih == 1)
-                                        @php
-                                        $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                                        @endphp
-                                        <td>
-                                            @if ($tagihan->is_request == 0)
-                                            <button class="btn btn-block bg-black waves-effect" data-toggle="tooltip" data-html="true" title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $ket->nm_biaya . ' || ' . $ket->keterangan }}" data-placement="top" onclick="takeAction(this)" data-id="{{ $tagihan->id_tagihan_biaya }}" data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
+                                            @php
+                                                $tagihan = $data_tagihan_non_bulanan
+                                                    ->where('id_siswa', $siswa->id_siswa)
+                                                    ->where('keterangan', $ket->keterangan)
+                                                    // ->where('nm_biaya', $ket->nm_biaya)
+                                                    ->first();
+                                            @endphp
+                                            @if (!empty($tagihan) > 0)
+                                                @if ($tagihan->is_tagih == 1)
+                                                    @php
+                                                        $tagihan_bulanan =
+                                                            $tagihan->besar_biaya +
+                                                            $tagihan->denda_biaya -
+                                                            $tagihan->besar_pembayaran;
+                                                    @endphp
+                                                    <td>
+                                                        @if ($tagihan->is_request == 0)
+                                                            <button class="btn btn-block bg-black waves-effect"
+                                                                data-toggle="tooltip" data-html="true"
+                                                                title="{{ $siswa->pengguna->nm_pengguna . ' || ' . $ket->nm_biaya . ' || ' . $ket->keterangan }}"
+                                                                data-placement="top" onclick="takeAction(this)"
+                                                                data-id="{{ $tagihan->id_tagihan_biaya }}"
+                                                                data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
+                                                        @else
+                                                            Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
+                                                        @endif
+                                                    </td>
+                                                @elseif($tagihan->is_tagih == 0)
+                                                    <td
+                                                        class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}">
+                                                        <a target="_blank"
+                                                            href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b
+                                                                style="color: #4caf50;">Print
+                                                                {{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b></a>
+                                                        @if ($tagihan->is_request == 0 && \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->tgl_pelunasan)
+                                                            <br>
+                                                            <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
+                                                                onclick="deleteActionKhusus(this)"
+                                                                data-id="{{ $tagihan->id_tagihan_biaya }}">
+                                                                Batal
+                                                            </a>
+                                                        @endif
+                                                        @if ($tagihan->is_request == 1)
+                                                            <br> <b>Online</b>
+                                                        @endif
+                                                    </td>
+                                                @endif
                                             @else
-                                            Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
+                                                <td></td>
                                             @endif
-                                        </td>
-                                        @elseif($tagihan->is_tagih == 0)
-                                        <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}">
-                                            <a target="_blank" href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b style="color: #4caf50;">Print
-                                                    {{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b></a>
-                                            @if ($tagihan->is_request == 0)
-                                            @if (
-                                            $tagihan->is_request == 0 &&
-                                            \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->tgl_pelunasan)
-                                                <br>
-                                                <a style="margin-top: 2px; color: #e91e63; cursor: pointer;" onclick="deleteActionKhusus(this)" data-id="{{ $tagihan->id_tagihan_biaya }}">
-                                                    Batal
-                                                </a>
-                                                @endif
-                                                @endif
-                                                @if ($tagihan->is_request == 1)
-                                                <br> <b>Online</b>
-                                                @endif
-                                        </td>
-                                        @endif
-                                        @else
-                                        <td></td>
-                                        @endif
                                         @endforeach
-                                        @endif
-
-
-                                </tr>
+                                    @endif
+                                    </tr>
                                 @endforeach
                                 <tr>
                                     <td colspan="3" align="center"><b>Total</b></td>
                                     @foreach ($data_bulan_tagihan as $bulan)
-                                    <th class="tdbg-{{ $bulan->id_bulan }}" style=" text-align: center;">
-                                        <div id="total_pembayaran-{{ $bulan->id_bulan }}"></div>
-                                    </th>
+                                        <th class="tdbg-{{ $bulan->id_bulan }}" style=" text-align: center;">
+                                            <div id="total_pembayaran-{{ $bulan->id_bulan }}"></div>
+                                        </th>
                                     @endforeach
                                     {{-- @foreach ($data_ket_tagihan as $ket)
                                         <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->keterangan }}
