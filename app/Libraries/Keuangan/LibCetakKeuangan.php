@@ -362,7 +362,7 @@ class LibCetakKeuangan
                                     $temp_data_pengembangan_pendidikan[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
                                 }
 
-                                if($x->subkategori_rapb->kode_subkategori_rapb == 'K.5.4'){
+                                if ($x->subkategori_rapb->kode_subkategori_rapb == 'K.5.4') {
                                     $total_bayar_pengembangan_pendidikan += $x->besar_biaya;
                                 }
                             } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
@@ -679,7 +679,7 @@ class LibCetakKeuangan
                             $temp_data_subkategori_rapb[$x->subkategori_rapb->kode_subkategori_rapb . ' ' . $x->subkategori_rapb->nm_subkategori_rapb][$x->nm_detail_biaya_internal] += $x->besar_biaya;
                         }
 
-                        if($x->subkategori_rapb->kode_subkategori_rapb == 'K.5.4'){
+                        if ($x->subkategori_rapb->kode_subkategori_rapb == 'K.5.4') {
                             $total_bayar_pengembangan_pendidikan += $x->besar_biaya;
                         }
                     } else if ($x->nm_detail_biaya_internal == 'SPP MURNI' || $x->nm_detail_biaya_internal == 'LAIN-LAIN') {
@@ -1649,7 +1649,21 @@ class LibCetakKeuangan
             $print_setting = session('setting_print_keuangan');
         }
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        if (empty(session('setting_print_keuangan2'))) {
+            $print_setting2 = 'semua';
+        } else {
+            $print_setting2 = session('setting_print_keuangan2');
+        }
+
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.bulan', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
+            ->whereHas('tagihan_biaya.detail_biaya', function ($query) use ($print_setting2) {
+                if ($print_setting2 == 'spp') {
+                    return $query->where('id_jenis_detail_biaya', '=', 4);
+                } elseif ($print_setting2 == 'lain') {
+                    return $query->where('id_jenis_detail_biaya', '!=', 4);
+                }
+            });
+
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
         }
