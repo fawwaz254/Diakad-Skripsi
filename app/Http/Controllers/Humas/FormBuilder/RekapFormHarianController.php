@@ -72,7 +72,6 @@ class RekapFormHarianController extends Controller
 
             $datas = [];
         } else if ($roles == '2') {
-
             $data_pengguna = Pengguna::has('guru')->whereHas('status_pengguna', function ($q) {
                 $q->where('aktif_status_pengguna', 1);
             })->orderBy('nm_pengguna')->get();
@@ -191,7 +190,6 @@ class RekapFormHarianController extends Controller
         return view('humas/form-builder/rekap-form-harian/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month',  'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan', 'nm_pertanyaan'));
     }
 
-
     public function getDetailJawaban(Request $request)
     {
         $input = (object) $request->input();
@@ -201,7 +199,6 @@ class RekapFormHarianController extends Controller
 
     public function viewHarianFormHarian(Request $request, $id_form, $date = null,  $id_kelas = null)
     {
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -209,7 +206,7 @@ class RekapFormHarianController extends Controller
         $list_pertanyaan = PertanyaanForm::where('id_form', $id_form)->orderBy('urutan', 'asc')->get();
 
         $roles = $form->id_role;
-        if ($date !== '0' || $date == null) {
+        if (!$date) {
             $date = Carbon::now()->format('Y-m-d');
         }
         if ($roles == '15') {
@@ -245,13 +242,10 @@ class RekapFormHarianController extends Controller
             ];
         }
 
-
         $jawaban_form = JawabanForm::with('detail_jawaban_form.pertanyaan_form')->where('id_form', $id_form)
             // ->whereMonth('created_at', $bulan)
             // ->whereYear('created_at', $tahun)
-            ->when($date !== '0', function ($q) use ($date) {
-                $q->whereDate('created_at', $date);
-            })
+            ->whereDate('created_at', $date)
             ->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))
             ->get();
 
