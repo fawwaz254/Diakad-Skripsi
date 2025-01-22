@@ -172,9 +172,11 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('input-pelanggaran', [InputPelanggaranController::class, 'viewInputPelanggaran']);
             Route::get('input-pelanggaran/datatables', [InputPelanggaranController::class, 'datatablesInputPelanggaran']);
             Route::get('input-pelanggaran/add', [InputPelanggaranController::class, 'addInputPelanggaran']);
+            Route::get('input-pelanggaran/multiple', [InputPelanggaranController::class, 'addInputPelanggaranMultiple']);
             Route::get('input-pelanggaran/edit/{id}', [InputPelanggaranController::class, 'editInputPelanggaran']);
 
             Route::post('action-input-pelanggaran/{mode}/{id}', [InputPelanggaranController::class, 'actionInputPelanggaran']);
+            Route::post('action-input-pelanggaran/add-multiple', [InputPelanggaranController::class, 'actionInputPelanggaranMultiple']);
 
             // MENU Tindakan Pelanggaran
             Route::get('tindakan-pelanggaran/datatables-belum-nonkbm', [TindakanPelanggaranController::class, 'datatablesBelumTindakanNonKBM']);
