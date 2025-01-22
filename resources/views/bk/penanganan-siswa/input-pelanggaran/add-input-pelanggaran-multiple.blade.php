@@ -15,9 +15,10 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-input-pelanggaran/add/' . $id_pelanggaran_siswa) }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-input-pelanggaran/add/' . $id_pelanggaran_siswa) }}"
+                        method="POST">
                         {{ csrf_field() }}
-                        @method('POST')
+                        {{-- @method('POST') --}}
                         @csrf
 
                         <div class="row clearfix">
@@ -26,7 +27,8 @@
                                 <select class="form-control show-tick" name="id_semester" required="">
                                     <option value="" disabled selected>-- Pilih Semester --</option>
                                     @foreach ($data_semester as $data)
-                                        <option value="{{ $data->id_semester }}" {{ $data->is_aktif_semester == 1 ? 'selected' : '' }}>
+                                        <option value="{{ $data->id_semester }}"
+                                            {{ $data->is_aktif_semester == 1 ? 'selected' : '' }}>
                                             {{ $data->tahun_ajaran }} {{ $data->nm_semester }}
                                             {{ $data->is_aktif_semester == 1 ? '(Aktif)' : '' }}
                                         </option>
@@ -124,8 +126,7 @@
                                     User Lain</b></small></h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea name="catatan_pelanggaran_khusus" id="editor1" class="editor1" rows="10"
-                                    cols="80"></textarea>
+                                <textarea name="catatan_pelanggaran_khusus" id="editor1" class="editor1" rows="10" cols="80"></textarea>
                             </div>
                         </div>
 
@@ -187,11 +188,14 @@
         $('#editor1').val(editorText);
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         var selectedStudents = [];
+        var selected_students = [];
+        // OPSI 2 dengan kelas
+        var selected_students_kelas = [];
 
-        $('#add-students').click(function () {
-            $('.select-item:checked').each(function () {
+        $('#add-students').click(function() {
+            $('.select-item:checked').each(function() {
                 var row = $(this).closest('tr');
                 var studentData = {
                     id: $(this).val(),
@@ -202,8 +206,12 @@
                     tahunMasuk: row.find('td:nth-child(6)').text()
                 };
 
-                if (!selectedStudents.some(student => student.nis === studentData.nis)) {
+                if (!selectedStudents.some(student => student.nis === studentData
+                        .nis)) {
                     selectedStudents.push(studentData);
+                    selected_students.push(studentData.id);
+                    // OPSI 2 dengan kelas
+                    selected_students_kelas.push(studentData.kelas);
                     updateSelectedStudentsTable();
                 }
             });
@@ -213,7 +221,7 @@
             var tbody = $('#selected-students-body');
             tbody.empty();
 
-            selectedStudents.forEach(function (student, index) {
+            selectedStudents.forEach(function(student, index) {
                 var row = `
                 <tr>
                     <td>${student.nis}</td>
@@ -229,7 +237,7 @@
                 tbody.append(row);
             });
 
-            $('.history-student').on('click', function () {
+            $('.history-student').on('click', function() {
                 var index = $(this).data('index');
                 var student = selectedStudents[index];
                 showHistoryModal(student);
@@ -244,58 +252,64 @@
             $('#modal_history_pelanggaran').modal('show');
         }
 
-        $(document).on('click', '.delete-student', function () {
+        $(document).on('click', '.delete-student', function() {
             var index = $(this).data('index');
             selectedStudents.splice(index, 1);
             updateSelectedStudentsTable();
         });
 
-        $('.select-all').change(function () {
+        $('.select-all').change(function() {
             $('.select-item').prop('checked', $(this).prop('checked'));
         });
 
-        $(document).on('change', '.select-item', function () {
-            $('.select-all').prop('checked', $('.select-item:checked').length === $('.select-item').length);
+        $(document).on('change', '.select-item', function() {
+            $('.select-all').prop('checked', $('.select-item:checked').length === $('.select-item')
+                .length);
         });
 
-        $('#form-validation').on('submit', function (event) {
+        $('#form-validation').on('submit', function(event) {
             event.preventDefault();
 
-            if (selectedStudents.length === 0) {
+            if (!selectedStudents.length) {
                 swal({
                     title: 'Pilih satu atau lebih siswa',
                 });
                 return;
             }
 
-            var formData = {
-                selected_students: selectedStudents,
-                // id_semester: $('select[name=id_semester]').val(),
-                id_subkategori_pelanggaran: $('select[name=id_subkategori_pelanggaran]').val(),
-                catatan_pelanggaran: $('input[name=catatan_pelanggaran]').val(),
-                catatan_pelanggaran_khusus: $('textarea[name=catatan_pelanggaran_khusus]').val(),
-                tgl_pelanggaran: $('input[name=tgl_pelanggaran]').val(),
-            };
+            var id_semester = $('select[name=id_semester]').val();
+            var id_subkategori_pelanggaran = $('select[name=id_subkategori_pelanggaran]').val();
+            var catatan_pelanggaran = $('input[name=catatan_pelanggaran]').val();
+            var catatan_pelanggaran_khusus = $('textarea[name=catatan_pelanggaran_khusus]').val();
+            var tgl_pelanggaran = $('input[name=tgl_pelanggaran]').val();
 
             swal({
                 title: 'Apakah Yakin Untuk Menyimpan Pelanggaran?',
                 showCancelButton: true
-            }, function (isConfirm) {
+            }, function(isConfirm) {
                 if (isConfirm) {
                     $.ajax({
-                        url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-input-pelanggaran/add-multiple') }}',
+                        url: "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-input-pelanggaran/add-multiple') }}",
                         type: 'POST',
-                        data: { 'selectedStudents': selectedStudents, 'formData': formData },
-                        success: function (response) {
+                        data: {
+                            selected_students,
+                            // OPSI 2 dengan kelas
+                            selected_students_kelas,
+                            id_semester,
+                            id_subkategori_pelanggaran,
+                            catatan_pelanggaran,
+                            catatan_pelanggaran_khusus,
+                            tgl_pelanggaran,
+                        },
+                        success: function(response) {
                             if (response.status == 202) {
                                 vex.dialog.alert(response.message);
                                 selectedStudents = [];
+                                selected_students = [];
                                 updateSelectedStudentsTable();
-                            } else {
-                                vex.dialog.alert(response.message);
                             }
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             var errors = xhr.responseJSON.errors;
                             var errorMessage = '';
                             for (var key in errors) {
@@ -303,12 +317,13 @@
                             }
                             vex.dialog.alert(errorMessage);
                         },
-                        complete: function () {
+                        complete: function() {
                             $('button').removeAttr('disabled', 'disabled');
                         }
                     });
                 } else {
                     selectedStudents = [];
+                    selected_students = [];
                 }
             });
         });
@@ -323,7 +338,7 @@
             data: {
                 siswa: $('select[name=id_siswa]').val()
             },
-            success: function (result) {
+            success: function(result) {
                 console.log(result);
                 // alert(result['siswa']);
 
@@ -342,7 +357,7 @@
                     '<td align="center">Jumlah</td>' +
                     '</tr>';
                 var jumlah = 0;
-                $.each(result['list_data'], function (key, item) {
+                $.each(result['list_data'], function(key, item) {
                     html += '<tr><td align="center">' + (key + 1) + '</td>';
                     html += '<td align="center">' + item['nm_subkategori_pelanggaran'] + '</td>';
                     html += '<td align="center">' + item['nm_kategori_pelanggaran'] + '</td>';
@@ -351,7 +366,8 @@
                     html += '<td align="center">' + item['jumlah_poin'] + '</td></tr>';
                     jumlah += item['jumlah_poin'];
                 });
-                html += '<tr><td colspan="5" align="center">Total</td><td align="center">' + jumlah + '</td></tr>'
+                html += '<tr><td colspan="5" align="center">Total</td><td align="center">' + jumlah +
+                    '</td></tr>'
                 html += '</table>';
 
                 $('#print').html(html);
@@ -366,17 +382,18 @@
             data: {
                 kelas: $('select[name=kelas]').val()
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $('select[name=id_siswa]').html('<option>Loading...</option>');
                 $('#table-body').html('<tr><td colspan="6">Loading...</td></tr>');
             },
-            success: function (result) {
+            success: function(result) {
                 $('select[name=id_siswa]').html('');
                 $('#table-body').html('');
 
                 var html = '<option value="">-- Pilih Siswa --</option>';
-                $.each(result, function (key, item) {
-                    html += `<option value="${item.id_siswa}">${item.nm_pengguna} (${item.nis_siswa})</option>`;
+                $.each(result, function(key, item) {
+                    html +=
+                        `<option value="${item.id_siswa}">${item.nm_pengguna} (${item.nis_siswa})</option>`;
 
                     var checkboxId = 'checkbox_' + item.id_siswa;
 
@@ -398,7 +415,7 @@
 
                 $('select[name=id_siswa]').html(html);
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 alert('Terjadi kesalahan saat memuat data. Silakan coba lagi.');
                 $('select[name=id_siswa]').html('<option value="">-- Pilih Siswa --</option>');
                 $('#table-body').html('<tr><td colspan="6">Data tidak tersedia.</td></tr>');
