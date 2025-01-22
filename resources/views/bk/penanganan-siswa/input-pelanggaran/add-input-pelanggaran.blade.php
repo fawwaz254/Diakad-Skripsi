@@ -1,8 +1,13 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
+        <h2 style="display: flex; justify-content: space-between">
+            <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#penanganan-siswa/tindakan-pelanggaran') }}"><i
-                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
+                    class="material-icons">backspace</i><span>Kembali</span></a>
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{url(Request::segment(1) . '#penanganan-siswa/input-pelanggaran/multiple')}}"><i
+                    class="material-icons">list_alt</i><span>Tambah Sekaligus</span></a>
+        </h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -20,15 +25,17 @@
                         <div class="row clearfix">
                             <div class="col-md-4">
                                 <label>Semester</label>
-                                <select class="form-control show-tick" name="id_semester"required="">
+                                <select class="form-control show-tick" name="id_semester" required="">
                                     <option value="" disabled selected>-- Pilih Semester --</option>
                                     @foreach ($data_semester as $data)
                                         @if ($data->is_aktif_semester == 1)
                                             <option value="{{ $data->id_semester }}" selected>{{ $data->tahun_ajaran }}
-                                                {{ $data->nm_semester }} (Aktif)</option>
+                                                {{ $data->nm_semester }} (Aktif)
+                                            </option>
                                         @else
                                             <option value="{{ $data->id_semester }}">{{ $data->tahun_ajaran }}
-                                                {{ $data->nm_semester }}</option>
+                                                {{ $data->nm_semester }}
+                                            </option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -76,7 +83,8 @@
                                             @foreach ($kategori->subkategori_pelanggaran as $data)
                                                 <option value="{{ $data->id_subkategori_pelanggaran }}">
                                                     {{ $kategori->tingkat_kategori_pelanggaran }}.{{ $data->tingkat_subkategori_pelanggaran }}
-                                                    {!! $data->nm_subkategori_pelanggaran !!}</option>
+                                                    {!! $data->nm_subkategori_pelanggaran !!}
+                                                </option>
                                             @endforeach
                                         </optgroup>
                                     @endforeach
@@ -97,7 +105,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea name="catatan_pelanggaran_khusus" id="editor1" class="editor1" rows="10" cols="80"></textarea>
+                                <textarea name="catatan_pelanggaran_khusus" id="editor1" class="editor1" rows="10"
+                                    cols="80"></textarea>
                             </div>
                         </div>
 
@@ -180,7 +189,7 @@
         $('#editor1').val(editorText);
     }
 
-    $(function() {
+    $(function () {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'DD MMMM YYYY HH:mm:00',
             //lang : 'id',
@@ -198,10 +207,10 @@
             data: {
                 kelas: $('select[name=kelas]').val()
             },
-            success: function(result) {
+            success: function (result) {
                 $('select[name=id_siswa]').html('');
                 var html = '<option value="">-- Pilih Siswa --</option>';
-                $.each(result, function(key, item) {
+                $.each(result, function (key, item) {
                     // html += '<option value="' + item.id_kelas + '/' + '' + item.id_siswa + '">  ' +
                     //     item.nm_pengguna + ' (' + item.nis_siswa + ')</option>'
                     html += '<option value="' + item.id_siswa + '">  ' +
@@ -220,7 +229,7 @@
             data: {
                 siswa: $('select[name=id_siswa]').val()
             },
-            success: function(result) {
+            success: function (result) {
                 // console.log();
                 // alert(result['siswa']);
 
@@ -239,7 +248,7 @@
                     '<td align="center" >Jumlah</td>' +
                     '</tr>';
                 var jumlah = 0;
-                $.each(result['list_data'], function(key, item) {
+                $.each(result['list_data'], function (key, item) {
                     html += '<tr><td align="center">' + (key + 1) + '</td>';
                     html += '<td align="center">' + item['nm_subkategori_pelanggaran'] + '</td>';
                     html += '<td align="center">' + item['nm_kategori_pelanggaran'] + '</td>';
@@ -259,11 +268,11 @@
     // function changeName(el){
     //     var nilai = $(el).val() ;
     //     $('#print').html('@foreach ($data_semester as $data)'+
-    //     '@if ($data->is_aktif_semester == 1)'+
-    //     // '<a href="#" data-toggle="modal" data-target="#myModal2" class=" bg-blue waves-effect  "><i class="material-icons">search</i><span>Lihat Histori</span></a>'+
-    //     // '<a href="#myModal2" class="btn bg-blue waves-effect  passingID2" data-bs-toggle="modal"><i class="material-icons">backspace</i><span>Kembali</span></a>'+
-    //     // '<a href="bimbingan-konseling/penanganan-siswa/jurnal-tindakan/print/{{ $data->id_semester }}/'+nilai+'" id="print" target="_blank">Histori Pelanggaran</a>'+
-    //     '@endif'+
+        //     '@if ($data->is_aktif_semester == 1)'+
+            //     // '<a href="#" data-toggle="modal" data-target="#myModal2" class=" bg-blue waves-effect  "><i class="material-icons">search</i><span>Lihat Histori</span></a>'+
+            //     // '<a href="#myModal2" class="btn bg-blue waves-effect  passingID2" data-bs-toggle="modal"><i class="material-icons">backspace</i><span>Kembali</span></a>'+
+            //     // '<a href="bimbingan-konseling/penanganan-siswa/jurnal-tindakan/print/{{ $data->id_semester }}/'+nilai+'" id="print" target="_blank">Histori Pelanggaran</a>'+
+        //     '@endif'+
     //     '@endforeach');
 
     // }
