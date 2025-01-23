@@ -14,9 +14,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-input-pelanggaran/add/' . $id_pelanggaran_siswa) }}"
-                        method="POST">
+                    <form id="form-validation" method="POST">
                         {{ csrf_field() }}
                         {{-- @method('POST') --}}
                         @csrf
@@ -27,8 +25,7 @@
                                 <select class="form-control show-tick" name="id_semester" required="">
                                     <option value="" disabled selected>-- Pilih Semester --</option>
                                     @foreach ($data_semester as $data)
-                                        <option value="{{ $data->id_semester }}"
-                                            {{ $data->is_aktif_semester == 1 ? 'selected' : '' }}>
+                                        <option value="{{ $data->id_semester }}" {{ $data->is_aktif_semester == 1 ? 'selected' : '' }}>
                                             {{ $data->tahun_ajaran }} {{ $data->nm_semester }}
                                             {{ $data->is_aktif_semester == 1 ? '(Aktif)' : '' }}
                                         </option>
@@ -44,14 +41,6 @@
                                     @foreach ($data_kelas as $data)
                                         <option value="{{ $data->id_kelas }}">{{ $data->nm_kelas }}</option>
                                     @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label>Nama Siswa</label>
-                                <select class="form-control show-tick" name="id_siswa" required
-                                    onchange="changeName(this)">
-                                    <option value="">-- Pilih Siswa --</option>
                                 </select>
                             </div>
                         </div>
@@ -126,7 +115,8 @@
                                     User Lain</b></small></h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea name="catatan_pelanggaran_khusus" id="editor1" class="editor1" rows="10" cols="80"></textarea>
+                                <textarea name="catatan_pelanggaran_khusus" id="editor1" class="editor1" rows="10"
+                                    cols="80"></textarea>
                             </div>
                         </div>
 
@@ -188,14 +178,14 @@
         $('#editor1').val(editorText);
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         var selectedStudents = [];
         var selected_students = [];
         // OPSI 2 dengan kelas
         var selected_students_kelas = [];
 
-        $('#add-students').click(function() {
-            $('.select-item:checked').each(function() {
+        $('#add-students').click(function () {
+            $('.select-item:checked').each(function () {
                 var row = $(this).closest('tr');
                 var studentData = {
                     id: $(this).val(),
@@ -207,7 +197,7 @@
                 };
 
                 if (!selectedStudents.some(student => student.nis === studentData
-                        .nis)) {
+                    .nis)) {
                     selectedStudents.push(studentData);
                     selected_students.push(studentData.id);
                     // OPSI 2 dengan kelas
@@ -221,7 +211,7 @@
             var tbody = $('#selected-students-body');
             tbody.empty();
 
-            selectedStudents.forEach(function(student, index) {
+            selectedStudents.forEach(function (student, index) {
                 var row = `
                 <tr>
                     <td>${student.nis}</td>
@@ -230,14 +220,13 @@
                     <td>${student.jenisKelamin}</td>
                     <td>${student.tahunMasuk}</td>
                     <td>
-                        <button type="button" class="btn btn-info btn-sm history-student" data-index="${index}">History</button>
                         <button class="btn btn-danger btn-sm delete-student" data-index="${index}">Delete</button>
                     </td>
                 </tr>`;
                 tbody.append(row);
             });
 
-            $('.history-student').on('click', function() {
+            $('.history-student').on('click', function () {
                 var index = $(this).data('index');
                 var student = selectedStudents[index];
                 showHistoryModal(student);
@@ -252,22 +241,24 @@
             $('#modal_history_pelanggaran').modal('show');
         }
 
-        $(document).on('click', '.delete-student', function() {
+        $(document).on('click', '.delete-student', function () {
             var index = $(this).data('index');
             selectedStudents.splice(index, 1);
+            selected_students.splice(index, 1);
+            selected_students_kelas.splice(index, 1);
             updateSelectedStudentsTable();
         });
 
-        $('.select-all').change(function() {
+        $('.select-all').change(function () {
             $('.select-item').prop('checked', $(this).prop('checked'));
         });
 
-        $(document).on('change', '.select-item', function() {
+        $(document).on('change', '.select-item', function () {
             $('.select-all').prop('checked', $('.select-item:checked').length === $('.select-item')
                 .length);
         });
 
-        $('#form-validation').on('submit', function(event) {
+        $('#form-validation').on('submit', function (event) {
             event.preventDefault();
 
             if (!selectedStudents.length) {
@@ -286,30 +277,39 @@
             swal({
                 title: 'Apakah Yakin Untuk Menyimpan Pelanggaran?',
                 showCancelButton: true
-            }, function(isConfirm) {
+            }, function (isConfirm) {
                 if (isConfirm) {
                     $.ajax({
-                        url: "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-input-pelanggaran/add-multiple') }}",
+                        url: "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-input-pelanggaran/multiple') }}",
                         type: 'POST',
                         data: {
                             selected_students,
-                            // OPSI 2 dengan kelas
-                            selected_students_kelas,
                             id_semester,
                             id_subkategori_pelanggaran,
                             catatan_pelanggaran,
                             catatan_pelanggaran_khusus,
                             tgl_pelanggaran,
                         },
-                        success: function(response) {
+                        success: function (response) {
+                            try {
+                                if (typeof response === 'string') {
+                                    response = JSON.parse(response);
+                                }
+                            } catch (e) {
+                                console.error('Error parsing JSON response:', e);
+                                vex.dialog.alert('Terjadi kesalahan saat memproses response dari server.');
+                                return;
+                            }
                             if (response.status == 202) {
                                 vex.dialog.alert(response.message);
                                 selectedStudents = [];
-                                selected_students = [];
                                 updateSelectedStudentsTable();
+                            } else {
+                                vex.dialog.alert(response.message);
                             }
                         },
-                        error: function(xhr) {
+
+                        error: function (xhr) {
                             var errors = xhr.responseJSON.errors;
                             var errorMessage = '';
                             for (var key in errors) {
@@ -317,15 +317,15 @@
                             }
                             vex.dialog.alert(errorMessage);
                         },
-                        complete: function() {
+                        complete: function () {
                             $('button').removeAttr('disabled', 'disabled');
                         }
                     });
                 } else {
                     selectedStudents = [];
-                    selected_students = [];
                 }
             });
+
         });
     });
 
@@ -338,7 +338,7 @@
             data: {
                 siswa: $('select[name=id_siswa]').val()
             },
-            success: function(result) {
+            success: function (result) {
                 console.log(result);
                 // alert(result['siswa']);
 
@@ -357,7 +357,7 @@
                     '<td align="center">Jumlah</td>' +
                     '</tr>';
                 var jumlah = 0;
-                $.each(result['list_data'], function(key, item) {
+                $.each(result['list_data'], function (key, item) {
                     html += '<tr><td align="center">' + (key + 1) + '</td>';
                     html += '<td align="center">' + item['nm_subkategori_pelanggaran'] + '</td>';
                     html += '<td align="center">' + item['nm_kategori_pelanggaran'] + '</td>';
@@ -382,21 +382,13 @@
             data: {
                 kelas: $('select[name=kelas]').val()
             },
-            beforeSend: function() {
-                $('select[name=id_siswa]').html('<option>Loading...</option>');
+            beforeSend: function () {
                 $('#table-body').html('<tr><td colspan="6">Loading...</td></tr>');
             },
-            success: function(result) {
-                $('select[name=id_siswa]').html('');
+            success: function (result) {
                 $('#table-body').html('');
-
-                var html = '<option value="">-- Pilih Siswa --</option>';
-                $.each(result, function(key, item) {
-                    html +=
-                        `<option value="${item.id_siswa}">${item.nm_pengguna} (${item.nis_siswa})</option>`;
-
+                result.forEach(function (item) {
                     var checkboxId = 'checkbox_' + item.id_siswa;
-
                     var row = `
                     <tr>
                         <td>
@@ -409,15 +401,11 @@
                         <td>${item.jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan'}</td>
                         <td>${item.thn_masuk_siswa}</td>
                     </tr>`;
-
                     $('#table-body').append(row);
                 });
-
-                $('select[name=id_siswa]').html(html);
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 alert('Terjadi kesalahan saat memuat data. Silakan coba lagi.');
-                $('select[name=id_siswa]').html('<option value="">-- Pilih Siswa --</option>');
                 $('#table-body').html('<tr><td colspan="6">Data tidak tersedia.</td></tr>');
             }
         });
