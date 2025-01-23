@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use Auth;
-
 use Session;
+
 use Validator;
 use Carbon\Carbon;
 use App\Models\Guru;
 use App\Models\Role;
 use App\Models\Kelas;
+use App\Models\Rapor;
 use App\Models\Siswa;
 use App\Models\Staff;
 use App\Models\Ekskul;
@@ -21,6 +21,7 @@ use App\Models\Sekolah;
 use App\Models\BukuAlat;
 use App\Models\Pengguna;
 use App\Models\Semester;
+use Carbon\CarbonPeriod;
 use App\Models\HomeVisit;
 use App\Models\Kerjasama;
 use App\Models\Kurikulum;
@@ -37,17 +38,18 @@ use App\Models\RaporSisipan;
 use App\Models\RuanganKelas;
 use App\Models\TagihanBiaya;
 use Illuminate\Http\Request;
+
 use App\Models\JadwalKelasMp;
-
 use App\Models\KegiatanSiswa;
-use App\Models\LowonganKerja;
 
+use App\Models\LowonganKerja;
 use App\Models\PrestasiSiswa;
 use App\Models\CalonSiswaBaru;
 use App\Models\JadwalKegiatan;
 use App\Models\PemasukanBiaya;
 use App\Models\PresensiEkskul;
 use App\Models\KomplainSarpras;
+use App\Models\LogSesiPengguna;
 use App\Models\PresensiMpSiswa;
 use App\Models\SekretarisKelas;
 use App\Models\PelanggaranSiswa;
@@ -57,20 +59,17 @@ use App\Models\PengeluaranBiaya;
 use App\Models\PesertaEkskulSet;
 use Yajra\Datatables\Datatables;
 use App\Models\LaporanKerjaHarian;
+use Illuminate\Support\Facades\DB;
+use App\Models\LogAktivitasPengguna;
 use App\Models\PresensiMpPelanggaran;
 use App\Models\LaporanKerjaHarianMGMP;
 use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\LogAktivitasPengguna;
-use App\Models\LogSesiPengguna;
-use App\Models\Rapor;
 use Illuminate\Routing\Controller as BaseController;
 
 class ReportController extends BaseController
 {
-
     public function viewAllDiakad()
     {
-
         $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
         $role = Role::whereNotIn('nm_role', ['Siswa', 'Wali Murid', 'Administrator', 'Dapodik', 'Alumni', 'Rapor & Buku Induk', 'Tenaga Pendidik'])->orderBy('nm_role', 'asc')->get();
         $sekolah = Sekolah::orderBy('id_sekolah')->first();
@@ -98,7 +97,6 @@ class ReportController extends BaseController
 
     public function printAllDiakad()
     {
-
         $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
         $role = Role::whereNotIn('nm_role', ['Siswa', 'Wali Murid', 'Administrator', 'Dapodik', 'Alumni', 'Rapor & Buku Induk', 'Tenaga Pendidik'])->orderBy('nm_role', 'asc')->get();
         $sekolah = Sekolah::orderBy('id_sekolah')->first();
@@ -138,7 +136,6 @@ class ReportController extends BaseController
 
     public function checkProgress($id_role)
     {
-
         $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
         $tahun_semester_aktif = $semester_aktif->thn_akademik_semester;
         $semester_aktif = $semester_aktif->id_semester;
@@ -519,11 +516,9 @@ class ReportController extends BaseController
         return response()->json($data);
     }
 
-
     // Repor Wali kelas
     public function viewReportWaliKelas(Request $request)
     {
-
         $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
         $wali_kelas = WaliKelas::with('guru.pengguna', 'kelas')
             ->where('is_aktif', 1)->whereHas('kelas', function ($query) {
@@ -590,7 +585,6 @@ class ReportController extends BaseController
 
     public function checkDataWaliKelas($id_kelas, $wali_kelass, $semua_siswas, $biodata_siswas, $pelanggaran_siswas, $kegiatan_siswas, $prestasi_siswas, $kegiatan_siswa_approves,  $prestasi_siswa_approves, $home_visits, $wali_murids)
     {
-
         $wali_kelas = $wali_kelass->where('id_kelas', $id_kelas)->first();
         $semua_siswa = $semua_siswas->where('id_kelas', $id_kelas)->count();
 
@@ -645,68 +639,194 @@ class ReportController extends BaseController
 
     public function viewReportGuru(Request $request)
     {
-        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
+        $input = (object) $request->input();
+
+        $validated = $request->validate([
+            'filter_value' => 'sometimes|integer|digits_between:1,10',
+            'filter_tanggal' => 'sometimes|integer: 7, 30, 365',
+        ]);
+
+        $filter_value = intval($validated['filter_value'] ?? 1);
+        $filter_tanggal = intval($validated['filter_tanggal'] ?? 1);
+
+        $chartData = [
+            'labels' => [],
+            'data' => []
+        ];
+
+        $semester_aktif = Semester::select('id_semester', 'nm_semester')->where('is_aktif_semester', 1)->first();
         $id_semester = $semester_aktif->id_semester;
-        $sekolah = Sekolah::orderBy('id_sekolah')->first();
-        $guru = Guru::with('pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
-            $query->where('nm_status_pengguna', '=', 'AKTIF');
-        })->get();
+        $sekolah = Sekolah::select('nm_singkat_sekolah')->orderBy('id_sekolah')->first();
 
+        $guru = DB::table('guru as g')
+            ->select(
+                'g.id_pengguna',
+                'g.nik_ptk',
+                'g.tgl_lahir',
+                'g.nm_ibu_kandung',
+                'g.alamat_jalan',
+                'g.npwp_ptk',
+                'g.nomor_hp',
+                'g.email',
+                'g.nomor_sk_penugasan',
+                'p.nm_pengguna',
+                'g.created_at',
+                'g.created_by',
+                'g.deleted_at',
+            )
+            ->join('pengguna as p', 'g.id_pengguna', '=', 'p.id_pengguna')
+            ->join('status_pengguna as sp', 'p.id_status_pengguna', '=', 'sp.id_status_pengguna')
+            ->where('sp.nm_status_pengguna', 'AKTIF')
+            ->whereNull('sp.deleted_at')
+            ->whereNull('p.deleted_at')
+            ->whereNull('g.deleted_at')
+            ->get();
 
-        $data = array();
+        $kegiatan_gurus = KegiatanGuru::select('id_kegiatan_guru', 'created_at', 'created_by', 'deleted_at')->get();
+        $prestasi_gurus = PrestasiGuru::select('id_prestasi_guru', 'created_at', 'created_by', 'deleted_at')->get();
 
-        $kegiatan_gurus = KegiatanGuru::get();
-        $prestasi_gurus = PrestasiGuru::get();
-        $arsip_dokumens = ArsipDokumen::get();
-        $rapor_sisipans = Rapor::where('id_semester', $id_semester)->where('nm_rapor', 'sisipan')->get();
-        $materi_ajars = MateriAjar::get();
-        $paket_soals = PaketSoal::get();
-        $presensi_mps = PresensiMp::whereHas('kelas_mp', function ($query) use ($id_semester) {
-            $query->where('id_semester', '=', $id_semester);
-        })->get();
-        $jurnal_harians = LaporanKerjaHarianMGMP::get();
-        $presensi_mp_siswa_pelanggarans = PresensiMpPelanggaran::get();
-        $pelanggaran_siswas = PelanggaranSiswa::get();
-        $komplain_sarpass = KomplainSarpras::get();
-        $laporan_kerja_harians = LaporanKerjaHarian::get();
+        $arsip_dokumens = ArsipDokumen::select('id_arsip_dokumen', 'created_at', 'created_by', 'deleted_at')->get();
 
+        $rapor_sisipans = DB::table('rapor')
+            ->select('id_rapor', 'id_semester', 'created_at', 'created_by', 'deleted_at')
+            ->where('id_semester', $id_semester)
+            ->where('nm_rapor', 'sisipan')
+            ->whereNull('deleted_at')
+            ->get();
+
+        $presensi_mps = DB::table('presensi_mp as pm')
+            ->select('pm.id_presensi_mp', 'pm.id_kelas_mp', 'pm.created_at', 'pm.created_by')
+            ->join('kelas_mp as km', 'pm.id_kelas_mp', '=', 'km.id_kelas_mp')
+            ->where('km.id_semester', $id_semester)
+            ->whereNull('pm.deleted_at')
+            ->whereNull('km.deleted_at')
+            ->get();
+
+        $materi_ajars = MateriAjar::select('id_materi_ajar', 'created_at', 'created_by', 'deleted_at')->get();
+        $paket_soals = PaketSoal::select('id_paket_soal', 'created_at', 'created_by', 'deleted_at')->get();
+        $jurnal_harians = DB::table('laporan_kerja_harian_mgmp')
+            ->select('id_laporan_kerja_harian_mgmp', 'created_at', 'created_by', 'deleted_at')->whereNull('deleted_at')->get();
+
+        $presensi_mp_siswa_pelanggarans = PresensiMpPelanggaran::select('id_presensi_mp_pelanggaran', 'created_at', 'created_by', 'deleted_at')->get();
+        $pelanggaran_siswas = DB::table('pelanggaran_siswa')->select('id_pelanggaran_siswa', 'created_at', 'created_by', 'deleted_at')->whereNull('deleted_at')->get();
+
+        $komplain_sarpass = KomplainSarpras::select('id_komplain_sarpras', 'created_at', 'created_by', 'deleted_at')->get();
+        $laporan_kerja_harians = LaporanKerjaHarian::select('id_laporan_kerja_harian', 'created_at', 'created_by', 'deleted_at')->get();
 
         foreach ($guru as $key => $g) {
-            $data[$key]['id_pengguna'] = $g->id_pengguna;
-            $data[$key]['nama'] = $g->pengguna->nm_pengguna;
-            $data[$key]['data'][1] = 'Biodata';
-            $data[$key]['data'][2] = 'Kesekretariatan';
-            $data[$key]['data'][3] = 'Rapor Sisipan';
-            $data[$key]['data'][4] = 'E-Learning Materi';
-            $data[$key]['data'][5] = 'E-Learning Soal';
-            $data[$key]['data'][6] = 'Presensi';
-            $data[$key]['data'][7] = 'Jurnal harian';
-            $data[$key]['data'][8] = 'Pelanggaran Siswa';
-            $data[$key]['data'][9] = 'Sarana Prasarana';
-            $data[$key]['data'][10] = 'Laporan';
+            $week = null;
+            $month = null;
+            $year = null;
 
-            $temp = $this->checkDataGuru($g, $g->id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians);
+            $chartData['labels'][] = $g->nm_pengguna;
+
+            if ($filter_value == 3 || $filter_value == 6) {
+                // Rapor sisipan dan presensi berdasarkan satu semester
+                switch ($filter_tanggal) {
+                    case 30:
+                        $month = 6;
+                        break;
+                }
+            } else {
+                switch ($filter_tanggal) {
+                    case 7:
+                        $week = 1;
+                        break;
+                    case 30:
+                        $month = 1;
+                        break;
+                    case 365:
+                        $year = 1;
+                        break;
+
+                    default:
+                        $week = null;
+                        $month = null;
+                        $year = null;
+                        break;
+                }
+            }
+
+            $temp = $this->checkDataGuru($g, $g->id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians, $week, $month, $year);
+
             $temp = $temp->original;
-            $data[$key]['status'][1] = $temp['status'][1];
-            $data[$key]['status'][2] = $temp['status'][2];
-            $data[$key]['status'][3] = $temp['status'][3];
-            $data[$key]['status'][4] = $temp['status'][4];
-            $data[$key]['status'][5] = $temp['status'][5];
-            $data[$key]['status'][6] = $temp['status'][6];
-            $data[$key]['status'][7] = $temp['status'][7];
-            $data[$key]['status'][8] = $temp['status'][8];
-            $data[$key]['status'][9] = $temp['status'][9];
-            $data[$key]['status'][10] = $temp['status'][10];
-            $data[$key]['progres'] = $temp['progres'];
+            $chartData['data'][] = $temp['status'][$filter_value];
         }
 
+        array_multisort($chartData['data'], SORT_DESC, $chartData['labels']);
 
-        return view('reporting-dashboard.guru', compact('data', 'semester_aktif', 'sekolah'));
+        return view('reporting-dashboard.testing', compact('semester_aktif', 'sekolah', 'chartData', 'filter_value', 'filter_tanggal'));
     }
 
-    public function checkDataGuru($guru, $id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens,  $rapor_sisipans,  $materi_ajars, $paket_soals, $presensi_mps,  $jurnal_harians, $presensi_mp_siswa_pelanggarans,  $pelanggaran_siswas, $komplain_sarpass,  $laporan_kerja_harians)
+    public function filterDataByDate($datas, $filter_tanggal, $id_guru, $month = null, $year = null, $semester_aktif = null)
     {
+        switch ($filter_tanggal) {
+            case 7:
+                return $this->countDataBetweenWeek($id_guru, $datas);
+            case 30:
+                return $this->countDataBetweenMonth($datas, $id_guru, $month, $semester_aktif);
+            case 365:
+                return $this->countDataBetweenYear($datas, $id_guru, $year);
+            default:
+                return $this->countDataCreatedBy($datas, $id_guru);
+        }
+    }
 
+    public function countDataCreatedBy($collection, $id_pengguna)
+    {
+        return $collection
+            ->where('created_by', $id_pengguna)
+            ->count();
+    }
+
+    public function countDataBetweenWeek($collection, $id_pengguna)
+    {
+        $startWeek = Carbon::now('Asia/Jakarta')->subWeek()->endOfDay();
+        $endWeek = Carbon::now('Asia/Jakarta')->startOfDay();
+        return $collection
+            ->where('created_by', $id_pengguna)
+            ->whereBetween('created_at', [$startWeek, $endWeek])
+            ->count();
+    }
+
+    public function countDataBetweenMonth($month, $collection, $id_pengguna, $semester_aktif)
+    {
+        $startMonth = Carbon::now('Asia/Jakarta')->subMonth($month)->endOfDay();
+        $endMonth = Carbon::now('Asia/Jakarta')->startOfDay();
+        if (!$semester_aktif) {
+            return $collection
+                ->where('created_by', $id_pengguna)
+                ->whereBetween('created_at', [$startMonth, $endMonth])
+                ->count();
+        } else {
+            if ($semester_aktif->nm_semester == 'Ganjil') {
+                return $collection
+                    ->where('created_by', $id_pengguna)
+                    ->whereMonth('created_at', '>=', 7)
+                    ->count();
+            } else {
+                // Genap
+                return $collection
+                    ->where('created_by', $id_pengguna)
+                    ->whereMonth('created_at', '<=', 6)
+                    ->count();
+            }
+        }
+    }
+
+    public function countDataBetweenYear($year, $collection, $id_pengguna)
+    {
+        $startYear = Carbon::now('Asia/Jakarta')->subYear($year)->endOfDay();
+        $endYear = Carbon::now('Asia/Jakarta')->startOfDay();
+
+        return $collection
+            ->where('created_by', $id_pengguna)
+            ->whereBetween('created_at', [$startYear, $endYear])
+            ->count();
+    }
+
+    public function checkDataGuru($guru, $id_pengguna,  $kegiatan_gurus, $prestasi_gurus,  $arsip_dokumens = null,  $rapor_sisipans = null,  $materi_ajars = null, $paket_soals = null, $presensi_mps = null,  $jurnal_harians = null, $presensi_mp_siswa_pelanggarans = null,  $pelanggaran_siswas = null, $komplain_sarpass = null,  $laporan_kerja_harians = null, $week = null, $month = null, $year = null, $semester_aktif = null)
+    {
         $nilai_biodata = 0;
         $nilai_biodata += ($guru->nik_ptk) ? 1 : 0;
         $nilai_biodata += ($guru->tgl_lahir) ? 1 : 0;
@@ -716,19 +836,64 @@ class ReportController extends BaseController
         $nilai_biodata += ($guru->nomor_hp) ? 1 : 0;
         $nilai_biodata += ($guru->email) ? 1 : 0;
         $nilai_biodata += ($guru->nomor_sk_penugasan) ? 1 : 0;
-        $nilai_biodata += ($kegiatan_gurus->where('created_by', $id_pengguna)->count() != 0) ? 1 : 0;
-        $nilai_biodata += ($prestasi_gurus->where('created_by', $id_pengguna)->count() != 0) ? 1 : 0;
 
-        $arsip_dokumen = $arsip_dokumens->where('created_by', $id_pengguna)->count();
-        $rapor_sisipan = $rapor_sisipans->where('created_by', $id_pengguna)->count();
-        $materi_ajar =  $materi_ajars->where('created_by', $id_pengguna)->count();
-        $paket_soal = $paket_soals->where('created_by', $id_pengguna)->count();
-        $presensi_mp =  $presensi_mps->where('created_by', $id_pengguna)->count();
-        $jurnal_harian = $jurnal_harians->where('created_by', $id_pengguna)->count();
-        $presensi_mp_siswa_pelanggaran =  $presensi_mp_siswa_pelanggarans->where('created_by', $id_pengguna)->count();
-        $pelanggaran_siswa =  $pelanggaran_siswas->where('created_by', $id_pengguna)->count();
-        $komplain_sarpas = $komplain_sarpass->where('created_by', $id_pengguna)->count();
-        $laporan_kerja_harian = $laporan_kerja_harians->where('created_by', $id_pengguna)->count();
+        if ($week) {
+            $nilai_biodata += $this->countDataBetweenWeek($kegiatan_gurus, $id_pengguna) ? 1 : 0;
+            $nilai_biodata += $this->countDataBetweenWeek($prestasi_gurus, $id_pengguna) ? 1 : 0;
+
+            $arsip_dokumen = $this->countDataBetweenWeek($arsip_dokumens, $id_pengguna);
+            $rapor_sisipan = $this->countDataBetweenWeek($rapor_sisipans, $id_pengguna);
+            $materi_ajar = $this->countDataBetweenWeek($materi_ajars, $id_pengguna);
+            $paket_soal = $this->countDataBetweenWeek($paket_soals, $id_pengguna);
+            $presensi_mp = $this->countDataBetweenWeek($presensi_mps, $id_pengguna);
+            $jurnal_harian = $this->countDataBetweenWeek($jurnal_harians, $id_pengguna);
+            $presensi_mp_siswa_pelanggaran = $this->countDataBetweenWeek($presensi_mp_siswa_pelanggarans, $id_pengguna);
+            $pelanggaran_siswa = $this->countDataBetweenWeek($pelanggaran_siswas, $id_pengguna);
+            $komplain_sarpas = $this->countDataBetweenWeek($komplain_sarpass, $id_pengguna);
+            $laporan_kerja_harian = $this->countDataBetweenWeek($laporan_kerja_harians, $id_pengguna);
+        } elseif ($month) {
+            $nilai_biodata += $this->countDataBetweenMonth($month, $kegiatan_gurus, $id_pengguna, $semester_aktif) ? 1 : 0;
+            $nilai_biodata += $this->countDataBetweenMonth($month, $prestasi_gurus, $id_pengguna, $semester_aktif) ? 1 : 0;
+
+            $arsip_dokumen = $this->countDataBetweenMonth($month, $arsip_dokumens, $id_pengguna, $semester_aktif);
+            $rapor_sisipan = $this->countDataBetweenMonth($month, $rapor_sisipans, $id_pengguna, $semester_aktif);
+            $materi_ajar = $this->countDataBetweenMonth($month, $materi_ajars, $id_pengguna, $semester_aktif);
+            $paket_soal = $this->countDataBetweenMonth($month, $paket_soals, $id_pengguna, $semester_aktif);
+            $presensi_mp = $this->countDataBetweenMonth($month, $presensi_mps, $id_pengguna, $semester_aktif);
+            $jurnal_harian = $this->countDataBetweenMonth($month, $jurnal_harians, $id_pengguna, $semester_aktif);
+            $presensi_mp_siswa_pelanggaran = $this->countDataBetweenMonth($month, $presensi_mp_siswa_pelanggarans, $id_pengguna, $semester_aktif);
+            $pelanggaran_siswa = $this->countDataBetweenMonth($month, $pelanggaran_siswas, $id_pengguna, $semester_aktif);
+            $komplain_sarpas = $this->countDataBetweenMonth($month, $komplain_sarpass, $id_pengguna, $semester_aktif);
+            $laporan_kerja_harian = $this->countDataBetweenMonth($month, $laporan_kerja_harians, $id_pengguna, $semester_aktif);
+        } elseif ($year) {
+            $nilai_biodata += $this->countDataBetweenYear($year, $kegiatan_gurus, $id_pengguna) ? 1 : 0;
+            $nilai_biodata += $this->countDataBetweenYear($year, $prestasi_gurus, $id_pengguna) ? 1 : 0;
+
+            $arsip_dokumen = $this->countDataBetweenYear($year, $arsip_dokumens, $id_pengguna);
+            $rapor_sisipan = $this->countDataBetweenYear($year, $rapor_sisipans, $id_pengguna);
+            $materi_ajar = $this->countDataBetweenYear($year, $materi_ajars, $id_pengguna);
+            $paket_soal = $this->countDataBetweenYear($year, $paket_soals, $id_pengguna);
+            $presensi_mp = $this->countDataBetweenYear($year, $presensi_mps, $id_pengguna);
+            $jurnal_harian = $this->countDataBetweenYear($year, $jurnal_harians, $id_pengguna);
+            $presensi_mp_siswa_pelanggaran = $this->countDataBetweenYear($year, $presensi_mp_siswa_pelanggarans, $id_pengguna);
+            $pelanggaran_siswa = $this->countDataBetweenYear($year, $pelanggaran_siswas, $id_pengguna);
+            $komplain_sarpas = $this->countDataBetweenYear($year, $komplain_sarpass, $id_pengguna);
+            $laporan_kerja_harian = $this->countDataBetweenYear($year, $laporan_kerja_harians, $id_pengguna);
+        } else {
+            $nilai_biodata += $this->countDataCreatedBy($kegiatan_gurus, $id_pengguna) ? 1 : 0;
+            $nilai_biodata += $this->countDataCreatedBy($prestasi_gurus, $id_pengguna) ? 1 : 0;
+
+            $arsip_dokumen = $this->countDataCreatedBy($arsip_dokumens, $id_pengguna);
+            $rapor_sisipan = $this->countDataCreatedBy($rapor_sisipans, $id_pengguna);
+            $materi_ajar =  $this->countDataCreatedBy($materi_ajars, $id_pengguna);
+            $paket_soal = $this->countDataCreatedBy($paket_soals, $id_pengguna);
+            $presensi_mp =  $this->countDataCreatedBy($presensi_mps, $id_pengguna);
+            $jurnal_harian = $this->countDataCreatedBy($jurnal_harians, $id_pengguna);
+            $presensi_mp_siswa_pelanggaran =  $this->countDataCreatedBy($presensi_mp_siswa_pelanggarans, $id_pengguna);
+            $pelanggaran_siswa =  $this->countDataCreatedBy($pelanggaran_siswas, $id_pengguna);
+            $komplain_sarpas = $this->countDataCreatedBy($komplain_sarpass, $id_pengguna);
+            $laporan_kerja_harian = $this->countDataCreatedBy($laporan_kerja_harians, $id_pengguna);
+        }
 
         $param['status'][1] =  $nilai_biodata;
         $param['status'][2] =  $arsip_dokumen;
@@ -741,12 +906,10 @@ class ReportController extends BaseController
         $param['status'][9] =  $komplain_sarpas;
         $param['status'][10] =  $laporan_kerja_harian;
 
-        $total = 0;
         for ($i = 1; $i <= 10; $i++) {
-            $total  += ($param['status'][$i] > 10) ? 10 : $param['status'][$i];
+            $param['status'][$i];
         }
 
-        $param['progres'] =  $total;
         return response()->json($param);
     }
 
