@@ -39,7 +39,6 @@ class AbsensiTanpaJadwalController extends BaseController
 {
     public function viewAbsensiTanpaJadwal(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
