@@ -24,12 +24,13 @@ use UniSharp\LaravelFilemanager\Controllers\DownloadController;
 use App\Http\Controllers\Guru\WaliKelas\RaporPendukungController;
 use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
 use App\Http\Controllers\Administrator\Device\FingerprintController;
+use App\Http\Controllers\Administrator\PengelolaanAkun\FotoProfileController;
 use App\Libraries\WinpayPHP\WinpayCheckout;
 
 // Only for deploy to other prod server, 
 // Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
-Route::get('find-win/{uid}', function(Request $request, $uid){
+Route::get('find-win/{uid}', function (Request $request, $uid) {
     $winpay_checkout = new WinpayCheckout;
     $response = $winpay_checkout->find($uid);
 
@@ -66,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/delete', [DeleteController::class, 'getDelete'])->name('unisharp.lfm.getDelete');
         Route::get('/demo', [DemoController::class, 'index']);
     });
+    Route::put('update-foto-profil', [FotoProfileController::class, 'update'])->name('update-foto-profil');
 });
 
 // START USING FOR FINGERPRINT
@@ -119,7 +121,8 @@ Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionC
 Route::get('forms', [CustomFormResponController::class, 'landingPage']);
 Route::post('forms', [CustomFormResponController::class, 'findForms']);
 Route::post('forms/data/siswa', [CustomFormResponController::class, 'getDataSiswa']);
-Route::resource('forms.viewform', CustomFormResponController::class)->shallow();;
+Route::resource('forms.viewform', CustomFormResponController::class)->shallow();
+;
 Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);
 
