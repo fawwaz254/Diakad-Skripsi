@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers\Guru\WaliKelas;
 
-use App\Exports\TemplateExcel;
 use Validator;
 use Carbon\Carbon;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\Setting;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\RaporPendukung;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\KomponenRaporPendukung;
 use App\Models\PredikatRaporPendukung;
 use App\Models\IndikatorRaporPendukung;
 use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\Setting;
-use DB;
-use Maatwebsite\Excel\Facades\Excel;
 
 class RaporPendukungController extends Controller
 {
@@ -397,9 +395,20 @@ class RaporPendukungController extends Controller
             ->orderBy('nis_siswa')
             ->get();
 
-        $komponen_rapor = KomponenRaporPendukung::with(['indikator_rapor_pendukung.predikat_rapor_pendukung'])
+        if ($kelas->tingkat == 1) {
+            $tingkat = 10;
+        } elseif ($kelas->tingkat == 2) {
+            $tingkat = 11;
+        } elseif ($kelas->tingkat == 3) {
+            $tingkat = 12;
+        }
+
+        $komponen_rapor = KomponenRaporPendukung::with('indikator_rapor_pendukung.predikat_rapor_pendukung')
+            ->join('indikator_rapor_pendukung as irp', 'irp.id_komponen_rapor_pendukung', '=', 'komponen_rapor_pendukung.id_komponen_rapor_pendukung')
+            ->where('irp.tingkat_kelas', $tingkat)
             ->where('id_rapor_pendukung', $id_rapor_pendukung)
-            ->orderBy('urutan')
+            ->orderBy('komponen_rapor_pendukung.urutan')
+            ->orderBy('irp.urutan')
             ->get();
 
         $list_catatan_siswa = PredikatRaporPendukung::where('id_rapor_pendukung', $id_rapor_pendukung)->whereNull('id_indikator_rapor_pendukung')->get();
@@ -415,9 +424,9 @@ class RaporPendukungController extends Controller
             // PREDIKAT SISWA
             foreach ($komponen_rapor as $komponen) {
                 foreach ($komponen->indikator_rapor_pendukung as $indikator) {
-                    $predikat_siswa = $indikator->predikat_rapor_pendukung->first(function ($predikat) use ($siswa) {
-                        return $predikat->id_siswa == $siswa->id_siswa;
-                    });
+                    $predikat_siswa = $indikator->predikat_rapor_pendukung
+                        ->where('id_siswa', $siswa->id_siswa)
+                        ->first();
 
                     $data_siswa['[' . $komponen->nm_komponen . '] ' . $indikator->nm_indikator] = $predikat_siswa ? $predikat_siswa->nilai : '';
                 }
@@ -521,6 +530,9 @@ class RaporPendukungController extends Controller
                 }
             }
         }
+
+        // dump($list_siswa, $list_predikat);
+        dd($list_siswa, $list_predikat);
 
         return [
             'status' => 203, // SUCCESS AND LOAD CONTENT
