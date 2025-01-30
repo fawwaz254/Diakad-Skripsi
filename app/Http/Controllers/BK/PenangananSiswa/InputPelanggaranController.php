@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers\BK\PenangananSiswa;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use App\Models\PelanggaranSiswa as PelanggaranSiswa;
-use App\Models\TindakanPelanggaran as TindakanPelanggaran;
-use App\Models\Guru as Guru;
-use App\Models\Siswa as Siswa;
-use App\Models\KategoriPelanggaran;
-use App\Models\WaliMurid;
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Libraries\Pendidikan\LibSiswa;
-use App\Libraries\Pendidikan\LibKelas;
-use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
-use App\Libraries\LibGlobal;
-
 use Auth;
-use DB;
 use Session;
 use Validator;
+
+use Carbon\Carbon;
+use App\Models\Semester;
+use App\Models\WaliMurid;
+use App\Libraries\LibGlobal;
+use App\Models\Guru as Guru;
+use Illuminate\Http\Request;
+use App\Models\Siswa as Siswa;
+use Yajra\Datatables\Datatables;
+
+use Illuminate\Support\Facades\DB;
+use App\Models\KategoriPelanggaran;
+use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\Pendidikan\LibDataAkademik;
+
+use App\Models\PelanggaranSiswa as PelanggaranSiswa;
+use Illuminate\Routing\Controller as BaseController;
+use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
+use App\Models\TindakanPelanggaran as TindakanPelanggaran;
 
 class InputPelanggaranController extends BaseController
 {
@@ -108,14 +109,14 @@ class InputPelanggaranController extends BaseController
 
     public function ajaxGetPelanggaranSiswa(Request $request)
     {
-        $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
         // dd($input->siswa);
         $id_siswa = explode("/", $input->siswa);
         // $sekolah_data = $auth_data->sekolah_data;
 
-        $siswa      = LibSiswa::fetchDataSiswa($auth_data, null, $id_siswa);
+        $siswa = LibSiswa::fetchDataSiswa($auth_data, null, $id_siswa);
 
         $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
             ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
@@ -143,11 +144,6 @@ class InputPelanggaranController extends BaseController
 
     //     return $data_siswa;
     // } 
-
-
-
-
-
     public function ajaxGetSubkategoriByKategori(Request $request)
     {
         # code...
@@ -241,15 +237,15 @@ class InputPelanggaranController extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_siswa'                      => 'required',
-            'id_subkategori_pelanggaran'    => 'required',
-            'id_semester'                   => 'required',
-            'catatan_pelanggaran'           => 'required',
+            'id_siswa' => 'required',
+            'id_subkategori_pelanggaran' => 'required',
+            'id_semester' => 'required',
+            'catatan_pelanggaran' => 'required',
             /*'catatan_pelanggaran_khusus'    => 'required',*/
-            'tgl_pelanggaran'               => 'required'
+            'tgl_pelanggaran' => 'required'
         ]);
 
-        if ($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete' && $mode != 'multiple') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -270,7 +266,7 @@ class InputPelanggaranController extends BaseController
                     ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
                     ->where('id_siswa', $id_siswa)
                     ->first();
-                
+
                 if ($pelanggaran) {
                     return [
                         'status' => 300, // FAILED
@@ -297,20 +293,20 @@ class InputPelanggaranController extends BaseController
 
                 $siswa = Siswa::where('id_siswa', '=', $id_siswa)->first();
 
-                $pelanggaranSiswa                               = new PelanggaranSiswa;
-                $pelanggaranSiswa->id_pelanggaran_siswa         = $id;
-                $pelanggaranSiswa->id_siswa                     = $id_siswa;
-                $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
-                $pelanggaranSiswa->id_guru_input                = $id_guru_input;
-                $pelanggaranSiswa->id_semester                  = $input->id_semester;
-                $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
-                $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
-                $pelanggaranSiswa->catatan_pelanggaran_khusus   = $input->catatan_pelanggaran_khusus;
+                $pelanggaranSiswa = new PelanggaranSiswa;
+                $pelanggaranSiswa->id_pelanggaran_siswa = $id;
+                $pelanggaranSiswa->id_siswa = $id_siswa;
+                $pelanggaranSiswa->id_kelas = $siswa->id_kelas;
+                $pelanggaranSiswa->id_guru_input = $id_guru_input;
+                $pelanggaranSiswa->id_semester = $input->id_semester;
+                $pelanggaranSiswa->id_subkategori_pelanggaran = $input->id_subkategori_pelanggaran;
+                $pelanggaranSiswa->catatan_pelanggaran = $input->catatan_pelanggaran;
+                $pelanggaranSiswa->catatan_pelanggaran_khusus = $input->catatan_pelanggaran_khusus;
                 // convert format date
-                $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
-                $pelanggaranSiswa->aktor_input_pelanggaran      = 1;
-                $pelanggaranSiswa->is_sudah_tindakan            = 0;
-                $pelanggaranSiswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->tgl_pelanggaran = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
+                $pelanggaranSiswa->aktor_input_pelanggaran = 1;
+                $pelanggaranSiswa->is_sudah_tindakan = 0;
+                $pelanggaranSiswa->created_by = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->save();
 
                 if (!empty($siswa->id_wali_murid)) {
@@ -349,19 +345,19 @@ class InputPelanggaranController extends BaseController
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
                 // make object to find id
-                $pelanggaranSiswa                               = PelanggaranSiswa::find($id);
-                $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
-                $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
-                $pelanggaranSiswa->id_semester                  = $input->id_semester;
-                $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
-                $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                $pelanggaranSiswa = PelanggaranSiswa::find($id);
+                $pelanggaranSiswa->id_siswa = $input->id_siswa;
+                $pelanggaranSiswa->id_kelas = $siswa->id_kelas;
+                $pelanggaranSiswa->id_semester = $input->id_semester;
+                $pelanggaranSiswa->id_subkategori_pelanggaran = $input->id_subkategori_pelanggaran;
+                $pelanggaranSiswa->catatan_pelanggaran = $input->catatan_pelanggaran;
                 if (!empty($input->catatan_pelanggaran_khusus)) {
-                    $pelanggaranSiswa->catatan_pelanggaran_khusus   = $input->catatan_pelanggaran_khusus;
+                    $pelanggaranSiswa->catatan_pelanggaran_khusus = $input->catatan_pelanggaran_khusus;
                 }
                 // convert format date
-                $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
-                $pelanggaranSiswa->updated_by                   = $input->auth_data->pengguna->id_pengguna;
-                $pelanggaranSiswa->updated_at                   = $now;
+                $pelanggaranSiswa->tgl_pelanggaran = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
+                $pelanggaranSiswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->updated_at = $now;
                 $pelanggaranSiswa->save();
 
                 return [
@@ -377,8 +373,8 @@ class InputPelanggaranController extends BaseController
                     ];
                 } else {
                     // make object to find id
-                    $pelanggaranSiswa               = PelanggaranSiswa::find($id);
-                    $pelanggaranSiswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $pelanggaranSiswa = PelanggaranSiswa::find($id);
+                    $pelanggaranSiswa->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $pelanggaranSiswa->save();
 
                     $pelanggaranSiswa->delete();
@@ -388,7 +384,78 @@ class InputPelanggaranController extends BaseController
                         'message' => 'Delete Pelanggaran Siswa Successfully'
                     ];
                 }
+            } elseif ($mode == 'multiple') {
+                $now = Carbon::now();
+
+                // OPSI 1
+                try {
+                    DB::beginTransaction();
+                    foreach ($input->selected_students as $student) {
+                        $kelas = Siswa::select('id_kelas')->where('id_siswa', $student)->first();
+
+                        if ($input->auth_data->pengguna->status_join_table == 2) {
+                            $guru = Guru::select('id_guru')
+                                ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                                ->first();
+
+                            $id_guru_input = $guru->id_guru;
+                        } else {
+                            $id_guru_input = null;
+                        }
+
+                        $pelanggaran = new PelanggaranSiswa();
+                        $pelanggaran->id_pelanggaran_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pelanggaran->id_siswa = $student;
+                        $pelanggaran->id_semester = $input->id_semester;
+                        $pelanggaran->id_kelas = $kelas->id_kelas;
+                        $pelanggaran->id_subkategori_pelanggaran = $input->id_subkategori_pelanggaran;
+                        $pelanggaran->catatan_pelanggaran = $input->catatan_pelanggaran;
+                        $pelanggaran->catatan_pelanggaran_khusus = $input->catatan_pelanggaran_khusus;
+                        $pelanggaran->tgl_pelanggaran = $input->tgl_pelanggaran;
+                        $pelanggaran->id_guru_input = $id_guru_input;
+                        $pelanggaran->aktor_input_pelanggaran = 1;
+                        $pelanggaran->is_sudah_tindakan = 0;
+                        $pelanggaran->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pelanggaran->save();
+                    }
+
+                    DB::commit();
+                    return response()->json([
+                        'status' => 202,
+                        'message' => 'Data pelanggaran berhasil disimpan.'
+                    ]);
+                } catch (\Throwable $e) {
+                    DB::rollback();
+                    return response()->json([
+                        'status' => 203,
+                        'message' => 'Gagal menyimpan data pelanggaran: ' . $e->getMessage()
+                    ]);
+                }
             }
         }
+    }
+    public function addInputPelanggaranMultiple(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        // Mengambil waktu sekarang
+        $now = Carbon::now();
+
+        // Ambil data semester
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+
+        // Ambil data semua kelas
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+
+        // Ambil data semua kategori
+        $data_kategori = KategoriPelanggaran::with('subkategori_pelanggaran')
+            ->where('id_sekolah', $auth_data->pengguna->id_sekolah)
+            ->get();
+
+        // Generate ID pelanggaran siswa
+        $id_pelanggaran_siswa = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+        return view('bk/penanganan-siswa/input-pelanggaran/add-input-pelanggaran-multiple', compact('auth_data', 'data_semester', 'data_kelas', 'data_kategori', 'id_pelanggaran_siswa'));
     }
 }
