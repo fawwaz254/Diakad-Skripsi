@@ -16,8 +16,24 @@
                         @else
                             <img src="{{ asset('media/blank-user.png') }}" style="height: 270px; width: 180px">
                         @endif
+                        <br>
+                        @if (auth_data()->pengguna->status_join_table == 1 || auth_data()->pengguna->status_join_table == 2)
+                            <form action="{{ route('update-foto-profil') }}" method="POST" enctype="multipart/form-data"
+                                style="margin-top: 10px">
+                                @method('PUT') 
+                                @csrf
+                                <input type="file" name="foto" accept="image/*" required>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px">Upload</button>
+                            </form>
+
+                        @endif
+
+                        @if (session('success'))
+                            <div class="alert alert-success mt-3">
+                                {{ session('success') }}
+                            </div>
+                        @endif
                     </center>
-                    <br>
                 </div>
             </div>
         </div>

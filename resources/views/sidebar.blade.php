@@ -5,11 +5,11 @@
     $path = Request::fullUrl();
     $role_aktif = auth_data()->role_aktif->id_role;
     $id_pengguna = auth_data()->pengguna->id_pengguna;
-    
+
     $detail_kelas = get_keterangan_kelas($id_pengguna);
     $detail_wali_kelas = get_keterangan_wali_kelas($id_pengguna);
     $category_file_role = category_file_role($role_aktif);
-    
+
     $nm_kelas = null;
     // if siswa
     if ($role_aktif == 3) {
@@ -19,16 +19,14 @@
             $nm_kelas = $kelas->nm_kelas;
         }
     }
-    
+
     // if guru
     if ($role_aktif == 2) {
-        $guru = App\Models\Guru::with('unit_kerja')
-            ->where('id_pengguna', $id_pengguna)
-            ->first();
+        $guru = App\Models\Guru::with('unit_kerja')->where('id_pengguna', $id_pengguna)->first();
         $wali_kelas = App\Models\WaliKelas::where('id_guru', $guru->id_guru)
             ->where('is_aktif', 1)
             ->first();
-    
+
         if (!empty($wali_kelas)) {
             $kelas = App\Models\Kelas::where('id_kelas', $wali_kelas->id_kelas)->first();
             if (!empty($kelas)) {
@@ -36,6 +34,7 @@
             }
         }
     }
+
 @endphp
 <section>
     <!-- Left Sidebar -->
@@ -98,43 +97,41 @@
                     </a>
                 </li>
                 @foreach (get_moduls() as $modul)
-                    @if (auth_data()->sekolah_data->nm_singkat_sekolah !== 'smpypm2' && $modul->nm_modul=="Ketidaksesuaian SOP")
-                        
+                    @if (auth_data()->sekolah_data->nm_singkat_sekolah !== 'smpypm2' && $modul->nm_modul == 'Ketidaksesuaian SOP')
                     @else
-                        @if (auth_data()->pengguna->role_pengguna[0]->id_role == 4 && $modul->route == 'kesekretariatan' )
-                        
-                        @else    
+                        @if (auth_data()->pengguna->role_pengguna[0]->id_role == 4 && $modul->route == 'kesekretariatan')
+                        @else
                             <li id="modul-item-{{ $modul->route }}" class="modul-item">
                                 @if (!empty($modul->page))
                                     <a class="target-link" href="{{ url(Request::segment(1) . '#' . $modul->page) }}"
                                         class="menu-toggle waves-effect waves-block">
-                                    @else
-                                        <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                                @else
+                                    <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
                                 @endif
-                                <span>{{ $modul->nm_modul }}</span>
-                                </a>
-                                @if (count($modul->menus))
-                                    <ul class="ml-menu">
-                                        @foreach ($modul->menus as $menu)
-                                            @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12)
-                                            @else
-                                                <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}" class="menu-item">
-                                                    @if (!empty($menu->page))
-                                                        <a class="target-link"
-                                                            href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
-                                                            class="waves-effect waves-block">
+                                        <span>{{ $modul->nm_modul }}</span>
+                                    </a>
+                                    @if (count($modul->menus))
+                                        <ul class="ml-menu">
+                                            @foreach ($modul->menus as $menu)
+                                                @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12)
+                                                @else
+                                                    <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}" class="menu-item">
+                                                        @if (!empty($menu->page))
+                                                            <a class="target-link"
+                                                                href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
+                                                                class="waves-effect waves-block">
                                                         @else
                                                             <a href="javascript:void(0);" class="waves-effect waves-block">
-                                                    @endif
-                                                    {{ $menu->nm_menu }}
-                                                    </a>
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                @endif
+                                                        @endif
+                                                                {{ $menu->nm_menu }}
+                                                            </a>
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    @endif
                             </li>
-                        @endif    
+                        @endif
                     @endif
                 @endforeach
 
@@ -244,8 +241,7 @@
                 Copyright &copy;{{ now()->format('Y') }}
             </div>
             <div class="version">
-                Made with <span style="color: #e25555;">&hearts;</span> by <a
-                    href="https://solusimaster.co.id">@Digital
+                Made with <span style="color: #e25555;">&hearts;</span> by <a href="https://solusimaster.co.id">@Digital
                     Solusi Master</a>
             </div>
         </div>
