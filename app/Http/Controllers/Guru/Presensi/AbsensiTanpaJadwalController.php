@@ -39,7 +39,6 @@ class AbsensiTanpaJadwalController extends BaseController
 {
     public function viewAbsensiTanpaJadwal(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -52,8 +51,9 @@ class AbsensiTanpaJadwalController extends BaseController
         $jadwal_kelas_mp = JadwalKelasMp::with('kelas_mp')
             ->join('kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
             ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-            ->where('jadwal_kelas_mp.id_jadwal_hari', '=', '0')
-            ->where('pengampu_mp.id_guru', '=', $id_guru)
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->where('jadwal_kelas_mp.id_jadwal_hari',  '0')
+            ->where('pengampu_mp.id_guru', $id_guru)
             ->get();
 
         $kelas = LibKelas::fetchDataKelas($auth_data, $id = null);

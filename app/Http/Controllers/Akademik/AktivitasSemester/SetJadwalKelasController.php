@@ -2,33 +2,34 @@
 
 namespace App\Http\Controllers\Akademik\AktivitasSemester;
 
-use DB;
 use Auth;
 use Session;
 use Validator;
 use Carbon\Carbon;
 use App\Models\Guru;
 use App\Models\Kelas;
+use App\Models\Jurusan;
 use App\Models\KelasMp;
 use App\Models\Ruangan;
+use App\Models\Semester;
 use App\Models\JadwalJam;
 use App\Models\Kurikulum;
 use App\Models\JadwalHari;
 use App\Models\PengampuMp;
+use App\Models\PresensiMp;
 use Illuminate\Http\Request;
 use App\Models\JadwalKelasMp;
 use App\Models\MataPelajaran;
 use App\Models\PengambilanMp;
+use Yajra\Datatables\Datatables;
+use App\Models\JenisMataPelajaran;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\JenisMataPelajaran;
-use App\Models\Jurusan;
-use App\Models\PresensiMp;
-use App\Models\Semester;
-use Yajra\Datatables\Datatables;
-use Illuminate\Support\Facades\Log;
+use App\Models\WaliKelas;
 
 class SetJadwalKelasController extends Controller
 {
@@ -483,7 +484,6 @@ class SetJadwalKelasController extends Controller
 
     public function viewSetKBMTanpaJadwal(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -579,8 +579,14 @@ class SetJadwalKelasController extends Controller
         $kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $id_semester = $semester->id_semester;
-        $list_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
-        $id_guru = $list_guru->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()->id_guru;
+        $list_guru = Guru::with('pengguna')->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
+        $id_guru = $list_guru->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+
+        $guru = $list_guru->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+        $id_guru =  $guru->id_guru ?? null;
+        if (!$id_guru) {
+            $id_guru = WaliKelas::select('id_guru')->where('id_kelas', $id_kelas)->where('is_aktif', 1)->first()->id_guru;
+        }
 
         $id_jurusan = $kelas->id_jurusan;
         $data_jenis_mata_pelajaran = JenisMataPelajaran::with([
@@ -794,7 +800,6 @@ class SetJadwalKelasController extends Controller
                 'message' => 'Save Successfully'
             ];
         }
-
     }
 
     public function getMapelKbmTanpaJadwal(Request $request)
