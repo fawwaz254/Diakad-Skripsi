@@ -6,8 +6,24 @@
                     <h2>Data Laporan Kerja Harian Kelompok</h2>
                 </div>
                 <div class="body">
+                    <label for="filterNama">Filter Nama:</label>
+                    <form action="{{ url()->current() }}" method="GET" style="display: flex; align-items: center">
+                        <div class="row clearfix">
+                            <div class="col-md-4" style="width: 100%;">
+                                <select id="filterNama" name="id_pengguna" class="form-control">
+                                    <option value="">-- Pilih Nama --</option>
+                                    @foreach ($data as $d)
+                                        <option value="{{ $d->id_pengguna }}" {{ request('id_pengguna') == $d->id_pengguna ? 'selected' : '' }}>
+                                            {{ $d->nm_pengguna }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </form>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -69,16 +85,16 @@
                         <label>
                             Tanggal Awal
                         </label>
-                        <input type="date" class="datepicker form-control" id="start_date" name="start_date"
-                            required="" aria-required="true" aria-invalid="true">
+                        <input type="date" class="datepicker form-control" id="start_date" name="start_date" required=""
+                            aria-required="true" aria-invalid="true">
                     </div>
 
                     <div class="col-md-6">
                         <label>
                             Tanggal Akhir
                         </label>
-                        <input type="date" class="datepicker form-control" id="end_date" name="end_date"
-                            required="" aria-required="true" aria-invalid="true">
+                        <input type="date" class="datepicker form-control" id="end_date" name="end_date" required=""
+                            aria-required="true" aria-invalid="true">
                     </div>
 
                 </div>
@@ -93,11 +109,11 @@
 </div>
 
 <script type="text/javascript">
-    $('#print').click(function() {
+    $('#print').click(function () {
         $('#modal_print').modal('show');
     });
 
-    $('#print_laporan').click(function() {
+    $('#print_laporan').click(function () {
         var start_date = $('#start_date').val();
         var end_date = $('#end_date').val();
 
@@ -124,89 +140,39 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
-            type: 'GET'
-        },
-        columns: [{
-                data: 'index_column',
-                class: 'text-center',
-                defaultContent: '',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'tanggal',
-                name: 'tanggal'
-            },
-            {
-                data: 'jenis',
-                class: 'text-center',
-                name: 'action',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'mapel.category_file_name',
-                class: 'text-center',
-                name: 'action',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'keterangan_progres',
-                name: 'keterangan_progres',
-                render: function(data, type, row) {
-                    return '<span style="white-space:normal">' + data + "</span>";
-                } // tampilan wrap text
-            },
-            {
-                data: 'action',
-                class: 'text-center',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    if (data.status == 1) {
-                        return 'selesai';
-                    } else {
-                        return 'belum selesai';
-                    }
-                }
-            },
-            {
-                data: 'action',
-                name: 'file',
-                class: 'text-center',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    if (data.file) {
-                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="' +
-                            data.file + '" onclick="open_modal(\'' + data.id + '\' , this)">' +
-                            '    <i class="material-icons">insert_drive_file</i>' +
-                            '</a> '
-                    } else {
-                        return `-`;
-                    }
-                }
-            },
-            {
-                data: 'nm_pengguna',
-                name: 'nm_pengguna',
-                orderable: false
+            type: 'GET',
+            data: function (d) {
+                d.id_pengguna = $('#filterNama').val();
             }
+        },
+        columns: [
+            { data: 'index_column', class: 'text-center', searchable: false, orderable: false },
+            { data: 'tanggal', name: 'tanggal' },
+            { data: 'jenis', class: 'text-center', searchable: false, orderable: false },
+            { data: 'mapel.category_file_name', class: 'text-center', searchable: false, orderable: false },
+            {
+                data: 'keterangan_progres', name: 'keterangan_progres', render: function (data) {
+                    return '<span style="white-space:normal">' + data + "</span>";
+                }
+            },
+            {
+                data: 'action', class: 'text-center', searchable: false, orderable: false, render: function (data) {
+                    return data.status == 1 ? 'selesai' : 'belum selesai';
+                }
+            },
+            {
+                data: 'action', name: 'file', class: 'text-center', searchable: false, orderable: false, render: function (data) {
+                    if (data.file) {
+                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="' + data.file + '" onclick="open_modal(\'' + data.id + '\' , this)">' +
+                            '<i class="material-icons">insert_drive_file</i></a>';
+                    } else {
+                        return '-';
+                    }
+                }
+            },
+            { data: 'nm_pengguna', name: 'nm_pengguna', orderable: false }
         ]
     });
-
-    primary_table.on('draw', function() {
-        primary_table.column(0, {
-            search: 'applied',
-            order: 'applied'
-        }).nodes().each(function(cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = start + i + 1;
-            primary_table.cell(cell).invalidate('dom');
-        });
-    }).draw();
 
     function open_modal(id, element) {
 
@@ -219,4 +185,19 @@
         `);
         $('#modal-opsi').modal('show');
     }
+
+    $('#filterNama').on('change', function () {
+        primary_table.ajax.reload();
+    });
+
+    primary_table.on('draw', function () {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function (cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
+        });
+    }).draw();
 </script>
