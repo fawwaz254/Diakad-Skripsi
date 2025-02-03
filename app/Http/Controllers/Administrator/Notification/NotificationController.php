@@ -126,73 +126,110 @@ class NotificationController extends Controller
         }
     }
 
-    public function actionUpdateNotificationSetting(Request $request)
+    public function actionUpdateNotificationSetting(Request $request, $mode = null)
     {
         $input = (object) $request->input();
 
-        $validator = Validator::make($request->all(), [
-            'attendance_mode' => 'required',
-            'attendance_template' => 'required',
-            'attendance_time_schedule' => 'required',
-            'payment_template' => 'required',
-            'payment_time_schedule' => 'required',
-            'day_schedule' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return [
-                'status_code' => 300,
-                'message'     => $validator->errors()->first()
-            ];
-        } else {
-
-            DB::beginTransaction();
-
+        if ($mode == 'jadwal') {
             try {
-                // MODE
-                $mode = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->first();
-                $mode->value = $input->attendance_mode;
-                $mode->save();
+                $validator = Validator::make($request->all(), [
+                    'attendance_mode' => 'required',
+                    'attendance_template' => 'required',
+                    'attendance_time_schedule' => 'required',
+                    'day_schedule' => 'required',
+                ]);
 
-                // TEMPLATE
-                $payment_template = Setting::where('key_setting', 'template_notif_pembayaran_spp')->first();
-                $payment_template->value = $input->payment_template;
-                $payment_template->save();
+                if ($validator->fails()) {
+                    return [
+                        'status_code' => 300,
+                        'message'     => $validator->errors()->first()
+                    ];
+                } else {
+                    DB::beginTransaction();
 
-                $attendance_template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->first();
-                $attendance_template->value = $input->attendance_template;
-                $attendance_template->save();
+                    // NOTIF KEHADIRAN
+                    $mode = Setting::where('key_setting', 'mode_notif_kehadiran_siswa')->first();
+                    $mode->value = $input->attendance_mode;
+                    $mode->save();
 
-                // TIME SCHEDULE
-                $attendance_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->first();
-                $attendance_time_setting->value = $input->attendance_time_schedule;
-                $attendance_time_setting->save();
+                    // TEMPLATE NOTIF KEHADIRAN
+                    $attendance_template = Setting::where('key_setting', 'template_notif_kehadiran_siswa')->first();
+                    $attendance_template->value = $input->attendance_template;
+                    $attendance_template->save();
 
-                $payment_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_pembayaran_spp')->first();
-                $payment_time_setting->value = $input->payment_time_schedule;
-                $payment_time_setting->save();
+                    // JADWAL JAM NOTIF KEHADIRAN
+                    $attendance_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_kehadiran_siswa')->first();
+                    $attendance_time_setting->value = $input->attendance_time_schedule;
+                    $attendance_time_setting->save();
 
-                // DAY SCHEDULE
-                $day_schedule_setting = Setting::where('key_setting', 'jadwal_hari_notifikasi')->first();
-                $day_schedule_setting->value = $input->day_schedule;
-                $day_schedule_setting->save();
+                    // JADWAL NOTIF HARIAN
+                    $day_schedule_setting = Setting::where('key_setting', 'jadwal_hari_notifikasi')->first();
+                    $day_schedule_setting->value = $input->day_schedule;
+                    $day_schedule_setting->save();
 
-                DB::commit();
-
-                return [
-                    'status_code'  => 202,
-                    'path'    => 'notification/whatsapp',
-                    'message' => 'Update Data Succesfully'
-                ];
+                    DB::commit();
+                    return [
+                        'status_code'  => 202,
+                        'path'    => 'notification/whatsapp',
+                        'message' => 'success update jadwal'
+                    ];
+                }
             } catch (\Exception $e) {
                 DB::rollback();
 
                 return [
-                    'status_code'  => 202,
+                    'status_code'  => 300,
                     'path'    => 'notification/whatsapp',
                     'message' => $e->getMessage()
                 ];
             }
+        } elseif ($mode == 'pembayaran') {
+            try {
+                $validator = Validator::make($request->all(), [
+                    'payment_template' => 'required',
+                    'payment_time_schedule' => 'required',
+                ]);
+
+                if ($validator->fails()) {
+                    return [
+                        'status_code' => 300,
+                        'message'     => $validator->errors()->first()
+                    ];
+                } else {
+                    DB::beginTransaction();
+
+                    // NOTIF PEMBAYARAN
+                    $payment_template = Setting::where('key_setting', 'template_notif_pembayaran_spp')->first();
+                    $payment_template->value = $input->payment_template;
+                    $payment_template->save();
+
+                    // JADWAL NOTIF PEMBAYARAN
+                    $payment_time_setting = Setting::where('key_setting', 'jadwal_jam_notif_pembayaran_spp')->first();
+                    $payment_time_setting->value = $input->payment_time_schedule;
+                    $payment_time_setting->save();
+
+                    DB::commit();
+                    return [
+                        'status_code'  => 202,
+                        'path'    => 'notification/whatsapp',
+                        'message' => 'success update pembayaran'
+                    ];
+                }
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return [
+                    'status_code'  => 300,
+                    'path'    => 'notification/whatsapp',
+                    'message' => $e->getMessage()
+                ];
+            }
+        } else {
+            return [
+                'status_code'  => 300,
+                'path'    => 'notification/whatsapp',
+                'message' => 'Update salah satu'
+            ];
         }
     }
 }
