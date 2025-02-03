@@ -1,11 +1,15 @@
 <div class="container-fluid">
     <div class="card" style="margin-bottom: 3rem">
         <div class="header">
-            <h2 style="float:left; font-size:2rem">TEMPLATE PESAN</h2>
+            <h2 style="float:left; font-size:2rem">TEMPLATE PESAN JADWAL</h2>
 
             <div style="clear: both;"></div>
         </div>
+
+        {{-- jadwal harian --}}
         <div class="body">
+            {{-- <form> --}}
+            {{-- @csrf --}}
             <label style="margin-top:1rem">Jadwal Hari Notifikasi</label>
             <input type="text" name="day_schedule" class="form-control"
                 placeholder="MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY" value="{{ $day_schedule_setting }}">
@@ -13,7 +17,8 @@
             <select class="form-control show-tick" name="attendance_mode">
                 <option value="ABSENT_ONLY" {{ $mode_attendance_setting == 'ABSENT_ONLY' ? 'selected' : '' }}>Tidak
                     Hadir Saja</option>
-                <option value="PRESENT_ONLY" {{ $mode_attendance_setting == 'PRESENT_ONLY' ? 'selected' : '' }}>Hadir
+                <option value="PRESENT_ONLY" {{ $mode_attendance_setting == 'PRESENT_ONLY' ? 'selected' : '' }}>
+                    Hadir
                     Saja
                 </option>
                 <option value="ALL" {{ $mode_attendance_setting == 'ALL' ? 'selected' : '' }}>Semua</option>
@@ -38,7 +43,24 @@
             <label style="margin-top:1rem">Jadwal Kehadiran/Ketidakhadiran Siswa</label>
             <input type="time" name="attendance_time_schedule" class="form-control"
                 value="{{ $attendance_time_setting }}">
-            <hr>
+            <button class="btn bg-green waves-effect" style="float:right;margin-top:1rem" type="submit"
+                onclick="actionUpdateJadwal()"><i class="material-icons">save</i><span>Update Jadwal</span></button>
+            <div style="clear: both;"></div>
+            {{-- </form> --}}
+        </div>
+    </div>
+    <hr>
+    <div class="card" style="margin-bottom: 3rem">
+        <div class="header">
+            <h2 style="float:left; font-size:2rem">TEMPLATE PESAN PEMBAYARAN</h2>
+
+            <div style="clear: both;"></div>
+        </div>
+
+        {{-- pembayaran --}}
+        <div class="body">
+            {{-- <form> --}}
+            {{-- @csrf --}}
             <div style="margin-top:1rem">
                 <small>
                     <strong>KODE TEMPLATE:</strong><br>
@@ -59,9 +81,11 @@
             <label style="margin-top:1rem">Jadwal Pembayaran SPP Siswa</label>
             <input type="time" name="payment_time_schedule" class="form-control" value="{{ $payment_time_setting }}">
 
-            <button class="btn bg-green waves-effect" style="float:right;margin-top:1rem" onclick="actionUpdate()"><i
-                    class="material-icons">save</i><span>Update</span></button>
+            <button class="btn bg-green waves-effect" style="float:right;margin-top:1rem" type="submit"
+                onclick="actionUpdatePembayaran()"><i class="material-icons">save</i><span>Update
+                    Pembayaran</span></button>
             <div style="clear: both;"></div>
+            {{-- </form> --}}
         </div>
     </div>
 
@@ -132,6 +156,8 @@
 </div>
 
 <script>
+    var update_url = '/administrator/notification/whatsapp/setting/update'
+
     $(document).ready(function() {
         $.ajax({
             type: "POST",
@@ -243,17 +269,51 @@
         });
     }
 
-    function actionUpdate() {
+    // tambahkan update yang berbeda yaitu pembayaran dan jadwal
+    function actionUpdatePembayaran() {
         $.ajax({
             type: 'POST',
-            url: base_url + '/administrator/notification/whatsapp/setting/update',
+            url: base_url + update_url + '/pembayaran',
             data: {
+                payment_template: $('textarea[name=payment_template]').val(),
+                payment_time_schedule: $('input[name=payment_time_schedule]').val(),
+            },
+            success: function(response) {
+                if (response.status_code == 200) {
+                    vex.dialog.alert(response.message);
+                } else if (response.status_code == 201) {
+                    vex.dialog.alert(response.message);
+                    window.location.href = response.link;
+                } else if (response.status_code == 202) {
+                    vex.dialog.alert(response.message);
+                    setTimeout(function() {
+                        loadURI(response.path);
+                    }, 2000);
+
+                } else if (response.status_code == 203) {
+                    vex.dialog.alert(response.message);
+                    primary_table.ajax.reload(null, false);
+                } else if (response.status_code == 204) {
+                    loadURI(response.path);
+                } else if (response.status_code == 300) {
+                    vex.dialog.alert(response.message);
+                }
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
+    function actionUpdateJadwal() {
+        $.ajax({
+            type: 'POST',
+            url: base_url + update_url + '/jadwal',
+            data: {
+                day_schedule: $('input[name=day_schedule]').val(),
                 attendance_mode: $('select[name=attendance_mode]').val(),
                 attendance_template: $('textarea[name=attendance_template]').val(),
                 attendance_time_schedule: $('input[name=attendance_time_schedule]').val(),
-                payment_template: $('textarea[name=payment_template]').val(),
-                payment_time_schedule: $('input[name=payment_time_schedule]').val(),
-                day_schedule: $('input[name=day_schedule]').val(),
             },
             success: function(response) {
                 if (response.status_code == 200) {
