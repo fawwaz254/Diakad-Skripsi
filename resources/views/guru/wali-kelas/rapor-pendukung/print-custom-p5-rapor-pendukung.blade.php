@@ -133,7 +133,6 @@
 </head>
 
 <body>
-
     @foreach ($list_siswa as $siswa)
         <div class="page" style="padding-top: 3rem">
 
@@ -194,12 +193,34 @@
             </table>
 
             {{-- PROJEK 1 --}}
-            <h3 style="width: 90%; margin: 2rem auto;">Projek 1 | Bhinneka Tunggal Ika | “SEKOLAHKU NYAMAN, NO
-                BULLYING!”</h3>
+            @if ($kelas->tingkat === 1)
+                <h3 style="width: 90%; margin: 2rem auto;">TEMA KEWIRAUSAHAAN : Wirausaha Muda Berkarya secara Inovatif
+                    dan Kompetitif (membuat buket)
+                </h3>
+            @elseif($kelas->tingkat === 2)
+                <h3 style="width: 90%; margin: 2rem auto;">TEMA KEWIRAUSAHAAN : HIDUP SEHAT DENGAN TOGA (Membuat Jamu
+                    Bubuk)
+                </h3>
+            @elseif($kelas->tingkat === 3)
+                <h3 style="width: 90%; margin: 2rem auto;">TEMA SUARA DEMOKRASI : KEBEBASAN BERPENDAPAT WUJUD DEMOKRASI
+                    SUATU BANGSA
+                </h3>
+            @endif
             <table style="width: 90%; margin: 2rem auto;">
                 <tr>
-                    <th style="font-weight: bold;background-color: #f7b2ab">Bhinneka Tunggal Ika | “SEKOLAHKU NYAMAN, NO
-                        BULLYING!”</th>
+                    @if ($kelas->tingkat === 1)
+                        <th style="font-weight: bold;background-color: #f7b2ab">TEMA KEWIRAUSAHAAN : Wirausaha Muda
+                            Berkarya secara Inovatif dan Kompetitif (membuat buket)
+                        </th>
+                    @elseif($kelas->tingkat === 2)
+                        <th style="font-weight: bold;background-color: #f7b2ab">TEMA KEWIRAUSAHAAN : HIDUP SEHAT DENGAN
+                            TOGA (Membuat Jamu Bubuk)
+                        </th>
+                    @elseif($kelas->tingkat === 3)
+                        <th style="font-weight: bold;background-color: #f7b2ab">TEMA SUARA DEMOKRASI : KEBEBASAN
+                            BERPENDAPAT WUJUD DEMOKRASI SUATU BANGSA
+                        </th>
+                    @endif
                     <th style="font-weight: bold;background-color: #abb9f7">BB</th>
                     <th style="font-weight: bold;background-color: #abb9f7">MB</th>
                     <th style="font-weight: bold;background-color: #abb9f7">BSH</th>
@@ -260,12 +281,33 @@
             </table>
 
             {{-- PROJEK 2 --}}
-            <h3 style="width: 90%; margin: 2rem auto;">Projek 2 | “WIRAUSAHA MUDA BERKARYA SECARA INOVATIF & KOMPETITIF”
-            </h3>
+            @if ($kelas->tingkat === 1)
+                <h3 style="width: 90%; margin: 2rem auto;">TEMA GAYA HIDUP BERKELANJUTAN : Pengelolaan Sampah
+                </h3>
+            @elseif($kelas->tingkat === 2)
+                <h3 style="width: 90%; margin: 2rem auto;">TEMA KEARIFAN LOKAL : MEMANFAATKAN KEKAYAAN ALAM DENGAN
+                    MEMBUAT BATIK ECOPRINT.
+                </h3>
+            @elseif($kelas->tingkat === 3)
+                <h3 style="width: 90%; margin: 2rem auto;">TEMA KEARIFAN LOKAL : MAKANAN TRADISIONAL KHAS KOTA
+                    SURABAYA DI LINGKUNGAN SEKOLAH
+                </h3>
+            @endif
             <table style="width: 90%; margin: 2rem auto;">
                 <tr>
-                    <th style="font-weight: bold;background-color: #f7b2ab">WIRAUSAHA MUDA BERKARYA SECARA INOVATIF &
-                        KOMPETITIF</th>
+                    @if ($kelas->tingkat === 1)
+                        <th style="font-weight: bold;background-color: #f7b2ab">TEMA GAYA HIDUP BERKELANJUTAN :
+                            Pengelolaan Sampah
+                        </th>
+                    @elseif($kelas->tingkat === 2)
+                        <th style="font-weight: bold;background-color: #f7b2ab">TEMA KEARIFAN LOKAL : MEMANFAATKAN
+                            KEKAYAAN ALAM DENGAN MEMBUAT BATIK ECOPRINT
+                        </th>
+                    @elseif($kelas->tingkat === 3)
+                        <th style="font-weight: bold;background-color: #f7b2ab">TEMA KEARIFAN LOKAL : MAKANAN
+                            TRADISIONAL KHAS KOTA SURABAYA DI LINGKUNGAN SEKOLAH
+                        </th>
+                    @endif
                     <th style="font-weight: bold;background-color: #abb9f7">BB</th>
                     <th style="font-weight: bold;background-color: #abb9f7">MB</th>
                     <th style="font-weight: bold;background-color: #abb9f7">BSH</th>
@@ -326,70 +368,87 @@
             </table>
 
             {{-- PROJEK 3 --}}
-            <h3 style="width: 90%; margin: 2rem auto;">Projek 3 | GAYA HIDUP BERKELANJUTAN | “PENGHIJAUAN DISEKITAR
-                SEKOLAHKU”</h3>
-            <table style="width: 90%; margin: 2rem auto;">
-                <tr>
-                    <th style="font-weight: bold;background-color: #f7b2ab">GAYA HIDUP BERKELANJUTAN | “PENGHIJAUAN
-                        DISEKITAR SEKOLAHKU”</th>
-                    <th style="font-weight: bold;background-color: #abb9f7">BB</th>
-                    <th style="font-weight: bold;background-color: #abb9f7">MB</th>
-                    <th style="font-weight: bold;background-color: #abb9f7">BSH</th>
-                    <th style="font-weight: bold;background-color: #abb9f7">SB</th>
-                </tr>
-
-                @php
-                    $filter_komponen = $list_komponen_rapor
-                        ->filter(function ($komponen) {
-                            return str_contains($komponen->nm_komponen, 'Projek 3');
-                        })
-                        ->values();
-                @endphp
-                @foreach ($filter_komponen as $komponen)
-                    <tr style="background-color: #f7ebab">
-                        <td colspan="5" style="font-weight: bold">
-                            {{ str_replace('Projek 3:', '', $komponen->nm_komponen) }}</td>
+            @if ($kelas->tingkat !== 3)
+                @if ($kelas->tingkat === 1)
+                    <h3 style="width: 90%; margin: 2rem auto;">TEMA BHINEKA TUNGGAL IKA : Eksplorasi Budaya Bangsa
+                    </h3>
+                @else
+                    <h3 style="width: 90%; margin: 2rem auto;">TEMA KEARIFAN LOKAL : MAKANAN TRADISIONAL KHAS KOTA
+                        SURABAYA
+                        DI LINGKUNGAN SEKOLAH
+                    </h3>
+                @endif
+                <table style="width: 90%; margin: 2rem auto;">
+                    <tr>
+                        @if ($kelas->tingkat === 1)
+                            <th style="font-weight: bold;background-color: #f7b2ab">TEMA BHINEKA TUNGGAL IKA :
+                                Eksplorasi
+                                Budaya Bangsa
+                            </th>
+                        @else
+                            <th style="font-weight: bold;background-color: #f7b2ab">TEMA KEARIFAN LOKAL : MAKANAN
+                                TRADISIONAL KHAS KOTA SURABAYA DI LINGKUNGAN SEKOLAH
+                            </th>
+                        @endif
+                        <th style="font-weight: bold;background-color: #abb9f7">BB</th>
+                        <th style="font-weight: bold;background-color: #abb9f7">MB</th>
+                        <th style="font-weight: bold;background-color: #abb9f7">BSH</th>
+                        <th style="font-weight: bold;background-color: #abb9f7">SB</th>
                     </tr>
 
-                    @foreach ($komponen->indikator_rapor_pendukung as $indikator)
-                        @php
-                            $nilai = '';
-                        @endphp
-                        @foreach ($indikator->predikat_rapor_pendukung as $predikat)
-                            @if ($predikat->id_siswa == $siswa->id_siswa)
-                                @php
-                                    $nilai = $predikat->nilai;
-                                @endphp
-                            @endif
-                        @endforeach
-                        <tr>
-                            <td style="font-weight: bold">
-                                {{ $indikator->nm_indikator }}
-                            </td>
-                            <td style="text-align: center">
-                                @if ($nilai == 'BB')
-                                    &#10003;
-                                @endif
-                            </td>
-                            <td style="text-align: center">
-                                @if ($nilai == 'MB')
-                                    &#10003;
-                                @endif
-                            </td>
-                            <td style="text-align: center">
-                                @if ($nilai == 'BSH')
-                                    &#10003;
-                                @endif
-                            </td>
-                            <td style="text-align: center">
-                                @if ($nilai == 'SB')
-                                    &#10003;
-                                @endif
-                            </td>
+                    @php
+                        $filter_komponen = $list_komponen_rapor
+                            ->filter(function ($komponen) {
+                                return str_contains($komponen->nm_komponen, 'Projek 3');
+                            })
+                            ->values();
+                    @endphp
+                    @foreach ($filter_komponen as $komponen)
+                        <tr style="background-color: #f7ebab">
+                            <td colspan="5" style="font-weight: bold">
+                                {{ str_replace('Projek 3:', '', $komponen->nm_komponen) }}</td>
                         </tr>
+
+                        @foreach ($komponen->indikator_rapor_pendukung as $indikator)
+                            @php
+                                $nilai = '';
+                            @endphp
+                            @foreach ($indikator->predikat_rapor_pendukung as $predikat)
+                                @if ($predikat->id_siswa == $siswa->id_siswa)
+                                    @php
+                                        $nilai = $predikat->nilai;
+                                    @endphp
+                                @endif
+                            @endforeach
+                            <tr>
+                                <td style="font-weight: bold">
+                                    {{ $indikator->nm_indikator }}
+                                </td>
+                                <td style="text-align: center">
+                                    @if ($nilai == 'BB')
+                                        &#10003;
+                                    @endif
+                                </td>
+                                <td style="text-align: center">
+                                    @if ($nilai == 'MB')
+                                        &#10003;
+                                    @endif
+                                </td>
+                                <td style="text-align: center">
+                                    @if ($nilai == 'BSH')
+                                        &#10003;
+                                    @endif
+                                </td>
+                                <td style="text-align: center">
+                                    @if ($nilai == 'SB')
+                                        &#10003;
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
                     @endforeach
-                @endforeach
-            </table>
+                </table>
+            @endif
 
             {{-- CATATAN PROSES --}}
             <table style="width: 90%; margin: 2rem auto;">
