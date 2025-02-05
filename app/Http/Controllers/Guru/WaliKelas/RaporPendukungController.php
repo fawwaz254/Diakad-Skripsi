@@ -573,6 +573,9 @@ class RaporPendukungController extends Controller
             $q->where('tingkat_kelas', $tingkat);
         }])
             ->where('id_rapor_pendukung', $id_rapor_pendukung)
+            ->whereHas('indikator_rapor_pendukung', function ($q) use ($tingkat) {
+                $q->where('tingkat_kelas', $tingkat);
+            })
             ->orderBy('urutan')
             ->get();
 
