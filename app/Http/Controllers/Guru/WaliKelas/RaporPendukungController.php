@@ -561,7 +561,17 @@ class RaporPendukungController extends Controller
 
         $rapor = RaporPendukung::findOrFail($id_rapor_pendukung);
 
-        $list_komponen_rapor = KomponenRaporPendukung::with('indikator_rapor_pendukung')
+        if ($kelas->tingkat == 1) {
+            $tingkat = 10;
+        } elseif ($kelas->tingkat == 2) {
+            $tingkat = 11;
+        } elseif ($kelas->tingkat == 3) {
+            $tingkat = 12;
+        }
+
+        $list_komponen_rapor = KomponenRaporPendukung::with(['indikator_rapor_pendukung' => function ($q) use ($tingkat) {
+            $q->where('tingkat_kelas', $tingkat);
+        }])
             ->where('id_rapor_pendukung', $id_rapor_pendukung)
             ->orderBy('urutan')
             ->get();
@@ -573,7 +583,6 @@ class RaporPendukungController extends Controller
             $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
         }
 
-
         if (str_contains($rapor->nm_rapor, 'P5')) {
             $list_catatan_siswa = PredikatRaporPendukung::where(
                 'id_rapor_pendukung',
@@ -584,7 +593,6 @@ class RaporPendukungController extends Controller
 
             return view('guru/wali-kelas/rapor-pendukung/print-custom-p5-rapor-pendukung', compact('auth_data', 'semester_aktif', 'kelas', 'list_siswa', 'rapor', 'list_komponen_rapor', 'list_catatan_siswa', 'tanggal_cetak', 'wali_kelas'));
         } else {
-
             $predikat_rapor_pendukung = DB::select("select prp.id_siswa, irp.id_indikator_rapor_pendukung, prp.tipe, prp.nilai 
                     from indikator_rapor_pendukung irp
                     left join predikat_rapor_pendukung prp on prp.id_indikator_rapor_pendukung = irp.id_indikator_rapor_pendukung and prp.deleted_at is null and prp.id_kelas = '$kelas->id_kelas'
