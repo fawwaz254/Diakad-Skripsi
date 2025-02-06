@@ -368,28 +368,15 @@
             </table>
 
             {{-- PROJEK 3 --}}
-            @if ($kelas->tingkat !== 3)
-                @if ($kelas->tingkat === 1)
-                    <h3 style="width: 90%; margin: 2rem auto;">TEMA BHINEKA TUNGGAL IKA : Eksplorasi Budaya Bangsa
-                    </h3>
-                @else
-                    <h3 style="width: 90%; margin: 2rem auto;">TEMA KEARIFAN LOKAL : MAKANAN TRADISIONAL KHAS KOTA
-                        SURABAYA
-                        DI LINGKUNGAN SEKOLAH
-                    </h3>
-                @endif
+            @if ($kelas->tingkat === 1)
+                <h3 style="width: 90%; margin: 2rem auto;">TEMA BHINEKA TUNGGAL IKA : Eksplorasi Budaya Bangsa
+                </h3>
                 <table style="width: 90%; margin: 2rem auto;">
                     <tr>
-                        @if ($kelas->tingkat === 1)
-                            <th style="font-weight: bold;background-color: #f7b2ab">TEMA BHINEKA TUNGGAL IKA :
-                                Eksplorasi
-                                Budaya Bangsa
-                            </th>
-                        @else
-                            <th style="font-weight: bold;background-color: #f7b2ab">TEMA KEARIFAN LOKAL : MAKANAN
-                                TRADISIONAL KHAS KOTA SURABAYA DI LINGKUNGAN SEKOLAH
-                            </th>
-                        @endif
+                        <th style="font-weight: bold;background-color: #f7b2ab">TEMA BHINEKA TUNGGAL IKA :
+                            Eksplorasi
+                            Budaya Bangsa
+                        </th>
                         <th style="font-weight: bold;background-color: #abb9f7">BB</th>
                         <th style="font-weight: bold;background-color: #abb9f7">MB</th>
                         <th style="font-weight: bold;background-color: #abb9f7">BSH</th>
