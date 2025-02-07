@@ -49,7 +49,7 @@
             {{-- </form> --}}
         </div>
     </div>
-    <hr>
+
     <div class="card" style="margin-bottom: 3rem">
         <div class="header">
             <h2 style="float:left; font-size:2rem">TEMPLATE PESAN PEMBAYARAN</h2>
@@ -91,14 +91,20 @@
 
     <div class="card" style="margin-bottom: 3rem">
         <div class="header">
-            <h2 style="float:left; font-size:2rem">LIST GRUP</h2>
-            <a style="float:right; font-size:2rem" class="btn bg-green"
-                href="{{ request()->segment(1) . request()->segment(2) . '#notification/whatsapp/scan' }}"
-                target="_blank">
-                <i class="material-icons">sync</i> SCAN QR CODE
-            </a>
-
-            <div style="clear: both;"></div>
+            <div style="display: flex; justify-content:space-between">
+                <h2 style="display:block; width: fit-content">LIST GRUP</h2>
+                <span>
+                    <button style="font-size:2rem; color:white;" class="btn bg-cyan"
+                        onclick="actionSendMsgToGroupWhatsapp()">
+                        <i class="material-icons">send</i> Kirim Manual
+                    </button>
+                    <a style="font-size:2rem" class="btn bg-green"
+                        href="{{ request()->segment(1) . request()->segment(2) . '#notification/whatsapp/scan' }}"
+                        target="_blank">
+                        <i class="material-icons">sync</i> SCAN QR CODE
+                    </a>
+                </span>
+            </div>
         </div>
         <div class="body">
             <div class="table-responsive">
@@ -157,6 +163,7 @@
 
 <script>
     var update_url = '/administrator/notification/whatsapp/setting/update'
+    var send_url = '/administrator/notification/whatsapp/group/send'
 
     $(document).ready(function() {
         $.ajax({
@@ -269,7 +276,44 @@
         });
     }
 
-    // tambahkan update yang berbeda yaitu pembayaran dan jadwal
+    function actionSendMsgToGroupWhatsapp() {
+        swal({
+            title: 'Yakin kirim notifikasi whatsapp secara manual?',
+            showCancelButton: true
+        }, function(isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + send_url,
+                    success: function(response) {
+                        if (response.status_code == 200) {
+                            vex.dialog.alert(response.message);
+                        } else if (response.status_code == 201) {
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        } else if (response.status_code == 202) {
+                            vex.dialog.alert(response.message);
+                            setTimeout(function() {
+                                loadURI(response.path);
+                            }, 2000);
+
+                        } else if (response.status_code == 203) {
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                        } else if (response.status_code == 204) {
+                            loadURI(response.path);
+                        } else if (response.status_code == 300) {
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            }
+        });
+    }
+
     function actionUpdatePembayaran() {
         $.ajax({
             type: 'POST',

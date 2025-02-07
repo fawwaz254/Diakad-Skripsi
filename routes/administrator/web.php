@@ -61,11 +61,10 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('/whatsapp', [NotificationController::class, 'viewWhatsappGroup']);
             Route::view('/whatsapp/scan', 'administrator.notification.view-whatsapp-scan');
             Route::post('/whatsapp/group', [NotificationController::class, 'fetchWhatsappGroup']);
+            Route::post('/whatsapp/group/send', [NotificationController::class, 'sendMsgToGroupWhatsapp']);
             Route::post('/whatsapp/group/{mode}', [NotificationController::class, 'actionWhatsappGroup']);
             Route::post('/whatsapp/setting/update/{mode}', [NotificationController::class, 'actionUpdateNotificationSetting']);
         });
-
-
 
         Route::prefix('manajemen-file')->group(function () {
             Route::prefix('data-kategori')->group(function () {
