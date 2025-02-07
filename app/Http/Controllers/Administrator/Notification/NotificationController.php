@@ -13,6 +13,7 @@ use App\Jobs\PushNotification;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Artisan;
 
 class NotificationController extends Controller
 {
@@ -42,6 +43,12 @@ class NotificationController extends Controller
         $day_schedule_setting = Setting::where('key_setting', 'jadwal_hari_notifikasi')->value('value');
 
         return view('administrator.notification.view-whatsapp-group', compact('list_kelas', 'attendance_time_setting', 'payment_time_setting', 'mode_attendance_setting', 'template_attendance_setting', 'template_payment_setting', 'day_schedule_setting'));
+    }
+
+    public function sendMsgToGroupWhatsapp()
+    {
+        Artisan::call('notification:attendance-class');
+        Artisan::call('notification:payment-class');
     }
 
     public function fetchWhatsappGroup()
