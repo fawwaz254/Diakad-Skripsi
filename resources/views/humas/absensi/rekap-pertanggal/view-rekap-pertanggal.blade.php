@@ -254,8 +254,8 @@
         class="btn bg-blue waves-effect" style=" margin-top: 20px !important;">
         <i class="material-icons" style="font-size: 15px;">print</i> Export PDF
     </a>
-    <a href="humas/absensi/rekap-pertanggal/export-pertanggal/{{ $bulan->kode_bulan }}/{{ $tahun }}"
-        target="_blank" class="btn bg-green waves-effect" style=" margin-top: 20px !important;">
+    <a href="humas/absensi/rekap-pertanggal/export-pertanggal/{{ $bulan->kode_bulan }}/{{ $tahun }}" target="_blank"
+        class="btn bg-green waves-effect" style=" margin-top: 20px !important;">
         <i class="material-icons" style="font-size: 15px;">print</i> Excel
     </a>
     <div class="row clearfix">
@@ -308,13 +308,11 @@
                                                 }
                                             @endphp
                                             <td
-                                                @if ($status == 'M') style="text-align: center;background: #b5ffe0" 
-                                                @elseif($status == 'A') style="text-align: center;background: #ff9494" 
-                                                @elseif($status == 'L') style="text-align: center;background: yellow"
-                                                @else style="text-align: center;" @endif>
+                                                @if ($status == 'M') style="text-align: center;background: #b5ffe0" @elseif($status == 'A') style="text-align: center;background: #ff9494" @else style="text-align: center;" @endif>
                                                 {{ $status }}
                                             </td>
                                         @endforeach
+
                                     </tr>
                                 @endforeach
                             </tbody>
