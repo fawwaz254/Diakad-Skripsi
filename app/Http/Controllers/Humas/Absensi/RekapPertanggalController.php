@@ -40,6 +40,7 @@ class RekapPertanggalController extends Controller
         $start_month = Carbon::create($tahun, $bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun, $bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
         $dates = CarbonPeriod::create($start_month, $end_month);
+        $hari_libur = ManajemenHariLibur::pluck('date')->toArray();
 
         $query = Pengguna::whereIn('status_join_table', [1, 2])
             ->where('username', '!=', 'admin')
@@ -61,7 +62,9 @@ class RekapPertanggalController extends Controller
             $hasil[$value->id_pengguna]['nm_pengguna'] = $value->gelar_depan . ' ' . $value->nm_pengguna . ' ' . $value->gelar_belakang;
 
             foreach ($value->shiftPenggunas as $shiftPengguna) {
-                if ($shiftPengguna->shift_master && $shiftPengguna->date < Carbon::now()->format('Y-m-d')) {
+                if (in_array($shiftPengguna->date, $hari_libur) || Carbon::make($shiftPengguna->date)->isWeekend()) {
+                    $hasil[$value->id_pengguna][$shiftPengguna->date] = 'L'; // 'Libur'
+                } elseif ($shiftPengguna->shift_master && $shiftPengguna->date < Carbon::now()->format('Y-m-d')) {
                     $hasil[$value->id_pengguna][$shiftPengguna->date] = 'A';
                 }
             }
@@ -107,8 +110,9 @@ class RekapPertanggalController extends Controller
 
         $bulan = Bulan::find($bulan);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
+        dump($hari_libur, $hasil);
 
-        return view('humas/absensi/rekap-pertanggal/view-rekap-pertanggal', compact('auth_data', 'dates', 'hasil', 'pengguna', 'bulan', 'data_bulan', 'tahun'));
+        return view('humas/absensi/rekap-pertanggal/view-rekap-pertanggal', compact('auth_data', 'dates', 'hasil', 'pengguna', 'bulan', 'data_bulan', 'tahun', 'hari_libur'));
     }
 
     public function selectRekapPertanggal(Request $request)
