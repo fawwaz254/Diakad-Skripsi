@@ -157,6 +157,9 @@ class RekapPelanggaranKelasController extends BaseController
             ->addColumn('nm_mapel', function ($item) {
                 return $item->kd_mata_pelajaran . " - " . $item->nm_mata_pelajaran;
             })
+            ->addColumn('tingkat_pelanggaran', function ($item) {
+                return $item->tingkat_kategori_pelanggaran . "." . $item->tingkat_subkategori_pelanggaran;
+            })
             ->addColumn('tgl_pelanggaran', function ($item) {
                 return strftime("%d %B %Y %H:%M:%S", strtotime($item->created_at));
             })
@@ -210,7 +213,11 @@ class RekapPelanggaranKelasController extends BaseController
                 }
             })
             ->editColumn('nm_subkategori_pelanggaran', function ($item) {
+                if (!empty($item->id_pelanggaran_siswa)) {
                 return strip_tags($item->nm_subkategori_pelanggaran);
+                }else {
+                return strip_tags($item->nm_subkategori_pelanggaran_mp);
+                }
             })
             ->addColumn('nm_kelas', function ($item) {
                 if (!empty($item->nm_kelas)) {
@@ -250,7 +257,7 @@ class RekapPelanggaranKelasController extends BaseController
                     } elseif (!empty($item->gelar_depan_guru_presensi)) {
                         return $item->gelar_depan_guru_presensi . " " . $item->nm_guru_input_presensi . " (Guru)";
                     } elseif (!empty($item->gelar_belakang_guru_presensi)) {
-                        return $item->nm_guru_input_presensinm_guru_input_presensi . ", " . $item->gelar_belakang_guru_presensi . " (Guru)";
+                        return $item->nm_guru_input_presensi . ", " . $item->gelar_belakang_guru_presensi . " (Guru)";
                     } else {
                         return $item->nm_guru_input_presensi . " (Guru)";
                     }

@@ -140,7 +140,9 @@
             },
             {
                 data: 'nm_subkategori_pelanggaran',
-                name: 'nm_subkategori_pelanggaran'
+                name: 'nm_subkategori_pelanggaran',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'tgl_pelanggaran',
@@ -237,12 +239,15 @@
             name: 'action',
             searchable: false,
             orderable: false,
-            render: function (data) {
-                return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                    add_url_kbm + '/' + data.id + '">' +
-                    '    <i class="material-icons">done_all</i>' +
-                    '</a>';
-            }
+            render: function (data, type, row) {
+                    if (row.tingkat_kategori_pelanggaran == 1) {
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            add_url_nonkbm + '/' + data.id + '">' +
+                            '    <i class="material-icons">done_all</i>' +
+                            '</a> ';
+                    }
+                    return '';
+                }
         },
         ],
         createdRow: function (row, data, dataIndex) {
@@ -265,7 +270,7 @@
 
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
-        serverSide: true,
+        serverSide: false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
@@ -281,17 +286,17 @@
         },
         {
             data: 'nm_siswa',
-            searchable: false,
+            name: 'pengguna.nm_pengguna',
             orderable: false
         },
         {
             data: 'nm_kelas',
-            searchable: false,
             orderable: false
         },
         {
             data: 'nm_subkategori_pelanggaran',
-            name: 'nm_subkategori_pelanggaran'
+            name: 'nm_subkategori_pelanggaran',
+            orderable: false
         },
         {
             data: 'tgl_pelanggaran',
@@ -307,14 +312,16 @@
         },
         {
             data: 'nm_input_tindakan',
-            name: 'p_tindakan.nm_pengguna'
+            name: 'p_tindakan.nm_pengguna',
+            searchable: false,
+            orderable: false
         },
         {
             data: 'action',
             name: 'action',
             searchable: false,
             orderable: false,
-            render: function (data) {
+            render: function (data, type, row) {
                 return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
                     edit_url + '/' + data.id + '">' +
                     '    <i class="material-icons">edit</i>' +
