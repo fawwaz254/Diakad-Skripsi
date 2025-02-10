@@ -176,11 +176,11 @@ class JurnalPimpinanController extends Controller
 
     public function datatablesJurnalPimpinan(Request $request)
     {
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $list_data = LaporanJurnalPimpinan::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
+            ->orderBy('tanggal', 'DESC')
             ->get();
         return Datatables::of($list_data)
             ->editColumn('tanggal', function ($item) {
