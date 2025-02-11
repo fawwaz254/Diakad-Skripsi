@@ -403,12 +403,21 @@ class RaporPendukungController extends Controller
             $tingkat = 12;
         }
 
-        $komponen_rapor = KomponenRaporPendukung::with('indikator_rapor_pendukung.predikat_rapor_pendukung')
-            ->join('indikator_rapor_pendukung as irp', 'irp.id_komponen_rapor_pendukung', '=', 'komponen_rapor_pendukung.id_komponen_rapor_pendukung')
-            ->where('irp.tingkat_kelas', $tingkat)
+        // $komponen_rapor = KomponenRaporPendukung::with('indikator_rapor_pendukung.predikat_rapor_pendukung')
+        //     ->join('indikator_rapor_pendukung as irp', 'irp.id_komponen_rapor_pendukung', '=', 'komponen_rapor_pendukung.id_komponen_rapor_pendukung')
+        //     ->where('irp.tingkat_kelas', $tingkat)
+        //     ->where('id_rapor_pendukung', $id_rapor_pendukung)
+        //     ->orderBy('komponen_rapor_pendukung.urutan')
+        //     ->orderBy('irp.urutan')
+        //     ->get();
+        $komponen_rapor = KomponenRaporPendukung::with(['indikator_rapor_pendukung' => function ($q) use ($tingkat) {
+            $q->where('tingkat_kelas', $tingkat);
+        }])
             ->where('id_rapor_pendukung', $id_rapor_pendukung)
-            ->orderBy('komponen_rapor_pendukung.urutan')
-            ->orderBy('irp.urutan')
+            ->whereHas('indikator_rapor_pendukung', function ($q) use ($tingkat) {
+                $q->where('tingkat_kelas', $tingkat);
+            })
+            ->orderBy('urutan')
             ->get();
 
         $list_catatan_siswa = PredikatRaporPendukung::where('id_rapor_pendukung', $id_rapor_pendukung)->whereNull('id_indikator_rapor_pendukung')->get();
@@ -530,9 +539,6 @@ class RaporPendukungController extends Controller
                 }
             }
         }
-
-        // dump($list_siswa, $list_predikat);
-        dd($list_siswa, $list_predikat);
 
         return [
             'status' => 203, // SUCCESS AND LOAD CONTENT
