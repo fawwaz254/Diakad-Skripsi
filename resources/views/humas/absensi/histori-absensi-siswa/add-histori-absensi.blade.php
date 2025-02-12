@@ -24,10 +24,19 @@
 
                             <div class="col-md-6">
                                 <select class="form-control show-tick" name="status">
+                                    <option value="masuk">masuk</option>
                                     <option value="izin">izin</option>
                                     <option value="sakit">sakit</option>
                                     <option value="lainnya">lainnya</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <h2 class="card-inside-title">Jam Kehadiran</h2>
+                        <p style="font-size: 12px;">* Pilih opsi ini hanya jika berstatus Hadir.</p>
+                        <div class="row clearfix">
+                            <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
+                                <input type="time" name="check_in" class="form-control">
                             </div>
                         </div>
 
@@ -37,15 +46,17 @@
                                 <input type="text" name="notes" class="form-control">
                             </div>
                         </div>
+
                         <button id="btn-submit" class="btn btn-block bg-red waves-effect">
                             <i class="material-icons">save</i>
                             <span>Save</span>
                         </button>
-                    </form>
                 </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script>
     $("#add-form").submit(function() {

@@ -80,7 +80,8 @@ class HistoriAbsensiSiswaController extends Controller
             },
             'presensi_pengguna' => function ($query) use ($date) {
                 $query->where('date', $date);
-            }, 'siswa.kelas'
+            },
+            'siswa.kelas'
         ])->orderBy('username', 'asc')->get();
 
         // if ($id_kelas == '0') {
@@ -739,7 +740,8 @@ class HistoriAbsensiSiswaController extends Controller
         $input = $request->input();
         $status = $input['status'];
         $notes = $input['notes'];
-        PresensiPengguna::create(['id_pengguna' => $id_pengguna, 'status_join_table' => 3, 'date' => $date, 'status' => $status, 'notes' => $notes]);
+        $check_in = $input['status'] === 'masuk' ? $input['check_in'] : null;
+        PresensiPengguna::create(['id_pengguna' => $id_pengguna, 'status_join_table' => 3, 'date' => $date, 'status' => $status, 'notes' => $notes, 'check_in' => $check_in]);
         return redirect("/{{Request::segment(1)}}#absensi/histori-absensi-siswa/detail/" . $kelas . "/"  . $date . "/0");
     }
 
