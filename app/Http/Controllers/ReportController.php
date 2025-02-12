@@ -708,8 +708,10 @@ class ReportController extends BaseController
 
     private function reward_siswa()
     {
+        // jika tidak memakai model nonkbm maka data terlalu banyak terutama pada salah satu sekolah
         $reward_siswas = DB::table('reward_siswa')
             ->select('id_reward_siswa', 'created_at', 'created_by', 'deleted_at')
+            ->where('model_event', 'NonKBM')
             ->whereNull('deleted_at')
             ->get();
         return $reward_siswas;
