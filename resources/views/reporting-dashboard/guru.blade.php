@@ -40,9 +40,9 @@
 
                                 <hr>
                                 <form id="form-validation" method="POST"
-                                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/') }}"
+                                    action="{{ url(Request::segment(1) . '/' . Request::segment(2)) }}"
                                     style="display: inline;padding: 5px">
-                                    {{ csrf_field() }}
+                                    @csrf
                                     <div class="row clearfix">
                                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                             <select class="form-control show-tick" name="filter_value">
@@ -62,11 +62,11 @@
                                                 <option value="7" {{ $filter_value == '7' ? 'selected' : '' }}>
                                                     Jurnal Harian</option>
                                                 <option value="8" {{ $filter_value == '8' ? 'selected' : '' }}>
-                                                    Pelanggaran Siswa</option>
-                                                <option value="9" {{ $filter_value == '9' ? 'selected' : '' }}>
                                                     Sarana Prasarana</option>
-                                                <option value="10" {{ $filter_value == '10' ? 'selected' : '' }}>
+                                                <option value="9" {{ $filter_value == '9' ? 'selected' : '' }}>
                                                     Laporan</option>
+                                                <option value="10" {{ $filter_value == '10' ? 'selected' : '' }}>
+                                                    Reward Siswa</option>
                                             </select>
                                         </div>
                                     </div>
@@ -86,7 +86,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 none">
-                                        <button class="btn btn-block form-control bg-cyan waves-effect" type="submit">
+                                        <button class="btn btn-block form-control bg-cyan waves-effect">
                                             Filter
                                         </button>
                                         <button onclick="window.print()"
