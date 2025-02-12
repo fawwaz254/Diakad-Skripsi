@@ -3,6 +3,7 @@
 use App\Http\Controllers\PembimbingMagang\PresensiMagang\RekapPresensiMagangController;
 use App\Http\Controllers\PembimbingMagang\PresensiMagang\InputPresensiMagangController;
 use App\Http\Controllers\PembimbingMagang\WelcomeController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
 	Route::prefix('pembimbing-magang')->group(function () {

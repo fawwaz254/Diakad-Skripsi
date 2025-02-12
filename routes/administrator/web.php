@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Models\Pengguna;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ReportController;

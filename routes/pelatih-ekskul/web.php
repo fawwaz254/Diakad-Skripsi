@@ -8,6 +8,7 @@ use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController;
 use App\Http\Controllers\PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController;
 use App\Http\Controllers\Guru\PembinaEkskul\RekapAbsensiEkskulController as RekapAbsensiEkskulControllerFromGuru;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('pelatih-ekskul')->group(function () {

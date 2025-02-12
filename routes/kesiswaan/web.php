@@ -47,6 +47,7 @@ use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\MonitoringNilaiEkskulControll
 use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\MonitoringAbsensiEkskulController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as WaliKelasRekapKesehatanController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapKesehatanController as HumasRekapKesehatanController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
 

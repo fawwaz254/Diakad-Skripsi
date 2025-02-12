@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sekretariat\DataDokumen\DokumenDibagikanController;
 use App\Http\Controllers\Sekretariat\DataDokumen\InputDokumenController;
 use App\Http\Controllers\Sekretariat\DataSekretariat\DataKategoriController;

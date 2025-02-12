@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc8e1edd2311e991ae066e04cb2a1ee4",
+    "content-hash": "d443d5fd0cd002ddcdb08ae4b65e6d7b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -397,16 +397,16 @@
         },
         {
             "name": "cloudinary/cloudinary_php",
-            "version": "1.20.1",
+            "version": "1.20.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cloudinary/cloudinary_php.git",
-                "reference": "94516fe6d0a43645e964b38d78d5f4555dbd192d"
+                "reference": "c5d2eb500a92802ef958f8bb36d81af07fb3f6f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/94516fe6d0a43645e964b38d78d5f4555dbd192d",
-                "reference": "94516fe6d0a43645e964b38d78d5f4555dbd192d",
+                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/c5d2eb500a92802ef958f8bb36d81af07fb3f6f7",
+                "reference": "c5d2eb500a92802ef958f8bb36d81af07fb3f6f7",
                 "shasum": ""
             },
             "require": {
@@ -449,9 +449,9 @@
             "support": {
                 "email": "info@cloudinary.com",
                 "issues": "https://github.com/cloudinary/cloudinary_php/issues",
-                "source": "https://github.com/cloudinary/cloudinary_php/tree/1.20.1"
+                "source": "https://github.com/cloudinary/cloudinary_php/tree/1.20.2"
             },
-            "time": "2022-02-01T08:35:49+00:00"
+            "time": "2023-02-09T18:55:50+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -12234,12 +12234,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.3|^8.0"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }

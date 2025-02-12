@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Pendidikan\Siswa\InsertUpdateSiswaController;
 use App\Http\Controllers\RaporBukuInduk\BukuInduk\CariSiswaBIController;
 use App\Http\Controllers\RaporBukuInduk\BukuInduk\CetakByKelasBIController;
