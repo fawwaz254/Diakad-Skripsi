@@ -25,6 +25,7 @@ use App\Http\Controllers\PPDB\Peserta\ProsesPenetapanController;
 use App\Http\Controllers\PPDB\Report\HasilPlacementController;
 use App\Http\Controllers\PPDB\Report\ReportPendaftaranController;
 use App\Http\Controllers\PPDB\WelcomeController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
 	Route::prefix('ppdb')->group(function () {

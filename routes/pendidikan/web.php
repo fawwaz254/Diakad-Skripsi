@@ -1,6 +1,6 @@
 <?php
 // ROLE PENDIDIKAN
-
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
@@ -361,7 +361,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [JurnalGuruController::class, 'viewJurnalGuru']);
                 Route::get('/{id_guru}/{id_semester}', [JurnalGuruController::class, 'viewJurnalGuru']);
                 Route::get('datatables/{id_guru}/{id_semester}', [JurnalGuruController::class, 'datatablesJurnalGuru']);
-
             });
             Route::prefix('jurnal-kelas')->group(function () {
                 Route::get('print-pdf/{id_kelas_mp}', [JurnalKelasController::class, 'printPdfJurnalKelas']);

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WaliMurid\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;

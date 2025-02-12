@@ -5,7 +5,7 @@
 use App\Http\Controllers\Api\v2\KeuanganController;
 use App\Http\Controllers\Apiv1Controller;
 use App\Http\Controllers\BankController;
-
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | API Routes
