@@ -115,7 +115,7 @@
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
                                                 <th>Sub Kategori</th>
-                                                <th>Tanggal Pelanggaran</th>
+                                                <th>Tanggal Tindakan</th>
                                                 <th>Nama Guru Input</th>
                                                 <th>Nama Input Tindakan</th>
                                                 <!-- <th>Catatan Tindakan</th>
@@ -393,8 +393,8 @@
                 orderable: false
             },
             {
-                data: 'tgl_pelanggaran',
-                name: 'tgl_pelanggaran',
+                data: 'tgl_tindakan',
+                name: 'tgl_tindakan',
                 searchable: false,
                 orderable: false
             },
