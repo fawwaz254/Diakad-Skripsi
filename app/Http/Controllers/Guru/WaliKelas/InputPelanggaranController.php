@@ -202,11 +202,11 @@ class InputPelanggaranController extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_siswa'              => 'required',
-            'id_subkategori_pelanggaran'    => 'required',
-            'id_semester'            => 'required',
-            'catatan_pelanggaran'   => 'required',
-            'tgl_pelanggaran'       => 'required'
+            'id_siswa' => 'required',
+            'id_subkategori_pelanggaran' => 'required',
+            'id_semester' => 'required',
+            'catatan_pelanggaran' => 'required',
+            'tgl_pelanggaran' => 'required'
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
@@ -250,19 +250,19 @@ class InputPelanggaranController extends BaseController
 
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
-                $pelanggaranSiswa                               = new PelanggaranSiswa;
-                $pelanggaranSiswa->id_pelanggaran_siswa         = $id;
-                $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
-                $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
-                $pelanggaranSiswa->id_guru_input                = $id_guru_input;
-                $pelanggaranSiswa->id_semester                  = $input->id_semester;
-                $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
-                $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                $pelanggaranSiswa = new PelanggaranSiswa;
+                $pelanggaranSiswa->id_pelanggaran_siswa = $id;
+                $pelanggaranSiswa->id_siswa = $input->id_siswa;
+                $pelanggaranSiswa->id_kelas = $siswa->id_kelas;
+                $pelanggaranSiswa->id_guru_input = $id_guru_input;
+                $pelanggaranSiswa->id_semester = $input->id_semester;
+                $pelanggaranSiswa->id_subkategori_pelanggaran = $input->id_subkategori_pelanggaran;
+                $pelanggaranSiswa->catatan_pelanggaran = $input->catatan_pelanggaran;
                 // convert format date
-                $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
-                $pelanggaranSiswa->aktor_input_pelanggaran      = 3;
-                $pelanggaranSiswa->is_sudah_tindakan            = 0;
-                $pelanggaranSiswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->tgl_pelanggaran = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
+                $pelanggaranSiswa->aktor_input_pelanggaran = 3;
+                $pelanggaranSiswa->is_sudah_tindakan = 0;
+                $pelanggaranSiswa->created_by = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->save();
 
                 if (!empty($siswa->id_wali_murid)) {
@@ -300,16 +300,16 @@ class InputPelanggaranController extends BaseController
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
                 // make object to find id
-                $pelanggaranSiswa                               = PelanggaranSiswa::find($id);
-                $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
-                $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
-                $pelanggaranSiswa->id_semester                  = $input->id_semester;
-                $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
-                $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                $pelanggaranSiswa = PelanggaranSiswa::find($id);
+                $pelanggaranSiswa->id_siswa = $input->id_siswa;
+                $pelanggaranSiswa->id_kelas = $siswa->id_kelas;
+                $pelanggaranSiswa->id_semester = $input->id_semester;
+                $pelanggaranSiswa->id_subkategori_pelanggaran = $input->id_subkategori_pelanggaran;
+                $pelanggaranSiswa->catatan_pelanggaran = $input->catatan_pelanggaran;
                 // convert format date
-                $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
-                $pelanggaranSiswa->updated_by                   = $input->auth_data->pengguna->id_pengguna;
-                $pelanggaranSiswa->updated_at                   = $now;
+                $pelanggaranSiswa->tgl_pelanggaran = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
+                $pelanggaranSiswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->updated_at = $now;
                 $pelanggaranSiswa->save();
 
                 return [
@@ -325,8 +325,8 @@ class InputPelanggaranController extends BaseController
                     ];
                 } else {
                     // make object to find id
-                    $pelanggaranSiswa               = PelanggaranSiswa::find($id);
-                    $pelanggaranSiswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $pelanggaranSiswa = PelanggaranSiswa::find($id);
+                    $pelanggaranSiswa->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $pelanggaranSiswa->save();
 
                     $pelanggaranSiswa->delete();
@@ -338,5 +338,146 @@ class InputPelanggaranController extends BaseController
                 }
             }
         }
+    }
+
+    public function actionTindakanPelanggaran(Request $request, $mode, $id = null)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            /*'id_pelanggaran_siswa'          => 'required',
+            'id_presensi_mp_pelanggaran'    => 'required',*/
+            'id_jenis_tindakan' => 'required',
+            'catatan_tindakan_pelanggaran' => 'required',
+            /*'catatan_tindakan_pelanggaran_khusus'    => 'required',*/
+            'tgl_tindakan_pelanggaran' => 'required'
+        ]);
+
+        if ($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            // mengambil waktu sekarang
+            $now = Carbon::now();
+
+            if ($mode == 'add-nonkbm') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                $tindakanPelanggaran = new TindakanPelanggaran;
+                $tindakanPelanggaran->id_tindakan_pelanggaran = $id;
+                $tindakanPelanggaran->id_pelanggaran_siswa = $input->id_pelanggaran_siswa;
+                $tindakanPelanggaran->id_jenis_tindakan = $input->id_jenis_tindakan;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran = $input->catatan_tindakan_pelanggaran;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran_khusus = $input->catatan_tindakan_pelanggaran_khusus;
+                // convert format date
+                $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
+                $tindakanPelanggaran->aktor_input_tindakan_pelanggaran = 1;
+                $tindakanPelanggaran->created_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->save();
+
+                $pelanggaranSiswa = PelanggaranSiswa::find($input->id_pelanggaran_siswa);
+                $pelanggaranSiswa->is_sudah_tindakan = 1;
+                $pelanggaranSiswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->updated_at = $now;
+                $pelanggaranSiswa->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'penanganan-siswa/tindakan-pelanggaran',
+                    'message' => 'Save Tindakan Pelanggaran Siswa Successfully'
+                ];
+            } elseif ($mode == 'add-kbm') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                $tindakanPelanggaran = new TindakanPelanggaran;
+                $tindakanPelanggaran->id_tindakan_pelanggaran = $id;
+                $tindakanPelanggaran->id_presensi_mp_pelanggaran = $input->id_presensi_mp_pelanggaran;
+                $tindakanPelanggaran->id_jenis_tindakan = $input->id_jenis_tindakan;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran = $input->catatan_tindakan_pelanggaran;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran_khusus = $input->catatan_tindakan_pelanggaran_khusus;
+                // convert format date
+                $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
+                $tindakanPelanggaran->aktor_input_tindakan_pelanggaran = 1;
+                $tindakanPelanggaran->created_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->save();
+
+                $presensiMpPelanggaran = PresensiMpPelanggaran::find($input->id_presensi_mp_pelanggaran);
+                $presensiMpPelanggaran->is_sudah_tindakan = 1;
+                $presensiMpPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $presensiMpPelanggaran->updated_at = $now;
+                $presensiMpPelanggaran->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'penanganan-siswa/tindakan-pelanggaran',
+                    'message' => 'Save Tindakan Pelanggaran Siswa Successfully'
+                ];
+            } elseif ($mode == 'edit') {
+                // make object to find id
+                $tindakanPelanggaran = TindakanPelanggaran::find($id);
+                $tindakanPelanggaran->id_jenis_tindakan = $input->id_jenis_tindakan;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran = $input->catatan_tindakan_pelanggaran;
+                if (!empty($input->catatan_tindakan_pelanggaran_khusus)) {
+                    $tindakanPelanggaran->catatan_tindakan_pelanggaran_khusus = $input->catatan_tindakan_pelanggaran_khusus;
+                }
+                // convert format date
+                $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
+                $tindakanPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->updated_at = $now;
+                $tindakanPelanggaran->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'penanganan-siswa/tindakan-pelanggaran',
+                    'message' => 'Update Tindakan Pelanggaran Siswa Successfully'
+                ];
+            } elseif ($mode == 'delete') {
+                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_tindakan_pelanggaran', $id)->where('created_by', '<>', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    return [
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Failed To Delete Tindakan Pelanggaran Siswa, Yg boleh menghapus hanya penindak'
+                    ];
+                } else {
+                    // make object to find id
+                    $tindakanPelanggaran = TindakanPelanggaran::find($id);
+                    if ($tindakanPelanggaran->id_pelanggaran_siswa) {
+                        $pelanggaranSiswa = PelanggaranSiswa::find($tindakanPelanggaran->id_pelanggaran_siswa);
+                        $pelanggaranSiswa->is_sudah_tindakan = 0;
+                        $pelanggaranSiswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                        $pelanggaranSiswa->updated_at = $now;
+                        $pelanggaranSiswa->save();
+                    } elseif ($tindakanPelanggaran->id_presensi_mp_pelanggaran) {
+                        $presensiMpPelanggaran = PresensiMpPelanggaran::find($tindakanPelanggaran->id_presensi_mp_pelanggaran);
+                        $presensiMpPelanggaran->is_sudah_tindakan = 0;
+                        $presensiMpPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                        $presensiMpPelanggaran->updated_at = $now;
+                        $presensiMpPelanggaran->save();
+                    }
+
+                    $tindakanPelanggaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                    $tindakanPelanggaran->save();
+
+                    $tindakanPelanggaran->delete();
+
+                    return [
+                        'status' => 203, // SUCCESS AND LOAD TABLE
+                        'message' => 'Delete Tindakan Pelanggaran Siswa Successfully'
+                    ];
+                }
+            }
+        }
+    }
+
+    public function deleteInputPelanggaran($id, Request $request)
+    {
+        $pelanggaranSiswa = PelanggaranSiswa::where('id_pelanggaran_siswa', '=', $id);
+        $pelanggaranSiswa->delete();
+
+        return [
+            'status' => 203, // SUCCESS AND LOAD TABLE
+            'message' => 'Delete Tindakan Pelanggaran Siswa Successfully'
+        ];
     }
 }

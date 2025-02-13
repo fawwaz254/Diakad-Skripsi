@@ -299,7 +299,11 @@ class TindakanPelanggaranController extends BaseController
                 return $hasil;
             })
             ->addColumn('nis_siswa', function ($item) {
-                return $item->nis_siswa;
+                if (!empty($item->id_pelanggaran_siswa)) {
+                    return $item->nis_siswa;
+                } else {
+                    return $item->nis_siswa_mp;
+                }
             })
             ->addColumn('nm_siswa', function ($item) {
                 if (!empty($item->nm_siswa)) {
@@ -311,7 +315,11 @@ class TindakanPelanggaranController extends BaseController
                 }
             })
             ->editColumn('nm_subkategori_pelanggaran', function ($item) {
-                return strip_tags($item->nm_subkategori_pelanggaran);
+                if (!empty($item->id_pelanggaran_siswa)) {
+                    return strip_tags($item->nm_subkategori_pelanggaran);
+                } else {
+                    return strip_tags($item->nm_subkategori_pelanggaran_mp);
+                }
             })
             ->addColumn('nm_kelas', function ($item) {
                 if (!empty($item->nm_kelas)) {
@@ -351,7 +359,7 @@ class TindakanPelanggaranController extends BaseController
                     } elseif (!empty($item->gelar_depan_guru_presensi)) {
                         return $item->gelar_depan_guru_presensi . " " . $item->nm_guru_input_presensi . " (Guru)";
                     } elseif (!empty($item->gelar_belakang_guru_presensi)) {
-                        return $item->nm_guru_input_presensinm_guru_input_presensi . ", " . $item->gelar_belakang_guru_presensi . " (Guru)";
+                        return $item->nm_guru_input_presensi . ", " . $item->gelar_belakang_guru_presensi . " (Guru)";
                     } else {
                         return $item->nm_guru_input_presensi . " (Guru)";
                     }
@@ -393,11 +401,11 @@ class TindakanPelanggaranController extends BaseController
                     return "-";
                 }
             })
-            ->addColumn('tgl_pelanggaran', function ($item) {
+            ->addColumn('tgl_tindakan', function ($item) {
                 if (!empty($item->id_pelanggaran_siswa)) {
-                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran));
+                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_tindakan_pelanggaran));
                 } else {
-                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran_presensi));
+                    return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_tindakan_pelanggaran));
                 }
             })
             ->addColumn('aktor_input_pelanggaran', function ($item) {
