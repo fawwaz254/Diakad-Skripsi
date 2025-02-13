@@ -73,7 +73,8 @@
                         </h4>
                         <select class="form-control show-tick" name="month" required="">
                             @foreach ($data_month as $month)
-                                <option value="{{ $month->id }}" {{ $month->id == $now->month ? 'selected' : '' }}>
+                                <option value="{{ $month->id }}"
+                                    {{ Request::input('month') == $month->id ? 'selected' : '' }}>
                                     {{ $month->name }}</option>
                             @endforeach
                         </select>
@@ -84,7 +85,8 @@
                         </h4>
                         <select class="form-control show-tick" name="year" required="">
                             @foreach ($data_year as $year)
-                                <option value="{{ $year }}" {{ $year == $now->year ? 'selected' : '' }}>
+                                <option value="{{ $year }}"
+                                    {{ Request::input('year') == $year ? 'selected' : '' }}>
                                     {{ $year }}</option>
                             @endforeach
                         </select>
@@ -109,7 +111,9 @@
                     <h2>Rekap Aktivitas Reward</h2>
                 </div>
                 <div class="body">
-                    <h3>Bulan {{ $now->isoFormat('MMMM Y') }}</h3>
+                    <h3>Bulan
+                        {{ \Carbon\Carbon::create(null, Request::input('month'))->translatedFormat('F') . ' ' . Request::input('year') }}
+                    </h3>
                     @if (!empty(Request::input('jenis')) && Request::input('jenis') == 1)
                         <h4>Rekap Aktivitas Harian</h4>
                         <div class="table-responsive">
@@ -136,12 +140,20 @@
                                             <td>{{ $siswa->nm_kelas }}</td>
                                             @foreach ($dates as $d)
                                                 @php
-                                                    $key = $siswa->id_siswa . '_' . $d->format('Y-m-d');
+                                                    // ada kemungkkinan aktifitas "semua" akan ditambah/dijumlahkan perhari
+                                                    $hitung = $data_reward_siswa
+                                                        ->where('id_pengguna_pengisi', $siswa->id_pengguna)
+                                                        ->where('tgl_pengisian', $d->format('Y-m-d'))
+                                                        ->first();
                                                 @endphp
-                                                @if (isset($data_reward_siswa[$key]))
-                                                    <td style="background-color: #bffa85;">1x</td>
+                                                @if (Request::input('id_aktivitas_reward') == 0 && $hitung)
+                                                    <td style="background-color: #bffa85;">&#10003;</td>
                                                 @else
-                                                    <td></td>
+                                                    @if ($hitung)
+                                                        <td style="background-color: #bffa85;">1x</td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
                                                 @endif
                                             @endforeach
                                         </tr>
@@ -177,11 +189,8 @@
                                             <td>{{ $siswa->nis_siswa }}</td>
                                             <td>{{ $siswa->nm_kelas }}</td>
                                             @foreach ($week_dates as $d)
-                                                @php
-                                                    $key = $siswa->id_siswa . '_' . $d['start']->format('Y-m-d');
-                                                @endphp
-                                                @if (isset($data_reward_siswa[$key]))
-                                                    <td style="background-color: #bffa85;">1x</td>
+                                                @if ($data_reward_siswa->where('id_pengguna_pengisi', $siswa->pengguna)->whereBetween('tgl_pengisian', [$d['start']->format('Y-m-d'), $d['end']->format('Y-m-d')])->first())
+                                                    <td style="background-color: #bffa85;">&#10003;</td>
                                                 @else
                                                     <td></td>
                                                 @endif
@@ -203,7 +212,9 @@
                                         <th>Nama Siswa</th>
                                         <th>NIS</th>
                                         <th>Kelas</th>
-                                        <th>Bulan {{ $now->isoFormat('MMMM Y') }}</th>
+                                        <th>Bulan
+                                            {{ \Carbon\Carbon::create(null, Request::input('month'))->translatedFormat('F') }}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -212,9 +223,9 @@
                                             <td>{{ $siswa->nm_pengguna }}</td>
                                             <td>{{ $siswa->nis_siswa }}</td>
                                             <td>{{ $siswa->nm_kelas }}</td>
-                                            @if ($data_reward_siswa->where('id_siswa', $siswa->id_siswa)->first())
+                                            @if ($data_reward_siswa->where('id_pengguna_pengisi', $siswa->id_pengguna)->first())
                                                 <td style="background-color: #bffa85;">
-                                                    1x
+                                                    &#10003;
                                                 </td>
                                             @else
                                                 <td></td>
@@ -275,7 +286,6 @@
         // lengthMenu: dtLengButton,
         buttons: buttonConfigReward,
     })
-
 
     function changeJenis() {
         $.ajax({
