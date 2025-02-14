@@ -22,10 +22,24 @@
 <body>
     <main>
         <div>
-            <div>
-                <h1 style="margin-bottom: 50px; text-align: center; font-size: 28px; font-weight: bold">
-                    {{ 'Rekap Data Kerja Harian ' . $datas[0]->getRelation('pengguna')->nm_pengguna }}</h1>
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h1 style="font-size: 28px; font-weight: bold;">
+                    {{ 'Rekap Data Kerja Harian ' . $datas[0]->getRelation('pengguna')->nm_pengguna }}
+                </h1>
+
+                @if ($tahunAjaran)
+                    <h2 style="font-size: 24px; font-weight: bold;">
+                        {{ 'Tahun Ajaran : ' . $tahunAjaran }}
+                    </h2>
+                @endif
+
+                @if ($semester)
+                    <h2 style="font-size: 24px; font-weight: bold;">
+                        {{ 'Semester : ' . $semester }}
+                    </h2>
+                @endif
             </div>
+
             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                 id="primary_table">
                 <thead>

@@ -8,30 +8,51 @@
                 <div class="body">
                     <div
                         style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 10px">
-                        <div class="">
-                            <label for="filterNama">Filter Nama:</label>
-                            <form action="{{ url()->current() }}" method="GET"
-                                style="display: flex; align-items: center">
-                                <div class="row clearfix">
-                                    <div class="col-md-4" style="width: 100%;">
-                                        <select id="filterNama" name="id_pengguna" class="form-control">
-                                            <option value="">-- Pilih Nama --</option>
-                                            @foreach ($data as $d)
-                                                <option value="{{ $d->id_pengguna }}"
-                                                    {{ request('id_pengguna') == $d->id_pengguna ? 'selected' : '' }}>
-                                                    {{ $d->nm_pengguna }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                        <div style="display: flex; align-items: end; gap: 20px">
+                            <div>
+                                <label for="filterNama">Filter Nama:</label>
+                                <form action="{{ url()->current() }}" method="GET"
+                                    style="display: flex; align-items: center">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4" style="width: 100%; margin:0">
+                                            <select id="filterNama" name="id_pengguna" class="form-control">
+                                                <option value="">-- Pilih Nama --</option>
+                                                @foreach ($data as $d)
+                                                    <option value="{{ $d->id_pengguna }}"
+                                                        {{ request('id_pengguna') == $d->id_pengguna ? 'selected' : '' }}>
+                                                        {{ $d->nm_pengguna }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
+
+                            <div>
+                                <label for="filterTahun">Tahun Ajaran:</label>
+                                <select id="filterTahun" class="form-control">
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="filterSemester">Semester:</label>
+                                <select id="filterSemester" class="form-control">
+                                    <option value="">-- Pilih Semester --</option>
+                                    <option value="ganjil">Semester Ganjil (Jan - Jun)</option>
+                                    <option value="genap">Semester Genap (Jul - Des)</option>
+                                </select>
+                            </div>
+                            <button type="button"
+                                style="padding: 8px 15px; border-radius: 5px; border: none; background-color: #6C757D; color: #fff; cursor: pointer; margin-left: 10px; "
+                                id="tombol-reset-filter">
+                                Hapus Filter
+                            </button>
                         </div>
 
                         <button id="tombol-print" class="hidden btn btn-warning" title="Cetak">
                             <i class="material-icons">print</i>
                         </button>
-
                     </div>
                     <div class="table-responsive">
                         <table
@@ -122,6 +143,29 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        let currentYear = new Date().getFullYear();
+
+        $('#tombol-reset-filter').click(function() {
+            $('#filterNama').val('');
+            $('#filterTahun').val(currentYear);
+            $('#filterSemester').val('');
+            $("#tombol-print").addClass("hidden");
+            primary_table.ajax.reload();
+        });
+
+
+        let tahunSelect = $('#filterTahun');
+        for (let i = 0; i < 5; i++) {
+            let year = currentYear - i;
+            tahunSelect.append(new Option(`Tahun ${year}`, year));
+        }
+        tahunSelect.append(new Option("Semua Tahun", ""));
+        $('#filterSemester').append(new Option("Semua Semester", ""));
+
+        function getSemesterMonths(semester) {
+            return semester === "ganjil" ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
+        }
+
         $('#print').click(function() {
             $('#modal_print').modal('show');
         });
@@ -157,6 +201,8 @@
                 type: 'GET',
                 data: function(d) {
                     d.id_pengguna = $('#filterNama').val();
+                    d.tahun = $('#filterTahun').val();
+                    d.semester = $('#filterSemester').val();
                 }
             },
             columns: [{
@@ -204,14 +250,11 @@
                     searchable: false,
                     orderable: false,
                     render: function(data) {
-                        if (data.file) {
-                            return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="' +
-                                data.file + '" onclick="open_modal(\'' + data.id +
-                                '\' , this)">' +
-                                '<i class="material-icons">insert_drive_file</i></a>';
-                        } else {
-                            return '-';
-                        }
+                        return data.file ?
+                            '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="' +
+                            data.file + '" onclick="open_modal(\'' + data.id +
+                            '\', this)"><i class="material-icons">insert_drive_file</i></a>' :
+                            '-';
                     }
                 },
                 {
@@ -236,7 +279,7 @@
         }
 
 
-        $('#filterNama').on('change', function() {
+        $('#filterNama, #filterSemester, #filterTahun').on('change', function() {
             primary_table.ajax.reload();
             if ($("#filterNama").val()) {
                 $("#tombol-print").removeClass("hidden");
@@ -246,10 +289,10 @@
         });
 
         $('#tombol-print').click(function() {
-            console.log($('#filterNama').val());
-            window.open(`${base_url}/akademik/mpmp/laporan-mgmp/${$('#filterNama').val()}/cetak`,
-                '_blank')
-        })
+            window.open(
+                `${base_url}/akademik/mpmp/laporan-mgmp/${$('#filterNama').val()}/cetak?tahun-ajaran=${$('#filterTahun').val()}&semester=${$('#filterSemester').val()}`,
+                '_blank');
+        });
 
 
         primary_table.on('draw', function() {
