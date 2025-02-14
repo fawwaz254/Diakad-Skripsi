@@ -28,8 +28,7 @@
                             </form>
                         </div>
 
-
-                        <button id="tombol-print" class="hidden btn btn-warning" title="mode baca">
+                        <button id="tombol-print" class="hidden btn btn-warning" title="Cetak">
                             <i class="material-icons">print</i>
                         </button>
 
@@ -45,7 +44,7 @@
                                     <th colspan="2" style="vertical-align : middle;text-align:center;">Kategori</th>
                                     <th rowspan="2" style="vertical-align : middle;text-align:center;">Uraian
                                         Kegiatan</th>
-                                    <th rowspan="2" style="vertical-align : middle;text-align:center;">Tuntas</th>
+                                    <th rowspan="2" style="vertical-align : middle;text-align:center;">Status</th>
                                     <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
                                     <th rowspan="2" style="vertical-align : middle;text-align:center;">Nama</th>
                                 </tr>
@@ -248,8 +247,8 @@
 
         $('#tombol-print').click(function() {
             console.log($('#filterNama').val());
-            window.open(`${base_url}/akademik#mpmp/laporan-mgmp/${$('#filterNama').val()}`, '_blank')
-
+            window.open(`${base_url}/akademik/mpmp/laporan-mgmp/${$('#filterNama').val()}/cetak`,
+                '_blank')
         })
 
 
