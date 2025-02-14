@@ -256,6 +256,17 @@ class DataKategoriMGMPController extends BaseController
         return view('akademik/mgmp/data-kategori/laporan-data-mgmp', compact('auth_data', 'data'));
     }
 
+    public function showDataByUserId($id_pengguna)
+    {
+        $datas = LaporanKerjaHarianMGMP::with(['mapel', 'pengguna'])
+            ->where('id_pengguna', $id_pengguna)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('akademik/mgmp/data-kategori/cetak-data-mgmp-by-id', compact('datas'));
+    }
+
+
     public function previewFile($id, Request $request)
     {
 
