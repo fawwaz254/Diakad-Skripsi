@@ -98,10 +98,11 @@ class InputRewardSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $now = Carbon::now();
-        $id_aktivitas_reward = intval($input->id_aktivitas_reward) ?? 0;
-        $id_jenis = intval($input->jenis) ?? 1;
-        $month = intval($input->month) ?? $now->month;
-        $year = intval($input->year) ?? $now->year;
+
+        $id_aktivitas_reward = intval($input->id_aktivitas_reward ?? 0);
+        $id_jenis = intval($input->jenis ?? 1);
+        $month = intval($input->month ?? $now->month);
+        $year = intval($input->year ?? $now->year);
 
         if ($month || $year) {
             $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
