@@ -165,7 +165,11 @@
                         Fase
                     </td>
                     <td style="width: 20%">
-                        : {{ explode('-', $kelas->nm_kelas)[1] }}
+                        :@if ($kelas->tingkat === 1)
+                            E
+                        @else
+                            F
+                        @endif
                     </td>
                 </tr>
                 <tr>
