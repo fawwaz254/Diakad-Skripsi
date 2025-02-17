@@ -121,6 +121,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('laporan-mgmp')->group(function () {
                 Route::get('/', [DataKategoriMGMPController::class, 'viewLaporanAllMGMP']);
                 Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesKerjaHarianAllMGMP']);
+                Route::get('/{id_pengguna}/cetak', [DataKategoriMGMPController::class, 'showDataByUserId']);
                 Route::get('preview-file/{id}', [DataKategoriMGMPController::class, 'previewFile']);
                 Route::get('download-file/{id}', [DataKategoriMGMPController::class, 'downloadFile']);
             });
