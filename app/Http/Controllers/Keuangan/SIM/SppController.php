@@ -2242,7 +2242,14 @@ class SppController extends BaseController
     {
         $auth_data = $request->auth_data;
 
-        if ($pembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->where('id_tagihan_biaya', $id)->first()) {
+        if ($pembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')
+            ->select('pembayaran_biaya.*', 'db.id_bulan')
+            // join untuk mendapatkan id_bulan
+            ->leftJoin('tagihan_biaya as tb', 'pembayaran_biaya.id_tagihan_biaya', '=', 'tb.id_tagihan_biaya')
+            ->leftJoin('detail_biaya as db', 'tb.id_detail_biaya', '=', 'db.id_detail_biaya')
+            ->where('pembayaran_biaya.id_tagihan_biaya', $id)
+            ->first()
+        ) {
         } else {
             return abort(404);
         }
@@ -2262,10 +2269,13 @@ class SppController extends BaseController
             return abort(404);
         } else {
             $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna')
-                ->leftJoin('tagihan_biaya as tb', 'pembayaran_biaya.id_tagihan_biaya', '=', 'tb.id_tagihan_biaya')
+                // join untu mendapatkan id_bulan dan semester untuk tahun
+                ->leftJoin('tagihan_biaya as tb', 'pembayaran_biaya.id_tagihan_biaya', '=', 'tb.id_tagjihan_biaya')
                 ->leftJoin('detail_biaya as db', 'tb.id_detail_biaya', '=', 'db.id_detail_biaya')
+                ->leftJoin('biaya_sekolah as bs', 'bs.id_biaya_sekolah', '=', 'db.id_biaya_sekolah')
+                ->leftJoin('semester as s', 'bs.id_semester', '=', 's.id_semester')
                 ->leftJoin('biaya as b', 'db.id_biaya', '=', 'b.id_biaya')
-                ->select([
+                ->select(
                     'pembayaran_biaya.id_pembayaran_biaya',
                     'pembayaran_biaya.id_tagihan_biaya',
                     'pembayaran_biaya.id_staff_bayar',
@@ -2280,19 +2290,33 @@ class SppController extends BaseController
                     'db.id_bulan',
                     'b.id_biaya',
                     'b.nm_biaya',
-                    'tb.is_tagih'
-                ])
+                    'tb.tgl_pelunasan',
+                    'tb.is_tagih',
+                    'bs.id_semester',
+                    's.thn_akademik_semester',
+                    's.nm_semester',
+                    's.tahun_ajaran',
+                )
                 ->where('tb.id_siswa', $id_siswa)
-                ->whereBetween('pembayaran_biaya.tgl_pembayaran', [$startYear, $endYear])
+                ->whereDate('tb.tgl_pelunasan', Carbon::now())
+                ->orderBy('pembayaran_biaya.created_at', 'ASC')
                 ->get();
             $totalPembayaran = $pembayaran->sum('besar_pembayaran');
 
             $pembayaranByDate = $pembayaran->groupBy(function ($item) {
                 return $item->tgl_pembayaran->toDateString();
             });
+
+            $pembayaran->map(function ($item) {
+                if ($item->nm_semester == 'Ganjil') {
+                    $item->tahun = \Illuminate\Support\Str::before($item->tahun_ajaran, '/');
+                } else {
+                    $item->tahun = \Illuminate\Support\Str::after($item->tahun_ajaran, '/');
+                }
+                return $item;
+            });
         }
 
-        // dump($pembayaran, $id_siswa, $pembayaranByDate);
         return view('keuangan/sim/spp/print-pembayaran-spp', compact('auth_data', 'pembayaran', 'pembayaranByDate', 'id_siswa'));
     }
 
