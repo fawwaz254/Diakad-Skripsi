@@ -33,20 +33,20 @@
 </head>
 
 <body>
-    @if (isset($id_siswa))
-        <div class="page">
-            <table>
-                <tr>
-                    <td>
-                        <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
-                            alt="Logo Sekolah" style="height:50px;" />
-                    </td>
-                    <td>
-                        <h2 style="margin-left: 10px;">Tanda Bukti Pembayaran<br>
-                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h2>
-                    </td>
-                </tr>
-            </table>
+    <div class="page">
+        <table>
+            <tr>
+                <td>
+                    <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
+                        alt="Logo Sekolah" style="height:50px;" />
+                </td>
+                <td>
+                    <h2 style="margin-left: 10px;">Tanda Bukti Pembayaran<br>
+                        {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h2>
+                </td>
+            </tr>
+        </table>
+        @if (isset($id_siswa))
             @foreach ($pembayaranByDate as $tgl_pembayaran => $pembayarans)
                 <table border="1" cellspacing="0" cellpadding="5" style="width: 100%;" class="text-left">
                     <tr>
@@ -98,6 +98,7 @@
                                             @else
                                                 {{ $bayar->nm_biaya }}
                                             @endif
+                                            {{ $bayar->tahun }}
                                             @if (!$loop->last)
                                                 ,
                                             @endif
@@ -161,25 +162,7 @@
                     </tr>
                 </table>
             @endforeach
-            <div>
-                <p style="font-size: x-small;">Tanggal sekarang: {{ \Carbon\Carbon::now()->format('j M Y') }}</p>
-            </div>
-            <div class="clear"></div>
-        </div>
-    @else
-        <div class="page">
-            <table>
-                <tr>
-                    <td>
-                        <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
-                            alt="Logo Sekolah" style="height:50px;" />
-                    </td>
-                    <td>
-                        <h2 style="margin-left: 10px;">Tanda Bukti Pembayaran<br>
-                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h2>
-                    </td>
-                </tr>
-            </table>
+        @else
             <table border="1" cellspacing="0" cellpadding="5" style="width: 100%;" class="text-left">
                 <tr>
                     <td colspan="2" style="text-align: center;"><b>TANDA BUKTI PEMBAYARAN
@@ -204,12 +187,33 @@
                                 <td>:</td>
                                 <td>{{ $pembayaran->tagihan_biaya->siswa->pengguna->nm_pengguna }}</td>
                             </tr>
+                            @php
+                                $data_month = [
+                                    (object) ['id' => 1, 'name' => 'Januari'],
+                                    (object) ['id' => 2, 'name' => 'Februari'],
+                                    (object) ['id' => 3, 'name' => 'Maret'],
+                                    (object) ['id' => 4, 'name' => 'April'],
+                                    (object) ['id' => 5, 'name' => 'Mei'],
+                                    (object) ['id' => 6, 'name' => 'Juni'],
+                                    (object) ['id' => 7, 'name' => 'Juli'],
+                                    (object) ['id' => 8, 'name' => 'Agustus'],
+                                    (object) ['id' => 9, 'name' => 'September'],
+                                    (object) ['id' => 10, 'name' => 'Oktober'],
+                                    (object) ['id' => 11, 'name' => 'November'],
+                                    (object) ['id' => 12, 'name' => 'Desember'],
+                                ];
+                            @endphp
                             <tr style="vertical-align: top;">
                                 <th>Untuk Pembayaran</th>
                                 <td>:</td>
                                 <td>
                                     @if ($pembayaran->tagihan_biaya->keterangan == '-' || $pembayaran->tagihan_biaya->keterangan == null)
                                         SPP
+                                        @foreach ($data_month as $month)
+                                            @if ($pembayaran->id_bulan == $month->id)
+                                                {{ $month->name }}
+                                            @endif
+                                        @endforeach
                                     @else
                                         {{ $pembayaran->tagihan_biaya->keterangan }}
                                     @endif
@@ -264,12 +268,31 @@
                     </td>
                 </tr>
             </table>
-            <div>
-                <p style="font-size: x-small;">Tanggal sekarang: {{ \Carbon\Carbon::now()->format('j M Y') }}</p>
-            </div>
-            <div class="clear"></div>
+        @endif
+        <div>
+            <p style="font-size: x-small;">Tanggal sekarang: {{ \Carbon\Carbon::now()->format('j M Y') }}</p>
         </div>
-    @endif
+        <div class="clear"></div>
+    </div>
+    {{-- <div class="page">
+        <table>
+            <tr>
+                <td>
+                    <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
+                        alt="Logo Sekolah" style="height:50px;" />
+                </td>
+                <td>
+                    <h2 style="margin-left: 10px;">Tanda Bukti Pembayaran<br>
+                        {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h2>
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <p style="font-size: x-small;">Tanggal sekarang: {{ \Carbon\Carbon::now()->format('j M Y') }}</p>
+        </div>
+        <div class="clear"></div>
+    </div> --}}
 </body>
 <script>
     window.print();
