@@ -14,18 +14,13 @@ class AddModuleOnRoleGuru extends Migration
      */
     public function up()
     {
-        $module = Modul::where('nm_module', 'Magang siswa')->where('id_role', 19)->first();
-        if (!$module) {
-            $modul = new Modul;
-            $modul->id_role = 19; // humas
-            $modul->nm_modul = 'Magang siswa';
-            $modul->route = 'magang-siswa';
-            $modul->urutan = 2;
-            $modul->akses = 1;
-            $modul->save();
-        } else {
-            throw new \Exception("Modul 'Magang Siswa' untuk role 19 ditemukan");
-        }
+        $modul = new Modul;
+        $modul->id_role = 19; // humas
+        $modul->nm_modul = 'Magang siswa';
+        $modul->route = 'magang-siswa';
+        $modul->urutan = 2;
+        $modul->akses = 1;
+        $modul->save();
     }
 
     /**
