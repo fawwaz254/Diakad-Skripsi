@@ -22,6 +22,7 @@ use App\Http\Controllers\PPDB\Penetapan\PersidanganController;
 use App\Http\Controllers\PPDB\Peserta\PembayaranFormulirController;
 use App\Http\Controllers\PPDB\Peserta\PindahPenerimaanController;
 use App\Http\Controllers\PPDB\Peserta\ProsesPenetapanController;
+use App\Http\Controllers\PPDB\Peserta\UploadDataCalonSiswaController;
 use App\Http\Controllers\PPDB\Report\HasilPlacementController;
 use App\Http\Controllers\PPDB\Report\ReportPendaftaranController;
 use App\Http\Controllers\PPDB\WelcomeController;
@@ -125,12 +126,18 @@ Route::middleware(['token_staff'])->group(function () {
 			// MENU proses penetapan
 			Route::get('proses-penetapan', [ProsesPenetapanController::class, 'viewProsesPenetapan']);
 			Route::post('proses-penetapan/post-view-proses-penetapan', [ProsesPenetapanController::class, 'actionViewProsesPenetapan']);
-			Route::get('proses-penetapan/{id_penerimaan}', [ProsesPenetapanController::class, 'showPeserta']);
+			Route::get('proses-penetapan/{id_penerimaan}', [ProsesPenetapanController::class, 'showPeserta'])->name('proses-penetapan.byid');
 			Route::get('proses-penetapan/datatables/{id_penerimaan}', [ProsesPenetapanController::class, 'datatablesProsesPenetapan']);
 			Route::post('proses-penetapan/penetapan', [ProsesPenetapanController::class, 'actionPenetapan']);
 			Route::get('proses-penetapan/excel/{id_penerimaan}', [ProsesPenetapanController::class, 'excelPenetapan']);
 			Route::get('proses-penetapan/upload/{id_penerimaan}', [ProsesPenetapanController::class, 'uploadPenetapan']);
+			Route::get('proses-penetapan/upload-calon-siswa/{id_penerimaan}', [ProsesPenetapanController::class, 'uploadPenetapanCalonSiswa']);
 			Route::post('proses-penetapan/post-file-excel', [ProsesPenetapanController::class, 'postUploadPenetapan']);
+			Route::get('/download-file-excel', [ProsesPenetapanController::class, 'downloadFileExcel'])->name('calon-siswa/download-file-excel');
+			Route::post('cek-file-excel', [ProsesPenetapanController::class, 'cekFileExcel']);
+			Route::post('post-file-excel/{id_penerimaan}', [UploadDataCalonSiswaController::class, 'uploadFileExcel'])->name('calon-siswa.post-file-excel');
+
+			Route::get('proses-penetapan/cetak-kuitansi/{id_siswa}', [ProsesPenetapanController::class, 'cetakKuitansi'])->name('cetak-kuitansi');
 
 
 

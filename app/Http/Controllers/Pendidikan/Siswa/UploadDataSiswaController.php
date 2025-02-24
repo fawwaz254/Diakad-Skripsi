@@ -39,12 +39,11 @@ use App\Imports\UploadToInsertUpdateSiswa;
 use Auth;
 use Maatwebsite\Excel\Facades\Excel;
 // use Excel;
-use DB;
 use Session;
 use Validator;
 use App\Imports\DataImportExcel;
 use Barryvdh\Debugbar\Facade as Debugbar;
-
+use Illuminate\Support\Facades\DB;
 
 class UploadDataSiswaController extends BaseController
 {

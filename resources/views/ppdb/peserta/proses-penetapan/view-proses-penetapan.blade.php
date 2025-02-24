@@ -13,7 +13,7 @@
                             <div class="form-line">
                                 <select class="form-control" name="id_penerimaan" id="select-penerimaan">
                                     <option value="">- Pilih Penerimaan -</option>
-                                    @foreach ($grup_penerimaan_tahun as $tahun => $grup_penerimaan)
+                                    {{-- @foreach ($grup_penerimaan_tahun as $tahun => $grup_penerimaan)
                                         @foreach ($grup_penerimaan as $semester => $datapergrup)
                                             <optgroup label="{{ $tahun }} {{ $semester }}">
                                                 @foreach ($datapergrup as $data)
@@ -35,7 +35,17 @@
                                                 @endforeach
                                             </optgroup>
                                         @endforeach
+                                    @endforeach --}}
+
+
+                                    @foreach ($penerimaan as $data)
+                                        <option
+                                            {{ isset($showPenerimaan) && $data->id_penerimaan == $showPenerimaan->id_penerimaan ? 'selected' : '' }}
+                                            value="{{ $data->id_penerimaan }}"=>
+                                            {{ $data->nm_penerimaan . ' | Gelombang ' . ($data->gelombang_penerimaan == '0' ? 'Inden' : $data->gelombang_penerimaan) . ' | Semester ' . $data->nm_semester_penerimaan }}
+                                        </option>
                                     @endforeach
+
                                 </select>
                             </div>
                         </div>
@@ -53,6 +63,9 @@
                 <a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/proses-penetapan/upload/' . $id) }}"
                     class="btn bg-green waves-effect">
                     <i class="material-icons" style="font-size: 15px;">print</i> Upload Siswa</a>
+                <a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/proses-penetapan/upload-calon-siswa/' . $id) }}"
+                    class="btn btn-primary waves-effect">
+                    <i class="material-icons" style="font-size: 15px;">print</i> Upload Calon Siswa</a>
                 <br>
             @endif
             <br>
@@ -79,6 +92,7 @@
                                             <th>Nama</th>
                                             <th>No HP</th>
                                             <th>Asal Sekolah</th>
+                                            <th>Kuitansi</th>
                                             {{-- <th>Pilihan 1</th> --}}
                                         </tr>
                                     </thead>
@@ -86,7 +100,7 @@
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <input type="hidden" name="id_penerimaan"
-                                            value="{{ $penerimaan->id_penerimaan }}"></input>
+                                            value="{{ $showPenerimaan->id_penerimaan }}"></input>
                                         {{-- <button class="btn btn-block bg-red waves-effect" type="submit"><i
                                                 class="material-icons">save</i><span>Save</span></button> --}}
                                     </div>
@@ -102,9 +116,10 @@
 </div>
 @include('scriptjs')
 
+
 @if ($mode == 'show')
     <script>
-        var id_penerimaan = {!! json_encode($penerimaan->id_penerimaan) !!};
+        var id_penerimaan = {!! json_encode($showPenerimaan->id_penerimaan) !!};
 
         var modul_url = 'peserta';
         var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'proses-penetapan/datatables/' +
@@ -112,7 +127,6 @@
 
         var primary_table = $('#primary_table').DataTable({
             processing: true,
-            // serverSide: true,
             pageLength: 100,
             responsive: false,
             ajax: {
@@ -124,19 +138,6 @@
                     searchable: false,
                     orderable: false
                 },
-                // {
-                //     data: 'checkbox',
-                //     name: 'checkbox',
-                //     searchable: false,
-                //     orderable: false,
-                //     render: function(data, type, full, meta) {
-                //         return '<input id="checkbox-' + data.id +
-                //             '" type="checkbox" name="id_c_siswa[]" class="filled-in" value="' + data.id +
-                //             '">' +
-                //             '<label for="checkbox-' + data.id + '"></label>';
-
-                //     }
-                // },
                 {
                     data: 'is_siswa',
                     name: 'is_siswa'
@@ -157,12 +158,21 @@
                     data: 'nm_sekolah_asal',
                     name: 'calon_siswa_sekolah.nm_sekolah_asal'
                 },
-                // {
-                //     data: 'nm_jurusan',
-                //     name: 'jurusan.nm_jurusan'
-                // }
+                {
+                    data: 'id_c_siswa', // Gantilah dengan ID yang sesuai dari data siswa
+                    name: 'id_c_siswa',
+                    orderable: false,
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return `<a href="${base_url}/${role_url}/peserta/proses-penetapan/cetak-kuitansi/${data}" 
+                        class="btn btn-success btn-sm waves-effect" target="_blank">
+                            <i class="material-icons" style="font-size: 15px;">print</i> Cetak Kuitansi
+                        </a>`;
+                    }
+                }
             ]
         });
+
 
         primary_table.on('draw', function() {
             primary_table.column(0, {
