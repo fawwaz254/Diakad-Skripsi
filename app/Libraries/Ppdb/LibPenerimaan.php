@@ -25,44 +25,99 @@ class LibPenerimaan
      * @param String id_penerimaan
      * @return Object penerimaan
      */
+    // static function fetchDataPenerimaan($auth_data,  $id = null)
+    // {
+    //     if ($id != null) {
+    //         /** get data penerimaan by id_penerimaan */
+    //         $penerimaan = Penerimaan::select('penerimaan.id_penerimaan', 'penerimaan.id_jalur', 'penerimaan.id_semester', 'penerimaan.tahun_penerimaan', 'jalur.nm_jalur', 'penerimaan.gelombang_penerimaan', 'penerimaan.tahun_penerimaan', 'penerimaan.nm_penerimaan', 'penerimaan.nm_semester_penerimaan', 'penerimaan.jml_pilihan_jurusan', 'penerimaan.tgl_awal_registrasi', 'penerimaan.tgl_akhir_registrasi', 'penerimaan.tgl_awal_verifikasi', 'penerimaan.tgl_akhir_verifikasi', 'penerimaan.tgl_penetapan', 'penerimaan.tgl_pengumuman', 'penerimaan.tgl_awal_voucher', 'penerimaan.tgl_akhir_voucher', 'penerimaan.is_pendaftaran_online', 'penerimaan.is_verifikasi', 'penerimaan.is_bayar_voucher', 'penerimaan.nomor_rekening_transfer', 'penerimaan.biaya_daftar_ulang', 'penerimaan.jenis_penerimaan', 'penerimaan.is_aktif', 'penerimaan.biaya_daftar_ulang')
+    //             ->leftJoin('jalur', function ($q) {
+    //                 $q->on('jalur.id_jalur', '=', 'penerimaan.id_jalur')
+    //                     ->whereNull('jalur.deleted_at');
+    //             })
+    //             ->leftJoin('semester', function ($q) {
+    //                 $q->on('semester.id_semester', '=', 'penerimaan.id_semester')
+    //                     ->whereNull('semester.deleted_at');
+    //             })
+    //             ->where('penerimaan.id_penerimaan', '=', $id)
+    //             ->where('penerimaan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+    //             ->first();
+    //     } else {
+    //         /** get all data penerimaan */
+    //         $penerimaan = Penerimaan::select('penerimaan.id_penerimaan', 'penerimaan.id_jalur', 'penerimaan.id_semester', 'penerimaan.tahun_penerimaan', 'jalur.nm_jalur', 'penerimaan.gelombang_penerimaan', 'penerimaan.tahun_penerimaan', 'penerimaan.nm_penerimaan', 'penerimaan.nm_semester_penerimaan', 'penerimaan.jml_pilihan_jurusan', 'penerimaan.tgl_awal_registrasi', 'penerimaan.tgl_akhir_registrasi', 'penerimaan.tgl_awal_verifikasi', 'penerimaan.tgl_akhir_verifikasi', 'penerimaan.tgl_penetapan', 'penerimaan.tgl_pengumuman', 'penerimaan.tgl_awal_voucher', 'penerimaan.tgl_akhir_voucher', 'penerimaan.is_pendaftaran_online', 'penerimaan.is_verifikasi', 'penerimaan.is_bayar_voucher', 'penerimaan.nomor_rekening_transfer', 'penerimaan.biaya_daftar_ulang', 'penerimaan.jenis_penerimaan', 'penerimaan.is_aktif', 'penerimaan.biaya_daftar_ulang')
+    //             ->leftJoin('jalur', function ($q) {
+    //                 $q->on('jalur.id_jalur', '=', 'penerimaan.id_jalur')
+    //                     ->whereNull('jalur.deleted_at');
+    //             })
+    //             ->leftJoin('semester', function ($q) {
+    //                 $q->on('semester.id_semester', '=', 'penerimaan.id_semester')
+    //                     ->whereNull('semester.deleted_at');
+    //             })
+    //             ->where('penerimaan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+    //             ->where('penerimaan.jenis_penerimaan', '=', '1')
+    //             ->orderBy('penerimaan.tahun_penerimaan', 'desc')
+    //             ->orderBy('penerimaan.nm_semester_penerimaan', 'asc')
+    //             ->orderBy('penerimaan.gelombang_penerimaan', 'asc')
+    //             ->orderBy('penerimaan.id_jalur', 'asc')
+    //             ->orderBy('penerimaan.nm_penerimaan', 'asc')
+    //             ->get();
+    //     }
+    //     return $penerimaan;
+    // }
+
     static function fetchDataPenerimaan($auth_data, $id = null)
     {
-        if ($id != null) {
-            /** get data penerimaan by id_penerimaan */
-            $penerimaan = Penerimaan::select('penerimaan.id_penerimaan', 'penerimaan.id_jalur', 'penerimaan.id_semester', 'penerimaan.tahun_penerimaan', 'jalur.nm_jalur', 'penerimaan.gelombang_penerimaan', 'penerimaan.tahun_penerimaan', 'penerimaan.nm_penerimaan', 'penerimaan.nm_semester_penerimaan', 'penerimaan.jml_pilihan_jurusan', 'penerimaan.tgl_awal_registrasi', 'penerimaan.tgl_akhir_registrasi', 'penerimaan.tgl_awal_verifikasi', 'penerimaan.tgl_akhir_verifikasi', 'penerimaan.tgl_penetapan', 'penerimaan.tgl_pengumuman', 'penerimaan.tgl_awal_voucher', 'penerimaan.tgl_akhir_voucher', 'penerimaan.is_pendaftaran_online', 'penerimaan.is_verifikasi', 'penerimaan.is_bayar_voucher', 'penerimaan.nomor_rekening_transfer', 'penerimaan.biaya_daftar_ulang', 'penerimaan.jenis_penerimaan', 'penerimaan.is_aktif', 'penerimaan.biaya_daftar_ulang')
-                ->leftJoin('jalur', function ($q) {
-                    $q->on('jalur.id_jalur', '=', 'penerimaan.id_jalur')
-                        ->whereNull('jalur.deleted_at');
-                })
-                ->leftJoin('semester', function ($q) {
-                    $q->on('semester.id_semester', '=', 'penerimaan.id_semester')
-                        ->whereNull('semester.deleted_at');
-                })
-                ->where('penerimaan.id_penerimaan', '=', $id)
-                ->where('penerimaan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                ->first();
-        } else {
-            /** get all data penerimaan */
-            $penerimaan = Penerimaan::select('penerimaan.id_penerimaan', 'penerimaan.id_jalur', 'penerimaan.id_semester', 'penerimaan.tahun_penerimaan', 'jalur.nm_jalur', 'penerimaan.gelombang_penerimaan', 'penerimaan.tahun_penerimaan', 'penerimaan.nm_penerimaan', 'penerimaan.nm_semester_penerimaan', 'penerimaan.jml_pilihan_jurusan', 'penerimaan.tgl_awal_registrasi', 'penerimaan.tgl_akhir_registrasi', 'penerimaan.tgl_awal_verifikasi', 'penerimaan.tgl_akhir_verifikasi', 'penerimaan.tgl_penetapan', 'penerimaan.tgl_pengumuman', 'penerimaan.tgl_awal_voucher', 'penerimaan.tgl_akhir_voucher', 'penerimaan.is_pendaftaran_online', 'penerimaan.is_verifikasi', 'penerimaan.is_bayar_voucher', 'penerimaan.nomor_rekening_transfer', 'penerimaan.biaya_daftar_ulang', 'penerimaan.jenis_penerimaan', 'penerimaan.is_aktif', 'penerimaan.biaya_daftar_ulang')
-                ->leftJoin('jalur', function ($q) {
-                    $q->on('jalur.id_jalur', '=', 'penerimaan.id_jalur')
-                        ->whereNull('jalur.deleted_at');
-                })
-                ->leftJoin('semester', function ($q) {
-                    $q->on('semester.id_semester', '=', 'penerimaan.id_semester')
-                        ->whereNull('semester.deleted_at');
-                })
-                ->where('penerimaan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                ->where('penerimaan.jenis_penerimaan', '=', '1')
-                ->orderBy('penerimaan.tahun_penerimaan', 'desc')
-                ->orderBy('penerimaan.nm_semester_penerimaan', 'asc')
-                ->orderBy('penerimaan.gelombang_penerimaan', 'asc')
-                ->orderBy('penerimaan.id_jalur', 'asc')
-                ->orderBy('penerimaan.nm_penerimaan', 'asc')
-                ->get();
+        $query = Penerimaan::select(
+            'penerimaan.id_penerimaan',
+            'penerimaan.id_jalur',
+            'penerimaan.id_semester',
+            'penerimaan.tahun_penerimaan',
+            'jalur.nm_jalur',
+            'penerimaan.gelombang_penerimaan',
+            'penerimaan.nm_penerimaan',
+            'penerimaan.nm_semester_penerimaan',
+            'penerimaan.jml_pilihan_jurusan',
+            'penerimaan.tgl_awal_registrasi',
+            'penerimaan.tgl_akhir_registrasi',
+            'penerimaan.tgl_awal_verifikasi',
+            'penerimaan.tgl_akhir_verifikasi',
+            'penerimaan.tgl_penetapan',
+            'penerimaan.tgl_pengumuman',
+            'penerimaan.tgl_awal_voucher',
+            'penerimaan.tgl_akhir_voucher',
+            'penerimaan.is_pendaftaran_online',
+            'penerimaan.is_verifikasi',
+            'penerimaan.is_bayar_voucher',
+            'penerimaan.nomor_rekening_transfer',
+            'penerimaan.biaya_daftar_ulang',
+            'penerimaan.jenis_penerimaan',
+            'penerimaan.is_aktif',
+            'penerimaan.biaya_daftar_ulang'
+        )
+            ->leftJoin('jalur', function ($q) {
+                $q->on('jalur.id_jalur', '=', 'penerimaan.id_jalur')
+                    ->whereNull('jalur.deleted_at');
+            })
+            ->leftJoin('semester', function ($q) {
+                $q->on('semester.id_semester', '=', 'penerimaan.id_semester')
+                    ->whereNull('semester.deleted_at');
+            })
+            ->where('penerimaan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('penerimaan.jenis_penerimaan', '=', '1');
+
+        // // Jika ID diberikan, ambil data berdasarkan ID
+        if ($id !== null) {
+            return $query->where('penerimaan.id_penerimaan', '=', $id)->first();
         }
-        return $penerimaan;
+
+        return $query->orderBy('penerimaan.tahun_penerimaan', 'desc')
+            ->orderBy('penerimaan.nm_semester_penerimaan', 'asc')
+            ->orderBy('penerimaan.gelombang_penerimaan', 'asc')
+            ->orderBy('penerimaan.id_jalur', 'asc')
+            ->orderBy('penerimaan.nm_penerimaan', 'asc')
+            ->get();
     }
+
+
 
     /** 
      * Get data penerimaan by id and get all data penerimaan
