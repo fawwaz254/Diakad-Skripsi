@@ -30,7 +30,9 @@ class TindakanPelanggaranController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('bk/penanganan-siswa/tindakan-pelanggaran/view-tindakan-pelanggaran', compact('auth_data'));
+        $kelas_list = \App\Libraries\Pendidikan\LibKelas::fetchDataKelas($auth_data, null, false, true);
+
+        return view('bk/penanganan-siswa/tindakan-pelanggaran/view-tindakan-pelanggaran', compact('auth_data', 'kelas_list'));
     }
 
     public function addTindakanPelanggaranNonKBM($id, Request $request)
@@ -108,13 +110,14 @@ class TindakanPelanggaranController extends BaseController
         $input = (object) $request->input();
         $filter_tanggal = null;
         $status_siswa = $input->status_siswa;
+        $filter_kelas = $input->filter_kelas ?? null;
 
         if (!empty($input->filter_tanggal)) {
             $filter_tanggal = $input->filter_tanggal;
         }
         $auth_data = $input->auth_data;
 
-        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1", $status_siswa, $filter_tanggal);
+        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1", $status_siswa, $filter_tanggal, $filter_kelas);
         // dd($list_data);
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
@@ -198,13 +201,14 @@ class TindakanPelanggaranController extends BaseController
         $input = (object) $request->input();
         $filter_tanggal = null;
         $status_siswa = $input->status_siswa;
+        $filter_kelas = $input->filter_kelas ?? null;
 
         if (!empty($input->filter_tanggal)) {
             $filter_tanggal = $input->filter_tanggal;
         }
         $auth_data = $input->auth_data;
 
-        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1", "-", $status_siswa, $filter_tanggal);
+        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1", "-", $status_siswa, $filter_tanggal, $filter_kelas);
 
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
@@ -276,13 +280,14 @@ class TindakanPelanggaranController extends BaseController
         $input = (object) $request->input();
         $filter_tanggal = null;
         $status_siswa = $input->status_siswa;
+        $filter_kelas = $input->filter_kelas ?? null;
 
         if (!empty($input->filter_tanggal)) {
             $filter_tanggal = $input->filter_tanggal;
         }
         $auth_data = $input->auth_data;
 
-        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1", $status_siswa, $filter_tanggal);
+        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1", $status_siswa, $filter_tanggal, $filter_kelas);
 
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();

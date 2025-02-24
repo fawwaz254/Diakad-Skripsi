@@ -12,13 +12,22 @@
                 </div>
                 <div class="container" style="margin-top: 3rem">
                     <div class="row">
-                        <div class="col-md-4 col-sm-12 col-xs-12 mb-3">
+                        <div class="col-md-3 col-sm-12 col-xs-12 mb-3">
                             <h4 class="card-inside-title">Pilih Tanggal</h4>
                             <input type="date" class="form-control" id="filter_tanggal" name="tanggal"
                                 aria-required="true" aria-invalid="true">
                         </div>
 
-                        <div class="col-md-4 col-sm-12 col-xs-12 mb-3">
+                        <div class="col-md-3 col-sm-12 col-xs-12 mb-3">
+                            <h4 class="card-inside-title">Kelas</h4>
+                            <select class="form-control" id="filter_kelas" name="kelas">
+                                <option value="">-- Pilih Kelas --</option>
+                                @foreach($kelas_list as $kelas)
+                                <option value="{{ $kelas->id_kelas }}">{{ $kelas->nm_kelas }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12 mb-1">
                             <h4 class="card-inside-title">Status Tampil Data Siswa</h4>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" id="aktif" name="status_siswa"
@@ -31,7 +40,6 @@
                                 <label class="form-check-label" for="all">Semua Siswa</label>
                             </div>
                         </div>
-
                         <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 3rem">
                             <button class="btn btn-block btn-danger waves-effect align-items-start" type="button"
                                 onclick="filterAction()">
@@ -267,7 +275,7 @@
                 // Tambahkan parameter tambahan di sini
                 d.filter_tanggal = '';
                 d.status_siswa = 1;
-            }, 
+            },
         },
         columns: [{
                 data: 'index_table',
@@ -362,7 +370,7 @@
                 // Tambahkan parameter tambahan di sini
                 d.filter_tanggal = '';
                 d.status_siswa = 1;
-            }, 
+            },
         },
         columns: [{
                 data: 'index_table',
@@ -500,13 +508,13 @@
     function filterAction() {
         var tanggal = $('#filter_tanggal').val();
         var status_siswa = $('input[name="status_siswa"]:checked').val();
+        var kelas = $('#filter_kelas').val();
 
-        console.log(status_siswa);
-        
         var table = $('#primary_table_belum_nonkbm').DataTable();
         table.settings()[0].ajax.data = function(d) {
             d.filter_tanggal = tanggal;
             d.status_siswa = status_siswa;
+            d.filter_kelas = kelas;
         };
         table.ajax.reload(null, false);
 
@@ -514,6 +522,7 @@
         table.settings()[0].ajax.data = function(d) {
             d.filter_tanggal = tanggal;
             d.status_siswa = status_siswa;
+            d.filter_kelas = kelas;
         };
         table.ajax.reload(null, false);
 
@@ -521,6 +530,7 @@
         table.settings()[0].ajax.data = function(d) {
             d.filter_tanggal = tanggal;
             d.status_siswa = status_siswa;
+            d.filter_kelas = kelas;
         };
         table.ajax.reload(null, false);
     }
