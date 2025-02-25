@@ -57,8 +57,6 @@ use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
 use App\Http\Controllers\Guru\RaporAgama\InputNilaiRaporAgamaController;
 use App\Http\Controllers\Guru\WaliKelas\InputKPIController;
-// use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
-// use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;

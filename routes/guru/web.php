@@ -58,7 +58,6 @@ use App\Http\Controllers\Guru\WaliKelas\RekapPelanggaranKelasController;
 use App\Http\Controllers\Guru\WaliKelas\TracerAlumniWaliKelasController;
 use App\Http\Controllers\Guru\PembinaEkskul\InputAbsensiEkskulController;
 use App\Http\Controllers\Guru\PembinaEkskul\RekapAbsensiEkskulController;
-use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Guru\PelanggaranSiswa\InputPelanggaranController;
 use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
 use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
