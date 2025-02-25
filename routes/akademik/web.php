@@ -42,7 +42,6 @@ use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanAkhirController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanController;
 use App\Http\Controllers\Guru\RaporSisipan\RaporSisipanController as RaporSisipanGuru;
 use App\Http\Controllers\Guru\RaporSisipan\RaporSisipanAkhirController as RaporSisipanAkhirGuru;
-use App\Http\Controllers\Akademik\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Akademik\Ujian\TryOutController;
 use App\Http\Controllers\Akademik\Ujian\UjianUASController;
 use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
@@ -501,7 +500,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('datatables', [KomponenNilaiRaporSisipanController::class, 'datatablesKomponenNilai']);
                 // Route::get('edit/{id}', [KomponenNilaiRaporSisipanController::class, 'editKomponenNilai']);
                 // Route::post('edit/{id}', [KomponenNilaiRaporSisipanController::class, 'actionEditKomponenNilai']);
-                // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
 
             });
 

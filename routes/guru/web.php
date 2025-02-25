@@ -941,19 +941,19 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
             });
 
-            Route::prefix('rapor-tengah-semester')->group(function () {
-                Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
-                Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesRaporTengahSemester']);
-                Route::get('add', [RaporTengahSemesterController::class, 'addRaporTengahSemester']);
-                Route::post('action-rapor-tengah-semester/{mode}/{id}', [RaporTengahSemesterController::class, 'actionRaporTengahSemester']);
+            // Route::prefix('rapor-tengah-semester')->group(function () {
+            //     Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
+            //     Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesRaporTengahSemester']);
+            //     Route::get('add', [RaporTengahSemesterController::class, 'addRaporTengahSemester']);
+            //     Route::post('action-rapor-tengah-semester/{mode}/{id}', [RaporTengahSemesterController::class, 'actionRaporTengahSemester']);
                 // Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
                 // Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
                 // Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
-                Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfRaporTengahSemester']);
+                // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfRaporTengahSemester']);
                 // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
                 // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
 
-            });
+            // });
         });
 
         Route::prefix('rapor-semester')->group(function () {
