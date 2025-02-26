@@ -114,7 +114,8 @@ class InputRewardSiswaController extends BaseController
 
         $dates = CarbonPeriod::create($startOfMonth, $endOfMonth);
 
-        $week_dates = array();
+        $week_dates = [];
+        $count_per_day = [];
 
         $i = $startOfMonth;
         while ($i < $endOfMonth) {
@@ -252,6 +253,9 @@ class InputRewardSiswaController extends BaseController
         } else if ($data_aktivitas_reward->id_jenis_aktivitas_reward == 2) {
             $date_input = 'minggu ini tanggal (' . Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('D MMM Y') . ' - ' . Carbon::now('Asia/Jakarta')->endOfWeek()->isoFormat('D MMM Y') . ')';
         } else if ($data_aktivitas_reward->id_jenis_aktivitas_reward == 3) {
+            $date_input = 'bulan ' . Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('MMMM');
+        } else if ($data_aktivitas_reward->id_jenis_aktivitas_reward == 4) {
+            // insidentil
             $date_input = 'bulan ' . Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('MMMM');
         }
 
