@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Guru\ELearningSoal;
 
-use App\Exports\RekapNilaiElearning;
-use App\Exports\RekapNilaiElearning2;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\DetailPaketSoal;
-use App\Models\JawabanTest;
-use App\Models\PaketSoal;
-use App\Models\PilihanPertanyaan;
-use App\Models\PilihanSoal;
-use App\Models\Siswa;
-use App\Models\Test;
-use Maatwebsite\Excel\Facades\Excel;
-use Yajra\Datatables\Datatables;
-use Auth;
 use DB;
+use Auth;
 use Validator;
 use Carbon\Carbon;
+use App\Models\Test;
+use App\Models\Siswa;
+use App\Models\PaketSoal;
+use App\Models\JawabanTest;
+use App\Models\PilihanSoal;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\DetailPaketSoal;
+use Yajra\Datatables\Datatables;
+use App\Models\PilihanPertanyaan;
+use App\Exports\RekapNilaiElearning;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RekapNilaiElearning2;
+use App\Libraries\Pendidikan\LibDataAkademik;
 
 class HasilTestController extends Controller
 {
@@ -537,7 +538,6 @@ class HasilTestController extends Controller
         return Excel::download(new RekapNilaiElearning($data), 'Detail Jawaban Siswa' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
     }
 
-
     public function printHasilTest4(Request $request, $id)
     {
         set_time_limit(-1);
@@ -547,10 +547,8 @@ class HasilTestController extends Controller
 
         $tests = Test::where('id_paket_soal', $paket_soal->id_paket_soal)->get();
 
-
         $nilai_siswa = [];
         $benar = [];
-
 
         foreach ($tests as $test) {
             $type1 = 0;
@@ -598,7 +596,6 @@ class HasilTestController extends Controller
                         $type2++;
                     }
                 } elseif ($jawaban_test->id_tipe_soal == '7') {
-
                     $p1 =  $pilihan_soal->where('id_soal', $jawaban_test->id_soal)->where('number_option', '0')->first();
 
                     if ($p1 && $p1->correct == $jawaban_test->pilihan_jawaban1) {
@@ -664,8 +661,6 @@ class HasilTestController extends Controller
             $benar[$test->id_pengguna]['type2'] = $type2;
         }
 
-
-
         $soal_biasa = $paket_soal->detail_paket_soal->whereIn('soal.id_tipe_soal', [1, 2, 3, 4, 5])->count();
         $soal_cabang = 0;
         $query_soal_cabang = $paket_soal->detail_paket_soal->whereIn('soal.id_tipe_soal', [6, 7]);
@@ -679,15 +674,13 @@ class HasilTestController extends Controller
             $nilai = number_format(100 / ($soal_biasa + $soal_cabang), 1);
         }
 
-
         $data['nilai_siswa'] = $nilai_siswa;
         $data['paket_soal'] = $paket_soal;
         $data['benar'] = $benar;
         $data['point'] = $paket_soal->nilai != '0' ? $paket_soal->nilai : $nilai;
 
-        return Excel::download(new RekapNilaiElearning2($data), 'Rekap Nilai E-learning' . $paket_soal->text . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
+        return Excel::download(new RekapNilaiElearning2($data), 'Rekap Nilai E-learning' . Str::slug($paket_soal->text) . '(' . $paket_soal->kategori_soal->nm_kategori_soal . ').xlsx');
     }
-
 
     public function koreksiUlang(Request $request)
     {
@@ -722,34 +715,39 @@ class HasilTestController extends Controller
 
                                 $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks1)->first();
                                 if ($pilihan_jawaban) {
-                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                    if ($pilihan_jawaban->correct == 1) {
+                                    } else {
                                         $jawaban_benar = false;
                                     }
                                 }
                                 $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks2)->first();
                                 if ($pilihan_jawaban) {
-                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                    if ($pilihan_jawaban->correct == 1) {
+                                    } else {
                                         $jawaban_benar = false;
                                     }
                                 }
 
                                 $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks3)->first();
                                 if ($pilihan_jawaban) {
-                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                    if ($pilihan_jawaban->correct == 1) {
+                                    } else {
                                         $jawaban_benar = false;
                                     }
                                 }
 
                                 $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks4)->first();
                                 if ($pilihan_jawaban) {
-                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                    if ($pilihan_jawaban->correct == 1) {
+                                    } else {
                                         $jawaban_benar = false;
                                     }
                                 }
 
                                 $pilihan_jawaban = $pilihan_soal->where('id_pilihan_soal', $jawaban_test->id_pilihan_soal_kompleks5)->first();
                                 if ($pilihan_jawaban) {
-                                    if ($pilihan_jawaban->correct == 1) { } else {
+                                    if ($pilihan_jawaban->correct == 1) {
+                                    } else {
                                         $jawaban_benar = false;
                                     }
                                 }
