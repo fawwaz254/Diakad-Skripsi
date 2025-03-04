@@ -16,11 +16,9 @@ class UpdateMenuKunjunganMagangOnRoleGuru extends Migration
     {
         $menu = Menu::where('nm_menu', 'Kunjungan magang')
             ->where('page', 'add-kunjungan-magang')
-            ->get();
-
-        $menu->update([
-            'page' => 'list-kunjungan-magang',
-        ]);
+            ->update([
+                'page' => 'list-kunjungan-magang',
+            ]);
     }
 
     /**
