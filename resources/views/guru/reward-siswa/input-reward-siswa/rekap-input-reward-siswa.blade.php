@@ -140,11 +140,21 @@
                                             <td>{{ $siswa->nm_kelas }}</td>
                                             @foreach ($dates as $d)
                                                 @php
-                                                    // ada kemungkkinan aktifitas "semua" akan ditambah/dijumlahkan perhari
-                                                    $hitung = $data_reward_siswa
-                                                        ->where('id_pengguna_pengisi', $siswa->id_pengguna)
-                                                        ->where('tgl_pengisian', $d->format('Y-m-d'))
-                                                        ->first();
+                                                    if ($id_aktivitas_reward == 0) {
+                                                        $hitung = $data_reward_siswa
+                                                            ->where('id_pengguna_pengisi', $siswa->id_pengguna)
+                                                            ->where('tgl_pengisian', $d->format('Y-m-d'))
+                                                            ->first();
+                                                    } else {
+                                                        $hitung = $data_reward_siswa
+                                                            ->where('id_siswa', $siswa->id_siswa)
+                                                            ->filter(function ($item) use ($d) {
+                                                                return \Carbon\Carbon::parse($item->created_at)->format(
+                                                                    'Y-m-d',
+                                                                ) == $d->format('Y-m-d');
+                                                            })
+                                                            ->first();
+                                                    }
                                                 @endphp
                                                 @if (Request::input('id_aktivitas_reward') == 0 && $hitung)
                                                     <td style="background-color: #bffa85;">&#10003;</td>
@@ -189,10 +199,37 @@
                                             <td>{{ $siswa->nis_siswa }}</td>
                                             <td>{{ $siswa->nm_kelas }}</td>
                                             @foreach ($week_dates as $d)
-                                                @if ($data_reward_siswa->where('id_pengguna_pengisi', $siswa->pengguna)->whereBetween('tgl_pengisian', [$d['start']->format('Y-m-d'), $d['end']->format('Y-m-d')])->first())
+                                                @php
+                                                    if ($id_aktivitas_reward == 0) {
+                                                        $hitung = $data_reward_siswa
+                                                            ->where('id_pengguna_pengisi', $siswa->id_pengguna)
+                                                            ->whereBetween('tgl_pengisian', [
+                                                                $d['start']->format('Y-m-d'),
+                                                                $d['end']->format('Y-m-d'),
+                                                            ])
+                                                            ->first();
+                                                    } else {
+                                                        $hitung = $data_reward_siswa
+                                                            ->where('id_siswa', $siswa->id_siswa)
+                                                            ->filter(function ($item) use ($d) {
+                                                                return \Carbon\Carbon::parse(
+                                                                    $item->created_at,
+                                                                )->between(
+                                                                    $d['start']->format('Y-m-d'),
+                                                                    $d['end']->format('Y-m-d'),
+                                                                );
+                                                            })
+                                                            ->first();
+                                                    }
+                                                @endphp
+                                                @if (Request::input('id_aktivitas_reward') == 0 && $hitung)
                                                     <td style="background-color: #bffa85;">&#10003;</td>
                                                 @else
-                                                    <td></td>
+                                                    @if ($hitung)
+                                                        <td style="background-color: #bffa85;">1x</td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
                                                 @endif
                                             @endforeach
                                         </tr>
@@ -223,12 +260,25 @@
                                             <td>{{ $siswa->nm_pengguna }}</td>
                                             <td>{{ $siswa->nis_siswa }}</td>
                                             <td>{{ $siswa->nm_kelas }}</td>
-                                            @if ($data_reward_siswa->where('id_pengguna_pengisi', $siswa->id_pengguna)->first())
-                                                <td style="background-color: #bffa85;">
-                                                    &#10003;
-                                                </td>
+                                            @php
+                                                if ($id_aktivitas_reward == 0) {
+                                                    $hitung = $data_reward_siswa
+                                                        ->where('id_pengguna_pengisi', $siswa->id_pengguna)
+                                                        ->first();
+                                                } else {
+                                                    $hitung = $data_reward_siswa
+                                                        ->where('id_siswa', $siswa->id_siswa)
+                                                        ->first();
+                                                }
+                                            @endphp
+                                            @if (Request::input('id_aktivitas_reward') == 0 && $hitung)
+                                                <td style="background-color: #bffa85;">&#10003;</td>
                                             @else
-                                                <td></td>
+                                                @if ($hitung)
+                                                    <td style="background-color: #bffa85;">1x</td>
+                                                @else
+                                                    <td></td>
+                                                @endif
                                             @endif
                                         </tr>
                                     @endforeach

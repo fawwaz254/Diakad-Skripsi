@@ -14,11 +14,16 @@ class UpdateMenuKunjunganMagangOnRoleGuru extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('nm_menu', 'Kunjungan magang')
-            ->where('page', 'add-kunjungan-magang')
-            ->update([
+        $menu = Menu::where('page', 'add-kunjungan-magang')
+            ->first();
+
+        if (!$menu) {
+            echo "Menu sudah di migrattion" . "\n";
+        } else {
+            $menu->update([
                 'page' => 'list-kunjungan-magang',
             ]);
+        }
     }
 
     /**
