@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sekretariat\DataDokumen\DokumenDibagikanController;
 use App\Http\Controllers\Sekretariat\DataDokumen\InputDokumenController;
 use App\Http\Controllers\Sekretariat\DataSekretariat\DataKategoriController;
+use App\Http\Controllers\Sekretariat\ManajemenFile\DataKategoriController as ManajemenfileDataKategoriController;
 use App\Http\Controllers\Sekretariat\DataSekretariat\DataLokerAlmariController;
 use App\Http\Controllers\Sekretariat\DataSekretariat\DataPemilikController;
 use App\Http\Controllers\Sekretariat\DataSekretariat\DataSubKategoriController;
@@ -16,7 +18,7 @@ use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('sekretariat')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('data-sekretariat')->group(function () {
             // MENU Data Loker Almari
@@ -91,13 +93,13 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('manajemen-file')->group(function () {
 
             Route::prefix('data-kategori')->group(function () {
-                Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
-                Route::get('/add', [DataKategoriController::class, 'addDataKategori']);
-                Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
-                Route::get('/edit/{id}', [DataKategoriController::class, 'editDataKategori']);
+                Route::get('/', [ManajemenfileDataKategoriController::class, 'viewDataKategori']);
+                Route::get('/add', [ManajemenfileDataKategoriController::class, 'addDataKategori']);
+                Route::get('/datatables', [ManajemenfileDataKategoriController::class, 'datatablesCategoryfile']);
+                Route::get('/edit/{id}', [ManajemenfileDataKategoriController::class, 'editDataKategori']);
 
                 //action input data kategori
-                Route::post('action-data-kategori/{mode}/{id}', [DataKategoriController::class, 'actionDataKategori']);
+                Route::post('action-data-kategori/{mode}/{id}', [ManajemenfileDataKategoriController::class, 'actionDataKategori']);
             });
             Route::prefix('data-sub-kategori')->group(function () {
                 Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);

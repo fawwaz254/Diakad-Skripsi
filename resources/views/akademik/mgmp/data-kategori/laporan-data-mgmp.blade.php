@@ -6,8 +6,57 @@
                     <h2>Data Laporan Kerja Harian Kelompok</h2>
                 </div>
                 <div class="body">
+                    <div
+                        style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 10px">
+                        <div style="display: flex; align-items: end; gap: 20px">
+                            <div>
+                                <label for="filterNama">Filter Nama:</label>
+                                <form action="{{ url()->current() }}" method="GET"
+                                    style="display: flex; align-items: center">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4" style="width: 100%; margin:0">
+                                            <select id="filterNama" name="id_pengguna" class="form-control">
+                                                <option value="">-- Pilih Nama --</option>
+                                                @foreach ($data as $d)
+                                                    <option value="{{ $d->id_pengguna }}"
+                                                        {{ request('id_pengguna') == $d->id_pengguna ? 'selected' : '' }}>
+                                                        {{ $d->nm_pengguna }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div>
+                                <label for="filterTahun">Tahun Ajaran:</label>
+                                <select id="filterTahun" class="form-control">
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="filterSemester">Semester:</label>
+                                <select id="filterSemester" class="form-control">
+                                    <option value="">-- Pilih Semester --</option>
+                                    <option value="ganjil">Semester Ganjil (Jan - Jun)</option>
+                                    <option value="genap">Semester Genap (Jul - Des)</option>
+                                </select>
+                            </div>
+                            <button type="button"
+                                style="padding: 8px 15px; border-radius: 5px; border: none; background-color: #6C757D; color: #fff; cursor: pointer; margin-left: 10px; "
+                                id="tombol-reset-filter">
+                                Hapus Filter
+                            </button>
+                        </div>
+
+                        <button id="tombol-print" class="hidden btn btn-warning" title="Cetak">
+                            <i class="material-icons">print</i>
+                        </button>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -16,7 +65,7 @@
                                     <th colspan="2" style="vertical-align : middle;text-align:center;">Kategori</th>
                                     <th rowspan="2" style="vertical-align : middle;text-align:center;">Uraian
                                         Kegiatan</th>
-                                    <th rowspan="2" style="vertical-align : middle;text-align:center;">Tuntas</th>
+                                    <th rowspan="2" style="vertical-align : middle;text-align:center;">Status</th>
                                     <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
                                     <th rowspan="2" style="vertical-align : middle;text-align:center;">Nama</th>
                                 </tr>
@@ -93,130 +142,168 @@
 </div>
 
 <script type="text/javascript">
-    $('#print').click(function() {
-        $('#modal_print').modal('show');
-    });
+    $(document).ready(function() {
+        let currentYear = new Date().getFullYear();
 
-    $('#print_laporan').click(function() {
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
+        $('#tombol-reset-filter').click(function() {
+            $('#filterNama').val('');
+            $('#filterTahun').val(currentYear);
+            $('#filterSemester').val('');
+            $("#tombol-print").addClass("hidden");
+            primary_table.ajax.reload();
+        });
 
-        if (!start_date || !end_date) {
-            alert('Mohon diisi start date dan end date terlebih dahulu');
-            return;
+
+        let tahunSelect = $('#filterTahun');
+        for (let i = 0; i < 5; i++) {
+            let year = currentYear - i;
+            tahunSelect.append(new Option(`Tahun ${year}`, year));
+        }
+        tahunSelect.append(new Option("Semua Tahun", ""));
+        $('#filterSemester').append(new Option("Semua Semester", ""));
+
+        function getSemesterMonths(semester) {
+            return semester === "ganjil" ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
         }
 
-        window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/" + start_date + "/" + end_date;
-    })
-
-    var modul_url = 'mpmp';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-mgmp/datatables';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-mgmp/preview-file';
-    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-mgmp/download-file';
-
-
-    var primary_table = $('#primary_table').DataTable({
-        processing: true,
-        serverSide: true,
-        responsive: false,
-        dom: 'Bfrtip',
-        lengthMenu: dtLengButton,
-        buttons: dtButtonConfig,
-        ajax: {
-            url: datatable_url,
-            type: 'GET'
-        },
-        columns: [{
-                data: 'index_column',
-                class: 'text-center',
-                defaultContent: '',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'tanggal',
-                name: 'tanggal'
-            },
-            {
-                data: 'jenis',
-                class: 'text-center',
-                name: 'action',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'mapel.category_file_name',
-                class: 'text-center',
-                name: 'action',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'keterangan_progres',
-                name: 'keterangan_progres',
-                render: function(data, type, row) {
-                    return '<span style="white-space:normal">' + data + "</span>";
-                } // tampilan wrap text
-            },
-            {
-                data: 'action',
-                class: 'text-center',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    if (data.status == 1) {
-                        return 'selesai';
-                    } else {
-                        return 'belum selesai';
-                    }
-                }
-            },
-            {
-                data: 'action',
-                name: 'file',
-                class: 'text-center',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    if (data.file) {
-                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="' +
-                            data.file + '" onclick="open_modal(\'' + data.id + '\' , this)">' +
-                            '    <i class="material-icons">insert_drive_file</i>' +
-                            '</a> '
-                    } else {
-                        return `-`;
-                    }
-                }
-            },
-            {
-                data: 'nm_pengguna',
-                name: 'nm_pengguna',
-                orderable: false
-            }
-        ]
-    });
-
-    primary_table.on('draw', function() {
-        primary_table.column(0, {
-            search: 'applied',
-            order: 'applied'
-        }).nodes().each(function(cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = start + i + 1;
-            primary_table.cell(cell).invalidate('dom');
+        $('#print').click(function() {
+            $('#modal_print').modal('show');
         });
-    }).draw();
 
-    function open_modal(id, element) {
+        $('#print_laporan').click(function() {
+            var start_date = $('#start_date').val();
+            var end_date = $('#end_date').val();
 
-        var item = $(element);
-        $('#place').empty();
-        $('#place').append(`
+            if (!start_date || !end_date) {
+                alert('Mohon diisi start date dan end date terlebih dahulu');
+                return;
+            }
+
+            window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/" + start_date +
+                "/" + end_date;
+        })
+
+        var modul_url = 'mpmp';
+        var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-mgmp/datatables';
+        var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-mgmp/preview-file';
+        var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-mgmp/download-file';
+
+
+        var primary_table = $('#primary_table').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: false,
+            dom: 'Bfrtip',
+            lengthMenu: dtLengButton,
+            buttons: dtButtonConfig,
+            ajax: {
+                url: datatable_url,
+                type: 'GET',
+                data: function(d) {
+                    d.id_pengguna = $('#filterNama').val();
+                    d.tahun = $('#filterTahun').val();
+                    d.semester = $('#filterSemester').val();
+                }
+            },
+            columns: [{
+                    data: 'index_column',
+                    class: 'text-center',
+                    searchable: false,
+                    orderable: false
+                },
+                {
+                    data: 'tanggal',
+                    name: 'tanggal'
+                },
+                {
+                    data: 'jenis',
+                    class: 'text-center',
+                    searchable: false,
+                    orderable: false
+                },
+                {
+                    data: 'mapel.category_file_name',
+                    class: 'text-center',
+                    searchable: false,
+                    orderable: false
+                },
+                {
+                    data: 'keterangan_progres',
+                    name: 'keterangan_progres',
+                    render: function(data) {
+                        return '<span style="white-space:normal">' + data + "</span>";
+                    }
+                },
+                {
+                    data: 'action',
+                    class: 'text-center',
+                    searchable: false,
+                    orderable: false,
+                    render: function(data) {
+                        return data.status == 1 ? 'selesai' : 'belum selesai';
+                    }
+                },
+                {
+                    data: 'action',
+                    name: 'file',
+                    class: 'text-center',
+                    searchable: false,
+                    orderable: false,
+                    render: function(data) {
+                        return data.file ?
+                            '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="' +
+                            data.file + '" onclick="open_modal(\'' + data.id +
+                            '\', this)"><i class="material-icons">insert_drive_file</i></a>' :
+                            '-';
+                    }
+                },
+                {
+                    data: 'nm_pengguna',
+                    name: 'nm_pengguna',
+                    orderable: false
+                }
+            ]
+        });
+
+
+        function open_modal(id, element) {
+
+            var item = $(element);
+            $('#place').empty();
+            $('#place').append(`
             <a href="` + preview_file_url + `/` + id + `" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
             <a href="` + download_file_url + `/` + id + `" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);
-        $('#modal-opsi').modal('show');
-    }
+            $('#modal-opsi').modal('show');
+        }
+
+
+        $('#filterNama, #filterSemester, #filterTahun').on('change', function() {
+            primary_table.ajax.reload();
+            if ($("#filterNama").val()) {
+                $("#tombol-print").removeClass("hidden");
+            } else {
+                $("#tombol-print").addClass("hidden");
+            }
+        });
+
+        $('#tombol-print').click(function() {
+            window.open(
+                `${base_url}/akademik/mpmp/laporan-mgmp/${$('#filterNama').val()}/cetak?tahun-ajaran=${$('#filterTahun').val()}&semester=${$('#filterSemester').val()}`,
+                '_blank');
+        });
+
+
+        primary_table.on('draw', function() {
+            primary_table.column(0, {
+                search: 'applied',
+                order: 'applied'
+            }).nodes().each(function(cell, i) {
+                var start = this.page.info().page * this.page.info().length;
+                cell.innerHTML = start + i + 1;
+                primary_table.cell(cell).invalidate('dom');
+            });
+        }).draw();
+    })
 </script>

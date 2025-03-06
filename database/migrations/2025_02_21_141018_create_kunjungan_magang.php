@@ -13,6 +13,7 @@ class CreateKunjunganMagang extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('kunjungan_magang');
         Schema::create('kunjungan_magang', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('id_kunjungan_magang', 40)->primary();

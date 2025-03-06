@@ -38,11 +38,14 @@ class ListUjianController extends Controller
             [
                 'testSiswa' => function ($query) use ($auth_data) {
                     $query->where('id_pengguna', $auth_data->pengguna->id_pengguna);
-                }, 'kategori_soal',
+                },
+                'kategori_soal',
             ]
         )->whereHas('paket_soal_kelas', function ($query) use ($id_kelas) {
             $query->where('id_kelas', $id_kelas);
-        })->orderBy('created_at', 'desc');
+        })->orderBy('updated_at', 'DESC')
+            ->orderBy('status', 'DESC')
+            ->get();
         $waktu = Carbon::now('Asia/Jakarta');
         return Datatables::of($list_data)
             ->editColumn('waktu_pengerjaan', '{{$waktu_pengerjaan}} Menit')

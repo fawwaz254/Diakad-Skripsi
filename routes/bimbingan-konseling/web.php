@@ -175,7 +175,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('input-pelanggaran/multiple', [InputPelanggaranController::class, 'addInputPelanggaranMultiple']);
             Route::get('input-pelanggaran/edit/{id}', [InputPelanggaranController::class, 'editInputPelanggaran']);
 
-            Route::post('action-input-pelanggaran/{mode}/{id}', [InputPelanggaranController::class, 'actionInputPelanggaran']);
+            Route::post('action-input-pelanggaran/{mode}/{id?}', [InputPelanggaranController::class, 'actionInputPelanggaran']);
             Route::post('action-input-pelanggaran/add-multiple', [InputPelanggaranController::class, 'actionInputPelanggaranMultiple']);
 
             // MENU Tindakan Pelanggaran

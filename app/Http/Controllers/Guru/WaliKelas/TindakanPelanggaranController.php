@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Guru\WaliKelas;
 
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 
 use App\Models\PelanggaranSiswa as PelanggaranSiswa;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
@@ -16,30 +16,115 @@ use Yajra\Datatables\Datatables;
 
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
-use App\Models\WaliKelas;
+
 use Auth;
 use DB;
 use Session;
 use Validator;
 
-class RekapPelanggaranKelasController extends BaseController
+class TindakanPelanggaranController extends BaseController
 {
-    public function viewRekapPelanggaranKelas(Request $request)
+    public function viewTindakanPelanggaranNonKBM(Request $request)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('guru/wali-kelas/rekap-pelanggaran-kelas/view-rekap-pelanggaran-kelas', compact('auth_data'));
+        return view('guru/wali-kelas/rekap-pelanggaran-kelas/add-nonkbm-tindakan-pelanggaran', compact('auth_data'));
+    }
+
+    public function viewTindakanPelanggaranKBM(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('guru/wali-kelas/rekap-pelanggaran-kelas/add-kbm-tindakan-pelanggaran', compact('auth_data'));
+    }
+
+    public function addTindakanPelanggaranNonKBM($id, Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        // mengambil waktu sekarang
+        $now = Carbon::now();
+
+        // ambil data pelanggaran
+        $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, $id);
+
+        // convert format date
+        $tgl_pelanggaran = strftime("%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));
+
+        $data_jenis_tindakan = LibDataPelanggaran::fetchDataJenisTindakan($auth_data);
+
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+
+        $id_tindakan_pelanggaran = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+        return view('guru/wali-kelas/rekap-pelanggaran-kelas/add-nonkbm-tindakan-pelanggaran', compact('auth_data', 'data_pelanggaran_siswa', 'tgl_pelanggaran', 'data_jenis_tindakan', 'id_pengguna', 'id_tindakan_pelanggaran'));
+    }
+
+    public function addTindakanPelanggaranKBM($id, Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        // mengambil waktu sekarang
+        $now = Carbon::now();
+
+        // ambil data presensi mp pelanggaran
+        $data_presensi_mp_pelanggaran = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, $id);
+
+        // convert format date
+        $tgl_pelanggaran = strftime("%d %B %Y %H:%M:%S", strtotime($data_presensi_mp_pelanggaran->created_at));
+
+        $data_jenis_tindakan = LibDataPelanggaran::fetchDataJenisTindakan($auth_data);
+
+        $id_tindakan_pelanggaran = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+        return view('guru/wali-kelas/rekap-pelanggaran-kelas/add-kbm-tindakan-pelanggaran', compact('auth_data', 'data_presensi_mp_pelanggaran', 'tgl_pelanggaran', 'data_jenis_tindakan', 'id_tindakan_pelanggaran'));
+    }
+
+    public function editTindakanPelanggaran($id, Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_jenis_tindakan = LibDataPelanggaran::fetchDataJenisTindakan($auth_data);
+
+        $data_tindakan_pelanggaran = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, null, $id);
+
+        if (!empty($data_tindakan_pelanggaran->id_pelanggaran_siswa)) {
+            $tgl_pelanggaran = strftime("%d %B %Y %H:%M:%S", strtotime($data_tindakan_pelanggaran->tgl_pelanggaran));
+        } else {
+            $tgl_pelanggaran = strftime("%d %B %Y %H:%M:%S", strtotime($data_tindakan_pelanggaran->tgl_pelanggaran_presensi));
+        }
+
+        // convert format date
+        $tgl_tindakan_pelanggaran = strftime("%d %B %Y %H:%M:%S", strtotime($data_tindakan_pelanggaran->tgl_tindakan_pelanggaran));
+
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+
+        return view('guru/wali-kelas/rekap-pelanggaran-kelas/edit-tindakan-pelanggaran', compact('auth_data', 'data_jenis_tindakan', 'data_tindakan_pelanggaran', 'tgl_pelanggaran', 'tgl_tindakan_pelanggaran', 'id_pengguna'));
     }
 
     public function datatablesBelumTindakanNonKBM(Request $request)
     {
         $input = (object) $request->input();
+        $filter_tanggal = null;
+        $status_siswa = $input->status_siswa;
+
+        if (!empty($input->filter_tanggal)) {
+            $filter_tanggal = $input->filter_tanggal;
+        }
         $auth_data = $input->auth_data;
 
-        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaranByKelas($auth_data, 0, null, "1");
-
+        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1", $status_siswa, $filter_tanggal);
+        // dd($list_data);
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         if ($pengguna) {
@@ -53,6 +138,9 @@ class RekapPelanggaranKelasController extends BaseController
                     $hasil = true;
                 }
                 return $hasil;
+            })
+            ->addColumn('nis_siswa', function ($item) {
+                return $item->nis_siswa;
             })
             ->addColumn('nm_siswa', function ($item) {
                 return $item->nm_pengguna;
@@ -117,8 +205,15 @@ class RekapPelanggaranKelasController extends BaseController
     public function datatablesBelumTindakanKBM(Request $request)
     {
         $input = (object) $request->input();
+        $filter_tanggal = null;
+        $status_siswa = $input->status_siswa;
+
+        if (!empty($input->filter_tanggal)) {
+            $filter_tanggal = $input->filter_tanggal;
+        }
         $auth_data = $input->auth_data;
-        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaranByKelas($auth_data, null, "1");
+
+        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1", "-", $status_siswa, $filter_tanggal);
 
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
@@ -133,6 +228,9 @@ class RekapPelanggaranKelasController extends BaseController
                     $hasil = true;
                 }
                 return $hasil;
+            })
+            ->addColumn('nis_siswa', function ($item) {
+                return $item->nis_siswa;
             })
             ->addColumn('nm_siswa', function ($item) {
                 return $item->nm_pengguna;
@@ -156,9 +254,6 @@ class RekapPelanggaranKelasController extends BaseController
             })
             ->addColumn('nm_mapel', function ($item) {
                 return $item->kd_mata_pelajaran . " - " . $item->nm_mata_pelajaran;
-            })
-            ->addColumn('tingkat_pelanggaran', function ($item) {
-                return $item->tingkat_kategori_pelanggaran . "." . $item->tingkat_subkategori_pelanggaran;
             })
             ->addColumn('tgl_pelanggaran', function ($item) {
                 return strftime("%d %B %Y %H:%M:%S", strtotime($item->created_at));
@@ -186,8 +281,15 @@ class RekapPelanggaranKelasController extends BaseController
     public function datatablesSudahTindakan(Request $request)
     {
         $input = (object) $request->input();
+        $filter_tanggal = null;
+        $status_siswa = $input->status_siswa;
+
+        if (!empty($input->filter_tanggal)) {
+            $filter_tanggal = $input->filter_tanggal;
+        }
         $auth_data = $input->auth_data;
-        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaranByKelas($auth_data, 1, null, "1");
+
+        $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1", $status_siswa, $filter_tanggal);
 
         $bk_kelas = [];
         $pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
@@ -203,6 +305,9 @@ class RekapPelanggaranKelasController extends BaseController
                 }
                 return $hasil;
             })
+            ->addColumn('nis_siswa', function ($item) {
+                return $item->nis_siswa;
+            })
             ->addColumn('nm_siswa', function ($item) {
                 if (!empty($item->nm_siswa)) {
                     return $item->nm_siswa;
@@ -213,11 +318,7 @@ class RekapPelanggaranKelasController extends BaseController
                 }
             })
             ->editColumn('nm_subkategori_pelanggaran', function ($item) {
-                if (!empty($item->id_pelanggaran_siswa)) {
                 return strip_tags($item->nm_subkategori_pelanggaran);
-                }else {
-                return strip_tags($item->nm_subkategori_pelanggaran_mp);
-                }
             })
             ->addColumn('nm_kelas', function ($item) {
                 if (!empty($item->nm_kelas)) {
@@ -257,7 +358,7 @@ class RekapPelanggaranKelasController extends BaseController
                     } elseif (!empty($item->gelar_depan_guru_presensi)) {
                         return $item->gelar_depan_guru_presensi . " " . $item->nm_guru_input_presensi . " (Guru)";
                     } elseif (!empty($item->gelar_belakang_guru_presensi)) {
-                        return $item->nm_guru_input_presensi . ", " . $item->gelar_belakang_guru_presensi . " (Guru)";
+                        return $item->nm_guru_input_presensinm_guru_input_presensi . ", " . $item->gelar_belakang_guru_presensi . " (Guru)";
                     } else {
                         return $item->nm_guru_input_presensi . " (Guru)";
                     }
@@ -354,5 +455,136 @@ class RekapPelanggaranKelasController extends BaseController
                 return $data;
             })
             ->make(true);
+    }
+
+    // Action POST
+    public function actionTindakanPelanggaran(Request $request, $mode, $id = null)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            /*'id_pelanggaran_siswa'          => 'required',
+            'id_presensi_mp_pelanggaran'    => 'required',*/
+            'id_jenis_tindakan' => 'required',
+            'catatan_tindakan_pelanggaran' => 'required',
+            /*'catatan_tindakan_pelanggaran_khusus'    => 'required',*/
+            'tgl_tindakan_pelanggaran' => 'required'
+        ]);
+
+        if ($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            // mengambil waktu sekarang
+            $now = Carbon::now();
+
+            if ($mode == 'add-nonkbm') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                $tindakanPelanggaran = new TindakanPelanggaran;
+                $tindakanPelanggaran->id_tindakan_pelanggaran = $id;
+                $tindakanPelanggaran->id_pelanggaran_siswa = $input->id_pelanggaran_siswa;
+                $tindakanPelanggaran->id_jenis_tindakan = $input->id_jenis_tindakan;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran = $input->catatan_tindakan_pelanggaran;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran_khusus = $input->catatan_tindakan_pelanggaran_khusus;
+                // convert format date
+                $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
+                $tindakanPelanggaran->aktor_input_tindakan_pelanggaran = 1;
+                $tindakanPelanggaran->created_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->save();
+
+                $pelanggaranSiswa = PelanggaranSiswa::find($input->id_pelanggaran_siswa);
+                $pelanggaranSiswa->is_sudah_tindakan = 1;
+                $pelanggaranSiswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->updated_at = $now;
+                $pelanggaranSiswa->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/rekap-pelanggaran-kelas',
+                    'message' => 'Save Tindakan Pelanggaran Siswa Successfully'
+                ];
+            } elseif ($mode == 'add-kbm') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                $tindakanPelanggaran = new TindakanPelanggaran;
+                $tindakanPelanggaran->id_tindakan_pelanggaran = $id;
+                $tindakanPelanggaran->id_presensi_mp_pelanggaran = $input->id_presensi_mp_pelanggaran;
+                $tindakanPelanggaran->id_jenis_tindakan = $input->id_jenis_tindakan;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran = $input->catatan_tindakan_pelanggaran;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran_khusus = $input->catatan_tindakan_pelanggaran_khusus;
+                // convert format date
+                $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
+                $tindakanPelanggaran->aktor_input_tindakan_pelanggaran = 1;
+                $tindakanPelanggaran->created_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->save();
+
+                $presensiMpPelanggaran = PresensiMpPelanggaran::find($input->id_presensi_mp_pelanggaran);
+                $presensiMpPelanggaran->is_sudah_tindakan = 1;
+                $presensiMpPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $presensiMpPelanggaran->updated_at = $now;
+                $presensiMpPelanggaran->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/rekap-pelanggaran-kelas',
+                    'message' => 'Save Tindakan Pelanggaran Siswa Successfully'
+                ];
+            } elseif ($mode == 'edit') {
+                // make object to find id
+                $tindakanPelanggaran = TindakanPelanggaran::find($id);
+                $tindakanPelanggaran->id_jenis_tindakan = $input->id_jenis_tindakan;
+                $tindakanPelanggaran->catatan_tindakan_pelanggaran = $input->catatan_tindakan_pelanggaran;
+                if (!empty($input->catatan_tindakan_pelanggaran_khusus)) {
+                    $tindakanPelanggaran->catatan_tindakan_pelanggaran_khusus = $input->catatan_tindakan_pelanggaran_khusus;
+                }
+                // convert format date
+                $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
+                $tindakanPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->updated_at = $now;
+                $tindakanPelanggaran->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/rekap-pelanggaran-kelas',
+                    'message' => 'Update Tindakan Pelanggaran Siswa Successfully'
+                ];
+            } elseif ($mode == 'delete') {
+                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_tindakan_pelanggaran', $id)->where('created_by', '<>', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    return [
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Failed To Delete Tindakan Pelanggaran Siswa, Yg boleh menghapus hanya penindak'
+                    ];
+                } else {
+                    // make object to find id
+                    $tindakanPelanggaran = TindakanPelanggaran::find($id);
+                    if ($tindakanPelanggaran->id_pelanggaran_siswa) {
+                        $pelanggaranSiswa = PelanggaranSiswa::find($tindakanPelanggaran->id_pelanggaran_siswa);
+                        $pelanggaranSiswa->is_sudah_tindakan = 0;
+                        $pelanggaranSiswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                        $pelanggaranSiswa->updated_at = $now;
+                        $pelanggaranSiswa->save();
+                    } elseif ($tindakanPelanggaran->id_presensi_mp_pelanggaran) {
+                        $presensiMpPelanggaran = PresensiMpPelanggaran::find($tindakanPelanggaran->id_presensi_mp_pelanggaran);
+                        $presensiMpPelanggaran->is_sudah_tindakan = 0;
+                        $presensiMpPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                        $presensiMpPelanggaran->updated_at = $now;
+                        $presensiMpPelanggaran->save();
+                    }
+
+                    $tindakanPelanggaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                    $tindakanPelanggaran->save();
+
+                    $tindakanPelanggaran->delete();
+
+                    return [
+                        'status' => 203, // SUCCESS AND LOAD TABLE
+                        'message' => 'Delete Tindakan Pelanggaran Siswa Successfully'
+                    ];
+                }
+            }
+        }
     }
 }

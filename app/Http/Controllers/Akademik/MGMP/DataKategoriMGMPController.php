@@ -12,14 +12,16 @@ use App\Models\MataPelajaran;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Pengguna;
+use App\Models\Semester;
 use App\Models\SubCategoryFileMGMP;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Validator;
+
 
 
 class DataKategoriMGMPController extends BaseController
@@ -138,12 +140,12 @@ class DataKategoriMGMPController extends BaseController
 
                 if ($input->allowed_guru ?? false) {
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $datakategori                               = new CategoriFileMGMP;
-                    $datakategori->category_file_mgmp_id        = $id;
-                    $datakategori->category_file_name           = $input->category_file_name;
-                    $datakategori->category_file_explanation    = $input->category_file_explanation;
-                    $datakategori->is_aktif                     = 1;
-                    $datakategori->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $datakategori = new CategoriFileMGMP;
+                    $datakategori->category_file_mgmp_id = $id;
+                    $datakategori->category_file_name = $input->category_file_name;
+                    $datakategori->category_file_explanation = $input->category_file_explanation;
+                    $datakategori->is_aktif = 1;
+                    $datakategori->created_by = $input->auth_data->pengguna->id_pengguna;
                     $datakategori->save();
 
                     foreach ($input->allowed_guru as $key => $value) {
@@ -151,7 +153,7 @@ class DataKategoriMGMPController extends BaseController
                         $datakategori_guru = new CategoriFileGuru;
                         $datakategori_guru->category_file_guru_id = $uuid;
                         $datakategori_guru->id_pengguna = $input->allowed_guru[$key];
-                        $datakategori_guru->category_file_mgmp_id =  $datakategori->category_file_mgmp_id;
+                        $datakategori_guru->category_file_mgmp_id = $datakategori->category_file_mgmp_id;
                         //  $datakategori_guru->category_file_mgmp_id = $datakategori->category_file_mgmp_id;
                         $datakategori_guru->save();
                     }
@@ -186,12 +188,12 @@ class DataKategoriMGMPController extends BaseController
                 }
             } elseif ($mode == 'edit') {
                 // make object to find id
-                $datakategori                               = CategoriFileMGMP::find($id);
-                $datakategori->category_file_name           = $input->category_file_name;
-                $datakategori->category_file_explanation    = $input->category_file_explanation;
-                $datakategori->is_aktif                     = $input->is_aktif;
-                $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
-                $datakategori->updated_at                   = $now;
+                $datakategori = CategoriFileMGMP::find($id);
+                $datakategori->category_file_name = $input->category_file_name;
+                $datakategori->category_file_explanation = $input->category_file_explanation;
+                $datakategori->is_aktif = $input->is_aktif;
+                $datakategori->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $datakategori->updated_at = $now;
                 $datakategori->save();
 
                 // replace category file role
@@ -225,12 +227,12 @@ class DataKategoriMGMPController extends BaseController
                     $dataguru = CategoriFileGuru::where('category_file_mgmp_id', $id)->get();
 
                     foreach ($dataguru as $guru) {
-                        $data =    CategoriFileGuru::where('category_file_guru_id', $guru->category_file_guru_id)->first();
+                        $data = CategoriFileGuru::where('category_file_guru_id', $guru->category_file_guru_id)->first();
                         $data->delete();
                     }
 
-                    $datakategori                       = CategoriFileMGMP::where('category_file_mgmp_id', $id)->first();
-                    $datakategori->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                    $datakategori = CategoriFileMGMP::where('category_file_mgmp_id', $id)->first();
+                    $datakategori->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $datakategori->save();
 
                     $datakategori->delete();
@@ -248,12 +250,42 @@ class DataKategoriMGMPController extends BaseController
     }
     public function viewLaporanAllMGMP(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('akademik/mgmp/data-kategori/laporan-data-mgmp', compact('auth_data'));
+        $data = Pengguna::where('status_join_table', 2)->orderBy('nm_pengguna', 'asc')->get(['id_pengguna', 'nm_pengguna']);
+
+        return view('akademik/mgmp/data-kategori/laporan-data-mgmp', compact('auth_data', 'data'));
     }
+
+    public function showDataByUserId($id_pengguna, Request $request)
+    {
+
+        $tahunAjaran = $request->query('tahun-ajaran');
+        $semester = $request->query('semester');
+
+        $datas = LaporanKerjaHarianMGMP::with(['mapel', 'pengguna'])
+            ->where('id_pengguna', $id_pengguna)
+            ->orderBy('created_at', 'desc');
+
+        if ($tahunAjaran) {
+            $datas->whereYear('tanggal', $tahunAjaran);
+        }
+
+        if ($semester) {
+            $semesterMonths = $semester === "ganjil" ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
+            $datas->whereIn(DB::raw('MONTH(tanggal)'), $semesterMonths);
+        }
+
+        $datas = $datas->get();
+
+        if (count($datas) === 0) {
+            return abort(404);
+        }
+
+        return view('akademik/mgmp/data-kategori/cetak-data-mgmp-by-id', compact('datas', 'semester', 'tahunAjaran'));
+    }
+
 
     public function previewFile($id, Request $request)
     {
@@ -279,11 +311,33 @@ class DataKategoriMGMPController extends BaseController
 
     public function datatablesKerjaHarianAllMGMP(Request $request)
     {
-
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
+        $id_pengguna = $request->input('id_pengguna');
+        $tahun = $request->input('tahun');
+        $semester = $request->input('semester');
 
-        $list_data = LaporanKerjaHarianMGMP::with('mapel', 'pengguna')->orderBy('created_at', 'desc')->get();
+        $query = LaporanKerjaHarianMGMP::with('mapel', 'pengguna');
+
+
+        if ($id_pengguna) {
+            $query->where('id_pengguna', $id_pengguna);
+        }
+
+        if ($tahun) {
+            $query->whereYear('tanggal', $tahun);
+        }
+
+        if ($semester) {
+            $semesterMonths = $semester === "ganjil" ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
+            $query->whereIn(DB::raw('MONTH(tanggal)'), $semesterMonths);
+        }
+
+        $list_data = $query->orderBy('created_at', 'desc')
+            ->get();
+
+        $list_data->each(function ($item, $index) {
+            $item->index_column = $index + 1;
+        });
 
         return Datatables::of($list_data)
             ->editColumn('tanggal', function ($item) {
@@ -291,28 +345,23 @@ class DataKategoriMGMPController extends BaseController
             })
             ->addColumn('action', function ($item) {
                 if ($item->path_file) {
-                    $file =  Storage::disk('spaces')->url($item->path_file);
+                    $file = Storage::disk('spaces')->url($item->path_file);
                     $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
-                    if ($ext == 'pdf' || $ext == 'doc' || $ext == 'docx') {
-                        $note = 'file';
-                    } else {
-                        $note = 'image';
-                    }
+                    $note = in_array($ext, ['pdf', 'doc', 'docx']) ? 'file' : 'image';
                 } else {
                     $file = null;
                     $note = null;
                 }
 
-                $data = array(
-                    'id'        => $item->id_laporan_kerja_harian_mgmp,
-                    'jenis'    => $item->jenis,
-                    'status'    => $item->status,
-                    'file'      => $file,
-                    'note'      => $item->mapel,
-                );
-                return $data;
+                return [
+                    'id' => $item->id_laporan_kerja_harian_mgmp,
+                    'jenis' => $item->jenis,
+                    'status' => $item->status,
+                    'file' => $file,
+                    'note' => $note,
+                ];
             })
-            ->addColumn('nm_pengguna', function($item) {
+            ->addColumn('nm_pengguna', function ($item) {
                 return $item->pengguna->nm_pengguna;
             })
             ->make(true);

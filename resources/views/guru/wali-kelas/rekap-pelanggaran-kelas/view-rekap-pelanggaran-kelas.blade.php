@@ -38,6 +38,7 @@
                                                 <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
                                                 <th>Nama Guru Input</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -58,6 +59,7 @@
                                                 <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
                                                 <th>Nama Guru Input</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -78,6 +80,7 @@
                                                 <th>Tanggal Pelanggaran</th>
                                                 <th>Nama Guru Input</th>
                                                 <th>Nama Input Tindakan</th>
+                                                <th>Action</th>
                                                 <!-- <th>Catatan Tindakan</th>
                                                 <th>Catatan Khusus</th> -->
 
@@ -104,12 +107,12 @@
         'rekap-pelanggaran-kelas/datatables-belum-kbm';
     var datatable_url_sudah = base_url + '/' + role_url + '/' + modul_url + '/' +
         'rekap-pelanggaran-kelas/datatables-sudah';
-    var add_url_nonkbm = role_url + '#' + modul_url + '/' + 'rekap-pelanggaran-kelas/add-nonkbm';
-    var add_url_kbm = role_url + '#' + modul_url + '/' + 'rekap-pelanggaran-kelas/add-kbm';
-    var edit_url = role_url + '#' + modul_url + '/' + 'rekap-pelanggaran-kelas/edit';
+    var add_url_nonkbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-nonkbm';
+    var add_url_kbm = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-kbm';
+    var edit_url = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/edit';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-tindakan-pelanggaran/delete';
     var delete_nonkbm_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-tindakan-pelanggaran-nonkbm';
-    console.log(datatable_url_belum_kbm);
+
     var primary_table_belum_nonkbm = $('#primary_table_belum_nonkbm').DataTable({
         processing: true,
         serverSide: true,
@@ -120,7 +123,8 @@
             url: datatable_url_belum_nonkbm,
             type: 'GET'
         },
-        columns: [{
+        columns: [
+            {
                 data: 'index_table',
                 defaultContent: '',
                 searchable: false,
@@ -136,7 +140,9 @@
             },
             {
                 data: 'nm_subkategori_pelanggaran',
-                name: 'nm_subkategori_pelanggaran'
+                name: 'nm_subkategori_pelanggaran',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'tgl_pelanggaran',
@@ -148,19 +154,38 @@
                 searchable: false,
                 orderable: false
             },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function (data, type, row) {
+                    if (row.tingkat_kategori_pelanggaran == 1) {
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            add_url_nonkbm + '/' + data.id + '">' +
+                            '    <i class="material-icons">done_all</i>' +
+                            '</a> ' +
+                            '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTindakan(\'' +
+                            delete_url + '\', this)" data-id="' + data.id + '">' +
+                            '    <i class="material-icons">delete_forever</i>' +
+                            '</button>';
+                    }
+                    return '';
+                }
+            }
         ],
-        createdRow: function(row, data, dataIndex) {
+        createdRow: function (row, data, dataIndex) {
             if (data.cek_pj_bk) {
                 $(row).css('background-color', 'hsl(28, 80%, 61%)');
             }
         }
     });
 
-    primary_table_belum_nonkbm.on('draw', function() {
+    primary_table_belum_nonkbm.on('draw', function () {
         primary_table_belum_nonkbm.column(0, {
             search: 'applied',
             order: 'applied'
-        }).nodes().each(function(cell, i) {
+        }).nodes().each(function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
             primary_table_belum_nonkbm.cell(cell).invalidate('dom');
@@ -178,50 +203,65 @@
             type: 'GET'
         },
         columns: [{
-                data: 'index_table',
-                defaultContent: '',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'nm_siswa',
-                name: 'pengguna.nm_pengguna'
-            },
-            {
-                data: 'nm_kelas',
-                name: 'kelas.nm_kelas'
-            },
-            {
-                data: 'nm_mapel',
-                name: 'mata_pelajaran.nm_mata_pelajaran'
-            },
-            {
-                data: 'nm_subkategori_pelanggaran',
-                name: 'nm_subkategori_pelanggaran'
-            },
-            {
-                data: 'tgl_pelanggaran',
-                name: 'presensi_mp_pelanggaran.created_at'
-            },
-            {
-                data: 'nm_input',
-                name: 'nm_input',
-                searchable: false,
-                orderable: false
-            },
+            data: 'index_table',
+            defaultContent: '',
+            searchable: false,
+            orderable: false
+        },
+        {
+            data: 'nm_siswa',
+            name: 'pengguna.nm_pengguna'
+        },
+        {
+            data: 'nm_kelas',
+            name: 'kelas.nm_kelas'
+        },
+        {
+            data: 'nm_mapel',
+            name: 'mata_pelajaran.nm_mata_pelajaran'
+        },
+        {
+            data: 'nm_subkategori_pelanggaran',
+            name: 'nm_subkategori_pelanggaran'
+        },
+        {
+            data: 'tgl_pelanggaran',
+            name: 'presensi_mp_pelanggaran.created_at'
+        },
+        {
+            data: 'nm_input',
+            name: 'nm_input',
+            searchable: false,
+            orderable: false
+        },
+        {
+            data: 'action',
+            name: 'action',
+            searchable: false,
+            orderable: false,
+            render: function (data, type, row) {
+                    if (row.tingkat_kategori_pelanggaran == 1) {
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            add_url_nonkbm + '/' + data.id + '">' +
+                            '    <i class="material-icons">done_all</i>' +
+                            '</a> ';
+                    }
+                    return '';
+                }
+        },
         ],
-        createdRow: function(row, data, dataIndex) {
+        createdRow: function (row, data, dataIndex) {
             if (data.cek_pj_bk) {
                 $(row).css('background-color', 'hsl(28, 80%, 61%)');
             }
         }
     });
 
-    primary_table_belum_kbm.on('draw', function() {
+    primary_table_belum_kbm.on('draw', function () {
         primary_table_belum_kbm.column(0, {
             search: 'applied',
             order: 'applied'
-        }).nodes().each(function(cell, i) {
+        }).nodes().each(function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
             primary_table_belum_kbm.cell(cell).invalidate('dom');
@@ -230,7 +270,7 @@
 
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
-        serverSide: true,
+        serverSide: false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
@@ -239,54 +279,73 @@
             type: 'GET'
         },
         columns: [{
-                data: 'index_table',
-                defaultContent: '',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'nm_siswa',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'nm_kelas',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'nm_subkategori_pelanggaran',
-                name: 'nm_subkategori_pelanggaran'
-            },
-            {
-                data: 'tgl_pelanggaran',
-                name: 'tgl_pelanggaran',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'nm_input',
-                name: 'nm_input',
-                searchable: false,
-                orderable: false
-            },
-            {
-                data: 'nm_input_tindakan',
-                name: 'p_tindakan.nm_pengguna'
-            },
+            data: 'index_table',
+            defaultContent: '',
+            searchable: false,
+            orderable: false
+        },
+        {
+            data: 'nm_siswa',
+            name: 'pengguna.nm_pengguna',
+            orderable: false
+        },
+        {
+            data: 'nm_kelas',
+            orderable: false
+        },
+        {
+            data: 'nm_subkategori_pelanggaran',
+            name: 'nm_subkategori_pelanggaran',
+            orderable: false
+        },
+        {
+            data: 'tgl_pelanggaran',
+            name: 'tgl_pelanggaran',
+            searchable: false,
+            orderable: false
+        },
+        {
+            data: 'nm_input',
+            name: 'nm_input',
+            searchable: false,
+            orderable: false
+        },
+        {
+            data: 'nm_input_tindakan',
+            name: 'p_tindakan.nm_pengguna',
+            searchable: false,
+            orderable: false
+        },
+        {
+            data: 'action',
+            name: 'action',
+            searchable: false,
+            orderable: false,
+            render: function (data, type, row) {
+                return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                    edit_url + '/' + data.id + '">' +
+                    '    <i class="material-icons">edit</i>' +
+                    '</a> ' +
+                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTindakan(\'' +
+                    delete_url + '\', this)" data-id="' + data.id + '">' +
+                    '    <i class="material-icons">delete_forever</i>' +
+                    '</button>';
+            }
+        },
+
         ],
-        createdRow: function(row, data, dataIndex) {
+        createdRow: function (row, data, dataIndex) {
             if (data.cek_pj_bk) {
                 $(row).css('background-color', 'hsl(28, 80%, 61%)');
             }
         }
     });
 
-    primary_table_sudah.on('draw', function() {
+    primary_table_sudah.on('draw', function () {
         primary_table_sudah.column(0, {
             search: 'applied',
             order: 'applied'
-        }).nodes().each(function(cell, i) {
+        }).nodes().each(function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
             primary_table_sudah.cell(cell).invalidate('dom');
@@ -307,12 +366,12 @@
             cancelButtonText: "No, cancel!",
             closeOnConfirm: true,
             closeOnCancel: true
-        }, function(result) {
+        }, function (result) {
             if (result) {
                 $.ajax({
                     type: "POST",
                     url: delete_url + '/' + item.attr('data-id'),
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status == 200) {
                             vex.dialog.alert(response.message);
                         } else if (response.status == 201) {
@@ -330,7 +389,7 @@
                             vex.dialog.alert(response.message);
                         }
                     },
-                    complete: function() {
+                    complete: function () {
                         $('button').removeAttr('disabled', 'disabled');
                     }
                 });
