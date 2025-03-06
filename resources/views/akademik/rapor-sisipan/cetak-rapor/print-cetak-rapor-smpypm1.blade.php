@@ -5,77 +5,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapor Sisipan STS ({{ $kelas->nm_kelas }})</title>
+    <td style="border-style : hidden;width: 25%;"> : I
 
 
-    <style>
-        * {
-            font-family: 'Tahoma';
-            letter-spacing: 1.5px;
-        }
 
-        table,
-        td,
-        th {
-            border: 1px solid;
-            padding: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            /* border: 5px double; */
-        }
-
-        .head {
-            border: 5px double;
-        }
-
-        td {
-            /* font-size: 10px; */
-            padding: 2px;
-        }
-
-        .page {
-            width: 1200px;
-        }
-
-        .body {
-
-            border: 5px double;
-            border-top-style: none;
-        }
-
-        .under-below {
-            text-decoration: underline;
-            -webkit-text-underline-position: under;
-            -ms-text-underline-position: below;
-            text-underline-position: under;
-        }
-
-        .capitalize {
-            text-transform: capitalize;
-        }
-    </style>
-
-    <style type="text/css" media="print">
-        @page {
-            /* margin: 125mm 125mm 125mm 125mm;    */
-            size: portrait;
-            size: auto;
-            margin: 0mm;
-
-        }
-
-        @media print {
-            .page {
-                page-break-after: always;
+        <style>
+            * {
+                font-family: 'Tahoma';
+                letter-spacing: 1.5px;
             }
-        }
-    </style>
+
+            table,
+            td,
+            th {
+                border: 1px solid;
+                padding: 10px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                /* border: 5px double; */
+            }
+
+            .head {
+                border: 5px double;
+            }
+
+            td {
+                /* font-size: 10px; */
+                padding: 2px;
+            }
+
+            .page {
+                width: 1200px;
+            }
+
+            .body {
+
+                border: 5px double;
+                border-top-style: none;
+            }
+
+            .under-below {
+                text-decoration: underline;
+                -webkit-text-underline-position: under;
+                -ms-text-underline-position: below;
+                text-underline-position: under;
+            }
+
+            .capitalize {
+                text-transform: capitalize;
+            }
+        </style>
+
+        <style type="text/css" media="print">
+            @page {
+                /* margin: 125mm 125mm 125mm 125mm;    */
+                size: portrait;
+                size: auto;
+                margin: 0mm;
+            }
+
+            @media print {
+                .page {
+                    page-break-after: always;
+                }
+            }
+        </style>
 </head>
 
 <body>
-
     @foreach ($list_siswa as $siswa)
         <div class="page">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
@@ -111,7 +111,7 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr width="90%" style="background-color: black;color:white">
                     <td align="center" style="border-style : hidden">Alamat :
-                        {{ $auth_data->sekolah_data->alamat_jalan .', ' .$auth_data->sekolah_data->alamat_kelurahan .', ' .substr($auth_data->sekolah_data->nomor_telp_sekolah, 0, 3) .' ' .substr($auth_data->sekolah_data->nomor_telp_sekolah, 3, 7) .' - ' .substr($auth_data->sekolah_data->nomor_fax_sekolah, 3, 7) .' ' .$auth_data->sekolah_data->alamat_kecamatan .' - ' .App\Models\Kota::where('id_kota', $auth_data->sekolah_data->alamat_kota)->pluck('nm_kota')->first() .' ' .$auth_data->sekolah_data->alamat_kodepos .' ' .App\Models\Provinsi::where('id_provinsi', $auth_data->sekolah_data->alamat_provinsi)->pluck('nm_provinsi')->first() }}
+                        {{ $auth_data->sekolah_data->alamat_jalan . ', ' . $auth_data->sekolah_data->alamat_kelurahan . ', ' . substr($auth_data->sekolah_data->nomor_telp_sekolah, 0, 3) . ' ' . substr($auth_data->sekolah_data->nomor_telp_sekolah, 3, 7) . ' - ' . substr($auth_data->sekolah_data->nomor_fax_sekolah, 3, 7) . ' ' . $auth_data->sekolah_data->alamat_kecamatan . ' - ' . App\Models\Kota::where('id_kota', $auth_data->sekolah_data->alamat_kota)->pluck('nm_kota')->first() . ' ' . $auth_data->sekolah_data->alamat_kodepos . ' ' . App\Models\Provinsi::where('id_provinsi', $auth_data->sekolah_data->alamat_provinsi)->pluck('nm_provinsi')->first() }}
                     </td>
                 </tr>
             </table>
@@ -146,9 +146,11 @@
                     </td>
                     <td style="border-style : hidden;width: 25%;">Semester
                     </td>
-                    <td style="border-style : hidden;width: 25%;"> : I
-
-
+                    <td style="border-style : hidden;width: 25%;"> : @if ($semester->nm_semester == 'Ganjil')
+                            I
+                        @else
+                            II
+                        @endif
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
