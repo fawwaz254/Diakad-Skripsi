@@ -2270,7 +2270,7 @@ class SppController extends BaseController
         } else {
             $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna')
                 // join untu mendapatkan id_bulan dan semester untuk tahun
-                ->leftJoin('tagihan_biaya as tb', 'pembayaran_biaya.id_tagihan_biaya', '=', 'tb.id_tagjihan_biaya')
+                ->leftJoin('tagihan_biaya as tb', 'pembayaran_biaya.id_tagihan_biaya', '=', 'tb.id_tagihan_biaya')
                 ->leftJoin('detail_biaya as db', 'tb.id_detail_biaya', '=', 'db.id_detail_biaya')
                 ->leftJoin('biaya_sekolah as bs', 'bs.id_biaya_sekolah', '=', 'db.id_biaya_sekolah')
                 ->leftJoin('semester as s', 'bs.id_semester', '=', 's.id_semester')
