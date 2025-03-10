@@ -29,7 +29,7 @@ class WaliKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -40,7 +40,7 @@ class WaliKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required'
@@ -63,7 +63,7 @@ class WaliKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // dd($id_kelas);
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -74,7 +74,7 @@ class WaliKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -86,7 +86,7 @@ class WaliKelasController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_wali_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_wali_kelas = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/setting-kelas/wali-kelas/add-wali-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_guru', 'id_wali_kelas'));
     }
@@ -95,7 +95,7 @@ class WaliKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -112,7 +112,7 @@ class WaliKelasController extends BaseController
     public function datatablesWaliKelas(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibGuru::fetchDataWaliKelas($auth_data, $id_kelas);
 
         return Datatables::of($list_data)
@@ -172,13 +172,13 @@ class WaliKelasController extends BaseController
                 $waliKelas = WaliKelas::join('semester', 'semester.id_semester', '=', 'wali_kelas.id_semester')
                     ->where('wali_kelas.id_kelas', '=', $input->id_kelas)
                     ->where('wali_kelas.id_semester', '=', $input->id_semester)
-                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('semester.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $waliKelasGuru = WaliKelas::join('semester', 'semester.id_semester', '=', 'wali_kelas.id_semester')
                     ->where('wali_kelas.id_guru', '=', $input->id_guru)
                     ->where('wali_kelas.id_semester', '=', $input->id_semester)
-                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('semester.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 if ($waliKelas || $waliKelasGuru) {
@@ -197,7 +197,7 @@ class WaliKelasController extends BaseController
                         ];
                     }
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $waliKelas                       = new WaliKelas;
                     $waliKelas->id_wali_kelas        = $id;
@@ -205,7 +205,7 @@ class WaliKelasController extends BaseController
                     $waliKelas->id_semester          = $input->id_semester;
                     $waliKelas->id_guru              = $input->id_guru;
                     $waliKelas->is_aktif             = $input->is_aktif;
-                    $waliKelas->created_by           = $input->auth_data->pengguna->id_pengguna;
+                    $waliKelas->created_by           = auth_data()->pengguna->id_pengguna;
                     $waliKelas->save();
 
                     // cek jika update status aktif = 1, maka yg lain status aktif = 0
@@ -214,7 +214,7 @@ class WaliKelasController extends BaseController
 
                         foreach ($data_wali_kelas as $waliKelas) {
                             $waliKelas->is_aktif    = 0;
-                            $waliKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
+                            $waliKelas->updated_by  = auth_data()->pengguna->id_pengguna;
                             $waliKelas->updated_at  = $now;
                             $waliKelas->save();
                         }
@@ -233,7 +233,7 @@ class WaliKelasController extends BaseController
                 $waliKelas->id_semester      = $input->id_semester;
                 $waliKelas->id_guru          = $input->id_guru;
                 $waliKelas->is_aktif         = $input->is_aktif;
-                $waliKelas->updated_by       = $input->auth_data->pengguna->id_pengguna;
+                $waliKelas->updated_by       = auth_data()->pengguna->id_pengguna;
                 $waliKelas->updated_at       = $now;
                 $waliKelas->save();
 
@@ -243,7 +243,7 @@ class WaliKelasController extends BaseController
 
                     foreach ($data_wali_kelas as $waliKelas) {
                         $waliKelas->is_aktif    = 0;
-                        $waliKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
+                        $waliKelas->updated_by  = auth_data()->pengguna->id_pengguna;
                         $waliKelas->updated_at  = $now;
                         $waliKelas->save();
                     }
@@ -257,7 +257,7 @@ class WaliKelasController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $waliKelas               = WaliKelas::find($id);
-                $waliKelas->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $waliKelas->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $waliKelas->save();
 
                 $waliKelas->delete();

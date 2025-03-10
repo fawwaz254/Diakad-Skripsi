@@ -24,7 +24,7 @@ class JurusanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('pendidikan/data-akademik/jurusan/view-jurusan', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class JurusanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class JurusanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data, $id);
 
@@ -61,7 +61,7 @@ class JurusanController extends BaseController
     public function datatablesJurusan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataAkademik::fetchDataJurusan($auth_data);
 
         return Datatables::of($list_data)
@@ -95,7 +95,7 @@ class JurusanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jurusan                  = new Jurusan;
                 $jurusan->id_jurusan      = $id;
@@ -104,8 +104,8 @@ class JurusanController extends BaseController
                 $jurusan->bidang_keahlian = $input->bidang_keahlian;
                 $jurusan->program_keahlian = $input->program_keahlian;
                 $jurusan->kompetensi_keahlian  =  $input->kompetensi_keahlian;
-                $jurusan->id_sekolah      = $input->auth_data->pengguna->id_sekolah;
-                $jurusan->created_by      = $input->auth_data->pengguna->id_pengguna;
+                $jurusan->id_sekolah      = auth_data()->pengguna->id_sekolah;
+                $jurusan->created_by      = auth_data()->pengguna->id_pengguna;
                 $jurusan->save();
 
                 return [
@@ -121,7 +121,7 @@ class JurusanController extends BaseController
                 $jurusan->bidang_keahlian = $input->bidang_keahlian;
                 $jurusan->program_keahlian = $input->program_keahlian;
                 $jurusan->kompetensi_keahlian  =  $input->kompetensi_keahlian;
-                $jurusan->updated_by      = $input->auth_data->pengguna->id_pengguna;
+                $jurusan->updated_by      = auth_data()->pengguna->id_pengguna;
                 $jurusan->updated_at      = $now;
                 $jurusan->save();
 
@@ -139,7 +139,7 @@ class JurusanController extends BaseController
                 } else {
                     // make object to find id
                     $jurusan               = Jurusan::find($id);
-                    $jurusan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $jurusan->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $jurusan->save();
 
                     $jurusan->delete();

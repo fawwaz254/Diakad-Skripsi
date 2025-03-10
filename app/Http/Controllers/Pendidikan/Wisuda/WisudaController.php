@@ -24,7 +24,7 @@ class WisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('pendidikan/wisuda/nama-wisuda/view-wisuda', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class WisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class WisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_wisuda = LibWisuda::fetchDataWisuda($auth_data, $id);
 
@@ -57,7 +57,7 @@ class WisudaController extends BaseController
     public function datatablesWisuda(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibWisuda::fetchDataWisuda($auth_data);
 
         return Datatables::of($list_data)
@@ -91,14 +91,14 @@ class WisudaController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $wisuda                     = new Wisuda;
                 $wisuda->id_wisuda          = $id;
                 $wisuda->nm_wisuda          = $input->nm_wisuda;
                 $wisuda->keterangan_wisuda  = $input->keterangan_wisuda;
-                $wisuda->id_sekolah         = $input->auth_data->pengguna->id_sekolah;
-                $wisuda->created_by         = $input->auth_data->pengguna->id_pengguna;
+                $wisuda->id_sekolah         = auth_data()->pengguna->id_sekolah;
+                $wisuda->created_by         = auth_data()->pengguna->id_pengguna;
                 $wisuda->save();
 
                 return [
@@ -111,7 +111,7 @@ class WisudaController extends BaseController
                 $wisuda                     = Wisuda::find($id);
                 $wisuda->nm_wisuda          = $input->nm_wisuda;
                 $wisuda->keterangan_wisuda  = $input->keterangan_wisuda;
-                $wisuda->updated_by         = $input->auth_data->pengguna->id_pengguna;
+                $wisuda->updated_by         = auth_data()->pengguna->id_pengguna;
                 $wisuda->updated_at         = $now;
                 $wisuda->save();
 
@@ -129,7 +129,7 @@ class WisudaController extends BaseController
                 } else {
                     // make object to find id
                     $wisuda               = Wisuda::find($id);
-                    $wisuda->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $wisuda->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $wisuda->save();
 
                     $wisuda->delete();

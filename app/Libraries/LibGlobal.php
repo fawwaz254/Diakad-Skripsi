@@ -2,7 +2,6 @@
 
 namespace App\Libraries;
 
-use Cloudder;
 use App\Models\NotifikasiPengguna;
 
 class LibGlobal
@@ -157,25 +156,4 @@ class LibGlobal
 
 		return $result;
 	}
-
-	/**
-	 * Fungsi upload to cloudinary (by Rio)
-	 * @param string $string
-	 * @param string $key
-	 * @return string 
-	 * @author Rio Ramadhan D (17-01-2019)
-	 */
-
-	static function uploadCloudinary(Request $request){
-		$image_name = $request->file('image_name')->getRealPath();;
- 
-		Cloudder::upload($image_name, null, [ 'folder' => 'diakad/smawh2/' ]);
- 
-		list($width, $height) = getimagesize($image_name);
-
-		$image_url= Cloudder::show(Cloudder::getPublicId(), ["width" => $width, "height"=>$height]);
-		return 'Success '.$image_url;
-
-	}
-	
 }

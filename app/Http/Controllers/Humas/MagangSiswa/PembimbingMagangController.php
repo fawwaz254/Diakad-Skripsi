@@ -39,7 +39,7 @@ class PembimbingMagangController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
         $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
@@ -51,7 +51,7 @@ class PembimbingMagangController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_pengambil_magang = PengambilanMagang::with('periode.semester', 'rekanan')->find($id);
 
@@ -68,7 +68,7 @@ class PembimbingMagangController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $pembimbing_magang = PembimbingMagang::with('periode.semester', 'rekanan')->find($id);
         return view('humas/magang-siswa/pembimbing-magang/edit-pembimbing-magang', compact('auth_data', 'pembimbing_magang'));
@@ -79,7 +79,7 @@ class PembimbingMagangController extends Controller
     {
 
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
+        // $auth_data = auth_data();
 
         $id_periode_magang = $input->id_periode_magang;
 
@@ -119,7 +119,7 @@ class PembimbingMagangController extends Controller
     public function actionInputPembimbingMagang(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $now = Carbon::now();
 
@@ -135,20 +135,20 @@ class PembimbingMagangController extends Controller
         }
 
         if ($mode == 'add') {
-            $id_pengguna            = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $id_pembimbing_magang   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id_pengguna            = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id_pembimbing_magang   = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
             $status_pengguna        = StatusPengguna::where('status_join_table', '=', '6')->where('aktif_status_pengguna', '=', '1')->first();
 
             $pengguna                           = new Pengguna;
             $pengguna->id_pengguna              = $id_pengguna;
             $pengguna->id_status_pengguna       = $status_pengguna->id_status_pengguna;
-            $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
+            $pengguna->id_sekolah               = auth_data()->pengguna->id_sekolah;
             $pengguna->nm_pengguna              = $input->nm_pembimbing_magang;
             $pengguna->username                 = $input->username;
             $pengguna->password                 = Hash::make($input->username);
             $pengguna->must_change_password     = 0;
             $pengguna->status_join_table        = 6;
-            $pengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
+            $pengguna->created_by               = auth_data()->pengguna->id_pengguna;
             $pengguna->save();
 
             $pembimbing                                 = new PembimbingMagang;
@@ -156,7 +156,7 @@ class PembimbingMagangController extends Controller
             $pembimbing->id_periode_magang              = $input->id_periode_magang;
             $pembimbing->id_rekanan_magang              = $input->id_rekanan_magang;
             $pembimbing->id_pengguna                    = $id_pengguna;
-            $pembimbing->created_by                     = $input->auth_data->pengguna->id_pengguna;
+            $pembimbing->created_by                     = auth_data()->pengguna->id_pengguna;
             $pembimbing->created_at                     = $now;
             $pembimbing->save();
 
@@ -165,7 +165,7 @@ class PembimbingMagangController extends Controller
             $rolePengguna->id_pengguna              = $id_pengguna;
             $rolePengguna->keterangan_role_pengguna = "Input Pembimbing Magang";
             $rolePengguna->is_aktif                 = 1;
-            $rolePengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
+            $rolePengguna->created_by               = auth_data()->pengguna->id_pengguna;
             $rolePengguna->save();
 
             return [
@@ -191,22 +191,22 @@ class PembimbingMagangController extends Controller
             if ($presensi_magang) {
                 foreach ($presensi_magang as $presensi) {
                     foreach ($presensi->presensiMagangSiswa as $presensiSiswa) {
-                        $presensiSiswa->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                        $presensiSiswa->deleted_by = auth_data()->pengguna->id_pengguna;
                         $presensiSiswa->save();
                         $presensiSiswa->delete();
                     }
-                    $presensi->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                    $presensi->deleted_by = auth_data()->pengguna->id_pengguna;
                     $presensi->save();
                     $presensi->delete();
                 }
             }
-            $role_pengguna->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $role_pengguna->deleted_by = auth_data()->pengguna->id_pengguna;
             $role_pengguna->save();
             $role_pengguna->delete();
-            $pengguna->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $pengguna->deleted_by = auth_data()->pengguna->id_pengguna;
             $pengguna->save();
             $pengguna->delete();
-            $pembimbing_magang->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+            $pembimbing_magang->deleted_by =  auth_data()->pengguna->id_pengguna;
             $pembimbing_magang->save();
             $pembimbing_magang->delete();
             return [

@@ -21,7 +21,7 @@ class PembayaranFormulirController extends Controller
     public function viewPembayaranFormulir(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
         $voucher    = null;
 
         return view('ppdb/peserta/pembayaran-formulir/pembayaran-formulir', compact('voucher'));
@@ -35,7 +35,7 @@ class PembayaranFormulirController extends Controller
     public function findVoucher(Request $request)
     {
         $input          = (object) $request->input();
-        $auth_data      = $input->auth_data;
+        $auth_data      = auth_data();
         $kode_voucher   = $input->kode_voucher;
 
         $validator = Validator::make($request->all(), [
@@ -64,7 +64,7 @@ class PembayaranFormulirController extends Controller
     public function showVoucher(Request $request, $kode_voucher)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $voucher = Voucher::select(
             'voucher.id_voucher',
@@ -122,7 +122,7 @@ class PembayaranFormulirController extends Controller
     public function bayarVoucher(Request $request, $kode_voucher)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator = Validator::make($request->all(), [
             'kode_voucher'      => 'required',
@@ -163,7 +163,7 @@ class PembayaranFormulirController extends Controller
         $now                    = Carbon::now();
         $voucher->tgl_bayar     = $now;
         $voucher->besar_biaya   = $input->besar_biaya;
-        $voucher->updated_by    = $input->auth_data->pengguna->id_pengguna;
+        $voucher->updated_by    = auth_data()->pengguna->id_pengguna;
         $voucher->save();
 
         return [
@@ -181,7 +181,7 @@ class PembayaranFormulirController extends Controller
     public function deletePembayaranFormulir(Request $request, $kode_voucher)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator = Validator::make($request->all(), [
             'kode_voucher'      => 'required'
@@ -203,7 +203,7 @@ class PembayaranFormulirController extends Controller
         $voucher->besar_biaya = null;
         $voucher->nomor_transaksi = null;
         $voucher->tgl_bayar = null;
-        $voucher->updated_by = $input->auth_data->pengguna->id_pengguna;
+        $voucher->updated_by = auth_data()->pengguna->id_pengguna;
         $voucher->save();
 
         return [

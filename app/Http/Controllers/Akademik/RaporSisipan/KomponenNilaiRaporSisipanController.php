@@ -31,7 +31,7 @@ class KomponenNilaiRaporSisipanController extends Controller
     public function viewKomponenNilai(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('akademik/rapor-sisipan/komponen-nilai/view-komponen-nilai', compact('auth_data'));
     }
@@ -39,7 +39,7 @@ class KomponenNilaiRaporSisipanController extends Controller
     public function editKomponenNilai(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $komponen_nilai = KomponenNilaiRaporSisipan::find($id);
         // dd($komponen_nilai);
 
@@ -51,7 +51,7 @@ class KomponenNilaiRaporSisipanController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // $list_data = KomponenNilaiRaporSisipan::orderBy('urutan', 'asc')->get();
         $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
             $query->where('nm_jenis_rapor',  'sisipan');
@@ -71,7 +71,7 @@ class KomponenNilaiRaporSisipanController extends Controller
     public function actionEditKomponenNilai(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'nm_nilai' => 'required',

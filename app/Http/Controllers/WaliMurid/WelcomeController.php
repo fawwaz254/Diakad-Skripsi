@@ -18,7 +18,7 @@ class WelcomeController extends BaseController
     public function indexWelcome(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_anak_murid  = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna);
         return view('wali-murid/welcome', compact('auth_data', 'data_anak_murid'));
@@ -27,6 +27,6 @@ class WelcomeController extends BaseController
     public function actionSaveChangeAnakMurid(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
     }
 }

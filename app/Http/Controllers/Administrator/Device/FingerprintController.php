@@ -17,7 +17,7 @@ class FingerprintController extends BaseController
     public function indexList(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('administrator/device/fingerprint/view-data-fingerprint', compact('auth_data'));
     }

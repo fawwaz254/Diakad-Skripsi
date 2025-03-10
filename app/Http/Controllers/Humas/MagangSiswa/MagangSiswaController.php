@@ -25,14 +25,14 @@ class MagangSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/magang-siswa/nama-magang/view-magang', compact('auth_data'));
     }
     public function datatablesMagangSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibMagangSiswa::fetchDataMagangSiswa($auth_data);
 
         return Datatables::of($list_data)
@@ -49,7 +49,7 @@ class MagangSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -63,7 +63,7 @@ class MagangSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_magang = LibMagangSiswa::fetchDataMagangSiswa($auth_data, $id);
 
@@ -89,14 +89,14 @@ class MagangSiswaController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $magangSiswa                     = new MagangSiswa;
                 $magangSiswa->id_magang          = $id;
                 $magangSiswa->nm_magang         = $input->nm_magang;
                 $magangSiswa->keterangan_magang  = $input->keterangan_magang;
-                $magangSiswa->id_sekolah         = $input->auth_data->pengguna->id_sekolah;
-                $magangSiswa->created_by         = $input->auth_data->pengguna->id_pengguna;
+                $magangSiswa->id_sekolah         = auth_data()->pengguna->id_sekolah;
+                $magangSiswa->created_by         = auth_data()->pengguna->id_pengguna;
                 $magangSiswa->save();
 
                 return [
@@ -109,7 +109,7 @@ class MagangSiswaController extends BaseController
                 $magangSiswa                     = MagangSiswa::find($id);
                 $magangSiswa->nm_magang          = $input->nm_magang;
                 $magangSiswa->keterangan_magang  = $input->keterangan_magang;
-                $magangSiswa->updated_by         = $input->auth_data->pengguna->id_pengguna;
+                $magangSiswa->updated_by         = auth_data()->pengguna->id_pengguna;
                 $magangSiswa->updated_at         = $now;
                 $magangSiswa->save();
 
@@ -127,7 +127,7 @@ class MagangSiswaController extends BaseController
                 } else {
                     // make object to find id
                     $magangSiswa               = MagangSiswa::find($id);
-                    $magangSiswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $magangSiswa->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $magangSiswa->save();
 
                     $magangSiswa->delete();

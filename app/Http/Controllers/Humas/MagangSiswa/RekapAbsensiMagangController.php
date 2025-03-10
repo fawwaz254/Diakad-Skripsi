@@ -26,7 +26,7 @@ class RekapAbsensiMagangController extends Controller
     public function viewRekapAbsensiMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
         $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
@@ -40,7 +40,7 @@ class RekapAbsensiMagangController extends Controller
     public function viewDetailRekapAbsensiMagang(Request $request, $id_rekanan, $id_periode, $date)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
         $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
@@ -69,7 +69,7 @@ class RekapAbsensiMagangController extends Controller
     public function printRekapPresensiMagang(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $pengambilan_magang = PengambilanMagang::where('id_siswa', $id_siswa)->first();
         $pembimbing_magang = PembimbingMagang::with('rekanan', 'periode', 'pengguna')->where('id_periode_magang', $pengambilan_magang->id_periode_magang)->where('id_rekanan_magang', $pengambilan_magang->id_rekanan_magang)->first();
 

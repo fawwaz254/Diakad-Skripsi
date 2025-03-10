@@ -26,7 +26,7 @@ class CetakByKelasController extends BaseController
     public function viewCetakByKelas(Request $request, $id_kelas = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'ASC')->orderBy('nm_kelas', 'ASC')->get();
 
@@ -36,7 +36,7 @@ class CetakByKelasController extends BaseController
     public function actionViewCetakByKelas(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required'
@@ -58,7 +58,7 @@ class CetakByKelasController extends BaseController
     public function datatablesCetakByKelas(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas', 'kelas.tingkat', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')

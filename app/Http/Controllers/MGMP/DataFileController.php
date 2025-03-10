@@ -20,8 +20,8 @@ class DataFileController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data->role_aktif->id_role;
-        $pengguna = $input->auth_data->pengguna->id_pengguna;
+        // $auth_data = auth_data()->role_aktif->id_role;
+        $pengguna = auth_data()->pengguna->id_pengguna;
 
 
         // $category = CategoriFileGuru::where('id_pengguna' , $pengguna)->get();
@@ -37,7 +37,7 @@ class DataFileController extends Controller
 
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $category = CategoriFileMGMP::find($id);
         $sub_category = SubCategoryFileMGMP::where('category_file_mgmp_id', $id)->get();
         return view('guru/mgmp/data-file/view-data-file-category', compact('auth_data', 'sub_category', 'category'));
@@ -48,7 +48,7 @@ class DataFileController extends Controller
 
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $sub_category = SubCategoryFileMGMP::find($id);
         $data_file = Pengguna::Has('file_pengguna')
@@ -77,7 +77,7 @@ class DataFileController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data->pengguna->id_pengguna;
+        $auth_data = auth_data()->pengguna->id_pengguna;
 
         $category = CategoriFileGuru::join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'category_file_guru.category_file_mgmp_id')
             ->where('category_file_guru.id_pengguna', $auth_data)
@@ -97,7 +97,7 @@ class DataFileController extends Controller
     {
         $input = (object) $request->input();
 
-        $id_pengguna = $input->auth_data->pengguna->id_pengguna;
+        $id_pengguna = auth_data()->pengguna->id_pengguna;
 
 
 
@@ -192,7 +192,7 @@ class DataFileController extends Controller
                     foreach ($files as $file) {
                         $now = Carbon::now();
                         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                         $data = new FilePengguna;
                         $data->file_pengguna_id = $id;
@@ -201,7 +201,7 @@ class DataFileController extends Controller
                         $data->keterangan = $input->keterangan;
                         $data->sub_category_file_id = $input->sub_category_file_id;
                         $data->created_by = $id_pengguna;
-                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
                         $uploaded_file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
                         $data->link_file = $uploaded_file;
                         $data->extension_file = $file->extension();
@@ -223,7 +223,7 @@ class DataFileController extends Controller
                     }
 
                     $now = Carbon::now();
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $data = new FilePengguna;
                     $data->file_pengguna_id = $id;
                     $data->pengguna_id = $id_pengguna;

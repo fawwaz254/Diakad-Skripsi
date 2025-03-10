@@ -29,7 +29,7 @@ class DataKegiatanSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('siswa/skpi/data-kegiatan-siswa/view-data-kegiatan-siswa', compact('auth_data'));
     }
@@ -38,7 +38,7 @@ class DataKegiatanSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         return view('siswa/skpi/data-kegiatan-siswa/add-data-kegiatan-siswa', compact('auth_data'));
@@ -48,7 +48,7 @@ class DataKegiatanSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         $kegiatan = KegiatanSiswa::find($id);
@@ -59,7 +59,7 @@ class DataKegiatanSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
@@ -81,7 +81,7 @@ class DataKegiatanSiswaController extends BaseController
 
             if ($mode == 'add') {
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan = new KegiatanSiswa;
                 $kegiatan->id_kegiatan_siswa = $id;
@@ -94,7 +94,7 @@ class DataKegiatanSiswaController extends BaseController
                 $kegiatan->id_tingkat_prestasi_siswa = 0;
                 $kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
                 $kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
-                $kegiatan->created_by = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->created_by = auth_data()->pengguna->id_pengguna;
                 $kegiatan->save();
 
                 return [
@@ -114,7 +114,7 @@ class DataKegiatanSiswaController extends BaseController
                 $kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
                 $kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
                 $kegiatan->updated_at = $now;
-                $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->updated_by = auth_data()->pengguna->id_pengguna;
                 $kegiatan->save();
 
                 return [
@@ -125,7 +125,7 @@ class DataKegiatanSiswaController extends BaseController
             } elseif ($mode == 'delete') {
 
                 $kegiatan = KegiatanSiswa::find($id);
-                $kegiatan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->deleted_by  = auth_data()->pengguna->id_pengguna;
                 $kegiatan->deleted_at  = $now;
                 $kegiatan->save();
 
@@ -143,7 +143,7 @@ class DataKegiatanSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = KegiatanSiswa::Select(
             'kegiatan_siswa.id_kegiatan_siswa',

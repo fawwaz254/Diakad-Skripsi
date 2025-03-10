@@ -39,7 +39,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $selected_semester = null;
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
@@ -52,7 +52,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_ekskul' => 'required',
@@ -75,7 +75,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_ekskul' => 'required',
@@ -99,7 +99,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
@@ -119,7 +119,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $ekskul = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
 
@@ -130,7 +130,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         // $ekskul = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
         $ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
@@ -146,7 +146,7 @@ class SettingPesertaEkskulController extends BaseController
     public function datatablesCopySettingPesertaEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = PesertaEkskulSet::select('peserta_ekskul_set.is_aktif', 'ekskul.id_ekskul', 'siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'peserta_ekskul_set.id_peserta_ekskul_set')
             ->join('ekskul', 'ekskul.id_ekskul', '=', 'peserta_ekskul_set.id_ekskul')
             ->join('siswa', 'siswa.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
@@ -190,7 +190,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required'
@@ -213,7 +213,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $ekskul = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $kelas_siswa = Siswa::where('id_kelas', '=', $id_kelas)->get();
@@ -225,7 +225,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_peserta = PesertaEkskulSet::join('pengambilan_ekskul', 'pengambilan_ekskul.id_ekskul', '=', 'peserta_ekskul_set.id_ekskul')
             ->join('ekskul', 'ekskul.id_ekskul', '=', 'pengambilan_ekskul.id_ekskul')
             ->join('siswa', 'siswa.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
@@ -239,7 +239,7 @@ class SettingPesertaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $ekskul = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
 
         $semester   = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -265,7 +265,7 @@ class SettingPesertaEkskulController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = PesertaEkskulSet::select('peserta_ekskul_set.is_aktif', 'ekskul.id_ekskul', 'siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'peserta_ekskul_set.id_peserta_ekskul_set')
             ->join('ekskul', 'ekskul.id_ekskul', '=', 'peserta_ekskul_set.id_ekskul')
             ->join('siswa', 'siswa.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
@@ -307,7 +307,7 @@ class SettingPesertaEkskulController extends BaseController
     public function datatablesSiswaSettingPesertaEkskul(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->where('siswa.id_kelas', '=', $id_kelas);
 
         return Datatables::of($list_data)
@@ -323,7 +323,7 @@ class SettingPesertaEkskulController extends BaseController
     public function actionSettingPesertaEkskul(Request $request, $mode, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), []);
         if (($validator->fails() && $mode != 'delete') || ($validator->fails() && $mode != 'checkdelete')) {
@@ -363,7 +363,7 @@ class SettingPesertaEkskulController extends BaseController
                         $pengambilan_ekskul->id_semester        = $semester->id_semester;
                         $pengambilan_ekskul->is_tampil          = 0;
                         $pengambilan_ekskul->created_at         = $now;
-                        $pengambilan_ekskul->created_by         = $input->auth_data->pengguna->id_pengguna;
+                        $pengambilan_ekskul->created_by         = auth_data()->pengguna->id_pengguna;
 
                         $pengambilan_ekskul->save();
 
@@ -374,7 +374,7 @@ class SettingPesertaEkskulController extends BaseController
                         $peserta_ekskul_set->id_semester            = $semester->id_semester;
                         $peserta_ekskul_set->is_aktif               = 1;
                         $peserta_ekskul_set->created_at             = $now;
-                        $peserta_ekskul_set->created_by             = $input->auth_data->pengguna->id_pengguna;
+                        $peserta_ekskul_set->created_by             = auth_data()->pengguna->id_pengguna;
                         $peserta_ekskul_set->save();
                     }
                     DB::commit();
@@ -408,13 +408,13 @@ class SettingPesertaEkskulController extends BaseController
                     } else {
                         // make object to find id
                         $ekskul                 = PesertaEkskulSet::find($key);
-                        $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
+                        $ekskul->deleted_by     = auth_data()->pengguna->id_pengguna;
                         $ekskul->save();
 
                         $ekskul->forceDelete();
 
                         $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
-                        $pengambilan->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                        $pengambilan->deleted_by = auth_data()->pengguna->id_pengguna;
                         $pengambilan->save();
 
                         $pengambilan->forceDelete();
@@ -438,13 +438,13 @@ class SettingPesertaEkskulController extends BaseController
                 } else {
                     // make object to find id
                     $ekskul                 = PesertaEkskulSet::find($id_ekskul);
-                    $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
+                    $ekskul->deleted_by     = auth_data()->pengguna->id_pengguna;
                     $ekskul->save();
 
                     $ekskul->delete();
 
                     $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
-                    $pengambilan->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                    $pengambilan->deleted_by = auth_data()->pengguna->id_pengguna;
                     $pengambilan->save();
 
                     $pengambilan->delete();
@@ -460,14 +460,14 @@ class SettingPesertaEkskulController extends BaseController
 
                 $peserta_ekskul = PesertaEkskulSet::find($id_ekskul);
                 $peserta_ekskul->is_aktif = $input->is_aktif;
-                $peserta_ekskul->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $peserta_ekskul->updated_by = auth_data()->pengguna->id_pengguna;
                 $peserta_ekskul->updated_at = $now;
 
                 $peserta_ekskul->save();
 
                 $pengambilan = PengambilanEkskul::find($pengambilan_ekskul->id_pengambilan_ekskul);
                 $pengambilan->is_tampil = $input->is_tampil;
-                $pengambilan->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $pengambilan->updated_by = auth_data()->pengguna->id_pengguna;
                 $pengambilan->updated_at = $now;
 
                 $pengambilan->save();
@@ -490,7 +490,7 @@ class SettingPesertaEkskulController extends BaseController
                     $batch_insert_pengambilan_ekskul = [];
 
                     foreach ($peserta_ekskul_set as $peserta_ekskul) {
-                        $id_pengambilan_ekskul      = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_pengambilan_ekskul      = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $id_siswa                   = $peserta_ekskul->id_siswa;
 
                         $siswa                      = Siswa::where('id_siswa', '=', $id_siswa)->first();
@@ -508,7 +508,7 @@ class SettingPesertaEkskulController extends BaseController
                             'id_kelas'                  => $id_kelas,
                             'id_semester'               => $id_semester,
                             'is_tampil'                 => 0,
-                            'created_by'                => $input->auth_data->pengguna->id_pengguna,
+                            'created_by'                => auth_data()->pengguna->id_pengguna,
                             'created_at'                => $now
                         );
                     }
@@ -557,7 +557,7 @@ class SettingPesertaEkskulController extends BaseController
                         $pengambilan_ekskul->id_semester        = $semester->id_semester;
                         $pengambilan_ekskul->is_tampil          = 0;
                         $pengambilan_ekskul->created_at         = $now;
-                        $pengambilan_ekskul->created_by         = $input->auth_data->pengguna->id_pengguna;
+                        $pengambilan_ekskul->created_by         = auth_data()->pengguna->id_pengguna;
 
                         $pengambilan_ekskul->save();
 
@@ -568,7 +568,7 @@ class SettingPesertaEkskulController extends BaseController
                         $peserta_ekskul_set->id_semester            = $semester->id_semester;
                         $peserta_ekskul_set->is_aktif               = 1;
                         $peserta_ekskul_set->created_at             = $now;
-                        $peserta_ekskul_set->created_by             = $input->auth_data->pengguna->id_pengguna;
+                        $peserta_ekskul_set->created_by             = auth_data()->pengguna->id_pengguna;
                         $peserta_ekskul_set->save();
                     }
                     DB::commit();

@@ -30,7 +30,7 @@ class RekapAbsensiKelasDaringController extends BaseController
     public function viewRekapAbsensiKelasDaring(Request $request){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
@@ -50,7 +50,7 @@ class RekapAbsensiKelasDaringController extends BaseController
     public function actionViewRekapAbsensiKelasDaring(Request $request){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_kelas_mp_grup' => 'required'
@@ -73,7 +73,7 @@ class RekapAbsensiKelasDaringController extends BaseController
     public function viewDetailRekapAbsensiKelasDaring(Request $request,$id_kelas_mp_grup){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

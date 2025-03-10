@@ -29,7 +29,7 @@ class HistoryAdmisiSiswaController extends BaseController
 	{
 		# code..
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 
 		return view('pendidikan/siswa/history-admisi-siswa/view-history-admisi-siswa', compact('auth_data'));
 	}
@@ -38,7 +38,7 @@ class HistoryAdmisiSiswaController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 
 		$validator = Validator::make($request->all(), [
 			'nis_nama_siswa' => 'required'
@@ -60,7 +60,7 @@ class HistoryAdmisiSiswaController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 
 		$siswa = LibSiswa::fetchAdmisiSiswa($auth_data, $nis_siswa);
 		$status = StatusPengguna::where('status_join_table', '=', '3')->where('kode_status_pengguna', '!=', 'LULUS')->where('kode_status_pengguna', '!=', 'CALON_LULUS')->get();
@@ -71,7 +71,7 @@ class HistoryAdmisiSiswaController extends BaseController
 	public function datatablesHistoryAdmisiSiswa(Request $request, $nis_nama_siswa)
 	{
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 
 		$siswa_data = LibSiswa::fetchAdmisiSiswa($auth_data, $nis_nama_siswa);
 
@@ -126,7 +126,7 @@ class HistoryAdmisiSiswaController extends BaseController
 				$now = Carbon::now();
 				// make object to find id
 				$admisi             		  = Admisi::find($id);
-				$admisi->deleted_by   		  = $input->auth_data->pengguna->id_pengguna;
+				$admisi->deleted_by   		  = auth_data()->pengguna->id_pengguna;
 				$admisi->save();
 
 				$admisi->delete();

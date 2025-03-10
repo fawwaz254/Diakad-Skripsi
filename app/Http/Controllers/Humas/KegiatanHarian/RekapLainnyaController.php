@@ -31,7 +31,7 @@ class RekapLainnyaController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/kegiatan-harian/rekap-lainnya/view-list-rekap-lainnya', compact('auth_data'));
     }
@@ -39,7 +39,7 @@ class RekapLainnyaController extends Controller
     public function datatablesListKegiatan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = KegiatanHarian::with('pengisisan_kegiatan_harian')->where('nm_kegiatan_harian', '!=', 'Monitoring Kesehatan COV-19');
         return Datatables::of($list_data)
             ->editColumn('is_aktif', function ($item) {
@@ -60,7 +60,7 @@ class RekapLainnyaController extends Controller
     public function datatablesDetail(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = PengisianKegiatanHarian::with('pengguna_pengisi');
 
         if (!empty($input->date)) {
@@ -125,7 +125,7 @@ class RekapLainnyaController extends Controller
     public function actionFormLainnya(Request $request, $mode)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if ($mode == 'add') {
             // 
@@ -135,10 +135,10 @@ class RekapLainnyaController extends Controller
 
             if ($pengisian_kegiatan_harian && $pengisian_jawaban) {
                 try {
-                    $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $pengisian_kegiatan_harian->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $pengisian_kegiatan_harian->save();
 
-                    $pengisian_jawaban->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $pengisian_jawaban->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $pengisian_jawaban->save();
 
                     $pengisian_kegiatan_harian->delete();
@@ -167,7 +167,7 @@ class RekapLainnyaController extends Controller
     public function viewRekapKegiatanGuruTendik(Request $request, $id_kegiatan_harian, $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $now = Carbon::today();
         if (empty($id_bulan)) {
@@ -195,7 +195,7 @@ class RekapLainnyaController extends Controller
     public function viewRekapKegiatanSiswa(Request $request, $id_kegiatan_harian, $bulan = null, $tahun = null, $kelas = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $now = Carbon::today();
         if (empty($bulan)) {
@@ -234,7 +234,7 @@ class RekapLainnyaController extends Controller
     public function viewRekapDetail(Request $request, $id_pengguna = '-', $date)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $pengguna = Pengguna::find($id_pengguna);
 
@@ -245,7 +245,7 @@ class RekapLainnyaController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $pengisian_kegiatan_harian = PengisianKegiatanHarian::with('pengguna_pengisi')->where('id_pengisian_kegiatan_harian', $id)->first();
 

@@ -22,7 +22,7 @@ class CetakRaporAgamaController extends Controller
     public function viewCetakRaporAgama(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -32,7 +32,7 @@ class CetakRaporAgamaController extends Controller
     public function datatablesCetakRaporAgama(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($input->id_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -82,7 +82,7 @@ class CetakRaporAgamaController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->orderBy('nis_siswa')->get();
         $siswa = Siswa::find($id_semester);
         if (!empty($siswa)) {

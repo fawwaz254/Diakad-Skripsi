@@ -28,7 +28,7 @@ class RekapPelanggaranKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/wali-kelas/rekap-pelanggaran-kelas/view-rekap-pelanggaran-kelas', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class RekapPelanggaranKelasController extends BaseController
     public function datatablesBelumTindakanNonKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaranByKelas($auth_data, 0, null, "1");
 
@@ -117,7 +117,7 @@ class RekapPelanggaranKelasController extends BaseController
     public function datatablesBelumTindakanKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaranByKelas($auth_data, null, "1");
 
         $bk_kelas = [];
@@ -186,7 +186,7 @@ class RekapPelanggaranKelasController extends BaseController
     public function datatablesSudahTindakan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaranByKelas($auth_data, 1, null, "1");
 
         $bk_kelas = [];

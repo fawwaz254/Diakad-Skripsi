@@ -37,7 +37,7 @@ class AbsensiHarianSiswaController extends BaseController
     public function viewAbsensiHarianSiswa(Request $request, $id_semester = null, $id_kelas = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -62,7 +62,7 @@ class AbsensiHarianSiswaController extends BaseController
     public function viewManageAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -84,7 +84,7 @@ class AbsensiHarianSiswaController extends BaseController
     public function viewDetailAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas, $tahun, $id_bulan)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -116,7 +116,7 @@ class AbsensiHarianSiswaController extends BaseController
     public function printDetailAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas, $id_pengguna, $id_bulan, $tahun)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
 
@@ -143,7 +143,7 @@ class AbsensiHarianSiswaController extends BaseController
     public function datatablesAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $bulan = Bulan::get();
 
@@ -169,7 +169,7 @@ class AbsensiHarianSiswaController extends BaseController
     public function datatablesKelasAbsensiHariSiswa(Request $request, $id_semester, $id_kelas, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'only-aktif');
 
@@ -244,10 +244,10 @@ class AbsensiHarianSiswaController extends BaseController
                     if (!empty($input->id_presensi_harian)) {
                         $presensi_harian = PresensiHarian::find($input->id_presensi_harian);
                     } else {
-                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_harian = new PresensiHarian;
                         $presensi_harian->id_presensi_harian = $id;
-                        $presensi_harian->id_guru_entry = $input->auth_data->pengguna->id_pengguna;
+                        $presensi_harian->id_guru_entry = auth_data()->pengguna->id_pengguna;
                         $presensi_harian->id_kelas = $input->id_kelas;
                         $presensi_harian->id_semester = $input->id_semester;
                     }
@@ -267,15 +267,15 @@ class AbsensiHarianSiswaController extends BaseController
                         }
 
                         if ($presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', '=', $presensi_harian->id_presensi_harian)->where('id_siswa', '=', $id_siswa)->first()) {
-                            $presensi_harian_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
+                            $presensi_harian_siswa->updated_by                = auth_data()->pengguna->id_pengguna;
                         } else {
                             // make id
-                            $id_presensi_harian_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_presensi_harian_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $presensi_harian_siswa                            = new PresensiHarianSiswa;
                             $presensi_harian_siswa->id_presensi_harian        = $presensi_harian->id_presensi_harian;
                             $presensi_harian_siswa->id_presensi_harian_siswa  = $id_presensi_harian_siswa;
-                            $presensi_harian_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
+                            $presensi_harian_siswa->created_by                = auth_data()->pengguna->id_pengguna;
 
                             if ($siswa = Siswa::find($id_siswa)) {
                                 if (!empty($siswa->id_wali_murid)) {
@@ -309,11 +309,11 @@ class AbsensiHarianSiswaController extends BaseController
                                             );
 
                                             $notifikasi = array(
-                                                'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                                'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                                                 'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                                 'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                                 'isi_notifikasi' => $message,
-                                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                                'created_by' => auth_data()->pengguna->id_pengguna
                                             );
 
                                             LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
