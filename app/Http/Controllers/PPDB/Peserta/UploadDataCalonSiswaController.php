@@ -40,7 +40,7 @@ class UploadDataCalonSiswaController extends Controller
     {
         set_time_limit(-1);
         // $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
+        // $auth_data = auth_data();
         // $now = Carbon::now();
         if ($request->hasFile('file-excel')) {
             $datas = Excel::toArray(new DataImportExcel, $request->file('file-excel'));

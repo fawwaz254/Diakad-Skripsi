@@ -34,7 +34,7 @@ class MapelRppController extends BaseController
     public function viewList(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $mata_pelajaran = MataPelajaran::find($request->id);
 
@@ -44,7 +44,7 @@ class MapelRppController extends BaseController
     public function viewAdd(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $mata_pelajaran = MataPelajaran::find($request->id);
         $data_semester = Semester::orderBy('kode_semester')->get();
@@ -55,7 +55,7 @@ class MapelRppController extends BaseController
     public function actionDatatables(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = MapelRPP::with('mata_pelajaran', 'semester')->where('id_mata_pelajaran', $request->id);
 
         return Datatables::of($list_data)
@@ -75,7 +75,7 @@ class MapelRppController extends BaseController
     public function actionItem(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if($mode == 'delete'){
             MapelRPP::where('id_mapel_rpp', $id)->delete();
@@ -137,7 +137,7 @@ class MapelRppController extends BaseController
                                 $nilai_karater .= rtrim(ltrim($kk)).'#';
                             }
                             $mapel_rpp_detail->nilai_karakter   = rtrim($nilai_karater, '#');
-                            $mapel_rpp_detail->created_by       = $input->auth_data->pengguna->id_pengguna;
+                            $mapel_rpp_detail->created_by       = auth_data()->pengguna->id_pengguna;
                             $mapel_rpp_detail->save();
                         }
                     }

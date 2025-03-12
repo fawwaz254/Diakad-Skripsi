@@ -26,7 +26,7 @@ class WaliKelasSKPIController extends Controller
     public function viewListSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
@@ -37,7 +37,7 @@ class WaliKelasSKPIController extends Controller
     public function datatablesListSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
@@ -78,7 +78,7 @@ class WaliKelasSKPIController extends Controller
     public function viewKegiatanSiswa(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/wali-kelas/skpi/kegiatan-siswa/view-kegiatan-siswa', compact('auth_data', 'id_siswa'));
     }
@@ -86,7 +86,7 @@ class WaliKelasSKPIController extends Controller
     public function datatablesKegiatanSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = KegiatanSiswa::Select(
             'kegiatan_siswa.id_kegiatan_siswa',
@@ -133,7 +133,7 @@ class WaliKelasSKPIController extends Controller
     public function addKegiatanSiswa(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/wali-kelas/skpi/kegiatan-siswa/add-kegiatan-siswa', compact('auth_data', 'id_siswa'));
     }
@@ -141,7 +141,7 @@ class WaliKelasSKPIController extends Controller
     public function editKegiatanSiswa(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kegiatan_siswa = KegiatanSiswa::where('id_kegiatan_siswa', $id)->first();
         // dd($kegiatan_siswa);
         return view('guru/wali-kelas/skpi/kegiatan-siswa/edit-kegiatan-siswa', compact('auth_data', 'kegiatan_siswa'));
@@ -151,7 +151,7 @@ class WaliKelasSKPIController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         // dd($id_kelas);
@@ -173,7 +173,7 @@ class WaliKelasSKPIController extends Controller
 
             if ($mode == 'add') {
                 $id_kelas = Siswa::where('id_siswa', $input->id_siswa)->pluck('id_kelas')->first();
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan = new KegiatanSiswa;
                 $kegiatan->id_kegiatan_siswa = $id;
@@ -186,7 +186,7 @@ class WaliKelasSKPIController extends Controller
                 $kegiatan->id_tingkat_prestasi_siswa = 0;
                 $kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
                 $kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
-                $kegiatan->created_by = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->created_by = auth_data()->pengguna->id_pengguna;
                 $kegiatan->save();
 
                 return [
@@ -207,7 +207,7 @@ class WaliKelasSKPIController extends Controller
                 $kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
                 $kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
                 $kegiatan->updated_at = $now;
-                $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->updated_by = auth_data()->pengguna->id_pengguna;
                 $kegiatan->save();
 
                 return [
@@ -218,7 +218,7 @@ class WaliKelasSKPIController extends Controller
             } elseif ($mode == 'delete') {
 
                 $kegiatan = KegiatanSiswa::find($id);
-                $kegiatan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->deleted_by  = auth_data()->pengguna->id_pengguna;
                 $kegiatan->deleted_at  = $now;
                 $kegiatan->save();
 
@@ -234,7 +234,7 @@ class WaliKelasSKPIController extends Controller
     public function datatablesPrestasiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',
@@ -343,7 +343,7 @@ class WaliKelasSKPIController extends Controller
     public function addPrestasiSiswa(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
         // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
@@ -362,7 +362,7 @@ class WaliKelasSKPIController extends Controller
     public function editPrestasiSiswa(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
         // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
@@ -382,7 +382,7 @@ class WaliKelasSKPIController extends Controller
     public function actionDataPrestasiSiswa(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
 
@@ -406,7 +406,7 @@ class WaliKelasSKPIController extends Controller
 
             if ($mode == 'add') {
                 $id_kelas = Siswa::where('id_siswa', $input->id_siswa)->pluck('id_kelas')->first();
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $prestasi = new PrestasiSiswa;
                 $prestasi->id_prestasi_siswa = $id;
@@ -421,7 +421,7 @@ class WaliKelasSKPIController extends Controller
                 $prestasi->penyelenggara_prestasi_siswa = $input->penyelenggara_prestasi_siswa;
                 $prestasi->peringkat_prestasi_siswa = $input->peringkat_prestasi_siswa;
                 $prestasi->tgl_prestasi_siswa = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
-                $prestasi->created_by = $input->auth_data->pengguna->id_pengguna;
+                $prestasi->created_by = auth_data()->pengguna->id_pengguna;
 
                 if (!empty($input->id_guru_pendamping)) {
                     $prestasi->id_guru_pendamping = $input->id_guru_pendamping;
@@ -455,7 +455,7 @@ class WaliKelasSKPIController extends Controller
                 $prestasi->peringkat_prestasi_siswa = $input->peringkat_prestasi_siswa;
                 $prestasi->tgl_prestasi_siswa = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
                 $prestasi->updated_at = $now;
-                $prestasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $prestasi->updated_by = auth_data()->pengguna->id_pengguna;
 
                 if (!empty($input->id_guru_pendamping)) {
                     $prestasi->id_guru_pendamping = $input->id_guru_pendamping;
@@ -476,7 +476,7 @@ class WaliKelasSKPIController extends Controller
                 ];
             } elseif ($mode == 'delete') {
                 $prestasi = PrestasiSiswa::findOrFail($id);
-                $prestasi->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $prestasi->deleted_by  = auth_data()->pengguna->id_pengguna;
                 $prestasi->deleted_at  = $now;
                 $prestasi->save();
 
@@ -492,7 +492,7 @@ class WaliKelasSKPIController extends Controller
     public function viewPrestasiSiswa(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/wali-kelas/skpi/prestasi-siswa/view-prestasi-siswa', compact('auth_data', 'id_siswa'));
     }

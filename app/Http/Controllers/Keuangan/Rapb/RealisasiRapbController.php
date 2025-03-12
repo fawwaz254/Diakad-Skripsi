@@ -32,7 +32,7 @@ class RealisasiRapbController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -43,7 +43,7 @@ class RealisasiRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_semester_mulai'   => 'required',
@@ -67,7 +67,7 @@ class RealisasiRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -77,7 +77,7 @@ class RealisasiRapbController extends BaseController
     public function datatablesRapbRendah(Request $request, $id_semester_mulai, $id_semester_selesai)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, null, "1", "1");
 
@@ -137,7 +137,7 @@ class RealisasiRapbController extends BaseController
     public function datatablesRapbSedang(Request $request, $id_semester_mulai, $id_semester_selesai)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, null, "1", "2");
 
@@ -197,7 +197,7 @@ class RealisasiRapbController extends BaseController
     public function datatablesRapbTinggi(Request $request, $id_semester_mulai, $id_semester_selesai)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, null, "1", "3");
 
@@ -259,7 +259,7 @@ class RealisasiRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -276,7 +276,7 @@ class RealisasiRapbController extends BaseController
     public function datatablesRealisasi(Request $request, $id_rapb)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataKeuangan::fetchDataRealisasi($auth_data, $id_rapb, null, "1");
 
@@ -334,7 +334,7 @@ class RealisasiRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -361,7 +361,7 @@ class RealisasiRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -382,7 +382,7 @@ class RealisasiRapbController extends BaseController
     public function datatablesRealisasiTermin(Request $request, $id_realisasi)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataKeuangan::fetchDataRealisasiPembayaran($auth_data, $id_realisasi, null, "1");
 
@@ -410,7 +410,7 @@ class RealisasiRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -435,7 +435,7 @@ class RealisasiRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -452,7 +452,7 @@ class RealisasiRapbController extends BaseController
     public function datatablesRealisasiSarpras(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataPengadaanSarpras($auth_data, null, null, 1, 1);
 
         return Datatables::of($list_data)
@@ -493,7 +493,7 @@ class RealisasiRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -530,14 +530,14 @@ class RealisasiRapbController extends BaseController
         if ($mode == 'approve-cek-keuangan') {
             $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                 ->whereIn('staff.jenis_jabatan', [2, 4, 98])
-                ->where('pengguna.id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                ->where('pengguna.id_pengguna', '=', auth_data()->pengguna->id_pengguna)
                 ->first();
 
             if (!empty($staff->id_pengguna)) {
                 // make object to find id
                 $realisasi                           = Realisasi::find($id);
                 $realisasi->id_pengguna_cek_keuangan = $staff->id_pengguna;
-                $realisasi->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->updated_by               = auth_data()->pengguna->id_pengguna;
                 $realisasi->updated_at               = $now;
                 $realisasi->save();
 
@@ -549,14 +549,14 @@ class RealisasiRapbController extends BaseController
 
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->whereIn('guru.jenis_jabatan', [2, 4, 98])
-                    ->where('pengguna.id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                    ->where('pengguna.id_pengguna', '=', auth_data()->pengguna->id_pengguna)
                     ->first();
 
                 if (!empty($guru->id_pengguna)) {
                     // make object to find id
                     $realisasi                           = Realisasi::find($id);
                     $realisasi->id_pengguna_cek_keuangan = $guru->id_pengguna;
-                    $realisasi->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                    $realisasi->updated_by               = auth_data()->pengguna->id_pengguna;
                     $realisasi->updated_at               = $now;
                     $realisasi->save();
 
@@ -574,19 +574,19 @@ class RealisasiRapbController extends BaseController
         } elseif ($mode == 'approve-kepala-keuangan') {
             $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                 ->where('guru.jenis_jabatan', '=', 2)
-                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                 ->first();
 
             $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                 ->where('staff.jenis_jabatan', '=', 2)
-                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                 ->first();
 
             if (!empty($guru->id_pengguna)) {
                 // make object to find id
                 $realisasi                               = Realisasi::find($id);
                 $realisasi->id_pengguna_kepala_keuangan  = $guru->id_pengguna;
-                $realisasi->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $realisasi->updated_at                   = $now;
                 $realisasi->save();
 
@@ -598,7 +598,7 @@ class RealisasiRapbController extends BaseController
                 // make object to find id
                 $realisasi                               = Realisasi::find($id);
                 $realisasi->id_pengguna_kepala_keuangan  = $staff->id_pengguna;
-                $realisasi->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $realisasi->updated_at                   = $now;
                 $realisasi->save();
 
@@ -615,19 +615,19 @@ class RealisasiRapbController extends BaseController
         } elseif ($mode == 'approve-kepala-keuangan-termin') {
             $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                 ->where('guru.jenis_jabatan', '=', 2)
-                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                 ->first();
 
             $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                 ->where('staff.jenis_jabatan', '=', 2)
-                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                 ->first();
 
             if (!empty($guru->id_pengguna)) {
                 // make object to find id
                 $RealisasiPembayaran                               = RealisasiPembayaran::find($id);
                 $RealisasiPembayaran->id_pengguna_kepala_keuangan  = $guru->id_pengguna;
-                $RealisasiPembayaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $RealisasiPembayaran->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $RealisasiPembayaran->updated_at                   = $now;
                 $RealisasiPembayaran->save();
 
@@ -639,7 +639,7 @@ class RealisasiRapbController extends BaseController
                 // make object to find id
                 $RealisasiPembayaran                               = RealisasiPembayaran::find($id);
                 $RealisasiPembayaran->id_pengguna_kepala_keuangan  = $staff->id_pengguna;
-                $RealisasiPembayaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $RealisasiPembayaran->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $RealisasiPembayaran->updated_at                   = $now;
                 $RealisasiPembayaran->save();
 
@@ -705,7 +705,7 @@ class RealisasiRapbController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add' or $mode == 'add-sarpras') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $realisasi                               = new Realisasi;
                 $realisasi->id_realisasi                 = $id;
@@ -727,7 +727,7 @@ class RealisasiRapbController extends BaseController
                 }
                 $realisasi->dana_realisasi               = $input->dana_realisasi;
                 $realisasi->tgl_realisasi                = date_format(date_create($input->tgl_realisasi), "Y-m-d");
-                $realisasi->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->created_by                   = auth_data()->pengguna->id_pengguna;
                 $realisasi->save();
 
                 if ($mode == 'add') {
@@ -744,7 +744,7 @@ class RealisasiRapbController extends BaseController
                     ];
                 }
             } elseif ($mode == 'add-realisasi-termin') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 // make object to find id
                 $realisasiPembayaran                               = new RealisasiPembayaran;
@@ -753,7 +753,7 @@ class RealisasiRapbController extends BaseController
                 $realisasiPembayaran->termin_ke                    = $input->termin_ke;
                 $realisasiPembayaran->tgl_pembayaran               = date_format(date_create($input->tgl_pembayaran), "Y-m-d");
                 $realisasiPembayaran->dana_realisasi_pembayaran    = $input->dana_realisasi_pembayaran;
-                $realisasiPembayaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $realisasiPembayaran->created_by                   = auth_data()->pengguna->id_pengguna;
                 $realisasiPembayaran->save();
 
                 return [
@@ -770,7 +770,7 @@ class RealisasiRapbController extends BaseController
                 } else {
                     // make object to find id
                     $rapb               = Rapb::find($id);
-                    $rapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $rapb->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $rapb->save();
 
                     $rapb->delete();

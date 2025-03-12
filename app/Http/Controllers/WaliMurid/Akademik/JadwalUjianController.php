@@ -23,7 +23,7 @@ class JadwalUjianController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -37,7 +37,7 @@ class JadwalUjianController extends BaseController
     public function datatablesJadwalUTS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -86,7 +86,7 @@ class JadwalUjianController extends BaseController
     public function datatablesJadwalUAS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

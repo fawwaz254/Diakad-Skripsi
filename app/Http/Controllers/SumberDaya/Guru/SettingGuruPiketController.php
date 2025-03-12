@@ -32,7 +32,7 @@ class SettingGuruPiketController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sumber-daya/guru/setting-guru-piket/view-setting-guru-piket', compact('auth_data'));
     }
@@ -41,7 +41,7 @@ class SettingGuruPiketController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sumber-daya/guru/setting-guru-piket/view-add-setting-guru-piket', compact('auth_data'));
     }
@@ -50,13 +50,13 @@ class SettingGuruPiketController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $guru = GuruPiket::select('guru.nip_guru', 'staff.nip_staff', 'pengguna.nm_pengguna', 'guru_piket.id_guru_piket', 'guru_piket.is_aktif')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru_piket.id_pengguna')
             ->leftjoin('guru', 'guru.id_pengguna', '=', 'guru_piket.id_pengguna')
             ->leftjoin('staff', 'staff.id_pengguna', '=', 'guru_piket.id_pengguna')
-            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+            ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
             ->where('guru_piket.id_guru_piket', '=', $id)->first();
 
         return view('sumber-daya/guru/setting-guru-piket/view-edit-setting-guru-piket', compact('auth_data', 'guru'));
@@ -65,7 +65,7 @@ class SettingGuruPiketController extends BaseController
     public function datatablesSettingGuruPiket(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = GuruPiket::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru, uks.nm_unit_kerja AS unit_kerja_staff')
             ->addSelect('guru.nip_guru', 'staff.nip_staff', 'pengguna.nm_pengguna', 'guru_piket.id_guru_piket', 'guru_piket.is_aktif')
@@ -74,7 +74,7 @@ class SettingGuruPiketController extends BaseController
             ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
             ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
             ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
-            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+            ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
             ->get();
 
         return Datatables::of($list_data)
@@ -111,7 +111,7 @@ class SettingGuruPiketController extends BaseController
     public function datatablesAddGuruPiket(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = Pengguna::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru, uks.nm_unit_kerja AS unit_kerja_staff')
             ->addSelect('pengguna.nm_pengguna', 'guru.nip_guru', 'staff.nip_staff', 'pengguna.id_pengguna')
@@ -120,7 +120,7 @@ class SettingGuruPiketController extends BaseController
             ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
             ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
             ->whereIn('pengguna.status_join_table', [1, 2])
-            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+            ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('guru_piket')
@@ -162,7 +162,7 @@ class SettingGuruPiketController extends BaseController
     public function actionSettingGuruPiket(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
@@ -179,9 +179,9 @@ class SettingGuruPiketController extends BaseController
                 try {
                     foreach ($input->id_pengguna as $id_pengguna) {
                         $guru                            = new GuruPiket;
-                        $guru->id_guru_piket            = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $guru->id_guru_piket            = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $guru->id_pengguna                 = $id_pengguna;
-                        $guru->created_by                = $input->auth_data->pengguna->id_pengguna;
+                        $guru->created_by                = auth_data()->pengguna->id_pengguna;
                         $guru->created_at                = $now;
                         $guru->is_aktif                 = 1;
                         $guru->save();
@@ -205,7 +205,7 @@ class SettingGuruPiketController extends BaseController
                 $guru         = GuruPiket::find($id);
                 $guru->is_aktif    = $input->is_aktif;
                 $guru->updated_at    = $now;
-                $guru->updated_by    = $input->auth_data->pengguna->id_pengguna;
+                $guru->updated_by    = auth_data()->pengguna->id_pengguna;
                 $guru->save();
 
                 return [

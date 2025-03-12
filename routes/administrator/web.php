@@ -54,10 +54,6 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         Route::prefix('notification')->group(function () {
-            // Route::get('/', [NotificationController::class, 'indexList']);
-            // Route::get('/datatables', [NotificationController::class, 'commonList']);
-            Route::get('/send', [NotificationController::class, 'send']);
-
             // whatsapp notification
             Route::get('/whatsapp', [NotificationController::class, 'viewWhatsappGroup']);
             Route::view('/whatsapp/scan', 'administrator.notification.view-whatsapp-scan');

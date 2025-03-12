@@ -27,7 +27,7 @@ class PeriodeWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('pendidikan/wisuda/periode-wisuda/view-periode-wisuda', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class PeriodeWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_wisuda = LibWisuda::fetchDataWisuda($auth_data);
 
@@ -45,7 +45,7 @@ class PeriodeWisudaController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_periode_wisuda = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_periode_wisuda = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/wisuda/periode-wisuda/add-periode-wisuda', compact('auth_data', 'data_wisuda', 'data_semester', 'id_periode_wisuda'));
     }
@@ -54,7 +54,7 @@ class PeriodeWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_wisuda = LibWisuda::fetchDataWisuda($auth_data);
 
@@ -72,7 +72,7 @@ class PeriodeWisudaController extends BaseController
     public function datatablesPeriodeWisuda(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibWisuda::fetchDataPeriodeWisuda($auth_data);
 
         return Datatables::of($list_data)
@@ -131,7 +131,7 @@ class PeriodeWisudaController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $periodeWisuda                      = new PeriodeWisuda;
                 $periodeWisuda->id_periode_wisuda   = $id;
@@ -142,7 +142,7 @@ class PeriodeWisudaController extends BaseController
                 $periodeWisuda->tgl_bayar_mulai     = date_format(date_create($input->tgl_bayar_mulai), "Y-m-d");
                 $periodeWisuda->tgl_bayar_selesai   = date_format(date_create($input->tgl_bayar_selesai), "Y-m-d");
                 $periodeWisuda->is_aktif            = $input->is_aktif;
-                $periodeWisuda->created_by          = $input->auth_data->pengguna->id_pengguna;
+                $periodeWisuda->created_by          = auth_data()->pengguna->id_pengguna;
                 $periodeWisuda->save();
 
                 return [
@@ -160,7 +160,7 @@ class PeriodeWisudaController extends BaseController
                 $periodeWisuda->tgl_bayar_mulai     = date_format(date_create($input->tgl_bayar_mulai), "Y-m-d");
                 $periodeWisuda->tgl_bayar_selesai   = date_format(date_create($input->tgl_bayar_selesai), "Y-m-d");
                 $periodeWisuda->is_aktif            = $input->is_aktif;
-                $periodeWisuda->updated_by          = $input->auth_data->pengguna->id_pengguna;
+                $periodeWisuda->updated_by          = auth_data()->pengguna->id_pengguna;
                 $periodeWisuda->updated_at          = $now;
                 $periodeWisuda->save();
 
@@ -178,7 +178,7 @@ class PeriodeWisudaController extends BaseController
                 } else {
                     // make object to find id
                     $periodeWisuda               = PeriodeWisuda::find($id);
-                    $periodeWisuda->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $periodeWisuda->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $periodeWisuda->save();
 
                     $periodeWisuda->delete();

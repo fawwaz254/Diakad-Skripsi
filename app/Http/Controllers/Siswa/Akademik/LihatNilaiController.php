@@ -15,7 +15,7 @@ class LihatNilaiController extends BaseController
     public function index(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = Siswa::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

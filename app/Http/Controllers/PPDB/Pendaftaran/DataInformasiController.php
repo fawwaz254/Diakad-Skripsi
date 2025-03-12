@@ -25,7 +25,7 @@ class DataInformasiController extends Controller
     public function dataInformasi(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $data_informasi = InformasiPpdb::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
 
@@ -43,7 +43,7 @@ class DataInformasiController extends Controller
     public function actionPostDataInformasi(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator = Validator::make($request->all(), [
             'isi_informasi' => 'required'
@@ -62,23 +62,23 @@ class DataInformasiController extends Controller
 
             if ($data_informasi == null) { // CREATE INFORMASI DATA
                 /** generate id_data_informasi */
-                $id_data_informasi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id_data_informasi = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 /** create data informasi */
                 $data_informasi                     = new InformasiPpdb;
                 $data_informasi->id_informasi_ppdb  = $id_data_informasi;
-                $data_informasi->id_pengguna_input  = $input->auth_data->pengguna->id_pengguna;
+                $data_informasi->id_pengguna_input  = auth_data()->pengguna->id_pengguna;
                 $data_informasi->isi_informasi      = $input->isi_informasi;
                 $data_informasi->is_aktif           = 1;
-                $data_informasi->id_sekolah         = $input->auth_data->sekolah_data->id_sekolah;
-                $data_informasi->created_by         = $input->auth_data->pengguna->id_pengguna;
+                $data_informasi->id_sekolah         = auth_data()->sekolah_data->id_sekolah;
+                $data_informasi->created_by         = auth_data()->pengguna->id_pengguna;
                 $data_informasi->save();
             } else { // UPDATE
                 /** update data informasi */
                 $data_informasi->isi_informasi      = $input->isi_informasi;
                 $data_informasi->is_aktif           = 1;
                 $data_informasi->updated_at         = $now;
-                $data_informasi->updated_by         = $input->auth_data->pengguna->id_pengguna;
+                $data_informasi->updated_by         = auth_data()->pengguna->id_pengguna;
                 $data_informasi->save();
             }
 

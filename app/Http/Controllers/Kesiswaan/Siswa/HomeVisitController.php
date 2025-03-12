@@ -26,7 +26,7 @@ class HomeVisitController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         // dd($data_kelas);
 
@@ -37,7 +37,7 @@ class HomeVisitController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -86,7 +86,7 @@ class HomeVisitController extends BaseController
     public function datatablesHomeVisit(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // dd($auth_data->pengguna->id_sekolah);
         $id_kelas = '';
         if (!empty($input->id_kelas)) {
@@ -246,7 +246,7 @@ class HomeVisitController extends BaseController
     public function actionHomeVisit(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
@@ -258,10 +258,10 @@ class HomeVisitController extends BaseController
             ];
         } else {
             if ($mode == 'edit') {
-                if ($input->auth_data->pengguna->status_join_table == 2) {
+                if (auth_data()->pengguna->status_join_table == 2) {
                     // get id_guru
                     $guru = Guru::select('id_guru')
-                        ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                        ->where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)
                         ->first();
 
                     $id_guru_kesiswaan = $guru->id_guru;
@@ -273,7 +273,7 @@ class HomeVisitController extends BaseController
                 $homeVisit->is_berkas_lengkap = $input->is_berkas_lengkap;
                 $homeVisit->id_guru_kesiswaan = $id_guru_kesiswaan;
                 $homeVisit->updated_at = $now;
-                $homeVisit->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $homeVisit->updated_by = auth_data()->pengguna->id_pengguna;
                 $homeVisit->save();
 
                 return [
@@ -287,10 +287,10 @@ class HomeVisitController extends BaseController
                 try {
                     foreach ($selectedIds as $id_visit) {
                         $homeVisit = HomeVisit::where('id_home_visit', $id_visit);
-                        if ($input->auth_data->pengguna->status_join_table == 2) {
+                        if (auth_data()->pengguna->status_join_table == 2) {
                             // get id_guru
                             $guru = Guru::select('id_guru')
-                                ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                                ->where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)
                                 ->first();
 
                             $id_guru_kesiswaan = $guru->id_guru;
@@ -309,7 +309,7 @@ class HomeVisitController extends BaseController
                             'is_berkas_lengkap' => true,
                             'id_guru_kesiswaan' => $id_guru_kesiswaan,
                             'updated_at' => $now,
-                            'updated_by' => $input->auth_data->pengguna->id_pengguna,
+                            'updated_by' => auth_data()->pengguna->id_pengguna,
                         ]);
                     }
                     DB::commit();

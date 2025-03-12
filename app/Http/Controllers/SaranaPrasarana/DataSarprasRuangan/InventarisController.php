@@ -27,7 +27,7 @@ class InventarisController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-ruangan/inventaris/view-inventaris', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class InventarisController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -52,7 +52,7 @@ class InventarisController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
@@ -67,7 +67,7 @@ class InventarisController extends BaseController
     public function datatablesInventaris(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataInventarisRuangan($auth_data);
 
         return Datatables::of($list_data)
@@ -115,7 +115,7 @@ class InventarisController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $inventarisRuangan                                  = new InventarisRuangan;
                 $inventarisRuangan->id_inventaris_ruangan           = $id;
@@ -129,7 +129,7 @@ class InventarisController extends BaseController
                 $inventarisRuangan->jumlah_kondisi_rusak            = $input->jumlah_kondisi_rusak;
                 $inventarisRuangan->spesifikasi_inventaris_ruangan  = $input->spesifikasi_inventaris_ruangan;
                 $inventarisRuangan->keterangan_inventaris_ruangan   = $input->keterangan_inventaris_ruangan;
-                $inventarisRuangan->created_by                      = $input->auth_data->pengguna->id_pengguna;
+                $inventarisRuangan->created_by                      = auth_data()->pengguna->id_pengguna;
                 $inventarisRuangan->save();
 
                 return [
@@ -150,7 +150,7 @@ class InventarisController extends BaseController
                 $inventarisRuangan->jumlah_kondisi_rusak            = $input->jumlah_kondisi_rusak;
                 $inventarisRuangan->spesifikasi_inventaris_ruangan  = $input->spesifikasi_inventaris_ruangan;
                 $inventarisRuangan->keterangan_inventaris_ruangan   = $input->keterangan_inventaris_ruangan;
-                $inventarisRuangan->updated_by                      = $input->auth_data->pengguna->id_pengguna;
+                $inventarisRuangan->updated_by                      = auth_data()->pengguna->id_pengguna;
                 $inventarisRuangan->updated_at                      = $now;
                 $inventarisRuangan->save();
 
@@ -162,7 +162,7 @@ class InventarisController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $inventarisRuangan               = InventarisRuangan::find($id);
-                $inventarisRuangan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $inventarisRuangan->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $inventarisRuangan->save();
 
                 $inventarisRuangan->delete();
@@ -179,7 +179,7 @@ class InventarisController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-ruangan/inventaris/import-excel', compact('auth_data'));
     }
@@ -188,7 +188,7 @@ class InventarisController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -300,7 +300,7 @@ class InventarisController extends BaseController
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
                             $data->spesifikasi_inventaris_ruangan = $value->spesifikasi;
                             $data->keterangan_inventaris_ruangan  = $value->keterangan;
-                            $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                            $data->created_by                     = auth_data()->pengguna->id_pengguna;
                             $data->save();
                         }
 

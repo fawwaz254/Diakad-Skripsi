@@ -1,6 +1,8 @@
     <div class="container-fluid">
         <div class="block-header">
-            <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/mata-pelajaran')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+            <h2><a class="btn bg-blue waves-effect target-link"
+                    href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/mata-pelajaran') }}"><i
+                        class="material-icons">backspace</i><span>Kembali</span></a></h2>
         </div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -11,63 +13,62 @@
                         </h2>
                     </div>
                     <div class="body">
-                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-mata-pelajaran/add/'.$id_mata_pelajaran)}}">
-                            {{csrf_field()}}
+                        <form id="form-validation" method="POST"
+                            action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-mata-pelajaran/add/' . $id_mata_pelajaran) }}">
+                            {{ csrf_field() }}
 
                             <div class="row clearfix">
-
                                 <div class="col-md-4">
                                     <label>Jurusan <span style="color:red">*</span></label>
                                     <select class="form-control show-tick" name="id_jurusan">
                                         <option value="1">Semua Jurusan</option>
-                                        @foreach($data_jurusan as $data)
-                                        <option value="{{$data->id_jurusan}}">{{$data->nm_jurusan}}</option>
+                                        @foreach ($data_jurusan as $data)
+                                            <option value="{{ $data->id_jurusan }}">{{ $data->nm_jurusan }}</option>
                                         @endforeach
                                     </select>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label>Kode Mapel <span style="color:red">*</span></label>
-                                    <input type="text" class="form-control" name="kd_mata_pelajaran" required="" aria-required="true"
-                                        aria-invalid="true">
+                                    <input type="text" class="form-control" name="kd_mata_pelajaran" required=""
+                                        aria-required="true" aria-invalid="true">
                                 </div>
 
                                 <div class="col-md-4">
                                     <label>Nama Mapel <span style="color:red">*</span></label>
-                                    <input type="text" class="form-control" name="nm_mata_pelajaran" required="" aria-required="true"
-                                        aria-invalid="true">
+                                    <input type="text" class="form-control" name="nm_mata_pelajaran" required=""
+                                        aria-required="true" aria-invalid="true">
                                 </div>
-
                             </div>
 
                             <div class="row clearfix">
-
                                 <div class="col-md-6">
                                     <label> Jenis Mapel <span style="color:red">*</span></label>
                                     <select class="form-control show-tick" name="id_jenis_mata_pelajaran">
-                                        @foreach($jenis_mapel as $data)
-                                            <option value="{{$data->id_jenis_mata_pelajaran}}">{{$data->nm_jenis_mata_pelajaran}}</option>
+                                        @foreach ($jenis_mapel as $data)
+                                            <option value="{{ $data->id_jenis_mata_pelajaran }}">
+                                                {{ $data->nm_jenis_mata_pelajaran }}</option>
                                         @endforeach
                                     </select>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label>Nama Mapel English</label>
-                                    <input type="text" class="form-control" name="nm_mata_pelajaran_en" aria-required="true"
+                                    <input type="text" class="form-control" name="nm_mata_pelajaran_en"
+                                        aria-required="true" aria-invalid="true">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Nilai KKM</label>
+                                    <input type="number" class="form-control" name="nilai_kkm" aria-required="true"
                                         aria-invalid="true">
                                 </div>
 
-                               <div class="col-md-4">
-                                    <label>Nilai KKM</label>
-                                    <input type="number" class="form-control" name="nilai_kkm" required="" aria-required="true" aria-invalid="true">
-                                </div> 
-
-                               <!--  <div class="col-md-4">
+                                <!--  <div class="col-md-4">
                                     <label>Jam KBM</label>
                                     <input type="number" class="form-control" name="kredit_semester" required="" aria-required="true"
                                         aria-invalid="true">
                                 </div> -->
-
                             </div>
 
                             <!-- <h2 class="card-inside-title">
@@ -116,7 +117,7 @@
                                 </div>
                             </div> -->
 
-                           <!--  <div class="col-md-6">
+                            <!--  <div class="col-md-6">
                                 <label>Tingkat Semester</label>
                                 <input type="number" class="form-control" name="tingkat_semester" required="" aria-required="true"
                                     aria-invalid="true">
@@ -163,7 +164,6 @@
                                         id="diktat_0" required="required" data-error="Error msg here">
                                     <label for="diktat_0">Tidak</label>
                                 </div>
-
                             </div> -->
 
                             <div class="row clearfix">
@@ -172,7 +172,8 @@
                             </div>
                             <div class="row clearfix">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                            class="material-icons">save</i><span>Save</span></button>
                                 </div>
                             </div>
                         </form>

@@ -27,7 +27,7 @@ class CariSiswaController extends BaseController
     public function viewCariSiswa(Request $request, $nis_nama_siswa = null){
 	    # code..
 	    $input = (object) $request->input();
-	    $auth_data = $input->auth_data;
+	    $auth_data = auth_data();
 
     	return view('akademik/aktivitas-semester/cari-siswa/view-cari-siswa',compact('auth_data','nis_nama_siswa'));
   	}
@@ -35,7 +35,7 @@ class CariSiswaController extends BaseController
   	public function actionViewCariSiswa(Request $request){
       # code...
       $input = (object) $request->input();
-      $auth_data = $input->auth_data;
+      $auth_data = auth_data();
 
       $validator = Validator::make($request->all(), [
           'nis_nama_siswa' =>'required'
@@ -58,7 +58,7 @@ class CariSiswaController extends BaseController
   public function viewDetailCariSiswa(Request $request, $nis_nama_siswa){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
   
@@ -67,7 +67,7 @@ class CariSiswaController extends BaseController
 
     public function datatablesCariSiswa(Request $request, $nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::select('siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna','kelas.nm_kelas','status_pengguna.nm_status_pengguna','jalur.nm_jalur')
           ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
@@ -98,7 +98,7 @@ class CariSiswaController extends BaseController
     public function viewDetailSiswaCariSiswa(Request $request, $nis_siswa, $nis_nama_siswa_asli){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
         

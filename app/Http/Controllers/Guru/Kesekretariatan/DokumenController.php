@@ -33,7 +33,7 @@ class DokumenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/kesekretariatan/dokumen/view-dokumen', compact('auth_data'));
     }
@@ -42,7 +42,7 @@ class DokumenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $dokumen = ArsipDokumen::select('arsip_dokumen.id_arsip_dokumen', 'arsip_dokumen.kode_katalog', 'arsip_dokumen.nm_arsip_dokumen', 'arsip_dokumen.nomor_arsip_dokumen', 'arsip_dokumen.jumlah_halaman', 'arsip_dokumen.tgl_penyusunan', 'arsip_dokumen.tgl_penyusunan', 'unit_kerja.nm_unit_kerja', 'arsip_dokumen.contact_person', 'arsip_loker.nm_arsip_loker', 'arsip_pemilik.nm_arsip_pemilik', 'arsip_subkategori.nm_arsip_subkategori', 'arsip_kategori.nm_arsip_kategori', 'arsip_dokumen.id_arsip_dokumen')
             ->leftJoin('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'arsip_dokumen.id_unit_kerja')
@@ -61,7 +61,7 @@ class DokumenController extends BaseController
     public function datatablesDokumen(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = ArsipDokumen::select(
             'arsip_dokumen.id_arsip_dokumen',
@@ -163,7 +163,7 @@ class DokumenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $kategori           = ArsipKategori::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $unit               = UnitKerja::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
@@ -225,7 +225,7 @@ class DokumenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // ambil data all siswa
         $subkategori = ArsipSubkategori::where('id_arsip_kategori', '=', $input->kategori)->get();
@@ -237,7 +237,7 @@ class DokumenController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -264,7 +264,7 @@ class DokumenController extends BaseController
             if ($mode == 'add') {
                 DB::beginTransaction();
                 try {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $arsip                          = new ArsipDokumen;
                     $arsip->id_arsip_dokumen        = $id;
@@ -282,7 +282,7 @@ class DokumenController extends BaseController
                     $arsip->is_publik               = $input->is_publik;
                     $arsip->id_sekolah              = $auth_data->pengguna->id_sekolah;
                     $arsip->created_at              = $now;
-                    $arsip->created_by              = $input->auth_data->pengguna->id_pengguna;
+                    $arsip->created_by              = auth_data()->pengguna->id_pengguna;
                     $arsip->save();
 
                     // is_public = 0
@@ -301,7 +301,7 @@ class DokumenController extends BaseController
                             ];
                         } else {
                             $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                            $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $arsip_dokumen_akses->id_arsip_dokumen_akses    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                             $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
                             if (isset($input->status_pengguna)) {
                                 foreach ($input->status_pengguna as $status_pengguna) {
@@ -318,28 +318,28 @@ class DokumenController extends BaseController
                                 $arsip_dokumen_akses->id_unit_kerja  = null;
                             }
                             $arsip_dokumen_akses->created_at                = $now;
-                            $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
+                            $arsip_dokumen_akses->created_by                = auth_data()->pengguna->id_pengguna;
                             $arsip_dokumen_akses->save();
                         }
                     }
 
                     // add uploaded file
                     if (!empty(request()->file)) {
-                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
 
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/sekretariat/' . $arsip->id_arsip_dokumen, request()->file, 'public');
 
                         // update $arsip
                         $arsip->is_upload               = 1;
                         $arsip->updated_at              = $now;
-                        $arsip->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                        $arsip->updated_by              = auth_data()->pengguna->id_pengguna;
                         $arsip->save();
 
                         $arsipFile                             = new ArsipDokumenFile;
-                        $arsipFile->id_arsip_dokumen_file      = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $arsipFile->id_arsip_dokumen_file      = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $arsipFile->id_arsip_dokumen           = $arsip->id_arsip_dokumen;
                         $arsipFile->nm_arsip_dokumen_file      = $file;
-                        $arsipFile->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                        $arsipFile->created_by                 = auth_data()->pengguna->id_pengguna;
                         $arsipFile->save();
                     }
 
@@ -361,7 +361,7 @@ class DokumenController extends BaseController
             } elseif ($mode == 'edit') {
                 DB::beginTransaction();
                 try {
-                    // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    // $id = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
 
                     $arsip                          = ArsipDokumen::find($id);
                     $arsip->id_arsip_loker          = $input->id_arsip_loker;
@@ -376,7 +376,7 @@ class DokumenController extends BaseController
                     $arsip->contact_person          = $input->contact_person;
                     $arsip->is_publik               = $input->is_publik;
                     $arsip->updated_at              = $now;
-                    $arsip->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                    $arsip->updated_by              = auth_data()->pengguna->id_pengguna;
                     $arsip->save();
 
                     // is_publik = 0
@@ -385,7 +385,7 @@ class DokumenController extends BaseController
                         $data_dokumen_akses = ArsipDokumenAkses::where('id_arsip_dokumen', '=', $id)->forceDelete();
 
                         $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                        $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $arsip_dokumen_akses->id_arsip_dokumen_akses    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
                         if (isset($input->status_pengguna)) {
                             foreach ($input->status_pengguna as $status_pengguna) {
@@ -402,7 +402,7 @@ class DokumenController extends BaseController
                             $arsip_dokumen_akses->id_unit_kerja  = null;
                         }
                         $arsip_dokumen_akses->created_at                = $now;
-                        $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
+                        $arsip_dokumen_akses->created_by                = auth_data()->pengguna->id_pengguna;
                         $arsip_dokumen_akses->save();
                     } else {
                         // delete status_pengguna & unit_kerja
@@ -437,21 +437,21 @@ class DokumenController extends BaseController
                     ];
                 }
 
-                $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
 
                 $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/sekretariat/' . $id, request()->file, 'public');
 
                 $arsipDokumen                          = ArsipDokumen::find($id);
                 $arsipDokumen->is_upload               = 1;
                 $arsipDokumen->updated_at              = $now;
-                $arsipDokumen->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                $arsipDokumen->updated_by              = auth_data()->pengguna->id_pengguna;
                 $arsipDokumen->save();
 
                 $arsip                                 = new ArsipDokumenFile;
-                $arsip->id_arsip_dokumen_file          = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $arsip->id_arsip_dokumen_file          = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $arsip->id_arsip_dokumen               = $id;
                 $arsip->nm_arsip_dokumen_file          = $file;
-                $arsip->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                $arsip->created_by                     = auth_data()->pengguna->id_pengguna;
                 $arsip->save();
 
                 return redirect(Request::segment(1) . '#kesekretariatan/upload-dokumen/upload/' . $id);
@@ -465,7 +465,7 @@ class DokumenController extends BaseController
                 $files = Storage::disk('spaces')->delete($arsipDokumenFile->nm_arsip_dokumen_file);
 
                 // delete tabel DB
-                $arsipDokumenFile->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $arsipDokumenFile->deleted_by  = auth_data()->pengguna->id_pengguna;
                 $arsipDokumenFile->deleted_at  = $now;
                 $arsipDokumenFile->save();
 
@@ -477,7 +477,7 @@ class DokumenController extends BaseController
                     $arsipDokumen                          = ArsipDokumen::find($id_arsip_dokumen);
                     $arsipDokumen->is_upload               = 0;
                     $arsipDokumen->updated_at              = $now;
-                    $arsipDokumen->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                    $arsipDokumen->updated_by              = auth_data()->pengguna->id_pengguna;
                     $arsipDokumen->save();
                 }
 
@@ -494,7 +494,7 @@ class DokumenController extends BaseController
                 //     ];
                 // } else {
                 $arsip  = ArsipDokumen::find($id);
-                $arsip->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $arsip->deleted_by  = auth_data()->pengguna->id_pengguna;
                 $arsip->deleted_at  = $now;
                 $arsip->save();
 
@@ -513,7 +513,7 @@ class DokumenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $dokumen = ArsipDokumen::select('arsip_dokumen.id_arsip_dokumen', 'arsip_dokumen.kode_katalog', 'arsip_dokumen.nm_arsip_dokumen', 'arsip_dokumen.nomor_arsip_dokumen', 'arsip_dokumen.jumlah_halaman', 'arsip_dokumen.tgl_penyusunan', 'arsip_dokumen.tgl_penyusunan', 'unit_kerja.nm_unit_kerja', 'arsip_loker.nm_arsip_loker', 'arsip_pemilik.nm_arsip_pemilik', 'arsip_subkategori.nm_arsip_subkategori', 'arsip_kategori.nm_arsip_kategori', 'arsip_dokumen.id_arsip_dokumen')
             ->leftJoin('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'arsip_dokumen.id_unit_kerja')

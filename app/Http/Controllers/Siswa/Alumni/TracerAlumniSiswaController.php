@@ -25,7 +25,7 @@ class TracerAlumniSiswaController extends Controller
     public function viewTracerAlumni(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $alumni = Alumni::where('id_c_siswa', $siswa->id_c_siswa)->first();
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
@@ -41,7 +41,7 @@ class TracerAlumniSiswaController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // $data_jurusan = Jurusan::all();
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             // $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 9)->get();
@@ -59,7 +59,7 @@ class TracerAlumniSiswaController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $data_jurusan = Jurusan::all();
 
@@ -81,7 +81,7 @@ class TracerAlumniSiswaController extends Controller
     public function datatablesTracerAlumni(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             $alumnis    = LibAlumni::getAlumnisSmpWithId($siswa->id_c_siswa);

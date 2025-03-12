@@ -30,7 +30,7 @@ class MataPelajaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('akademik/data-akademik/mata-pelajaran/view-mata-pelajaran', compact('auth_data'));
     }
@@ -39,7 +39,7 @@ class MataPelajaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
 
@@ -47,7 +47,7 @@ class MataPelajaranController extends BaseController
         $now = Carbon::now();
         $jenis_mapel = JenisMataPelajaran::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
-        $id_mata_pelajaran = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_mata_pelajaran = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('akademik/data-akademik/mata-pelajaran/add-mata-pelajaran', compact('auth_data', 'data_jurusan', 'id_mata_pelajaran', 'jenis_mapel'));
     }
@@ -56,7 +56,7 @@ class MataPelajaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
         $jenis_mapel = JenisMataPelajaran::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
@@ -69,14 +69,14 @@ class MataPelajaranController extends BaseController
     public function datatablesMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $status = $input->semuaStatus;
 
         if ($status == 1) {
             $list_data = LibAkademik::fetchDataMataPelajaran($auth_data, null, "1");
         } else {
             $list_data = LibAkademik::fetchDataMataPelajaran($auth_data, null);
-        }    
+        }
 
         return Datatables::of($list_data)
             ->addColumn('status', function ($item) {
@@ -111,7 +111,7 @@ class MataPelajaranController extends BaseController
             // 'kredit_prak_lapangan'  => 'required',
             // 'kredit_simulasi'       => 'required',
             // 'tingkat_semester'      => 'required',
-            'nilai_kkm'             => 'required'
+            'nilai_kkm'             => 'sometimes'
             // 'ada_sap'               => 'required',
             // 'ada_silabus'           => 'required',
             // 'ada_bahan_ajar'        => 'required',
@@ -129,7 +129,7 @@ class MataPelajaranController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $mataPelajaran                          = new MataPelajaran;
                 $mataPelajaran->id_mata_pelajaran       = $id;
@@ -149,12 +149,13 @@ class MataPelajaranController extends BaseController
                 // $mataPelajaran->kredit_simulasi         = $input->kredit_simulasi;
                 // $mataPelajaran->tingkat_semester        = $input->tingkat_semester;
                 $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
-                $mataPelajaran->nilai_kkm               = '1';
+                // $mataPelajaran->nilai_kkm               = '1';
+                $mataPelajaran->is_aktif                 = 1;
                 // $mataPelajaran->ada_sap                 = $input->ada_sap;
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;
                 // $mataPelajaran->ada_diktat              = $input->ada_diktat;
-                $mataPelajaran->created_by              = $input->auth_data->pengguna->id_pengguna;
+                $mataPelajaran->created_by              = auth_data()->pengguna->id_pengguna;
                 $mataPelajaran->save();
 
                 return [
@@ -186,7 +187,7 @@ class MataPelajaranController extends BaseController
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;
                 // $mataPelajaran->ada_diktat              = $input->ada_diktat;
-                $mataPelajaran->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                $mataPelajaran->updated_by              = auth_data()->pengguna->id_pengguna;
                 $mataPelajaran->updated_at              = $now;
                 $mataPelajaran->save();
 
@@ -204,7 +205,7 @@ class MataPelajaranController extends BaseController
                 } else {
                     // make object to find id
                     $mataPelajaran               = MataPelajaran::find($id);
-                    $mataPelajaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $mataPelajaran->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $mataPelajaran->save();
 
                     $mataPelajaran->delete();

@@ -38,7 +38,7 @@ class ManajemenHariLiburController extends BaseController
     public function storeManajemenHariLibur(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)->first();
         if ($is_holiday_exist) {
             return [
@@ -70,7 +70,7 @@ class ManajemenHariLiburController extends BaseController
     public function updateManajemenHariLibur(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)->where('manajemen_hari_libur_id', '!=', $id)->first();
         if ($is_holiday_exist) {
             return [
@@ -93,7 +93,7 @@ class ManajemenHariLiburController extends BaseController
     public function destroyManajemenHariLibur(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $holiday = ManajemenHariLibur::where('manajemen_hari_libur_id', $id)->first();
         $holiday->deleted_by = $auth_data->pengguna->id_pengguna;
         $holiday->delete();

@@ -27,7 +27,7 @@ class ApproveSiswaMagangController extends BaseController
     public function viewApproveSiswaMagang(Request $request){
         # code...
       $input = (object) $request->input();
-      $auth_data = $input->auth_data;
+      $auth_data = auth_data();
 
       $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
       $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
@@ -38,7 +38,7 @@ class ApproveSiswaMagangController extends BaseController
     public function actionViewDetailApproveSiswaMagang(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             /*'id_semester' => 'required'*/
@@ -69,7 +69,7 @@ class ApproveSiswaMagangController extends BaseController
     public function viewDetailApproveSiswaMagang(Request $request, $id_periode_magang,$id_rekanan_magang, $nis_nama_siswa){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data,$id_periode_magang);
       	$data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data,$id_rekanan_magang);
@@ -80,7 +80,7 @@ class ApproveSiswaMagangController extends BaseController
     }
     public function datatablesApproveSiswaMagang(Request $request, $id_periode_magang, $id_rekanan_magang,$nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibMagangSiswa::fetchDataApproveSiswaMagang($auth_data, $id_periode_magang, $id_rekanan_magang,$nis_nama_siswa);
 
         return Datatables::of($list_data)

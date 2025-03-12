@@ -42,7 +42,7 @@ class CetakPresensiKBMController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -53,7 +53,7 @@ class CetakPresensiKBMController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_semester' =>'required'
@@ -76,7 +76,7 @@ class CetakPresensiKBMController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester   = Semester::where('id_semester', '=', $id)->first();
 
@@ -88,7 +88,7 @@ class CetakPresensiKBMController extends BaseController
     public function datatablesCetakPresensiKBM(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = JadwalKelasMp::select('jadwal_kelas_mp.id_jadwal_kelas_mp', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'ruangan.kapasitas_ruangan')
             ->join('kelas_mp', function ($q) {
                 $q->on('kelas_mp.id_kelas_mp', '=', 'jadwal_kelas_mp.id_kelas_mp')
@@ -142,7 +142,7 @@ class CetakPresensiKBMController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -158,7 +158,7 @@ class CetakPresensiKBMController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

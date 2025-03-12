@@ -34,7 +34,7 @@ class UjianUASController extends BaseController
   {
     # code...
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
     $semester = Semester::where('semester.is_aktif_semester', '=', 1)->first();
 
     return view('akademik/ujian/ujian-uas-reguler-online/view-ujian-uas-reguler-online', compact('auth_data', 'id', 'semester'));
@@ -44,7 +44,7 @@ class UjianUASController extends BaseController
   {
     # code..
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
     $kegiatan         = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kode_kegiatan', '=', 'UAS')->get();
 
     return view('akademik/ujian/ujian-uas-reguler-online/view-add-ujian-uas-reguler-online', compact('auth_data', 'kegiatan', 'id'));
@@ -53,7 +53,7 @@ class UjianUASController extends BaseController
   {
     # code..
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
     $kegiatan     = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kode_kegiatan', '=', 'UAS')->first();
     $kelas_mp = KelasMp::join('kelas', 'kelas_mp.id_kelas', '=', 'kelas.id_kelas')->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
       ->where('id_kelas_mp', '=', $id)->first();
@@ -66,7 +66,7 @@ class UjianUASController extends BaseController
   {
     # code..
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
     echo $auth_data;
     $ujian = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'ruangan.id_ruangan', 'kelas.nm_kelas', 'ujian_mp.id_kegiatan')
       ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
@@ -91,7 +91,7 @@ class UjianUASController extends BaseController
   {
     # code..
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
     $kelas = UjianMp::join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
       ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
       ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
@@ -103,7 +103,7 @@ class UjianUASController extends BaseController
   public function datatablesUjianUas(Request $request, $online)
   {
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     //kode kegiatan diganti sesuai jenis ujiannya
     // $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan',)
@@ -167,7 +167,7 @@ class UjianUASController extends BaseController
   // public function datatablesUjianUas(Request $request, $online)
   // {
   //   $input = (object) $request->input();
-  //   $auth_data = $input->auth_data;
+  //   $auth_data = auth_data();
 
   //   //kode kegiatan diganti sesuai jenis ujiannya
   //   $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan')
@@ -220,7 +220,7 @@ class UjianUASController extends BaseController
   public function datatablesDaftarMataPelajaran(Request $request, $online)
   {
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     //kode kegiatan diganti sesuai jenis ujiannya
     $list_data = KelasMp::select('kelas_mp.nm_kelas_mp', 'kelas_mp.id_kelas', 'kelas_mp.id_mata_pelajaran', 'kelas_mp.id_semester', 'kelas_mp.id_kelas_mp', 'kelas.nm_kelas', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'semester.nm_semester', 'semester.tahun_ajaran')
@@ -256,7 +256,7 @@ class UjianUASController extends BaseController
   public function datatablesDaftarSiswa(Request $request, $id)
   {
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
     $kelas = UjianMp::where('id_ujian_mp', '=', $id)->first();
 
     $list_data = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'siswa.id_kelas', 'kelas.nm_kelas', 'kelas_mp.nm_kelas_mp', 'siswa.id_siswa')
@@ -280,7 +280,7 @@ class UjianUASController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
     $now = Carbon::now();
     $validator = Validator::make($request->all(), [
       'nm_ujian_mp' => 'required',
@@ -296,8 +296,8 @@ class UjianUASController extends BaseController
       ];
     } else {
       if ($mode == 'add') {
-        $id_ujian_mp          = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-        $id_ruangan_ujian_mp  = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_ujian_mp          = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_ruangan_ujian_mp  = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         $ujian                                  = new UjianMp;
         $ujian->id_ujian_mp               = $id_ujian_mp;
@@ -309,7 +309,7 @@ class UjianUASController extends BaseController
         $ujian->jam_selesai               = $input->jam_selesai;
         $ujian->keterangan                = $input->keterangan;
         $ujian->is_online                 = $input->is_online;
-        $ujian->created_by                = $input->auth_data->pengguna->id_pengguna;
+        $ujian->created_by                = auth_data()->pengguna->id_pengguna;
         $ujian->created_at                = $now;
         $ujian->save();
 
@@ -317,7 +317,7 @@ class UjianUASController extends BaseController
         $ruangan->id_ujian_mp_ruangan = $id_ruangan_ujian_mp;
         $ruangan->id_ujian_mp         = $id_ujian_mp;
         $ruangan->id_ruangan          = $input->id_ruangan;
-        $ruangan->created_by          = $input->auth_data->pengguna->id_pengguna;
+        $ruangan->created_by          = auth_data()->pengguna->id_pengguna;
         $ruangan->created_at          = $now;
         $ruangan->save();
 
@@ -336,13 +336,13 @@ class UjianUASController extends BaseController
         $ujian->jam_selesai           = $input->jam_selesai;
         $ujian->keterangan            = $input->keterangan;
         $ujian->is_online             = $input->is_online;
-        $ujian->updated_by            = $input->auth_data->pengguna->id_pengguna;
+        $ujian->updated_by            = auth_data()->pengguna->id_pengguna;
         $ujian->updated_at            = $now;
         $ujian->save();
 
         $ruangan                      = UjianMpRuangan::where('ujian_mp_ruangan.id_ujian_mp', '=', $id)->first();
         $ruangan->id_ruangan          = $input->id_ruangan;
-        $ruangan->updated_by          = $input->auth_data->pengguna->id_pengguna;
+        $ruangan->updated_by          = auth_data()->pengguna->id_pengguna;
         $ruangan->updated_at          = $now;
         $ruangan->save();
 
@@ -360,12 +360,12 @@ class UjianUASController extends BaseController
           ];
         } else {
           $ujian                        = UjianMp::find($id);
-          $ujian->deleted_by            = $input->auth_data->pengguna->id_pengguna;
+          $ujian->deleted_by            = auth_data()->pengguna->id_pengguna;
           $ujian->save();
           $ujian->forceDelete();
 
           $ruangan                      = UjianMpRuangan::where('ujian_mp_ruangan.id_ujian_mp', '=', $id)->first();
-          $ruangan->deleted_by          = $input->auth_data->pengguna->id_pengguna;
+          $ruangan->deleted_by          = auth_data()->pengguna->id_pengguna;
           $ruangan->save();
           $ruangan->forceDelete();
 
@@ -392,7 +392,7 @@ class UjianUASController extends BaseController
               $presensi->id_ujian_mp          = $id;
               $presensi->id_siswa             = $id_siswa;
               $presensi->created_at           = $now;
-              $presensi->created_by           = $input->auth_data->pengguna->id_pengguna;
+              $presensi->created_by           = auth_data()->pengguna->id_pengguna;
               $presensi->save();
             }
           }

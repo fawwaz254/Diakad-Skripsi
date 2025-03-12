@@ -36,7 +36,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
@@ -58,7 +58,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // dd("masuk");
         $validator = Validator::make($request->all(), [
             'id_kelas_mp' => 'required'
@@ -81,7 +81,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $id_guru = $guru->id_guru;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -113,7 +113,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $id_guru = $guru->id_guru;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);

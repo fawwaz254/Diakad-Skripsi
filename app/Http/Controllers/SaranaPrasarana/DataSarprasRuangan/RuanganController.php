@@ -32,7 +32,7 @@ class RuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-ruangan/ruangan/view-ruangan', compact('auth_data'));
     }
@@ -41,7 +41,7 @@ class RuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jenis_ruangan = LibDataSarpras::fetchDataJenisRuangan($auth_data);
 
@@ -61,7 +61,7 @@ class RuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jenis_ruangan = LibDataSarpras::fetchDataJenisRuangan($auth_data);
 
@@ -79,7 +79,7 @@ class RuanganController extends BaseController
     public function datatablesRuangan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataRuangan($auth_data);
         return Datatables::of($list_data)
             ->addColumn('status_aktif', function ($item) {
@@ -131,7 +131,7 @@ class RuanganController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $ruangan                        = new Ruangan;
                 $ruangan->id_ruangan            = $id;
@@ -144,7 +144,7 @@ class RuanganController extends BaseController
                 $ruangan->kapasitas_ujian       = $input->kapasitas_ujian;
                 $ruangan->deskripsi_ruangan     = $input->deskripsi_ruangan;
                 $ruangan->is_aktif              = $input->is_aktif;
-                $ruangan->created_by            = $input->auth_data->pengguna->id_pengguna;
+                $ruangan->created_by            = auth_data()->pengguna->id_pengguna;
                 $ruangan->save();
 
                 return [
@@ -164,7 +164,7 @@ class RuanganController extends BaseController
                 $ruangan->kapasitas_ujian       = $input->kapasitas_ujian;
                 $ruangan->deskripsi_ruangan     = $input->deskripsi_ruangan;
                 $ruangan->is_aktif              = $input->is_aktif;
-                $ruangan->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                $ruangan->updated_by            = auth_data()->pengguna->id_pengguna;
                 $ruangan->updated_at            = $now;
                 $ruangan->save();
 
@@ -182,7 +182,7 @@ class RuanganController extends BaseController
                 } else {
                     // make object to find id
                     $ruangan               = Ruangan::find($id);
-                    $ruangan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $ruangan->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $ruangan->save();
 
                     $ruangan->delete();
@@ -200,7 +200,7 @@ class RuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-ruangan/ruangan/import-excel', compact('auth_data'));
     }
@@ -209,7 +209,7 @@ class RuanganController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -351,7 +351,7 @@ class RuanganController extends BaseController
                             $data->kapasitas_ujian               = $value->kapasitas_ujian;
                             $data->deskripsi_ruangan             = $value->deskripsi_ruangan;
                             $data->is_aktif                      = $is_aktif;
-                            $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                            $data->created_by                    = auth_data()->pengguna->id_pengguna;
                             $data->save();
                         }
 
@@ -364,8 +364,8 @@ class RuanganController extends BaseController
                         // $data->kelas  
                         // $data->nm_ruangan
                         // $data->panjang_ruangan
-                        // $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
-                        // $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                        // $data->id_sekolah                    = auth_data()->pengguna->id_sekolah;
+                        // $data->created_by                    = auth_data()->pengguna->id_pengguna;
                         // $data->save();
 
                         DB::commit();

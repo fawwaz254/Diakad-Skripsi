@@ -24,7 +24,7 @@ class SiswaController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, null, true);
 
@@ -35,7 +35,7 @@ class SiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required'
@@ -57,7 +57,7 @@ class SiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, null, true);
 
@@ -67,7 +67,7 @@ class SiswaController extends BaseController
     public function datatablesSiswa(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $pengguna = Pengguna::select('pengguna.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.username', 'pengguna.nm_pengguna', 'kelas.nm_kelas')
             ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')

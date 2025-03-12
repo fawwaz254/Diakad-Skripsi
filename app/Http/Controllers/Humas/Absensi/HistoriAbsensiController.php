@@ -23,7 +23,7 @@ class HistoriAbsensiController extends BaseController
     public function getDataHistoriAbsensi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('humas/absensi/histori-absensi/get-data-fingerprint', compact('auth_data'));
     }
 
@@ -363,7 +363,7 @@ class HistoriAbsensiController extends BaseController
     {
         set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $hasil = [];
         $jumlah_hadir = 0;
         $jumlah_sakit = 0;

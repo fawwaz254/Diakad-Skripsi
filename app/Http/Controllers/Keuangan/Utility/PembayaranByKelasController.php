@@ -20,7 +20,7 @@ class PembayaranByKelasController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -38,7 +38,7 @@ class PembayaranByKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'tahun_akademik_semester' => 'required',
@@ -62,7 +62,7 @@ class PembayaranByKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester = Semester::orderBy('tahun_ajaran', 'asc')->get();
 
         if (empty($tahun_akademik_semester)) {
@@ -136,7 +136,7 @@ class PembayaranByKelasController extends BaseController
     public function printPembayaranByKelas(Request $request, $tahun_akademik_semester, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -289,7 +289,7 @@ class PembayaranByKelasController extends BaseController
     public function printPembayaranByKelasPerSemester(Request $request, $tipe_semester, $tahun_akademik_semester, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);

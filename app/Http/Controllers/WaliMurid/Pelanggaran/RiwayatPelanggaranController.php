@@ -22,7 +22,7 @@ class RiwayatPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('wali-murid/pelanggaran/riwayat-pelanggaran/view-riwayat-pelanggaran', compact('auth_data'));
     }
@@ -30,7 +30,7 @@ class RiwayatPelanggaranController extends BaseController
     public function datatablesPelanggaranNonKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
         
@@ -91,7 +91,7 @@ class RiwayatPelanggaranController extends BaseController
     public function datatablesPelanggaranKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 

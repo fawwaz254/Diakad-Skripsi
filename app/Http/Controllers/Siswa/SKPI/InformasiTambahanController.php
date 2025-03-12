@@ -20,7 +20,7 @@ class InformasiTambahanController extends Controller
     public function viewInformasiTambahan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('siswa/skpi/informasi-tambahan/view-informasi-tambahan', compact('auth_data'));
     }
@@ -28,7 +28,7 @@ class InformasiTambahanController extends Controller
     public function viewAddInformasiTambahan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('siswa/skpi/informasi-tambahan/add-informasi-tambahan', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class InformasiTambahanController extends Controller
     public function viewEditInformasiTambahan(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
@@ -56,7 +56,7 @@ class InformasiTambahanController extends Controller
     public function actionInformasiTambahan(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
@@ -75,7 +75,7 @@ class InformasiTambahanController extends Controller
 
             if ($mode == 'add') {
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $informasi = new InformasiTambahan;
                 $informasi->id_informasi_tambahan = $id;
@@ -86,7 +86,7 @@ class InformasiTambahanController extends Controller
                 $informasi->nm_informasi_tambahan = $input->nm_informasi_tambahan;
                 $informasi->nm_informasi_tambahan_eng = $input->nm_informasi_tambahan_eng;
                 $informasi->status = 0;
-                $informasi->created_by = $input->auth_data->pengguna->id_pengguna;
+                $informasi->created_by = auth_data()->pengguna->id_pengguna;
                 $informasi->save();
 
                 return [
@@ -101,7 +101,7 @@ class InformasiTambahanController extends Controller
                 $informasi->nm_informasi_tambahan = $input->nm_informasi_tambahan;
                 $informasi->nm_informasi_tambahan_eng = $input->nm_informasi_tambahan_eng;
                 $informasi->updated_at = $now;
-                $informasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $informasi->updated_by = auth_data()->pengguna->id_pengguna;
                 $informasi->save();
 
                 return [
@@ -112,7 +112,7 @@ class InformasiTambahanController extends Controller
             } elseif ($mode == 'delete') {
 
                 $kegiatan = InformasiTambahan::find($id);
-                $kegiatan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->deleted_by  = auth_data()->pengguna->id_pengguna;
                 $kegiatan->deleted_at  = $now;
                 $kegiatan->save();
 
@@ -129,7 +129,7 @@ class InformasiTambahanController extends Controller
     public function datatablesInformasiTambahan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = InformasiTambahan::Select(
             'informasi_tambahan.id_informasi_tambahan',

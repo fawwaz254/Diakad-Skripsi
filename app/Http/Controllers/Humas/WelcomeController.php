@@ -27,7 +27,7 @@ class WelcomeController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
 
         if ($start_monkes = Setting::where('key_setting', 'start_monkes')->first()) {
@@ -56,7 +56,7 @@ class WelcomeController extends BaseController
         try {
 
             $input = (object) $request->input();
-            $auth_data = $input->auth_data;
+            $auth_data = auth_data();
 
             $request->validate([
                 'id_form' => 'required',

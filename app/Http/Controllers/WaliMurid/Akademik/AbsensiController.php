@@ -15,7 +15,7 @@ class AbsensiController extends Controller
     public function viewLihatAbsensi(Request $request, $id_bulan = null, $tahun = null){
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
     
         $now = Carbon::today();

@@ -21,7 +21,7 @@ class UploadDataGuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sumber-daya/guru/upload-data-guru/view-upload-data-guru', compact('auth_data'));
     }
@@ -39,7 +39,7 @@ class UploadDataGuruController extends BaseController
     public function uploadFileExcel(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         if ($request->hasFile('file-excel')) {
             $path = $request->file('file-excel')->getRealPath();
@@ -96,8 +96,8 @@ class UploadDataGuruController extends BaseController
                         // $arr[] = [];
                     } else {
                         //generate id
-                        $id_guru = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_guru = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_pengguna = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                         $arr[] = [
                             'id_guru' => $id_guru,
@@ -107,8 +107,8 @@ class UploadDataGuruController extends BaseController
                             'status' => $status->id_status_pengguna,
                             'jenis_kelamin' => $jenis_kelamin,
                             'unit_kerja' => $unit->id_unit_kerja,
-                            'id_sekolah' => $input->auth_data->pengguna->id_sekolah,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            'id_sekolah' => auth_data()->pengguna->id_sekolah,
+                            'created_by' => auth_data()->pengguna->id_pengguna,
                         ];
                     }
                 }
