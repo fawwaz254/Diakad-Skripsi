@@ -35,7 +35,7 @@ class DataPribadiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_status_aktif_guru = LibDataSumberDaya::fetchDataStatusAktifGuru($auth_data);
 
@@ -61,7 +61,7 @@ class DataPribadiController extends BaseController
     public function actionSaveDataPribadi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'nm_pengguna'           => 'required',
@@ -86,12 +86,12 @@ class DataPribadiController extends BaseController
             $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
             $pengguna->gelar_depan              = $input->gelar_depan;
             $pengguna->gelar_belakang           = $input->gelar_belakang;
-            $pengguna->updated_by               = $input->auth_data->pengguna->id_pengguna;
+            $pengguna->updated_by               = auth_data()->pengguna->id_pengguna;
             $pengguna->updated_at               = $now;
             $pengguna->save();
 
             /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
-            $guru->updated_by               = $input->auth_data->pengguna->id_pengguna;
+            $guru->updated_by               = auth_data()->pengguna->id_pengguna;
             $guru->updated_at               = $now;
             $guru->nik_ptk                  = $input->nik_ptk;
             $guru->jenis_kelamin            = $input->jenis_kelamin;

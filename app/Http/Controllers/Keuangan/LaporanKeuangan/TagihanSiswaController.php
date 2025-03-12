@@ -23,7 +23,7 @@ class TagihanSiswaController extends BaseController
     public function viewTagihanSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
@@ -38,7 +38,7 @@ class TagihanSiswaController extends BaseController
     public function datatablesTagihanSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tahun = $input->tahun_akademik_semester;
         $kelas = $input->kelas;
@@ -146,7 +146,7 @@ class TagihanSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $status = $request->status;
 
@@ -342,7 +342,7 @@ class TagihanSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -362,16 +362,16 @@ class TagihanSiswaController extends BaseController
             $t->keterangan = 'pembayaran awal tahun';
 
             $now = Carbon::now();
-            $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $uuid = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
             $pembayaranBiaya = new PembayaranBiaya;
             $pembayaranBiaya->id_pembayaran_biaya = $uuid;
             $pembayaranBiaya->id_tagihan_biaya = $t->id_tagihan_biaya;
-            $pembayaranBiaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
+            $pembayaranBiaya->id_staff_bayar = auth_data()->pengguna->id_pengguna;
             $pembayaranBiaya->id_semester_bayar = $id_semester;
             $pembayaranBiaya->besar_pembayaran =  $besar;
             $pembayaranBiaya->tgl_pembayaran = '2023-07-31 00:00:00';
             $pembayaranBiaya->keterangan = 'pembayaran awal tahun';
-            $pembayaranBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
+            $pembayaranBiaya->created_by = auth_data()->pengguna->id_pengguna;
             $pembayaranBiaya->save();
             $t->save();
         }

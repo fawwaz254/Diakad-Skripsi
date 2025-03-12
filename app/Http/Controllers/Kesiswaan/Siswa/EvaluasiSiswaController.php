@@ -31,7 +31,7 @@ class EvaluasiSiswaController extends BaseController
     {
   	    # code..
      $input = (object) $request->input();
-     $auth_data = $input->auth_data;
+     $auth_data = auth_data();
 
      return view('kesiswaan/siswa/evaluasi-siswa/view-evaluasi-siswa',compact('auth_data','nis_nama_siswa'));
     }
@@ -39,7 +39,7 @@ class EvaluasiSiswaController extends BaseController
     public function actionViewEvaluasiSiswa(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'nis_nama_siswa' =>'required'
@@ -62,7 +62,7 @@ class EvaluasiSiswaController extends BaseController
     public function viewDetailEvaluasiSiswa(Request $request, $nis_nama_siswa){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
   
@@ -71,7 +71,7 @@ class EvaluasiSiswaController extends BaseController
 
     public function datatablesEvaluasiSiswa(Request $request, $nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::select('siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna','kelas.nm_kelas','status_pengguna.nm_status_pengguna','jalur.nm_jalur')
           ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
@@ -102,7 +102,7 @@ class EvaluasiSiswaController extends BaseController
 
     public function datatablesBeasiswa(Request $request, $nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
 
         $list_data = BeasiswaSiswa::where('id_siswa','=',$siswa->id_siswa)->get();
@@ -128,7 +128,7 @@ class EvaluasiSiswaController extends BaseController
 
     public function datatablesPrestasi(Request $request, $nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
 
         $list_data = PrestasiSiswa::select('jenis_prestasi_siswa','nm_prestasi_siswa','lokasi_prestasi_siswa','penyelenggara_prestasi_siswa','peringkat_prestasi_siswa','tgl_prestasi_siswa','nm_semester','tahun_ajaran','nm_tingkat_prestasi_siswa','nm_pengguna','nm_ekskul')
@@ -167,7 +167,7 @@ class EvaluasiSiswaController extends BaseController
 
     public function datatablesEkskul(Request $request, $nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
 
         $list_data = PengambilanEkskul::select('nm_ekskul','nm_semester','tahun_ajaran','nilai_angka','nilai_huruf')
@@ -185,7 +185,7 @@ class EvaluasiSiswaController extends BaseController
     public function viewDetailSiswaEvaluasiSiswa(Request $request, $nis_siswa, $nis_nama_siswa_asli){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
         

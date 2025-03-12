@@ -24,7 +24,7 @@ class KategoriPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('bk/data-pelanggaran/kategori-pelanggaran/view-kategori-pelanggaran', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class KategoriPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class KategoriPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kategori_pelanggaran = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data, $id);
 
@@ -57,7 +57,7 @@ class KategoriPelanggaranController extends BaseController
     public function datatablesKategoriPelanggaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
 
         return Datatables::of($list_data)
@@ -92,15 +92,15 @@ class KategoriPelanggaranController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kategoriPelanggaran                                        = new KategoriPelanggaran;
                 $kategoriPelanggaran->id_kategori_pelanggaran               = $id;
                 $kategoriPelanggaran->nm_kategori_pelanggaran               = $input->nm_kategori_pelanggaran;
                 $kategoriPelanggaran->tingkat_kategori_pelanggaran          = $input->tingkat_kategori_pelanggaran;
                 $kategoriPelanggaran->keterangan_kategori_pelanggaran       = $input->keterangan_kategori_pelanggaran;
-                $kategoriPelanggaran->id_sekolah                            = $input->auth_data->pengguna->id_sekolah;
-                $kategoriPelanggaran->created_by                            = $input->auth_data->pengguna->id_pengguna;
+                $kategoriPelanggaran->id_sekolah                            = auth_data()->pengguna->id_sekolah;
+                $kategoriPelanggaran->created_by                            = auth_data()->pengguna->id_pengguna;
                 $kategoriPelanggaran->save();
 
                 return [
@@ -114,7 +114,7 @@ class KategoriPelanggaranController extends BaseController
                 $kategoriPelanggaran->nm_kategori_pelanggaran               = $input->nm_kategori_pelanggaran;
                 $kategoriPelanggaran->tingkat_kategori_pelanggaran          = $input->tingkat_kategori_pelanggaran;
                 $kategoriPelanggaran->keterangan_kategori_pelanggaran       = $input->keterangan_kategori_pelanggaran;
-                $kategoriPelanggaran->updated_by                            = $input->auth_data->pengguna->id_pengguna;
+                $kategoriPelanggaran->updated_by                            = auth_data()->pengguna->id_pengguna;
                 $kategoriPelanggaran->updated_at                            = $now;
                 $kategoriPelanggaran->save();
 
@@ -132,7 +132,7 @@ class KategoriPelanggaranController extends BaseController
                 } else {
                     // make object to find id
                     $kategoriPelanggaran               = KategoriPelanggaran::find($id);
-                    $kategoriPelanggaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $kategoriPelanggaran->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $kategoriPelanggaran->save();
 
                     $kategoriPelanggaran->delete();

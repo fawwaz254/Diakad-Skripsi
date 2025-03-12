@@ -218,7 +218,7 @@ class ShiftSiswaController extends Controller
                         'date' => $value->format('Y-m-d'),
                         'id_shift_master' => $input->dayName[$value->format('l')],
                         'created_at' => $now,
-                        'created_by' =>  $input->auth_data->pengguna->id_pengguna,
+                        'created_by' =>  auth_data()->pengguna->id_pengguna,
                     ];
                 }
                 // if (!empty($list_data)) {

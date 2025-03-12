@@ -28,7 +28,7 @@ class TagihanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
@@ -40,7 +40,7 @@ class TagihanController extends BaseController
     public function datatablesTagihan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         /*$nmeng = array('January', 'February', 'March', '');
         $nmtur = array('Januari', 'Februari', 'Maret, '');
@@ -84,7 +84,7 @@ class TagihanController extends BaseController
     public function actionGenerate(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'payment_channel' => 'required',

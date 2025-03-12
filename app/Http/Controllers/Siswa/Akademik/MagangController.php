@@ -21,7 +21,7 @@ class MagangController extends BaseController{
     public function viewMagang(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
     	return view('siswa/akademik/magang/view-magang',compact('auth_data'));
 
@@ -29,7 +29,7 @@ class MagangController extends BaseController{
 
     public function datatablesMagang(Request $request){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibSiswa::fetchDataMagang($auth_data, $auth_data->pengguna->id_pengguna);
 

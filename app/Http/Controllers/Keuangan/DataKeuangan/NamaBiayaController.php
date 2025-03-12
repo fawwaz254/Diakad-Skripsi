@@ -24,7 +24,7 @@ class NamaBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('keuangan/data-keuangan/nama-biaya/view-nama-biaya', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class NamaBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class NamaBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_nama_biaya = LibDataKeuangan::fetchDataNamaBiaya($auth_data, $id);
 
@@ -57,7 +57,7 @@ class NamaBiayaController extends BaseController
     public function datatablesNamaBiaya(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataKeuangan::fetchDataNamaBiaya($auth_data);
 
         return Datatables::of($list_data)
@@ -91,14 +91,14 @@ class NamaBiayaController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $namaBiaya                       = new Biaya;
                 $namaBiaya->id_biaya             = $id;
                 $namaBiaya->nm_biaya             = $input->nm_biaya;
                 $namaBiaya->keterangan_biaya     = $input->keterangan_biaya;
-                $namaBiaya->id_sekolah           = $input->auth_data->pengguna->id_sekolah;
-                $namaBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
+                $namaBiaya->id_sekolah           = auth_data()->pengguna->id_sekolah;
+                $namaBiaya->created_by           = auth_data()->pengguna->id_pengguna;
                 $namaBiaya->save();
 
                 return [
@@ -111,7 +111,7 @@ class NamaBiayaController extends BaseController
                 $namaBiaya                       = Biaya::find($id);
                 $namaBiaya->nm_biaya             = $input->nm_biaya;
                 $namaBiaya->keterangan_biaya     = $input->keterangan_biaya;
-                $namaBiaya->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                $namaBiaya->updated_by           = auth_data()->pengguna->id_pengguna;
                 $namaBiaya->updated_at           = $now;
                 $namaBiaya->save();
 
@@ -129,7 +129,7 @@ class NamaBiayaController extends BaseController
                 } else {
                     // make object to find id
                     $namaBiaya               = Biaya::find($id);
-                    $namaBiaya->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $namaBiaya->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $namaBiaya->save();
 
                     $namaBiaya->delete();

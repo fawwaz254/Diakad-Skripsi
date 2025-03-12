@@ -43,7 +43,7 @@ class SppController extends BaseController
     public function viewMenuSpp(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('keuangan/sim/spp/view-menu-spp', compact('auth_data'));
     }
@@ -51,7 +51,7 @@ class SppController extends BaseController
     public function viewMenuInput(Request $request, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
@@ -94,7 +94,7 @@ class SppController extends BaseController
     public function viewMenuEditSetting(Request $request, $thn_akademik_semester, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
         $tahun_akademik_semester = $thn_akademik_semester;
@@ -116,7 +116,7 @@ class SppController extends BaseController
     public function viewMenuEditSettingNonSpp(Request $request, $thn_akademik_semester, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
         $tahun_akademik_semester = $thn_akademik_semester;
@@ -142,7 +142,7 @@ class SppController extends BaseController
     public function viewMenuCari(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
@@ -183,7 +183,7 @@ class SppController extends BaseController
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         if ($request->hasFile('file-excel')) {
 
@@ -221,20 +221,20 @@ class SppController extends BaseController
 
                                     if ($tagihan_siswa) {
                                         $pembayaran_biaya = new PembayaranBiaya;
-                                        $pembayaran_biaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                        $pembayaran_biaya->id_pembayaran_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                                         $pembayaran_biaya->id_tagihan_biaya = $tagihan_siswa->id_tagihan_biaya;
-                                        $pembayaran_biaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
+                                        $pembayaran_biaya->id_staff_bayar = auth_data()->pengguna->id_pengguna;
                                         $pembayaran_biaya->id_semester_bayar = $semester->id_semester;
                                         $pembayaran_biaya->besar_pembayaran = $tagihan_siswa->besar_biaya;
                                         $pembayaran_biaya->tgl_pembayaran = $tanggal_bayar;
                                         $pembayaran_biaya->keterangan = "Langsung Lunas";
-                                        $pembayaran_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
+                                        $pembayaran_biaya->created_by = auth_data()->pengguna->id_pengguna;
                                         $pembayaran_biaya->save();
 
                                         $tagihan_siswa->besar_pembayaran = $tagihan_siswa->besar_pembayaran + $pembayaran_biaya->besar_pembayaran;
                                         $tagihan_siswa->tgl_pelunasan = $pembayaran_biaya->tgl_pembayaran;
                                         $tagihan_siswa->is_tagih = 0;
-                                        $tagihan_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                                        $tagihan_siswa->updated_by = auth_data()->pengguna->id_pengguna;
                                         $tagihan_siswa->save();
                                     }
                                 }
@@ -306,20 +306,20 @@ class SppController extends BaseController
 
                                     if ($tagihan_siswa->is_tagih == '1') {
                                         $pembayaran_biaya = new PembayaranBiaya;
-                                        $pembayaran_biaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                        $pembayaran_biaya->id_pembayaran_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                                         $pembayaran_biaya->id_tagihan_biaya = $tagihan_siswa->id_tagihan_biaya;
-                                        $pembayaran_biaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
+                                        $pembayaran_biaya->id_staff_bayar = auth_data()->pengguna->id_pengguna;
                                         $pembayaran_biaya->id_semester_bayar = $semester->id_semester;
                                         $pembayaran_biaya->besar_pembayaran = $tagihan_siswa->besar_biaya;
                                         $pembayaran_biaya->tgl_pembayaran = $tanggal_bayar;
                                         $pembayaran_biaya->keterangan = "Langsung Lunas";
-                                        $pembayaran_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
+                                        $pembayaran_biaya->created_by = auth_data()->pengguna->id_pengguna;
                                         $pembayaran_biaya->save();
 
                                         $tagihan_siswa->besar_pembayaran = $tagihan_siswa->besar_pembayaran + $pembayaran_biaya->besar_pembayaran;
                                         $tagihan_siswa->tgl_pelunasan = $pembayaran_biaya->tgl_pembayaran;
                                         $tagihan_siswa->is_tagih = 0;
-                                        $tagihan_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                                        $tagihan_siswa->updated_by = auth_data()->pengguna->id_pengguna;
                                         $tagihan_siswa->save();
                                     }
                                 }
@@ -408,7 +408,7 @@ class SppController extends BaseController
             ->get();
 
         $bulan = Bulan::find($id_bulan);
-        $sekolah = $input->auth_data->sekolah_data;
+        $sekolah = auth_data()->sekolah_data;
 
         $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first();
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first();
@@ -593,10 +593,10 @@ class SppController extends BaseController
                     $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
                     $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu = (!empty($pembayaran_old_years) ? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
 
-                    $tutup_buku_bulanan_biaya->updated_by = $input->auth_data->pengguna->id_pengguna;
+                    $tutup_buku_bulanan_biaya->updated_by = auth_data()->pengguna->id_pengguna;
                     $tutup_buku_bulanan_biaya->save();
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $tutup_buku_bulanan_biaya = new TutupBukuBulananBiaya;
                     $tutup_buku_bulanan_biaya->id_tutup_buku_bulanan_biaya = $id;
@@ -624,7 +624,7 @@ class SppController extends BaseController
                     $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
                     $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu = (!empty($pembayaran_old_years) ? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
 
-                    $tutup_buku_bulanan_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $tutup_buku_bulanan_biaya->created_by = auth_data()->pengguna->id_pengguna;
                     $tutup_buku_bulanan_biaya->save();
                 }
             }
@@ -658,13 +658,13 @@ class SppController extends BaseController
             $tutup_buku_tahunan_biaya_old = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu])->first();
 
             if ($tutup_buku_tahunan_biaya_now = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first()) {
-                $tutup_buku_tahunan_biaya_now->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tutup_buku_tahunan_biaya_now->updated_by = auth_data()->pengguna->id_pengguna;
             } else {
                 $tutup_buku_tahunan_biaya_now = new TutupBukuTahunanBiaya;
-                $tutup_buku_tahunan_biaya_now->id_tutup_buku_tahunan_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $tutup_buku_tahunan_biaya_now->id_tutup_buku_tahunan_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $tutup_buku_tahunan_biaya_now->id_semester_mulai = $id_semester_mulai;
                 $tutup_buku_tahunan_biaya_now->id_semester_selesai = $id_semester_selesai;
-                $tutup_buku_tahunan_biaya_now->created_by = $input->auth_data->pengguna->id_pengguna;
+                $tutup_buku_tahunan_biaya_now->created_by = auth_data()->pengguna->id_pengguna;
             }
 
             $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
@@ -699,14 +699,14 @@ class SppController extends BaseController
                 ->get();
 
             if ($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first()) {
-                $tutup_buku_bulanan_kas_now->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tutup_buku_bulanan_kas_now->updated_by = auth_data()->pengguna->id_pengguna;
             } else {
                 $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
-                $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $tutup_buku_bulanan_kas_now->id_semester_mulai = $id_semester_mulai;
                 $tutup_buku_bulanan_kas_now->id_semester_selesai = $id_semester_selesai;
                 $tutup_buku_bulanan_kas_now->id_bulan = $id_bulan;
-                $tutup_buku_bulanan_kas_now->created_by = $input->auth_data->pengguna->id_pengguna;
+                $tutup_buku_bulanan_kas_now->created_by = auth_data()->pengguna->id_pengguna;
             }
             $tutup_buku_bulanan_kas_now->kas_spp = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu;
             $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
@@ -736,7 +736,7 @@ class SppController extends BaseController
     public function datatablesMenuCari(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tahun = $input->tahun_akademik_semester;
         $kelas = $input->kelas;
@@ -799,7 +799,7 @@ class SppController extends BaseController
             $date_filter = Carbon::today()->toDateString();
         }
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester = Semester::orderBy('tahun_ajaran', 'asc')->get();
 
         if (empty($tahun_akademik_semester)) {
@@ -907,7 +907,7 @@ class SppController extends BaseController
     public function viewMenuPemasukan(Request $request, $tahun_akademik_semester = null, $id_bulan = null, $print_setting = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -969,7 +969,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerTingkat($auth_data, $input->start_date, $input->end_date);
         $data = [];
@@ -1101,7 +1101,7 @@ class SppController extends BaseController
     public function viewMenuPenerimaan(Request $request, $tahun_akademik_semester = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -1131,7 +1131,7 @@ class SppController extends BaseController
     public function viewMenuDetailPenerimaan(Request $request, $tahun_akademik_semester = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
@@ -1154,7 +1154,7 @@ class SppController extends BaseController
     public function datatablesMenuDetailPenerimaan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $tahun = $input->tahun;
         $tgl_awal = $input->tgl_awal;
@@ -1191,7 +1191,7 @@ class SppController extends BaseController
     public function viewMenuTunggakan(Request $request, $tahun_akademik_semester = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -1247,7 +1247,7 @@ class SppController extends BaseController
     public function viewMenuTunggakanAlumni(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('keuangan/sim/spp/view-menu-tunggakan-alumni', compact('auth_data'));
     }
 
@@ -1323,7 +1323,7 @@ class SppController extends BaseController
     public function viewMenuSetting(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
@@ -1336,7 +1336,7 @@ class SppController extends BaseController
     public function datatablesMenuSetting(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tahun = $input->tahun_akademik_semester;
 
@@ -1406,7 +1406,7 @@ class SppController extends BaseController
     public function viewMenuSettingNonSpp(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
@@ -1421,7 +1421,7 @@ class SppController extends BaseController
     public function datatablesMenuSettingNonSpp(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tahun = $input->tahun_akademik_semester;
 
@@ -1476,7 +1476,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1487,7 +1487,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = TutupBukuTahunanBiaya::with('semester_mulai', 'semester_selesai')->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
@@ -1514,7 +1514,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1533,7 +1533,7 @@ class SppController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data = TutupBukuTahunanBiaya::find($id);
 
@@ -1544,7 +1544,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'jml_tunggakan_biaya' => 'required',
@@ -1586,14 +1586,14 @@ class SppController extends BaseController
                     ];
                 }
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $data = new TutupBukuTahunanBiaya;
                 $data->id_tutup_buku_tahunan_biaya = $id;
                 $data->id_semester_mulai = $semester_mulai->id_semester;
                 $data->id_semester_selesai = $semester_selesai->id_semester;
                 $data->jml_tunggakan_biaya = $input->jml_tunggakan_biaya;
-                $data->created_by = $input->auth_data->pengguna->id_pengguna;
+                $data->created_by = auth_data()->pengguna->id_pengguna;
                 $data->save();
 
                 $cek = TutupBukuBulananKas::where(['id_bulan' => 6, 'id_semester_mulai' => $semester_mulai_tahun_lalu->id_semester, 'id_semester_selesai' => $semester_selesai_tahun_lalu->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
@@ -1611,7 +1611,7 @@ class SppController extends BaseController
             } elseif ($mode == 'edit') {
                 $data = TutupBukuTahunanBiaya::find($id);
                 $data->jml_tunggakan_biaya = $input->jml_tunggakan_biaya;
-                $data->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $data->updated_by = auth_data()->pengguna->id_pengguna;
                 $data->save();
 
                 $cek = TutupBukuBulananKas::where(['id_bulan' => 6, 'id_semester_mulai' => $semester_mulai_tahun_lalu->id_semester, 'id_semester_selesai' => $semester_selesai_tahun_lalu->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
@@ -1634,7 +1634,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1645,7 +1645,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = TutupBukuBulananKas::where('id_bulan', 6)->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
@@ -1672,7 +1672,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1691,7 +1691,7 @@ class SppController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data = TutupBukuBulananKas::find($id);
 
@@ -1702,7 +1702,7 @@ class SppController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'kas_akhir_bulan' => 'required',
@@ -1739,7 +1739,7 @@ class SppController extends BaseController
                     ];
                 }
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $data = new TutupBukuBulananKas;
                 $data->id_tutup_buku_bulanan_kas = $id;
@@ -1747,7 +1747,7 @@ class SppController extends BaseController
                 $data->id_semester_selesai = $semester_selesai->id_semester;
                 $data->id_bulan = 6;
                 $data->kas_akhir_bulan = $input->kas_akhir_bulan;
-                $data->created_by = $input->auth_data->pengguna->id_pengguna;
+                $data->created_by = auth_data()->pengguna->id_pengguna;
                 $data->save();
 
                 return [
@@ -1759,7 +1759,7 @@ class SppController extends BaseController
 
                 $data = TutupBukuBulananKas::find($id);
                 $data->kas_akhir_bulan = $input->kas_akhir_bulan;
-                $data->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $data->updated_by = auth_data()->pengguna->id_pengguna;
                 $data->save();
 
                 return [
@@ -1774,7 +1774,7 @@ class SppController extends BaseController
     public function actionMenuSettingSaveSpp(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'tahun_akademik_semester' => 'required',
@@ -1813,7 +1813,7 @@ class SppController extends BaseController
                     $detail_biaya = array();
                     $tagihan = array();
 
-                    $id_detail_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_detail_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     if ($bulan->id_bulan < 7) {
                         $id_semester = $semester_selesai->id_semester;
                     } else {
@@ -1823,7 +1823,7 @@ class SppController extends BaseController
                     if ($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()) {
                     } else {
                         $biaya_sekolah = new BiayaSekolah;
-                        $biaya_sekolah->id_biaya_sekolah = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $biaya_sekolah->id_biaya_sekolah = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $biaya_sekolah->id_kelompok_biaya = $input->id_kelompok_biaya;
                         $biaya_sekolah->id_semester = $id_semester;
                         $biaya_sekolah->besar_biaya_sekolah = (1 * $input->nominal_spp_juli) + (11 * $input->nominal_spp_non_juli);
@@ -1861,14 +1861,14 @@ class SppController extends BaseController
                             'id_jenis_detail_biaya' => 4,
                             'id_bulan' => $bulan->id_bulan,
                             'created_at' => $now,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            'created_by' => auth_data()->pengguna->id_pengguna,
                             'updated_at' => $now,
                         );
                     }
 
                     foreach ($data_siswa as $siswa) {
                         $tagihan[] = array(
-                            'id_tagihan_biaya' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id_tagihan_biaya' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_siswa' => $siswa->id_siswa,
                             'id_kelas' => $siswa->id_kelas,
                             'id_detail_biaya' => $id_detail_biaya,
@@ -1876,7 +1876,7 @@ class SppController extends BaseController
                             'denda_biaya' => 0,
                             'is_tagih' => 1,
                             'created_at' => $now,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            'created_by' => auth_data()->pengguna->id_pengguna,
                             'updated_at' => $now,
                         );
                     }
@@ -1913,7 +1913,7 @@ class SppController extends BaseController
     public function actionMenuSettingSaveNonSpp(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'tahun_akademik_semester' => 'required',
@@ -1954,7 +1954,7 @@ class SppController extends BaseController
                 $biaya_sekolah->save();
             } else {
                 $biaya_sekolah = new BiayaSekolah;
-                $biaya_sekolah->id_biaya_sekolah = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $biaya_sekolah->id_biaya_sekolah = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $biaya_sekolah->id_kelompok_biaya = $input->id_kelompok_biaya;
                 $biaya_sekolah->id_semester = $id_semester;
                 $biaya_sekolah->besar_biaya_sekolah = $input->besar_biaya;
@@ -1969,7 +1969,7 @@ class SppController extends BaseController
                 $tagihan = array();
 
                 foreach ($data_siswa as $siswa) {
-                    $id_detail_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_detail_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $besar_biaya = $input->besar_biaya;
 
                     $detail_biaya[] = array(
@@ -1981,12 +1981,12 @@ class SppController extends BaseController
                         'besar_biaya' => $besar_biaya,
                         'id_jenis_detail_biaya' => $input->id_jenis_detail_biaya,
                         'created_at' => $now,
-                        'created_by' => $input->auth_data->pengguna->id_pengguna,
+                        'created_by' => auth_data()->pengguna->id_pengguna,
                         'updated_at' => $now,
                     );
 
                     $tagihan[] = array(
-                        'id_tagihan_biaya' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                        'id_tagihan_biaya' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                         'id_siswa' => $siswa->id_siswa,
                         'id_kelas' => $siswa->id_kelas,
                         'id_detail_biaya' => $id_detail_biaya,
@@ -1994,7 +1994,7 @@ class SppController extends BaseController
                         'denda_biaya' => 0,
                         'is_tagih' => 1,
                         'created_at' => $now,
-                        'created_by' => $input->auth_data->pengguna->id_pengguna,
+                        'created_by' => auth_data()->pengguna->id_pengguna,
                         'updated_at' => $now,
                     );
                 }
@@ -2025,7 +2025,7 @@ class SppController extends BaseController
     public function actionSaveInputPenerimaan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
@@ -2057,12 +2057,12 @@ class SppController extends BaseController
 
             DB::beginTransaction();
             try {
-                $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $input->auth_data->pengguna->id_pengguna])->first();
+                $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => auth_data()->pengguna->id_pengguna])->first();
 
                 if ($rapb) {
                 } else {
                     $rapb = new Rapb;
-                    $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $rapb->id_rapb = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $rapb->id_semester_mulai = $semester_mulai->id_semester;
                     $rapb->id_semester_selesai = $semester_selesai->id_semester;
@@ -2070,23 +2070,23 @@ class SppController extends BaseController
                     $rapb->tgl_rapb = $now->format('Y-m-d');
                     $rapb->prioritas_rapb = 3;
                     $rapb->dana_perkiraan_rapb = 0;
-                    $rapb->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $rapb->created_by = auth_data()->pengguna->id_pengguna;
 
-                    if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    if ($actor = Staff::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                         $rapb->id_unit_kerja = $actor->id_unit_kerja;
-                    } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    } else if ($actor = Guru::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                         $rapb->id_unit_kerja = $actor->id_unit_kerja;
                     }
 
                     if ($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                         ->where('guru.jenis_jabatan', '=', 2)
-                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                         ->first()
                     ) {
                         $rapb->id_pengguna_kepala_unit = $kepala_unit_keuangan->id_pengguna;
                     } else if ($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                         ->where('staff.jenis_jabatan', '=', 2)
-                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                         ->first()
                     ) {
                         $rapb->id_pengguna_kepala_keuangan = $kepala_unit_keuangan->id_pengguna;
@@ -2097,20 +2097,20 @@ class SppController extends BaseController
                 if (isset($input->id_realisasi)) {
                     $realisasi = Realisasi::find($input->id_realisasi);
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $realisasi = new Realisasi;
                     $realisasi->id_realisasi = $id;
                     $realisasi->id_semester_realisasi = $id_semester;
                     $realisasi->id_rapb = $rapb->id_rapb;
-                    $realisasi->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $realisasi->created_by = auth_data()->pengguna->id_pengguna;
                     $realisasi->termin_dana_realisasi = 1;
                     $realisasi->is_hutang_realisasi = 0;
                 }
 
-                if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                if ($actor = Staff::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                     $realisasi->id_unit_kerja = $actor->id_unit_kerja;
-                } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                } else if ($actor = Guru::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                     $realisasi->id_unit_kerja = $actor->id_unit_kerja;
                 }
                 $realisasi->nm_realisasi = $input->nm_realisasi;
@@ -2143,7 +2143,7 @@ class SppController extends BaseController
         $input = (object) $request->input();
 
         $pengeluaran = Realisasi::find($id);
-        $pengeluaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
+        $pengeluaran->deleted_by = auth_data()->pengguna->id_pengguna;
         $pengeluaran->save();
 
         $pengeluaran->delete();
@@ -2158,7 +2158,7 @@ class SppController extends BaseController
     public function actionGetKeterangan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tahun_akademik_semester = $input->tahun_akademik_semester;
         if (empty($tahun_akademik_semester)) {
@@ -2183,7 +2183,7 @@ class SppController extends BaseController
     public function actionSaveInputTunggakan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'tahun_akademik_semester' => 'required',
@@ -2206,7 +2206,7 @@ class SppController extends BaseController
 
             DB::beginTransaction();
             try {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $pembayaran_tunggakan = new PembayaranTunggakan;
                 $pembayaran_tunggakan->id_pembayaran_tunggakan = $id;
@@ -2215,7 +2215,7 @@ class SppController extends BaseController
                 $pembayaran_tunggakan->besar_pembayaran = $input->besar_pembayaran;
                 $pembayaran_tunggakan->tgl_pembayaran = date_format(date_create($input->tgl_pembayaran), "Y-m-d");
                 $pembayaran_tunggakan->keterangan = $input->keterangan;
-                $pembayaran_tunggakan->created_by = $input->auth_data->pengguna->id_pengguna;
+                $pembayaran_tunggakan->created_by = auth_data()->pengguna->id_pengguna;
                 $pembayaran_tunggakan->save();
 
                 DB::commit();
@@ -2270,7 +2270,7 @@ class SppController extends BaseController
         } else {
             $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna')
                 // join untu mendapatkan id_bulan dan semester untuk tahun
-                ->leftJoin('tagihan_biaya as tb', 'pembayaran_biaya.id_tagihan_biaya', '=', 'tb.id_tagjihan_biaya')
+                ->leftJoin('tagihan_biaya as tb', 'pembayaran_biaya.id_tagihan_biaya', '=', 'tb.id_tagihan_biaya')
                 ->leftJoin('detail_biaya as db', 'tb.id_detail_biaya', '=', 'db.id_detail_biaya')
                 ->leftJoin('biaya_sekolah as bs', 'bs.id_biaya_sekolah', '=', 'db.id_biaya_sekolah')
                 ->leftJoin('semester as s', 'bs.id_semester', '=', 's.id_semester')
@@ -2400,7 +2400,7 @@ class SppController extends BaseController
 
         $tagihan_biaya = TagihanBiaya::find($id);
         if ($tagihan_biaya) {
-            $tagihan_biaya->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $tagihan_biaya->deleted_by = auth_data()->pengguna->id_pengguna;
             $tagihan_biaya->save();
             $tagihan_biaya->delete(); //untuk semestara, jika sudah clear maka akan permanent delete
             return $id;
@@ -2418,7 +2418,7 @@ class SppController extends BaseController
     public function actionMenuUploadTunggakanAlumni(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if ($request->hasFile('file-excel')) {
 
@@ -2438,7 +2438,7 @@ class SppController extends BaseController
                             if ($tunggakan = TunggakanAlumni::where('nis', $item["nis"])->first()) {
                             } else {
                                 $tunggakan = new TunggakanAlumni;
-                                $tunggakan->id_tunggakan_alumni = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $tunggakan->id_tunggakan_alumni = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $tunggakan->nis = $item["nis"];
                             }
 
@@ -2486,7 +2486,7 @@ class SppController extends BaseController
             $selisih = '0';
         }
 
-        $tagihan_biaya->deleted_by = $input->auth_data->pengguna->id_pengguna;
+        $tagihan_biaya->deleted_by = auth_data()->pengguna->id_pengguna;
         $tagihan_biaya->save();
         $tagihan_biaya->delete(); //untuk semestara, jika sudah clear maka akan permanent delete
 

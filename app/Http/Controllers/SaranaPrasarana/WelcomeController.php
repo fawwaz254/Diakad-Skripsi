@@ -17,7 +17,7 @@ class WelcomeController extends BaseController{
     public function indexWelcome(Request $request){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if($start_monkes = Setting::where('key_setting', 'start_monkes')->first()){
             $start_monkes = $start_monkes->value;

@@ -25,7 +25,7 @@ class GuruKpiController extends BaseController
     public function viewIndexKpi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester = Semester::get();
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         return (view('guru/guru-kpi/rekap-nilai-kpi/index', compact('semester', 'kelas', 'auth_data')));
@@ -33,7 +33,7 @@ class GuruKpiController extends BaseController
     public function viewIndexInputKpi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // $semester = Semester::get();
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         return (view('guru/guru-kpi/input-nilai-kpi/index', compact('kelas', 'auth_data')));
@@ -42,7 +42,7 @@ class GuruKpiController extends BaseController
     public function RekapNilaiKpiSiswa(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kpi = KategoriKpi::get();
         $siswa = Siswa::where('id_siswa', $id_siswa)->first();
         $semester = Semester::where('is_aktif_semester', 1)->first();
@@ -62,7 +62,7 @@ class GuruKpiController extends BaseController
     public function InputNilaiKpiSiswa(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = Siswa::where('id_siswa', $id_siswa)->first();
         // dd($siswa->kelas->tingkat);
         $semester = Semester::where('is_aktif_semester', 1)->first();
@@ -87,7 +87,7 @@ class GuruKpiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'kelas' => 'required',
@@ -111,7 +111,7 @@ class GuruKpiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester = Semester::where('is_aktif_semester', 1)->first()->id_semester;
         $validator = Validator::make($request->all(), [
             'kelas' => 'required',
@@ -134,7 +134,7 @@ class GuruKpiController extends BaseController
     public function viewIndexKpiDetail(Request $request, $kelas, $semester)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_semester = $semester;
         $semester = Semester::where('id_semester', $data_semester)->first();
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $kelas);
@@ -147,7 +147,7 @@ class GuruKpiController extends BaseController
     public function viewIndexInputKpiDetail(Request $request, $kelas, $semester)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_semester = $semester;
         $semester = Semester::where('id_semester', $data_semester)->first();
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $kelas);
@@ -160,7 +160,7 @@ class GuruKpiController extends BaseController
     public function datatablesRekapNilaiKpiSiswa(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
 
@@ -178,7 +178,7 @@ class GuruKpiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // dd($input);
         $semester = Semester::where('is_aktif_semester', 1)->first();
 
@@ -212,7 +212,7 @@ class GuruKpiController extends BaseController
             $now1 = Carbon::now();
 
             $kpi = new Kpi;
-            $kpi->id_kpi = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+            $kpi->id_kpi = auth_data()->sekolah_data->prefix . strtotime($now1) . uniqid();
             $kpi->id_semester = $input->id_semester;
             $kpi->id_siswa = $input->id_siswa;
             $kpi->id_kelas = $siswa->kelas->id_kelas;
@@ -222,7 +222,7 @@ class GuruKpiController extends BaseController
             // $haskpi = new HasKpi;
             foreach ($kategori as $item) {
                 $haskpi = new HasKpi;
-                $haskpi->id_has_kpi = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+                $haskpi->id_has_kpi = auth_data()->sekolah_data->prefix . strtotime($now1) . uniqid();
                 $haskpi->id_kpi = $kpi->id_kpi;
                 $haskpi->id_kategori_kpi = $item->id_kategori_kpi;
                 $haskpi->created_at = $now1;
@@ -232,7 +232,7 @@ class GuruKpiController extends BaseController
             foreach ($input->id_komponen as $key => $value) {
                 $now1 = Carbon::now();
                 $nilai = new NilaiKomponenKpi;
-                $nilai->id_nilai_kpi = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+                $nilai->id_nilai_kpi = auth_data()->sekolah_data->prefix . strtotime($now1) . uniqid();
                 $nilai->id_kpi = $kpi->id_kpi;
                 $nilai->id_komponen = $input->id_komponen[$key];
                 $nilai->id_siswa = $siswa->id_siswa;

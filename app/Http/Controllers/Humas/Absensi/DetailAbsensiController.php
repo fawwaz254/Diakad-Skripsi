@@ -31,7 +31,7 @@ class DetailAbsensiController extends Controller
     public function selectHistoriAbsensi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_unit_kerja = UnitKerja::all();
         // $pengguna = Guru
         if (empty($start_date) || empty($end_date)) {
@@ -44,7 +44,7 @@ class DetailAbsensiController extends Controller
     public function actionGetPengguna(Request $request)
     {
         $input          = (object) $request->input();
-        $auth_data      = $input->auth_data;
+        $auth_data      = auth_data();
 
         if ($input->unit_kerja == "1") {
             $pengguna = pengguna::where('status_join_table', 1)->where('username', '!=', 'admin')
@@ -72,7 +72,7 @@ class DetailAbsensiController extends Controller
 
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_unit_kerja = UnitKerja::all();
         $nm_pengguna = Pengguna::where('id_pengguna', $pengguna)->pluck('nm_pengguna')->first();
 
@@ -208,7 +208,7 @@ class DetailAbsensiController extends Controller
     public function selectHistoriAbsensiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_kelas = Kelas::where('is_aktif', 1)->get();
         // $pengguna = Guru
         if (empty($start_date) || empty($end_date)) {
@@ -221,7 +221,7 @@ class DetailAbsensiController extends Controller
     public function actionGetSiswa(Request $request)
     {
         $input          = (object) $request->input();
-        $auth_data      = $input->auth_data;
+        $auth_data      = auth_data();
 
 
         $pengguna = pengguna::where('status_join_table', 3)
@@ -243,7 +243,7 @@ class DetailAbsensiController extends Controller
         // dd($pengguna);
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_kelas = Kelas::where('is_aktif', 1)->get();
         $nm_pengguna = Pengguna::where('id_pengguna', $pengguna)->pluck('nm_pengguna')->first();
 
@@ -363,7 +363,7 @@ class DetailAbsensiController extends Controller
     public function cetakDetailAbsensi(Request $request, $id_pengguna, $start_date, $end_date)
     {
         // $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
+        // $auth_data = auth_data();
         // $list_unit_kerja = UnitKerja::all();
         $nm_pengguna = Pengguna::where('id_pengguna', $id_pengguna)->pluck('nm_pengguna')->first();
 

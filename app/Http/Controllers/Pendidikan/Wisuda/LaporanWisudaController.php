@@ -25,7 +25,7 @@ class LaporanWisudaController extends BaseController{
     public function viewLaporanWisuda(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data);
 

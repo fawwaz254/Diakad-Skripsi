@@ -26,7 +26,7 @@ class LaporanKerjaHarianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/mgmp/laporan-harian-mgmp/view-data-laporan-harian-mgmp', compact('auth_data'));
     }
@@ -34,9 +34,9 @@ class LaporanKerjaHarianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $waktu = Carbon::today()->format('d-M-Y');
-        $mapel = CategoriFileGuru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->whereHas('categori_file_mgmp', function ($query) {
+        $mapel = CategoriFileGuru::where('id_pengguna', auth_data()->pengguna->id_pengguna)->with('categori_file_mgmp')->whereHas('categori_file_mgmp', function ($query) {
             $query->where('is_aktif', 1);
         })->get();
         $jenis = JenisMGMP::all();
@@ -46,7 +46,7 @@ class LaporanKerjaHarianController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
@@ -88,19 +88,19 @@ class LaporanKerjaHarianController extends Controller
 
             if ($mode == 'add') {
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $data                               = new LaporanKerjaHarianMGMP();
                 $data->id_laporan_kerja_harian_mgmp = $id;
-                $data->id_role                      = $input->auth_data->role_aktif->id_role;
+                $data->id_role                      = auth_data()->role_aktif->id_role;
                 $data->tanggal                      = date_format(date_create($input->tanggal), "Y-m-d");
                 $data->jenis                        = $input->jenis;
                 $data->mapel                        = $input->mata_pelajaran;
                 $data->keterangan_progres           = $input->keterangan;
                 $data->status                       = $input->status;
 
-                $data->id_pengguna                  = $input->auth_data->pengguna->id_pengguna;
-                $data->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $data->id_pengguna                  = auth_data()->pengguna->id_pengguna;
+                $data->created_by                   = auth_data()->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
 
@@ -114,7 +114,7 @@ class LaporanKerjaHarianController extends Controller
                             'message' => $validator->errors()->first()
                         ];
                     } else {
-                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $id, request()->file, 'public');
                         $data->path_file = $file;
 
@@ -133,13 +133,13 @@ class LaporanKerjaHarianController extends Controller
                 ];
             } elseif ($mode == 'edit') {
                 $data                        = LaporanKerjaHarianMGMP::find($id);
-                $data->id_role               = $input->auth_data->role_aktif->id_role;
+                $data->id_role               = auth_data()->role_aktif->id_role;
                 $data->tanggal               = date_format(date_create($input->tanggal), "Y-m-d");
                 $data->jenis                        = $input->jenis;
                 $data->mapel                        = $input->mata_pelajaran;
                 $data->keterangan_progres           = $input->keterangan;
                 $data->status                       = $input->status;
-                $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $data->updated_by                   = auth_data()->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
 
@@ -153,7 +153,7 @@ class LaporanKerjaHarianController extends Controller
                         ];
                     } else {
 
-                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $id, request()->file, 'public');
                         $data->path_file = $file;
 
@@ -173,7 +173,7 @@ class LaporanKerjaHarianController extends Controller
             } elseif ($mode == 'delete') {
 
                 $data               = LaporanKerjaHarianMGMP::find($id);
-                $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $data->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $data->save();
                 $data->delete();
 
@@ -189,10 +189,10 @@ class LaporanKerjaHarianController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
-        $list_data = LaporanKerjaHarianMGMP::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
-            ->where('id_role', $input->auth_data->role_aktif->id_role)->with('mapel')->orderBy('tanggal', 'DESC')
+        $list_data = LaporanKerjaHarianMGMP::where('id_pengguna', auth_data()->pengguna->id_pengguna)
+            ->where('id_role', auth_data()->role_aktif->id_role)->with('mapel')->orderBy('tanggal', 'DESC')
             ->get();
 
         return Datatables::of($list_data)
@@ -232,9 +232,9 @@ class LaporanKerjaHarianController extends Controller
     public function editKerjaHarian(Request $request, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $laporan_kerja_harian_mgmp = LaporanKerjaHarianMGMP::findOrFail($id);
-        $mapel = CategoriFileGuru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
+        $mapel = CategoriFileGuru::where('id_pengguna', auth_data()->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
         $jenis = JenisMGMP::all();
         return view('guru/mgmp/laporan-harian-mgmp/edit-data-laporan-harian-mgmp', compact('auth_data', 'mapel', 'laporan_kerja_harian_mgmp', 'jenis'));
     }
@@ -242,7 +242,7 @@ class LaporanKerjaHarianController extends Controller
     public function viewLaporanKelompokMGMP(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('guru/mgmp/laporan-harian-mgmp/view-data-laporan-harian-mgmp-kelompok', compact('auth_data'));
     }
 
@@ -250,7 +250,7 @@ class LaporanKerjaHarianController extends Controller
     {
 
         $input = (object) $request->input();
-        $id_pengguna = $input->auth_data->pengguna->id_pengguna;
+        $id_pengguna = auth_data()->pengguna->id_pengguna;
         $list_data = CategoriFileMGMP::where('is_aktif', 1)->with('category_file_guru.pengguna')->whereHas('category_file_guru', function ($query) use ($id_pengguna) {
             $query->where('id_pengguna',  $id_pengguna);
         })->get();
@@ -278,7 +278,7 @@ class LaporanKerjaHarianController extends Controller
     public function detailLaporanKelompokMGMP(Request $request, $id  = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data = CategoriFileGuru::where('category_file_mgmp_id', $id)->with('pengguna')->get();
         return view('guru/mgmp/laporan-harian-mgmp/detail-data-laporan-harian-mgmp-kelompok', compact('auth_data', 'data', 'id'));
     }
@@ -286,9 +286,9 @@ class LaporanKerjaHarianController extends Controller
     public function datatablesDetailKerjaHarianKelompokMGMP(Request $request, $id  = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
-        $list_data = LaporanKerjaHarianMGMP::where('id_role', $input->auth_data->role_aktif->id_role)
+        $list_data = LaporanKerjaHarianMGMP::where('id_role', auth_data()->role_aktif->id_role)
             ->where('mapel', $id)
             ->with('mapel', 'pengguna')
             ->orderBy('tanggal', 'DESC')
@@ -327,9 +327,9 @@ class LaporanKerjaHarianController extends Controller
     public function print(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
-        $list_data = LaporanKerjaHarianMGMP::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
+        $list_data = LaporanKerjaHarianMGMP::where('id_pengguna', auth_data()->pengguna->id_pengguna)
             ->orderBy('tanggal', 'DESC')
             ->get();
 

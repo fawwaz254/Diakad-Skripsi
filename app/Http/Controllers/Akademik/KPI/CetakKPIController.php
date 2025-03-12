@@ -18,7 +18,7 @@ class CetakKPIController extends Controller
     public function viewCetakKPI(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
         if ($tanggal->value != null) {
             $tanggal_cetak = $tanggal->value;
@@ -32,7 +32,7 @@ class CetakKPIController extends Controller
     public function datatablesViewCetakKPI(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $point_kpi = PointKPI::where('id_semester', $data_semester_aktif->id_semester)->where('jenis', '1')->get();
         $point_mengaji_kpi = PointKPI::where('id_semester', $data_semester_aktif->id_semester)->where('jenis', '3')->get()->count();
@@ -57,7 +57,7 @@ class CetakKPIController extends Controller
     public function detailCetakKPI(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
 
         return view('akademik/kpi/cetak-kpi/view-detail-cetak-kpi', compact('auth_data', 'id_kelas'));
@@ -66,7 +66,7 @@ class CetakKPIController extends Controller
     public function datatablesKelompokKPI(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $list_data = Siswa::where('id_kelas', $id_kelas)->with('pengguna', 'kelas');

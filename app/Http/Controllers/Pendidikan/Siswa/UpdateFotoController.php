@@ -30,11 +30,11 @@ class UpdateFotoController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
-        $jurusan = Jurusan::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
-        $jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
-        $status_pengguna = StatusPengguna::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+        $jurusan = Jurusan::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
+        $jalur = Jalur::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
+        $status_pengguna = StatusPengguna::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
             ->where('status_join_table', '=', 3)
             ->get();
         $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')
@@ -50,7 +50,7 @@ class UpdateFotoController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('pendidikan/siswa/update-foto/view-batch-upload-foto', compact('auth_data'));
     }
@@ -59,7 +59,7 @@ class UpdateFotoController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $validator = Validator::make($request->all(), []);
 
         if ($validator->fails()) {
@@ -79,15 +79,15 @@ class UpdateFotoController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna);
 
 
-        $jurusan = Jurusan::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
+        $jurusan = Jurusan::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
         $kelas = Kelas::where('id_jurusan', '=', $id_jurusan)->where('is_aktif', 1)->get();
-        $jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
-        $status_pengguna = StatusPengguna::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+        $jalur = Jalur::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
+        $status_pengguna = StatusPengguna::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
             ->where('status_join_table', '=', 3)
             ->get();
         $thn_masuk_siswa_list = Siswa::select('thn_masuk_siswa')
@@ -102,7 +102,7 @@ class UpdateFotoController extends BaseController
     public function datatablesUpdateFoto(Request $request, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna);
 
@@ -129,7 +129,7 @@ class UpdateFotoController extends BaseController
     public function viewUpload(Request $request, $id_pengguna)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('pendidikan/siswa/update-foto/view-upload-foto', compact('auth_data', 'id_pengguna'));
     }
@@ -137,7 +137,7 @@ class UpdateFotoController extends BaseController
     public function actionUpdateFoto(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
@@ -154,14 +154,14 @@ class UpdateFotoController extends BaseController
                 ]);
 
 
-                $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
 
                 $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/siswa/' . $id, request()->file, 'public');
 
                 //save file name to database
                 $siswa                          = Pengguna::find($id);
                 $siswa->path_foto_pengguna      = $file;
-                $siswa->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                $siswa->updated_by              = auth_data()->pengguna->id_pengguna;
                 $siswa->save();
 
                 return [
@@ -176,7 +176,7 @@ class UpdateFotoController extends BaseController
     public function actionBatchUploadFoto(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -194,14 +194,14 @@ class UpdateFotoController extends BaseController
         $filename = pathinfo($upload_image->getClientOriginalName(), PATHINFO_FILENAME);
 
         if ($siswa = Siswa::where('nis_siswa', $filename)->first()) {
-            $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+            $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
 
             $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/siswa/' . $siswa->id_pengguna, $upload_image, 'public');
 
             //save file name to database
             $siswa                          = Pengguna::find($siswa->id_pengguna);
             $siswa->path_foto_pengguna      = $file;
-            $siswa->updated_by              = $input->auth_data->pengguna->id_pengguna;
+            $siswa->updated_by              = auth_data()->pengguna->id_pengguna;
             $siswa->save();
 
             return Response::json('success', 200);

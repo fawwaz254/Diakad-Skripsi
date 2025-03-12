@@ -20,7 +20,7 @@ class RaporSisipanSTSController extends Controller
     public function viewRaporSisipanSTS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
 
         return view('wali-murid/rapor-sisipan/view-cetak-sts', compact('auth_data'));
@@ -31,7 +31,7 @@ class RaporSisipanSTSController extends Controller
         // $id_semester, $id_kelas
         set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if ($id_semester == '0') {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);

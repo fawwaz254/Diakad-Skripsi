@@ -33,13 +33,13 @@ class AbsensiSiswaController extends BaseController
 {
     public function viewAbsensiSiswa(Request $request, $id_semester = null, $id_jurusan = null, $id_kelas = null, $tgl_mulai = null, $tgl_selesai = null){
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 
 		$data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
 		$data_kelas = LibKelas::fetchDataKelas($auth_data);      
 
-	    $jurusan = Jurusan::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->get();
+	    $jurusan = Jurusan::where('id_sekolah','=',auth_data()->pengguna->id_sekolah)->get();
 
 		return view('pendidikan/laporan-akademik/absensi-siswa/view-absensi-siswa',compact('auth_data', 'data_semester', 'data_kelas', 'id_semester', 'id_kelas','jurusan', 'id_jurusan', 'tgl_selesai', 'tgl_mulai'));
   	}
@@ -47,7 +47,7 @@ class AbsensiSiswaController extends BaseController
   	public function actionViewAbsensiSiswa(Request $request){
       # code...
       $input = (object) $request->input();
-      $auth_data = $input->auth_data;
+      $auth_data = auth_data();
       $validator = Validator::make($request->all(), [
           'tgl_mulai' 	=> 'required',
           'tgl_selesai' => 'required'

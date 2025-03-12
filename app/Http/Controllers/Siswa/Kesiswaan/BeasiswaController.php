@@ -27,7 +27,7 @@ class BeasiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('siswa/kesiswaan/beasiswa/view-beasiswa', compact('auth_data'));
     }
@@ -35,7 +35,7 @@ class BeasiswaController extends BaseController
     public function datatablesBeasiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa')
                                     ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')

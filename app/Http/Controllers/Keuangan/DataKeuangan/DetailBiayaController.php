@@ -29,7 +29,7 @@ class DetailBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $biaya_sekolah = BiayaSekolah::with('kelompok', 'semester')->find($id);
 
@@ -40,7 +40,7 @@ class DetailBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
@@ -58,7 +58,7 @@ class DetailBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -82,7 +82,7 @@ class DetailBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -106,7 +106,7 @@ class DetailBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_biaya_sekolah = LibDataKeuangan::fetchDataBiayaSekolah($auth_data, 1);
 
@@ -127,7 +127,7 @@ class DetailBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_biaya_sekolah = LibDataKeuangan::fetchDataBiayaSekolah($auth_data, 1);
 
@@ -148,7 +148,7 @@ class DetailBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if ($input->id_jenis_detail_biaya == 4) {
             // ambil data bulan
@@ -163,7 +163,7 @@ class DetailBiayaController extends BaseController
     public function datatablesDetailBiaya2(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataKeuangan::fetchDataDetailBiaya($auth_data, null, "1");
         $list_data = $list_data->where('detail_biaya.id_biaya_sekolah', $id);
 
@@ -223,7 +223,7 @@ class DetailBiayaController extends BaseController
     public function datatablesDetailBiaya(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataKeuangan::fetchDataDetailBiaya($auth_data, null, "1");
 
         if (!empty($input->tahun_akademik_semester)) {
@@ -311,7 +311,7 @@ class DetailBiayaController extends BaseController
 
                 if (!empty($input->id_bulan)) {
                     foreach ($input->id_bulan as $id_bulan) {
-                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                         $detailBiaya                                = new DetailBiaya;
                         $detailBiaya->id_detail_biaya               = $id;
@@ -323,11 +323,11 @@ class DetailBiayaController extends BaseController
                         $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
                         $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
                         $detailBiaya->id_bulan                      = $id_bulan;
-                        $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                        $detailBiaya->created_by                    = auth_data()->pengguna->id_pengguna;
                         $detailBiaya->save();
                     }
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $detailBiaya                                = new DetailBiaya;
                     $detailBiaya->id_detail_biaya               = $id;
@@ -338,7 +338,7 @@ class DetailBiayaController extends BaseController
                     $detailBiaya->besar_biaya                   = $input->besar_biaya;
                     $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
                     $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
-                    $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                    $detailBiaya->created_by                    = auth_data()->pengguna->id_pengguna;
                     $detailBiaya->save();
                 }
 
@@ -361,7 +361,7 @@ class DetailBiayaController extends BaseController
                 if (!empty($input->id_bulan)) {
                     $detailBiaya->id_bulan                      = $input->id_bulan;
                 }
-                $detailBiaya->updated_by                    = $input->auth_data->pengguna->id_pengguna;
+                $detailBiaya->updated_by                    = auth_data()->pengguna->id_pengguna;
                 $detailBiaya->updated_at                    = $now;
                 $detailBiaya->save();
 
@@ -379,7 +379,7 @@ class DetailBiayaController extends BaseController
                 } else {
                     // make object to find id
                     $detailBiaya               = DetailBiaya::find($id);
-                    $detailBiaya->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $detailBiaya->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $detailBiaya->save();
 
                     $detailBiaya->delete();
@@ -423,7 +423,7 @@ class DetailBiayaController extends BaseController
 
                 if (!empty($input->id_bulan)) {
                     foreach ($input->id_bulan as $id_bulan) {
-                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                         $detailBiaya                                = new DetailBiaya;
                         $detailBiaya->id_detail_biaya               = $id;
@@ -435,11 +435,11 @@ class DetailBiayaController extends BaseController
                         $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
                         $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
                         $detailBiaya->id_bulan                      = $id_bulan;
-                        $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                        $detailBiaya->created_by                    = auth_data()->pengguna->id_pengguna;
                         $detailBiaya->save();
                     }
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $detailBiaya                                = new DetailBiaya;
                     $detailBiaya->id_detail_biaya               = $id;
@@ -450,7 +450,7 @@ class DetailBiayaController extends BaseController
                     $detailBiaya->besar_biaya                   = $input->besar_biaya;
                     $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
                     $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
-                    $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                    $detailBiaya->created_by                    = auth_data()->pengguna->id_pengguna;
                     $detailBiaya->save();
                 }
 
@@ -472,7 +472,7 @@ class DetailBiayaController extends BaseController
                 if (!empty($input->id_bulan)) {
                     $detailBiaya->id_bulan                      = $input->id_bulan;
                 }
-                $detailBiaya->updated_by                    = $input->auth_data->pengguna->id_pengguna;
+                $detailBiaya->updated_by                    = auth_data()->pengguna->id_pengguna;
                 $detailBiaya->updated_at                    = $now;
                 $detailBiaya->save();
 
@@ -491,7 +491,7 @@ class DetailBiayaController extends BaseController
                 } else {
                     // make object to find id
                     $detailBiaya               = DetailBiaya::find($id);
-                    $detailBiaya->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $detailBiaya->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $detailBiaya->save();
 
                     $detailBiaya->delete();

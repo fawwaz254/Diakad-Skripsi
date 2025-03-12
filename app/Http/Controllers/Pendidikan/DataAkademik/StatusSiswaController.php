@@ -21,7 +21,7 @@ class StatusSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('pendidikan/data-akademik/status-siswa/view-status-siswa', compact('auth_data'));
     }
@@ -30,7 +30,7 @@ class StatusSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -44,7 +44,7 @@ class StatusSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_status_pengguna = $this->fetchDataStatusSiswa($auth_data, $id);
 
@@ -54,7 +54,7 @@ class StatusSiswaController extends BaseController
     public function datatablesStatusSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = $this->fetchDataStatusSiswa($auth_data);
 
         return Datatables::of($list_data)
@@ -112,7 +112,7 @@ class StatusSiswaController extends BaseController
             if ($mode == 'add') {
                 $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', $input->kode_status_pengguna)
                     ->where('status_join_table', '=', 3)
-                    ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 if ($statusPengguna) {
@@ -121,7 +121,7 @@ class StatusSiswaController extends BaseController
                         'message' => 'Failed To Save Status Siswa!'
                     ];
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $statusPengguna                         = new StatusPengguna;
                     $statusPengguna->id_status_pengguna     = $id;
@@ -129,8 +129,8 @@ class StatusSiswaController extends BaseController
                     $statusPengguna->aktif_status_pengguna  = $input->aktif_status_pengguna;
                     $statusPengguna->kode_status_pengguna   = $input->kode_status_pengguna;
                     $statusPengguna->status_join_table      = 3;
-                    $statusPengguna->id_sekolah             = $input->auth_data->pengguna->id_sekolah;
-                    $statusPengguna->created_by             = $input->auth_data->pengguna->id_pengguna;
+                    $statusPengguna->id_sekolah             = auth_data()->pengguna->id_sekolah;
+                    $statusPengguna->created_by             = auth_data()->pengguna->id_pengguna;
                     $statusPengguna->save();
 
                     return [
@@ -144,7 +144,7 @@ class StatusSiswaController extends BaseController
                 $statusPengguna                         = StatusPengguna::find($id);
                 $statusPengguna->nm_status_pengguna     = $input->nm_status_pengguna;
                 $statusPengguna->aktif_status_pengguna  = $input->aktif_status_pengguna;
-                $statusPengguna->updated_by             = $input->auth_data->pengguna->id_pengguna;
+                $statusPengguna->updated_by             = auth_data()->pengguna->id_pengguna;
                 $statusPengguna->updated_at             = $now;
                 $statusPengguna->save();
 
@@ -162,7 +162,7 @@ class StatusSiswaController extends BaseController
                 } else {
                     // make object to find id
                     $statusPengguna               = StatusPengguna::find($id);
-                    $statusPengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $statusPengguna->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $statusPengguna->save();
 
                     $statusPengguna->delete();

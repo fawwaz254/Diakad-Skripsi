@@ -23,7 +23,7 @@ class VideoController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $role_id = $auth_data->role_aktif->id_role;
         $role_name = $auth_data->role_aktif->nm_role;
@@ -36,7 +36,7 @@ class VideoController extends BaseController
     public function viewVideoModul(Request $request,$id_modul)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $modul = Modul::find($id_modul);
         $menu = Menu::where('id_modul',$id_modul)->where('akses',1)->get();
@@ -48,7 +48,7 @@ class VideoController extends BaseController
     public function viewVideoMenu(Request $request,$id_menu)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $menu = Menu::find($id_menu);
 

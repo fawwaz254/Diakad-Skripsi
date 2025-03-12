@@ -28,7 +28,7 @@ class HistoriAbsensiSiswaPondokController extends Controller
     public function viewHistoriAbsensiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $date = Carbon::now()->format('Y-m-d');
@@ -115,7 +115,7 @@ class HistoriAbsensiSiswaPondokController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');

@@ -19,7 +19,7 @@ class SettingToleransiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $setting = Setting::where('key_setting', 'setting_keterlambatan_global')->first();
 
@@ -30,7 +30,7 @@ class SettingToleransiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'setting_keterlambatan_global' =>'required'

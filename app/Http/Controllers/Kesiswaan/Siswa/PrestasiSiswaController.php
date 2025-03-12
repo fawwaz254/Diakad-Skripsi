@@ -35,7 +35,7 @@ class PrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('kesiswaan/siswa/prestasi-siswa/view-prestasi-siswa', compact('auth_data', 'id_kelas'));
     }
@@ -44,7 +44,7 @@ class PrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -54,7 +54,7 @@ class PrestasiSiswaController extends BaseController
         $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/siswa/prestasi-siswa/add-prestasi-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'data_tingkat_prestasi', 'data_ekskul', 'data_guru'));
     }
@@ -63,7 +63,7 @@ class PrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -78,7 +78,7 @@ class PrestasiSiswaController extends BaseController
             ->leftjoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
             ->where('id_prestasi_siswa', '=', $id_prestasi_siswa)->first();
 
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/siswa/prestasi-siswa/edit-prestasi-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'data_tingkat_prestasi', 'data_ekskul', 'data_guru', 'prestasi'));
     }
@@ -87,7 +87,7 @@ class PrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // ambil data all siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $input->kelas);
@@ -98,7 +98,7 @@ class PrestasiSiswaController extends BaseController
     public function datatablesPrestasiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $alumni = $input->alumni;
         if ($alumni == 1) {
             $list_data = PrestasiSiswa::select(
@@ -262,7 +262,7 @@ class PrestasiSiswaController extends BaseController
     public function actionPrestasiSiswa(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -287,7 +287,7 @@ class PrestasiSiswaController extends BaseController
 
             if ($mode == 'add') {
                 if ($siswa = Siswa::find($input->id_siswa)) {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $prestasi                                 = new PrestasiSiswa;
                     $prestasi->id_prestasi_siswa              = $id;
@@ -305,7 +305,7 @@ class PrestasiSiswaController extends BaseController
                     $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
                     $prestasi->tgl_prestasi_siswa             = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
                     $prestasi->link_sertif_prestasi_siswa     = $input->link_sertifikat;
-                    $prestasi->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                    $prestasi->created_by                     = auth_data()->pengguna->id_pengguna;
                     $prestasi->created_at                     = $now;
                     $prestasi->status = 1;
                     $prestasi->approved_by = $auth_data->pengguna->id_pengguna;
@@ -324,11 +324,11 @@ class PrestasiSiswaController extends BaseController
                         );
 
                         $notifikasi = array(
-                            'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_pengguna' => $siswa->pengguna->id_pengguna,
                             'id_sekolah' => $siswa->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                            'created_by' => auth_data()->pengguna->id_pengguna
                         );
 
                         LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
@@ -349,11 +349,11 @@ class PrestasiSiswaController extends BaseController
                                 );
 
                                 $notifikasi = array(
-                                    'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                    'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                                     'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                     'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                     'isi_notifikasi' => $message,
-                                    'created_by' => $input->auth_data->pengguna->id_pengguna
+                                    'created_by' => auth_data()->pengguna->id_pengguna
                                 );
 
                                 LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -391,7 +391,7 @@ class PrestasiSiswaController extends BaseController
                     $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
                     $prestasi->link_sertif_prestasi_siswa     = $input->link_sertifikat;
                     $prestasi->tgl_prestasi_siswa             = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
-                    $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
+                    $prestasi->updated_by                     = auth_data()->pengguna->id_pengguna;
                     $prestasi->updated_at                     = $now;
                     $prestasi->save();
 
@@ -408,7 +408,7 @@ class PrestasiSiswaController extends BaseController
                 }
             } elseif ($mode == 'delete') {
                 $prestasi                 = PrestasiSiswa::find($id);
-                $prestasi->deleted_by     = $input->auth_data->pengguna->id_pengguna;
+                $prestasi->deleted_by     = auth_data()->pengguna->id_pengguna;
                 $prestasi->save();
 
                 $prestasi->delete();

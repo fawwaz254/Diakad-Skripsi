@@ -39,7 +39,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('is_aktif', 1)->get();
 
         return view('kesiswaan/skpi/approve-prestasi-siswa/view-approve-prestasi-siswa', compact('auth_data', 'kelas'));
@@ -49,7 +49,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = Siswa::where('id_siswa', $id)->first();
         $pengguna = Pengguna::where('id_pengguna', $siswa->id_pengguna)->first();
         $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
@@ -61,7 +61,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data = Siswa::where('id_kelas', $id_kelas)->get();
         // $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
@@ -117,7 +117,7 @@ class ApprovePrestasiSiswaController extends BaseController
     public function printSkpi(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data = Siswa::findOrFail($id);
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
@@ -187,7 +187,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::findOrFail($id);
 
@@ -244,7 +244,7 @@ class ApprovePrestasiSiswaController extends BaseController
     public function datatablesInformasiTambahan(Request $request, $id, $param)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::findOrFail($id);
 
@@ -296,7 +296,7 @@ class ApprovePrestasiSiswaController extends BaseController
     public function datatablesPrestasiApprovePrestasiSiswa(Request $request, $id, $param)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
@@ -420,7 +420,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         if ($data == 'prestasi') {
@@ -429,7 +429,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
             $prestasi = PrestasiSiswa::findOrFail($id);
             $prestasi->status = 1;
-            $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $prestasi->approved_by = auth_data()->pengguna->id_pengguna;
             $prestasi->approved_at = $now;
 
             $prestasi->save();
@@ -439,7 +439,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
             $kegiatan = KegiatanSiswa::findOrFail($id);
             $kegiatan->status = 1;
-            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_by = auth_data()->pengguna->id_pengguna;
             $kegiatan->approved_at = $now;
 
             $kegiatan->save();
@@ -449,7 +449,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
             $kegiatan = InformasiTambahan::findOrFail($id);
             $kegiatan->status = 1;
-            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_by = auth_data()->pengguna->id_pengguna;
             $kegiatan->approved_at = $now;
 
             $kegiatan->save();
@@ -466,7 +466,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         if ($data == 'prestasi') {
@@ -476,7 +476,7 @@ class ApprovePrestasiSiswaController extends BaseController
             $prestasi = PrestasiSiswa::findOrFail($id);
             $prestasi->status = 10;
             $prestasi->keterangan = $input->keterangan;
-            $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $prestasi->approved_by = auth_data()->pengguna->id_pengguna;
             $prestasi->approved_at = $now;
 
             $prestasi->save();
@@ -487,7 +487,7 @@ class ApprovePrestasiSiswaController extends BaseController
             $kegiatan = KegiatanSiswa::findOrFail($id);
             $kegiatan->status = 10;
             $kegiatan->keterangan = $input->keterangan;
-            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_by = auth_data()->pengguna->id_pengguna;
             $kegiatan->approved_at = $now;
 
             $kegiatan->save();
@@ -497,7 +497,7 @@ class ApprovePrestasiSiswaController extends BaseController
             $kegiatan = InformasiTambahan::findOrFail($id);
             $kegiatan->status = 10;
             $kegiatan->keterangan = $input->keterangan;
-            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_by = auth_data()->pengguna->id_pengguna;
             $kegiatan->approved_at = $now;
 
             $kegiatan->save();
@@ -516,7 +516,7 @@ class ApprovePrestasiSiswaController extends BaseController
         # Param 1 = siswa yang menunggu approval
         # Param 2 = Data dkpi semua siswa
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $param = $input->param;
         $param_semua_siswa = $input->param_semua_siswa;
         $alumni = $input->alumni;
@@ -1080,7 +1080,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -1091,7 +1091,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $prestasi = PrestasiSiswa::join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')->where('id_prestasi_siswa', '=', $id)->first();
 
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/skpi/approve-prestasi-siswa/edit-prestasi-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'data_tingkat_prestasi', 'data_ekskul', 'data_guru', 'prestasi'));
     }
@@ -1100,7 +1100,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $now = Carbon::now();
 
@@ -1136,7 +1136,7 @@ class ApprovePrestasiSiswaController extends BaseController
             $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
             $prestasi->tgl_prestasi_siswa             = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
             $prestasi->link_sertif_prestasi_siswa     = $input->link_sertifikat;
-            $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
+            $prestasi->updated_by                     = auth_data()->pengguna->id_pengguna;
             $prestasi->updated_at                     = $now;
             $prestasi->save();
 
@@ -1161,7 +1161,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -1177,7 +1177,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -1208,7 +1208,7 @@ class ApprovePrestasiSiswaController extends BaseController
             $kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
             $kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
             $kegiatan->updated_at = $now;
-            $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->updated_by = auth_data()->pengguna->id_pengguna;
             $kegiatan->save();
 
             // if ($auth_data->pengguna->status_join_table == 2) {
@@ -1228,7 +1228,7 @@ class ApprovePrestasiSiswaController extends BaseController
     public function editInformasiTambahanSiswa(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $informasi_tambahan = InformasiTambahan::findOrFail($id);
 
         return view('kesiswaan/skpi/approve-prestasi-siswa/edit-informasi-tambahan-siswa', compact('auth_data', 'informasi_tambahan'));
@@ -1238,7 +1238,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -1258,7 +1258,7 @@ class ApprovePrestasiSiswaController extends BaseController
             $informasi->nm_informasi_tambahan = $input->nm_informasi_tambahan;
             $informasi->nm_informasi_tambahan_eng = $input->nm_informasi_tambahan_eng;
             $informasi->updated_at = $now;
-            $informasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $informasi->updated_by = auth_data()->pengguna->id_pengguna;
             $informasi->save();
 
             // if (true) {

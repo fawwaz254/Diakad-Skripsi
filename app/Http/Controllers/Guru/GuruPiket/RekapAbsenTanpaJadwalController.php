@@ -35,7 +35,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     {
         # code...
         $input          = (object) $request->input();
-        $auth_data      = $input->auth_data;
+        $auth_data      = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_kelas     = LibKelas::fetchDataKelas($auth_data);
 
@@ -46,7 +46,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     public function actionGetKBMByKelas(Request $request)
     {
         $input          = (object) $request->input();
-        $auth_data      = $input->auth_data;
+        $auth_data      = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -66,7 +66,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     {
         # code...
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_kelas_mp' => 'required'
@@ -89,7 +89,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     {
         # code...
         $input          = (object) $request->input();
-        $auth_data      = $input->auth_data;
+        $auth_data      = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_siswa     = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna')
@@ -143,7 +143,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
     {
         # code...
         $input          = (object) $request->input();
-        $auth_data      = $input->auth_data;
+        $auth_data      = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_siswa     = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna')

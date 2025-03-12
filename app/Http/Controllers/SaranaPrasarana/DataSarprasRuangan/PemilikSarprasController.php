@@ -26,7 +26,7 @@ class PemilikSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-ruangan/pemilik-sarpras/view-pemilik-sarpras', compact('auth_data'));
     }
@@ -35,7 +35,7 @@ class PemilikSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -49,7 +49,7 @@ class PemilikSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_pemilik_sarpras = LibDataSarpras::fetchDataPemilikSarpras($auth_data, $id);
 
@@ -59,7 +59,7 @@ class PemilikSarprasController extends BaseController
     public function datatablesPemilikSarpras(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataPemilikSarpras($auth_data);
 
         return Datatables::of($list_data)
@@ -93,14 +93,14 @@ class PemilikSarprasController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $pemilikSarpras                        = new PemilikSarpras;
                 $pemilikSarpras->id_pemilik_sarpras    = $id;
                 $pemilikSarpras->kode_pemilik_sarpras  = $input->kode_pemilik_sarpras;
                 $pemilikSarpras->nm_pemilik_sarpras    = $input->nm_pemilik_sarpras;
-                $pemilikSarpras->id_sekolah            = $input->auth_data->pengguna->id_sekolah;
-                $pemilikSarpras->created_by            = $input->auth_data->pengguna->id_pengguna;
+                $pemilikSarpras->id_sekolah            = auth_data()->pengguna->id_sekolah;
+                $pemilikSarpras->created_by            = auth_data()->pengguna->id_pengguna;
                 $pemilikSarpras->save();
 
                 return [
@@ -113,7 +113,7 @@ class PemilikSarprasController extends BaseController
                 $pemilikSarpras                        = PemilikSarpras::find($id);
                 $pemilikSarpras->kode_pemilik_sarpras  = $input->kode_pemilik_sarpras;
                 $pemilikSarpras->nm_pemilik_sarpras    = $input->nm_pemilik_sarpras;
-                $pemilikSarpras->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                $pemilikSarpras->updated_by            = auth_data()->pengguna->id_pengguna;
                 $pemilikSarpras->updated_at            = $now;
                 $pemilikSarpras->save();
 
@@ -131,7 +131,7 @@ class PemilikSarprasController extends BaseController
                 } else {
                     // make object to find id
                     $pemilikSarpras               = PemilikSarpras::find($id);
-                    $pemilikSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $pemilikSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $pemilikSarpras->save();
 
                     $pemilikSarpras->delete();
@@ -149,7 +149,7 @@ class PemilikSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-ruangan/pemilik-sarpras/import-excel', compact('auth_data'));
     }
@@ -158,7 +158,7 @@ class PemilikSarprasController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -202,8 +202,8 @@ class PemilikSarprasController extends BaseController
                             $data->id_pemilik_sarpras            = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $data->kode_pemilik_sarpras          = $value->kode_pemilik_sarpras;
                             $data->nm_pemilik_sarpras            = $value->nama_pemilik_sarpras;
-                            $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
-                            $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                            $data->id_sekolah                    = auth_data()->pengguna->id_sekolah;
+                            $data->created_by                    = auth_data()->pengguna->id_pengguna;
                             $data->save();
                         }
 
