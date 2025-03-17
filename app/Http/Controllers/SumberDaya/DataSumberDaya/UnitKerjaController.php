@@ -27,7 +27,7 @@ class UnitKerjaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sumber-daya/data-sumber-daya/unit-kerja/view-unit-kerja', compact('auth_data'));
     }
@@ -36,14 +36,14 @@ class UnitKerjaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_unit_kerja_induk = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_unit_kerja = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_unit_kerja = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('sumber-daya/data-sumber-daya/unit-kerja/add-unit-kerja', compact('auth_data', 'data_unit_kerja_induk', 'id_unit_kerja'));
     }
@@ -52,7 +52,7 @@ class UnitKerjaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_unit_kerja_induk = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
 
@@ -64,7 +64,7 @@ class UnitKerjaController extends BaseController
     public function datatablesUnitKerja(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
 
         return Datatables::of($list_data)
@@ -102,7 +102,7 @@ class UnitKerjaController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $unitKerja                          = new UnitKerja;
                 $unitKerja->id_unit_kerja           = $id;
@@ -111,8 +111,8 @@ class UnitKerjaController extends BaseController
                 $unitKerja->tipe_unit_kerja         = $input->tipe_unit_kerja;
                 $unitKerja->id_unit_kerja_induk     = $input->id_unit_kerja_induk;
                 $unitKerja->nm_singkatan_unit       = $input->nm_singkatan_unit;
-                $unitKerja->id_sekolah              = auth_data()->pengguna->id_sekolah;
-                $unitKerja->created_by              = auth_data()->pengguna->id_pengguna;
+                $unitKerja->id_sekolah              = $input->auth_data->pengguna->id_sekolah;
+                $unitKerja->created_by              = $input->auth_data->pengguna->id_pengguna;
                 $unitKerja->save();
 
                 return [
@@ -128,7 +128,7 @@ class UnitKerjaController extends BaseController
                 $unitKerja->tipe_unit_kerja         = $input->tipe_unit_kerja;
                 $unitKerja->id_unit_kerja_induk     = $input->id_unit_kerja_induk;
                 $unitKerja->nm_singkatan_unit       = $input->nm_singkatan_unit;
-                $unitKerja->updated_by              = auth_data()->pengguna->id_pengguna;
+                $unitKerja->updated_by              = $input->auth_data->pengguna->id_pengguna;
                 $unitKerja->updated_at              = $now;
                 $unitKerja->save();
 
@@ -146,7 +146,7 @@ class UnitKerjaController extends BaseController
                 } else {
                     // make object to find id
                     $unitKerja               = UnitKerja::find($id);
-                    $unitKerja->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $unitKerja->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $unitKerja->save();
 
                     $unitKerja->delete();

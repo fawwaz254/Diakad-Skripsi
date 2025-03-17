@@ -25,7 +25,7 @@ class RaporSisipanAkhirController extends Controller
     public function viewDaftarNilaiSAS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
         return view('akademik/rapor-sisipan/daftar-nilai-sas/view-daftar-nilai-sas', compact('auth_data', 'semester_aktif', 'data_semester'));
@@ -34,7 +34,7 @@ class RaporSisipanAkhirController extends Controller
     public function datatablesDaftarNilaiSAS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if (empty($input->thn_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -90,7 +90,7 @@ class RaporSisipanAkhirController extends Controller
 
         set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas', 'semester', 'pengguna')->first();
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;

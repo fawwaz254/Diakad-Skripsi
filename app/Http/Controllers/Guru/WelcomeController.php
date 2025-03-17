@@ -35,7 +35,7 @@ class WelcomeController extends BaseController
         }
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $role_aktif = $auth_data->role_aktif;
 
@@ -46,7 +46,7 @@ class WelcomeController extends BaseController
     // public function viewBiodata(Request $request)
     // {
     //     $input = (object) $request->input();
-    //     $auth_data = auth_data();
+    //     $auth_data = $input->auth_data;
     //     if ($auth_data->pengguna->status_join_table == '1') { //tendik
     //         $pengguna = Staff::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
     //         return view('view-biodata', compact('auth_data', 'pengguna'));

@@ -14,7 +14,7 @@ class FaqController extends BaseController
     public function viewIndex(Request $request, $search = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $pengguna = Pengguna::get();
         $faq = collect((object) [
             (object) [

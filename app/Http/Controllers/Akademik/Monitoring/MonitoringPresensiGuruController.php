@@ -18,7 +18,7 @@ class MonitoringPresensiGuruController extends Controller
     public function viewMonitoringPresensiGuru(Request $request, $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if (empty($id_bulan)) {
@@ -76,7 +76,7 @@ class MonitoringPresensiGuruController extends Controller
     public function actionDeletePresensiGuru(Request $request, $id_presensi_mp)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $p = PresensiMp::find($id_presensi_mp);
         if ($p) {
@@ -90,7 +90,7 @@ class MonitoringPresensiGuruController extends Controller
     public function viewDetailPresensiGuru(Request $request, $day, $id_bulan, $tahun, $id_pengguna)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_presensi = PresensiMp::select('nm_pengguna', 'pengguna.id_pengguna', 'nip_guru', 'pertemuan_ke', 'uraian_materi', 'waktu_mulai', 'waktu_selesai', 'tgl_presensi', 'nm_kelas_mp', 'id_presensi_mp')
             ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'presensi_mp.id_kelas_mp')
@@ -127,7 +127,7 @@ class MonitoringPresensiGuruController extends Controller
     public function printViewMonitoringPresensiGuru(Request $request, $id_bulan, $tahun)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if (empty($id_bulan)) {

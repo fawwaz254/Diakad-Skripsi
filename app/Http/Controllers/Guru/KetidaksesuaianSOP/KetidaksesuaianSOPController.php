@@ -14,7 +14,7 @@ class KetidaksesuaianSOPController extends Controller
     public function viewKetidaksesuaianSOP(Request $request)
     {  # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/ketidaksesuaian-sop/ketidaksesuaian-sop-pribadi/view-ketidaksesuaian-sop', compact('auth_data'));
     }
@@ -22,7 +22,7 @@ class KetidaksesuaianSOPController extends Controller
     public function datatablesKetidaksesuaianSOP(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = KetidaksesuaianSOP::where('id_pengguna', $auth_data->pengguna->id_pengguna);
 
@@ -36,7 +36,7 @@ class KetidaksesuaianSOPController extends Controller
     public function viewLaporanKetidaksesuaianSOP(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/ketidaksesuaian-sop/laporan-ketidaksesuaian-sop/view-laporan-ketidaksesuaian-sop', compact('auth_data'));
     }
@@ -44,7 +44,7 @@ class KetidaksesuaianSOPController extends Controller
     public function datataablesLaporanKetidaksesuaianSOP(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = KetidaksesuaianSOP::with('pengguna', 'pengguna_input')->get();
 
@@ -77,7 +77,7 @@ class KetidaksesuaianSOPController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_kerja_harian = KetidaksesuaianSOP::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);

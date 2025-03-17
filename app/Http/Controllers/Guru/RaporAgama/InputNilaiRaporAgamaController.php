@@ -26,7 +26,7 @@ class InputNilaiRaporAgamaController extends Controller
     public function viewNilaiRaporAgama(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -37,7 +37,7 @@ class InputNilaiRaporAgamaController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $status = $input->status;
 
         if (empty($input->id_semester)) {
@@ -94,7 +94,7 @@ class InputNilaiRaporAgamaController extends Controller
     public function viewTambahNilaiRaporAgama(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data['list_kelas'] = Kelas::where('is_aktif', 1)->get();
         $data['semester_aktif'] = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data['data_semester'] = LibDataAkademik::fetchDataNamaSemester($auth_data);
@@ -167,7 +167,7 @@ class InputNilaiRaporAgamaController extends Controller
             DB::beginTransaction();
 
             try {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $rapor                      = new Rapor;
                 $rapor->id_rapor            = $id;
                 $rapor->id_semester         = $input->id_semester;
@@ -175,7 +175,7 @@ class InputNilaiRaporAgamaController extends Controller
                 $rapor->id_kelas            = $input->id_kelas;
                 $rapor->nm_rapor            = 'agama';
 
-                $rapor->created_by          = auth_data()->pengguna->id_pengguna;
+                $rapor->created_by          = $input->auth_data->pengguna->id_pengguna;
                 $rapor->save();
 
                 $siswa = Siswa::where('id_kelas', $input->id_kelas)
@@ -190,7 +190,7 @@ class InputNilaiRaporAgamaController extends Controller
 
                 foreach ($siswa as $s) {
                     foreach ($komponen_jenis_rapor as $komponen) {
-                        $id = auth_data()->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                         $list_data[] = [
                             'id_nilai_rapor' =>  $id,
                             'id_rapor' => $rapor->id_rapor,
@@ -199,7 +199,7 @@ class InputNilaiRaporAgamaController extends Controller
                             'nilai' => 0,
                             'keterangan' => null,
                             'created_at' => Carbon::now(),
-                            'created_by' => auth_data()->pengguna->id_pengguna,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
                         ];
                     }
                 }
@@ -296,7 +296,7 @@ class InputNilaiRaporAgamaController extends Controller
     {
         // set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
 

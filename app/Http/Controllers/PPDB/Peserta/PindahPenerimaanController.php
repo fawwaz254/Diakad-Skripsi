@@ -21,7 +21,7 @@ class PindahPenerimaanController extends Controller
     public function viewPindahPenerimaan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
         $voucher    = null;
         
         return view('ppdb/peserta/pindah-penerimaan/pindah-penerimaan', compact('voucher'));
@@ -35,7 +35,7 @@ class PindahPenerimaanController extends Controller
     public function findVoucher(Request $request)
     {
         $input          = (object) $request->input();
-        $auth_data      = auth_data();
+        $auth_data      = $input->auth_data;
         $kode_voucher   = $input->kode_voucher;
 
         $validator = Validator::make($request->all(), [
@@ -69,7 +69,7 @@ class PindahPenerimaanController extends Controller
     public function showVoucher(Request $request, $kode_voucher)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $voucher = Voucher::select(
                         'voucher.id_voucher', 'voucher.id_penerimaan', 'voucher.kode_voucher', 'voucher.pin_password', 'voucher.tgl_ambil', 'voucher.tgl_bayar', 'voucher_tarif.tarif', 'penerimaan.nm_penerimaan', 'voucher.besar_biaya', 'voucher.is_tagih_bank', 'voucher.nomor_transaksi', 'voucher.id_bank', 'voucher.id_bank_via', 'calon_siswa_baru.nm_c_siswa'
@@ -112,7 +112,7 @@ class PindahPenerimaanController extends Controller
     public function actionPindahVoucher(Request $request, $kode_voucher)
     {
         $input          = (object) $request->input();
-        $auth_data      = auth_data();
+        $auth_data      = $input->auth_data;
         $kode_voucher   = $input->kode_voucher;
 
         $validator = Validator::make($request->all(), [
@@ -146,7 +146,7 @@ class PindahPenerimaanController extends Controller
         // change id_penerimaan on calon_siswa_baru 
 
         $voucher->id_penerimaan = $input->penerimaan_tujuan;
-        $voucher->updated_by    = auth_data()->pengguna->id_pengguna;
+        $voucher->updated_by    = $input->auth_data->pengguna->id_pengguna;
         $voucher->save();
 
         return [

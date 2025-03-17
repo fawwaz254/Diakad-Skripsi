@@ -26,7 +26,7 @@ class StatusAktifGuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sumber-daya/data-sumber-daya/status-aktif-guru/view-status-aktif-guru', compact('auth_data'));
     }
@@ -35,12 +35,12 @@ class StatusAktifGuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_status_pengguna = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_status_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('sumber-daya/data-sumber-daya/status-aktif-guru/add-status-aktif-guru', compact('auth_data', 'id_status_pengguna'));
     }
@@ -49,7 +49,7 @@ class StatusAktifGuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_status_pengguna = LibDataSumberDaya::fetchDataStatusAktifGuru($auth_data, $id);
 
@@ -59,7 +59,7 @@ class StatusAktifGuruController extends BaseController
     public function datatablesStatusAktifGuru(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSumberDaya::fetchDataStatusAktifGuru($auth_data);
 
         return Datatables::of($list_data)
@@ -101,15 +101,15 @@ class StatusAktifGuruController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $statusPengguna                         = new StatusPengguna;
                 $statusPengguna->id_status_pengguna     = $id;
                 $statusPengguna->status_join_table      = 2;
                 $statusPengguna->nm_status_pengguna     = $input->nm_status_pengguna;
                 $statusPengguna->aktif_status_pengguna  = $input->aktif_status_pengguna;
-                $statusPengguna->id_sekolah             = auth_data()->pengguna->id_sekolah;
-                $statusPengguna->created_by             = auth_data()->pengguna->id_pengguna;
+                $statusPengguna->id_sekolah             = $input->auth_data->pengguna->id_sekolah;
+                $statusPengguna->created_by             = $input->auth_data->pengguna->id_pengguna;
                 $statusPengguna->save();
 
                 return [
@@ -122,7 +122,7 @@ class StatusAktifGuruController extends BaseController
                 $statusPengguna                         = StatusPengguna::find($id);
                 $statusPengguna->nm_status_pengguna     = $input->nm_status_pengguna;
                 $statusPengguna->aktif_status_pengguna  = $input->aktif_status_pengguna;
-                $statusPengguna->updated_by             = auth_data()->pengguna->id_pengguna;
+                $statusPengguna->updated_by             = $input->auth_data->pengguna->id_pengguna;
                 $statusPengguna->updated_at             = $now;
                 $statusPengguna->save();
 
@@ -140,7 +140,7 @@ class StatusAktifGuruController extends BaseController
                 } else {
                     // make object to find id
                     $statusPengguna               = StatusPengguna::find($id);
-                    $statusPengguna->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $statusPengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $statusPengguna->save();
 
                     $statusPengguna->delete();

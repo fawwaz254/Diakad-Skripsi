@@ -32,7 +32,7 @@ class PengajuanMagangController extends BaseController
   {
     # code...
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
     $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
@@ -44,7 +44,7 @@ class PengajuanMagangController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
     $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
@@ -56,7 +56,7 @@ class PengajuanMagangController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
     $now = Carbon::now();
 
     $validator = Validator::make($request->all(), [
@@ -102,14 +102,14 @@ class PengajuanMagangController extends BaseController
                 }
 
                 $data                        = new PengajuanSiswaMagang;
-                $data->id_pengambilan_magang = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $data->id_pengambilan_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $data->id_siswa              = $siswa->id_siswa;
                 $data->id_kelas              = $siswa->id_kelas;
                 $data->id_periode_magang     = $input->id_periode_magang;
                 $data->id_rekanan_magang     = $input->id_rekanan_magang;
                 $data->status_apv_pengambilan_magang         = $status;
                 $data->status_magang         = 0;
-                $data->created_by            = auth_data()->pengguna->id_pengguna;
+                $data->created_by            = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
               } else {
 
@@ -156,7 +156,7 @@ class PengajuanMagangController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $id_periode_magang = $input->id_periode_magang;
     $id_rekanan_magang = $input->id_rekanan_magang;
@@ -217,7 +217,7 @@ class PengajuanMagangController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data, $id_rekanan_magang);
     $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data, $id_periode_magang);
@@ -229,7 +229,7 @@ class PengajuanMagangController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $data_siswa = Siswa::select('pengambilan_magang.id_pengambilan_magang', 'pengambilan_magang.id_rekanan_magang', 'pengambilan_magang.id_periode_magang', 'pengambilan_magang.status_apv_pengambilan_magang', 'pengambilan_magang.status_magang', 'siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas')
       ->leftJoin('pengambilan_magang', function ($join) use ($id_rekanan_magang, $id_periode_magang) {
@@ -281,11 +281,11 @@ class PengajuanMagangController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $now = Carbon::now();
 
-    $id_pengambilan_magang = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+    $id_pengambilan_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
     if (!isset($input->id_pengambilan_magang)) {
       $siswa  = Siswa::find($input->id_siswa);
@@ -301,14 +301,14 @@ class PengajuanMagangController extends BaseController
       $data->id_rekanan_magang     = $input->id_rekanan_magang;
       $data->status_apv_pengambilan_magang         = $input->status_apv_pengambilan_magang;
       $data->status_magang         = 0;
-      $data->created_by            = auth_data()->pengguna->id_pengguna;
+      $data->created_by            = $input->auth_data->pengguna->id_pengguna;
       $data->save();
 
       $message = 'Pengajuan Siswa Magang Successfully';
     } elseif ($input->mode == 'pengubahan-status-magang') {
       $data = PengajuanSiswaMagang::find($input->id_pengambilan_magang);
       $data->status_magang = $input->status_magang;
-      $data->updated_by            = auth_data()->pengguna->id_pengguna;
+      $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
       $data->save();
 
       $message = 'Perngubahan Status Magang Successfully';
@@ -328,7 +328,7 @@ class PengajuanMagangController extends BaseController
 
       $data->status_apv_pengambilan_magang = $input->status_apv_pengambilan_magang;
       $data->keterangan_approval = $input->keterangan;
-      $data->updated_by            = auth_data()->pengguna->id_pengguna;
+      $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
       $data->save();
 
       $message = 'Perngubahan Status Tidak Diapprove Successfully';
@@ -346,7 +346,7 @@ class PengajuanMagangController extends BaseController
         ])->first();
       }
 
-      $data->deleted_by            = auth_data()->pengguna->id_pengguna;
+      $data->deleted_by            = $input->auth_data->pengguna->id_pengguna;
       $data->save();
       $data->delete();
 

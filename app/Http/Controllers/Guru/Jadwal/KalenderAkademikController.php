@@ -21,7 +21,7 @@ class KalenderAkademikController extends BaseController{
     public function viewKalenderAkademik(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -31,7 +31,7 @@ class KalenderAkademikController extends BaseController{
 
     public function datatablesKalenderAkademik(Request $request){
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

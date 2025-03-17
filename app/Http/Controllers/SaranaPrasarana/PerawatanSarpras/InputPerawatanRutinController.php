@@ -22,7 +22,7 @@ class InputPerawatanRutinController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sarana-prasarana/perawatan-sarpras/perawatan-rutin/view-perawatan-rutin', compact('auth_data'));
     }
@@ -31,7 +31,7 @@ class InputPerawatanRutinController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // ambil data inventaris ruangan
         $data_inventaris = LibDataSarpras::fetchDataInventarisRuangan($auth_data, $input->id_ruangan);
@@ -43,7 +43,7 @@ class InputPerawatanRutinController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -61,7 +61,7 @@ class InputPerawatanRutinController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
@@ -80,7 +80,7 @@ class InputPerawatanRutinController extends BaseController
     public function datatablesInputPerawatanRutinBelum(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataPerawatanSarpras($auth_data, 0, null, 1);
 
         return Datatables::of($list_data)
@@ -112,7 +112,7 @@ class InputPerawatanRutinController extends BaseController
     public function datatablesInputPerawatanRutinSudah(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataPerawatanSarpras($auth_data, 1, null, 1);
 
         return Datatables::of($list_data)
@@ -165,7 +165,7 @@ class InputPerawatanRutinController extends BaseController
                 if (!empty($input->id_ruangan) or !empty($input->id_inventaris_ruangan) or !empty($input->id_buku_alat)) {
                     // make object to find id
                     $perawatanSarpras                           = new PerawatanSarpras;
-                    $perawatanSarpras->id_perawatan_sarpras     = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $perawatanSarpras->id_perawatan_sarpras     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $perawatanSarpras->id_ruangan               = $input->id_ruangan;
                     $perawatanSarpras->id_inventaris_ruangan    = $input->id_inventaris_ruangan;
                     $perawatanSarpras->id_buku_alat             = $input->id_buku_alat;
@@ -173,7 +173,7 @@ class InputPerawatanRutinController extends BaseController
                     $perawatanSarpras->tgl_perawatan            = date_format(date_create($input->tgl_perawatan), "Y-m-d H:i:s");
                     $perawatanSarpras->keterangan_perawatan     = $input->keterangan_perawatan;
                     $perawatanSarpras->is_sudah_perawatan       = $input->is_sudah_perawatan;
-                    $perawatanSarpras->created_by               = auth_data()->pengguna->id_pengguna;
+                    $perawatanSarpras->created_by               = $input->auth_data->pengguna->id_pengguna;
                     $perawatanSarpras->save();
 
                     return [
@@ -194,7 +194,7 @@ class InputPerawatanRutinController extends BaseController
                 $perawatanSarpras->tgl_perawatan            = date_format(date_create($input->tgl_perawatan), "Y-m-d H:i:s");
                 $perawatanSarpras->keterangan_perawatan     = $input->keterangan_perawatan;
                 $perawatanSarpras->is_sudah_perawatan       = $input->is_sudah_perawatan;
-                $perawatanSarpras->updated_by               = auth_data()->pengguna->id_pengguna;
+                $perawatanSarpras->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $perawatanSarpras->updated_at               = $now;
                 $perawatanSarpras->save();
 
@@ -206,7 +206,7 @@ class InputPerawatanRutinController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $perawatanSarpras               = PerawatanSarpras::find($id);
-                $perawatanSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $perawatanSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $perawatanSarpras->save();
 
                 $perawatanSarpras->delete();

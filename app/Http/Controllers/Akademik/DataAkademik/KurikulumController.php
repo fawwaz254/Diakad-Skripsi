@@ -28,7 +28,7 @@ class KurikulumController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('akademik/data-akademik/kurikulum/view-kurikulum', compact('auth_data'));
     }
@@ -37,7 +37,7 @@ class KurikulumController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
 
@@ -46,7 +46,7 @@ class KurikulumController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_kurikulum = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_kurikulum = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('akademik/data-akademik/kurikulum/add-kurikulum', compact('auth_data', 'data_jurusan', 'data_semester', 'id_kurikulum'));
     }
@@ -55,7 +55,7 @@ class KurikulumController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
 
@@ -73,7 +73,7 @@ class KurikulumController extends BaseController
     public function datatablesKurikulum(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibAkademik::fetchDataKurikulum($auth_data);
 
@@ -131,7 +131,7 @@ class KurikulumController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kurikulum                              = new Kurikulum;
                 $kurikulum->id_kurikulum                = $id;
@@ -145,7 +145,7 @@ class KurikulumController extends BaseController
                 $kurikulum->berlaku_mulai               = date_format(date_create($input->berlaku_mulai), "Y-m-d");
                 $kurikulum->berlaku_sampai              = date_format(date_create($input->berlaku_sampai), "Y-m-d");
                 $kurikulum->is_aktif                    = 0;
-                $kurikulum->created_by                  = auth_data()->pengguna->id_pengguna;
+                $kurikulum->created_by                  = $input->auth_data->pengguna->id_pengguna;
                 $kurikulum->save();
 
                 return [
@@ -165,7 +165,7 @@ class KurikulumController extends BaseController
                 // convert format date
                 $kurikulum->berlaku_mulai               = date_format(date_create($input->berlaku_mulai), "Y-m-d");
                 $kurikulum->berlaku_sampai              = date_format(date_create($input->berlaku_sampai), "Y-m-d");
-                $kurikulum->updated_by                  = auth_data()->pengguna->id_pengguna;
+                $kurikulum->updated_by                  = $input->auth_data->pengguna->id_pengguna;
                 $kurikulum->updated_at                  = $now;
                 $kurikulum->save();
 
@@ -183,7 +183,7 @@ class KurikulumController extends BaseController
                 } else {
                     // make object to find id
                     $kurikulum               = Kurikulum::find($id);
-                    $kurikulum->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $kurikulum->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kurikulum->save();
 
                     $kurikulum->delete();

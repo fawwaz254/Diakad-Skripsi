@@ -23,7 +23,7 @@ class AbsensiBarcodeController extends BaseController
     public function viewAbsensiBarcode(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::now();
 

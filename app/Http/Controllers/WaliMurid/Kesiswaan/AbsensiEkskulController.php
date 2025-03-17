@@ -29,7 +29,7 @@ class AbsensiEkskulController extends Controller
 	public function viewAbsensiEkskul(Request $request){
 
 		$input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
@@ -46,7 +46,7 @@ class AbsensiEkskulController extends Controller
 	public function viewDetailAbsensiEkskul(Request $request, $id_semester, $id_ekskul){
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 

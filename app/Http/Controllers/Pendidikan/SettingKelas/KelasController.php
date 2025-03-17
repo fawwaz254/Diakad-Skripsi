@@ -31,7 +31,7 @@ class KelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('pendidikan/setting-kelas/kelas/view-kelas', compact('auth_data'));
     }
@@ -40,14 +40,14 @@ class KelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_kelas = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/setting-kelas/kelas/add-kelas', compact('auth_data', 'data_jurusan', 'id_kelas'));
     }
@@ -56,7 +56,7 @@ class KelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jurusan = LibDataAkademik::fetchDataJurusan($auth_data);
 
@@ -69,7 +69,7 @@ class KelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester   = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -89,7 +89,7 @@ class KelasController extends BaseController
     public function datatablesKelas(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibKelas::fetchDataKelas($auth_data, null, false, false);
 
         return Datatables::of($list_data)
@@ -198,7 +198,7 @@ class KelasController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kelas                     = new Kelas;
                 $kelas->id_kelas           = $id;
@@ -207,7 +207,7 @@ class KelasController extends BaseController
                 $kelas->tingkat            = $input->tingkat;
                 $kelas->keterangan_kelas   = $input->keterangan_kelas;
                 $kelas->is_aktif           = '1';
-                $kelas->created_by         = auth_data()->pengguna->id_pengguna;
+                $kelas->created_by         = $input->auth_data->pengguna->id_pengguna;
                 $kelas->save();
 
                 return [
@@ -223,7 +223,7 @@ class KelasController extends BaseController
                 $kelas->tingkat                 = $input->tingkat;
                 $kelas->keterangan_kelas        = $input->keterangan_kelas;
                 $kelas->is_aktif                = $input->is_aktif;
-                $kelas->updated_by              = auth_data()->pengguna->id_pengguna;
+                $kelas->updated_by              = $input->auth_data->pengguna->id_pengguna;
                 $kelas->updated_at              = $now;
                 $kelas->save();
 
@@ -264,7 +264,7 @@ class KelasController extends BaseController
                 } else {
                     // make object to find id
                     $kelas               = Kelas::find($id);
-                    $kelas->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $kelas->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kelas->save();
 
                     $kelas->delete();

@@ -31,7 +31,7 @@ class SettingPelatihEkskulController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		return view('kesiswaan/ekstrakurikuler/setting-pelatih-ekskul/view-setting-pelatih-ekskul', compact('auth_data'));
 	}
@@ -40,7 +40,7 @@ class SettingPelatihEkskulController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		return view('kesiswaan/ekstrakurikuler/setting-pelatih-ekskul/view-pelatih-ekskul', compact('auth_data'));
 	}
@@ -49,12 +49,12 @@ class SettingPelatihEkskulController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		// mengambil waktu sekarang
 		$now    = Carbon::now();
 
-		// $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+		// $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
 		return view('kesiswaan/ekstrakurikuler/setting-pelatih-ekskul/add-setting-pelatih-ekskul', compact('auth_data'));
 	}
@@ -63,13 +63,13 @@ class SettingPelatihEkskulController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		// mengambil waktu sekarang
 		$now    = Carbon::now();
 		$pelatih = PelatihEkskul::join('pengguna', 'pengguna.id_pengguna', '=', 'pelatih_ekskul.id_pengguna')->where('id_pelatih_ekskul', '=', $id)->first();
 
-		// $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+		// $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
 		return view('kesiswaan/ekstrakurikuler/setting-pelatih-ekskul/edit-setting-pelatih-ekskul', compact('auth_data', 'pelatih'));
 	}
@@ -78,7 +78,7 @@ class SettingPelatihEkskulController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		// mengambil waktu sekarang
 		$now    = Carbon::now();
@@ -89,7 +89,7 @@ class SettingPelatihEkskulController extends BaseController
 			->where('pelatih_ekskul_set.id_pelatih_ekskul_set', '=', $id)
 			->first();
 
-		// $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+		// $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
 		return view('kesiswaan/ekstrakurikuler/setting-pelatih-ekskul/edit-status-assign-pelatih-ekskul', compact('auth_data', 'pelatih'));
 	}
@@ -98,7 +98,7 @@ class SettingPelatihEkskulController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		// mengambil waktu sekarang
 		$now    = Carbon::now();
@@ -109,7 +109,7 @@ class SettingPelatihEkskulController extends BaseController
 			->where('pelatih_ekskul.id_pelatih_ekskul', '=', $id)->first();
 		$ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
-		// $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+		// $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
 		return view('kesiswaan/ekstrakurikuler/setting-pelatih-ekskul/assign-setting-pelatih-ekskul', compact('auth_data', 'pelatih', 'ekskul'));
 	}
@@ -117,7 +117,7 @@ class SettingPelatihEkskulController extends BaseController
 	public function datatablesSettingPelatihEkskul(Request $request)
 	{
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 		$list_data = PelatihEkskulSet::select('pelatih_ekskul_set.id_pelatih_ekskul_set', 'pelatih_ekskul.id_pelatih_ekskul', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pelatih_ekskul.nomor_hp_pelatih_ekskul', 'pelatih_ekskul.alamat_pelatih_ekskul', 'pelatih_ekskul_set.is_aktif', 'ekskul.nm_ekskul')
 			->join('pelatih_ekskul', 'pelatih_ekskul.id_pelatih_ekskul', '=', 'pelatih_ekskul_set.id_pelatih_ekskul')
 			->join('pengguna', 'pengguna.id_pengguna', '=', 'pelatih_ekskul.id_pengguna')
@@ -146,7 +146,7 @@ class SettingPelatihEkskulController extends BaseController
 	public function datatablesPelatihEkskul(Request $request)
 	{
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 		$list_data = PelatihEkskul::select('pelatih_ekskul.id_pelatih_ekskul', 'pelatih_ekskul.nomor_hp_pelatih_ekskul', 'pelatih_ekskul.alamat_pelatih_ekskul', 'pelatih_ekskul.is_aktif', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang')
 			->join('pengguna', 'pengguna.id_pengguna', '=', 'pelatih_ekskul.id_pengguna')
 			->get();
@@ -183,7 +183,7 @@ class SettingPelatihEkskulController extends BaseController
 	{
 
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 		$now = Carbon::now();
 
 		$validator = Validator::make($request->all(), [
@@ -200,8 +200,8 @@ class SettingPelatihEkskulController extends BaseController
 		} else {
 			// ACTION ADD
 			if ($mode == 'add') {
-				$id_pengguna 		= auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
-				$id_pelatih			= auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+				$id_pengguna 		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+				$id_pelatih			= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 				$status_pengguna	= StatusPengguna::where('status_join_table', '=', '4')->where('aktif_status_pengguna', '=', '1')->first();
 
 				$pelatih 							= new PelatihEkskul;
@@ -210,14 +210,14 @@ class SettingPelatihEkskulController extends BaseController
 				$pelatih->nomor_hp_pelatih_ekskul	= $input->nomor_hp_pelatih_ekskul;
 				$pelatih->alamat_pelatih_ekskul 	= $input->alamat_pelatih_ekskul;
 				$pelatih->is_aktif 					= $input->is_aktif;
-				$pelatih->created_by 				= auth_data()->pengguna->id_pengguna;
+				$pelatih->created_by 				= $input->auth_data->pengguna->id_pengguna;
 				$pelatih->created_at 				= $now;
 				$pelatih->save();
 
 				$pengguna 						= new Pengguna;
 				$pengguna->id_pengguna			= $id_pengguna;
 				$pengguna->id_status_pengguna	= $status_pengguna->id_status_pengguna;
-				$pengguna->id_sekolah			= auth_data()->pengguna->id_sekolah;
+				$pengguna->id_sekolah			= $input->auth_data->pengguna->id_sekolah;
 				$pengguna->nm_pengguna			= $input->nm_pengguna;
 				$pengguna->gelar_depan 			= $input->gelar_depan;
 				$pengguna->gelar_belakang		= $input->gelar_belakang;
@@ -226,7 +226,7 @@ class SettingPelatihEkskulController extends BaseController
 				$pengguna->password 			= Hash::make($input->nomor_hp_pelatih_ekskul);
 				$pengguna->must_change_password	= 1;
 				$pengguna->status_join_table	= 5;
-				$pengguna->created_by			= auth_data()->pengguna->id_pengguna;
+				$pengguna->created_by			= $input->auth_data->pengguna->id_pengguna;
 				$pengguna->created_at			= $now;
 				$pengguna->save();
 
@@ -235,7 +235,7 @@ class SettingPelatihEkskulController extends BaseController
 				$rolePengguna->id_pengguna      = $id_pengguna;
 				$rolePengguna->keterangan_role_pengguna = "Input Pelatih";
 				$rolePengguna->is_aktif         = 1;
-				$rolePengguna->created_by           = auth_data()->pengguna->id_pengguna;
+				$rolePengguna->created_by           = $input->auth_data->pengguna->id_pengguna;
 				$rolePengguna->created_at           = $now;
 				$rolePengguna->save();
 
@@ -252,7 +252,7 @@ class SettingPelatihEkskulController extends BaseController
 				$pelatih->alamat_pelatih_ekskul 	= $input->alamat_pelatih_ekskul;
 				$pelatih->is_aktif 					= $input->is_aktif;
 				$pelatih->updated_at				= $now;
-				$pelatih->updated_by				= auth_data()->pengguna->id_pengguna;
+				$pelatih->updated_by				= $input->auth_data->pengguna->id_pengguna;
 				$pelatih->save();
 
 				$pengguna 			            = Pengguna::where('id_pengguna', '=', $detail->id_pengguna)->first();
@@ -261,7 +261,7 @@ class SettingPelatihEkskulController extends BaseController
 				$pengguna->gelar_depan 			= $input->gelar_depan;
 				$pengguna->gelar_belakang		= $input->gelar_belakang;
 				$pengguna->updated_at		    = $now;
-				$pengguna->updated_by		    = auth_data()->pengguna->id_pengguna;
+				$pengguna->updated_by		    = $input->auth_data->pengguna->id_pengguna;
 				$pengguna->save();
 
 				return [
@@ -273,7 +273,7 @@ class SettingPelatihEkskulController extends BaseController
 				$pelatih                            = PelatihEkskulSet::find($id);
 				$pelatih->is_aktif                  = $input->is_aktif;
 				$pelatih->updated_at                = $now;
-				$pelatih->updated_by                = auth_data()->pengguna->id_pengguna;
+				$pelatih->updated_by                = $input->auth_data->pengguna->id_pengguna;
 				$pelatih->save();
 
 				return [
@@ -288,15 +288,15 @@ class SettingPelatihEkskulController extends BaseController
 					$pelatih->id_ekskul 			= $input->id_ekskul;
 					$pelatih->is_aktif 				= $input->is_aktif;
 					$pelatih->updated_at				= $now;
-					$pelatih->updated_by				= auth_data()->pengguna->id_pengguna;
+					$pelatih->updated_by				= $input->auth_data->pengguna->id_pengguna;
 					$pelatih->save();
 				} else {
 					$pelatih = new PelatihEkskulSet;
-					$pelatih->id_pelatih_ekskul_set = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+					$pelatih->id_pelatih_ekskul_set = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 					$pelatih->id_pelatih_ekskul 	= $input->id_pelatih;
 					$pelatih->id_ekskul 			= $input->id_ekskul;
 					$pelatih->is_aktif 				= $input->is_aktif;
-					$pelatih->created_by 				= auth_data()->pengguna->id_pengguna;
+					$pelatih->created_by 				= $input->auth_data->pengguna->id_pengguna;
 					$pelatih->created_at 				= $now;
 					$pelatih->save();
 				}
@@ -307,7 +307,7 @@ class SettingPelatihEkskulController extends BaseController
 				];
 			} elseif ($mode == 'unassign') {
 				$ekskul                 = PelatihEkskulSet::find($id);
-				$ekskul->deleted_by     = auth_data()->pengguna->id_pengguna;
+				$ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
 				$ekskul->save();
 
 				$ekskul->delete();
@@ -324,7 +324,7 @@ class SettingPelatihEkskulController extends BaseController
 				} else {
 					// make object to find id
 					$ekskul 				= PelatihEkskul::find($id);
-					$ekskul->deleted_by 	= auth_data()->pengguna->id_pengguna;
+					$ekskul->deleted_by 	= $input->auth_data->pengguna->id_pengguna;
 					$ekskul->save();
 
 					$ekskul->delete();

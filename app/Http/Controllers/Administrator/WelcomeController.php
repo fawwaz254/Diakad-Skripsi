@@ -24,7 +24,7 @@ class WelcomeController extends BaseController
     {
         $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $role_aktif = $auth_data->role_aktif;
 
         $role_dashboard = RoleDashboard::where(['id_role' => $role_aktif->id_role, 'is_aktif' => 1])->first();
@@ -33,7 +33,7 @@ class WelcomeController extends BaseController
     public function viewBiodata(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $role_pengguna = RolePengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('role.modul.menus')
             ->get();
         if ($auth_data->pengguna->status_join_table == '1') { //tendik

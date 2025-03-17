@@ -32,7 +32,7 @@ class DataPrestasiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/biodata/data-prestasi/view-data-prestasi', compact('auth_data'));
     }
@@ -41,7 +41,7 @@ class DataPrestasiController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
         $jenis_prestasi = [[1, 'Sains'], [2, 'Seni'], [3, 'Olahraga'], [4, 'Lain-lain']];
@@ -55,7 +55,7 @@ class DataPrestasiController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
         $jenis_prestasi = [[1, 'Sains'], [2, 'Seni'], [3, 'Olahraga'], [4, 'Lain-lain']];
@@ -70,7 +70,7 @@ class DataPrestasiController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
         $role = $auth_data->role_aktif->nm_role;
 
@@ -95,7 +95,7 @@ class DataPrestasiController extends BaseController
 
             if ($mode == 'add') {
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $prestasi = new PrestasiGuru;
                 $prestasi->id_prestasi_guru = $id;
@@ -118,7 +118,7 @@ class DataPrestasiController extends BaseController
                 $prestasi->penyelenggara = $input->penyelenggara;
                 $prestasi->peringkat = $input->peringkat;
                 $prestasi->tanggal = date("Y-m-d", strtotime($input->tanggal));
-                $prestasi->created_by = auth_data()->pengguna->id_pengguna;
+                $prestasi->created_by = $input->auth_data->pengguna->id_pengguna;
                 $prestasi->link_sertifikat = $input->link_sertifikat;
 
                 $prestasi->save();
@@ -150,7 +150,7 @@ class DataPrestasiController extends BaseController
                 $prestasi->tanggal = date("Y-m-d", strtotime($input->tanggal));
                 $prestasi->link_sertifikat = $input->link_sertifikat;
                 $prestasi->updated_at = $now;
-                $prestasi->updated_by = auth_data()->pengguna->id_pengguna;
+                $prestasi->updated_by = $input->auth_data->pengguna->id_pengguna;
 
                 $prestasi->save();
 
@@ -162,7 +162,7 @@ class DataPrestasiController extends BaseController
             } elseif ($mode == 'delete') {
 
                 $prestasi = PrestasiGuru::findOrFail($id);
-                $prestasi->deleted_by  = auth_data()->pengguna->id_pengguna;
+                $prestasi->deleted_by  = $input->auth_data->pengguna->id_pengguna;
                 $prestasi->deleted_at  = $now;
                 $prestasi->save();
 
@@ -179,7 +179,7 @@ class DataPrestasiController extends BaseController
     public function datatablesDataPrestasi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $role = $auth_data->role_aktif->nm_role;
 
         $list_data = PrestasiGuru::select(

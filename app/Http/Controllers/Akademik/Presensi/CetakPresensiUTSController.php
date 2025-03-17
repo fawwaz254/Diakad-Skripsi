@@ -43,7 +43,7 @@ class CetakPresensiUTSController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -54,7 +54,7 @@ class CetakPresensiUTSController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' =>'required'
@@ -77,7 +77,7 @@ class CetakPresensiUTSController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester   = Semester::where('id_semester', '=', $id)->first();
 
@@ -89,7 +89,7 @@ class CetakPresensiUTSController extends BaseController
     public function datatablesCetakPresensiUTS(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         //kode kegiatan diganti sesuai jenis ujiannya
         $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan', 'pengampu_mp.id_guru')
@@ -168,7 +168,7 @@ class CetakPresensiUTSController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

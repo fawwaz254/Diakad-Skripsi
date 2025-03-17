@@ -49,7 +49,7 @@ class ProsesPenetapanController extends BaseController
     // public function viewProsesPenetapan(Request $request)
     // {
     //     $input      = (object) $request->input();
-    //     $auth_data  = auth_data();
+    //     $auth_data  = $input->auth_data;
 
     //     /** get all data penerimaan */
 
@@ -71,7 +71,7 @@ class ProsesPenetapanController extends BaseController
     public function viewProsesPenetapan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         /** Tentukan semester aktif berdasarkan bulan saat ini */
         $currentMonth = Carbon::now()->month;
@@ -112,7 +112,7 @@ class ProsesPenetapanController extends BaseController
     public function actionViewProsesPenetapan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $validator  = Validator::make($request->all(), [
             'id_penerimaan' => 'required'
@@ -139,7 +139,7 @@ class ProsesPenetapanController extends BaseController
     public function showPeserta($id, Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         /** get all data penerimaan */
         $data_penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
@@ -188,7 +188,7 @@ class ProsesPenetapanController extends BaseController
     public function datatablesProsesPenetapan($id, Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibPenerimaan::fetchDataCalonSiswaPenetapan($auth_data, $id);
 
@@ -209,7 +209,7 @@ class ProsesPenetapanController extends BaseController
     public function actionPenetapan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
@@ -227,7 +227,7 @@ class ProsesPenetapanController extends BaseController
                     $c_siswa                = CalonSiswaBaru::find($id_c_siswa);
                     $c_siswa->nomor_ujian   = 'U-' . $c_siswa->kode_voucher;
                     $c_siswa->updated_at    = $now;
-                    $c_siswa->updated_by    = auth_data()->pengguna->id_pengguna;
+                    $c_siswa->updated_by    = $input->auth_data->pengguna->id_pengguna;
                     $c_siswa->save();
                 }
                 DB::commit();
@@ -260,7 +260,7 @@ class ProsesPenetapanController extends BaseController
     public function uploadPenetapan(Request $request, $id_penerimaan)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kelas_paling_rendah = Kelas::orderBy('tingkat')->first();
         $kelas = Kelas::where('tingkat', $kelas_paling_rendah->tingkat)->get();
         return view('ppdb/peserta/proses-penetapan/view-upload-penetapan', compact('auth_data', 'id_penerimaan', 'kelas'));
@@ -269,7 +269,7 @@ class ProsesPenetapanController extends BaseController
     public function uploadPenetapanCalonSiswa(Request $request, $id_penerimaan)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kelas_paling_rendah = Kelas::orderBy('tingkat')->first();
         $kelas = Kelas::where('tingkat', $kelas_paling_rendah->tingkat)->get();
         return view('ppdb/peserta/proses-penetapan/view-upload-penetapan-calon-siswa', compact('auth_data', 'id_penerimaan', 'kelas'));
@@ -279,7 +279,7 @@ class ProsesPenetapanController extends BaseController
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($request->hasFile('file-excel')) {
             $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
@@ -338,7 +338,7 @@ class ProsesPenetapanController extends BaseController
                     if (empty($pengguna)) {
                         //buat pengguna
                         $pengguna = new Pengguna;
-                        $pengguna->id_pengguna = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pengguna->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $updateData = false;
                     } else {
                         $updateData = true;
@@ -356,7 +356,7 @@ class ProsesPenetapanController extends BaseController
 
                     if (empty($siswa)) {
                         $siswa = new Siswa;
-                        $siswa->id_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $siswa->id_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     }
                     //buat siswa
                     $siswa->id_pengguna =  $pengguna->id_pengguna;
@@ -375,7 +375,7 @@ class ProsesPenetapanController extends BaseController
                     if ($updateData) {
                     } else {
                         $role_pengguna = new RolePengguna;
-                        // $role_pengguna->id_role_pengguna = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        // $role_pengguna->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $role_pengguna->id_role = '3';
                         $role_pengguna->id_pengguna = $pengguna->id_pengguna;
                         $role_pengguna->keterangan_role_pengguna = 'Input Pendidikan';
@@ -385,7 +385,7 @@ class ProsesPenetapanController extends BaseController
 
                         //buat admisi
                         $admisi = new Admisi;
-                        $admisi->id_admisi = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $admisi->id_admisi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $admisi->id_siswa  =  $siswa->id_siswa;
                         $admisi->id_semester = $semester->id_semester;
                         $admisi->id_status_pengguna = $status_join_table->id_status_pengguna;
@@ -395,7 +395,7 @@ class ProsesPenetapanController extends BaseController
 
                         //buat jalur_siswa
                         $jalur_siswa = new JalurSiswa;
-                        $jalur_siswa->id_jalur_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $jalur_siswa->id_jalur_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $jalur_siswa->id_siswa = $siswa->id_siswa;
                         $jalur_siswa->id_jalur = $jalur->id_jalur;
                         $jalur_siswa->id_semester = $semester->id_semester;

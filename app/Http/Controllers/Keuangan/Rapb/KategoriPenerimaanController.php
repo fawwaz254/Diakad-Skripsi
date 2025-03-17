@@ -25,7 +25,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('keuangan/rapb/kategori-penerimaan/view-kategori-penerimaan', compact('auth_data'));
     }
@@ -34,7 +34,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -48,7 +48,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kategori_rapb = LibDataKeuangan::fetchDataKategoriRapb($auth_data, null, $id);
 
@@ -58,7 +58,7 @@ class KategoriPenerimaanController extends BaseController
     public function datatablesKategoriPenerimaan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataKategoriRapb($auth_data, 1);
 
         return Datatables::of($list_data)
@@ -87,7 +87,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kategori_rapb = LibDataKeuangan::fetchDataKategoriRapb($auth_data, null, $id_kategori_rapb);
 
@@ -98,7 +98,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -114,7 +114,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kategori_rapb = LibDataKeuangan::fetchDataKategoriRapb($auth_data, null, $id_kategori_rapb);
 
@@ -126,7 +126,7 @@ class KategoriPenerimaanController extends BaseController
     public function datatablesSubkategoriPenerimaan(Request $request, $id_kategori_rapb)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb);
 
         return Datatables::of($list_data)
@@ -151,7 +151,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_subkategori_rapb = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
 
@@ -162,7 +162,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -178,7 +178,7 @@ class KategoriPenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_subkategori_rapb = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
 
@@ -190,7 +190,7 @@ class KategoriPenerimaanController extends BaseController
     public function datatablesKetSubkategoriPenerimaan(Request $request, $id_kategori_rapb, $id_subkategori_rapb)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataKetSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
 
         return Datatables::of($list_data)
@@ -243,7 +243,7 @@ class KategoriPenerimaanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add-kategori') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kategoriRapb                           = new KategoriRapb;
                 $kategoriRapb->id_kategori_rapb         = $id;
@@ -252,8 +252,8 @@ class KategoriPenerimaanController extends BaseController
                 $kategoriRapb->deskripsi_kategori_rapb  = $input->deskripsi_kategori_rapb;
                 $kategoriRapb->tipe_kategori_rapb       = 1;
                 $kategoriRapb->jenis_kategori_rapb      = $input->jenis_kategori_rapb;
-                $kategoriRapb->id_sekolah               = auth_data()->pengguna->id_sekolah;
-                $kategoriRapb->created_by               = auth_data()->pengguna->id_pengguna;
+                $kategoriRapb->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
+                $kategoriRapb->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $kategoriRapb->save();
 
                 return [
@@ -268,7 +268,7 @@ class KategoriPenerimaanController extends BaseController
                 $kategoriRapb->nm_kategori_rapb         = $input->nm_kategori_rapb;
                 $kategoriRapb->deskripsi_kategori_rapb  = $input->deskripsi_kategori_rapb;
                 $kategoriRapb->jenis_kategori_rapb      = $input->jenis_kategori_rapb;
-                $kategoriRapb->updated_by               = auth_data()->pengguna->id_pengguna;
+                $kategoriRapb->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $kategoriRapb->updated_at               = $now;
                 $kategoriRapb->save();
 
@@ -286,7 +286,7 @@ class KategoriPenerimaanController extends BaseController
                 } else {
                     // make object to find id
                     $kategoriRapb               = KategoriRapb::find($id);
-                    $kategoriRapb->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $kategoriRapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kategoriRapb->save();
 
                     $kategoriRapb->delete();
@@ -297,7 +297,7 @@ class KategoriPenerimaanController extends BaseController
                     ];
                 }
             } elseif ($mode == 'add-subkategori') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $subkategoriRapb                                = new SubkategoriRapb;
                 $subkategoriRapb->id_subkategori_rapb           = $id;
@@ -305,7 +305,7 @@ class KategoriPenerimaanController extends BaseController
                 $subkategoriRapb->kode_subkategori_rapb         = $input->kode_subkategori_rapb;
                 $subkategoriRapb->nm_subkategori_rapb           = $input->nm_subkategori_rapb;
                 $subkategoriRapb->deskripsi_subkategori_rapb    = $input->deskripsi_subkategori_rapb;
-                $subkategoriRapb->created_by                    = auth_data()->pengguna->id_pengguna;
+                $subkategoriRapb->created_by                    = $input->auth_data->pengguna->id_pengguna;
                 $subkategoriRapb->save();
 
                 return [
@@ -319,7 +319,7 @@ class KategoriPenerimaanController extends BaseController
                 $subkategoriRapb->kode_subkategori_rapb         = $input->kode_subkategori_rapb;
                 $subkategoriRapb->nm_subkategori_rapb           = $input->nm_subkategori_rapb;
                 $subkategoriRapb->deskripsi_subkategori_rapb    = $input->deskripsi_subkategori_rapb;
-                $subkategoriRapb->updated_by                    = auth_data()->pengguna->id_pengguna;
+                $subkategoriRapb->updated_by                    = $input->auth_data->pengguna->id_pengguna;
                 $subkategoriRapb->updated_at                    = $now;
                 $subkategoriRapb->save();
 
@@ -337,7 +337,7 @@ class KategoriPenerimaanController extends BaseController
                 } else {
                     // make object to find id
                     $subkategoriRapb               = SubkategoriRapb::find($id);
-                    $subkategoriRapb->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $subkategoriRapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $subkategoriRapb->save();
 
                     $subkategoriRapb->delete();
@@ -348,14 +348,14 @@ class KategoriPenerimaanController extends BaseController
                     ];
                 }
             } elseif ($mode == 'add-ket-subkategori') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $ketSubkategoriRapb                             = new KetSubkategoriRapb;
                 $ketSubkategoriRapb->id_ket_subkategori_rapb    = $id;
                 $ketSubkategoriRapb->id_subkategori_rapb        = $input->id_subkategori_rapb;
                 $ketSubkategoriRapb->kode_ket_subkategori_rapb  = $input->kode_ket_subkategori_rapb;
                 $ketSubkategoriRapb->nm_ket_subkategori_rapb    = $input->nm_ket_subkategori_rapb;
-                $ketSubkategoriRapb->created_by                 = auth_data()->pengguna->id_pengguna;
+                $ketSubkategoriRapb->created_by                 = $input->auth_data->pengguna->id_pengguna;
                 $ketSubkategoriRapb->save();
 
                 return [
@@ -368,7 +368,7 @@ class KategoriPenerimaanController extends BaseController
                 $ketSubkategoriRapb                             = KetSubkategoriRapb::find($id);
                 $ketSubkategoriRapb->kode_ket_subkategori_rapb  = $input->kode_ket_subkategori_rapb;
                 $ketSubkategoriRapb->nm_ket_subkategori_rapb    = $input->nm_ket_subkategori_rapb;
-                $ketSubkategoriRapb->updated_by                 = auth_data()->pengguna->id_pengguna;
+                $ketSubkategoriRapb->updated_by                 = $input->auth_data->pengguna->id_pengguna;
                 $ketSubkategoriRapb->updated_at                 = $now;
                 $ketSubkategoriRapb->save();
 
@@ -380,7 +380,7 @@ class KategoriPenerimaanController extends BaseController
             } elseif ($mode == 'delete-ket-subkategori') {
                 // make object to find id
                 $ketSubkategoriRapb               = KetSubkategoriRapb::find($id);
-                $ketSubkategoriRapb->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $ketSubkategoriRapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $ketSubkategoriRapb->save();
 
                 $ketSubkategoriRapb->delete();

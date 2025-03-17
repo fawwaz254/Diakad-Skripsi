@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 use App\Models\PelatihEkskul;
 use App\Models\Pengguna;
@@ -47,8 +46,7 @@ class MobileMiddleware
                 'sekolah_data' => $pengguna->sekolah,
                 'actor' => $actor
             );
-
-            Session::put('auth_data', $auth_data);
+            $request->request->add(['auth_data' => $auth_data]);
 
             return $next($request);
         } else {

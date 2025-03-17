@@ -17,7 +17,7 @@ class HistoriAbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if (empty($start_date) || empty($end_date)) {
             $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');

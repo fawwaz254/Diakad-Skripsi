@@ -27,7 +27,7 @@ class MonitoringKelasKosongController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/guru-piket/monitoring-kelas-kosong/view-monitoring-kelas-kosong', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class MonitoringKelasKosongController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/guru-piket/monitoring-kelas-kosong/view-rekap-monitoring-kelas-kosong', compact('auth_data'));
     }
@@ -44,7 +44,7 @@ class MonitoringKelasKosongController extends BaseController
     public function datatablesMonitoringKelasKosong(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::now();
         $tgl = $now->toDateString();
@@ -104,7 +104,7 @@ class MonitoringKelasKosongController extends BaseController
     public function datatablesRekapMonitoringKelasKosong(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $on_date = $input->on_date;
 

@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use App\Models\WhatsappGroup;
+use App\Jobs\PushNotification;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -16,6 +17,19 @@ use Illuminate\Support\Facades\Artisan;
 
 class NotificationController extends Controller
 {
+
+    public function send(Request $request)
+    {
+        $pengguna = Pengguna::whereNotNull('fcm_token')->get();
+
+        $title = "data Title";
+        $body = "Test Notifikasi";
+
+        $pengguna->each(function ($p) use ($title, $body) {
+            PushNotification::dispatch($p, $title, $body);
+            // $p->notify((new FcmNotification)->with($title, $body));
+        });
+    }
 
     public function viewWhatsappGroup()
     {
@@ -90,13 +104,13 @@ class NotificationController extends Controller
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $new_group                      = new WhatsappGroup();
                 $new_group->id_whatsapp_group   = $id;
                 $new_group->id_kelas            = $input->id_kelas;
                 $new_group->id_group            = $input->id_group;
                 $new_group->nm_group            = $input->nm_group;
-                $new_group->created_by          = auth_data()->pengguna->id_pengguna;
+                $new_group->created_by          = $input->auth_data->pengguna->id_pengguna;
                 $new_group->save();
 
                 return [
@@ -106,7 +120,7 @@ class NotificationController extends Controller
                 ];
             } elseif ($mode == 'delete') {
                 $groups                       = WhatsappGroup::where('id_group', $input->id_group)->first();
-                $groups->deleted_by           = auth_data()->pengguna->id_pengguna;
+                $groups->deleted_by           = $input->auth_data->pengguna->id_pengguna;
                 $groups->save();
                 $groups->delete();
 

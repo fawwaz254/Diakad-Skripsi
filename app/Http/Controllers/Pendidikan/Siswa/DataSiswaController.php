@@ -33,11 +33,11 @@ class DataSiswaController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
-        $jurusan = Jurusan::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
-        $jalur = Jalur::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
-        $status_pengguna = StatusPengguna::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+        $jurusan = Jurusan::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
+        $jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
+        $status_pengguna = StatusPengguna::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
             ->where('status_join_table', '=', 3)
             ->orderBy('nm_status_pengguna')
             ->get();
@@ -60,7 +60,7 @@ class DataSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $validator = Validator::make($request->all(), []);
 
         if ($validator->fails()) {
@@ -80,7 +80,7 @@ class DataSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna);
 
@@ -94,10 +94,10 @@ class DataSiswaController extends BaseController
             }
         });
 
-        $jurusan = Jurusan::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
+        $jurusan = Jurusan::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
         $kelas = Kelas::where('is_aktif', 1)->where('id_jurusan', '=', $id_jurusan)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
-        $jalur = Jalur::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
-        $status_pengguna = StatusPengguna::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+        $jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
+        $status_pengguna = StatusPengguna::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
             ->where('status_join_table', '=', 3)
             ->get();
         $thn_masuk_siswa_list = Siswa::select('thn_masuk_siswa')
@@ -115,7 +115,7 @@ class DataSiswaController extends BaseController
     public function datatablesDataSiswa(Request $request, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna);
 
@@ -178,7 +178,7 @@ class DataSiswaController extends BaseController
     public function viewDetailSiswa(Request $request, $nis_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $siswa1 = Siswa::where('nis_siswa', $nis_siswa)->first();
         $emailSiswa = Pengguna::where('id_pengguna', $siswa1->id_pengguna)->first();
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);

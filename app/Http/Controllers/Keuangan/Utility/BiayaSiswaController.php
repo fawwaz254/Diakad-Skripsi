@@ -27,7 +27,7 @@ class BiayaSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('keuangan/utility/biaya-siswa/view-biaya-siswa', compact('auth_data'));
     }
@@ -35,7 +35,7 @@ class BiayaSiswaController extends BaseController
     public function viewBiayaSiswaByKelas(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -47,7 +47,7 @@ class BiayaSiswaController extends BaseController
     public function setBiayaSiswa($id, Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -63,7 +63,7 @@ class BiayaSiswaController extends BaseController
     public function editBiayaSiswa($id, Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // ambil data kelompok biaya
         $data_kelompok_biaya = LibDataKeuangan::fetchDataKelompokBiaya($auth_data);
@@ -76,7 +76,7 @@ class BiayaSiswaController extends BaseController
     public function datatablesBiayaSiswaBelum(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if (!empty($input->id_kelas)) {
             if ($input->id_kelas == 'notset') {
@@ -116,7 +116,7 @@ class BiayaSiswaController extends BaseController
     public function datatablesBiayaSiswaSudah(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if (!empty($input->id_kelas)) {
             if ($input->id_kelas == 'notset') {
@@ -271,7 +271,7 @@ class BiayaSiswaController extends BaseController
                 $siswa = Siswa::find($id);
                 isset($input->ganti_kelompok_biaya);
                 if (isset($input->ganti_kelompok_biaya) && $input->ganti_kelompok_biaya == '1') {
-                    $auth_data = auth_data();
+                    $auth_data = $input->auth_data;
                     $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
                     //validasi
@@ -328,7 +328,7 @@ class BiayaSiswaController extends BaseController
 
                         if (empty($detail_biaya->deleted_at)) {
                             $tagihanBiaya = new TagihanBiaya;
-                            $tagihanBiaya->id_tagihan_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $tagihanBiaya->id_tagihan_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $tagihanBiaya->id_siswa = $siswa->id_siswa;
                             $tagihanBiaya->id_kelas = $siswa->id_kelas;
                             $tagihanBiaya->id_detail_biaya = $detail_biaya->id_detail_biaya;
@@ -336,7 +336,7 @@ class BiayaSiswaController extends BaseController
                             $tagihanBiaya->denda_biaya = 0;
                             $tagihanBiaya->is_tagih = 1;
                             $tagihanBiaya->keterangan = $detail_biaya->keterangan_biaya;
-                            $tagihanBiaya->created_by = auth_data()->pengguna->id_pengguna;
+                            $tagihanBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
                             $tagihanBiaya->save();
                         }
                     }

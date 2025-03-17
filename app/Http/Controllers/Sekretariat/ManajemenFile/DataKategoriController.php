@@ -23,7 +23,7 @@ class DataKategoriController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // $list_data = CategoryFile::with('category_file_role.nama_role')->get();
         // dd($list_data);
         return view('sekretariat/manajemen-file/data-kategori/view-data-kategori', compact('auth_data'));
@@ -33,7 +33,7 @@ class DataKategoriController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $role = Role::where('id_role', '<>', '14')->get();
         return view('sekretariat/manajemen-file/data-kategori/add-data-kategori', compact('auth_data', 'role'));
     }
@@ -41,7 +41,7 @@ class DataKategoriController extends BaseController
     public function datatablesCategoryfile(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = CategoryFile::with('category_file_role.nama_role')->get();
 
         return Datatables::of($list_data)
@@ -67,7 +67,7 @@ class DataKategoriController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data_kategori = CategoryFile::find($id);
         $role = Role::where('id_role', '<>', '14')->get();
         $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_id)->pluck('id_role');
@@ -96,16 +96,16 @@ class DataKategoriController extends BaseController
 
             if ($mode == 'add') {
                 if ($input->allowed_role ?? false) {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $datakategori                               = new CategoryFile;
                     $datakategori->category_file_id             = $id;
                     $datakategori->category_file_name           = $input->category_file_name;
                     $datakategori->category_file_explanation    = $input->category_file_explanation;
-                    $datakategori->created_by                   = auth_data()->pengguna->id_pengguna;
+                    $datakategori->created_by                   = $input->auth_data->pengguna->id_pengguna;
                     $datakategori->save();
 
                     foreach ($input->allowed_role as $key => $value) {
-                        $uuid = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $datakategori_role = new CategoryFileRole;
                         $datakategori_role->category_file_role_id = $uuid;
                         $datakategori_role->id_role = $input->allowed_role[$key];
@@ -129,7 +129,7 @@ class DataKategoriController extends BaseController
                     $datakategori                               = CategoryFile::find($id);
                     $datakategori->category_file_name           = $input->category_file_name;
                     $datakategori->category_file_explanation    = $input->category_file_explanation;
-                    $datakategori->updated_by                   = auth_data()->pengguna->id_pengguna;
+                    $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
                     $datakategori->updated_at                   = $now;
                     $datakategori->save();
 
@@ -137,7 +137,7 @@ class DataKategoriController extends BaseController
                     CategoryFileRole::where('category_file_id', $id)->delete();
                     $now = Carbon::now();
                     foreach ($input->allowed_role as $key => $value) {
-                        $uuid = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $datakategori_role = new CategoryFileRole;
                         $datakategori_role->category_file_role_id = $uuid;
                         $datakategori_role->id_role = $input->allowed_role[$key];
@@ -165,7 +165,7 @@ class DataKategoriController extends BaseController
                 } else {
                     // make object to find id 
                     $datakategori                       = CategoryFile::find($id);
-                    $datakategori->deleted_by           = auth_data()->pengguna->id_pengguna;
+                    $datakategori->deleted_by           = $input->auth_data->pengguna->id_pengguna;
                     $datakategori->save();
 
                     $datakategori->delete();

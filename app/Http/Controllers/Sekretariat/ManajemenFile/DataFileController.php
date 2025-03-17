@@ -29,7 +29,7 @@ class DataFileController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $category = CategoryFile::all();
         return view('sekretariat/manajemen-file/data-file/view-data-file', compact('auth_data', 'category'));
@@ -40,7 +40,7 @@ class DataFileController extends BaseController
 
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $category = CategoryFile::find($id);
         $sub_category = SubCategoryFile::where('category_file_id', $id)->get();
         return view('sekretariat/manajemen-file/data-file/view-data-file-category', compact('auth_data', 'sub_category', 'category'));
@@ -51,7 +51,7 @@ class DataFileController extends BaseController
 
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $sub_category = SubCategoryFile::find($id);
         $data_file = Pengguna::Has('file_pengguna')
             ->with(["file_pengguna" => function ($q) use ($id) {
@@ -78,7 +78,7 @@ class DataFileController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $category = CategoryFile::all();
         $sub_category = SubCategoryFile::all();
@@ -91,7 +91,7 @@ class DataFileController extends BaseController
         $input = (object) $request->input();
 
         $files = $request->file('file');
-        $id_pengguna = auth_data()->pengguna->id_pengguna;
+        $id_pengguna = $input->auth_data->pengguna->id_pengguna;
 
         if ($mode == 'delete-many') {
             $validator = Validator::make($request->all(), [
@@ -174,7 +174,7 @@ class DataFileController extends BaseController
                     foreach ($files as $file) {
                         $now = Carbon::now();
                         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                         $data = new FilePengguna;
                         $data->file_pengguna_id = $id;
@@ -183,7 +183,7 @@ class DataFileController extends BaseController
                         $data->keterangan = $input->keterangan;
                         $data->sub_category_file_id = $input->sub_category_file_id;
                         $data->created_by = $id_pengguna;
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $uploaded_file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
                         $data->link_file = $uploaded_file;
                         $data->extension_file = $file->extension();
@@ -205,7 +205,7 @@ class DataFileController extends BaseController
                     }
 
                     $now = Carbon::now();
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $data = new FilePengguna;
                     $data->file_pengguna_id = $id;
                     $data->pengguna_id = $id_pengguna;

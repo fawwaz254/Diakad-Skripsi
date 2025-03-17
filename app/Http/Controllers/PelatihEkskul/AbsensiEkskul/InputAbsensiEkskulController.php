@@ -44,7 +44,7 @@ class InputAbsensiEkskulController extends BaseController
     public function viewInputAbsensiEkskul(Request $request, $id_semester = null, $id_ekskul = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -66,7 +66,7 @@ class InputAbsensiEkskulController extends BaseController
     public function viewManageInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -88,7 +88,7 @@ class InputAbsensiEkskulController extends BaseController
     public function viewDetailInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul, $tahun, $id_bulan)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -122,7 +122,7 @@ class InputAbsensiEkskulController extends BaseController
     public function datatablesInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $bulan = Bulan::get();
 
@@ -148,7 +148,7 @@ class InputAbsensiEkskulController extends BaseController
     public function datatablesSiswaInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = PengambilanEkskul::with('siswa', 'siswa.pengguna', 'siswa.pengguna.status_pengguna', 'kelas')->where('id_semester', $id_semester)->where('id_ekskul', $id_ekskul)->get();
 
@@ -236,7 +236,7 @@ class InputAbsensiEkskulController extends BaseController
                     if (!empty($input->id_presensi_ekskul)) {
                         $presensi_ekskul = PresensiEkskul::find($input->id_presensi_ekskul);
                     } else {
-                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_ekskul = new PresensiEkskul;
                         $presensi_ekskul->id_presensi_ekskul = $id;
                         $presensi_ekskul->id_semester = $input->id_semester;
@@ -250,7 +250,7 @@ class InputAbsensiEkskulController extends BaseController
 
 
                     if (!empty(request()->file)) {
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
 
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ekstra/' . $input->id_ekskul . '/' . $id, request()->file, 'public');
                         $presensi_ekskul->image  = $file;
@@ -280,15 +280,15 @@ class InputAbsensiEkskulController extends BaseController
                         }
 
                         if ($presensi_ekskul_peserta = PresensiEkskulPeserta::where('id_presensi_ekskul', '=', $presensi_ekskul->id_presensi_ekskul)->where('id_siswa', '=', $item->id_siswa)->first()) {
-                            $presensi_ekskul_peserta->updated_by                = auth_data()->pengguna->id_pengguna;
+                            $presensi_ekskul_peserta->updated_by                = $input->auth_data->pengguna->id_pengguna;
                         } else {
                             // make id
-                            $id_presensi_ekskul_peserta = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_presensi_ekskul_peserta = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $presensi_ekskul_peserta                                = new PresensiEkskulPeserta;
                             $presensi_ekskul_peserta->id_presensi_ekskul            = $presensi_ekskul->id_presensi_ekskul;
                             $presensi_ekskul_peserta->id_presensi_ekskul_peserta    = $id_presensi_ekskul_peserta;
-                            $presensi_ekskul_peserta->created_by                    = auth_data()->pengguna->id_pengguna;
+                            $presensi_ekskul_peserta->created_by                    = $input->auth_data->pengguna->id_pengguna;
                         }
 
                         $presensi_ekskul_peserta->id_siswa                    = $item->id_siswa;
@@ -354,7 +354,7 @@ class InputAbsensiEkskulController extends BaseController
     public function viewExcelInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view(
             'pelatih-ekskul/absensi-ekskul/input-absensi-ekskul/excel-input-absensi-ekskul',
@@ -365,7 +365,7 @@ class InputAbsensiEkskulController extends BaseController
     public function downloadExcelInputAbsensiEkskul(Request $request, $id_semester, $id_ekskul, $day, $start_date, $end_date, $jam_mulai, $jam_selesai)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $dates = CarbonPeriod::create($start_date, $end_date);
         $tanggal = [];

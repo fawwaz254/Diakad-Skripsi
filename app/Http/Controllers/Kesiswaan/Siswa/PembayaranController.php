@@ -29,7 +29,7 @@ class PembayaranController extends BaseController
 	public function viewPembayaran(Request $request, $nis_nama_siswa = null){
 	    # code..
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		return view('kesiswaan/siswa/pembayaran/view-pembayaran',compact('auth_data','nis_nama_siswa'));
 	}
@@ -37,7 +37,7 @@ class PembayaranController extends BaseController
 	public function actionViewPembayaran(Request $request){
       # code...
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		$validator = Validator::make($request->all(), [
 			'nis_nama_siswa' =>'required'
@@ -59,7 +59,7 @@ class PembayaranController extends BaseController
 
      public function datatablesPembayaran(Request $request, $nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = Siswa::select('siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna','kelas.nm_kelas','status_pengguna.nm_status_pengguna','jalur.nm_jalur', DB::raw("(SELECT SUM(besar_biaya) FROM tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL) AS total_tagihan"), DB::raw("(SELECT SUM(denda_biaya) FROM tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL) AS total_denda"), DB::raw("(SELECT SUM(besar_pembayaran) FROM tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL) AS total_pembayaran"))
           ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
@@ -94,7 +94,7 @@ class PembayaranController extends BaseController
     public function viewDetailPembayaran(Request $request, $nis_nama_siswa){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
   
@@ -103,7 +103,7 @@ class PembayaranController extends BaseController
     public function viewDetailSiswaPembayaran(Request $request, $nis_siswa, $nis_nama_siswa_asli){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
 
@@ -112,7 +112,7 @@ class PembayaranController extends BaseController
 
     public function datatablesTagihanPembayaran(Request $request, $id_pengguna, $nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchTagihanSiswa($auth_data, $id_pengguna);
 
@@ -159,7 +159,7 @@ class PembayaranController extends BaseController
 
     public function datatablesRiwayatBayarSiswa(Request $request, $id_pengguna){
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchPembayaranSiswa($auth_data, $id_pengguna);
 

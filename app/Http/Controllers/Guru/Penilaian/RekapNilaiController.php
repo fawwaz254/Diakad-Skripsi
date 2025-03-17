@@ -29,7 +29,7 @@ class RekapNilaiController extends BaseController
     public function viewRekapNilai(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -48,7 +48,7 @@ class RekapNilaiController extends BaseController
     public function viewDetailRekapNilai(Request $request, $id_kelas_mp){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -105,7 +105,7 @@ class RekapNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 

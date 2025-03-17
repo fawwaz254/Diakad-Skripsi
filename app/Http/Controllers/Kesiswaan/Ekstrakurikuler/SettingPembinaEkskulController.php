@@ -27,7 +27,7 @@ class SettingPembinaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('kesiswaan/ekstrakurikuler/setting-pembina-ekskul/view-setting-pembina-ekskul', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class SettingPembinaEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now    = Carbon::now();
@@ -50,7 +50,7 @@ class SettingPembinaEkskulController extends BaseController
 
         $ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
-        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/ekstrakurikuler/setting-pembina-ekskul/assign-setting-pembina-ekskul', compact('auth_data', 'pembina', 'ekskul', 'data_guru', 'id'));
     }
@@ -58,7 +58,7 @@ class SettingPembinaEkskulController extends BaseController
     public function datatablesSettingPembinaEkskul(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = PembinaEkskulSet::select('pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pembina_ekskul_set.is_aktif', 'ekskul.nm_ekskul', 'guru.id_guru', 'guru.nip_guru', 'pembina_ekskul_set.id_pembina_ekskul_set')
             ->join('guru', 'guru.id_guru', '=', 'pembina_ekskul_set.id_guru')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
@@ -99,7 +99,7 @@ class SettingPembinaEkskulController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -119,15 +119,15 @@ class SettingPembinaEkskulController extends BaseController
                     $pembina->id_ekskul             = $input->id_ekskul;
                     $pembina->is_aktif              = $input->is_aktif;
                     $pembina->updated_at            = $now;
-                    $pembina->updated_by            = auth_data()->pengguna->id_pengguna;
+                    $pembina->updated_by            = $input->auth_data->pengguna->id_pengguna;
                     $pembina->save();
                 } else {
                     $pembina = new PembinaEkskulSet;
-                    $pembina->id_pembina_ekskul_set = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $pembina->id_pembina_ekskul_set = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $pembina->id_guru               = $input->id_guru;
                     $pembina->id_ekskul             = $input->id_ekskul;
                     $pembina->is_aktif              = $input->is_aktif;
-                    $pembina->created_by            = auth_data()->pengguna->id_pengguna;
+                    $pembina->created_by            = $input->auth_data->pengguna->id_pengguna;
                     $pembina->created_at            = $now;
                     $pembina->save();
                 }
@@ -138,14 +138,14 @@ class SettingPembinaEkskulController extends BaseController
                 ];
             } elseif ($mode == 'delete') {
                 $ekskul         = PembinaEkskulSet::find($id);
-                $ekskul->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $ekskul->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $ekskul->save();
 
                 $ekskul->delete();
 
                 // $detail        = PelatihEkskul::where('id_pelatih_ekskul','=',$id)->first();
                 // $pengguna        = Pengguna::find($detail->id_pengguna);
-                // $pengguna->deleted_by  =  auth_data()->pengguna->id_pengguna;
+                // $pengguna->deleted_by  =  $input->auth_data->pengguna->id_pengguna;
                 // $pengguna->save();
 
                 // $pengguna->delete();

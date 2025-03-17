@@ -31,7 +31,7 @@ class AktivitasRewardSiswaController extends Controller
     public function datatablesAktivitasRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($request->ajax()) {
             $data = AktivitasRewardSiswa::with('jenisAktivitasReward')
@@ -57,7 +57,7 @@ class AktivitasRewardSiswaController extends Controller
     public function addAktivitasRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jenis_aktivitas = JenisAktivitasReward::all();
 
@@ -67,7 +67,7 @@ class AktivitasRewardSiswaController extends Controller
     public function saveAktivitasRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validatedData = $request->validate([
             'jenis_aktivitas_reward'    => 'required',
@@ -92,7 +92,7 @@ class AktivitasRewardSiswaController extends Controller
         $aktivitas_reward_siswa->is_guru                    = $input->is_guru;
         $aktivitas_reward_siswa->is_siswa                   = $input->is_siswa;
         $aktivitas_reward_siswa->is_aktif                   = $input->status;
-        $aktivitas_reward_siswa->created_by                 = auth_data()->pengguna->id_pengguna;
+        $aktivitas_reward_siswa->created_by                 = $input->auth_data->pengguna->id_pengguna;
         $aktivitas_reward_siswa->save();
 
         return response()->json([
@@ -149,7 +149,7 @@ class AktivitasRewardSiswaController extends Controller
         ]);
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         try {
             $data_excel = Excel::toArray(new DataImportExcel, $request->file('file'));
@@ -208,7 +208,7 @@ class AktivitasRewardSiswaController extends Controller
                         }
                         $aktivitas_reward_siswa->nilai_karakter             = rtrim($nilai_karakter_save, '#');
                         $aktivitas_reward_siswa->is_aktif                   = 1;
-                        $aktivitas_reward_siswa->created_by                 = auth_data()->pengguna->id_pengguna;
+                        $aktivitas_reward_siswa->created_by                 = $input->auth_data->pengguna->id_pengguna;
                         $aktivitas_reward_siswa->save();
                     }
                 }
@@ -239,7 +239,7 @@ class AktivitasRewardSiswaController extends Controller
     {
         $input = (object) $request->input();
         // dd($input);
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data = AktivitasRewardSiswa::find($input->id);
         if ($data) {
@@ -271,7 +271,7 @@ class AktivitasRewardSiswaController extends Controller
     public function updateAktivitasRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validatedData = $request->validate([
             'jenis_aktivitas_reward'    => 'required',
@@ -296,7 +296,7 @@ class AktivitasRewardSiswaController extends Controller
         $aktivitas_reward_siswa->is_guru                    = $input->is_guru;
         $aktivitas_reward_siswa->is_sekretaris              = $input->is_sekretaris;
         $aktivitas_reward_siswa->is_aktif                   = $input->status;
-        $aktivitas_reward_siswa->created_by                 = auth_data()->pengguna->id_pengguna;
+        $aktivitas_reward_siswa->created_by                 = $input->auth_data->pengguna->id_pengguna;
         $aktivitas_reward_siswa->update();
 
         return response()->json([
@@ -315,7 +315,7 @@ class AktivitasRewardSiswaController extends Controller
     {
         // dd('masuk sini');
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // dd($input);
 
@@ -326,7 +326,7 @@ class AktivitasRewardSiswaController extends Controller
     {
         // dd('masuk datatables');
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($request->ajax()) {
             $data = RewardSiswa::select([
@@ -359,7 +359,7 @@ class AktivitasRewardSiswaController extends Controller
     public function viewInputCapaianKarakter(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         // dd($data_kelas);

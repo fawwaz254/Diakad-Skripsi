@@ -31,7 +31,7 @@ class DataKategoriMGMPController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data()->role_aktif->id_pengguna;
+        $auth_data = $input->auth_data->role_aktif->id_pengguna;
 
         return view('akademik/mgmp/data-kategori/view-data-kategori', compact('auth_data'));
     }
@@ -41,8 +41,8 @@ class DataKategoriMGMPController extends BaseController
         //$list_data = CategoryFileGuru::all();
 
         // $input = (object) $request->input();
-        // dd(auth_data());
-        // $auth_data = auth_data()->role_aktif->id_pengguna;
+        // dd($input->auth_data);
+        // $auth_data = $input->auth_data->role_aktif->id_pengguna;
         // $list_data = CategoryFileGuru::join('category_file_mgmp', 'category_file.category_file_mgmp_id', '=', 'category_file_guru.category_file_mgmp_id')
         //     ->where('category_file_guru.id_pengguna', $auth_data)
         //     ->select('category_file_mgmp.*')->get();
@@ -50,7 +50,7 @@ class DataKategoriMGMPController extends BaseController
         ///////////////////////////
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // $list_data = CategoriFileMGMP::all();
         $list_data = '';
@@ -80,7 +80,7 @@ class DataKategoriMGMPController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $mata_pelajaran = MataPelajaran::isAktif()->get();
 
 
@@ -101,7 +101,7 @@ class DataKategoriMGMPController extends BaseController
         // dd($category_file_id);
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $mata_pelajaran = MataPelajaran::isAktif()->get();
         $name = CategoriFileMGMP::where('category_file_mgmp_id', $category_file_id)->first();
         $data_kategori = CategoriFileGuru::where('category_file_mgmp_id', $category_file_id)->first();
@@ -139,17 +139,17 @@ class DataKategoriMGMPController extends BaseController
             if ($mode == 'add') {
 
                 if ($input->allowed_guru ?? false) {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $datakategori = new CategoriFileMGMP;
                     $datakategori->category_file_mgmp_id = $id;
                     $datakategori->category_file_name = $input->category_file_name;
                     $datakategori->category_file_explanation = $input->category_file_explanation;
                     $datakategori->is_aktif = 1;
-                    $datakategori->created_by = auth_data()->pengguna->id_pengguna;
+                    $datakategori->created_by = $input->auth_data->pengguna->id_pengguna;
                     $datakategori->save();
 
                     foreach ($input->allowed_guru as $key => $value) {
-                        $uuid = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $datakategori_guru = new CategoriFileGuru;
                         $datakategori_guru->category_file_guru_id = $uuid;
                         $datakategori_guru->id_pengguna = $input->allowed_guru[$key];
@@ -158,7 +158,7 @@ class DataKategoriMGMPController extends BaseController
                         $datakategori_guru->save();
                     }
 
-                    // $uuid1 = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    // $uuid1 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     // $subkategori = new SubCategoryFileMGMP(); 
                     // $subkategori->sub_category_file_id = $uuid1;
                     // $subkategori->sub_category_file_name = 'Folder Akademik';
@@ -166,7 +166,7 @@ class DataKategoriMGMPController extends BaseController
                     // $subkategori->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
                     // $subkategori->save();
 
-                    // $uuid2 = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    // $uuid2 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     // $subkategori2 = new SubCategoryFileMGMP(); 
                     // $subkategori2->sub_category_file_id = $uuid2;
                     // $subkategori2->sub_category_file_name = 'Folder Guru';
@@ -192,7 +192,7 @@ class DataKategoriMGMPController extends BaseController
                 $datakategori->category_file_name = $input->category_file_name;
                 $datakategori->category_file_explanation = $input->category_file_explanation;
                 $datakategori->is_aktif = $input->is_aktif;
-                $datakategori->updated_by = auth_data()->pengguna->id_pengguna;
+                $datakategori->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $datakategori->updated_at = $now;
                 $datakategori->save();
 
@@ -200,7 +200,7 @@ class DataKategoriMGMPController extends BaseController
                 CategoriFileGuru::where('category_file_mgmp_id', $id)->delete();
                 $now = Carbon::now();
                 foreach ($input->allowed_guru as $key => $value) {
-                    $uuid = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $datakategori_role = new CategoriFileGuru();
                     $datakategori_role->category_file_guru_id = $uuid;
                     $datakategori_role->id_pengguna = $input->allowed_guru[$key];
@@ -232,7 +232,7 @@ class DataKategoriMGMPController extends BaseController
                     }
 
                     $datakategori = CategoriFileMGMP::where('category_file_mgmp_id', $id)->first();
-                    $datakategori->deleted_by = auth_data()->pengguna->id_pengguna;
+                    $datakategori->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $datakategori->save();
 
                     $datakategori->delete();
@@ -251,7 +251,7 @@ class DataKategoriMGMPController extends BaseController
     public function viewLaporanAllMGMP(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data = Pengguna::where('status_join_table', 2)->orderBy('nm_pengguna', 'asc')->get(['id_pengguna', 'nm_pengguna']);
 
@@ -291,7 +291,7 @@ class DataKategoriMGMPController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);

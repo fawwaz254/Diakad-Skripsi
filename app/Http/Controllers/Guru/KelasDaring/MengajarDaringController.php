@@ -35,7 +35,7 @@ class MengajarDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/kelas-daring/mengajar-daring/view-mengajar-daring', compact('auth_data'));
     }
@@ -43,7 +43,7 @@ class MengajarDaringController extends BaseController
     public function datatablesMengajarDaring(Request $request){
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
@@ -137,7 +137,7 @@ class MengajarDaringController extends BaseController
     public function viewDetailMengajarDaring(Request $request,$id){
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data = PresensiMp::with('kelas_mp.kelas_mp_grup')->find($id);
         $data_materi = PresensiMpMateri::where('id_presensi_mp',$id)->get();
@@ -150,7 +150,7 @@ class MengajarDaringController extends BaseController
     public function changeStatusMengajarDaring(Request $request,$id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data = PresensiMp::find($id);
         $data->tgl_entry = Carbon::now()->format('Y-m-d');

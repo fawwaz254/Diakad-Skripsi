@@ -28,7 +28,7 @@ class KondisiRuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/view-kondisi-ruangan', compact('auth_data'));
     }
@@ -37,7 +37,7 @@ class KondisiRuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -55,7 +55,7 @@ class KondisiRuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
@@ -69,7 +69,7 @@ class KondisiRuanganController extends BaseController
     public function datatablesKondisiRuangan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataKondisiRuangan($auth_data);
 
         return Datatables::of($list_data)
@@ -118,7 +118,7 @@ class KondisiRuanganController extends BaseController
                         'message' => 'Kerusakan Ruangan Sudah Ada!'
                     ];
                 } else {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $kondisiRuangan                                 = new KondisiRuangan;
                     $kondisiRuangan->id_kondisi_ruangan             = $id;
@@ -126,7 +126,7 @@ class KondisiRuanganController extends BaseController
                     $kondisiRuangan->id_kerusakan_ruangan           = $input->id_kerusakan_ruangan;
                     $kondisiRuangan->persentase_kerusakan_ruangan   = $input->persentase_kerusakan_ruangan;
                     $kondisiRuangan->keterangan_kerusakan_ruangan   = $input->keterangan_kerusakan_ruangan;
-                    $kondisiRuangan->created_by                     = auth_data()->pengguna->id_pengguna;
+                    $kondisiRuangan->created_by                     = $input->auth_data->pengguna->id_pengguna;
                     $kondisiRuangan->save();
 
                     return [
@@ -149,7 +149,7 @@ class KondisiRuanganController extends BaseController
                         $kondisiRuangan->id_kerusakan_ruangan           = $input->id_kerusakan_ruangan;
                         $kondisiRuangan->persentase_kerusakan_ruangan   = $input->persentase_kerusakan_ruangan;
                         $kondisiRuangan->keterangan_kerusakan_ruangan   = $input->keterangan_kerusakan_ruangan;
-                        $kondisiRuangan->updated_by                     = auth_data()->pengguna->id_pengguna;
+                        $kondisiRuangan->updated_by                     = $input->auth_data->pengguna->id_pengguna;
                         $kondisiRuangan->updated_at                     = $now;
                         $kondisiRuangan->save();
 
@@ -163,7 +163,7 @@ class KondisiRuanganController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $kondisiRuangan               = KondisiRuangan::find($id);
-                $kondisiRuangan->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $kondisiRuangan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $kondisiRuangan->save();
 
                 $kondisiRuangan->delete();
@@ -180,7 +180,7 @@ class KondisiRuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/import-excel', compact('auth_data'));
     }
@@ -189,7 +189,7 @@ class KondisiRuanganController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -270,7 +270,7 @@ class KondisiRuanganController extends BaseController
                             $data->id_kerusakan_ruangan           = $check_kerusakan->id_kerusakan_ruangan;
                             $data->persentase_kerusakan_ruangan   = $value->presentase_kerusakan;
                             $data->keterangan_kerusakan_ruangan   = $value->keterangan;
-                            $data->created_by                     = auth_data()->pengguna->id_pengguna;
+                            $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
                         }
 

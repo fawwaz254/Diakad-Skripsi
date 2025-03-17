@@ -33,7 +33,7 @@ class RekapAbsensiEkskulController extends BaseController
     public function viewRekapAbsensiEkskul(Request $request, $id_semester = null, $id_ekskul = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -55,7 +55,7 @@ class RekapAbsensiEkskulController extends BaseController
     public function viewDetailRekapAbsensiEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -80,7 +80,7 @@ class RekapAbsensiEkskulController extends BaseController
     public function printRekapAbsensiEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -113,7 +113,7 @@ class RekapAbsensiEkskulController extends BaseController
     public function printRekapAbsensiKehadiranEkskul(Request $request, $id_semester, $id_ekskul, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 

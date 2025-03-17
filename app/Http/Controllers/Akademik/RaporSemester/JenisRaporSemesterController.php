@@ -12,7 +12,7 @@ class JenisRaporSemesterController extends Controller
     public function viewJenisRaporSemester(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('akademik/rapor-semester/jenis-rapor/view-jenis-rapor', compact('auth_data'));
     }
@@ -20,7 +20,7 @@ class JenisRaporSemesterController extends Controller
     public  function datatablesJenisRaporSemester(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = Kelas::where('is_aktif', '1')->orderBy('tingkat')->with('jenis_rapor.komponen_jenis_rapor')->get();
 
         return Datatables::of($list_data)

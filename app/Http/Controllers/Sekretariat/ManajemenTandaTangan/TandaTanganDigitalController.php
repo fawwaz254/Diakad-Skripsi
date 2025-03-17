@@ -22,7 +22,7 @@ class TandaTanganDigitalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sekretariat/manajemen-tanda-tangan/tanda-tangan-digital/view-tanda-tangan-digital', compact('auth_data'));
     }
@@ -30,7 +30,7 @@ class TandaTanganDigitalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         return view('sekretariat/manajemen-tanda-tangan/tanda-tangan-digital/add-tanda-tangan-digital', compact('auth_data'));
     }
 
@@ -38,7 +38,7 @@ class TandaTanganDigitalController extends BaseController
     {
         $input = (object) $request->input();
         $dokumen_tanda_tangan_digital = DokumenTandaTanganDigital::find($id);
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $link_dokumen = Storage::disk('spaces')->url($dokumen_tanda_tangan_digital->link_dokumen);
 
         return view('sekretariat/manajemen-tanda-tangan/tanda-tangan-digital/edit-tanda-tangan-digital', compact('auth_data', 'dokumen_tanda_tangan_digital', 'link_dokumen'));
@@ -47,7 +47,7 @@ class TandaTanganDigitalController extends BaseController
     public function previewDocument(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $dokumen_tanda_tangan_digital = DokumenTandaTanganDigital::findOrFail($id);
         $kepala_sekolah = UnitKerja::with('guru.pengguna')->where('nm_unit_kerja', 'Pimpinan')->first();
         $link_dokumen = Storage::disk('spaces')->url($dokumen_tanda_tangan_digital->link_dokumen);
@@ -58,7 +58,7 @@ class TandaTanganDigitalController extends BaseController
     public function datatablesTandaTanganDigital(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = DokumenTandaTanganDigital::get();
 
         return Datatables::of($list_data)
@@ -75,7 +75,7 @@ class TandaTanganDigitalController extends BaseController
     public function actionTandaTanganDigital(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         //mengambil waktu sekarang
         $now = Carbon::now();
 
@@ -92,8 +92,8 @@ class TandaTanganDigitalController extends BaseController
                 }
 
                 $file = $request->file('file');
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
-                $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                 $uploaded_file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
                 $jumlah_dokumen = DokumenTandaTanganDigital::count();
 
@@ -104,7 +104,7 @@ class TandaTanganDigitalController extends BaseController
                 $dokumen_tanda_tangan_digital->isi_dokumen = $input->isi_dokumen;
                 $dokumen_tanda_tangan_digital->link_dokumen = $uploaded_file;
                 $dokumen_tanda_tangan_digital->is_approve = 0;
-                $dokumen_tanda_tangan_digital->created_by = auth_data()->pengguna->id_pengguna;
+                $dokumen_tanda_tangan_digital->created_by = $input->auth_data->pengguna->id_pengguna;
                 $dokumen_tanda_tangan_digital->save();
 
                 return [
@@ -125,12 +125,12 @@ class TandaTanganDigitalController extends BaseController
                 if ($dokumen_tanda_tangan_digital = DokumenTandaTanganDigital::where('id_tanda_tangan_digital', $id)->first()) {
                     $dokumen_tanda_tangan_digital->perihal_dokumen = $input->perihal_dokumen;
                     $dokumen_tanda_tangan_digital->isi_dokumen = $input->isi_dokumen;
-                    $dokumen_tanda_tangan_digital->updated_by = auth_data()->pengguna->id_pengguna;
+                    $dokumen_tanda_tangan_digital->updated_by = $input->auth_data->pengguna->id_pengguna;
 
                     if ($request->hasFile('file')) {
                         $file = $request->file('file');
-                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $uploaded_file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
                         $dokumen_tanda_tangan_digital->link_dokumen = $uploaded_file;
                     }
@@ -144,7 +144,7 @@ class TandaTanganDigitalController extends BaseController
                 break;
             case 'delete':
                 $dokumen_tanda_tangan_digital = DokumenTandaTanganDigital::find($id);
-                $dokumen_tanda_tangan_digital->deleted_by = auth_data()->pengguna->id_pengguna;
+                $dokumen_tanda_tangan_digital->deleted_by = $input->auth_data->pengguna->id_pengguna;
                 $dokumen_tanda_tangan_digital->save();
                 Storage::disk('spaces')->delete($dokumen_tanda_tangan_digital->link_dokumen);
                 $dokumen_tanda_tangan_digital->delete();

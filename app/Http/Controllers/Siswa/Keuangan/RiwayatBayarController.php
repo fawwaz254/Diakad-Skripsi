@@ -21,7 +21,7 @@ class RiwayatBayarController extends BaseController{
     public function viewRiwayatBayar(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
     	return view('siswa/keuangan/riwayat-bayar/view-riwayat-bayar',compact('auth_data'));
 
@@ -29,7 +29,7 @@ class RiwayatBayarController extends BaseController{
 
     public function datatablesRiwayatBayar(Request $request){
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         /*$nmeng = array('January', 'February', 'March', '');
         $nmtur = array('Januari', 'Februari', 'Maret, '');

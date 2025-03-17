@@ -21,7 +21,7 @@ class HasilPlacementController extends Controller
     public function viewHasilPlacement(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         return view('ppdb/hasil-placement/view-hasil-placement', compact('auth_data'));
     }
@@ -30,7 +30,7 @@ class HasilPlacementController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // $list_data = LibPenerimaan::fetchDataCalonSiswaPenetapan($auth_data, $id = null);
         $list_data = CalonSiswaBaru::select('calon_siswa_baru.id_c_siswa', 'calon_siswa_baru.kode_voucher', 'calon_siswa_baru.nm_c_siswa', 'calon_siswa_baru.nomor_hp', 'calon_siswa_sekolah.nm_sekolah_asal', 'calon_siswa_baru.path_file')
@@ -71,7 +71,7 @@ class HasilPlacementController extends Controller
     public function viewUploadPlacement(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
 
@@ -121,7 +121,7 @@ class HasilPlacementController extends Controller
 
                 if ($request->hasFile('file_hasil_placement')) {
 
-                    $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                     $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ppdb/' . $data->id_c_siswa, request()->file_hasil_placement, 'public');
 
                     $calon_siswa                        = CalonSiswaBaru::find($request->id_c_siswa);
@@ -153,7 +153,7 @@ class HasilPlacementController extends Controller
 
             $hasil_placement->file_hasil_placement = null;
             $hasil_placement->path_file = null;
-            $hasil_placement->updated_by = auth_data()->pengguna->id_pengguna;
+            $hasil_placement->updated_by = $input->auth_data->pengguna->id_pengguna;
 
             $hasil_placement->save();
 
@@ -167,7 +167,7 @@ class HasilPlacementController extends Controller
     public function previewHasilPlacement(Request $request, $id_c_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_hasil_placement = CalonSiswaBaru::findOrFail($id_c_siswa);
         $ext = pathinfo($data_hasil_placement->path_file, PATHINFO_EXTENSION);

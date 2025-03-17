@@ -33,7 +33,7 @@ class FormLainnyaController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('tendik/kegiatan-harian/form-lainnya/view-list-form-lainnya', compact('auth_data'));
     }
@@ -41,7 +41,7 @@ class FormLainnyaController extends Controller
     public function datatablesListFormLainnya(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = KegiatanHarian::where('nm_kegiatan_harian', '!=', 'Monitoring Kesehatan COV-19')->get();
 
         return Datatables::of($list_data)
@@ -69,7 +69,7 @@ class FormLainnyaController extends Controller
     public function isiFormLainnya(Request $request, $id_form)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $kegiatan_harian = KegiatanHarian::with('kategori_pertanyaan', 'kategori_pertanyaan.pertanyaan', 'kategori_pertanyaan.pertanyaan.jawaban')->where('is_aktif', 1)->where('id_kegiatan_harian', $id_form)->first();
         $data_kegiatan_harian_kategori = $kegiatan_harian->kategori_pertanyaan;
@@ -80,7 +80,7 @@ class FormLainnyaController extends Controller
     {
         // dd($id_form);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kegiatan_harian  = KegiatanHarian::find($id_form);
 
         return view('tendik/kegiatan-harian/form-lainnya/view-form-lainnya', compact('auth_data', 'id_form', 'kegiatan_harian'));
@@ -92,7 +92,7 @@ class FormLainnyaController extends Controller
     public function postIsiFormLainnya(Request $request, $id_form, $mode)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // dd($mode);
 
 
@@ -135,7 +135,7 @@ class FormLainnyaController extends Controller
         }
 
         if ($mode == 'add') {
-            $pengisian_kegiatan_harian_id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
             // switch($request->segment(1)){
             //     case 'tendik':
@@ -157,7 +157,7 @@ class FormLainnyaController extends Controller
             $batch_insert_pengisian_jawaban = array();
             foreach ($input->jawaban_pertanyaan as $id_pertanyaan => $id_jawaban) {
                 $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $batch_insert_pengisian_jawaban[] = array(
                     'id_pengisian_jawaban'            => $id,
@@ -186,12 +186,12 @@ class FormLainnyaController extends Controller
             $insert_pengisian_kegiatan = array();
             // $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
             $insert_pengisian_kegiatan['id_pengisian_kegiatan_harian']   = $pengisian_kegiatan_harian_id;
-            $insert_pengisian_kegiatan['id_pengguna_pengisi']            = auth_data()->pengguna->id_pengguna;
+            $insert_pengisian_kegiatan['id_pengguna_pengisi']            = $input->auth_data->pengguna->id_pengguna;
             $insert_pengisian_kegiatan['id_kegiatan_harian']            = $id_form;
             $insert_pengisian_kegiatan['status_join_table']              = $status_join;
             $insert_pengisian_kegiatan['warna_keadaan']                  = $pengisian_jawaban_terbobot['warna_keadaan'];
             $insert_pengisian_kegiatan['status_pengisian']               = $status_pengisian;
-            $insert_pengisian_kegiatan['created_by']                     = auth_data()->pengguna->id_pengguna;
+            $insert_pengisian_kegiatan['created_by']                     = $input->auth_data->pengguna->id_pengguna;
             // if ($now->between($start_1, $end_1)) {
             $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today()->format('Y-m-d');
             // } else if ($now->between($start_2, $end_2)) {
@@ -231,7 +231,7 @@ class FormLainnyaController extends Controller
             $pengisian_kegiatan_harian  = PengisianKegiatanHarian::where('id_pengisian_kegiatan_harian', $id_form)->first();
             $pengisian_jawaban          = PengisianJawaban::where('id_pengisian_kegiatan_harian', $id_form)->delete();
 
-            $pengisian_kegiatan_harian->deleted_by   = auth_data()->pengguna->id_pengguna;
+            $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
             $pengisian_kegiatan_harian->save();
 
             $pengisian_kegiatan_harian->delete();
@@ -249,8 +249,8 @@ class FormLainnyaController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
-        $list_data = PengisianKegiatanHarian::where('id_kegiatan_harian', $id_form)->where('id_pengguna_pengisi', auth_data()->pengguna->id_pengguna)->with('pengguna_pengisi')->get();
+        $auth_data = $input->auth_data;
+        $list_data = PengisianKegiatanHarian::where('id_kegiatan_harian', $id_form)->where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->with('pengguna_pengisi')->get();
         return Datatables::of($list_data)
             // ->editColumn('pengguna_pengisi.nm_pengguna', function ($item) {
             //     return $item->pengguna_pengisi->fullname();
@@ -277,7 +277,7 @@ class FormLainnyaController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pengisian_kegiatan_harian = PengisianKegiatanHarian::with('pengguna_pengisi')->where('id_pengisian_kegiatan_harian', $id)->first();
 

@@ -35,7 +35,7 @@ class PlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
@@ -48,7 +48,7 @@ class PlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -72,7 +72,7 @@ class PlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -97,7 +97,7 @@ class PlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
@@ -111,7 +111,7 @@ class PlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
@@ -135,7 +135,7 @@ class PlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
@@ -158,7 +158,7 @@ class PlottingMapelSiswaController extends BaseController
     public function datatablesPlottingMapelSiswa(Request $request, $id, $angkatan)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = Jurusan::select(
             'jurusan.id_jurusan',
             'jurusan.nm_jurusan',
@@ -204,7 +204,7 @@ class PlottingMapelSiswaController extends BaseController
     public function datatablesMataPelajaran(Request $request, $id, $angkatan, $tingkat)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         if ($tingkat == "0") {
             $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
                 ->join('kelas_mp', function ($q) {
@@ -274,14 +274,14 @@ class PlottingMapelSiswaController extends BaseController
     public function datatablesSiswa(Request $request, $angkatan, $kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = Siswa::join('pengguna', function ($q) {
             $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                 ->whereNull('pengguna.deleted_at');
         })
             ->join('status_pengguna', function ($q) use ($input) {
                 $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                    ->where('status_pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                    ->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                     ->where('status_pengguna.aktif_status_pengguna', '=', '1')
                     ->whereNull('status_pengguna.deleted_at');
             })
@@ -317,7 +317,7 @@ class PlottingMapelSiswaController extends BaseController
     public function actionPlottingMapelSiswa(Request $request, $mode)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -402,7 +402,7 @@ class PlottingMapelSiswaController extends BaseController
     public function viewAutoPlottingMapelSiswa(Request $request, $id_semester, $angkatan, $id_jurusan)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
@@ -426,7 +426,7 @@ class PlottingMapelSiswaController extends BaseController
     public function datatablesAutoPlottingMapelSiswa(Request $request, $id_semester, $angkatan, $id_jurusan)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = Kelas::select(
             'kelas.id_kelas',
@@ -471,7 +471,7 @@ class PlottingMapelSiswaController extends BaseController
         set_time_limit(9800);
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         //    dd($input);
 
         DB::beginTransaction();
@@ -497,7 +497,7 @@ class PlottingMapelSiswaController extends BaseController
             })
                 ->join('status_pengguna', function ($q) use ($input) {
                     $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                        ->where('status_pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                        ->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->where('status_pengguna.aktif_status_pengguna', '=', '1')
                         ->whereNull('status_pengguna.deleted_at');
                 })

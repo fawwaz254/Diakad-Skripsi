@@ -30,7 +30,7 @@ class RaporPendukungController extends Controller
     public function viewTemplateRaporPendukung(Request $request, $global_role, $global_modul, $id_rapor_pendukung)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -121,18 +121,18 @@ class RaporPendukungController extends Controller
 
             if ($input->mode == 'add') {
                 $rapor = new RaporPendukung();
-                $rapor->id_rapor_pendukung = auth_data()->sekolah_data->prefix . $now->timestamp . uniqid();
+                $rapor->id_rapor_pendukung = $input->auth_data->sekolah_data->prefix . $now->timestamp . uniqid();
                 $rapor->nm_rapor = $input->nm_rapor;
-                $rapor->created_by = auth_data()->pengguna->id_pengguna;
+                $rapor->created_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor->save();
             } elseif ($input->mode == 'update') {
                 $rapor = RaporPendukung::findOrFail($input->id_rapor_pendukung);
                 $rapor->nm_rapor = $input->nm_rapor;
-                $rapor->updated_by = auth_data()->pengguna->id_pengguna;
+                $rapor->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor->save();
             } elseif ($input->mode == 'delete') {
                 $rapor = RaporPendukung::findOrFail($input->id_rapor_pendukung);
-                $rapor->deleted_by = auth_data()->pengguna->id_pengguna;
+                $rapor->deleted_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor->save();
 
                 $rapor->komponen_rapor_pendukung()->each(function ($komponen) {
@@ -217,35 +217,35 @@ class RaporPendukungController extends Controller
             $now = Carbon::now();
 
             if ($input->mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $komponen = KomponenRaporPendukung::create([
                     'id_komponen_rapor_pendukung' => $id,
                     'id_rapor_pendukung' => $id_rapor_pendukung,
                     'nm_komponen' => $input->nm_komponen,
                     'urutan' => $input->urutan,
-                    'created_by' => auth_data()->pengguna->id_pengguna
+                    'created_by' => $input->auth_data->pengguna->id_pengguna
                 ]);
             } elseif ($input->mode == 'update') {
                 $komponen = KomponenRaporPendukung::findOrFail($input->id_komponen_rapor_pendukung);
                 $komponen->nm_komponen = $input->nm_komponen;
                 $komponen->urutan = $input->urutan;
-                $komponen->updated_by = auth_data()->pengguna->id_pengguna;
+                $komponen->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $komponen->save();
             } elseif ($input->mode == 'delete') {
                 $komponen = KomponenRaporPendukung::findOrFail($input->id_komponen_rapor_pendukung);
 
                 foreach ($komponen->indikator_rapor_pendukung as $indikator) {
                     foreach ($indikator->predikat_rapor_pendukung as $predikat) {
-                        $predikat->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                        $predikat->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                         $predikat->delete();
                     }
 
-                    $indikator->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    $indikator->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     $indikator->delete();
                 }
 
-                $komponen->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                $komponen->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                 $komponen->delete();
             }
 
@@ -269,7 +269,7 @@ class RaporPendukungController extends Controller
     public function viewListIndikatorRaporPendukung(Request $request, $global_role, $global_modul, $id_komponen_rapor_pendukung)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $komponen = KomponenRaporPendukung::select('id_komponen_rapor_pendukung', 'id_rapor_pendukung', 'nm_komponen')->find($id_komponen_rapor_pendukung);
 
@@ -333,7 +333,7 @@ class RaporPendukungController extends Controller
             $now = Carbon::now();
 
             if ($input->mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $indikator = IndikatorRaporPendukung::create([
                     'id_indikator_rapor_pendukung' => $id,
@@ -342,7 +342,7 @@ class RaporPendukungController extends Controller
                     'tingkat_kelas' => $input->tingkat_kelas,
                     'nm_indikator' => $input->nm_indikator,
                     'urutan' => $input->urutan,
-                    'created_by' => auth_data()->pengguna->id_pengguna
+                    'created_by' => $input->auth_data->pengguna->id_pengguna
                 ]);
             } elseif ($input->mode == 'update') {
                 $indikator = IndikatorRaporPendukung::findOrFail($input->id_indikator_rapor_pendukung);
@@ -350,14 +350,14 @@ class RaporPendukungController extends Controller
                 $indikator->tingkat_kelas = $input->tingkat_kelas;
                 $indikator->nm_indikator = $input->nm_indikator;
                 $indikator->urutan = $input->urutan;
-                $indikator->updated_by = auth_data()->pengguna->id_pengguna;
+                $indikator->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $indikator->save();
             } elseif ($input->mode == 'delete') {
                 $indikator = IndikatorRaporPendukung::findOrFail($input->id_indikator_rapor_pendukung);
 
                 $indikator->predikat_rapor_pendukung()->delete();
 
-                $indikator->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                $indikator->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                 $indikator->delete();
             }
 
@@ -381,7 +381,7 @@ class RaporPendukungController extends Controller
     public function viewInputPredikatRaporPendukung(Request $request, $global_role, $global_modul, $id_rapor_pendukung)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
@@ -459,7 +459,7 @@ class RaporPendukungController extends Controller
     public function actionInputPredikatRaporPendukung(Request $request, $global_role, $global_modul, $id_rapor_pendukung)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data = json_decode($input->data);
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -493,7 +493,7 @@ class RaporPendukungController extends Controller
 
                             if (!$predikatExist) {
 
-                                $id = auth_data()->sekolah_data->prefix . strtotime(now()) . uniqid();
+                                $id = $input->auth_data->sekolah_data->prefix . strtotime(now()) . uniqid();
 
                                 $predikat = new PredikatRaporPendukung();
                                 $predikat->id_predikat_rapor_pendukung = $id;
@@ -519,7 +519,7 @@ class RaporPendukungController extends Controller
 
                             if (!$catatanExist) {
 
-                                $id = auth_data()->sekolah_data->prefix . strtotime(now()) . uniqid();
+                                $id = $input->auth_data->sekolah_data->prefix . strtotime(now()) . uniqid();
 
                                 $predikat = new PredikatRaporPendukung();
                                 $predikat->id_predikat_rapor_pendukung = $id;
@@ -550,7 +550,7 @@ class RaporPendukungController extends Controller
     public function cetakRaporPendukung(Request $request, $global_role, $global_modul, $id_rapor_pendukung)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $guru = Guru::with('pengguna')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);

@@ -40,7 +40,7 @@ class AbsensiTanpaJadwalController extends BaseController
     public function viewAbsensiTanpaJadwal(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tanggal = Carbon::now();
         $tanggal_id = $tanggal->format('d F Y');
@@ -65,7 +65,7 @@ class AbsensiTanpaJadwalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // dd("masuk");
         $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
 
@@ -97,7 +97,7 @@ class AbsensiTanpaJadwalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // dd()
         $validator = Validator::make($request->all(), [
             'id_jadwal_kelas_mp' => 'required',
@@ -129,7 +129,7 @@ class AbsensiTanpaJadwalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tanggal = $now->format('Y-m-d');
@@ -158,7 +158,7 @@ class AbsensiTanpaJadwalController extends BaseController
     {
         // dd($id_jadwal_kelas_mp, $pertemuan_ke);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
@@ -236,7 +236,7 @@ class AbsensiTanpaJadwalController extends BaseController
     public function actionAbsensiTanpaJadwal(Request $request, $mode, $id = null, $pertemuan_ke = null, $id_jadwal_kelas_mp = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // return response()->json($input);
         $validator = Validator::make($request->all(), [
             'uraian_materi' => 'required',
@@ -263,12 +263,12 @@ class AbsensiTanpaJadwalController extends BaseController
                 DB::beginTransaction();
                 try {
                     if ($presensi_mp) {
-                        $presensi_mp->updated_by = auth_data()->pengguna->id_pengguna;
+                        $presensi_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                     } else {
                         // make id
-                        $id_presensi_mp = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_presensi_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                        $auth_data = auth_data();
+                        $auth_data = $input->auth_data;
                         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
                         $data_kelas = LibGuru::fetchDataJadwalKBM(
                             $auth_data,
@@ -286,7 +286,7 @@ class AbsensiTanpaJadwalController extends BaseController
                         $presensi_mp->id_jadwal_kelas_mp = $id_jadwal_kelas_mp;
                         $presensi_mp->pertemuan_ke = $pertemuan_ke;
                         $presensi_mp->tgl_entry = $now;
-                        $presensi_mp->created_by = auth_data()->pengguna->id_pengguna;
+                        $presensi_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                     }
 
                     $presensi_mp->uraian_materi = $input->uraian_materi;
@@ -304,15 +304,15 @@ class AbsensiTanpaJadwalController extends BaseController
                         }
 
                         if ($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp->id_presensi_mp)->where('id_siswa', '=', $id_siswa)->first()) {
-                            $presensi_mp_siswa->updated_by = auth_data()->pengguna->id_pengguna;
+                            $presensi_mp_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
                         } else {
                             // make id
-                            $id_presensi_mp_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_presensi_mp_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $presensi_mp_siswa = new PresensiMpSiswa;
                             $presensi_mp_siswa->id_presensi_mp_siswa = $id_presensi_mp_siswa;
                             $presensi_mp_siswa->id_presensi_mp = $presensi_mp->id_presensi_mp;
-                            $presensi_mp_siswa->created_by = auth_data()->pengguna->id_pengguna;
+                            $presensi_mp_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
                             $presensi_mp_siswa->id_siswa = $id_siswa;
                         }
 
@@ -329,7 +329,7 @@ class AbsensiTanpaJadwalController extends BaseController
                             if (isset($data_karakter_siswa[$id_siswa])) {
                                 foreach ($data_karakter_siswa[$id_siswa] as $karakter_siswa) {
 
-                                    $id_reward_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                    $id_reward_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                                     $reward_siswa = new RewardSiswa();
                                     $reward_siswa->id_reward_siswa = $id_reward_siswa;
@@ -338,8 +338,8 @@ class AbsensiTanpaJadwalController extends BaseController
                                     $reward_siswa->id_kelas = $id_siswa;
                                     $reward_siswa->id_siswa = $presensi_mp->kelas_mp->id_kelas;
                                     $reward_siswa->nm_reward_siswa = $karakter_siswa;
-                                    $reward_siswa->id_pengguna_reward_siswa = auth_data()->pengguna->id_pengguna;
-                                    $reward_siswa->created_by = auth_data()->pengguna->id_pengguna;
+                                    $reward_siswa->id_pengguna_reward_siswa = $input->auth_data->pengguna->id_pengguna;
+                                    $reward_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
                                     $reward_siswa->save();
                                 }
                             }
@@ -369,7 +369,7 @@ class AbsensiTanpaJadwalController extends BaseController
                     ->where('pertemuan_ke', $pertemuan_ke)->get();
 
                 foreach ($presensi_mp as $data) {
-                    $data->deleted_by = auth_data()->pengguna->id_pengguna;
+                    $data->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $data->save();
                     $data->delete();
                 }

@@ -26,7 +26,7 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
@@ -40,7 +40,7 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_ruangan' => 'required'
@@ -63,7 +63,7 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data, 1, $id_ruangan);
 
@@ -73,7 +73,7 @@ class KomplainSarprasController extends BaseController
     public function datatablesRuanganKomplainSarpras(Request $request, $id_ruangan)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $id_ruangan);
 
         return Datatables::of($list_data)
@@ -147,7 +147,7 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data, 1, $id_ruangan);
 
@@ -156,7 +156,7 @@ class KomplainSarprasController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_komplain_sarpras = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('guru/sarpras/komplain-sarpras/add-ruangan-komplain-sarpras', compact('auth_data', 'data_ruangan', 'data_inventaris_ruangan', 'id_komplain_sarpras'));
     }
@@ -165,7 +165,7 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data, 1, $id_ruangan);
 
@@ -181,7 +181,7 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_buku_alat' => 'required'
@@ -204,7 +204,7 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data, $id_buku_alat);
 
@@ -214,7 +214,7 @@ class KomplainSarprasController extends BaseController
     public function datatablesBukualatKomplainSarpras(Request $request, $id_buku_alat)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $id_buku_alat);
 
         return Datatables::of($list_data)
@@ -288,14 +288,14 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data, $id_buku_alat);
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_komplain_sarpras = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('guru/sarpras/komplain-sarpras/add-bukualat-komplain-sarpras', compact('auth_data', 'data_buku_alat', 'id_komplain_sarpras'));
     }
@@ -304,7 +304,7 @@ class KomplainSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data, $id_buku_alat);
 
@@ -339,12 +339,12 @@ class KomplainSarprasController extends BaseController
             $now = Carbon::now();
 
             // get id_guru
-            $guru = Guru::where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)->first();
+            $guru = Guru::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
             $id_guru = $guru->id_guru;
 
             //** MODE UNTUK RUANGAN
             if ($mode == 'add-ruangan') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $komplainSarpras                            = new KomplainSarpras;
                 $komplainSarpras->id_komplain_sarpras       = $id;
@@ -358,7 +358,7 @@ class KomplainSarprasController extends BaseController
                 $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                 $komplainSarpras->is_urgent                 = $input->is_urgent;
                 $komplainSarpras->is_sudah_perbaikan        = 0;
-                $komplainSarpras->created_by                = auth_data()->pengguna->id_pengguna;
+                $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                 $komplainSarpras->save();
 
                 return [
@@ -378,7 +378,7 @@ class KomplainSarprasController extends BaseController
                 $komplainSarpras->id_guru_komplain          = $id_guru;
                 $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                 $komplainSarpras->is_urgent                 = $input->is_urgent;
-                $komplainSarpras->updated_by                = auth_data()->pengguna->id_pengguna;
+                $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
                 $komplainSarpras->updated_at                = $now;
                 $komplainSarpras->save();
 
@@ -390,7 +390,7 @@ class KomplainSarprasController extends BaseController
             } elseif ($mode == 'delete-ruangan') {
                 // make object to find id
                 $komplainSarpras               = KomplainSarpras::find($id);
-                $komplainSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $komplainSarpras->save();
 
                 $komplainSarpras->delete();
@@ -402,7 +402,7 @@ class KomplainSarprasController extends BaseController
             }
             //** MODE UNTUK BUKU/ALAT
             elseif ($mode == 'add-bukualat') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $komplainSarpras                            = new KomplainSarpras;
                 $komplainSarpras->id_komplain_sarpras       = $id;
@@ -411,7 +411,7 @@ class KomplainSarprasController extends BaseController
                 $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                 $komplainSarpras->is_urgent                 = $input->is_urgent;
                 $komplainSarpras->is_sudah_perbaikan        = 0;
-                $komplainSarpras->created_by                = auth_data()->pengguna->id_pengguna;
+                $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                 $komplainSarpras->save();
 
                 return [
@@ -426,7 +426,7 @@ class KomplainSarprasController extends BaseController
                 $komplainSarpras->id_guru_komplain          = $id_guru;
                 $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                 $komplainSarpras->is_urgent                 = $input->is_urgent;
-                $komplainSarpras->updated_by                = auth_data()->pengguna->id_pengguna;
+                $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
                 $komplainSarpras->updated_at                = $now;
                 $komplainSarpras->save();
 
@@ -438,7 +438,7 @@ class KomplainSarprasController extends BaseController
             } elseif ($mode == 'delete-bukualat') {
                 // make object to find id
                 $komplainSarpras               = KomplainSarpras::find($id);
-                $komplainSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $komplainSarpras->save();
 
                 $komplainSarpras->delete();

@@ -31,7 +31,7 @@ class InputNilaiMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
@@ -42,7 +42,7 @@ class InputNilaiMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_periode_magang' => 'required'
@@ -85,7 +85,7 @@ class InputNilaiMagangController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $periodeMagang = PeriodeMagang::leftJoin('semester', 'semester.id_semester', '=', 'periode_magang.id_semester')->where('periode_magang.id_periode_magang', '=', $id_periode_magang)->first();
 
@@ -121,7 +121,7 @@ class InputNilaiMagangController extends BaseController
     public function datatablesKomponenNilaiMagang(Request $request, $id_periode_magang)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $nilai_siswa = NilaiMagang::select(
             'nilai_magang.id_nilai_magang',
@@ -170,7 +170,7 @@ class InputNilaiMagangController extends BaseController
     {
         set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_periode_magang' => 'required'
@@ -228,14 +228,14 @@ class InputNilaiMagangController extends BaseController
                                     // if(!isset($input->$nameInput)){
                                     //     $input->$nameInput = NULL;
                                     // }
-                                    $id_nilai_magang = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                    $id_nilai_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                     $nameInput = 'nilai' . $key . '-' . $idSiswa;
                                     $nilaiMagang                            = new NilaiMagang;
                                     $nilaiMagang->id_nilai_magang           = $id_nilai_magang;
                                     $nilaiMagang->id_pengambilan_magang     = $input_array[$namePengambilan];
                                     $nilaiMagang->id_komponen_magang        = $key;
                                     $nilaiMagang->besar_nilai_magang        = $input->$nameInput;
-                                    $nilaiMagang->created_by                = auth_data()->pengguna->id_pengguna;
+                                    $nilaiMagang->created_by                = $input->auth_data->pengguna->id_pengguna;
                                     $nilaiMagang->save();
                                 }
                             } else {
@@ -246,7 +246,7 @@ class InputNilaiMagangController extends BaseController
                                         $nameInput = 'nilai' . $key . '-' . $idSiswa;
                                         $nilaiMagang                      = NilaiMagang::where('id_pengambilan_magang', '=', $pengajuanMagang->id_pengambilan_magang)->where('id_komponen_magang', '=', $key)->first();
                                         $nilaiMagang->besar_nilai_magang   = $input->$nameInput ? $input->$nameInput : NULL;
-                                        $nilaiMagang->updated_by           = auth_data()->pengguna->id_pengguna;
+                                        $nilaiMagang->updated_by           = $input->auth_data->pengguna->id_pengguna;
                                         $nilaiMagang->save();
                                     }
                                 }
@@ -255,7 +255,7 @@ class InputNilaiMagangController extends BaseController
                             $inputNilaiMagang                  = PengajuanSiswaMagang::find($input_array[$namePengambilan]);
                             $inputNilaiMagang->nilai_angka       = array_sum($nilai_akhir_final['nilai_angka' . $idSiswa]);
                             $inputNilaiMagang->status_magang   = 1;
-                            $inputNilaiMagang->updated_by      = auth_data()->pengguna->id_pengguna;
+                            $inputNilaiMagang->updated_by      = $input->auth_data->pengguna->id_pengguna;
                             $inputNilaiMagang->save();
                         } else {
                             return [

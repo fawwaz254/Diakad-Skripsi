@@ -27,7 +27,7 @@ class RuanganKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -38,7 +38,7 @@ class RuanganKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required'
@@ -61,7 +61,7 @@ class RuanganKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -72,7 +72,7 @@ class RuanganKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -84,7 +84,7 @@ class RuanganKelasController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_ruangan_kelas = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_ruangan_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/setting-kelas/ruangan-kelas/add-ruangan-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_ruangan', 'id_ruangan_kelas'));
     }
@@ -93,7 +93,7 @@ class RuanganKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -110,7 +110,7 @@ class RuanganKelasController extends BaseController
     public function datatablesRuanganKelas(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibKelas::fetchDataRuanganKelas($auth_data, $id_kelas);
 
         return Datatables::of($list_data)
@@ -163,7 +163,7 @@ class RuanganKelasController extends BaseController
                 $ruanganKelas = RuanganKelas::join('semester', 'semester.id_semester', '=', 'ruangan_kelas.id_semester')
                     ->where('ruangan_kelas.id_kelas', '=', $input->id_kelas)
                     ->where('ruangan_kelas.id_semester', '=', $input->id_semester)
-                    ->where('semester.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                     ->first();
 
                 if ($ruanganKelas) {
@@ -172,7 +172,7 @@ class RuanganKelasController extends BaseController
                         'message' => 'Failed To Save Ruangan Kelas!'
                     ];
                 } else {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $ruanganKelas                       = new RuanganKelas;
                     $ruanganKelas->id_ruangan_kelas     = $id;
@@ -180,7 +180,7 @@ class RuanganKelasController extends BaseController
                     $ruanganKelas->id_semester          = $input->id_semester;
                     $ruanganKelas->id_ruangan           = $input->id_ruangan;
                     $ruanganKelas->is_aktif             = $input->is_aktif;
-                    $ruanganKelas->created_by           = auth_data()->pengguna->id_pengguna;
+                    $ruanganKelas->created_by           = $input->auth_data->pengguna->id_pengguna;
                     $ruanganKelas->save();
 
                     // cek jika update status aktif = 1, maka yg lain status aktif = 0
@@ -189,7 +189,7 @@ class RuanganKelasController extends BaseController
 
                         foreach ($data_ruangan_kelas as $ruanganKelas) {
                             $ruanganKelas->is_aktif    = 0;
-                            $ruanganKelas->updated_by  = auth_data()->pengguna->id_pengguna;
+                            $ruanganKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
                             $ruanganKelas->updated_at  = $now;
                             $ruanganKelas->save();
                         }
@@ -208,7 +208,7 @@ class RuanganKelasController extends BaseController
                 $ruanganKelas->id_semester      = $input->id_semester;
                 $ruanganKelas->id_ruangan       = $input->id_ruangan;
                 $ruanganKelas->is_aktif         = $input->is_aktif;
-                $ruanganKelas->updated_by       = auth_data()->pengguna->id_pengguna;
+                $ruanganKelas->updated_by       = $input->auth_data->pengguna->id_pengguna;
                 $ruanganKelas->updated_at       = $now;
                 $ruanganKelas->save();
 
@@ -218,7 +218,7 @@ class RuanganKelasController extends BaseController
 
                     foreach ($data_ruangan_kelas as $ruanganKelas) {
                         $ruanganKelas->is_aktif    = 0;
-                        $ruanganKelas->updated_by  = auth_data()->pengguna->id_pengguna;
+                        $ruanganKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
                         $ruanganKelas->updated_at  = $now;
                         $ruanganKelas->save();
                     }
@@ -232,7 +232,7 @@ class RuanganKelasController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $ruanganKelas               = RuanganKelas::find($id);
-                $ruanganKelas->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $ruanganKelas->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $ruanganKelas->save();
 
                 $ruanganKelas->delete();

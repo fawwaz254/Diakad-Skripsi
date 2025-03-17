@@ -146,7 +146,7 @@ class Apiv1Controller extends BaseController
     public function actionGetDataPribadi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
@@ -167,7 +167,7 @@ class Apiv1Controller extends BaseController
     public function actionDataPribadi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $id_pengguna = $auth_data->pengguna->id_pengguna;
 
@@ -223,7 +223,7 @@ class Apiv1Controller extends BaseController
     public function actionGetKota(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $kota = Kota::select('id_kota', 'id_provinsi', 'nm_kota')->where('kota.is_aktif', '=', 1)->orderBy('nm_kota', 'asc')->get();
 
@@ -249,7 +249,7 @@ class Apiv1Controller extends BaseController
     public function actionGetKelasKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
 
@@ -268,7 +268,7 @@ class Apiv1Controller extends BaseController
     public function actionGetKelasAll(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -285,7 +285,7 @@ class Apiv1Controller extends BaseController
     public function actionGetSemester(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -302,7 +302,7 @@ class Apiv1Controller extends BaseController
     public function actionGetAbsensiHarianKelas(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $input = (object) $request->input();
 
@@ -357,7 +357,7 @@ class Apiv1Controller extends BaseController
     public function actionGetAbsensiHarianSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $input = (object) $request->input();
 
@@ -459,10 +459,10 @@ class Apiv1Controller extends BaseController
                     if (!empty($input->id_presensi_harian)) {
                         $presensi_harian = PresensiHarian::find($input->id_presensi_harian);
                     } else {
-                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_harian = new PresensiHarian;
                         $presensi_harian->id_presensi_harian = $id;
-                        $presensi_harian->id_guru_entry = auth_data()->pengguna->id_pengguna;
+                        $presensi_harian->id_guru_entry = $input->auth_data->pengguna->id_pengguna;
                         $presensi_harian->id_kelas = $input->id_kelas;
                         $presensi_harian->id_semester = $input->id_semester;
                     }
@@ -482,15 +482,15 @@ class Apiv1Controller extends BaseController
                         }
 
                         if ($presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', '=', $presensi_harian->id_presensi_harian)->where('id_siswa', '=', $id_siswa)->first()) {
-                            $presensi_harian_siswa->updated_by                = auth_data()->pengguna->id_pengguna;
+                            $presensi_harian_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
                         } else {
                             // make id
-                            $id_presensi_harian_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_presensi_harian_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $presensi_harian_siswa                            = new PresensiHarianSiswa;
                             $presensi_harian_siswa->id_presensi_harian        = $presensi_harian->id_presensi_harian;
                             $presensi_harian_siswa->id_presensi_harian_siswa  = $id_presensi_harian_siswa;
-                            $presensi_harian_siswa->created_by                = auth_data()->pengguna->id_pengguna;
+                            $presensi_harian_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
                         }
 
                         $presensi_harian_siswa->id_siswa                    = $id_siswa;
@@ -558,7 +558,7 @@ class Apiv1Controller extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $kegiatan_harian = KegiatanHarian::with('kategori_pertanyaan', 'kategori_pertanyaan.pertanyaan', 'kategori_pertanyaan.pertanyaan.jawaban')->where('is_aktif', 1)->first();
 
@@ -584,7 +584,7 @@ class Apiv1Controller extends BaseController
 
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::now();
 
@@ -602,7 +602,7 @@ class Apiv1Controller extends BaseController
         $pengisian_kegiatan_harian  = PengisianKegiatanHarian::where('id_pengisian_kegiatan_harian', $input->id_pengisian_kegiatan_harian)->first();
         $pengisian_jawaban          = PengisianJawaban::where('id_pengisian_kegiatan_harian', $input->id_pengisian_kegiatan_harian)->delete();
 
-        $pengisian_kegiatan_harian->deleted_by   = auth_data()->pengguna->id_pengguna;
+        $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
         $pengisian_kegiatan_harian->save();
 
         $pengisian_kegiatan_harian->delete();
@@ -615,7 +615,7 @@ class Apiv1Controller extends BaseController
     public function getdatamonitoringkesehatan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = PengisianKegiatanHarian::with('pengguna_pengisi');
 
         if (!empty($input->id_kelas)) {
@@ -679,7 +679,7 @@ class Apiv1Controller extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         if ($id == '-') {
             return response()->json([
                 'status_code'     => 300,
@@ -702,7 +702,7 @@ class Apiv1Controller extends BaseController
     public function viewDetailRekapKesehatan(Request $request, $id_kelas = '-', $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         $yesterday = Carbon::yesterday();
@@ -773,7 +773,7 @@ class Apiv1Controller extends BaseController
 
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($start_monkes = Setting::where('key_setting', 'start_monkes')->first()) {
             $start_monkes = $start_monkes->value;
@@ -803,7 +803,7 @@ class Apiv1Controller extends BaseController
             ];
         }
 
-        $pengisian_kegiatan_harian_id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
         switch ($request->segment(1)) {
             case 'tendik':
                 $status_join = 1;
@@ -838,7 +838,7 @@ class Apiv1Controller extends BaseController
             // return json_encode($hasil);
             foreach ($hasil as $id_pertanyaan => $id_jawaban) {
                 $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $batch_insert_pengisian_jawaban[] = array(
                     'id_pengisian_jawaban'            => $id,
@@ -859,9 +859,9 @@ class Apiv1Controller extends BaseController
 
             $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
             $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian   = $pengisian_kegiatan_harian_id;
-            $pengisian_kegiatan_harian->id_pengguna_pengisi            = auth_data()->pengguna->id_pengguna;
+            $pengisian_kegiatan_harian->id_pengguna_pengisi            = $input->auth_data->pengguna->id_pengguna;
             $pengisian_kegiatan_harian->status_join_table              = $status_join;
-            $pengisian_kegiatan_harian->created_by                     = auth_data()->pengguna->id_pengguna;
+            $pengisian_kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
             if ($now->between($start_1, $end_1)) {
                 $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today()->format('Y-m-d');
             } else if ($now->between($start_2, $end_2)) {
@@ -910,7 +910,7 @@ class Apiv1Controller extends BaseController
     public function actionGetRekapMonitoringKelasKosong(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'on_date' => 'required'
@@ -965,7 +965,7 @@ class Apiv1Controller extends BaseController
     public function actionGetMonitoringKelasKosong(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::now();
         $tgl = $now->toDateString();
@@ -1010,7 +1010,7 @@ class Apiv1Controller extends BaseController
     public function actionGetRekapAbsen(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1068,7 +1068,7 @@ class Apiv1Controller extends BaseController
     public function actionGetJadwal(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1164,7 +1164,7 @@ class Apiv1Controller extends BaseController
             'id_jadwal_kelas_mp' => 'required',
             'pertemuan_ke' => 'required'
         ]);
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1190,7 +1190,7 @@ class Apiv1Controller extends BaseController
             'id_jadwal_kelas_mp' => 'required',
             'pertemuan_ke' => 'required'
         ]);
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1263,7 +1263,7 @@ class Apiv1Controller extends BaseController
             ]);
         }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -1276,15 +1276,15 @@ class Apiv1Controller extends BaseController
         try {
             $now = Carbon::now();
             if ($presensi_mp) {
-                $presensi_mp->updated_by         = auth_data()->pengguna->id_pengguna;
+                $presensi_mp->updated_by         = $input->auth_data->pengguna->id_pengguna;
             } else {
                 $presensi_mp                     = new PresensiMp;
-                $presensi_mp->id_presensi_mp     = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $presensi_mp->id_presensi_mp     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $presensi_mp->id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
                 $presensi_mp->id_kelas_mp        = $data_kelas->id_kelas_mp;
                 $presensi_mp->pertemuan_ke       = $input->pertemuan_ke;
                 $presensi_mp->tgl_entry          = $now;
-                $presensi_mp->created_by         = auth_data()->pengguna->id_pengguna;
+                $presensi_mp->created_by         = $input->auth_data->pengguna->id_pengguna;
             }
 
             $presensi_mp->uraian_materi      = $input->uraian_materi;
@@ -1301,14 +1301,14 @@ class Apiv1Controller extends BaseController
                 }
 
                 if ($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp->id_presensi_mp)->where('id_siswa', '=', $id_siswa)->first()) {
-                    $presensi_mp_siswa->updated_by                = auth_data()->pengguna->id_pengguna;
+                    $presensi_mp_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
                 } else {
                     if ($siswa = Siswa::find($id_siswa)) {
                         $presensi_mp_siswa                            = new PresensiMpSiswa;
-                        $presensi_mp_siswa->id_presensi_mp_siswa      = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $presensi_mp_siswa->id_presensi_mp_siswa      = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi_mp_siswa->id_presensi_mp            = $presensi_mp->id_presensi_mp;
                         $presensi_mp_siswa->id_siswa                  = $id_siswa;
-                        $presensi_mp_siswa->created_by                = auth_data()->pengguna->id_pengguna;
+                        $presensi_mp_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
                     } else {
                         return response()->json([
                             'status_code'     => 300,
@@ -1343,7 +1343,7 @@ class Apiv1Controller extends BaseController
     public function actionGetKelasUTS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
 
@@ -1362,7 +1362,7 @@ class Apiv1Controller extends BaseController
     public function actionGetKelasUAS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
 
@@ -1385,7 +1385,7 @@ class Apiv1Controller extends BaseController
             'id_ujian_mp' => 'required'
         ]);
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data_siswa = LibSiswa::fetchDataSiswaUjianMp($auth_data, $input->id_ujian_mp);
 
         $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp', '=', $input->id_ujian_mp)->get();
@@ -1442,7 +1442,7 @@ class Apiv1Controller extends BaseController
             ]);
         }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         DB::beginTransaction();
 
@@ -1495,7 +1495,7 @@ class Apiv1Controller extends BaseController
             ]);
         }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $input->id_ruangan);
 
@@ -1525,7 +1525,7 @@ class Apiv1Controller extends BaseController
             ]);
         }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $input->id_buku_alat);
 
@@ -1566,12 +1566,12 @@ class Apiv1Controller extends BaseController
                 $now = Carbon::now();
 
                 // get id_guru
-                $guru = Guru::where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)->first();
+                $guru = Guru::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
                 $id_guru = $guru->id_guru;
 
                 //** MODE UNTUK RUANGAN
                 if ($mode == 'add-ruangan') {
-                    $id_komplain_sarpras = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
@@ -1585,7 +1585,7 @@ class Apiv1Controller extends BaseController
                     $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                     $komplainSarpras->is_urgent                 = $input->is_urgent;
                     $komplainSarpras->is_sudah_perbaikan        = 0;
-                    $komplainSarpras->created_by                = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
                     $message = 'Save Komplain Sarpras Successfully';
@@ -1601,7 +1601,7 @@ class Apiv1Controller extends BaseController
                     $komplainSarpras->id_guru_komplain          = $id_guru;
                     $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                     $komplainSarpras->is_urgent                 = $input->is_urgent;
-                    $komplainSarpras->updated_by                = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->updated_at                = $now;
                     $komplainSarpras->save();
 
@@ -1609,7 +1609,7 @@ class Apiv1Controller extends BaseController
                 } elseif ($mode == 'delete-ruangan') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
-                    $komplainSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
                     $komplainSarpras->delete();
@@ -1618,7 +1618,7 @@ class Apiv1Controller extends BaseController
                 }
                 //** MODE UNTUK BUKU/ALAT
                 elseif ($mode == 'add-bukualat') {
-                    $id_komplain_sarpras = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
@@ -1627,7 +1627,7 @@ class Apiv1Controller extends BaseController
                     $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                     $komplainSarpras->is_urgent                 = $input->is_urgent;
                     $komplainSarpras->is_sudah_perbaikan        = 0;
-                    $komplainSarpras->created_by                = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
                     $message = 'Save Komplain Sarpras Successfully';
@@ -1638,7 +1638,7 @@ class Apiv1Controller extends BaseController
                     $komplainSarpras->id_guru_komplain          = $id_guru;
                     $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                     $komplainSarpras->is_urgent                 = $input->is_urgent;
-                    $komplainSarpras->updated_by                = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->updated_at                = $now;
                     $komplainSarpras->save();
 
@@ -1646,7 +1646,7 @@ class Apiv1Controller extends BaseController
                 } elseif ($mode == 'delete-bukualat') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
-                    $komplainSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
                     $komplainSarpras->delete();
@@ -1692,7 +1692,7 @@ class Apiv1Controller extends BaseController
 
             try {
 
-                $pengguna = Pengguna::find(auth_data()->pengguna->id_pengguna);
+                $pengguna = Pengguna::find($input->auth_data->pengguna->id_pengguna);
                 $pengguna->api_token = $input->api_token;
                 $pengguna->save();
 
@@ -1718,7 +1718,7 @@ class Apiv1Controller extends BaseController
     public function actionGetRuangan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
@@ -1748,7 +1748,7 @@ class Apiv1Controller extends BaseController
         //     ]);
         // }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data);
 
@@ -1765,7 +1765,7 @@ class Apiv1Controller extends BaseController
     public function actionGetBukuAlat(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data);
 
@@ -1782,7 +1782,7 @@ class Apiv1Controller extends BaseController
     public function actionGetInputJadwal(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester   = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $id = $semester->id_semester;
@@ -1846,7 +1846,7 @@ class Apiv1Controller extends BaseController
             ]);
         }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $id = $input->id_kelas_mp;
 
         $kelas_mp   = KelasMp::select('mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester')
@@ -1903,7 +1903,7 @@ class Apiv1Controller extends BaseController
     public function actionInputJadwal(Request $request, $mode)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -2053,18 +2053,18 @@ class Apiv1Controller extends BaseController
                         $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai1;
                         $jadwal_kelas_mp->id_ruangan            = $input->ruangan1;
                         $jadwal_kelas_mp->updated_at            = $now;
-                        $jadwal_kelas_mp->updated_by            = auth_data()->pengguna->id_pengguna;
+                        $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                         $jadwal_kelas_mp->save();
                     } else {
                         $jadwal_kelas_mp                        = new JadwalKelasMp;
-                        $jadwal_kelas_mp->id_jadwal_kelas_mp    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $jadwal_kelas_mp->id_kelas_mp           = $id;
                         $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal1;
                         $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal1;
                         $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai1;
                         $jadwal_kelas_mp->id_ruangan            = $input->ruangan1;
                         $jadwal_kelas_mp->created_at            = $now;
-                        $jadwal_kelas_mp->created_by            = auth_data()->pengguna->id_pengguna;
+                        $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                         $jadwal_kelas_mp->save();
                     }
 
@@ -2078,13 +2078,13 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2) ? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan2;
                             $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal2 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal2 != null or $input->ruangan2 != null) {
                         } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
-                            $jadwal_kelas_mp->deleted_by   = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
@@ -2092,14 +2092,14 @@ class Apiv1Controller extends BaseController
                     } else {
                         if ($input->jam_jadwal2 != null && $input->jam_jadwal_selesai2 != null && $input->hari_jadwal2 != null && $input->ruangan2 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal2;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal2;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2) ? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan2;
                             $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -2113,13 +2113,13 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3) ? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan3;
                             $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal3 != null or $input->jam_jadwal_selesai3 != null or $input->hari_jadwal3 != null or $input->ruangan3 != null) {
                         } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
-                            $jadwal_kelas_mp->deleted_by   = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
@@ -2127,14 +2127,14 @@ class Apiv1Controller extends BaseController
                     } else {
                         if ($input->jam_jadwal3 != null && $input->jam_jadwal_selesai3 != null && $input->hari_jadwal3 != null && $input->ruangan3 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal3;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal3;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3) ? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan3;
                             $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -2148,13 +2148,13 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4) ? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
                             $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) {
                         } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
-                            $jadwal_kelas_mp->deleted_by   = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
@@ -2162,14 +2162,14 @@ class Apiv1Controller extends BaseController
                     } else {
                         if ($input->jam_jadwal4 != null && $input->jam_jadwal_selesai4 != null && $input->hari_jadwal4 != null && $input->ruangan4 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal4;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal4;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4) ? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
                             $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -2183,13 +2183,13 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5) ? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
                             $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) {
                         } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
-                            $jadwal_kelas_mp->deleted_by   = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
@@ -2197,14 +2197,14 @@ class Apiv1Controller extends BaseController
                     } else {
                         if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5) ? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
                             $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -2218,13 +2218,13 @@ class Apiv1Controller extends BaseController
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6) ? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
                             $jadwal_kelas_mp->updated_at            = $now;
-                            $jadwal_kelas_mp->updated_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) {
                         } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
-                            $jadwal_kelas_mp->deleted_by   = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
 
                             $jadwal_kelas_mp->delete();
@@ -2232,14 +2232,14 @@ class Apiv1Controller extends BaseController
                     } else {
                         if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
                             $jadwal_kelas_mp                        = new JadwalKelasMp;
-                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
                             $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6) ? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
                             $jadwal_kelas_mp->created_at            = $now;
-                            $jadwal_kelas_mp->created_by            = auth_data()->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
                         }
                     }
@@ -2250,16 +2250,16 @@ class Apiv1Controller extends BaseController
                         $pengampu_mp->id_guru           = $id_guru;
                         $pengampu_mp->pjmp_pengampu_mp  = 1;
                         $pengampu_mp->updated_at        = $now;
-                        $pengampu_mp->updated_by        = auth_data()->pengguna->id_pengguna;
+                        $pengampu_mp->updated_by        = $input->auth_data->pengguna->id_pengguna;
                         $pengampu_mp->save();
                     } else {
                         $pengampu_mp                    = new PengampuMp;
-                        $pengampu_mp->id_pengampu_mp    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pengampu_mp->id_kelas_mp       = $id;
                         $pengampu_mp->id_guru           = $id_guru;
                         $pengampu_mp->pjmp_pengampu_mp  = 1;
                         $pengampu_mp->created_at        = $now;
-                        $pengampu_mp->created_by        = auth_data()->pengguna->id_pengguna;
+                        $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
                         $pengampu_mp->save();
                     }
 
@@ -2289,10 +2289,10 @@ class Apiv1Controller extends BaseController
                         'message' => 'Terdapat siswa yang telah mengambil kelas ini'
                     ]);
                 } else {
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     PengampuMp::where('id_kelas_mp', $id)->delete();
 
                     return response()->json([
@@ -2308,7 +2308,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPelanggaranSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data);
 
@@ -2325,7 +2325,7 @@ class Apiv1Controller extends BaseController
     public function actionGetKategoriPelanggaranSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
 
@@ -2355,7 +2355,7 @@ class Apiv1Controller extends BaseController
             ]);
         }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $input->id_kategori);
 
@@ -2394,7 +2394,7 @@ class Apiv1Controller extends BaseController
                 $now = Carbon::now();
 
                 if ($mode == 'add') {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
@@ -2407,7 +2407,7 @@ class Apiv1Controller extends BaseController
                     $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
                     // convert format date
                     $presensiMpPelanggaran->is_sudah_tindakan            = 0;
-                    $presensiMpPelanggaran->created_by                   = auth_data()->pengguna->id_pengguna;
+                    $presensiMpPelanggaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
                     $presensiMpPelanggaran->save();
 
                     $result = null;
@@ -2427,11 +2427,11 @@ class Apiv1Controller extends BaseController
                                 );
 
                                 $notifikasi = array(
-                                    'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                    'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                                     'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                     'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                     'isi_notifikasi' => $message,
-                                    'created_by' => auth_data()->pengguna->id_pengguna
+                                    'created_by' => $input->auth_data->pengguna->id_pengguna
                                 );
 
                                 LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -2454,7 +2454,7 @@ class Apiv1Controller extends BaseController
                     $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
                     $presensiMpPelanggaran->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                     // convert format date
-                    $presensiMpPelanggaran->updated_by                   = auth_data()->pengguna->id_pengguna;
+                    $presensiMpPelanggaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
                     $presensiMpPelanggaran->updated_at                   = $now;
                     $presensiMpPelanggaran->save();
 
@@ -2475,7 +2475,7 @@ class Apiv1Controller extends BaseController
                     } else {
                         // make object to find id
                         $presensiMpPelanggaran               = PresensiMpPelanggaran::find($id);
-                        $presensiMpPelanggaran->deleted_by   = auth_data()->pengguna->id_pengguna;
+                        $presensiMpPelanggaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                         $presensiMpPelanggaran->save();
 
                         $presensiMpPelanggaran->delete();
@@ -2505,7 +2505,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPelanggaranNonKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
@@ -2524,7 +2524,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPelanggaranKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
@@ -2543,7 +2543,7 @@ class Apiv1Controller extends BaseController
     public function actionGetTagihan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
@@ -2562,7 +2562,7 @@ class Apiv1Controller extends BaseController
     public function actionGetRiwayatBayar(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
@@ -2581,7 +2581,7 @@ class Apiv1Controller extends BaseController
     public function actionGetBeasiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
@@ -2606,7 +2606,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPrestasi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
@@ -2659,7 +2659,7 @@ class Apiv1Controller extends BaseController
     public function actionGetMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
@@ -2678,7 +2678,7 @@ class Apiv1Controller extends BaseController
     public function actionGetKalenderAkademik(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -2697,7 +2697,7 @@ class Apiv1Controller extends BaseController
     public function actionGetJadwalWaliMurid(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -2733,7 +2733,7 @@ class Apiv1Controller extends BaseController
     public function actionGetWaliMuridSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna);
 
@@ -2750,7 +2750,7 @@ class Apiv1Controller extends BaseController
     public function actionGetJadwalSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -2784,7 +2784,7 @@ class Apiv1Controller extends BaseController
     public function actionGetKalenderAkademikSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -2803,7 +2803,7 @@ class Apiv1Controller extends BaseController
     public function actionGetMagangSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchDataMagang($auth_data, $auth_data->pengguna->id_pengguna);
 
@@ -2820,7 +2820,7 @@ class Apiv1Controller extends BaseController
     public function actionGetRiwayatBayarSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchPembayaranSiswa($auth_data, $auth_data->pengguna->id_pengguna);
 
@@ -2837,7 +2837,7 @@ class Apiv1Controller extends BaseController
     public function actionGetTagihanSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchTagihanSiswa($auth_data, $auth_data->pengguna->id_pengguna);
 
@@ -2854,7 +2854,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPelanggaranKBMSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchPelanggaranKBM($auth_data, $auth_data->pengguna->id_pengguna);
 
@@ -2871,7 +2871,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPelanggaranNonKBMSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $auth_data->pengguna->id_pengguna);
 
@@ -2901,7 +2901,7 @@ class Apiv1Controller extends BaseController
             ]);
         }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $input->id_ruangan);
 
@@ -2931,7 +2931,7 @@ class Apiv1Controller extends BaseController
             ]);
         }
 
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $input->id_buku_alat);
 
@@ -2972,12 +2972,12 @@ class Apiv1Controller extends BaseController
                 $now = Carbon::now();
 
                 // get id_siswa
-                $siswa = Siswa::where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)->first();
+                $siswa = Siswa::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
                 $id_siswa = $siswa->id_siswa;
 
                 //** MODE UNTUK RUANGAN
                 if ($mode == 'add-ruangan') {
-                    $id_komplain_sarpras = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
@@ -2991,7 +2991,7 @@ class Apiv1Controller extends BaseController
                     $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                     $komplainSarpras->is_urgent                 = $input->is_urgent;
                     $komplainSarpras->is_sudah_perbaikan        = 0;
-                    $komplainSarpras->created_by                = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
                     $message = 'Save Komplain Sarpras Successfully';
@@ -3007,7 +3007,7 @@ class Apiv1Controller extends BaseController
                     $komplainSarpras->id_siswa_komplain         = $id_siswa;
                     $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                     $komplainSarpras->is_urgent                 = $input->is_urgent;
-                    $komplainSarpras->updated_by                = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->updated_at                = $now;
                     $komplainSarpras->save();
 
@@ -3015,7 +3015,7 @@ class Apiv1Controller extends BaseController
                 } elseif ($mode == 'delete-ruangan') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
-                    $komplainSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
                     $komplainSarpras->delete();
@@ -3024,7 +3024,7 @@ class Apiv1Controller extends BaseController
                 }
                 //** MODE UNTUK BUKU/ALAT
                 elseif ($mode == 'add-bukualat') {
-                    $id_komplain_sarpras = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
@@ -3033,7 +3033,7 @@ class Apiv1Controller extends BaseController
                     $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                     $komplainSarpras->is_urgent                 = $input->is_urgent;
                     $komplainSarpras->is_sudah_perbaikan        = 0;
-                    $komplainSarpras->created_by                = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
                     $message = 'Save Komplain Sarpras Successfully';
@@ -3044,7 +3044,7 @@ class Apiv1Controller extends BaseController
                     $komplainSarpras->id_siswa_komplain         = $id_siswa;
                     $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
                     $komplainSarpras->is_urgent                 = $input->is_urgent;
-                    $komplainSarpras->updated_by                = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->updated_at                = $now;
                     $komplainSarpras->save();
 
@@ -3052,7 +3052,7 @@ class Apiv1Controller extends BaseController
                 } elseif ($mode == 'delete-bukualat') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
-                    $komplainSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
                     $komplainSarpras->delete();
@@ -3082,7 +3082,7 @@ class Apiv1Controller extends BaseController
     public function actionGetBeasiswaSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa')
             ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
@@ -3105,7 +3105,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPrestasiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',
@@ -3155,7 +3155,7 @@ class Apiv1Controller extends BaseController
     public function actionGetNotifikasi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = NotifikasiPengguna::select('id_notifikasi_pengguna', 'isi_notifikasi', 'link_url', 'status', 'created_at')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->take('10')->orderBy('created_at', 'desc')->get();
 
@@ -3172,7 +3172,7 @@ class Apiv1Controller extends BaseController
     public function geteditprofile(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // $kerja = UnitKerja::select("id_unit_kerja", "nm_unit_kerja")->orderBy("nm_unit_kerja")->get();
 
         // mengambil waktu sekarang
@@ -3278,25 +3278,25 @@ class Apiv1Controller extends BaseController
         DB::beginTransaction();
 
         try {
-            $pengguna                           =  Pengguna::find(auth_data()->pengguna->id_pengguna);
+            $pengguna                           =  Pengguna::find($input->auth_data->pengguna->id_pengguna);
             // $pengguna->id_status_pengguna       = $input->id_status_pengguna;
-            $pengguna->id_sekolah               = auth_data()->pengguna->id_sekolah;
+            $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
             $pengguna->nm_pengguna              = $input->nm_pengguna;
             // $pengguna->password                 = Hash::make($input->nip_staff);
             // $pengguna->must_change_password     = 1;
             // $pengguna->status_join_table        = 1;
             $pengguna->email_pengguna           = $input->email;
             $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
-            $pengguna->created_by               = auth_data()->pengguna->id_pengguna;
+            $pengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
             $pengguna->created_at               = $now;
             // $pengguna->gelar_depan              = $input->gelar_depan;
             // $pengguna->gelar_belakang           = $input->gelar_belakang;
             $pengguna->save();
 
             // if ($request->segment(3) == "guru") {
-            //     $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            //     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             //     // dd($input->jenis_kelamin);
-            //     $guru                           =  Guru::where("id_pengguna", "=", auth_data()->pengguna->id_pengguna)->first();
+            //     $guru                           =  Guru::where("id_pengguna", "=", $input->auth_data->pengguna->id_pengguna)->first();
             //     //    dd($guru);
             //     $guru->id_unit_kerja            = $input->id_unit_kerja;
             //     /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
@@ -3322,9 +3322,9 @@ class Apiv1Controller extends BaseController
             //     $guru->save();
             // } elseif ($request->segment(3) == "tendik") {
 
-            //     $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            //     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-            //     $staff                           = Staff::find(auth_data()->pengguna->id_pengguna);;
+            //     $staff                           = Staff::find($input->auth_data->pengguna->id_pengguna);;
             //     $staff->id_staff                 = $id;
             //     $staff->id_pengguna              = $pengguna->id_pengguna;
             //     $staff->id_unit_kerja            = $input->id_unit_kerja;
@@ -3350,9 +3350,9 @@ class Apiv1Controller extends BaseController
             //     $staff->email                    = $input->email;
             //     $staff->save();
             // } elseif ($request->segment(3) == "wali-murid") {
-            //     $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            //     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-            //     $staff                           =  WaliMurid::find(auth_data()->pengguna->id_pengguna);;
+            //     $staff                           =  WaliMurid::find($input->auth_data->pengguna->id_pengguna);;
             //     $staff->id_staff                 = $id;
             //     $staff->id_pengguna              = $pengguna->id_pengguna;
             //     $staff->id_unit_kerja            = $input->id_unit_kerja;
@@ -3378,9 +3378,9 @@ class Apiv1Controller extends BaseController
             //     $staff->email                    = $input->email;
             //     $staff->save();
             // } elseif ($request->segment(3) == "siswa") {
-            //     $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            //     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-            //     $staff                           = Siswa::find(auth_data()->pengguna->id_pengguna);
+            //     $staff                           = Siswa::find($input->auth_data->pengguna->id_pengguna);
             //     $staff->id_staff                 = $id;
             //     $staff->id_pengguna              = $pengguna->id_pengguna;
             //     $staff->id_unit_kerja            = $input->id_unit_kerja;
@@ -3501,7 +3501,7 @@ class Apiv1Controller extends BaseController
     public function actionGetFingerprint(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $presences = PresensiPengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereBetween('date', [$input->start_date, $input->end_date])->get();
         $list_shiftPengguna = ShiftPengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereBetween('date', [$input->start_date, $input->end_date])->with('shift_master')->get();
@@ -3641,7 +3641,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPresensiGuru(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
@@ -3693,7 +3693,7 @@ class Apiv1Controller extends BaseController
     public function actionGetEkskul(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
         $PengambilanEkskul = PengambilanEkskul::with('ekskul')->where('id_siswa', $siswa->id_siswa)->get();
@@ -3711,7 +3711,7 @@ class Apiv1Controller extends BaseController
     public function actionGetPresensiEkskul(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $id_ekskul = $input->id_ekskul;
 
@@ -3732,7 +3732,7 @@ class Apiv1Controller extends BaseController
     public function actionGetFormHarian(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $form_siswa = Form::with(['jawaban_form' => function ($q) use ($id_pengguna) {
             $q->where('created_by', $id_pengguna)->orderBy('created_at', 'desc');
@@ -3752,7 +3752,7 @@ class Apiv1Controller extends BaseController
     public function actionGetFormBebas(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $form_siswa = Form::with(['jawaban_form' => function ($q) use ($id_pengguna) {
             $q->where('created_by', $id_pengguna)->orderBy('created_at', 'desc');
@@ -3771,7 +3771,7 @@ class Apiv1Controller extends BaseController
     // public function actionGetDetailFormHarian(Request $request)
     // {
     //     $input = (object) $request->input();
-    //     $auth_data = auth_data();
+    //     $auth_data = $input->auth_data;
     //     $form = Form::with('pertanyaan_form')->find($input->id);
     //     return response()->json([
     //         'status_code'     => 200,
@@ -3788,7 +3788,7 @@ class Apiv1Controller extends BaseController
 
         // dd($mode);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $validator = Validator::make($request->all(), [
             'id_form' => 'required',
             'jawaban' => 'required'
@@ -3806,12 +3806,12 @@ class Apiv1Controller extends BaseController
             try {
                 $now = Carbon::now();
 
-                // $siswa = Siswa::where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)->first();
+                // $siswa = Siswa::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
                 // $id_siswa = $siswa->id_siswa;
                 // $message = 'ga';
                 if ($mode == 'add-form-harian') {
                     $jawaban_form = new JawabanForm;
-                    $jawaban_form->id_jawaban_form =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $jawaban_form->id_jawaban_form =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $jawaban_form->id_form          = $input->id_form;
                     $jawaban_form->created_by = $auth_data->pengguna->id_pengguna;
                     $jawaban_form->save();
@@ -3820,7 +3820,7 @@ class Apiv1Controller extends BaseController
                     foreach ($input->jawaban as $key => $value) {
                         // dd($input->jenis_jawaban[$no]);
                         $detail_jawaban_form = new DetailJawabanForm;
-                        $detail_jawaban_form->id_detail_jawaban_form = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();;
+                        $detail_jawaban_form->id_detail_jawaban_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();;
                         $detail_jawaban_form->id_jawaban_form = $jawaban_form->id_jawaban_form;
                         $detail_jawaban_form->id_pertanyaan_form = $key;
 

@@ -25,7 +25,7 @@ class InputPemasukanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('keuangan/pemasukan-sekolah/input-pemasukan/view-input-pemasukan', compact('auth_data'));
     }
@@ -34,7 +34,7 @@ class InputPemasukanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -52,7 +52,7 @@ class InputPemasukanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_subkategori_pemasukan = LibDataKeuangan::fetchDataSubkategoriPemasukan($auth_data);
 
@@ -69,7 +69,7 @@ class InputPemasukanController extends BaseController
     public function datatablesInputPemasukan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataPemasukan($auth_data, null, "1");
 
         return Datatables::of($list_data)
@@ -137,10 +137,10 @@ class InputPemasukanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                if (auth_data()->pengguna->status_join_table == 1) {
+                if ($input->auth_data->pengguna->status_join_table == 1) {
                     // get id_guru
                     $staff = Staff::select('id_staff')
-                        ->where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)
+                        ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
                         ->first();
 
                     $id_staff = $staff->id_staff;
@@ -148,7 +148,7 @@ class InputPemasukanController extends BaseController
                     $id_staff = null;
                 }
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $pemasukan                                  = new PemasukanBiaya;
                 $pemasukan->id_pemasukan_biaya              = $id;
@@ -160,7 +160,7 @@ class InputPemasukanController extends BaseController
                 $pemasukan->besar_pemasukan_biaya           = $input->besar_pemasukan_biaya;
                 $pemasukan->keterangan_pemasukan_biaya      = $input->keterangan_pemasukan_biaya;
                 $pemasukan->is_upload_file                  = $input->is_upload_file;
-                $pemasukan->created_by                      = auth_data()->pengguna->id_pengguna;
+                $pemasukan->created_by                      = $input->auth_data->pengguna->id_pengguna;
                 $pemasukan->save();
 
                 return [
@@ -179,7 +179,7 @@ class InputPemasukanController extends BaseController
                 $pemasukan->besar_pemasukan_biaya           = $input->besar_pemasukan_biaya;
                 $pemasukan->keterangan_pemasukan_biaya      = $input->keterangan_pemasukan_biaya;
                 $pemasukan->is_upload_file                  = $input->is_upload_file;
-                $pemasukan->updated_by                      = auth_data()->pengguna->id_pengguna;
+                $pemasukan->updated_by                      = $input->auth_data->pengguna->id_pengguna;
                 $pemasukan->updated_at                      = $now;
                 $pemasukan->save();
 
@@ -191,7 +191,7 @@ class InputPemasukanController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $pemasukan               = PemasukanBiaya::find($id);
-                $pemasukan->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $pemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $pemasukan->save();
 
                 $pemasukan->delete();

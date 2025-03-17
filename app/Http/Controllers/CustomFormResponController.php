@@ -41,7 +41,7 @@ class CustomFormResponController extends Controller
     public function indexDataTables(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = CustomForm::with('role', 'form_komponen.form_respon')
             ->whereIn('id_role', $auth_data->pengguna->role_pengguna->pluck('id_role'))
             ->get();
@@ -72,7 +72,7 @@ class CustomFormResponController extends Controller
 
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = CustomFormSheet::with('form')
             ->whereHas('form', function ($query) use ($auth_data) {
@@ -109,7 +109,7 @@ class CustomFormResponController extends Controller
     public function index(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('global/custom-form/index-respon-custom-form', compact('auth_data'));
     }
@@ -122,7 +122,7 @@ class CustomFormResponController extends Controller
         try {
 
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
             $form = CustomForm::with('form_komponen', 'role')->whereIn('id_role', $auth_data->pengguna->role_pengguna->pluck('id_role'))->findOrFail($id);
 
             return view('global/custom-form/all-respon-custom-form', compact('auth_data', 'form'));
@@ -140,7 +140,7 @@ class CustomFormResponController extends Controller
         try {
 
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             
@@ -209,7 +209,7 @@ class CustomFormResponController extends Controller
     {
         try {
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
 
@@ -255,7 +255,7 @@ class CustomFormResponController extends Controller
             DB::transaction(function () use ($request, $input, $auth_data, $form, $now) {
 
                 $sheet = new CustomFormSheet();
-                $sheet->id_custom_form_sheet = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $sheet->id_custom_form_sheet = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $sheet->id_custom_form = $form->id_custom_form;
                 $sheet->created_at = $now;
                 $sheet->created_by = $auth_data->pengguna->id_pengguna;
@@ -264,7 +264,7 @@ class CustomFormResponController extends Controller
                 foreach ($input->respon as $key => $value) {
                     $sekarang = Carbon::now(env('APP_TIMEZONE', ''));
                     $res = new CustomFormRespon();
-                    $res->id_custom_form_respon = auth_data()->sekolah_data->prefix . strtotime($sekarang) . uniqid();
+                    $res->id_custom_form_respon = $input->auth_data->sekolah_data->prefix . strtotime($sekarang) . uniqid();
                     $res->id_custom_form_sheet = $sheet->id_custom_form_sheet;
                     $res->id_custom_form_komponen = $key;
                     $komponen = CustomFormKomponen::where('id_custom_form_komponen', $key)->first();
@@ -340,7 +340,7 @@ class CustomFormResponController extends Controller
         try {
 
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             $form = CustomFormSheet::with('form.form_komponen', 'form_respon.form_komponen')->where('created_by', $auth_data->pengguna->id_pengguna)->findOrFail($id);
             $startTime = Carbon::createFromFormat('Y-m-d H:i:s', $form->form->start_time);
@@ -379,7 +379,7 @@ class CustomFormResponController extends Controller
         try {
 
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             $sheet = CustomFormSheet::with('form.form_komponen', 'form_respon.form_komponen')->where('created_by', $auth_data->pengguna->id_pengguna)->findOrFail($id);
@@ -432,7 +432,7 @@ class CustomFormResponController extends Controller
         try {
 
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
 
             $record = CustomFormSheet::with('form_respon')->where('created_by', $auth_data->pengguna->id_pengguna)->findOrFail($id);
             $record->form_respon()->delete();
@@ -454,7 +454,7 @@ class CustomFormResponController extends Controller
         try {
 
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
 
             $request->validate([
                 'id_kelas' => 'required'

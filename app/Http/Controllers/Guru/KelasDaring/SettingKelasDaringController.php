@@ -36,7 +36,7 @@ class SettingKelasDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -49,7 +49,7 @@ class SettingKelasDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
@@ -60,7 +60,7 @@ class SettingKelasDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $item = KelasMpGrup::find($id);
 
@@ -73,7 +73,7 @@ class SettingKelasDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $item = KelasMpGrup::find($id);
 
@@ -84,7 +84,7 @@ class SettingKelasDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $item = KelasMpGrup::find($id_kelas_mp_grup);
         $item2 = PresensiMp::find($id_presensi_mp);
@@ -96,7 +96,7 @@ class SettingKelasDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $item = PresensiMp::find($id_presensi_mp);
         $data_materi = PresensiMpMateri::where('id_presensi_mp', $id_presensi_mp)->get();
@@ -108,7 +108,7 @@ class SettingKelasDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -121,7 +121,7 @@ class SettingKelasDaringController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $item = KelasMpGrup::find($id);
@@ -136,7 +136,7 @@ class SettingKelasDaringController extends BaseController
     public function datatablesKelasDaring(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -190,7 +190,7 @@ class SettingKelasDaringController extends BaseController
     public function datatablesKelasMpKelasDaring(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -220,7 +220,7 @@ class SettingKelasDaringController extends BaseController
     public function datatablesPresensiMpKelasDaring(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -277,7 +277,7 @@ class SettingKelasDaringController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($auth_data->pengguna->status_join_table != 2) {
             $validator = Validator::make($request->all(), [
@@ -297,7 +297,7 @@ class SettingKelasDaringController extends BaseController
             ];
         } else {
             $now = Carbon::now();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
 
             if ($auth_data->pengguna->status_join_table != 2) {
                 $guru = Guru::where('id_guru', '=', $input->id_guru)->first();
@@ -308,7 +308,7 @@ class SettingKelasDaringController extends BaseController
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
             if (empty($input->id)) {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $kelas_mp_grup                      = new KelasMpGrup;
                 $kelas_mp_grup->id_kelas_mp_grup    = $id;
                 $kelas_mp_grup->id_semester         = $semester_aktif->id_semester;
@@ -350,7 +350,7 @@ class SettingKelasDaringController extends BaseController
 
             if ($mode == 'set') {
                 $now = Carbon::now();
-                $auth_data = auth_data();
+                $auth_data = $input->auth_data;
 
                 $kelas_mp                               = KelasMp::find($input->id_kelas_mp);
                 $kelas_mp->id_kelas_mp_grup             = $input->id;
@@ -364,7 +364,7 @@ class SettingKelasDaringController extends BaseController
             } else {
 
                 $now = Carbon::now();
-                $auth_data = auth_data();
+                $auth_data = $input->auth_data;
 
                 $kelas_mp                               = KelasMp::find($input->id_kelas_mp);
                 $kelas_mp->id_kelas_mp_grup             = null;
@@ -410,7 +410,7 @@ class SettingKelasDaringController extends BaseController
                 try {
 
                     $now = Carbon::now();
-                    $auth_data = auth_data();
+                    $auth_data = $input->auth_data;
 
                     $data_kelas_mp = KelasMp::where('id_kelas_mp_grup', $input->id_kelas_mp_grup)->get();
 
@@ -419,7 +419,7 @@ class SettingKelasDaringController extends BaseController
                         if ($check_presensi = PresensiMp::where('tgl_presensi', $input->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()) {
                         } else {
 
-                            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $presensi_mp = new PresensiMp;
                             $presensi_mp->id_presensi_mp = $id;
                             $presensi_mp->id_kelas_mp = $kelas_mp->id_kelas_mp;
@@ -439,7 +439,7 @@ class SettingKelasDaringController extends BaseController
                             foreach ($list_siswa as $r) {
 
                                 $presensi_mp_siswa = new PresensiMpSiswa;
-                                $presensi_mp_siswa->id_presensi_mp_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $presensi_mp_siswa->id_presensi_mp_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $presensi_mp_siswa->id_presensi_mp = $id;
                                 $presensi_mp_siswa->id_siswa = $r->id_siswa;
                                 $presensi_mp_siswa->kehadiran = 4; // tanpa keterangan tidak hadir
@@ -467,7 +467,7 @@ class SettingKelasDaringController extends BaseController
                 }
             } elseif ($mode == 'edit-jadwal') {
 
-                $auth_data = auth_data();
+                $auth_data = $input->auth_data;
 
                 $presensi_mp = PresensiMp::find($input->id_presensi_mp);
                 $presensi_mp->pertemuan_ke = $input->pertemuan_ke;
@@ -489,7 +489,7 @@ class SettingKelasDaringController extends BaseController
             } else {
 
                 $now = Carbon::now();
-                $auth_data = auth_data();
+                $auth_data = $input->auth_data;
 
                 // $kelas_mp                               = KelasMp::find($input->id_kelas_mp);
                 // $kelas_mp->id_kelas_mp_grup             = null;
@@ -518,7 +518,7 @@ class SettingKelasDaringController extends BaseController
         try {
 
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
 
             $presensi_mp = PresensiMp::find($id);
 
@@ -567,7 +567,7 @@ class SettingKelasDaringController extends BaseController
             };
 
             $now = Carbon::now();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
 
             $presensi_mp = PresensiMp::find($input->id_presensi_mp);
 
@@ -602,8 +602,8 @@ class SettingKelasDaringController extends BaseController
             }
 
             $now = Carbon::now();
-            $auth_data = auth_data();
-            $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+            $auth_data = $input->auth_data;
+            $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
 
             $kelas_mp_grup2 = KelasMpGrup::find($input->id_kelas_mp_grup);
             $guru = Guru::where('id_guru', '=', $kelas_mp_grup2->id_guru)->first();
@@ -619,7 +619,7 @@ class SettingKelasDaringController extends BaseController
 
             foreach ($data_kelas_mp as $kelas_mp) {
                 if ($check_presensi = PresensiMp::where('tgl_presensi', $presensi_mp->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()) {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $presensi_mp_materi = new PresensiMpMateri;
                     $presensi_mp_materi->id_presensi_mp_materi = $id;

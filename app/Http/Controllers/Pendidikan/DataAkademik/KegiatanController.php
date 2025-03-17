@@ -25,7 +25,7 @@ class KegiatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('pendidikan/data-akademik/kegiatan/view-kegiatan', compact('auth_data'));
     }
@@ -34,7 +34,7 @@ class KegiatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -50,7 +50,7 @@ class KegiatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kode_kegiatan = KodeKegiatan::orderBy('kode_kegiatan', 'asc')->get();
 
@@ -62,7 +62,7 @@ class KegiatanController extends BaseController
     public function datatablesKegiatan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataAkademik::fetchDataKegiatan($auth_data);
 
         return Datatables::of($list_data)
@@ -112,15 +112,15 @@ class KegiatanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan                       = new Kegiatan;
                 $kegiatan->id_kegiatan          = $id;
                 $kegiatan->nm_kegiatan          = $input->nm_kegiatan;
                 $kegiatan->deskripsi_kegiatan   = $input->deskripsi_kegiatan;
                 $kegiatan->kode_kegiatan        = $input->kode_kegiatan;
-                $kegiatan->id_sekolah           = auth_data()->pengguna->id_sekolah;
-                $kegiatan->created_by           = auth_data()->pengguna->id_pengguna;
+                $kegiatan->id_sekolah           = $input->auth_data->pengguna->id_sekolah;
+                $kegiatan->created_by           = $input->auth_data->pengguna->id_pengguna;
                 $kegiatan->save();
 
                 return [
@@ -134,7 +134,7 @@ class KegiatanController extends BaseController
                 $kegiatan->nm_kegiatan          = $input->nm_kegiatan;
                 $kegiatan->deskripsi_kegiatan   = $input->deskripsi_kegiatan;
                 $kegiatan->kode_kegiatan        = $input->kode_kegiatan;
-                $kegiatan->updated_by           = auth_data()->pengguna->id_pengguna;
+                $kegiatan->updated_by           = $input->auth_data->pengguna->id_pengguna;
                 $kegiatan->updated_at           = $now;
                 $kegiatan->save();
 
@@ -152,7 +152,7 @@ class KegiatanController extends BaseController
                 } else {
                     // make object to find id
                     $kegiatan               = Kegiatan::find($id);
-                    $kegiatan->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $kegiatan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kegiatan->save();
 
                     $kegiatan->delete();

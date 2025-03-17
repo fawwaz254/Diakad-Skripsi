@@ -38,7 +38,7 @@ class InputKPIController extends Controller
     public function viewInputKPI(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         // dd($semester_aktif);
 
@@ -49,7 +49,7 @@ class InputKPIController extends Controller
     public function datatablesInputKPI(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -81,7 +81,7 @@ class InputKPIController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -112,7 +112,7 @@ class InputKPIController extends Controller
     public function viewImportKPI(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         return view('guru/wali-kelas/kpi/input-kpi/view-import-excel-kpi', compact('auth_data'));
     }
 
@@ -219,7 +219,7 @@ class InputKPIController extends Controller
     public function printKPI(Request $request, $id_semester, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -279,7 +279,7 @@ class InputKPIController extends Controller
     public function printAllKPI(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);

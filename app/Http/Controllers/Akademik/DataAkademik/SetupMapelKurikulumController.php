@@ -29,7 +29,7 @@ class SetupMapelKurikulumController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         //get kurikulum aktif di sekolah tersebut
         $kurikulum = Kurikulum::with('jurusan')
@@ -47,7 +47,7 @@ class SetupMapelKurikulumController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_kurikulum' => 'required'
@@ -72,7 +72,7 @@ class SetupMapelKurikulumController extends BaseController
         # code...
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         //get kurikulum aktif di sekolah tersebut
         $kurikulum = Kurikulum::with('jurusan')
@@ -92,7 +92,7 @@ class SetupMapelKurikulumController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // $jurusan = Jurusan::where('id_jurusan','=',$id_jurusan)->first();
 
         return view('akademik/data-akademik/setup-mapel-kurikulum/add-mapel-kurikulum', compact('auth_data', 'id_kurikulum'));
@@ -101,7 +101,7 @@ class SetupMapelKurikulumController extends BaseController
     public function datatablesSetupMapelKurikulum(Request $request, $id_kurikulum)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = KurikulumMp::join('kurikulum', 'kurikulum.id_kurikulum', '=', 'kurikulum_mp.id_kurikulum')
             ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kurikulum_mp.id_mata_pelajaran')
@@ -128,7 +128,7 @@ class SetupMapelKurikulumController extends BaseController
     public function datatablesaddMapelKurikulum(Request $request, $id_jurusan)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = MataPelajaran::leftJoin('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
             ->whereNotExists(function ($query) {
@@ -158,7 +158,7 @@ class SetupMapelKurikulumController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
@@ -175,10 +175,10 @@ class SetupMapelKurikulumController extends BaseController
                 try {
                     foreach ($input->id_mata_pelajaran as $id_mata_pelajaran) {
                         $kurikulumMp                        = new KurikulumMp;
-                        $kurikulumMp->id_kurikulum_mp       = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $kurikulumMp->id_kurikulum_mp       = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $kurikulumMp->id_kurikulum          = $id;
                         $kurikulumMp->id_mata_pelajaran     = $id_mata_pelajaran;
-                        $kurikulumMp->created_by            = auth_data()->pengguna->id_pengguna;
+                        $kurikulumMp->created_by            = $input->auth_data->pengguna->id_pengguna;
                         $kurikulumMp->created_at            = $now;
                         $kurikulumMp->save();
                     }
@@ -199,7 +199,7 @@ class SetupMapelKurikulumController extends BaseController
                 }
             } elseif ($mode == 'delete') {
                 $kurikulumMp    = KurikulumMp::find($id);
-                // $kurikulumMp->deleted_by    = auth_data()->pengguna->id_pengguna;
+                // $kurikulumMp->deleted_by    = $input->auth_data->pengguna->id_pengguna;
                 // $kurikulumMp->deleted_at    = $now;
                 // $kurikulumMp->save();
 

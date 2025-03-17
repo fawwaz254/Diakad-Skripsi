@@ -33,7 +33,7 @@ class HistoriAbsensiController extends BaseController
 
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if (empty($start_date) || empty($end_date)) {
             $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
@@ -164,7 +164,7 @@ class HistoriAbsensiController extends BaseController
     public function cetakHistoriAbsensi(Request $request, $start_date, $end_date)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_unit_kerja = UnitKerja::all();
         $nm_pengguna = Pengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->pluck('nm_pengguna')->first();
 

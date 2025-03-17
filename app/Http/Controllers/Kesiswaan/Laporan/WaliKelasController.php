@@ -29,7 +29,7 @@ class WaliKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('kesiswaan/laporan/wali-kelas/view-wali-kelas', compact('auth_data'));
     }
@@ -38,7 +38,7 @@ class WaliKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         $id_bulan = $now->month;
@@ -55,7 +55,7 @@ class WaliKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $wali_kelas = LaporanWaliKelas::findOrFail($id);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
@@ -69,7 +69,7 @@ class WaliKelasController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_wali_kelas = LaporanWaliKelas::with('semester', 'bulan')->findOrFail($id);
 
@@ -87,11 +87,11 @@ class WaliKelasController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LaporanWaliKelas::with('bulan', 'semester')
-            ->where('created_by', auth_data()->pengguna->id_pengguna)
-            ->where('role_id', auth_data()->role_aktif->id_role)
+            ->where('created_by', $input->auth_data->pengguna->id_pengguna)
+            ->where('role_id', $input->auth_data->role_aktif->id_role)
             ->get();
 
         return Datatables::of($list_data)
@@ -119,7 +119,7 @@ class WaliKelasController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data =  LaporanWaliKelasDetail::with('guru', 'kelas')->where('id_laporan_wali_kelas', $id)->get();
 
@@ -173,7 +173,7 @@ class WaliKelasController extends BaseController
                     ];
                 }
 
-                $cek = LaporanWaliKelas::where(['id_semester' => $input->id_semester, 'id_bulan' => $input->id_bulan, 'role_id' => auth_data()->role_aktif->id_role])->count();
+                $cek = LaporanWaliKelas::where(['id_semester' => $input->id_semester, 'id_bulan' => $input->id_bulan, 'role_id' => $input->auth_data->role_aktif->id_role])->count();
 
                 if ($cek > 0) {
 
@@ -187,26 +187,26 @@ class WaliKelasController extends BaseController
 
             if ($mode == 'add') {
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $data                        = new LaporanWaliKelas;
                 $data->id_laporan_wali_kelas = $id;
-                $data->role_id               = auth_data()->role_aktif->id_role;
+                $data->role_id               = $input->auth_data->role_aktif->id_role;
                 $data->id_semester           = $input->id_semester;
                 $data->id_bulan              = $input->id_bulan;
-                $data->created_by            = auth_data()->pengguna->id_pengguna;
+                $data->created_by            = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
 
                 foreach ($wali_kelas as $r) {
 
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $data2                                  = new LaporanWaliKelasDetail;
                     $data2->id_laporan_wali_kelas_detail    = $id;
                     $data2->id_laporan_wali_kelas           = $data->id_laporan_wali_kelas;
                     $data2->id_guru                         = $r->id_guru;
                     $data2->id_kelas                        = $r->id_kelas;
-                    $data2->created_by                      = auth_data()->pengguna->id_pengguna;
+                    $data2->created_by                      = $input->auth_data->pengguna->id_pengguna;
                     $data2->save();
                 }
 
@@ -224,26 +224,26 @@ class WaliKelasController extends BaseController
                 $data->id_laporan_wali_kelas = $id;
                 $data->id_semester           = $input->id_semester;
                 $data->id_bulan              = $input->id_bulan;
-                $data->updated_by            = auth_data()->pengguna->id_pengguna;
+                $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
 
                 if ($input->id_semester != $semester_seblumnya) {
 
                     LaporanWaliKelasDetail::where('id_laporan_wali_kelas', $id)
-                        ->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                        ->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
 
                     LaporanWaliKelasDetail::where('id_laporan_wali_kelas', $id)->delete();
 
                     foreach ($wali_kelas as $r) {
 
-                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                         $data2                                  = new LaporanWaliKelasDetail;
                         $data2->id_laporan_wali_kelas_detail    = $id;
                         $data2->id_laporan_wali_kelas           = $data->id_laporan_wali_kelas;
                         $data2->id_guru                         = $r->id_guru;
                         $data2->id_kelas                        = $r->id_kelas;
-                        $data2->created_by                      = auth_data()->pengguna->id_pengguna;
+                        $data2->created_by                      = $input->auth_data->pengguna->id_pengguna;
                         $data2->save();
                     }
                 }
@@ -256,12 +256,12 @@ class WaliKelasController extends BaseController
             } elseif ($mode == 'delete') {
 
                 $data               = LaporanWaliKelas::find($id);
-                $data->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
                 $data->delete();
 
                 LaporanWaliKelasDetail::where('id_laporan_wali_kelas', $id)
-                    ->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    ->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
 
                 LaporanWaliKelasDetail::where('id_laporan_wali_kelas', $id)->delete();
 
@@ -278,14 +278,14 @@ class WaliKelasController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $id = $input->id_laporan_wali_kelas_detail;
 
         $data = LaporanWaliKelasDetail::find($id);
         $data->status = $input->status;
         $data->catatan = $input->catatan;
-        $data->updated_by = auth_data()->pengguna->id_pengguna;
+        $data->updated_by = $input->auth_data->pengguna->id_pengguna;
         $data->save();
 
         return [

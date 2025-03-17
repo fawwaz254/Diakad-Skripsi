@@ -17,7 +17,7 @@ class AbsensiKehadiranSiswaController extends Controller
     public function viewAbsensiKehadiran(Request $request, $start_date = null, $end_date = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if (empty($start_date) || empty($end_date)) {
             $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');

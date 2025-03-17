@@ -30,7 +30,7 @@ class BkKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -41,7 +41,7 @@ class BkKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required'
@@ -64,7 +64,7 @@ class BkKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // dd($id_kelas);
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -75,7 +75,7 @@ class BkKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -87,7 +87,7 @@ class BkKelasController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_bk_kelas = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_bk_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/setting-kelas/bk-kelas/add-bk-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_guru_tendik', 'id_bk_kelas'));
     }
@@ -96,7 +96,7 @@ class BkKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -112,7 +112,7 @@ class BkKelasController extends BaseController
     public function datatablesBkKelas(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibGuru::fetchDataBkKelas($auth_data, $id_kelas);
 
         return Datatables::of($list_data)
@@ -176,7 +176,7 @@ class BkKelasController extends BaseController
 
                     ->where('bk_kelas.id_kelas', '=', $input->id_kelas)
                     ->where('bk_kelas.id_semester', '=', $input->id_semester)
-                    ->where('semester.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                     ->first();
 
 
@@ -191,7 +191,7 @@ class BkKelasController extends BaseController
                     ];
                 } else {
 
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $bkKelas                       = new BkKelas();
                     $bkKelas->id_bk_kelas          = $id;
@@ -200,7 +200,7 @@ class BkKelasController extends BaseController
 
                     $bkKelas->id_pengguna          = $input->id_pengguna;
                     $bkKelas->is_aktif             = $input->is_aktif;
-                    $bkKelas->created_by           = auth_data()->pengguna->id_pengguna;
+                    $bkKelas->created_by           = $input->auth_data->pengguna->id_pengguna;
                     $bkKelas->save();
 
                     // cek jika update status aktif = 1, maka yg lain status aktif = 0
@@ -210,7 +210,7 @@ class BkKelasController extends BaseController
 
                         foreach ($data_bk_kelas as $bkKelas) {
                             $bkKelas->is_aktif    = 0;
-                            $bkKelas->updated_by  = auth_data()->pengguna->id_pengguna;
+                            $bkKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
                             $bkKelas->updated_at  = $now;
                             $bkKelas->save();
                         }
@@ -229,7 +229,7 @@ class BkKelasController extends BaseController
                 $bkKelas->id_semester      = $input->id_semester;
                 $bkKelas->id_pengguna      = $input->id_pengguna;
                 $bkKelas->is_aktif         = $input->is_aktif;
-                $bkKelas->updated_by       = auth_data()->pengguna->id_pengguna;
+                $bkKelas->updated_by       = $input->auth_data->pengguna->id_pengguna;
                 $bkKelas->updated_at       = $now;
                 $bkKelas->save();
 
@@ -240,7 +240,7 @@ class BkKelasController extends BaseController
 
                     foreach ($data_bk_kelas as $bkKelas) {
                         $bkKelas->is_aktif    = 0;
-                        $bkKelas->updated_by  = auth_data()->pengguna->id_pengguna;
+                        $bkKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
                         $bkKelas->updated_at  = $now;
                         $bkKelas->save();
                     }
@@ -254,7 +254,7 @@ class BkKelasController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $bkKelas               = BkKelas::find($id);
-                $bkKelas->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $bkKelas->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $bkKelas->save();
 
                 $bkKelas->delete();

@@ -27,7 +27,7 @@ class InventarisKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // get id_guru
         $guru = Guru::select('id_guru')
@@ -44,7 +44,7 @@ class InventarisKelasController extends BaseController
     public function datatablesInventarisKelas(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // get id_guru
         $guru = Guru::select('id_guru')

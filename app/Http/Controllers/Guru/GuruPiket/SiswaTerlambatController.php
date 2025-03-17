@@ -17,7 +17,7 @@ class SiswaTerlambatController extends Controller
     public function viewSiswaTerlambat(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', 1)->get();
         $date = Carbon::now()->toDateString();
         return view('guru/guru-piket/siswa-terlambat/view-siswa-terlambat', compact('auth_data', 'date', 'kelas'));
@@ -36,7 +36,7 @@ class SiswaTerlambatController extends Controller
     {
         $terlambat = [];
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $date = Carbon::parse($date)->toDateString();
         $kelas = Kelas::where('is_aktif', 1)->get();
@@ -104,7 +104,7 @@ class SiswaTerlambatController extends Controller
         $presensi->check_out = $input->check_out;
         $presensi->status = $input->status;
         $presensi->notes = $input->notes;
-        $presensi->created_by = auth_data()->pengguna->id_pengguna;
+        $presensi->created_by = $input->auth_data->pengguna->id_pengguna;
         $presensi->save();
 
         $id_presensi_pengguna = PresensiPengguna::where('id_pengguna', $id_pengguna)->where('date', Carbon::now()->format('Y-m-d'))->first()->id_presensi_pengguna;
@@ -134,7 +134,7 @@ class SiswaTerlambatController extends Controller
     public function PrintTerlambat(Request $request, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $lebar = 70;
         $nama_sekolah = $auth_data->sekolah_data->nm_sekolah;
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id)->first();

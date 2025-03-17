@@ -21,7 +21,7 @@ class InputPresensiMagangController extends Controller
     public function viewInputPresensiMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $detail_magang = PembimbingMagang::with('rekanan', 'periode')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         return view(
             'pembimbing-magang/presensi-magang/input-presensi-magang/view-input-presensi-magang',
@@ -32,7 +32,7 @@ class InputPresensiMagangController extends Controller
     public function datatablesInputPresensiMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $list_data = PresensiMagang::whereHas('pembimbingMagang', function ($query) use ($id_pengguna) {
             $query->where('id_pengguna', '=', $id_pengguna);
@@ -68,7 +68,7 @@ class InputPresensiMagangController extends Controller
     public function viewAddEditInputPresensiMagang(Request $request, $id_presensi_magang)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($id_presensi_magang != '0') {
             $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->find($id_presensi_magang);
@@ -87,7 +87,7 @@ class InputPresensiMagangController extends Controller
     public function datatablesSiswaInputPresensiMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         if ($input->id_presensi_magang != '0') {
             $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->find($input->id_presensi_magang);
         } else {
@@ -138,7 +138,7 @@ class InputPresensiMagangController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $validator = Validator::make($request->all(), [
             'tanggal' => 'required'
         ]);
@@ -159,7 +159,7 @@ class InputPresensiMagangController extends Controller
                     $pembimbing_magang = PembimbingMagang::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
                     if ($presensi = PresensiMagang::where('tanggal', $tanggal)->where('id_pembimbing_magang', $pembimbing_magang->id_pembimbing_magang)->first()) {
                     } else {
-                        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $presensi = new PresensiMagang;
                         $presensi->id_presensi_magang = $id;
                         $presensi->created_by = $auth_data->pengguna->id_pengguna;
@@ -181,11 +181,11 @@ class InputPresensiMagangController extends Controller
                     foreach ($array_combine as $item) {
                         if ($presensi_siswa = PresensiMagangSiswa::where('id_presensi_magang', '=', $presensi->id_presensi_magang)->where('id_siswa', '=', $item->id_siswa)->first()) {
                         } else {
-                            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $presensi_siswa                                 = new PresensiMagangSiswa;
                             $presensi_siswa->id_presensi_magang_siswa       = $id;
                             $presensi_siswa->id_presensi_magang             = $presensi->id_presensi_magang;
-                            $presensi_siswa->created_by                    = auth_data()->pengguna->id_pengguna;
+                            $presensi_siswa->created_by                    = $input->auth_data->pengguna->id_pengguna;
                             $presensi_siswa->id_siswa                    = $item->id_siswa;
                         }
 
@@ -295,7 +295,7 @@ class InputPresensiMagangController extends Controller
     public function viewDetailInputPresensiMagang(Request $request, $id_presensi_magang)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pembimbing_magang = PembimbingMagang::with('rekanan', 'periode')->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->find($id_presensi_magang);

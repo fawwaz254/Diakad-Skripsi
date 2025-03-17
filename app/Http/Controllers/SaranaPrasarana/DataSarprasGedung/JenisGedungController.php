@@ -24,7 +24,7 @@ class JenisGedungController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sarana-prasarana/data-sarpras-gedung/jenis-gedung/view-jenis-gedung', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class JenisGedungController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class JenisGedungController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jenis_gedung = LibDataSarpras::fetchDataJenisGedung($auth_data, $id);
 
@@ -57,7 +57,7 @@ class JenisGedungController extends BaseController
     public function datatablesJenisGedung(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataJenisGedung($auth_data);
 
         return Datatables::of($list_data)
@@ -90,13 +90,13 @@ class JenisGedungController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jenisGedung                        = new JenisGedung;
                 $jenisGedung->id_jenis_gedung       = $id;
                 $jenisGedung->nm_jenis_gedung       = $input->nm_jenis_gedung;
-                $jenisGedung->id_sekolah            = auth_data()->pengguna->id_sekolah;
-                $jenisGedung->created_by            = auth_data()->pengguna->id_pengguna;
+                $jenisGedung->id_sekolah            = $input->auth_data->pengguna->id_sekolah;
+                $jenisGedung->created_by            = $input->auth_data->pengguna->id_pengguna;
                 $jenisGedung->save();
 
                 return [
@@ -108,7 +108,7 @@ class JenisGedungController extends BaseController
                 // make object to find id
                 $jenisGedung                        = JenisGedung::find($id);
                 $jenisGedung->nm_jenis_gedung       = $input->nm_jenis_gedung;
-                $jenisGedung->updated_by            = auth_data()->pengguna->id_pengguna;
+                $jenisGedung->updated_by            = $input->auth_data->pengguna->id_pengguna;
                 $jenisGedung->updated_at            = $now;
                 $jenisGedung->save();
 
@@ -126,7 +126,7 @@ class JenisGedungController extends BaseController
                 } else {
                     // make object to find id
                     $jenisGedung               = JenisGedung::find($id);
-                    $jenisGedung->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $jenisGedung->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $jenisGedung->save();
 
                     $jenisGedung->delete();

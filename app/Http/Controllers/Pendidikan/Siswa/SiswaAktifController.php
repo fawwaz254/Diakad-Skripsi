@@ -25,7 +25,7 @@ class SiswaAktifController extends BaseController
 	{
 		# code..
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		$data_tingkat = Kelas::select('tingkat')->distinct()->orderBy('tingkat', 'asc')->get();
 		$data_jurusan = Jurusan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
