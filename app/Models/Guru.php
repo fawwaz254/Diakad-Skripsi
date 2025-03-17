@@ -16,10 +16,10 @@ class Guru extends Model
 
     protected $primaryKey = 'id_guru';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_pengguna',
         'id_unit_kerja',
@@ -69,6 +69,7 @@ class Guru extends Model
         'nomor_telp',
         'nomor_hp',
         'email',
+        'path_foto_ttd',
         'nomor_sk_penugasan',
         'tgl_sk_penugasan',
         'tgl_mulai_penugasan',
@@ -82,16 +83,18 @@ class Guru extends Model
 
     protected $guarded = [];
 
-    public function pengguna(){
+    public function pengguna()
+    {
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
 
-    public function pengampu_mapel(){
+    public function pengampu_mapel()
+    {
         return $this->hasMany(PengampuMapel::class, 'id_guru');
     }
 
-    public function unit_kerja(){
+    public function unit_kerja()
+    {
         return $this->belongsTo(UnitKerja::class, 'id_unit_kerja');
     }
-
 }
