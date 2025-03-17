@@ -218,19 +218,19 @@
                         Orang Tua/Wali,<br><br><br><br><br><br><br><br><br>
                         ...........................
                     </td>
-                    <td style="border-style : hidden; width: 33%; position: relative; padding-top: 8rem">
-                        Sidoarjo, {{ $tanggal_cetak }}<br><br>
+                    <td style="border-style : hidden; width: 33%; position: relative; padding-top: 12rem">
                         Kepala Sekolah,<br><br><br><br><br><br><br><br><br>
                         {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') --}}
-                        <img style="position: absolute; top: 5%; margin-left: 20px; margin-top: 10.7rem"
+                        <img style="position: absolute; top: 5%; margin-left: 20px; margin-top: 12.3rem"
                             src="{{ asset('media/ttd/barcode_nur_musolin.png') }}" alt="TTD" width="150px"
                             height="150px" class="ttd">
                         {{-- @endif --}}
                         <strong><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></strong>
                     </td>
                     <td style="border-style: hidden; width: 33%;">
-                        <div style="margin-top: -30px;">
-                            <br><br>Wali Kelas,<br><br><br><br><br><br><br><br><br>
+                        <div style="margin-top: 40px;">
+                            Sidoarjo, {{ $tanggal_cetak }}<br>
+                            Wali Kelas,<br><br><br><br><br><br><br><br><br>
                             @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
                                 <strong>
                                     <u>
