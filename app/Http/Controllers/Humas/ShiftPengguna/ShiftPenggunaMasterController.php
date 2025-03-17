@@ -47,7 +47,7 @@ class ShiftPenggunaMasterController extends Controller
     public function destroyShiftMaster(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $is_holiday = ShiftMaster::where('id_shift_master', $id);
         $is_holiday->update(['deleted_by' => $auth_data->pengguna->id_pengguna]);
         $is_holiday->delete();
@@ -71,7 +71,7 @@ class ShiftPenggunaMasterController extends Controller
     {
         // dd($id);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $shift = ShiftMaster::where('id_shift_master', $id)->first();
         $shift->start_time = $input->check_in;

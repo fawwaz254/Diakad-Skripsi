@@ -27,7 +27,7 @@ class RekapAbsensiController extends Controller
     public function selectRekapAbsensi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_unit_kerja = UnitKerja::all();
         $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
         $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
@@ -40,7 +40,7 @@ class RekapAbsensiController extends Controller
         set_time_limit(-1);
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         if (!isset($unit_kerja)) {
             $unit_kerja = "0";
         }
@@ -210,7 +210,7 @@ class RekapAbsensiController extends Controller
         set_time_limit(-1);
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         if (!isset($unit_kerja)) {
             $unit_kerja = "0";
         }
@@ -370,7 +370,7 @@ class RekapAbsensiController extends Controller
     public function selectRekapAbsensiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_kelas = Kelas::where('is_aktif', 1)->get();
         $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
         $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
@@ -383,7 +383,7 @@ class RekapAbsensiController extends Controller
         set_time_limit(-1);
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
 
         if ($tingkat == '0') {
@@ -565,7 +565,7 @@ class RekapAbsensiController extends Controller
         set_time_limit(-1);
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $nama_kelas = Kelas::select('nm_kelas')->where('id_kelas', $id_kelas)->first();
         // dd($nama_kelas);
@@ -737,7 +737,7 @@ class RekapAbsensiController extends Controller
 
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
 
         $pengguna = Pengguna::where('id_pengguna', $id_pengguna)->with('status_pengguna', 'guru.unit_kerja')->first();
@@ -884,7 +884,7 @@ class RekapAbsensiController extends Controller
 
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
 
         $pengguna = Pengguna::where('id_pengguna', $id_pengguna)->with('status_pengguna', 'guru.unit_kerja')->first();
@@ -1030,7 +1030,7 @@ class RekapAbsensiController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pengguna = Pengguna::where('id_pengguna', $id_pengguna)->with('status_pengguna', 'siswa.kelas')->first();
 
@@ -1175,7 +1175,7 @@ class RekapAbsensiController extends Controller
 
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
 
         $pengguna = Pengguna::where('id_pengguna', $id_pengguna)->with('status_pengguna', 'siswa.kelas')->first();
@@ -1321,7 +1321,7 @@ class RekapAbsensiController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::now();
         $start_date = $now->startOfWeek()->format('Y-m-d');

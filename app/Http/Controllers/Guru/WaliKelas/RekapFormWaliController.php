@@ -21,7 +21,7 @@ class RekapFormWaliController extends Controller
     public function viewListRekapFormWali(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/wali-kelas/rekap-form-wali/view-list-rekap-form-wali', compact('auth_data'));
     }
@@ -30,7 +30,7 @@ class RekapFormWaliController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = Form::with('role')->withCount('jawaban_form')->where('id_role', '3')->get();
 
@@ -64,7 +64,7 @@ class RekapFormWaliController extends Controller
     public function viewRekapBulananFormWali(Request $request, $id_form, $bulan = null, $tahun = null, $id_pertanyaan = '0')
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $form = Form::with('pertanyaan_form')->find($id_form);
@@ -180,7 +180,7 @@ class RekapFormWaliController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $form = Form::with('pertanyaan_form')->find($id_form);
         $list_pertanyaan = PertanyaanForm::where('id_form', $id_form)->orderBy('urutan', 'asc')->get();
@@ -191,7 +191,7 @@ class RekapFormWaliController extends Controller
         }
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first();

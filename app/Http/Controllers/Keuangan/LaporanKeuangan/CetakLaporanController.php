@@ -19,7 +19,7 @@ class CetakLaporanController extends BaseController
     public function viewCetakLaporan(Request $request, $nis_nama_siswa = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $bulan = Bulan::orderBy('id_bulan')->get();
 
         if (empty(session('kunci_keuangan'))) {
@@ -115,7 +115,7 @@ class CetakLaporanController extends BaseController
     public function printCetakLaporanPengeluaran(Request $request, $jenis, $start_date, $end_date)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make([
             'start_date' => $start_date,
@@ -150,7 +150,7 @@ class CetakLaporanController extends BaseController
         set_time_limit(1800);
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $sekolah = $auth_data->sekolah_data->nm_sekolah;
 
         $month_before = Carbon::parse($start_date)->subMonth()->format('m');
@@ -216,7 +216,7 @@ class CetakLaporanController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make([
             'start_date' => $start_date,
@@ -271,7 +271,7 @@ class CetakLaporanController extends BaseController
     public function printCetakLaporanBulanan(Request $request, $jenis, $start_date, $end_date)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make([
             'start_date' => $start_date,

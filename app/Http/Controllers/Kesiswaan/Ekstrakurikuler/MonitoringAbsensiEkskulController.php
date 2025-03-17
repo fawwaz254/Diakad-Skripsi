@@ -37,7 +37,7 @@ class MonitoringAbsensiEkskulController extends BaseController
     public function viewMonitoringAbsensiEkskul(Request $request, $id_semester = null, $id_ekskul = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -58,7 +58,7 @@ class MonitoringAbsensiEkskulController extends BaseController
     public function viewDetailMonitoringAbsensiEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -83,7 +83,7 @@ class MonitoringAbsensiEkskulController extends BaseController
     public function printMonitoringAbsensiEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 

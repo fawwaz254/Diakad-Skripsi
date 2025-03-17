@@ -31,7 +31,7 @@ class MateriAjarController extends BaseController
     public function viewMateriAjar(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('siswa/e-learning/materi-ajar/view-materi-ajar', compact('auth_data'));
     }
@@ -40,7 +40,7 @@ class MateriAjarController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $materi_ajar = MateriAjar::with('materi_ajar_file')->find($id);
         $now = Carbon::now();
         $cek = MateriAjarView::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_materi_ajar', $materi_ajar->id_materi_ajar)->first();
@@ -63,7 +63,7 @@ class MateriAjarController extends BaseController
     // public function addViewMateriAjar(Request $request,$id = null){
 
     // $input = (object) $request->input();
-    // $auth_data = auth_data();
+    // $auth_data = $input->auth_data;
     // $now = Carbon::now();
     // $link = MateriAjarFile::where('id_materi_ajar_file',$id)->first();
     // return redirect()->away($link->link_file);
@@ -96,7 +96,7 @@ class MateriAjarController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = Siswa::with('kelas')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $list_data = MateriAjar::with('materi_ajar_file', 'mapel', 'guru.pengguna')

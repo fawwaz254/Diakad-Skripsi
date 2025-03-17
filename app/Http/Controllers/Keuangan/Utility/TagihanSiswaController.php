@@ -25,7 +25,7 @@ class TagihanSiswaController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // $data_thn_masuk_siswa = Siswa::select('siswa.thn_masuk_siswa')
         //     ->distinct()
@@ -54,7 +54,7 @@ class TagihanSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required',
@@ -81,7 +81,7 @@ class TagihanSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // $data_thn_masuk_siswa = Siswa::select('siswa.thn_masuk_siswa')
         //     ->distinct()
@@ -107,7 +107,7 @@ class TagihanSiswaController extends BaseController
     public function datatablesTagihanSiswa(Request $request, $id_kelas, $thn_akademik_semester, $id_kelompok_biaya, $id_jalur, $is_insert_replace)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // dd($thn_akademik_semester);
         $siswa = LibDataKeuangan::fetchDataSiswaTagihan($auth_data, $id_kelas, $thn_akademik_semester, $id_kelompok_biaya, $id_jalur, "1");
 
@@ -208,15 +208,15 @@ class TagihanSiswaController extends BaseController
                                     if (empty($pembayaran)) { // jika TIDAK ADA pembayaran
                                         $tagihan_set->keterangan = $detail_biaya->keterangan_biaya;
                                         $tagihan_set->besar_biaya = $detail_biaya->besar_biaya;
-                                        $tagihan_set->updated_by = auth_data()->pengguna->id_pengguna;
+                                        $tagihan_set->updated_by = $input->auth_data->pengguna->id_pengguna;
                                         if (!empty($detail_biaya->deleted_at)) {
                                             $tagihan_set->deleted_at = $now;
-                                            $tagihan_set->deleted_by = auth_data()->pengguna->id_pengguna;
+                                            $tagihan_set->deleted_by = $input->auth_data->pengguna->id_pengguna;
                                         }
                                         $tagihan_set->save();
                                     } else { // jika ADA pembayaran hanya update keterangan
                                         $tagihan_set->keterangan = $detail_biaya->keterangan_biaya;
-                                        $tagihan_set->updated_by = auth_data()->pengguna->id_pengguna;
+                                        $tagihan_set->updated_by = $input->auth_data->pengguna->id_pengguna;
                                         $tagihan_set->save();
                                         // if(!empty($detail_biaya->deleted_at)){
                                         //     $pembayaran->delete();
@@ -226,7 +226,7 @@ class TagihanSiswaController extends BaseController
                                     $siswa = Siswa::find($id_siswa);
 
                                     $tagihanBiaya = new TagihanBiaya;
-                                    $tagihanBiaya->id_tagihan_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                    $tagihanBiaya->id_tagihan_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                     $tagihanBiaya->id_siswa = $id_siswa;
                                     $tagihanBiaya->id_kelas = $siswa->id_kelas;
                                     $tagihanBiaya->id_detail_biaya = $detail_biaya->id_detail_biaya;
@@ -234,7 +234,7 @@ class TagihanSiswaController extends BaseController
                                     $tagihanBiaya->denda_biaya = 0;
                                     $tagihanBiaya->is_tagih = 1;
                                     $tagihanBiaya->keterangan = $detail_biaya->keterangan_biaya;
-                                    $tagihanBiaya->created_by = auth_data()->pengguna->id_pengguna;
+                                    $tagihanBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
                                     $tagihanBiaya->save();
                                 }
                             } elseif ($input->is_insert_replace == "4") { // Sync
@@ -244,13 +244,13 @@ class TagihanSiswaController extends BaseController
                                     // if (empty($pembayaran)) { // jika TIDAK ADA pembayaran
                                     $tagihan_set->keterangan = $detail_biaya->keterangan_biaya;
                                     $tagihan_set->besar_biaya = $detail_biaya->besar_biaya;
-                                    $tagihan_set->updated_by = auth_data()->pengguna->id_pengguna;
+                                    $tagihan_set->updated_by = $input->auth_data->pengguna->id_pengguna;
                                     if (!empty($detail_biaya->deleted_at)) { //jika detail biaya telah dihapus
                                         $tagihan_set->deleted_at = $now;
-                                        $tagihan_set->deleted_by = auth_data()->pengguna->id_pengguna;
+                                        $tagihan_set->deleted_by = $input->auth_data->pengguna->id_pengguna;
                                         if (!empty($pembayaran)) { // kalau pembayaran ditemukan maka update
                                             $pembayaran->deleted_at = $now;
-                                            $pembayaran->deleted_by = auth_data()->pengguna->id_pengguna;
+                                            $pembayaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
                                         }
                                     }
 
@@ -265,7 +265,7 @@ class TagihanSiswaController extends BaseController
                                     $siswa = Siswa::find($id_siswa);
 
                                     $tagihanBiaya = new TagihanBiaya;
-                                    $tagihanBiaya->id_tagihan_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                    $tagihanBiaya->id_tagihan_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                     $tagihanBiaya->id_siswa = $id_siswa;
                                     $tagihanBiaya->id_kelas = $siswa->id_kelas;
                                     $tagihanBiaya->id_detail_biaya = $detail_biaya->id_detail_biaya;
@@ -273,7 +273,7 @@ class TagihanSiswaController extends BaseController
                                     $tagihanBiaya->denda_biaya = 0;
                                     $tagihanBiaya->is_tagih = 1;
                                     $tagihanBiaya->keterangan = $detail_biaya->keterangan_biaya;
-                                    $tagihanBiaya->created_by = auth_data()->pengguna->id_pengguna;
+                                    $tagihanBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
                                     $tagihanBiaya->save();
                                 }
                             } else {
@@ -294,7 +294,7 @@ class TagihanSiswaController extends BaseController
                                         ];
                                     } else {
                                         $tagihanBiaya = TagihanBiaya::find($tagihan_set->id_tagihan_biaya);
-                                        $tagihanBiaya->deleted_by = auth_data()->pengguna->id_pengguna;
+                                        $tagihanBiaya->deleted_by = $input->auth_data->pengguna->id_pengguna;
                                         $tagihanBiaya->save();
 
                                         $tagihanBiaya->delete();
@@ -304,7 +304,7 @@ class TagihanSiswaController extends BaseController
                                     $siswa = Siswa::find($id_siswa);
 
                                     $tagihanBiaya = new TagihanBiaya;
-                                    $tagihanBiaya->id_tagihan_biaya = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                    $tagihanBiaya->id_tagihan_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                     $tagihanBiaya->id_siswa = $id_siswa;
                                     $tagihanBiaya->id_kelas = $siswa->id_kelas;
                                     $tagihanBiaya->id_detail_biaya = $detail_biaya->id_detail_biaya;
@@ -312,7 +312,7 @@ class TagihanSiswaController extends BaseController
                                     $tagihanBiaya->denda_biaya = 0;
                                     $tagihanBiaya->is_tagih = 1;
                                     $tagihanBiaya->keterangan = $detail_biaya->keterangan_biaya;
-                                    $tagihanBiaya->created_by = auth_data()->pengguna->id_pengguna;
+                                    $tagihanBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
                                     $tagihanBiaya->save();
                                 }
                             }

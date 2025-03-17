@@ -23,7 +23,7 @@ class SubDataKategoriController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sekretariat/manajemen-file/data-sub-kategori/view-data-sub-kategori', compact('auth_data'));
     }
@@ -31,7 +31,7 @@ class SubDataKategoriController extends BaseController
     public function datatablesSubCategoryfile(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = SubCategoryFile::join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
             ->select('category_file.category_file_name as category_file', 'sub_category_file.*');
 
@@ -49,7 +49,7 @@ class SubDataKategoriController extends BaseController
     {
         #code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $category_file = CategoryFile::all();
 
         return view('sekretariat/manajemen-file/data-sub-kategori/add-data-sub-kategori', compact('auth_data', 'category_file'));
@@ -60,7 +60,7 @@ class SubDataKategoriController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $sub_data_kategori = SubCategoryFile::find($id);
         $data_kategori = CategoryFile::all();
 
@@ -88,7 +88,7 @@ class SubDataKategoriController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $subdatakategori                                = new SubCategoryFile;
 
@@ -96,7 +96,7 @@ class SubDataKategoriController extends BaseController
                 $subdatakategori->sub_category_file_name        = $input->sub_category_file_name;
                 $subdatakategori->sub_category_file_explanation = $input->sub_category_file_explanation;
                 $subdatakategori->category_file_id              = $input->category_file_id;
-                $subdatakategori->created_by                    = auth_data()->pengguna->id_pengguna;
+                $subdatakategori->created_by                    = $input->auth_data->pengguna->id_pengguna;
                 $subdatakategori->save();
 
                 return [
@@ -110,7 +110,7 @@ class SubDataKategoriController extends BaseController
                 $subdatakategori->sub_category_file_name         = $input->sub_category_file_name;
                 $subdatakategori->sub_category_file_explanation  = $input->sub_category_file_explanation;
                 $subdatakategori->category_file_id               = $input->category_file_id;
-                $subdatakategori->updated_by                     = auth_data()->pengguna->id_pengguna;
+                $subdatakategori->updated_by                     = $input->auth_data->pengguna->id_pengguna;
                 $subdatakategori->updated_at                     = $now;
                 $subdatakategori->save();
 
@@ -128,7 +128,7 @@ class SubDataKategoriController extends BaseController
                 } else {
                     // make object to find id 
                     $subdatakategori                       = SubCategoryFile::find($id);
-                    $subdatakategori->deleted_by           = auth_data()->pengguna->id_pengguna;
+                    $subdatakategori->deleted_by           = $input->auth_data->pengguna->id_pengguna;
                     $subdatakategori->save();
 
                     $subdatakategori->delete();

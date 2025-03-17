@@ -29,7 +29,7 @@ class PencarianController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('administrator/pengelolaan-akun/pencarian/view-pencarian', compact('auth_data', 'username_nama_cari'));
     }
@@ -38,7 +38,7 @@ class PencarianController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'username_nama_cari' => 'required'
@@ -60,7 +60,7 @@ class PencarianController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('administrator/pengelolaan-akun/pencarian/view-pencarian', compact('auth_data', 'username_nama_cari'));
     }
@@ -68,7 +68,7 @@ class PencarianController extends BaseController
     public function datatablesPencarian(Request $request, $username_nama_cari)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.username', 'pengguna.nm_pengguna', 'pengguna.status_join_table', 'role.nm_role', DB::raw("(SELECT COUNT(*) FROM role_pengguna WHERE role_pengguna.id_pengguna = pengguna.id_pengguna AND role_pengguna.deleted_at IS NULL) AS total_role"))
             ->join('role_pengguna', 'role_pengguna.id_pengguna', '=', 'pengguna.id_pengguna')
@@ -119,7 +119,7 @@ class PencarianController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pengguna = Pengguna::select('pengguna.path_foto_pengguna', 'pengguna.id_pengguna', 'pengguna.username', 'pengguna.nm_pengguna', 'pengguna.email_afiliasi', 'pengguna.email_pengguna', 'pengguna.nomor_hp_pengguna', 'pengguna.status_join_table', 'role_pengguna.id_role', 'pengguna.last_time_password', 'pengguna.last_time_login', 'pengguna.is_online', DB::raw("(SELECT COUNT(*) FROM role_pengguna WHERE role_pengguna.id_pengguna = pengguna.id_pengguna AND role_pengguna.deleted_at IS NULL) AS total_role"))
             ->join('role_pengguna', function ($join) {
@@ -197,7 +197,7 @@ class PencarianController extends BaseController
     public function datatablesRolePencarian(Request $request, $id_pengguna)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = RolePengguna::select('role_pengguna.id_role_pengguna', 'role.nm_role', 'role.deskripsi_role', 'role.path', 'role.is_mobile')
             ->join('role', 'role.id_role', '=', 'role_pengguna.id_role')
@@ -220,7 +220,7 @@ class PencarianController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pengguna = Pengguna::select('id_pengguna', 'username', 'nm_pengguna')
             ->where('id_pengguna', '=', $id_pengguna)
@@ -265,7 +265,7 @@ class PencarianController extends BaseController
 
                     $staff                  = Staff::find($staff->id_staff);
                     $staff->id_unit_kerja   = $input->id_unit_kerja;
-                    $staff->updated_by      = auth_data()->pengguna->id_pengguna;
+                    $staff->updated_by      = $input->auth_data->pengguna->id_pengguna;
                     $staff->updated_at      = $now;
                     $staff->save();
                 } elseif ($pengguna->status_join_table == 2) {
@@ -273,7 +273,7 @@ class PencarianController extends BaseController
 
                     $guru                  = Guru::find($guru->id_guru);
                     $guru->id_unit_kerja   = $input->id_unit_kerja;
-                    $guru->updated_by      = auth_data()->pengguna->id_pengguna;
+                    $guru->updated_by      = $input->auth_data->pengguna->id_pengguna;
                     $guru->updated_at      = $now;
                     $guru->save();
                 }
@@ -285,13 +285,13 @@ class PencarianController extends BaseController
 
                     $role_pengguna              = RolePengguna::find($role_pengguna->id_role_pengguna);
                     $role_pengguna->is_aktif    = 0;
-                    $role_pengguna->updated_by  = auth_data()->pengguna->id_pengguna;
+                    $role_pengguna->updated_by  = $input->auth_data->pengguna->id_pengguna;
                     $role_pengguna->updated_at  = $now;
                     $role_pengguna->save();
 
                     $role_pengguna              = RolePengguna::find($input->id_role_pengguna);
                     $role_pengguna->is_aktif    = 1;
-                    $role_pengguna->updated_by  = auth_data()->pengguna->id_pengguna;
+                    $role_pengguna->updated_by  = $input->auth_data->pengguna->id_pengguna;
                     $role_pengguna->updated_at  = $now;
                     $role_pengguna->save();
                 }
@@ -304,7 +304,7 @@ class PencarianController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $rolePengguna               = RolePengguna::find($id);
-                $rolePengguna->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $rolePengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $rolePengguna->save();
 
                 $rolePengguna->delete();
@@ -321,7 +321,7 @@ class PencarianController extends BaseController
                     $rolePengguna->id_pengguna              = $input->id_pengguna;
                     $rolePengguna->keterangan_role_pengguna = "Input Administrator";
                     $rolePengguna->is_aktif                 = 0;
-                    $rolePengguna->created_by               = auth_data()->pengguna->id_pengguna;
+                    $rolePengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
                     $rolePengguna->save();
                 }
 
@@ -336,14 +336,14 @@ class PencarianController extends BaseController
                 $pengguna->password             = Hash::make($pengguna->username);
                 $pengguna->must_change_password = 1;
                 $pengguna->last_time_password   = $now;
-                $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
+                $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
                 $pengguna->updated_at           = $now;
                 $pengguna->save();
 
                 $log = new LogResetPassword;
-                $log->id_log_reset_password = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $log->id_log_reset_password = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $log->id_pengguna       = $pengguna->id_pengguna;
-                $log->created_by           = auth_data()->pengguna->id_pengguna;
+                $log->created_by           = $input->auth_data->pengguna->id_pengguna;
                 $log->save();
 
                 return [
@@ -366,14 +366,14 @@ class PencarianController extends BaseController
                 $pengguna->password             = Hash::make($pengguna->username);
                 $pengguna->must_change_password = 1;
                 $pengguna->last_time_password   = $now;
-                $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
+                $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
                 $pengguna->updated_at           = $now;
                 $pengguna->save();
 
                 $log = new LogResetPassword;
-                $log->id_log_reset_password = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $log->id_log_reset_password = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $log->id_pengguna       = $pengguna->id_pengguna;
-                $log->created_by           = auth_data()->pengguna->id_pengguna;
+                $log->created_by           = $input->auth_data->pengguna->id_pengguna;
                 $log->save();
             }
 

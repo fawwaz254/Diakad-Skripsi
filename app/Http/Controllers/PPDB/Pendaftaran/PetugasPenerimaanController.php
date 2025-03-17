@@ -26,7 +26,7 @@ class PetugasPenerimaanController extends Controller
     public function viewPetugasPenerimaan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         /** get all data penerimaan */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
@@ -47,7 +47,7 @@ class PetugasPenerimaanController extends Controller
     public function actionViewPetugasPenerimaan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $validator  = Validator::make($request->all(), [
             'id_penerimaan' => 'required'
@@ -74,7 +74,7 @@ class PetugasPenerimaanController extends Controller
     public function petugasPenerimaan(Request $request, $id_penerimaan)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
@@ -110,7 +110,7 @@ class PetugasPenerimaanController extends Controller
     public function addPetugasPenerimaan(Request $request, $id_penerimaan)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         /** get list pengguna */
         $pengguna =
@@ -140,7 +140,7 @@ class PetugasPenerimaanController extends Controller
     public function actionAddPetugasPenerimaan(Request $request, $id)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_penerimaan'         => 'required',
@@ -158,7 +158,7 @@ class PetugasPenerimaanController extends Controller
             $now = Carbon::now();
 
             /** generate id penerimaan jurusan */
-            $id_penerimaan_petugas = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id_penerimaan_petugas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
             /** action for add data penerimaan */
             $penerimaan_petugas                         = new PenerimaanPetugas;
@@ -166,7 +166,7 @@ class PetugasPenerimaanController extends Controller
             $penerimaan_petugas->id_penerimaan          = $input->id_penerimaan;
             $penerimaan_petugas->id_pengguna_petugas    = $input->id_pengguna_petugas;
             $penerimaan_petugas->jabatan_petugas        = $input->jabatan_petugas;
-            $penerimaan_petugas->created_by             = auth_data()->pengguna->id_pengguna;
+            $penerimaan_petugas->created_by             = $input->auth_data->pengguna->id_pengguna;
             $penerimaan_petugas->save();
 
             return [
@@ -196,7 +196,7 @@ class PetugasPenerimaanController extends Controller
         }
 
         /** deleting data petugas penerimaan */
-        $penerimaan_petugas->deleted_by  = auth_data()->pengguna->id_pengguna;
+        $penerimaan_petugas->deleted_by  = $input->auth_data->pengguna->id_pengguna;
         $penerimaan_petugas->save();
         $penerimaan_petugas->delete();
 

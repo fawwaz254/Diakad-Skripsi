@@ -23,7 +23,7 @@ class WaliKelasController extends BaseController
     public function viewWaliKelas(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
        
         return view('sekretariat/laporan/wali-kelas/view-wali-kelas',compact('auth_data'));
     }
@@ -31,7 +31,7 @@ class WaliKelasController extends BaseController
     public function datatablesWaliKelas(Request $request){
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LaporanWaliKelas::with('bulan','semester','role')->get();
 
@@ -62,7 +62,7 @@ class WaliKelasController extends BaseController
     public function detailWaliKelas($id, Request $request){
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_wali_kelas = LaporanWaliKelas::with('semester','bulan','role')->findOrFail($id);
 
@@ -73,7 +73,7 @@ class WaliKelasController extends BaseController
     public function detailDataTable(Request $request,$id){
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data =  LaporanWaliKelasDetail::with('guru','kelas')->where('id_laporan_wali_kelas',$id)->get();
 

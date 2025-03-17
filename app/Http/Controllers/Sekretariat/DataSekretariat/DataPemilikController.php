@@ -24,7 +24,7 @@ class DataPemilikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sekretariat/data-sekretariat/data-pemilik/view-data-pemilik', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class DataPemilikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $unit = UnitKerja::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
@@ -44,7 +44,7 @@ class DataPemilikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $unit     = UnitKerja::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $arsip     = ArsipPemilik::where('id_arsip_pemilik', '=', $id)->first();
@@ -55,7 +55,7 @@ class DataPemilikController extends BaseController
     public function datatablesDataPemilik(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = ArsipPemilik::select('arsip_pemilik.id_arsip_pemilik', 'unit_kerja.nm_unit_kerja', 'arsip_pemilik.nm_arsip_pemilik', 'arsip_pemilik.id_unit_kerja')
             ->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'arsip_pemilik.id_unit_kerja')
             ->where('arsip_pemilik.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
@@ -74,7 +74,7 @@ class DataPemilikController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -90,7 +90,7 @@ class DataPemilikController extends BaseController
         } else {
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $arsip                     = new ArsipPemilik;
                 $arsip->id_arsip_pemilik    = $id;
@@ -98,7 +98,7 @@ class DataPemilikController extends BaseController
                 $arsip->id_unit_kerja     = $input->id_unit_kerja;
                 $arsip->id_sekolah         = $auth_data->pengguna->id_sekolah;
                 $arsip->created_at         = $now;
-                $arsip->created_by        = auth_data()->pengguna->id_pengguna;
+                $arsip->created_by        = $input->auth_data->pengguna->id_pengguna;
                 $arsip->save();
 
                 return [
@@ -111,7 +111,7 @@ class DataPemilikController extends BaseController
                 $arsip->nm_arsip_pemilik    = $input->nm_arsip_pemilik;
                 $arsip->id_unit_kerja    = $input->id_unit_kerja;
                 $arsip->updated_at         = $now;
-                $arsip->updated_by        = auth_data()->pengguna->id_pengguna;
+                $arsip->updated_by        = $input->auth_data->pengguna->id_pengguna;
                 $arsip->save();
 
                 return [
@@ -127,7 +127,7 @@ class DataPemilikController extends BaseController
                     ];
                 } else {
                     $arsip     = ArsipPemilik::find($id);
-                    $arsip->deleted_by    = auth_data()->pengguna->id_pengguna;
+                    $arsip->deleted_by    = $input->auth_data->pengguna->id_pengguna;
                     $arsip->deleted_at     = $now;
                     $arsip->save();
 

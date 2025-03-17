@@ -18,7 +18,7 @@ class FingerprintRealtimeController extends Controller
     public function viewFingerprintRealtime(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('administrator/device/fingerprintRealtime/view-fingerprint-realtime', compact('auth_data'));
     }

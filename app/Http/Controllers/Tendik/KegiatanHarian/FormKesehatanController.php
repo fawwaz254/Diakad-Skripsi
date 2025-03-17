@@ -36,7 +36,7 @@ class FormKesehatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($start_monkes = Setting::where('key_setting', 'start_monkes')->first()) {
             $start_monkes = $start_monkes->value;
@@ -70,7 +70,7 @@ class FormKesehatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($start_monkes = Setting::where('key_setting', 'start_monkes')->first()) {
             $start_monkes = $start_monkes->value;
@@ -108,7 +108,7 @@ class FormKesehatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pengisian_kegiatan_harian = PengisianKegiatanHarian::with('pengguna_pengisi')->where('id_pengisian_kegiatan_harian', $id)->first();
 
@@ -120,7 +120,7 @@ class FormKesehatanController extends BaseController
     public function showDatatablesFormKesehatan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = PengisianKegiatanHarian::with('pengguna_pengisi');
 
         if (!empty($input->id_kelas)) {
@@ -185,7 +185,7 @@ class FormKesehatanController extends BaseController
     public function actionFormKesehatan(Request $request, $mode)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         switch ($mode) {
             case 'add':
@@ -238,7 +238,7 @@ class FormKesehatanController extends BaseController
             }
 
             if ($mode == 'add') {
-                $pengisian_kegiatan_harian_id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 // switch($request->segment(1)){
                 //     case 'tendik':
@@ -260,7 +260,7 @@ class FormKesehatanController extends BaseController
                 $batch_insert_pengisian_jawaban = array();
                 foreach ($input->jawaban_pertanyaan as $id_pertanyaan => $id_jawaban) {
                     $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $batch_insert_pengisian_jawaban[] = array(
                         'id_pengisian_jawaban'            => $id,
@@ -289,11 +289,11 @@ class FormKesehatanController extends BaseController
                 $insert_pengisian_kegiatan = array();
                 // $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
                 $insert_pengisian_kegiatan['id_pengisian_kegiatan_harian']   = $pengisian_kegiatan_harian_id;
-                $insert_pengisian_kegiatan['id_pengguna_pengisi']            = auth_data()->pengguna->id_pengguna;
+                $insert_pengisian_kegiatan['id_pengguna_pengisi']            = $input->auth_data->pengguna->id_pengguna;
                 $insert_pengisian_kegiatan['status_join_table']              = $status_join;
                 $insert_pengisian_kegiatan['warna_keadaan']                  = $pengisian_jawaban_terbobot['warna_keadaan'];
                 $insert_pengisian_kegiatan['status_pengisian']               = $status_pengisian;
-                $insert_pengisian_kegiatan['created_by']                     = auth_data()->pengguna->id_pengguna;
+                $insert_pengisian_kegiatan['created_by']                     = $input->auth_data->pengguna->id_pengguna;
                 if ($now->between($start_1, $end_1)) {
                     $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today()->format('Y-m-d');
                 } else if ($now->between($start_2, $end_2)) {
@@ -335,10 +335,10 @@ class FormKesehatanController extends BaseController
 
                 if ($pengisian_kegiatan_harian && $pengisian_jawaban) {
                     try {
-                        $pengisian_kegiatan_harian->deleted_by   = auth_data()->pengguna->id_pengguna;
+                        $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                         $pengisian_kegiatan_harian->save();
 
-                        $pengisian_jawaban->deleted_by   = auth_data()->pengguna->id_pengguna;
+                        $pengisian_jawaban->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                         $pengisian_jawaban->save();
 
                         $pengisian_kegiatan_harian->delete();

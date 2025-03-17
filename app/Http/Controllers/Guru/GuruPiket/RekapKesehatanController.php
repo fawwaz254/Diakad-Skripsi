@@ -39,7 +39,7 @@ class RekapKesehatanController extends BaseController
     public function viewRekapKesehatan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -49,7 +49,7 @@ class RekapKesehatanController extends BaseController
     public function viewDetailRekapKesehatan(Request $request, $id_kelas = '-', $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if (empty($id_bulan)) {
@@ -78,7 +78,7 @@ class RekapKesehatanController extends BaseController
     public function downloadDetailRekapKesehatan(Request $request, $id_kelas = '-', $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if (empty($id_bulan)) {

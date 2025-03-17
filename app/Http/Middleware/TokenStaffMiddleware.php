@@ -36,7 +36,7 @@ class TokenStaffMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
         if (Auth::check()) {
             $pengguna = Auth::user();
@@ -129,6 +129,7 @@ class TokenStaffMiddleware
                 return redirect($auth_data->role_aktif->path);
             }
 
+            $request->request->add(['auth_data' => $auth_data]);
             return $next($request);
         } else {
             //barcode

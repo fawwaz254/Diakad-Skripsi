@@ -23,7 +23,7 @@ class DetailBiayaInternalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $detail_biaya = DetailBiaya::find($id);
         $biaya_sekolah = null;
@@ -38,7 +38,7 @@ class DetailBiayaInternalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelompok_biaya_internal = LibDataKeuangan::fetchDataBiayaInternal($auth_data);
         $data_kelompok_biaya = KelompokBiaya::orderBy('nm_kelompok_biaya', 'asc')->get();
@@ -50,7 +50,7 @@ class DetailBiayaInternalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -64,7 +64,7 @@ class DetailBiayaInternalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -80,7 +80,7 @@ class DetailBiayaInternalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_biaya_internal = LibDataKeuangan::fetchDataBiayaInternal($auth_data);
 
@@ -95,7 +95,7 @@ class DetailBiayaInternalController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_biaya_internal = LibDataKeuangan::fetchDataBiayaInternal($auth_data);
 
@@ -107,7 +107,7 @@ class DetailBiayaInternalController extends BaseController
     public function datatablesDetailBiayaInternal2(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataDetailBiayaInternal($auth_data, null, "1");
 
         $detail_biaya = DetailBiaya::find($id);
@@ -137,7 +137,7 @@ class DetailBiayaInternalController extends BaseController
     public function datatablesDetailBiayaInternal(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataDetailBiayaInternal($auth_data, null, "1");
 
         if (!empty($input->kelompok_biaya_internal)) {
@@ -210,7 +210,7 @@ class DetailBiayaInternalController extends BaseController
                 } else {
 
                     $kelompok_biaya_internal = new KelompokBiayaInternal;
-                    $kelompok_biaya_internal->id_kelompok_biaya_internal = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $kelompok_biaya_internal->id_kelompok_biaya_internal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $kelompok_biaya_internal->id_biaya = $detail_biaya->id_biaya;
                     $kelompok_biaya_internal->save();
 
@@ -250,11 +250,11 @@ class DetailBiayaInternalController extends BaseController
                 foreach ($nm_detail_biaya_internal as $key => $value) {
 
                     $detailBiayaInternal                                = new DetailBiayaInternal;
-                    $detailBiayaInternal->id_detail_biaya_internal      =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $detailBiayaInternal->id_detail_biaya_internal      =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $detailBiayaInternal->id_kelompok_biaya_internal    = $id_kelompok_biaya_internal;
                     $detailBiayaInternal->nm_detail_biaya_internal      = $value;
                     $detailBiayaInternal->besar_biaya                   = $besar_biaya[$key];
-                    $detailBiayaInternal->created_by                    = auth_data()->pengguna->id_pengguna;
+                    $detailBiayaInternal->created_by                    = $input->auth_data->pengguna->id_pengguna;
                     $detailBiayaInternal->save();
                 }
 
@@ -281,7 +281,7 @@ class DetailBiayaInternalController extends BaseController
                 //$detailBiayaInternal->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
                 $detailBiayaInternal->nm_detail_biaya_internal      = $input->nm_detail_biaya_internal;
                 $detailBiayaInternal->besar_biaya                   = $input->besar_biaya;
-                $detailBiayaInternal->updated_by                    = auth_data()->pengguna->id_pengguna;
+                $detailBiayaInternal->updated_by                    = $input->auth_data->pengguna->id_pengguna;
                 $detailBiayaInternal->updated_at                    = $now;
                 $detailBiayaInternal->save();
 
@@ -293,7 +293,7 @@ class DetailBiayaInternalController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $detailBiayaInternal               = DetailBiayaInternal::find($id);
-                $detailBiayaInternal->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $detailBiayaInternal->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $detailBiayaInternal->save();
 
                 $detailBiayaInternal->delete();
@@ -328,14 +328,14 @@ class DetailBiayaInternalController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $detailBiayaInternal                                = new DetailBiayaInternal;
                 $detailBiayaInternal->id_detail_biaya_internal      = $id;
                 $detailBiayaInternal->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
                 $detailBiayaInternal->nm_detail_biaya_internal      = $input->nm_detail_biaya_internal;
                 $detailBiayaInternal->besar_biaya                   = $input->besar_biaya;
-                $detailBiayaInternal->created_by                    = auth_data()->pengguna->id_pengguna;
+                $detailBiayaInternal->created_by                    = $input->auth_data->pengguna->id_pengguna;
                 $detailBiayaInternal->save();
 
                 return [
@@ -349,7 +349,7 @@ class DetailBiayaInternalController extends BaseController
                 $detailBiayaInternal->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
                 $detailBiayaInternal->nm_detail_biaya_internal      = $input->nm_detail_biaya_internal;
                 $detailBiayaInternal->besar_biaya                   = $input->besar_biaya;
-                $detailBiayaInternal->updated_by                    = auth_data()->pengguna->id_pengguna;
+                $detailBiayaInternal->updated_by                    = $input->auth_data->pengguna->id_pengguna;
                 $detailBiayaInternal->updated_at                    = $now;
                 $detailBiayaInternal->save();
 
@@ -361,7 +361,7 @@ class DetailBiayaInternalController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $detailBiayaInternal               = DetailBiayaInternal::find($id);
-                $detailBiayaInternal->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $detailBiayaInternal->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $detailBiayaInternal->save();
 
                 $detailBiayaInternal->delete();

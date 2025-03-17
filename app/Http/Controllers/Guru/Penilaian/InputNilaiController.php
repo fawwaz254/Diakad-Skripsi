@@ -34,7 +34,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         // get all data kelas_mp by id_pengguna guru
@@ -52,7 +52,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_kelas_mp' => 'required'
@@ -75,7 +75,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibGuru::fetchDataKelasMp($auth_data, $id_kelas_mp);
 
@@ -151,7 +151,7 @@ class InputNilaiController extends BaseController
                 try {
                     $pengambilanMp = PengambilanMp::find($id);
                     $pengambilanMp->is_tampil = 1;
-                    $pengambilanMp->updated_by = auth_data()->pengguna->id_pengguna;
+                    $pengambilanMp->updated_by = $input->auth_data->pengguna->id_pengguna;
                     $pengambilanMp->save();
 
                     DB::commit();
@@ -259,7 +259,7 @@ class InputNilaiController extends BaseController
                                             if (empty($nilaiMpSub)) { // if empty, then create new record
                                                 $is_new_subkomponen = 1;
                                                 $nilaiMpSub                            = new NilaiMpSubKomponen;
-                                                $nilaiMpSub->id_nilai_mp_subkomponen   = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                                $nilaiMpSub->id_nilai_mp_subkomponen   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                             }
 
                                             $nilaiMpSub->id_pengambilan_mp         = $siswa->id_pengambilan_mp;
@@ -270,10 +270,10 @@ class InputNilaiController extends BaseController
                                                 $nilaiMpSub->besar_nilai_mp        = $nilai['raw'];
                                             }
                                             if ($is_new_subkomponen == 1) {
-                                                $nilaiMpSub->created_by            = auth_data()->pengguna->id_pengguna;
+                                                $nilaiMpSub->created_by            = $input->auth_data->pengguna->id_pengguna;
                                                 $nilaiMpSub->created_at            = $now;
                                             } else {
-                                                $nilaiMpSub->updated_by            = auth_data()->pengguna->id_pengguna;
+                                                $nilaiMpSub->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                                 $nilaiMpSub->updated_at            = $now;
                                             }
                                             $nilaiMpSub->save();
@@ -290,7 +290,7 @@ class InputNilaiController extends BaseController
 
                                         if (empty($nilaiMp)) { // if empty, then create new record
                                             $nilaiMp                = new NilaiMp;
-                                            $nilaiMp->id_nilai_mp   = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                            $nilaiMp->id_nilai_mp   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                             $is_new_komponen = 1;
                                         }
 
@@ -298,10 +298,10 @@ class InputNilaiController extends BaseController
                                         $nilaiMp->id_komponen_mp        = $komponen;
                                         $nilaiMp->besar_nilai_mp        = !empty($nilaiKomponen) ? $nilaiKomponen : 0;
                                         if ($is_new_komponen == 1) {
-                                            $nilaiMp->created_by        = auth_data()->pengguna->id_pengguna;
+                                            $nilaiMp->created_by        = $input->auth_data->pengguna->id_pengguna;
                                             $nilaiMp->created_at        = $now;
                                         } else {
-                                            $nilaiMp->updated_by        = auth_data()->pengguna->id_pengguna;
+                                            $nilaiMp->updated_by        = $input->auth_data->pengguna->id_pengguna;
                                             $nilaiMp->updated_at        = $now;
                                         }
                                         $nilaiMp->save();
@@ -320,7 +320,7 @@ class InputNilaiController extends BaseController
                                     }
                                     $nilai_pengambilanMp                        = PengambilanMp::find($siswa->id_pengambilan_mp);
                                     $nilai_pengambilanMp->nilai_angka           = $nilai_angka;
-                                    $nilai_pengambilanMp->updated_by            = auth_data()->pengguna->id_pengguna;
+                                    $nilai_pengambilanMp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                     $nilai_pengambilanMp->updated_at            = $now;
                                     $nilai_pengambilanMp->nilai_huruf           = $nilai_huruf;
                                     $nilai_pengambilanMp->save();

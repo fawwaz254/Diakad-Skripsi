@@ -27,7 +27,7 @@ class PeriodeMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('humas/magang-siswa/periode-magang/view-periode-magang', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class PeriodeMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_magang = LibMagangSiswa::fetchDataMagangSiswa($auth_data);
 
@@ -45,7 +45,7 @@ class PeriodeMagangController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_periode_magang = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_periode_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('humas/magang-siswa/periode-magang/add-periode-magang', compact('auth_data', 'data_magang', 'data_semester', 'id_periode_magang'));
     }
@@ -54,7 +54,7 @@ class PeriodeMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_magang = LibMagangSiswa::fetchDataMagangSiswa($auth_data);
 
@@ -94,7 +94,7 @@ class PeriodeMagangController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $periodeMagang                          = new PeriodeMagang;
                 $periodeMagang->id_periode_magang       = $id;
@@ -106,7 +106,7 @@ class PeriodeMagangController extends BaseController
                 $periodeMagang->tgl_magang_selesai       = date_format(date_create($input->tgl_magang_selesai), "Y-m-d");
                 $periodeMagang->is_aktif                = $input->is_aktif;
                 $periodeMagang->nomor_sk_periode_magang = $input->nomor_sk_periode_magang;
-                $periodeMagang->created_by              = auth_data()->pengguna->id_pengguna;
+                $periodeMagang->created_by              = $input->auth_data->pengguna->id_pengguna;
                 $periodeMagang->save();
 
                 return [
@@ -125,7 +125,7 @@ class PeriodeMagangController extends BaseController
                 $periodeMagang->tgl_magang_selesai      = date_format(date_create($input->tgl_magang_selesai), "Y-m-d");
                 $periodeMagang->is_aktif                = $input->is_aktif;
                 $periodeMagang->nomor_sk_periode_magang = $input->nomor_sk_periode_magang;
-                $periodeMagang->updated_by              = auth_data()->pengguna->id_pengguna;
+                $periodeMagang->updated_by              = $input->auth_data->pengguna->id_pengguna;
                 $periodeMagang->updated_at              = $now;
                 $periodeMagang->save();
                 return [
@@ -142,7 +142,7 @@ class PeriodeMagangController extends BaseController
                 } else {
                     // make object to find id
                     $periodeMagang              = PeriodeMagang::find($id);
-                    $periodeMagang->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $periodeMagang->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $periodeMagang->save();
 
                     $periodeMagang->delete();
@@ -159,7 +159,7 @@ class PeriodeMagangController extends BaseController
     public function datatablesPeriodeMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
         return Datatables::of($list_data)

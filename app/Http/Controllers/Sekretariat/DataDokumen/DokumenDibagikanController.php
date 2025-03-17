@@ -22,7 +22,7 @@ class DokumenDibagikanController extends BaseController
     public function viewDokumenDibagikan(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
        
         return view('sekretariat/data-dokumen/dokumen-dibagikan/view-dokumen-dibagikan',compact('auth_data'));
     }

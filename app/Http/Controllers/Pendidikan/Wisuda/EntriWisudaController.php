@@ -28,7 +28,7 @@ class EntriWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data);
 
@@ -42,7 +42,7 @@ class EntriWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_periode_wisuda' => 'required',
@@ -66,7 +66,7 @@ class EntriWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data, $id_periode_wisuda);
 
@@ -77,7 +77,7 @@ class EntriWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_pengajuan_wisuda = $this->fetchDataEntriWisudaDetail($auth_data, $id);
 
@@ -100,7 +100,7 @@ class EntriWisudaController extends BaseController
     public function datatablesEntriWisuda(Request $request, $id_periode_wisuda, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = $this->fetchDataEntriWisuda($auth_data, $id_periode_wisuda, $id_kelas);
 
         return Datatables::of($list_data)
@@ -301,7 +301,7 @@ class EntriWisudaController extends BaseController
                     if (!empty($input->tgl_kelulusan)) {
                         $pengajuanWisuda->tgl_kelulusan         = date_format(date_create($input->tgl_kelulusan), "Y-m-d");
                     }
-                    $pengajuanWisuda->updated_by            = auth_data()->pengguna->id_pengguna;
+                    $pengajuanWisuda->updated_by            = $input->auth_data->pengguna->id_pengguna;
                     $pengajuanWisuda->updated_at            = $now;
                     $pengajuanWisuda->save();
 
@@ -319,7 +319,7 @@ class EntriWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('pendidikan/wisuda/entri-wisuda/import-nomor-ijasah', compact('auth_data'));
     }

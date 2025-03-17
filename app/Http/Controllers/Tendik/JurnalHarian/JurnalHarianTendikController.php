@@ -28,7 +28,7 @@ class JurnalHarianTendikController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('tendik/jurnal-harian/laporan-jurnal-harian/view-data-laporan-jurnal-harian-t', compact('auth_data'));
     }
@@ -36,9 +36,9 @@ class JurnalHarianTendikController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $waktu = Carbon::today()->format('d-M-Y');
-        $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna', auth_data()->pengguna->id_pengguna)->with('category_jurnal_harian_tendik', 'category_jurnal_harian_tendik.unit_kerja')->get();
+        $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik', 'category_jurnal_harian_tendik.unit_kerja')->get();
         $jenis = JenisJurnalHarianTendik::all();
         return view('tendik/jurnal-harian/laporan-jurnal-harian/add-data-laporan-jurnal-harian-t', compact('auth_data', 'unit_kerja', 'waktu', 'jenis'));
     }
@@ -46,7 +46,7 @@ class JurnalHarianTendikController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
@@ -88,7 +88,7 @@ class JurnalHarianTendikController extends Controller
 
             if ($mode == 'add') {
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $data                               = new LaporanKerjaHarianTendik();
                 $data->id_lap_kerha_t               = $id;
@@ -98,8 +98,8 @@ class JurnalHarianTendikController extends Controller
                 $data->keterangan_progres           = $input->keterangan;
                 $data->status                       = $input->status;
                 $data->catatan                      = $input->keterangan;
-                $data->id_pengguna                  = auth_data()->pengguna->id_pengguna;
-                $data->created_by                   = auth_data()->pengguna->id_pengguna;
+                $data->id_pengguna                  = $input->auth_data->pengguna->id_pengguna;
+                $data->created_by                   = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
 
@@ -113,7 +113,7 @@ class JurnalHarianTendikController extends Controller
                             'message' => $validator->errors()->first()
                         ];
                     } else {
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/tendik/' . $id, request()->file, 'public');
                         $data->path_file = $file;
 
@@ -130,13 +130,13 @@ class JurnalHarianTendikController extends Controller
                 ];
             } elseif ($mode == 'edit') {
                 $data                               = LaporanKerjaHarianTendik::find($id);
-                // $data->id_role                   = auth_data()->role_aktif->id_role;
+                // $data->id_role                   = $input->auth_data->role_aktif->id_role;
                 $data->tanggal                      = date_format(date_create($input->tanggal), "Y-m-d");
                 $data->jenis                        = $input->jenis;
                 $data->id_category_jh_tendik        = $input->unit_kerja;
                 $data->keterangan_progres           = $input->keterangan;
                 $data->catatan                      = $input->status;
-                $data->updated_by                   = auth_data()->pengguna->id_pengguna;
+                $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
                     $validator = Validator::make($request->all(), [
@@ -148,7 +148,7 @@ class JurnalHarianTendikController extends Controller
                             'message' => $validator->errors()->first()
                         ];
                     } else {
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/tendik/' . $id, request()->file, 'public');
                         $data->path_file = $file;
                         $upload = $request->file('file');
@@ -167,7 +167,7 @@ class JurnalHarianTendikController extends Controller
             } elseif ($mode == 'delete') {
 
                 $data               = LaporanKerjaHarianTendik::find($id);
-                $data->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
                 $data->delete();
 
@@ -184,7 +184,7 @@ class JurnalHarianTendikController extends Controller
 
         $input = (object) $request->input();
 
-        $list_data = LaporanKerjaHarianTendik::where('id_pengguna', auth_data()->pengguna->id_pengguna)
+        $list_data = LaporanKerjaHarianTendik::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
             ->with('category_jurnal_harian_tendik.unit_kerja')->orderBy('tanggal', 'DESC');
 
         return Datatables::of($list_data)
@@ -221,9 +221,9 @@ class JurnalHarianTendikController extends Controller
     public function editKerjaHarian(Request $request, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $laporan_kerja_harian_tendik = LaporanKerjaHarianTendik::findOrFail($id);
-        $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna', auth_data()->pengguna->id_pengguna)->with('category_jurnal_harian_tendik.unit_kerja')->get();
+        $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik.unit_kerja')->get();
         $jenis = JenisJurnalHarianTendik::all();
         return view('tendik/jurnal-harian/laporan-jurnal-harian/edit-data-laporan-jurnal-harian-t', compact('auth_data', 'unit_kerja', 'laporan_kerja_harian_tendik', 'jenis'));
     }
@@ -234,7 +234,7 @@ class JurnalHarianTendikController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('tendik/jurnal-harian/laporan-jurnal-harian/view-data-laporan-harian-tendik-kelompok', compact('auth_data'));
     }
@@ -243,9 +243,9 @@ class JurnalHarianTendikController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
-        $list_data = CategoryKelompokJurnalHarianTendik::where('id_pengguna', auth_data()->pengguna->id_pengguna)
+        $list_data = CategoryKelompokJurnalHarianTendik::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
             ->with('category_jurnal_harian_tendik', 'laporan_kerja_harian_tendik.pengguna', 'category_jurnal_harian_tendik.unit_kerja')
             ->get();
         // dd($list_data);
@@ -273,7 +273,7 @@ class JurnalHarianTendikController extends Controller
     public function detailLaporanKelompokTendik(Request $request, $id  = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data = CategoryKelompokJurnalHarianTendik::where('id_c_k_jh_tendik', $id)->with('pengguna')->get();
         return view('tendik/jurnal-harian/laporan-jurnal-harian/detail-data-laporan-harian-kelompok-tendik', compact('auth_data', 'data', 'id'));
     }
@@ -281,10 +281,10 @@ class JurnalHarianTendikController extends Controller
     public function datatablesDetailKerjaHarianKelompokTendik(Request $request, $id  = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LaporanKerjaHarianTendik::
-            // where('id_role',auth_data()->role_aktif->id_role)
+            // where('id_role',$input->auth_data->role_aktif->id_role)
             where('id_category_jh_tendik', $id)
             ->where('status', 1)
             ->with('category_jurnal_harian_tendik.unit_kerja', 'pengguna')

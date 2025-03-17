@@ -25,7 +25,7 @@ class JurnalPimpinanController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('administrator/jurnal-pimpinan/setting-jurnal-pimpinan/view-setting-jurnal-pimpinan', compact('auth_data'));
     }
@@ -34,7 +34,7 @@ class JurnalPimpinanController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('administrator/jurnal-pimpinan/setting-jurnal-pimpinan/view-add-setting-jurnal-pimpinan', compact('auth_data'));
     }
@@ -43,13 +43,13 @@ class JurnalPimpinanController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = JurnalPimpinan::select('guru.nip_guru', 'staff.nip_staff', 'pengguna.nm_pengguna', 'jurnal_pimpinan.id_jurnal_pimpinan', 'jurnal_pimpinan.is_aktif')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'jurnal_pimpinan.id_pengguna')
             ->leftjoin('guru', 'guru.id_pengguna', '=', 'jurnal_pimpinan.id_pengguna')
             ->leftjoin('staff', 'staff.id_pengguna', '=', 'jurnal_pimpinan.id_pengguna')
-            ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
             ->where('jurnal_pimpinan.id_jurnal_pimpinan', '=', $id)->first();
 
         return view('administrator/jurnal-pimpinan/setting-jurnal-pimpinan/view-edit-setting-jurnal-pimpinan', compact('auth_data', 'guru'));
@@ -58,7 +58,7 @@ class JurnalPimpinanController extends Controller
     public function datatablesSettingJurnalPimpinan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = JurnalPimpinan::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru, uks.nm_unit_kerja AS unit_kerja_staff')
             ->addSelect('guru.nip_guru', 'staff.nip_staff', 'pengguna.nm_pengguna', 'jurnal_pimpinan.id_jurnal_pimpinan', 'jurnal_pimpinan.is_aktif')
@@ -67,7 +67,7 @@ class JurnalPimpinanController extends Controller
             ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
             ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
             ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
-            ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
             ->get();
 
         return Datatables::of($list_data)
@@ -104,7 +104,7 @@ class JurnalPimpinanController extends Controller
     public function datatablesAddJurnalPimpinan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = Pengguna::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru')
             ->addSelect('pengguna.nm_pengguna', 'guru.nip_guru', 'pengguna.id_pengguna')
@@ -113,7 +113,7 @@ class JurnalPimpinanController extends Controller
             ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
             // ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
             ->where('pengguna.status_join_table', 2)
-            ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('jurnal_pimpinan')
@@ -149,7 +149,7 @@ class JurnalPimpinanController extends Controller
     public function actionSettingJurnalPimpinan(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), []);
@@ -166,9 +166,9 @@ class JurnalPimpinanController extends Controller
                 try {
                     foreach ($input->id_pengguna as $id_pengguna) {
                         $guru                            = new JurnalPimpinan();
-                        $guru->id_jurnal_pimpinan        = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $guru->id_jurnal_pimpinan        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $guru->id_pengguna                 = $id_pengguna;
-                        $guru->created_by                = auth_data()->pengguna->id_pengguna;
+                        $guru->created_by                = $input->auth_data->pengguna->id_pengguna;
                         $guru->created_at                = $now;
                         $guru->is_aktif                 = 1;
                         $guru->save();
@@ -192,7 +192,7 @@ class JurnalPimpinanController extends Controller
                 $guru         = JurnalPimpinan::find($id);
                 $guru->is_aktif    = $input->is_aktif;
                 $guru->updated_at    = $now;
-                $guru->updated_by    = auth_data()->pengguna->id_pengguna;
+                $guru->updated_by    = $input->auth_data->pengguna->id_pengguna;
                 $guru->save();
 
                 return [
@@ -214,7 +214,7 @@ class JurnalPimpinanController extends Controller
     public function viewLaporanAllJurnalPimpinan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('administrator/jurnal-pimpinan/laporan/laporan-data-jurnal-pimpinan', compact('auth_data'));
     }
@@ -223,7 +223,7 @@ class JurnalPimpinanController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // dd($id);
         $laporan_kerja_harian = LaporanJurnalPimpinan::findOrFail($id);
 
@@ -247,7 +247,7 @@ class JurnalPimpinanController extends Controller
     {
 
         $input = (object) $request->input();
-        // $auth_data = auth_data();
+        // $auth_data = $input->auth_data;
 
         $list_data = LaporanJurnalPimpinan::with('pengguna')->orderBy('created_at', 'desc');
 

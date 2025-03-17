@@ -15,7 +15,7 @@ class RekapPresensiMagangController extends Controller
     public function viewRekapAbsensiMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pembimbing_magang = PembimbingMagang::with('rekanan', 'periode')->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->where('id_pembimbing_magang', $pembimbing_magang->id_pembimbing_magang)->orderBy('tanggal', 'asc')->get();
@@ -31,7 +31,7 @@ class RekapPresensiMagangController extends Controller
     public function printAllRekapPresensiMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pembimbing_magang = PembimbingMagang::with('rekanan', 'periode', 'pengguna')->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $data_siswa = PengambilanMagang::with('siswa', 'siswa.pengguna', 'siswa.pengguna.status_pengguna')->where('id_periode_magang', $pembimbing_magang->id_periode_magang)->where('id_rekanan_magang', $pembimbing_magang->id_rekanan_magang)->get();
@@ -46,7 +46,7 @@ class RekapPresensiMagangController extends Controller
     public function printRekapPresensiMagang(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $pembimbing_magang = PembimbingMagang::with('rekanan', 'periode', 'pengguna')->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
         // $presensi_magang = PresensiMagang::with('presensiMagangSiswa')->where('id_pembimbing_magang', $pembimbing_magang->id_pembimbing_magang)->orderBy('tanggal', 'asc')->get();

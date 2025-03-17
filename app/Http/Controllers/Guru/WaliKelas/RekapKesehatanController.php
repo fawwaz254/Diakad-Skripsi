@@ -40,7 +40,7 @@ class RekapKesehatanController extends BaseController
     public function viewRekapKesehatanSiswa(Request $request, $id_pengguna = '-', $date)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $pengguna = Pengguna::find($id_pengguna);
 
@@ -49,7 +49,7 @@ class RekapKesehatanController extends BaseController
 
     public function viewRekapFormKesehatan(Request $request, $id_bulan = null, $tahun = null){
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if(empty($id_bulan)){
@@ -80,7 +80,7 @@ class RekapKesehatanController extends BaseController
 
     public function downloadRekapKesehatan(Request $request, $id_bulan = null, $tahun = null){
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if(empty($id_bulan)){

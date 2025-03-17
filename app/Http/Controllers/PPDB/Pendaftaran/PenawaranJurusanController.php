@@ -29,7 +29,7 @@ class PenawaranJurusanController extends Controller
     public function viewPenawaranJurusan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         /** get all data penerimaan */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
@@ -50,7 +50,7 @@ class PenawaranJurusanController extends Controller
     public function actionViewPenawaranJurusan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $validator  = Validator::make($request->all(), [
             'id_penerimaan' => 'required'
@@ -77,7 +77,7 @@ class PenawaranJurusanController extends Controller
     public function editPenawaranJurusan($id, Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
@@ -99,7 +99,7 @@ class PenawaranJurusanController extends Controller
     public function addPenawaranJurusan($id, Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
@@ -121,7 +121,7 @@ class PenawaranJurusanController extends Controller
     public function actionAddPenawaranJurusan(Request $request, $id)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_penerimaan' => 'required',
@@ -138,7 +138,7 @@ class PenawaranJurusanController extends Controller
             $now = Carbon::now();
 
             /** generate id penerimaan jurusan */
-            $id_penerimaan_jurusan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id_penerimaan_jurusan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
             /** action for add data penerimaan */
             $penerimaan_jurusan                         = new PenerimaanJurusan;
@@ -146,7 +146,7 @@ class PenawaranJurusanController extends Controller
             $penerimaan_jurusan->id_penerimaan          = $input->id_penerimaan;
             $penerimaan_jurusan->id_jurusan             = $input->id_jurusan;
             $penerimaan_jurusan->is_aktif               = 0; // default value
-            $penerimaan_jurusan->created_by             = auth_data()->pengguna->id_pengguna;
+            $penerimaan_jurusan->created_by             = $input->auth_data->pengguna->id_pengguna;
             $penerimaan_jurusan->save();
 
             return [
@@ -177,7 +177,7 @@ class PenawaranJurusanController extends Controller
 
         /** deleting data penerimaan jurusan */
         $id_penerimaan                  = $penerimaanJurusan->id_penerimaan;
-        $penerimaanJurusan->deleted_by  = auth_data()->pengguna->id_pengguna;
+        $penerimaanJurusan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
         $penerimaanJurusan->save();
         $penerimaanJurusan->delete();
 
@@ -212,7 +212,7 @@ class PenawaranJurusanController extends Controller
         $id_penerimaan                  = $penerimaanJurusan->id_penerimaan;
         $penerimaanJurusan->is_aktif    = ($penerimaanJurusan->is_aktif == "0" ? "1" : "0");
         $penerimaanJurusan->updated_at  = $now;
-        $penerimaanJurusan->updated_by  = auth_data()->pengguna->id_pengguna;
+        $penerimaanJurusan->updated_by  = $input->auth_data->pengguna->id_pengguna;
         $penerimaanJurusan->save();
 
         return [

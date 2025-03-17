@@ -34,7 +34,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
@@ -51,7 +51,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -75,7 +75,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // dd($id_pengguna);
 
         $data_kelas = LibGuru::fetchDataKelasGuru($auth_data, $id_pengguna, $id_semester);
@@ -92,7 +92,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_kelas_mp' => 'required'
@@ -115,7 +115,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibGuru::fetchDataKelasMp($auth_data, $id_kelas_mp);
 
@@ -126,7 +126,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibGuru::fetchDataKelasMp($auth_data, $id_kelas_mp);
         $data_komponen = KomponenMp::find($id_komponen_mp);
@@ -138,7 +138,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibGuru::fetchDataKelasMp($auth_data, $id_kelas_mp);
 
@@ -192,7 +192,7 @@ class InputNilaiController extends BaseController
     public function datatablesMataPelajaran(Request $request, $id_pengguna, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibGuru::fetchDataKelasGuru($auth_data, $id_pengguna, $id_semester);
 
         return Datatables::of($list_data)
@@ -211,7 +211,7 @@ class InputNilaiController extends BaseController
     public function datatablesKomponenNilai(Request $request, $id_kelas_mp)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibGuru::fetchDataKomponenNilai($auth_data, $id_kelas_mp);
 
         return Datatables::of($list_data)
@@ -230,7 +230,7 @@ class InputNilaiController extends BaseController
     public function datatablesSubKomponenNilai(Request $request, $id_komponen_mp)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibGuru::fetchDataSubKomponenNilai($auth_data, $id_komponen_mp);
 
         return Datatables::of($list_data)
@@ -257,14 +257,14 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibGuru::fetchDataKelasMp($auth_data, $id_kelas_mp);
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_komponen_mp = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_komponen_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('akademik/aktivitas-semester/input-nilai/view-add-komponen-nilai', compact('auth_data', 'data_kelas', 'id_komponen_mp', 'id_pengguna', 'id_semester', 'id_kelas_mp'));
     }
@@ -273,7 +273,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibGuru::fetchDataKelasMp($auth_data, $id_kelas_mp);
 
@@ -286,7 +286,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_komponen = KomponenMp::find($id_komponen_mp);
         // mengambil waktu sekarang
@@ -301,7 +301,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibGuru::fetchDataKelasMp($auth_data, $id_kelas_mp);
 
@@ -367,12 +367,12 @@ class InputNilaiController extends BaseController
                     }
 
                     $komponenMp                             = new KomponenMp;
-                    $komponenMp->id_komponen_mp             = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $komponenMp->id_komponen_mp             = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $komponenMp->id_kelas_mp                = $input->id_kelas_mp;
                     $komponenMp->nm_komponen_mp             = $input->nm_komponen_mp;
                     $komponenMp->persentase_komponen_mp     = $input->persentase_komponen_mp;
                     $komponenMp->urutan_komponen_mp         = $input->urutan_komponen_mp;
-                    $komponenMp->created_by                 = auth_data()->pengguna->id_pengguna;
+                    $komponenMp->created_by                 = $input->auth_data->pengguna->id_pengguna;
                     $komponenMp->save();
 
                     return [
@@ -405,7 +405,7 @@ class InputNilaiController extends BaseController
                     $komponenMp->nm_komponen_mp             = $input->nm_komponen_mp;
                     $komponenMp->persentase_komponen_mp     = $input->persentase_komponen_mp;
                     $komponenMp->urutan_komponen_mp         = $input->urutan_komponen_mp;
-                    $komponenMp->updated_by                 = auth_data()->pengguna->id_pengguna;
+                    $komponenMp->updated_by                 = $input->auth_data->pengguna->id_pengguna;
                     $komponenMp->updated_at                 = $now;
                     $komponenMp->save();
 
@@ -429,7 +429,7 @@ class InputNilaiController extends BaseController
                 } else {
                     // make object to find id
                     $komponenMp               = KomponenMp::find($id);
-                    $komponenMp->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $komponenMp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $komponenMp->save();
 
                     $komponenMp->delete();
@@ -491,7 +491,7 @@ class InputNilaiController extends BaseController
                                 foreach ($nilai_akhir_final['nilai_angka' . $idSiswa] as $key => $item) {
                                     $nameInput                              = 'nilai' . $key . '-' . $idSiswa;
                                     $nilaiMp                                = new NilaiMp;
-                                    $nilaiMp->id_nilai_mp                   = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                    $nilaiMp->id_nilai_mp                   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                     $nilaiMp->id_pengambilan_mp             = $siswa->id_pengambilan_mp;
                                     $nilaiMp->id_komponen_mp                = $key;
                                     if ($input->$nameInput == null) {
@@ -500,7 +500,7 @@ class InputNilaiController extends BaseController
                                         $nilaiMp->besar_nilai_mp            = $item['raw'];
                                         $nilai_angka                        = $nilai_angka + $item['partial'];
                                     }
-                                    $nilaiMp->created_by                    = auth_data()->pengguna->id_pengguna;
+                                    $nilaiMp->created_by                    = $input->auth_data->pengguna->id_pengguna;
                                     $nilaiMp->created_at                    = $now;
                                     $nilaiMp->save();
                                 }
@@ -516,7 +516,7 @@ class InputNilaiController extends BaseController
                                 }
                                 $nilai_pengambilanMp                        = PengambilanMp::find($siswa->id_pengambilan_mp);
                                 $nilai_pengambilanMp->nilai_angka           = $nilai_angka;
-                                $nilai_pengambilanMp->updated_by            = auth_data()->pengguna->id_pengguna;
+                                $nilai_pengambilanMp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                 $nilai_pengambilanMp->updated_at            = $now;
                                 $nilai_pengambilanMp->nilai_huruf           = $nilai_huruf;
                                 $nilai_pengambilanMp->save();
@@ -531,7 +531,7 @@ class InputNilaiController extends BaseController
                                         $nilaiMp->besar_nilai_mp            = $item['raw'];
                                         $nilai_angka                        = $nilai_angka + $item['partial'];
                                     }
-                                    $nilaiMp->updated_by                    = auth_data()->pengguna->id_pengguna;
+                                    $nilaiMp->updated_by                    = $input->auth_data->pengguna->id_pengguna;
                                     $nilaiMp->updated_at                    = $now;
                                     $nilaiMp->save();
                                 }
@@ -547,7 +547,7 @@ class InputNilaiController extends BaseController
                                 }
                                 $nilai_pengambilanMp                        = PengambilanMp::find($siswa->id_pengambilan_mp);
                                 $nilai_pengambilanMp->nilai_angka           = $nilai_angka;
-                                $nilai_pengambilanMp->updated_by            = auth_data()->pengguna->id_pengguna;
+                                $nilai_pengambilanMp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                 $nilai_pengambilanMp->updated_at            = $now;
                                 $nilai_pengambilanMp->nilai_huruf           = $nilai_huruf;
                                 $nilai_pengambilanMp->save();
@@ -565,7 +565,7 @@ class InputNilaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'nm_subkomponen_mp' => 'required',
@@ -597,12 +597,12 @@ class InputNilaiController extends BaseController
                     ];
                 } else {
                     $subKomponenMp                          = new SubKomponenMp;
-                    $subKomponenMp->id_subkomponen_mp       = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $subKomponenMp->id_subkomponen_mp       = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $subKomponenMp->id_komponen_mp          = $input->id_komponen_mp;
                     $subKomponenMp->kd_subkomponen_mp       = $input->kd_subkomponen_mp;
                     $subKomponenMp->nm_subkomponen_mp       = $input->nm_subkomponen_mp;
                     $subKomponenMp->type_subkomponen_mp     = $input->type_subkomponen_mp;
-                    $subKomponenMp->created_by              = auth_data()->pengguna->id_pengguna;
+                    $subKomponenMp->created_by              = $input->auth_data->pengguna->id_pengguna;
                     $subKomponenMp->save();
 
                     return [
@@ -643,7 +643,7 @@ class InputNilaiController extends BaseController
                 $subKomponenMp->kd_subkomponen_mp       = $input->kd_subkomponen_mp;
                 $subKomponenMp->nm_subkomponen_mp       = $input->nm_subkomponen_mp;
                 $subKomponenMp->type_subkomponen_mp     = $input->type_subkomponen_mp;
-                $subKomponenMp->updated_by              = auth_data()->pengguna->id_pengguna;
+                $subKomponenMp->updated_by              = $input->auth_data->pengguna->id_pengguna;
                 $subKomponenMp->save();
 
                 return [
@@ -660,7 +660,7 @@ class InputNilaiController extends BaseController
                 } else {
                     // make object to find id
                     $subKomponenMp               = SubKomponenMp::find($id);
-                    $subKomponenMp->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $subKomponenMp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $subKomponenMp->save();
 
                     $subKomponenMp->delete();
@@ -775,7 +775,7 @@ class InputNilaiController extends BaseController
                                         if (empty($nilaiMpSub)) { // if empty, then create new record
                                             $is_new_subkomponen = 1;
                                             $nilaiMpSub                            = new NilaiMpSubKomponen;
-                                            $nilaiMpSub->id_nilai_mp_subkomponen   = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                            $nilaiMpSub->id_nilai_mp_subkomponen   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                         }
 
                                         $nilaiMpSub->id_pengambilan_mp         = $siswa->id_pengambilan_mp;
@@ -786,10 +786,10 @@ class InputNilaiController extends BaseController
                                             $nilaiMpSub->besar_nilai_mp        = $nilai['raw'];
                                         }
                                         if ($is_new_subkomponen == 1) {
-                                            $nilaiMpSub->created_by            = auth_data()->pengguna->id_pengguna;
+                                            $nilaiMpSub->created_by            = $input->auth_data->pengguna->id_pengguna;
                                             $nilaiMpSub->created_at            = $now;
                                         } else {
-                                            $nilaiMpSub->updated_by            = auth_data()->pengguna->id_pengguna;
+                                            $nilaiMpSub->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                             $nilaiMpSub->updated_at            = $now;
                                         }
                                         $nilaiMpSub->save();
@@ -806,7 +806,7 @@ class InputNilaiController extends BaseController
 
                                     if (empty($nilaiMp)) { // if empty, then create new record
                                         $nilaiMp                = new NilaiMp;
-                                        $nilaiMp->id_nilai_mp   = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                        $nilaiMp->id_nilai_mp   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                         $is_new_komponen = 1;
                                     }
 
@@ -814,10 +814,10 @@ class InputNilaiController extends BaseController
                                     $nilaiMp->id_komponen_mp        = $komponen;
                                     $nilaiMp->besar_nilai_mp        = !empty($nilaiKomponen) ? $nilaiKomponen : 0;
                                     if ($is_new_komponen == 1) {
-                                        $nilaiMp->created_by        = auth_data()->pengguna->id_pengguna;
+                                        $nilaiMp->created_by        = $input->auth_data->pengguna->id_pengguna;
                                         $nilaiMp->created_at        = $now;
                                     } else {
-                                        $nilaiMp->updated_by        = auth_data()->pengguna->id_pengguna;
+                                        $nilaiMp->updated_by        = $input->auth_data->pengguna->id_pengguna;
                                         $nilaiMp->updated_at        = $now;
                                     }
                                     $nilaiMp->save();
@@ -836,7 +836,7 @@ class InputNilaiController extends BaseController
                                 }
                                 $nilai_pengambilanMp                        = PengambilanMp::find($siswa->id_pengambilan_mp);
                                 $nilai_pengambilanMp->nilai_angka           = $nilai_angka;
-                                $nilai_pengambilanMp->updated_by            = auth_data()->pengguna->id_pengguna;
+                                $nilai_pengambilanMp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                 $nilai_pengambilanMp->updated_at            = $now;
                                 $nilai_pengambilanMp->nilai_huruf           = $nilai_huruf;
                                 $nilai_pengambilanMp->save();

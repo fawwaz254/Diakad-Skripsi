@@ -22,7 +22,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
         // dd($rapor_sisipan);
@@ -81,12 +81,12 @@ class InputNilaiRaporSisipanAkhirController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         if ($mode == 'save') {
 
             $input = (object) $request->input();
-            $auth_data = auth_data();
+            $auth_data = $input->auth_data;
 
             $rapor_sisipan = RaporSisipan::find($id_rapor_sisipan);
             $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)
@@ -115,7 +115,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
                                 $NilaiRaporSisipan                                = $nilaiRaporSisipans->where('id_komponen_nilai', $nilaiRapor['id_komponen_nilai'])->where('id_siswa', $nilaiRapor['id_siswa'])->where('id_rapor_sisipan', $nilaiRapor['id_rapor_sisipan'])->first();
                                 if ($NilaiRaporSisipan && is_numeric($nilai)) {
                                     $NilaiRaporSisipan->nilai                 = $nilai;
-                                    $NilaiRaporSisipan->updated_by            = auth_data()->pengguna->id_pengguna;
+                                    $NilaiRaporSisipan->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                     $NilaiRaporSisipan->save();
                                 }
                             }
@@ -123,7 +123,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
                             $NilaiRaporSisipan                            = $nilaiRaporSisipans->where('id_komponen_nilai', $nilaiRapor['id_komponen_nilai'])->where('id_siswa', $nilaiRapor['id_siswa'])->where('id_rapor_sisipan', $nilaiRapor['id_rapor_sisipan'])->first();
                             if ($NilaiRaporSisipan) {
                                 $NilaiRaporSisipan->nilai                 = 0;
-                                $NilaiRaporSisipan->updated_by            = auth_data()->pengguna->id_pengguna;
+                                $NilaiRaporSisipan->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                 $NilaiRaporSisipan->save();
                             }
                         }

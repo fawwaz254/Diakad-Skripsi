@@ -23,7 +23,7 @@ class JurnalPimpinanController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/jurnal-pimpinan/laporan-jurnal-pimpinan/view-data-laporan-jurnal-pimpinan', compact('auth_data'));
     }
@@ -31,9 +31,9 @@ class JurnalPimpinanController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $waktu = Carbon::today()->format('d-M-Y');
-        // $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna',auth_data()->pengguna->id_pengguna)->with('category_jurnal_harian_tendik','category_jurnal_harian_tendik.unit_kerja')->get();
+        // $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik','category_jurnal_harian_tendik.unit_kerja')->get();
         $jenis = JenisJurnalPimpinan::all();
         return view('guru/jurnal-pimpinan/laporan-jurnal-pimpinan/add-data-laporan-jurnal-pimpinan', compact('auth_data', 'waktu', 'jenis'));
     }
@@ -41,7 +41,7 @@ class JurnalPimpinanController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_kerja_harian = LaporanJurnalPimpinan::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
@@ -83,7 +83,7 @@ class JurnalPimpinanController extends Controller
 
             if ($mode == 'add') {
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $data                               = new LaporanJurnalPimpinan();
                 $data->id_laporan_jurpin            = $id;
@@ -93,8 +93,8 @@ class JurnalPimpinanController extends Controller
                 $data->keterangan_progres           = $input->keterangan;
                 $data->status                       = $input->status;
                 $data->catatan                      = $input->keterangan;
-                $data->id_pengguna                  = auth_data()->pengguna->id_pengguna;
-                $data->created_by                   = auth_data()->pengguna->id_pengguna;
+                $data->id_pengguna                  = $input->auth_data->pengguna->id_pengguna;
+                $data->created_by                   = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
 
@@ -108,7 +108,7 @@ class JurnalPimpinanController extends Controller
                             'message' => $validator->errors()->first()
                         ];
                     } else {
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/jurnal-pimpinan/' . $id, request()->file, 'public');
                         $data->path_file = $file;
 
@@ -125,13 +125,13 @@ class JurnalPimpinanController extends Controller
                 ];
             } elseif ($mode == 'edit') {
                 $data                               = LaporanJurnalPimpinan::find($id);
-                // $data->id_role                   = auth_data()->role_aktif->id_role;
+                // $data->id_role                   = $input->auth_data->role_aktif->id_role;
                 $data->tanggal                      = date_format(date_create($input->tanggal), "Y-m-d");
                 $data->jenis                        = $input->jenis;
                 // $data->id_category_jh_tendik        = $input->unit_kerja;
                 $data->keterangan_progres           = $input->keterangan;
                 $data->catatan                      = $input->status;
-                $data->updated_by                   = auth_data()->pengguna->id_pengguna;
+                $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
                     $validator = Validator::make($request->all(), [
@@ -143,7 +143,7 @@ class JurnalPimpinanController extends Controller
                             'message' => $validator->errors()->first()
                         ];
                     } else {
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/jurnal-pimpinan/' . $id, request()->file, 'public');
                         $data->path_file = $file;
                         $upload = $request->file('file');
@@ -162,7 +162,7 @@ class JurnalPimpinanController extends Controller
             } elseif ($mode == 'delete') {
 
                 $data               = LaporanJurnalPimpinan::find($id);
-                $data->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
                 $data->delete();
 
@@ -177,9 +177,9 @@ class JurnalPimpinanController extends Controller
     public function datatablesJurnalPimpinan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
-        $list_data = LaporanJurnalPimpinan::where('id_pengguna', auth_data()->pengguna->id_pengguna)
+        $list_data = LaporanJurnalPimpinan::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
             ->orderBy('tanggal', 'DESC')
             ->get();
         return Datatables::of($list_data)
@@ -216,9 +216,9 @@ class JurnalPimpinanController extends Controller
     public function editLaporanJurnalPimpinan(Request $request, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $laporan_kerja_harian = LaporanJurnalPimpinan::findOrFail($id);
-        // $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna',auth_data()->pengguna->id_pengguna)->with('category_jurnal_harian_tendik.unit_kerja')->get();
+        // $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik.unit_kerja')->get();
         $jenis = JenisJurnalPimpinan::all();
         return view('guru/jurnal-pimpinan/laporan-jurnal-pimpinan/edit-data-laporan-jurnal-pimpinan', compact('auth_data', 'laporan_kerja_harian', 'jenis'));
     }

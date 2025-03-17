@@ -21,7 +21,7 @@ class KpiController extends Controller
     public function viewKpi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
@@ -35,7 +35,7 @@ class KpiController extends Controller
     public function printKpi(Request $request, $id_semester, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = Siswa::where('id_siswa', $id_siswa)->with('kelas')->first();
         $semester = Semester::find($id_semester);

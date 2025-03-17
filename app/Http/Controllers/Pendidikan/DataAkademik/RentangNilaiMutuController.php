@@ -25,7 +25,7 @@ class RentangNilaiMutuController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('pendidikan/data-akademik/rentang-nilai-mutu/view-rentang-nilai-mutu', compact('auth_data'));
     }
@@ -34,14 +34,14 @@ class RentangNilaiMutuController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_nilai_mutu = LibDataAkademik::fetchDataNilaiMutu($auth_data);
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_peraturan_nilai = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_peraturan_nilai = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/data-akademik/rentang-nilai-mutu/add-rentang-nilai-mutu', compact('auth_data', 'data_nilai_mutu', 'id_peraturan_nilai'));
     }
@@ -50,7 +50,7 @@ class RentangNilaiMutuController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_nilai_mutu = LibDataAkademik::fetchDataNilaiMutu($auth_data);
 
@@ -62,7 +62,7 @@ class RentangNilaiMutuController extends BaseController
     public function datatablesRentangNilaiMutu(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = $this->fetchDataRentangNilaiMutu($auth_data);
 
         return Datatables::of($list_data)
@@ -139,13 +139,13 @@ class RentangNilaiMutuController extends BaseController
                 if ($input->is_mata_pelajaran == 0) {
                     $rentangNilaiMutu = PeraturanNilai::join('standar_nilai', 'standar_nilai.id_standar_nilai', '=', 'peraturan_nilai.id_standar_nilai')
                         ->where('peraturan_nilai.id_standar_nilai', '=', $input->id_standar_nilai)
-                        ->where('standar_nilai.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                        ->where('standar_nilai.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->first();
                 } else {
                     $rentangNilaiMutu = PeraturanNilai::join('standar_nilai', 'standar_nilai.id_standar_nilai', '=', 'peraturan_nilai.id_standar_nilai')
                         ->where('peraturan_nilai.id_standar_nilai', '=', $input->id_standar_nilai)
                         ->where('peraturan_nilai.nilai_kkm', '=', $input->nilai_kkm)
-                        ->where('standar_nilai.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                        ->where('standar_nilai.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->first();
                 }
 
@@ -155,7 +155,7 @@ class RentangNilaiMutuController extends BaseController
                         'message' => 'Failed To Save Rentang Nilai Mutu!'
                     ];
                 } else {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $peraturanNilai                             = new PeraturanNilai;
                     $peraturanNilai->id_peraturan_nilai         = $id;
@@ -164,7 +164,7 @@ class RentangNilaiMutuController extends BaseController
                     $peraturanNilai->id_standar_nilai           = $input->id_standar_nilai;
                     $peraturanNilai->nilai_min_peraturan_nilai  = $input->nilai_min_peraturan_nilai;
                     $peraturanNilai->nilai_max_peraturan_nilai  = $input->nilai_max_peraturan_nilai;
-                    $peraturanNilai->created_by                 = auth_data()->pengguna->id_pengguna;
+                    $peraturanNilai->created_by                 = $input->auth_data->pengguna->id_pengguna;
                     $peraturanNilai->save();
 
                     return [
@@ -181,7 +181,7 @@ class RentangNilaiMutuController extends BaseController
                 $peraturanNilai->id_standar_nilai           = $input->id_standar_nilai;
                 $peraturanNilai->nilai_min_peraturan_nilai  = $input->nilai_min_peraturan_nilai;
                 $peraturanNilai->nilai_max_peraturan_nilai  = $input->nilai_max_peraturan_nilai;
-                $peraturanNilai->updated_by                 = auth_data()->pengguna->id_pengguna;
+                $peraturanNilai->updated_by                 = $input->auth_data->pengguna->id_pengguna;
                 $peraturanNilai->updated_at                 = $now;
                 $peraturanNilai->save();
 
@@ -193,7 +193,7 @@ class RentangNilaiMutuController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $peraturanNilai               = PeraturanNilai::find($id);
-                $peraturanNilai->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $peraturanNilai->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $peraturanNilai->save();
 
                 $peraturanNilai->delete();

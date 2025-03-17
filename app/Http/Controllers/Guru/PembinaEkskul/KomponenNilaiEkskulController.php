@@ -27,7 +27,7 @@ class KomponenNilaiEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
@@ -44,7 +44,7 @@ class KomponenNilaiEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_ekskul' => 'required',
@@ -68,7 +68,7 @@ class KomponenNilaiEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ekskul = Ekskul::find($id_ekskul);
         $semester = Semester::find($id_semester);
@@ -79,7 +79,7 @@ class KomponenNilaiEkskulController extends BaseController
     public function datatablesKomponenNilaiEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibGuru::fetchDataKomponenNilaiEkskul($auth_data, $id_semester, $id_ekskul);
 
         return Datatables::of($list_data)
@@ -96,7 +96,7 @@ class KomponenNilaiEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $komponen_ekskul = null;
         $id_komponen_ekskul = null;
@@ -110,7 +110,7 @@ class KomponenNilaiEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $komponen_ekskul = KomponenEkskul::find($id);
         $id_komponen_ekskul = $id;
@@ -124,7 +124,7 @@ class KomponenNilaiEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'nm_komponen_ekskul' => 'required',
@@ -186,7 +186,7 @@ class KomponenNilaiEkskulController extends BaseController
                         ];
                     }
 
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $komponenEkskul                                 = new KomponenEkskul;
                     $komponenEkskul->id_komponen_ekskul             = $id;
@@ -195,7 +195,7 @@ class KomponenNilaiEkskulController extends BaseController
                     $komponenEkskul->nm_komponen_ekskul             = $input->nm_komponen_ekskul;
                     $komponenEkskul->persentase_komponen_ekskul     = $input->persentase_komponen_ekskul;
                     $komponenEkskul->urutan_komponen_ekskul         = $input->urutan_komponen_ekskul;
-                    $komponenEkskul->created_by                     = auth_data()->pengguna->id_pengguna;
+                    $komponenEkskul->created_by                     = $input->auth_data->pengguna->id_pengguna;
                     $komponenEkskul->save();
 
                     return [

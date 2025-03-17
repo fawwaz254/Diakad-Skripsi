@@ -14,7 +14,7 @@ use Session;
 class WelcomeController extends BaseController{
     public function indexWelcome(Request $request){
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         return view('rapor-buku-induk/welcome', compact('auth_data'));
     }
 

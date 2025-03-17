@@ -31,7 +31,7 @@ class InputNilaiEkskulController extends BaseController
     public function viewInputNilaiEkskul(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
@@ -47,7 +47,7 @@ class InputNilaiEkskulController extends BaseController
     public function postViewInputNilaiEkskul(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_ekskul' => 'required',
@@ -70,7 +70,7 @@ class InputNilaiEkskulController extends BaseController
     public function viewDetailInputNilaiEkskul(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_ekskul_guru = LibGuru::fetchDataEkskulGuru($auth_data, $auth_data->pengguna->id_pengguna);
         $arr_id_ekskul = implode(',', $data_ekskul_guru->pluck('id_ekskul')->toArray());
@@ -137,7 +137,7 @@ class InputNilaiEkskulController extends BaseController
     public function saveInputNilaiEkskul(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->only('id_ekskul', 'id_semester'), [
@@ -226,7 +226,7 @@ class InputNilaiEkskulController extends BaseController
 
                         if (empty($nilaiEkskul)) { // if empty, then create new record
                             $nilaiEkskul                        = new NilaiEkskul;
-                            $nilaiEkskul->id_nilai_ekskul       = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $nilaiEkskul->id_nilai_ekskul       = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $is_new_komponen = 1;
                         }
@@ -234,10 +234,10 @@ class InputNilaiEkskulController extends BaseController
                         $nilaiEkskul->id_komponen_ekskul        = $id_komponen;
                         $nilaiEkskul->besar_nilai_ekskul        = !empty($nilaiKomponen) ? $nilaiKomponen : 0;
                         if ($is_new_komponen == 1) {
-                            $nilaiEkskul->created_by        = auth_data()->pengguna->id_pengguna;
+                            $nilaiEkskul->created_by        = $input->auth_data->pengguna->id_pengguna;
                             $nilaiEkskul->created_at        = $now;
                         } else {
-                            $nilaiEkskul->updated_by        = auth_data()->pengguna->id_pengguna;
+                            $nilaiEkskul->updated_by        = $input->auth_data->pengguna->id_pengguna;
                             $nilaiEkskul->updated_at        = $now;
                         }
                         $nilaiEkskul->save();
@@ -258,7 +258,7 @@ class InputNilaiEkskulController extends BaseController
 
                     $nilaiPengambilanEkskul                        = PengambilanEkskul::find($siswa->id_pengambilan_ekskul);
                     $nilaiPengambilanEkskul->nilai_angka           = $nilai_angka;
-                    $nilaiPengambilanEkskul->updated_by            = auth_data()->pengguna->id_pengguna;
+                    $nilaiPengambilanEkskul->updated_by            = $input->auth_data->pengguna->id_pengguna;
                     $nilaiPengambilanEkskul->updated_at            = $now;
                     $nilaiPengambilanEkskul->nilai_huruf           = $nilai_huruf;
                     $nilaiPengambilanEkskul->save();
@@ -276,7 +276,7 @@ class InputNilaiEkskulController extends BaseController
     public function viewImportNilaiExcel(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $nm_ekskul = Ekskul::select('nm_ekskul')->where('id_ekskul', $id_ekskul)->first();
 
@@ -286,7 +286,7 @@ class InputNilaiEkskulController extends BaseController
     public function downloadTemplateExcel(Request $request, $id_semester, $id_ekskul)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $ekskul = Ekskul::where('ekskul.id_ekskul', $id_ekskul)
             ->join('pengambilan_ekskul', 'pengambilan_ekskul.id_ekskul', 'ekskul.id_ekskul')
@@ -324,7 +324,7 @@ class InputNilaiEkskulController extends BaseController
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -438,7 +438,7 @@ class InputNilaiEkskulController extends BaseController
 
                                         if (empty($nilaiEkskul)) { // if empty, then create new record
                                             $nilaiEkskul                        = new NilaiEkskul;
-                                            $nilaiEkskul->id_nilai_ekskul       = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                                            $nilaiEkskul->id_nilai_ekskul       = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                                             $is_new_komponen = 1;
                                         }
@@ -446,10 +446,10 @@ class InputNilaiEkskulController extends BaseController
                                         $nilaiEkskul->id_komponen_ekskul        = $id_komponen;
                                         $nilaiEkskul->besar_nilai_ekskul        = !empty($nilaiKomponen) ? $nilaiKomponen : 0;
                                         if ($is_new_komponen == 1) {
-                                            $nilaiEkskul->created_by        = auth_data()->pengguna->id_pengguna;
+                                            $nilaiEkskul->created_by        = $input->auth_data->pengguna->id_pengguna;
                                             $nilaiEkskul->created_at        = $now;
                                         } else {
-                                            $nilaiEkskul->updated_by        = auth_data()->pengguna->id_pengguna;
+                                            $nilaiEkskul->updated_by        = $input->auth_data->pengguna->id_pengguna;
                                             $nilaiEkskul->updated_at        = $now;
                                         }
                                         $nilaiEkskul->save();
@@ -470,7 +470,7 @@ class InputNilaiEkskulController extends BaseController
 
                                     $nilaiPengambilanEkskul                        = PengambilanEkskul::find($siswa->id_pengambilan_ekskul);
                                     $nilaiPengambilanEkskul->nilai_angka           = $nilai_angka;
-                                    $nilaiPengambilanEkskul->updated_by            = auth_data()->pengguna->id_pengguna;
+                                    $nilaiPengambilanEkskul->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                     $nilaiPengambilanEkskul->updated_at            = $now;
                                     $nilaiPengambilanEkskul->nilai_huruf           = $nilai_huruf;
                                     $nilaiPengambilanEkskul->save();

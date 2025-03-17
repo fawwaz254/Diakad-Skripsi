@@ -47,7 +47,7 @@ class PrintRaporController extends BaseController
     {
         $request = $this->request;
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $id_siswa = $input->id_siswa;
         $id_kelas = $input->id_kelas;
         $id_semester = $input->id_semester;
@@ -136,7 +136,7 @@ class PrintRaporController extends BaseController
                     $rapor_deskripsi = RaporDeskripsi::find($rapor_siswa->id_rapor_deskripsi);
                 } else {
                     $rapor_deskripsi = new RaporDeskripsi();
-                    $rapor_deskripsi->id_rapor_deskripsi = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $rapor_deskripsi->id_rapor_deskripsi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 }
 
                 $rapor_kelompok_mp = RaporKelompokMp::where('id_mata_pelajaran', $mp->id_mata_pelajaran)->first();
@@ -151,9 +151,9 @@ class PrintRaporController extends BaseController
                 $rapor_deskripsi->predikat_rapor_deskripsi  = $mp->nilai_huruf;
                 // $rapor_deskripsi->deskripsi_rapor           = $text_keputusan; // ini akan diisi kenaikan kelas (rapor smt GENAP)
                 if (empty($rapor_deskripsi->created_by)) {
-                    $rapor_deskripsi->created_by            = auth_data()->pengguna->id_pengguna;
+                    $rapor_deskripsi->created_by            = $input->auth_data->pengguna->id_pengguna;
                 } else {
-                    $rapor_deskripsi->updated_by            = auth_data()->pengguna->id_pengguna;
+                    $rapor_deskripsi->updated_by            = $input->auth_data->pengguna->id_pengguna;
                 }
                 $rapor_deskripsi->save();
                 // end rapor_deskripsi
@@ -161,7 +161,7 @@ class PrintRaporController extends BaseController
                 // start rapor_siswa
                 if (empty($rapor_siswa)) {
                     $rapor_siswa = new RaporSiswa();
-                    $rapor_siswa->id_rapor_siswa     = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $rapor_siswa->id_rapor_siswa     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 }
 
                 $sakit = $presensiMpSiswa->where('kehadiran', 2)->where('id_mata_pelajaran', $mp->id_mata_pelajaran)->count();
@@ -181,9 +181,9 @@ class PrintRaporController extends BaseController
                 $rapor_siswa->nilai_angka        = round($mp->nilai_angka);
                 $rapor_siswa->nilai_huruf        = $mp->nilai_huruf;
                 if (empty($rapor_siswa->created_by)) {
-                    $rapor_siswa->created_by         = auth_data()->pengguna->id_pengguna;
+                    $rapor_siswa->created_by         = $input->auth_data->pengguna->id_pengguna;
                 } else {
-                    $rapor_siswa->updated_by         = auth_data()->pengguna->id_pengguna;
+                    $rapor_siswa->updated_by         = $input->auth_data->pengguna->id_pengguna;
                 }
                 $rapor_siswa->save();
                 // end rapor_siswa
@@ -201,7 +201,7 @@ class PrintRaporController extends BaseController
                     $rapor_deskripsi_ekskul = RaporDeskripsi::find($rapor_siswa_ekskul->id_rapor_deskripsi);
                 } else {
                     $rapor_deskripsi_ekskul = new RaporDeskripsi();
-                    $rapor_deskripsi_ekskul->id_rapor_deskripsi = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $rapor_deskripsi_ekskul->id_rapor_deskripsi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 }
 
                 $deskripsi_nilai_ekskul = $ekskul->nilai_huruf;
@@ -212,14 +212,14 @@ class PrintRaporController extends BaseController
                 $rapor_deskripsi_ekskul->id_ekstrakurikuler = $ekskul->id_ekskul;
                 $rapor_deskripsi_ekskul->predikat_rapor_deskripsi = $ekskul->nilai_huruf;
                 $rapor_deskripsi_ekskul->deskripsi_rapor = $deskripsi_nilai_ekskul;
-                $rapor_deskripsi_ekskul->created_by = auth_data()->pengguna->id_pengguna;
+                $rapor_deskripsi_ekskul->created_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor_deskripsi_ekskul->save();
                 // end rapor_deskripsi
 
                 // start rapor_siswa_ekskul
                 if (empty($rapor_siswa_ekskul)) {
                     $rapor_siswa_ekskul = new RaporSiswa();
-                    $rapor_siswa_ekskul->id_rapor_siswa     = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $rapor_siswa_ekskul->id_rapor_siswa     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 }
 
                 $sakit = $presensiEkskulSiswa->where('kehadiran', 2)
@@ -244,7 +244,7 @@ class PrintRaporController extends BaseController
                 $rapor_siswa_ekskul->nilai_kkm          = null;
                 $rapor_siswa_ekskul->nilai_angka        = round($ekskul->nilai_angka);
                 $rapor_siswa_ekskul->nilai_huruf        = $ekskul->nilai_huruf;
-                $rapor_siswa_ekskul->created_by         = auth_data()->pengguna->id_pengguna;
+                $rapor_siswa_ekskul->created_by         = $input->auth_data->pengguna->id_pengguna;
                 $rapor_siswa_ekskul->save();
                 // end rapor_siswa_ekskul
             }

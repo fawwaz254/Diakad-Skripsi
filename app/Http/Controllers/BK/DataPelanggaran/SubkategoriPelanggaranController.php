@@ -23,7 +23,7 @@ class SubkategoriPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('bk/data-pelanggaran/subkategori-pelanggaran/view-subkategori-pelanggaran', compact('auth_data'));
     }
@@ -32,7 +32,7 @@ class SubkategoriPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -48,7 +48,7 @@ class SubkategoriPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kategori_pelanggaran = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
 
@@ -60,7 +60,7 @@ class SubkategoriPelanggaranController extends BaseController
     public function datatablesSubkategoriPelanggaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataPelanggaran::fetchDataSubkategoriPelanggaran($auth_data);
 
         return Datatables::of($list_data)
@@ -99,7 +99,7 @@ class SubkategoriPelanggaranController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $subKategoriPelanggaran                                       = new SubkategoriPelanggaran;
                 $subKategoriPelanggaran->id_subkategori_pelanggaran           = $id;
@@ -108,7 +108,7 @@ class SubkategoriPelanggaranController extends BaseController
                 $subKategoriPelanggaran->tingkat_subkategori_pelanggaran      = $input->tingkat_subkategori_pelanggaran;
                 $subKategoriPelanggaran->poin_subkategori_pelanggaran         = $input->poin_subkategori_pelanggaran;
                 $subKategoriPelanggaran->keterangan_subkategori_pelanggaran   = $input->keterangan_subkategori_pelanggaran;
-                $subKategoriPelanggaran->created_by                           = auth_data()->pengguna->id_pengguna;
+                $subKategoriPelanggaran->created_by                           = $input->auth_data->pengguna->id_pengguna;
                 $subKategoriPelanggaran->save();
 
                 return [
@@ -124,7 +124,7 @@ class SubkategoriPelanggaranController extends BaseController
                 $subKategoriPelanggaran->tingkat_subkategori_pelanggaran      = $input->tingkat_subkategori_pelanggaran;
                 $subKategoriPelanggaran->poin_subkategori_pelanggaran         = $input->poin_subkategori_pelanggaran;
                 $subKategoriPelanggaran->keterangan_subkategori_pelanggaran   = $input->keterangan_subkategori_pelanggaran;
-                $subKategoriPelanggaran->updated_by                           = auth_data()->pengguna->id_pengguna;
+                $subKategoriPelanggaran->updated_by                           = $input->auth_data->pengguna->id_pengguna;
                 $subKategoriPelanggaran->updated_at                           = $now;
                 $subKategoriPelanggaran->save();
 
@@ -142,7 +142,7 @@ class SubkategoriPelanggaranController extends BaseController
                 } else {
                     // make object to find id
                     $subKategoriPelanggaran               = SubkategoriPelanggaran::find($id);
-                    $subKategoriPelanggaran->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $subKategoriPelanggaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $subKategoriPelanggaran->save();
 
                     $subKategoriPelanggaran->delete();

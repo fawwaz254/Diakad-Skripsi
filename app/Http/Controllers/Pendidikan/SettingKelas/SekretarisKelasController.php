@@ -27,7 +27,7 @@ class SekretarisKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -38,7 +38,7 @@ class SekretarisKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required'
@@ -61,7 +61,7 @@ class SekretarisKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -72,7 +72,7 @@ class SekretarisKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -84,7 +84,7 @@ class SekretarisKelasController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_sekretaris_kelas = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_sekretaris_kelas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/setting-kelas/sekretaris-kelas/add-sekretaris-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_siswa', 'id_sekretaris_kelas'));
     }
@@ -93,7 +93,7 @@ class SekretarisKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
@@ -110,7 +110,7 @@ class SekretarisKelasController extends BaseController
     public function datatablesSekretarisKelas(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = $this->fetchDataSekretarisKelas($auth_data, $id_kelas);
 
         return Datatables::of($list_data)
@@ -187,7 +187,7 @@ class SekretarisKelasController extends BaseController
                 $sekretarisKelas = SekretarisKelas::join('semester', 'semester.id_semester', '=', 'sekretaris_kelas.id_semester')
                     ->where('sekretaris_kelas.id_kelas', '=', $input->id_kelas)
                     ->where('sekretaris_kelas.id_semester', '=', $input->id_semester)
-                    ->where('semester.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                    ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                     ->first();
 
                 if ($sekretarisKelas) {
@@ -196,7 +196,7 @@ class SekretarisKelasController extends BaseController
                         'message' => 'Failed To Save Sekretaris Kelas!'
                     ];
                 } else {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $sekretarisKelas                       = new SekretarisKelas;
                     $sekretarisKelas->id_sekretaris_kelas  = $id;
@@ -204,7 +204,7 @@ class SekretarisKelasController extends BaseController
                     $sekretarisKelas->id_semester          = $input->id_semester;
                     $sekretarisKelas->id_siswa             = $input->id_siswa;
                     $sekretarisKelas->is_aktif             = $input->is_aktif;
-                    $sekretarisKelas->created_by           = auth_data()->pengguna->id_pengguna;
+                    $sekretarisKelas->created_by           = $input->auth_data->pengguna->id_pengguna;
                     $sekretarisKelas->save();
 
                     // cek jika update status aktif = 1, maka yg lain status aktif = 0
@@ -213,7 +213,7 @@ class SekretarisKelasController extends BaseController
 
                         foreach ($data_sekretaris_kelas as $sekretarisKelas) {
                             $sekretarisKelas->is_aktif    = 0;
-                            $sekretarisKelas->updated_by  = auth_data()->pengguna->id_pengguna;
+                            $sekretarisKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
                             $sekretarisKelas->updated_at  = $now;
                             $sekretarisKelas->save();
                         }
@@ -232,7 +232,7 @@ class SekretarisKelasController extends BaseController
                 $sekretarisKelas->id_semester      = $input->id_semester;
                 $sekretarisKelas->id_siswa         = $input->id_siswa;
                 $sekretarisKelas->is_aktif         = $input->is_aktif;
-                $sekretarisKelas->updated_by       = auth_data()->pengguna->id_pengguna;
+                $sekretarisKelas->updated_by       = $input->auth_data->pengguna->id_pengguna;
                 $sekretarisKelas->updated_at       = $now;
                 $sekretarisKelas->save();
 
@@ -242,7 +242,7 @@ class SekretarisKelasController extends BaseController
 
                     foreach ($data_sekretaris_kelas as $sekretarisKelas) {
                         $sekretarisKelas->is_aktif    = 0;
-                        $sekretarisKelas->updated_by  = auth_data()->pengguna->id_pengguna;
+                        $sekretarisKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
                         $sekretarisKelas->updated_at  = $now;
                         $sekretarisKelas->save();
                     }
@@ -256,7 +256,7 @@ class SekretarisKelasController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $sekretarisKelas               = SekretarisKelas::find($id);
-                $sekretarisKelas->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $sekretarisKelas->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $sekretarisKelas->save();
 
                 $sekretarisKelas->delete();

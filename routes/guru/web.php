@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
+use App\Http\Controllers\Administrator\PengelolaanAkun\FotoProfileController;
 use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
 use App\Http\Controllers\Guru\WelcomeController;
 use App\Http\Controllers\Guru\Tutorial\VideoController;
@@ -166,6 +167,7 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('biodata')->group(function () {
             Route::get('data-pribadi', [DataPribadiController::class, 'viewDataPribadi']);
             Route::post('action-data-pribadi', [DataPribadiController::class, 'actionSaveDataPribadi']);
+            Route::post('action-ttd/{mode}', [FotoProfileController::class, 'actionUpdateTdd']);
 
             Route::prefix('data-kegiatan')->group(function () {
                 Route::get('/', [DataKegiatanController::class, 'viewDataKegiatan']);
@@ -946,12 +948,12 @@ Route::middleware(['token_staff'])->group(function () {
             //     Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesRaporTengahSemester']);
             //     Route::get('add', [RaporTengahSemesterController::class, 'addRaporTengahSemester']);
             //     Route::post('action-rapor-tengah-semester/{mode}/{id}', [RaporTengahSemesterController::class, 'actionRaporTengahSemester']);
-                // Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
-                // Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
-                // Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
-                // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfRaporTengahSemester']);
-                // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
-                // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
+            // Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
+            // Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
+            // Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
+            // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfRaporTengahSemester']);
+            // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+            // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
 
             // });
         });

@@ -26,7 +26,7 @@ class EkskulWajibController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('kesiswaan/ekstrakurikuler/ekskul-wajib/view-ekskul-wajib', compact('auth_data'));
     }
@@ -35,13 +35,13 @@ class EkskulWajibController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now    = Carbon::now();
         $ekskul   = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $tingkat  = Kelas::select('tingkat')->distinct()->get();
-        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/ekstrakurikuler/ekskul-wajib/add-ekskul-wajib', compact('auth_data', 'ekskul', 'tingkat'));
     }
@@ -50,14 +50,14 @@ class EkskulWajibController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now    = Carbon::now();
         $ekskulWajib  = EkskulWajib::join('ekskul', 'ekskul.id_ekskul', '=', 'ekskul_wajib.id_ekskul')->where('id_ekskul_wajib', '=', $id)->first();
         $ekskul   = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $tingkat  = Kelas::select('tingkat')->distinct()->get();
-        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/ekstrakurikuler/ekskul-wajib/edit-ekskul-wajib', compact('auth_data', 'ekskul', 'tingkat', 'ekskulWajib'));
     }
@@ -65,7 +65,7 @@ class EkskulWajibController extends BaseController
     public function datatablesEkskulWajib(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = EkskulWajib::join('ekskul', 'ekskul.id_ekskul', '=', 'ekskul_wajib.id_ekskul')->where('ekskul.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
@@ -89,7 +89,7 @@ class EkskulWajibController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -106,14 +106,14 @@ class EkskulWajibController extends BaseController
         } else {
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $ekskul                             = new EkskulWajib;
                 $ekskul->id_ekskul_wajib            = $id;
                 $ekskul->id_ekskul                = $input->id_ekskul;
                 $ekskul->tingkat_kelas             = $input->tingkat_kelas;
                 $ekskul->is_aktif                 = $input->is_aktif;
-                $ekskul->created_by                = auth_data()->pengguna->id_pengguna;
+                $ekskul->created_by                = $input->auth_data->pengguna->id_pengguna;
                 $ekskul->created_at                = $now;
                 $ekskul->save();
 
@@ -127,7 +127,7 @@ class EkskulWajibController extends BaseController
                 $ekskul->id_ekskul           = $input->id_ekskul;
                 $ekskul->tingkat_kelas   = $input->tingkat_kelas;
                 $ekskul->is_aktif        = $input->is_aktif;
-                $ekskul->updated_by          = auth_data()->pengguna->id_pengguna;
+                $ekskul->updated_by          = $input->auth_data->pengguna->id_pengguna;
                 $ekskul->updated_at          = $now;
                 $ekskul->save();
 
@@ -138,7 +138,7 @@ class EkskulWajibController extends BaseController
                 ];
             } elseif ($mode == 'delete') {
                 $ekskul                       = EkskulWajib::find($id);
-                $ekskul->deleted_by     = auth_data()->pengguna->id_pengguna;
+                $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                 $ekskul->save();
 
                 $ekskul->delete();

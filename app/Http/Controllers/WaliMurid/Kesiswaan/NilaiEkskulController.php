@@ -33,7 +33,7 @@ class NilaiEkskulController extends Controller
 	public function viewNilaiEkskul(Request $request){
 
 		$input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
@@ -49,7 +49,7 @@ class NilaiEkskulController extends Controller
 	public function viewDetailNilaiEkskul(Request $request, $id_semester, $id_ekskul){
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 

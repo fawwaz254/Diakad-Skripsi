@@ -30,7 +30,7 @@ class LaporanAbsenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $id_guru = $guru->id_guru;
@@ -67,7 +67,7 @@ class LaporanAbsenController extends BaseController
     public function viewLaporanAbsenDetail(Request $request,$id_kelas_mp_grup){
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

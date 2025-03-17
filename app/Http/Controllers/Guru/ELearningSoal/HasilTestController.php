@@ -36,7 +36,7 @@ class HasilTestController extends Controller
         if (auth_data()->role_aktif->id_role == '7') {
             $list_data = PaketSoal::query();
         } else {
-            $list_data = PaketSoal::where('paket_soal.created_by', auth_data()->pengguna->id_pengguna);
+            $list_data = PaketSoal::where('paket_soal.created_by', $input->auth_data->pengguna->id_pengguna);
         }
 
         $list_data->withCount('test')
@@ -218,7 +218,7 @@ class HasilTestController extends Controller
     public function printHasilTest(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa', 'test', 'kategori_soal')->first();
         $time = Carbon::parse($paket_soal->waktu_mulai);
@@ -237,7 +237,7 @@ class HasilTestController extends Controller
     public function printHasilTest2(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $paket_soal = PaketSoal::where('id_paket_soal', $id)->with('paket_soal_kelas.kelas.siswa.pengguna', 'test', 'kategori_soal')->first();
         $time = Carbon::parse($paket_soal->waktu_mulai);

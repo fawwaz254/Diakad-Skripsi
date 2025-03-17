@@ -43,7 +43,7 @@ class InputGuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $status = StatusPengguna::where('status_join_table', 2)->get();
 
@@ -60,7 +60,7 @@ class InputGuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_status_aktif_guru = LibDataSumberDaya::fetchDataStatusAktifGuru($auth_data);
 
@@ -72,7 +72,7 @@ class InputGuruController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_guru = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_guru = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         $kota = Kota::where('kota.is_aktif', '=', 1)->get();
         $provinsi = Provinsi::where('provinsi.is_aktif', '=', 1)->get();
@@ -96,7 +96,7 @@ class InputGuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_status_aktif_guru = LibDataSumberDaya::fetchDataStatusAktifGuru($auth_data);
 
@@ -125,7 +125,7 @@ class InputGuruController extends BaseController
     public function datatablesInputGuru(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = Guru::select(
             'guru.id_guru',
@@ -219,9 +219,9 @@ class InputGuruController extends BaseController
             // ACTION ADD
             if ($mode == 'add') {
                 $pengguna                           = new Pengguna;
-                $pengguna->id_pengguna              = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $pengguna->id_pengguna              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $pengguna->id_status_pengguna       = $input->id_status_pengguna;
-                $pengguna->id_sekolah               = auth_data()->pengguna->id_sekolah;
+                $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
                 $pengguna->nm_pengguna              = $input->nm_pengguna;
                 $pengguna->username                 = $input->nip_guru;
                 $pengguna->password                 = Hash::make($input->nip_guru);
@@ -229,13 +229,13 @@ class InputGuruController extends BaseController
                 $pengguna->status_join_table        = 2;
                 $pengguna->email_pengguna           = $input->email;
                 $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
-                $pengguna->created_by               = auth_data()->pengguna->id_pengguna;
+                $pengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $pengguna->created_at               = $now;
                 $pengguna->gelar_depan              = $input->gelar_depan;
                 $pengguna->gelar_belakang           = $input->gelar_belakang;
                 $pengguna->save();
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $guru                           = new Guru;
                 $guru->id_guru                  = $id;
@@ -301,7 +301,7 @@ class InputGuruController extends BaseController
                 $guru->is_sekolah_induk         = $input->is_sekolah_induk;
                 $guru->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $guru->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
-                $guru->created_by               = auth_data()->pengguna->id_pengguna;
+                $guru->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $guru->created_at               = $now;
                 $guru->save();
 
@@ -310,7 +310,7 @@ class InputGuruController extends BaseController
                 $rolePengguna->id_pengguna              = $pengguna->id_pengguna;
                 $rolePengguna->keterangan_role_pengguna = "Input Sumber Daya";
                 $rolePengguna->is_aktif                 = 1;
-                $rolePengguna->created_by               = auth_data()->pengguna->id_pengguna;
+                $rolePengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $rolePengguna->save();
 
                 LibGlobal::insertUpdateUserInCenter([
@@ -350,7 +350,7 @@ class InputGuruController extends BaseController
                 $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
                 $pengguna->gelar_depan              = $input->gelar_depan;
                 $pengguna->gelar_belakang           = $input->gelar_belakang;
-                $pengguna->updated_by               = auth_data()->pengguna->id_pengguna;
+                $pengguna->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $pengguna->updated_at               = $now;
                 $pengguna->save();
 
@@ -360,7 +360,7 @@ class InputGuruController extends BaseController
                 $guru->id_unit_kerja            = $input->id_unit_kerja;
                 $guru->jenis_jabatan            = $input->jenis_jabatan;
                 $guru->nip_guru                 = $input->nip_guru;
-                $guru->updated_by               = auth_data()->pengguna->id_pengguna;
+                $guru->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $guru->updated_at               = $now;
                 $guru->nik_ptk                  = $input->nik_ptk;
                 $guru->jenis_kelamin            = $input->jenis_kelamin;
@@ -450,12 +450,12 @@ class InputGuruController extends BaseController
                     $guru                   = Guru::find($id);
 
                     $pengguna               = Pengguna::find($guru->id_pengguna);
-                    $pengguna->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $pengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $pengguna->save();
 
                     $pengguna->delete();
 
-                    $guru->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $guru->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $guru->save();
 
                     $guru->delete();

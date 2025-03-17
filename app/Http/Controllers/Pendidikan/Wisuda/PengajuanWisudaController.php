@@ -32,7 +32,7 @@ class PengajuanWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data);
 
@@ -46,7 +46,7 @@ class PengajuanWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_periode_wisuda' => 'required',
@@ -70,7 +70,7 @@ class PengajuanWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data, $id_periode_wisuda);
 
@@ -81,7 +81,7 @@ class PengajuanWisudaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_pengajuan_wisuda = $this->fetchDataPengajuanWisudaDetail($auth_data, $id);
 
@@ -94,7 +94,7 @@ class PengajuanWisudaController extends BaseController
     public function datatablesPengajuanWisuda(Request $request, $id_periode_wisuda, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = $this->fetchDataPengajuanWisuda($auth_data, $id_periode_wisuda, $id_kelas);
 
         return Datatables::of($list_data)
@@ -224,7 +224,7 @@ class PengajuanWisudaController extends BaseController
                     // get status_pengguna kode AKTIF
                     $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', "AKTIF")
                         ->where('status_join_table', '=', 3)
-                        ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                        ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->first();
 
                     // get siswa->id_pengguna
@@ -233,14 +233,14 @@ class PengajuanWisudaController extends BaseController
                     // -- UPDATE status_pengguna tabel pengguna --
                     $pengguna                       = Pengguna::find($siswa->id_pengguna);
                     $pengguna->id_status_pengguna   = $statusPengguna->id_status_pengguna;
-                    $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
+                    $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
                     $pengguna->updated_at           = $now;
                     $pengguna->save();
 
                     // -- UPDATE tabel pengajuan_wisuda --
                     $pengajuanWisuda->keterangan_batal      = $input->keterangan_batal;
                     $pengajuanWisuda->status_wisuda         = 3;
-                    $pengajuanWisuda->updated_by            = auth_data()->pengguna->id_pengguna;
+                    $pengajuanWisuda->updated_by            = $input->auth_data->pengguna->id_pengguna;
                     $pengajuanWisuda->updated_at            = $now;
                     $pengajuanWisuda->save();
 
@@ -248,7 +248,7 @@ class PengajuanWisudaController extends BaseController
                     // get admisi sesuai id_pengajuan_wisuda
                     $admisi = Admisi::where('id_pengajuan_wisuda', '=', $pengajuanWisuda->id_pengajuan_wisuda)
                         ->first();
-                    $admisi->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $admisi->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $admisi->save();
 
                     $admisi->delete();
@@ -269,23 +269,23 @@ class PengajuanWisudaController extends BaseController
                     // get status_pengguna kode CALON_LULUS
                     $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', "CALON_LULUS")
                         ->where('status_join_table', '=', 3)
-                        ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                        ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->first();
 
                     foreach ($input->id_siswa as $id_siswa) {
-                        $id_pengajuan_wisuda = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_pengajuan_wisuda = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         // get siswa->id_pengguna
                         $siswa  = Siswa::find($id_siswa);
 
                         // make id
-                        $id_admisi = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_admisi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                         if ($id_periode_wisuda != "0") {
 
                             // -- UPDATE status_pengguna tabel pengguna --
                             $pengguna                       = Pengguna::find($siswa->id_pengguna);
                             $pengguna->id_status_pengguna   = $statusPengguna->id_status_pengguna;
-                            $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
+                            $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
                             $pengguna->updated_at           = $now;
                             $pengguna->save();
 
@@ -297,7 +297,7 @@ class PengajuanWisudaController extends BaseController
                             $pengajuanWisuda->id_periode_wisuda     = $id_periode_wisuda;
                             $pengajuanWisuda->status_wisuda         = 1;
                             $pengajuanWisuda->tgl_pengajuan_wisuda  = $now;
-                            $pengajuanWisuda->created_by            = auth_data()->pengguna->id_pengguna;
+                            $pengajuanWisuda->created_by            = $input->auth_data->pengguna->id_pengguna;
                             $pengajuanWisuda->save();
 
                             // -- INSERT tabel admisi --
@@ -310,7 +310,7 @@ class PengajuanWisudaController extends BaseController
                             $admisi->id_semester            = $periodeWisuda->id_semester;
                             $admisi->id_status_pengguna     = $statusPengguna->id_status_pengguna;
                             $admisi->id_pengajuan_wisuda    = $id_pengajuan_wisuda;
-                            $admisi->created_by             = auth_data()->pengguna->id_pengguna;
+                            $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
                             $admisi->save();
                         } else {
                             // cek periode wisuda aktif sesuai semester aktif
@@ -321,7 +321,7 @@ class PengajuanWisudaController extends BaseController
                             // -- UPDATE status_pengguna tabel pengguna --
                             $pengguna                       = Pengguna::find($siswa->id_pengguna);
                             $pengguna->id_status_pengguna   = $statusPengguna->id_status_pengguna;
-                            $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
+                            $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
                             $pengguna->updated_at           = $now;
                             $pengguna->save();
 
@@ -333,7 +333,7 @@ class PengajuanWisudaController extends BaseController
                             $pengajuanWisuda->id_periode_wisuda     = $periodeWisuda->id_periode_wisuda;
                             $pengajuanWisuda->status_wisuda         = 1;
                             $pengajuanWisuda->tgl_pengajuan_wisuda  = $now;
-                            $pengajuanWisuda->created_by            = auth_data()->pengguna->id_pengguna;
+                            $pengajuanWisuda->created_by            = $input->auth_data->pengguna->id_pengguna;
                             $pengajuanWisuda->save();
 
                             // -- INSERT tabel admisi --
@@ -343,7 +343,7 @@ class PengajuanWisudaController extends BaseController
                             $admisi->id_semester            = $periodeWisuda->id_semester;
                             $admisi->id_status_pengguna     = $statusPengguna->id_status_pengguna;
                             $admisi->id_pengajuan_wisuda    = $id_pengajuan_wisuda;
-                            $admisi->created_by             = auth_data()->pengguna->id_pengguna;
+                            $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
                             $admisi->save();
                         }
                     }

@@ -27,7 +27,7 @@ class KerjaHarianController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/laporan/kerja-harian/view-kerja-harian', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class KerjaHarianController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/laporan/kerja-harian/add-kerja-harian', compact('auth_data'));
     }
@@ -46,7 +46,7 @@ class KerjaHarianController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_kerja_harian = LaporanKerjaHarian::findOrFail($id);
         $tanggal = strftime("%d %B %Y", strtotime($laporan_kerja_harian->tanggal));
@@ -58,7 +58,7 @@ class KerjaHarianController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_kerja_harian = LaporanKerjaHarian::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
@@ -92,18 +92,18 @@ class KerjaHarianController extends BaseController
 
             if ($mode == 'add') {
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $data                          = new LaporanKerjaHarian;
                 $data->id_laporan_kerja_harian = $id;
-                $data->id_role                 = auth_data()->role_aktif->id_role;
+                $data->id_role                 = $input->auth_data->role_aktif->id_role;
                 $data->tanggal                 = date_format(date_create($input->tanggal), "Y-m-d");
                 $data->lokasi                  = $input->lokasi;
                 $data->uraian_kegiatan         = $input->uraian_kegiatan;
                 $data->hasil                   = $input->hasil;
                 $data->kesesuaian_program_98   = $input->kesesuaian_program_98;
                 $data->status                  = $input->status;
-                $data->created_by              = auth_data()->pengguna->id_pengguna;
+                $data->created_by              = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
 
@@ -118,7 +118,7 @@ class KerjaHarianController extends BaseController
                         ];
                     } else {
 
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru-tendik/' . $id, request()->file, 'public');
                         $data->path_file = $file;
 
@@ -138,14 +138,14 @@ class KerjaHarianController extends BaseController
             } elseif ($mode == 'edit') {
 
                 $data                        = LaporanKerjaHarian::find($id);
-                $data->id_role               = auth_data()->role_aktif->id_role;
+                $data->id_role               = $input->auth_data->role_aktif->id_role;
                 $data->tanggal               = date_format(date_create($input->tanggal), "Y-m-d");
                 $data->lokasi                = $input->lokasi;
                 $data->uraian_kegiatan       = $input->uraian_kegiatan;
                 $data->kesesuaian_program_98 = $input->kesesuaian_program_98;
                 $data->hasil                 = $input->hasil;
                 $data->status                = $input->status;
-                $data->updated_by            = auth_data()->pengguna->id_pengguna;
+                $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
 
@@ -160,7 +160,7 @@ class KerjaHarianController extends BaseController
                         ];
                     } else {
 
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru-tendik/' . $id, request()->file, 'public');
                         $data->path_file = $file;
 
@@ -180,7 +180,7 @@ class KerjaHarianController extends BaseController
             } elseif ($mode == 'delete') {
 
                 $data               = LaporanKerjaHarian::find($id);
-                $data->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
                 $data->delete();
 
@@ -196,7 +196,7 @@ class KerjaHarianController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data['laporan'] = LaporanKerjaHarian::where('created_by', $auth_data->pengguna->id_pengguna)
             ->whereBetween('tanggal', [$start_date, $end_date])
@@ -215,10 +215,10 @@ class KerjaHarianController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
-        $list_data = LaporanKerjaHarian::where('created_by', auth_data()->pengguna->id_pengguna)
-            ->where('id_role', auth_data()->role_aktif->id_role)
+        $list_data = LaporanKerjaHarian::where('created_by', $input->auth_data->pengguna->id_pengguna)
+            ->where('id_role', $input->auth_data->role_aktif->id_role)
             ->get();
 
         return Datatables::of($list_data)

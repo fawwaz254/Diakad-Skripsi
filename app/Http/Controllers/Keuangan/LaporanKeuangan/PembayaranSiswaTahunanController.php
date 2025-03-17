@@ -14,7 +14,7 @@ class PembayaranSiswaTahunanController extends BaseController
     public function viewPembayaranSiswaTahunan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today(env('APP_TIMEZONE', 'Asia/Jakarta'));
         $id_tahun = $now->year;
@@ -30,7 +30,7 @@ class PembayaranSiswaTahunanController extends BaseController
     public function dataPembayaranSiswaTahunan(Request $request, $year = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = PembayaranBiaya::with('tagihan_biaya.siswa.kelas.jurusan');
         
         if ($year !== null) {

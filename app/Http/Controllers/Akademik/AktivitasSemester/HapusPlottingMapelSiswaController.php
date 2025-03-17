@@ -42,7 +42,7 @@ class HapusPlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -53,7 +53,7 @@ class HapusPlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required'
@@ -76,7 +76,7 @@ class HapusPlottingMapelSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester   = Semester::where('id_semester', '=', $id)->first();
 
@@ -86,7 +86,7 @@ class HapusPlottingMapelSiswaController extends BaseController
     public function viewDetailHapusPlottingMapelSiswa(Request $request, $id_kelas_mp)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -105,7 +105,7 @@ class HapusPlottingMapelSiswaController extends BaseController
     public function datatablesHapusPlottingMapelSiswa(Request $request, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = KelasMp::with(
             'mata_pelajaran',
             'mata_pelajaran.jenis_mata_pelajaran',
@@ -150,7 +150,7 @@ class HapusPlottingMapelSiswaController extends BaseController
     public function actionHapusPlottingMapelSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -214,7 +214,7 @@ class HapusPlottingMapelSiswaController extends BaseController
     function actionHapusSemuaPlottingMapelSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -280,7 +280,7 @@ class HapusPlottingMapelSiswaController extends BaseController
     function viewHapusPlotingOtomatis(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_siswa = PengambilanMp::select('id_siswa', 'id_kelas_mp', DB::raw('COUNT(id_siswa) as count'))
@@ -300,7 +300,7 @@ class HapusPlottingMapelSiswaController extends BaseController
         set_time_limit(-1);
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_siswa = PengambilanMp::select('id_siswa', 'id_kelas_mp', DB::raw('COUNT(id_siswa) as count'))

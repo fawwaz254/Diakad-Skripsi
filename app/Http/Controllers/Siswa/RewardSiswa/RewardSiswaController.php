@@ -19,7 +19,7 @@ class RewardSiswaController extends Controller
     public function viewInputRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $date_input = '';
         $pengisian_kegiatan_harian = false;
@@ -31,7 +31,7 @@ class RewardSiswaController extends Controller
             $title = 'Input Aktivitas Harian';
             $date_input = 'tanggal '.Carbon::now('Asia/Jakarta')->isoFormat('D MMM Y');
 
-            $pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', auth_data()->pengguna->id_pengguna)->where('id_kegiatan_harian', 'reward-siswa-harian')->where('tgl_pengisian', $now->format('Y-m-d'))->first();
+            $pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->where('id_kegiatan_harian', 'reward-siswa-harian')->where('tgl_pengisian', $now->format('Y-m-d'))->first();
         }else if($request->segment(3) == 'input-aktivitas-mingguan'){
             $jenis = 2;
             $title = 'Input Aktivitas Mingguan';
@@ -39,7 +39,7 @@ class RewardSiswaController extends Controller
 
             $startOfWeek = $now->startOfWeek()->toDateString();
             $endOfWeek = $now->endOfWeek()->toDateString();
-            $pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', auth_data()->pengguna->id_pengguna)->where('id_kegiatan_harian', 'reward-siswa-mingguan')->whereBetween('tgl_pengisian', [$startOfWeek, $endOfWeek])->first();
+            $pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->where('id_kegiatan_harian', 'reward-siswa-mingguan')->whereBetween('tgl_pengisian', [$startOfWeek, $endOfWeek])->first();
         }else if($request->segment(3) == 'input-aktivitas-bulanan'){
             $jenis = 3;
             $title = 'Input Aktivitas Bulanan';
@@ -47,7 +47,7 @@ class RewardSiswaController extends Controller
 
             $startOfMonth = $now->startOfMonth()->toDateString();
             $endOfMonth = $now->endOfMonth()->toDateString();
-            $pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', auth_data()->pengguna->id_pengguna)->where('id_kegiatan_harian', 'reward-siswa-bulanan')->whereBetween('tgl_pengisian', [$startOfMonth, $endOfMonth])->first();
+            $pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->where('id_kegiatan_harian', 'reward-siswa-bulanan')->whereBetween('tgl_pengisian', [$startOfMonth, $endOfMonth])->first();
         }
 
         return view('siswa.reward-siswa.input-reward-siswa', compact('jenis', 'title', 'date_input', 'pengisian_kegiatan_harian'));
@@ -57,7 +57,7 @@ class RewardSiswaController extends Controller
     {
         $input = (object) $request->input();
         // dd($input);
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $id_jenis_aktivitas_reward = $request->input('id_jenis_aktivitas_reward');
 
@@ -86,7 +86,7 @@ class RewardSiswaController extends Controller
     public function saveInputAktivitasReward(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         // dd($auth_data->pengguna->siswa->id_kelas);
 
         $jawaban = $request->input('jawaban');
@@ -150,7 +150,7 @@ class RewardSiswaController extends Controller
         DB::beginTransaction();
         try {
             $pengisian_kegiatan_harian = new PengisianKegiatanHarian();
-            $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $pengisian_kegiatan_harian->id_pengguna_pengisi = $auth_data->pengguna->id_pengguna;
             $pengisian_kegiatan_harian->id_kegiatan_harian = $id_kegiatan_harian;
             $pengisian_kegiatan_harian->status_join_table = 3;
@@ -167,7 +167,7 @@ class RewardSiswaController extends Controller
 
                     // dd($jenisAktivitas);
                     foreach ($karakter as $value) {
-                        $id_reward_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_reward_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         RewardSiswa::create([
                             'id_reward_siswa'           => $id_reward_siswa,
                             'id_siswa'                  => $auth_data->pengguna->siswa->id_siswa,
@@ -194,7 +194,7 @@ class RewardSiswaController extends Controller
     public function viewAktivitasRewardSaya(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('siswa.reward-siswa.aktivitas-reward-saya');
     }
@@ -202,7 +202,7 @@ class RewardSiswaController extends Controller
     public function datatableAktivitasRewardSaya(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $id_pengguna = $auth_data->pengguna->id_pengguna;
 
         $listData = RewardSiswa::select(
@@ -237,7 +237,7 @@ class RewardSiswaController extends Controller
 
         $startOfMonth = Carbon::now('Asia/Jakarta')->startOfMonth();
         $endOfMonth = Carbon::now('Asia/Jakarta')->endOfMonth();
-        $data_pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', auth_data()->pengguna->id_pengguna)->whereBetween('tgl_pengisian', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])->get();
+        $data_pengisian_kegiatan_harian = PengisianKegiatanHarian::where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->whereBetween('tgl_pengisian', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])->get();
 
         $dates = CarbonPeriod::create($startOfMonth, $endOfMonth);
 

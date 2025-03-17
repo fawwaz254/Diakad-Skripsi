@@ -24,7 +24,7 @@ class NilaiMutuController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('pendidikan/data-akademik/nilai-mutu/view-nilai-mutu', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class NilaiMutuController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class NilaiMutuController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_nilai_mutu = LibDataAkademik::fetchDataNilaiMutu($auth_data, $id);
 
@@ -57,7 +57,7 @@ class NilaiMutuController extends BaseController
     public function datatablesNilaiMutu(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataAkademik::fetchDataNilaiMutu($auth_data);
 
         return Datatables::of($list_data)
@@ -92,15 +92,15 @@ class NilaiMutuController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $standarNilai                               = new StandarNilai;
                 $standarNilai->id_standar_nilai             = $id;
                 $standarNilai->nm_standar_nilai             = $input->nm_standar_nilai;
                 $standarNilai->mutu_standar_nilai           = $input->mutu_standar_nilai;
                 $standarNilai->keterangan_standar_nilai     = $input->keterangan_standar_nilai;
-                $standarNilai->id_sekolah                   = auth_data()->pengguna->id_sekolah;
-                $standarNilai->created_by                   = auth_data()->pengguna->id_pengguna;
+                $standarNilai->id_sekolah                   = $input->auth_data->pengguna->id_sekolah;
+                $standarNilai->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $standarNilai->save();
 
                 return [
@@ -114,7 +114,7 @@ class NilaiMutuController extends BaseController
                 $standarNilai->nm_standar_nilai             = $input->nm_standar_nilai;
                 $standarNilai->mutu_standar_nilai           = $input->mutu_standar_nilai;
                 $standarNilai->keterangan_standar_nilai     = $input->keterangan_standar_nilai;
-                $standarNilai->updated_by                   = auth_data()->pengguna->id_pengguna;
+                $standarNilai->updated_by                   = $input->auth_data->pengguna->id_pengguna;
                 $standarNilai->updated_at                   = $now;
                 $standarNilai->save();
 
@@ -132,7 +132,7 @@ class NilaiMutuController extends BaseController
                 } else {
                     // make object to find id
                     $standarNilai               = StandarNilai::find($id);
-                    $standarNilai->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $standarNilai->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $standarNilai->save();
 
                     $standarNilai->delete();

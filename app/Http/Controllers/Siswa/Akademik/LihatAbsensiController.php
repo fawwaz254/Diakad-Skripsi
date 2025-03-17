@@ -28,7 +28,7 @@ class LihatAbsensiController extends BaseController{
     public function viewLihatAbsensi(Request $request, $id_bulan = null, $tahun = null){
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if(empty($id_bulan)){

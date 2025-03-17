@@ -36,7 +36,7 @@ class UploadDataTendikController extends BaseController
 	{
 		# code...
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 
 		return view('sumber-daya/tendik/upload-data-tendik/view-upload-data-tendik', compact('auth_data'));
 	}
@@ -54,7 +54,7 @@ class UploadDataTendikController extends BaseController
 	public function uploadFileExcel(Request $request)
 	{
 		$input = (object) $request->input();
-		$auth_data = auth_data();
+		$auth_data = $input->auth_data;
 		$now = Carbon::now();
 		if ($request->hasFile('file-excel')) {
 
@@ -89,8 +89,8 @@ class UploadDataTendikController extends BaseController
 							$arr[] = [];
 						} else {
 							//generate id
-							$id_staff			= auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
-							$id_pengguna 		= auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+							$id_staff			= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+							$id_pengguna 		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
 							$arr[] = [
 								'id_staff' 			=> $id_staff,
@@ -100,8 +100,8 @@ class UploadDataTendikController extends BaseController
 								'status'	 		=> $status->id_status_pengguna,
 								'jenis_kelamin' 	=> $jenis_kelamin,
 								'unit_kerja' 		=> $unit->id_unit_kerja,
-								'id_sekolah' 		=> auth_data()->pengguna->id_sekolah,
-								'created_by'		=> auth_data()->pengguna->id_pengguna
+								'id_sekolah' 		=> $input->auth_data->pengguna->id_sekolah,
+								'created_by'		=> $input->auth_data->pengguna->id_pengguna
 							];
 						}
 					}

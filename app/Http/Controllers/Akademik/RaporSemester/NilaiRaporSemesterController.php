@@ -15,7 +15,7 @@ class NilaiRaporSemesterController extends Controller
     public function viewNilaiRaporSemester(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -26,7 +26,7 @@ class NilaiRaporSemesterController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $status = $input->status;
 
         if (empty($input->id_semester)) {

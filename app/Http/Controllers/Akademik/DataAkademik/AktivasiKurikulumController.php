@@ -27,7 +27,7 @@ class AktivasiKurikulumController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('akademik/data-akademik/aktivasi-kurikulum/view-aktivasi-kurikulum', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class AktivasiKurikulumController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kurikulum = LibAkademik::fetchDataKurikulum($auth_data, $id);
 
@@ -54,7 +54,7 @@ class AktivasiKurikulumController extends BaseController
     public function datatablesAktivasiKurikulum(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibAkademik::fetchDataKurikulum($auth_data);
 
@@ -108,7 +108,7 @@ class AktivasiKurikulumController extends BaseController
                 // make object to find id
                 $kurikulum                              = Kurikulum::find($id);
                 $kurikulum->is_aktif                    = $input->is_aktif;
-                $kurikulum->updated_by                  = auth_data()->pengguna->id_pengguna;
+                $kurikulum->updated_by                  = $input->auth_data->pengguna->id_pengguna;
                 $kurikulum->updated_at                  = $now;
                 $kurikulum->save();
 

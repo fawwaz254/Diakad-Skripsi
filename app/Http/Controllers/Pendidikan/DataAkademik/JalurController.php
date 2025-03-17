@@ -24,7 +24,7 @@ class JalurController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('pendidikan/data-akademik/jalur/view-jalur', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class JalurController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class JalurController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jalur = LibDataAkademik::fetchDataJalur($auth_data, $id);
 
@@ -57,7 +57,7 @@ class JalurController extends BaseController
     public function datatablesJalur(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataAkademik::fetchDataJalur($auth_data);
 
         return Datatables::of($list_data)
@@ -91,14 +91,14 @@ class JalurController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jalur                  = new Jalur;
                 $jalur->id_jalur        = $id;
                 $jalur->nm_jalur        = $input->nm_jalur;
                 $jalur->kode_jalur      = $input->kode_jalur;
-                $jalur->id_sekolah      = auth_data()->pengguna->id_sekolah;
-                $jalur->created_by      = auth_data()->pengguna->id_pengguna;
+                $jalur->id_sekolah      = $input->auth_data->pengguna->id_sekolah;
+                $jalur->created_by      = $input->auth_data->pengguna->id_pengguna;
                 $jalur->save();
 
                 return [
@@ -111,7 +111,7 @@ class JalurController extends BaseController
                 $jalur                  = Jalur::find($id);
                 $jalur->nm_jalur        = $input->nm_jalur;
                 $jalur->kode_jalur      = $input->kode_jalur;
-                $jalur->updated_by      = auth_data()->pengguna->id_pengguna;
+                $jalur->updated_by      = $input->auth_data->pengguna->id_pengguna;
                 $jalur->updated_at      = $now;
                 $jalur->save();
 
@@ -129,7 +129,7 @@ class JalurController extends BaseController
                 } else {
                     // make object to find id
                     $jalur               = Jalur::find($id);
-                    $jalur->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $jalur->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $jalur->save();
 
                     $jalur->delete();

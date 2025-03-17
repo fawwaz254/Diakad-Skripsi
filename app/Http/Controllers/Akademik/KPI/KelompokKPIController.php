@@ -17,7 +17,7 @@ class KelompokKPIController extends Controller
     public function viewKelompokKPI(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $tingkat_kelas = Kelas::groupBy('tingkat')->pluck('tingkat');
         return view('akademik/kpi/kelompok-kpi/view-kelompok-kpi', compact('auth_data', 'data_semester', 'tingkat_kelas'));
@@ -26,7 +26,7 @@ class KelompokKPIController extends Controller
     public function postKelompokKPI(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -49,7 +49,7 @@ class KelompokKPIController extends Controller
     public function detailKelompokKPI(Request $request, $tingkat, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $tingkat_kelas = Kelas::groupBy('tingkat')->pluck('tingkat');
         return view('akademik/kpi/kelompok-kpi/detail-kelompok-kpi', compact('auth_data', 'tingkat', 'tingkat_kelas', 'data_semester', 'id_semester'));
@@ -80,7 +80,7 @@ class KelompokKPIController extends Controller
     public function copyKomponenKPI(Request $request, $tingkat, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $tingkat_kelas = Kelas::groupBy('tingkat')->pluck('tingkat');
         $point_kpi = PointKPI::select('id_point_kpi', 'nm_point_kpi', 'id_semester')
@@ -95,7 +95,7 @@ class KelompokKPIController extends Controller
     // public function copyKomponenKPI(Request $request, $id_semester, $tingkat)
     // {
     //     $input = (object) $request->input();
-    //     $auth_data = auth_data();
+    //     $auth_data = $input->auth_data;
     //     // $kelas = Kelas::where('is_aktif', '1')->get();
     //     // $kelas_sisipan = KelasSisipan::get();
     //     $point_kpi = PointKPI::where('id_semester', $input->id_semester)
@@ -136,7 +136,7 @@ class KelompokKPIController extends Controller
                 } else {
                     foreach ($kpi as $k) {
                         PointKPI::create([
-                            'id_point_kpi'      => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id_point_kpi'      => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_kelompok_kpi'   => $k->kelompok_kpi->id_kelompok_kpi,
                             'id_semester'       => $semester_aktif->id_semester,
                             'nm_point_kpi'      => $k->nm_point_kpi,
@@ -144,7 +144,7 @@ class KelompokKPIController extends Controller
                             'urutan'            => $k->urutan,
                             'deskripsi'         => $k->deskripsi,
                             'jenis'             => $k->jenis,
-                            'created_by'        =>  auth_data()->pengguna->id_pengguna,
+                            'created_by'        =>  $input->auth_data->pengguna->id_pengguna,
                         ]);
                     }
 

@@ -31,7 +31,7 @@ class ListUjianController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $id_kelas =  $siswa->id_kelas;
         $list_data = PaketSoal::with(
@@ -105,7 +105,7 @@ class ListUjianController extends Controller
     public function indexTest(Request $request, $id_paket_soal = 0)
     {
         $input = (object) $request->input();
-        $account = auth_data()->pengguna->id_pengguna;
+        $account = $input->auth_data->pengguna->id_pengguna;
         $now = Carbon::now();
         $test = Test::where('id_pengguna', $account)->where('id_paket_soal', $id_paket_soal)->first();
         if ($test && session()->has($id_paket_soal)) {
@@ -138,7 +138,7 @@ class ListUjianController extends Controller
                 }
             } else {
                 $test = new Test;
-                $test->id_test = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $test->id_test = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $test->id_pengguna = $account;
                 $test->id_paket_soal = $id_paket_soal;
                 $test->waktu_mulai_pengerjaan = $start_time;
@@ -156,7 +156,7 @@ class ListUjianController extends Controller
             }
 
             if ($test) {
-                $jawaban_test = JawabanTest::where('id_pengguna', auth_data()->pengguna->id_pengguna)
+                $jawaban_test = JawabanTest::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)
                     ->where('id_test', $test->id_test)
                     ->whereIn('id_soal', $question_package_details->pluck('id_soal'))->get();
 
@@ -229,8 +229,8 @@ class ListUjianController extends Controller
             }
 
             $test_answer = array(
-                'id_jawaban_test' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
-                'id_pengguna' => auth_data()->pengguna->id_pengguna,
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
                 'id_test' => session($input->paket_soal)['id_test'],
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
@@ -240,15 +240,15 @@ class ListUjianController extends Controller
                 'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
-                'created_by' => auth_data()->pengguna->id_pengguna,
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
 
             session([$input->paket_soal . '_jawaban' . $input->no => $input->question_option]);
         } elseif ($input->id_tipe_soal == 2) {
             $test_answer = array(
-                'id_jawaban_test' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
-                'id_pengguna' => auth_data()->pengguna->id_pengguna,
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
                 'id_test' => session($input->paket_soal)['id_test'],
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
@@ -258,16 +258,16 @@ class ListUjianController extends Controller
                 'status_koreksi' => 0,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
-                'created_by' => auth_data()->pengguna->id_pengguna,
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
             session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban_essay]);
         } elseif ($input->id_tipe_soal == 3) {
-            $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+            $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
             $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/jawaban_test', request()->file, 'public');
             $test_answer = array(
-                'id_jawaban_test' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
-                'id_pengguna' => auth_data()->pengguna->id_pengguna,
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
                 'id_test' => session($input->paket_soal)['id_test'],
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
@@ -278,7 +278,7 @@ class ListUjianController extends Controller
                 'status_koreksi' => 0,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
-                'created_by' => auth_data()->pengguna->id_pengguna,
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
             session([$input->paket_soal . '_jawaban' . $input->no => $file]);
@@ -302,8 +302,8 @@ class ListUjianController extends Controller
             $nilai =  $jawaban_benar ? session($input->paket_soal)['point_pilihan_ganda'] : 0;
 
             $test_answer = array(
-                'id_jawaban_test' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
-                'id_pengguna' => auth_data()->pengguna->id_pengguna,
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
                 'id_test' => session($input->paket_soal)['id_test'],
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
@@ -318,7 +318,7 @@ class ListUjianController extends Controller
                 'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
-                'created_by' => auth_data()->pengguna->id_pengguna,
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
 
@@ -343,8 +343,8 @@ class ListUjianController extends Controller
             }
 
             $test_answer = array(
-                'id_jawaban_test' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
-                'id_pengguna' => auth_data()->pengguna->id_pengguna,
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
                 'id_test' => session($input->paket_soal)['id_test'],
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
@@ -354,7 +354,7 @@ class ListUjianController extends Controller
                 'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
-                'created_by' => auth_data()->pengguna->id_pengguna,
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
             session([$input->paket_soal . '_jawaban' . $input->no => $input->jawaban_essay]);
@@ -376,8 +376,8 @@ class ListUjianController extends Controller
             $nilai = $jawaban_benar;
 
             $test_answer = array(
-                'id_jawaban_test' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
-                'id_pengguna' => auth_data()->pengguna->id_pengguna,
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
                 'id_test' => session($input->paket_soal)['id_test'],
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
@@ -391,7 +391,7 @@ class ListUjianController extends Controller
                 'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
-                'created_by' => auth_data()->pengguna->id_pengguna,
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
 
@@ -413,8 +413,8 @@ class ListUjianController extends Controller
             $nilai = $jawaban_benar;
 
             $test_answer = array(
-                'id_jawaban_test' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
-                'id_pengguna' => auth_data()->pengguna->id_pengguna,
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
                 'id_test' => session($input->paket_soal)['id_test'],
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
@@ -428,7 +428,7 @@ class ListUjianController extends Controller
                 'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
-                'created_by' => auth_data()->pengguna->id_pengguna,
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
             session([$input->paket_soal . '_jawaban' . $input->no => isset($input->jawaban) ? $input->jawaban : null]);
@@ -447,8 +447,8 @@ class ListUjianController extends Controller
             $nilai = $jawaban_benar;
 
             $test_answer = array(
-                'id_jawaban_test' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
-                'id_pengguna' => auth_data()->pengguna->id_pengguna,
+                'id_jawaban_test' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_pengguna' => $input->auth_data->pengguna->id_pengguna,
                 'id_test' => session($input->paket_soal)['id_test'],
                 'nomer' => $input->no,
                 'id_soal' => $input->question,
@@ -462,7 +462,7 @@ class ListUjianController extends Controller
                 'status_koreksi' => 1,
                 'id_tipe_soal' => $input->id_tipe_soal,
                 'created_at' => Carbon::now('Asia/Jakarta'),
-                'created_by' => auth_data()->pengguna->id_pengguna,
+                'created_by' => $input->auth_data->pengguna->id_pengguna,
                 'updated_at' => Carbon::now('Asia/Jakarta')
             );
             session([$input->paket_soal . '_jawaban' . $input->no => isset($input->jawaban) ? $input->jawaban : null]);
@@ -510,7 +510,7 @@ class ListUjianController extends Controller
     public function actionEndTest(Request $request)
     {
         $input = (object) $request->input();
-        $test = Test::where('id_pengguna', auth_data()->pengguna->id_pengguna)->where('id_test', session($input->paket_soal)['id_test'])->first();
+        $test = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', session($input->paket_soal)['id_test'])->first();
         if ($test) {
             $no = 1;
             session()->forget($test->id_paket_soal);

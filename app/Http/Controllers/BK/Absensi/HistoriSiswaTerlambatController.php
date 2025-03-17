@@ -28,7 +28,7 @@ class HistoriSiswaTerlambatController extends Controller
     public function viewSiswaTerlambat(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', 1)->get();
         $date = Carbon::now()->toDateString();
         return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'date', 'kelas'));
@@ -47,7 +47,7 @@ class HistoriSiswaTerlambatController extends Controller
     {
         $terlambat = [];
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $date = Carbon::parse($date)->toDateString();
         $kelas = Kelas::where('is_aktif', 1)->get();
@@ -113,7 +113,7 @@ class HistoriSiswaTerlambatController extends Controller
         $presensi->check_out = $input->check_out;
         $presensi->status = $input->status;
         $presensi->notes = $input->notes;
-        $presensi->created_by = auth_data()->pengguna->id_pengguna;
+        $presensi->created_by = $input->auth_data->pengguna->id_pengguna;
         $presensi->save();
 
         $id_presensi_pengguna = PresensiPengguna::where('id_pengguna', $id_pengguna)->where('date', Carbon::now()->format('Y-m-d'))->first()->id_presensi_pengguna;
@@ -131,7 +131,7 @@ class HistoriSiswaTerlambatController extends Controller
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $lebar = 70;
         $nama_sekolah = $auth_data->sekolah_data->nm_sekolah;
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id)->first();
@@ -169,7 +169,7 @@ class HistoriSiswaTerlambatController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::now();
         $subKategoriPelanggaran = SubkategoriPelanggaran::where('keterangan_subkategori_pelanggaran', 'Terlambat masuk kelas pada jam pelajaran sekolah.')->first();
@@ -179,33 +179,33 @@ class HistoriSiswaTerlambatController extends Controller
         try {
 
             foreach ($siswa as $s) {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $pelanggaranSiswa                               = new PelanggaranSiswa();
                 $pelanggaranSiswa->id_pelanggaran_siswa         = $id;
                 $pelanggaranSiswa->id_siswa                     = $s->id_siswa;
                 $pelanggaranSiswa->id_kelas                     = $s->id_kelas;
-                $pelanggaranSiswa->id_guru_input                = auth_data()->pengguna->id_pengguna;
+                $pelanggaranSiswa->id_guru_input                = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->id_semester                  = $semester_aktif->id_semester;
                 $pelanggaranSiswa->id_subkategori_pelanggaran   = $subKategoriPelanggaran->id_subkategori_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran          = 'Terlambat Fingerprint';
                 $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tanggal), "Y-m-d H:i:s");
                 $pelanggaranSiswa->aktor_input_pelanggaran      = 1;
                 $pelanggaranSiswa->is_sudah_tindakan            = 0;
-                $pelanggaranSiswa->created_by                   = auth_data()->pengguna->id_pengguna;
+                $pelanggaranSiswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->save();
 
                 // $pengguna                       = Pengguna::find($id_pengguna);
                 // $pengguna->password             = Hash::make($pengguna->username);
                 // $pengguna->must_change_password = 1;
                 // $pengguna->last_time_password   = $now;
-                // $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
+                // $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
                 // $pengguna->updated_at           = $now;
                 // $pengguna->save();
 
                 // $log = new LogResetPassword;
-                // $log->id_log_reset_password = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+                // $log->id_log_reset_password = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 // $log->id_pengguna       = $pengguna->id_pengguna;
-                // $log->created_by           = auth_data()->pengguna->id_pengguna;
+                // $log->created_by           = $input->auth_data->pengguna->id_pengguna;
                 // $log->save();
             }
 

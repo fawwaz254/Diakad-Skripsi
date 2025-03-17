@@ -19,7 +19,7 @@ class PembayaranSiswaController extends BaseController
     public function viewPembayaranSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('keuangan/laporan-keuangan/pembayaran-siswa/view-pembayaran-siswa', compact('auth_data'));
     }
@@ -27,7 +27,7 @@ class PembayaranSiswaController extends BaseController
     public function datatablesPembayaranSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->with(['tagihan_biaya.detail_biaya' => function ($q) {
             $q->with('biaya');
         }]);
@@ -57,7 +57,7 @@ class PembayaranSiswaController extends BaseController
     public function printSimplePembayaranSiswa(Request $request, $start_date, $end_date)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = PembayaranBiaya::select(
             'siswa.id_siswa',
@@ -104,7 +104,7 @@ class PembayaranSiswaController extends BaseController
     public function printDetailPembayaranSiswa(Request $request, $start_date, $end_date)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = PembayaranBiaya::select(
             'siswa.id_siswa',

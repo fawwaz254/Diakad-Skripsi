@@ -28,7 +28,7 @@ class PengambilanIjazahController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('kesiswaan/ijazah/pengambilan-ijazah/view-pengambilan-ijazah', compact('auth_data'));
     }
@@ -37,7 +37,7 @@ class PengambilanIjazahController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchDataSiswaLulus($auth_data);
 
@@ -48,7 +48,7 @@ class PengambilanIjazahController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchDataSiswaLulus($auth_data);
         $ijazah = LibIjazah::fetchDataPengambilanIjazah($auth_data, $id);
@@ -60,7 +60,7 @@ class PengambilanIjazahController extends BaseController
     public function datatablesPengambilanIjazah(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibIjazah::fetchDataPengambilanIjazah($auth_data);
 
         return Datatables::of($list_data)
@@ -82,7 +82,7 @@ class PengambilanIjazahController extends BaseController
     public function datatablesPengambilanIjazahSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $ijazah = PengajuanWisuda::pluck('id_siswa')->toArray();
         // dd($ijazah);
         $list_data = Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->whereIn('id_siswa', $ijazah);
@@ -104,7 +104,7 @@ class PengambilanIjazahController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $ijazah = LibIjazah::fetchDataPengambilanIjazah($auth_data, $id);
 
@@ -158,19 +158,19 @@ class PengambilanIjazahController extends BaseController
                 $list_siswa = Siswa::get();
                 $list_ijazah = Ijazah::get();
                 foreach ($input->nis_siswa as $nis_siswa) {
-                    $id = auth_data()->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                     $id_siswa = $list_siswa->where('nis_siswa', $nis_siswa)->first()->id_siswa;
                     if ($list_ijazah->where('id_siswa', $id_siswa)->first()) {
                     } else {
                         $ijazah                             = new Ijazah;
                         $ijazah->id_ijazah                  = $id;
                         $ijazah->id_siswa                   = $id_siswa;
-                        $ijazah->id_sekolah                 = auth_data()->pengguna->id_sekolah;
+                        $ijazah->id_sekolah                 = $input->auth_data->pengguna->id_sekolah;
                         $ijazah->tgl_pengambilan_ijazah     = $input->tgl_pengambilan_ijazah;
                         $ijazah->penerima_ijazah            = $input->penerima_ijazah; // null jika tidak diwakilkan
-                        $ijazah->id_pemberi_ijazah          = auth_data()->pengguna->id_pengguna;
+                        $ijazah->id_pemberi_ijazah          = $input->auth_data->pengguna->id_pengguna;
                         $ijazah->catatan_ijazah             = $input->catatan_ijazah;
-                        $ijazah->created_by                 = auth_data()->pengguna->id_pengguna;
+                        $ijazah->created_by                 = $input->auth_data->pengguna->id_pengguna;
                         $ijazah->save();
                     }
                 }
@@ -184,16 +184,16 @@ class PengambilanIjazahController extends BaseController
                 // make object to find id
                 $ijazah                             = Ijazah::find($id);
                 $ijazah->id_siswa                   = $input->id_siswa;
-                $ijazah->id_sekolah                 = auth_data()->pengguna->id_sekolah;
+                $ijazah->id_sekolah                 = $input->auth_data->pengguna->id_sekolah;
                 $ijazah->tgl_pengambilan_ijazah     = $input->tgl_pengambilan_ijazah;
                 if (isset($input->is_diwakilkan) && $input->is_diwakilkan == 1) {
                     $ijazah->penerima_ijazah            = $input->penerima_ijazah; // null jika tidak diwakilkan
                 } else {
                     $ijazah->penerima_ijazah            = null; // null jika tidak diwakilkan
                 }
-                $ijazah->id_pemberi_ijazah          = auth_data()->pengguna->id_pengguna;
+                $ijazah->id_pemberi_ijazah          = $input->auth_data->pengguna->id_pengguna;
                 $ijazah->catatan_ijazah             = $input->catatan_ijazah;
-                $ijazah->updated_by                 = auth_data()->pengguna->id_pengguna;
+                $ijazah->updated_by                 = $input->auth_data->pengguna->id_pengguna;
                 $ijazah->updated_at                 = $now;
                 $ijazah->save();
 
@@ -205,7 +205,7 @@ class PengambilanIjazahController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $ijazah               = Ijazah::find($id);
-                $ijazah->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $ijazah->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $ijazah->save();
 
                 $ijazah->delete();

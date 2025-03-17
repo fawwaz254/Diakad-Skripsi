@@ -24,7 +24,7 @@ class TingkatPrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('kesiswaan/siswa/tingkat-prestasi-siswa/view-tingkat-prestasi-siswa', compact('auth_data'));
     }
@@ -33,12 +33,12 @@ class TingkatPrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/siswa/tingkat-prestasi-siswa/add-tingkat-prestasi-siswa', compact('auth_data'));
     }
@@ -47,13 +47,13 @@ class TingkatPrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
         $tingkat_prestasi_siswa = TingkatPrestasiSiswa::where('id_tingkat_prestasi_siswa', '=', $id)->first();
 
-        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/siswa/tingkat-prestasi-siswa/edit-tingkat-prestasi-siswa', compact('auth_data', 'tingkat_prestasi_siswa'));
     }
@@ -61,7 +61,7 @@ class TingkatPrestasiSiswaController extends BaseController
     public function datatablesTingkatPrestasiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = TingkatPrestasiSiswa::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
@@ -78,7 +78,7 @@ class TingkatPrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -93,12 +93,12 @@ class TingkatPrestasiSiswaController extends BaseController
         } else {
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $tingkat                                 = new TingkatPrestasiSiswa;
                 $tingkat->id_tingkat_prestasi_siswa        = $id;
                 $tingkat->nm_tingkat_prestasi_siswa        = $input->nm_tingkat_prestasi_siswa;
-                $tingkat->created_by                        = auth_data()->pengguna->id_pengguna;
+                $tingkat->created_by                        = $input->auth_data->pengguna->id_pengguna;
                 $tingkat->id_sekolah                      = $auth_data->pengguna->id_sekolah;
                 $tingkat->created_at                        = $now;
                 $tingkat->save();
@@ -111,7 +111,7 @@ class TingkatPrestasiSiswaController extends BaseController
             } elseif ($mode == 'edit') {
                 $tingkat                                 = TingkatPrestasiSiswa::find($id);
                 $tingkat->nm_tingkat_prestasi_siswa        = $input->nm_tingkat_prestasi_siswa;
-                $tingkat->updated_by                        = auth_data()->pengguna->id_pengguna;
+                $tingkat->updated_by                        = $input->auth_data->pengguna->id_pengguna;
                 $tingkat->updated_at                        = $now;
                 $tingkat->save();
 
@@ -129,7 +129,7 @@ class TingkatPrestasiSiswaController extends BaseController
                 } else {
                     // make object to find id
                     $tingkat                 = TingkatPrestasiSiswa::find($id);
-                    $tingkat->deleted_by     = auth_data()->pengguna->id_pengguna;
+                    $tingkat->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                     $tingkat->save();
 
                     $tingkat->delete();

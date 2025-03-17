@@ -26,7 +26,7 @@ class InputTagihanSiswaController extends BaseController
   {
     # code..
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
     $data_biaya = LibDataKeuangan::fetchDataNamaBiaya($auth_data);
@@ -41,7 +41,7 @@ class InputTagihanSiswaController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $validator = Validator::make($request->all(), [
       'semester' => 'required',
@@ -78,7 +78,7 @@ class InputTagihanSiswaController extends BaseController
           ];
         }
 
-        $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         $detailBiaya                                = new DetailBiaya;
         $detailBiaya->id_detail_biaya               = $id;
@@ -89,7 +89,7 @@ class InputTagihanSiswaController extends BaseController
         $detailBiaya->is_general                    = 0;
         $detailBiaya->keterangan_biaya              = $input->keterangan;
         $detailBiaya->id_jenis_detail_biaya         = 3;
-        $detailBiaya->created_by                    = auth_data()->pengguna->id_pengguna;
+        $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
         $detailBiaya->save();
 
         foreach ($list_siswa as $r) {
@@ -97,7 +97,7 @@ class InputTagihanSiswaController extends BaseController
           $detail_siswa = Siswa::find($r);
 
           $tagihanBiaya                       = new TagihanBiaya;
-          $tagihanBiaya->id_tagihan_biaya     = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+          $tagihanBiaya->id_tagihan_biaya     = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
           $tagihanBiaya->id_siswa             = $r;
           $tagihanBiaya->id_kelas             = $detail_siswa->id_kelas;
           $tagihanBiaya->id_detail_biaya      = $detailBiaya->id_detail_biaya;
@@ -105,7 +105,7 @@ class InputTagihanSiswaController extends BaseController
           $tagihanBiaya->denda_biaya          = 0;
           $tagihanBiaya->is_tagih             = 1;
           $tagihanBiaya->keterangan           = $input->keterangan;
-          $tagihanBiaya->created_by           = auth_data()->pengguna->id_pengguna;
+          $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
           $tagihanBiaya->save();
         }
 
@@ -132,7 +132,7 @@ class InputTagihanSiswaController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = auth_data();
+    $auth_data = $input->auth_data;
 
     $data = LibSiswa::fetchDataSiswaByKelompokBiaya($auth_data, $id);
     return response()->json($data);

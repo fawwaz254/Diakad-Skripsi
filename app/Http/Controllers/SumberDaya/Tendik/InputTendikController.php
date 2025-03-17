@@ -43,7 +43,7 @@ class InputTendikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $status = StatusPengguna::where('status_join_table', 1)->get();
 
@@ -54,7 +54,7 @@ class InputTendikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_status_aktif_tendik = LibDataSumberDaya::fetchDataStatusAktifTendik($auth_data);
 
@@ -76,7 +76,7 @@ class InputTendikController extends BaseController
         $gaji = JenisSumberGaji::get();
         $lab = JenisKeahlianLab::get();
 
-        $id_staff = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_staff = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         /*return view('sumber-daya/tendik/input-tendik/add-input-tendik',compact('auth_data','data_status_aktif_tendik','data_jabatan_pegawai','data_unit_kerja','id_staff'));*/
 
@@ -87,7 +87,7 @@ class InputTendikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_status_aktif_tendik = LibDataSumberDaya::fetchDataStatusAktifTendik($auth_data);
 
@@ -116,7 +116,7 @@ class InputTendikController extends BaseController
     public function datatablesInputTendik(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = Staff::select('staff.id_staff', 'staff.id_pengguna', 'staff.tgl_keluar', 'staff.alasan_keluar', 'pengguna.id_status_pengguna', 'staff.jenis_jabatan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'staff.nip_staff', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
@@ -183,9 +183,9 @@ class InputTendikController extends BaseController
             // ACTION ADD
             if ($mode == 'add') {
                 $pengguna                           = new Pengguna;
-                $pengguna->id_pengguna              = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $pengguna->id_pengguna              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $pengguna->id_status_pengguna       = $input->id_status_pengguna;
-                $pengguna->id_sekolah               = auth_data()->pengguna->id_sekolah;
+                $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
                 $pengguna->nm_pengguna              = $input->nm_pengguna;
                 $pengguna->username                 = $input->nip_staff;
                 $pengguna->password                 = Hash::make($input->nip_staff);
@@ -193,13 +193,13 @@ class InputTendikController extends BaseController
                 $pengguna->status_join_table        = 1;
                 $pengguna->email_pengguna           = $input->email;
                 $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
-                $pengguna->created_by               = auth_data()->pengguna->id_pengguna;
+                $pengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $pengguna->created_at               = $now;
                 $pengguna->gelar_depan              = $input->gelar_depan;
                 $pengguna->gelar_belakang           = $input->gelar_belakang;
                 $pengguna->save();
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $staff                           = new Staff;
                 $staff->id_staff                 = $id;
@@ -265,7 +265,7 @@ class InputTendikController extends BaseController
                 $staff->is_sekolah_induk         = $input->is_sekolah_induk;
                 $staff->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $staff->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
-                $staff->created_by               = auth_data()->pengguna->id_pengguna;
+                $staff->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $staff->created_at               = $now;
                 $staff->save();
 
@@ -274,7 +274,7 @@ class InputTendikController extends BaseController
                 $rolePengguna->id_pengguna              = $pengguna->id_pengguna;
                 $rolePengguna->keterangan_role_pengguna = "Input Sumber Daya";
                 $rolePengguna->is_aktif                 = 1;
-                $rolePengguna->created_by               = auth_data()->pengguna->id_pengguna;
+                $rolePengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $rolePengguna->save();
 
                 LibGlobal::insertUpdateUserInCenter([
@@ -313,7 +313,7 @@ class InputTendikController extends BaseController
                     $pengguna->must_change_password     = 1;
                 }
 
-                $pengguna->updated_by               = auth_data()->pengguna->id_pengguna;
+                $pengguna->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $pengguna->updated_at               = $now;
                 $pengguna->save();
 
@@ -384,7 +384,7 @@ class InputTendikController extends BaseController
                 $staff->is_sekolah_induk         = $input->is_sekolah_induk;
                 $staff->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $staff->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
-                $staff->updated_by               = auth_data()->pengguna->id_pengguna;
+                $staff->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $staff->updated_at               = $now;
                 $staff->save();
 
@@ -411,12 +411,12 @@ class InputTendikController extends BaseController
                     ];
                 } else {
                     $pengguna               = Pengguna::find($staff->id_pengguna);
-                    $pengguna->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $pengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $pengguna->save();
 
                     $pengguna->delete();
 
-                    $staff->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $staff->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $staff->save();
 
                     $staff->delete();

@@ -24,7 +24,7 @@ class KesimpulanPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('bk/data-pelanggaran/kesimpulan-pelanggaran/view-kesimpulan-pelanggaran', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class KesimpulanPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class KesimpulanPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
 
@@ -59,7 +59,7 @@ class KesimpulanPelanggaranController extends BaseController
     public function datatablesKesimpulanPelanggaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataPelanggaran::fetchDataKesimpulanPelanggaran($auth_data);
 
         return Datatables::of($list_data)
@@ -105,7 +105,7 @@ class KesimpulanPelanggaranController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kesimpulanPelanggaran                                      = new KesimpulanPelanggaran;
                 $kesimpulanPelanggaran->id_kesimpulan_pelanggaran           = $id;
@@ -115,8 +115,8 @@ class KesimpulanPelanggaranController extends BaseController
                 $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
                 $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
                 $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
-                $kesimpulanPelanggaran->id_sekolah                          = auth_data()->pengguna->id_sekolah;
-                $kesimpulanPelanggaran->created_by                          = auth_data()->pengguna->id_pengguna;
+                $kesimpulanPelanggaran->id_sekolah                          = $input->auth_data->pengguna->id_sekolah;
+                $kesimpulanPelanggaran->created_by                          = $input->auth_data->pengguna->id_pengguna;
                 $kesimpulanPelanggaran->save();
 
                 return [
@@ -133,7 +133,7 @@ class KesimpulanPelanggaranController extends BaseController
                 $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
                 $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
                 $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
-                $kesimpulanPelanggaran->updated_by                          = auth_data()->pengguna->id_pengguna;
+                $kesimpulanPelanggaran->updated_by                          = $input->auth_data->pengguna->id_pengguna;
                 $kesimpulanPelanggaran->updated_at                          = $now;
                 $kesimpulanPelanggaran->save();
 
@@ -145,7 +145,7 @@ class KesimpulanPelanggaranController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $kesimpulanPelanggaran               = KesimpulanPelanggaran::find($id);
-                $kesimpulanPelanggaran->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $kesimpulanPelanggaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $kesimpulanPelanggaran->save();
 
                 $kesimpulanPelanggaran->delete();

@@ -19,7 +19,7 @@ class MonitoringPresensiSiswaController extends Controller
     public function viewMonitoringPresensiSiswa(Request $request, $id_kelas = null, $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if (empty($id_bulan)) {
@@ -42,7 +42,7 @@ class MonitoringPresensiSiswaController extends Controller
     public function viewDetailMonitoringPresensiSiswa(Request $request, $id_kelas = null, $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::today();
         if (empty($id_bulan)) {

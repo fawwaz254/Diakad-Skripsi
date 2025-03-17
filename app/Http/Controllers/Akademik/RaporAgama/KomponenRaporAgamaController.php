@@ -12,7 +12,7 @@ class KomponenRaporAgamaController extends Controller
     public function viewKomponenRapor(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('akademik/rapor-agama/komponen-rapor/view-komponen-rapor', compact('auth_data'));
     }

@@ -35,7 +35,7 @@ class JurnalTindakanController extends BaseController
     public function viewJurnalTindakan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester  = LibDataAkademik::fetchDataNamaSemester($auth_data);
@@ -53,7 +53,7 @@ class JurnalTindakanController extends BaseController
     public function actionPostJurnalTindakan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester'   => 'required',
@@ -77,7 +77,7 @@ class JurnalTindakanController extends BaseController
     public function printJurnalTindakan(Request $request, $id_semester, $id_kelas, $id_siswa, $set_tanggal = null)
     {
         $input      = (object) $request->input();
-        $auth_data  = auth_data();
+        $auth_data  = $input->auth_data;
 
         $sekolah_data = $auth_data->sekolah_data;
 

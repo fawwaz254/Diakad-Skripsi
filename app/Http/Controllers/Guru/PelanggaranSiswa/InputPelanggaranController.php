@@ -34,7 +34,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -48,7 +48,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/pelanggaran-siswa/input-pelanggaran/rekap-input-pelanggaran-mp', compact('auth_data'));
     }
@@ -56,7 +56,7 @@ class InputPelanggaranController extends BaseController
     public function ajaxGetPertemuanByJadwalKelasMp(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
 
@@ -88,7 +88,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_jadwal_kelas_mp' => 'required',
@@ -120,7 +120,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -136,7 +136,7 @@ class InputPelanggaranController extends BaseController
     public function datatablesInputPelanggaran(Request $request, $id_presensi_mp)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $presensi_mp_aktif = PresensiMp::where('id_presensi_mp', '=', $id_presensi_mp)->first();
         $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $presensi_mp_aktif->id_jadwal_kelas_mp, $presensi_mp_aktif->pertemuan_ke);
 
@@ -153,7 +153,7 @@ class InputPelanggaranController extends BaseController
     public function datatablesRekapInputPelanggaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, null, 'guru');
 
         return Datatables::of($list_data)
@@ -181,7 +181,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -206,7 +206,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // ambil data subkategori by kategori
         $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $input->kategori);
@@ -218,7 +218,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, $id);
 
@@ -240,7 +240,7 @@ class InputPelanggaranController extends BaseController
     public function actionInputPelanggaran(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_presensi_mp'              => 'required',
@@ -279,7 +279,7 @@ class InputPelanggaranController extends BaseController
                 }
 
 
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
@@ -292,7 +292,7 @@ class InputPelanggaranController extends BaseController
                 $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
                 $presensiMpPelanggaran->is_sudah_tindakan            = 0;
-                $presensiMpPelanggaran->created_by                   = auth_data()->pengguna->id_pengguna;
+                $presensiMpPelanggaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $presensiMpPelanggaran->save();
 
                 if (!empty($siswa->id_wali_murid)) {
@@ -310,11 +310,11 @@ class InputPelanggaranController extends BaseController
                         );
 
                         $notifikasi = array(
-                            'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                             'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
-                            'created_by' => auth_data()->pengguna->id_pengguna
+                            'created_by' => $input->auth_data->pengguna->id_pengguna
                         );
 
                         LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -336,7 +336,7 @@ class InputPelanggaranController extends BaseController
                 $presensiMpPelanggaran->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                 $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
-                $presensiMpPelanggaran->updated_by                   = auth_data()->pengguna->id_pengguna;
+                $presensiMpPelanggaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
                 $presensiMpPelanggaran->updated_at                   = $now;
                 $presensiMpPelanggaran->save();
 
@@ -354,7 +354,7 @@ class InputPelanggaranController extends BaseController
                 } else {
                     // make object to find id
                     $presensiMpPelanggaran               = PresensiMpPelanggaran::find($id);
-                    $presensiMpPelanggaran->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $presensiMpPelanggaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $presensiMpPelanggaran->save();
 
                     $presensiMpPelanggaran->delete();

@@ -20,7 +20,7 @@ class PembayaranSiswaBulananController extends BaseController
     public function viewPembayaranSiswaBulanan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $bulan = Bulan::orderBy('id_bulan')->get();
 
         $now = Carbon::today(env('APP_TIMEZONE', 'Asia/Jakarta'));
@@ -37,7 +37,7 @@ class PembayaranSiswaBulananController extends BaseController
     public function dataPembayaranSiswaBulanan(Request $request){
 
     	$input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data = $this->getPembayaranSiswaBulanan($input->bulan,$input->tahun);
         $grup = $data['grup'];

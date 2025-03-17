@@ -35,11 +35,11 @@ class SettingWaliMuridController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::now();
 
-        $id_wali_murid      = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_wali_murid      = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
@@ -92,7 +92,7 @@ class SettingWaliMuridController extends BaseController
     public function viewUploadSettingWaliMurid(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = Kelas::with('jurusan', 'siswa')->when($id_jurusan != '0', function ($q) use ($id_jurusan) {
             $q->where('kelas.id_jurusan', $id_jurusan);
@@ -115,7 +115,7 @@ class SettingWaliMuridController extends BaseController
     public function viewDownloadSettingWaliMurid(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
         $list_data = Siswa::with('pengguna', 'wali_murid', 'wali_murid.pengguna')->where('id_kelas', '=', $id_kelas)->get();
@@ -133,7 +133,7 @@ class SettingWaliMuridController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required',
@@ -156,7 +156,7 @@ class SettingWaliMuridController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelas = Kelas::when($id_jurusan != '0', function ($q) use ($id_jurusan) {
             $q->where('id_jurusan', $id_jurusan);
@@ -176,7 +176,7 @@ class SettingWaliMuridController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa =  Siswa::where('id_siswa', '=', $id)->with('pengguna', 'wali_murid')->first();
         return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa'));
@@ -185,7 +185,7 @@ class SettingWaliMuridController extends BaseController
     public function datatablesWaliMurid(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
-        // $auth_data = auth_data();
+        // $auth_data = $input->auth_data;
         $search = $input->search['value'];
 
         // $list_data = Siswa::select()->addSelect('pwm.gelar_depan AS gd', 'pwm.gelar_belakang AS gb', 'pengguna.nm_pengguna AS nm_siswa')
@@ -241,7 +241,7 @@ class SettingWaliMuridController extends BaseController
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = Siswa::with('pengguna', 'wali_murid')->whereHas('pengguna')->when($id_kelas != '0', function ($q) use ($id_kelas) {
             $q->where('id_kelas', $id_kelas);
@@ -300,7 +300,7 @@ class SettingWaliMuridController extends BaseController
                     $wali_murid->nm_wali_murid = $input->nm_ortu;
                     $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
                     $wali_murid->updated_at = $now;
-                    $wali_murid->updated_by = auth_data()->pengguna->id_pengguna;
+                    $wali_murid->updated_by = $input->auth_data->pengguna->id_pengguna;
                     $wali_murid->save();
 
                     $pengguna_wali_murid = Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->first();
@@ -325,8 +325,8 @@ class SettingWaliMuridController extends BaseController
                     // if siswa doesnt have wali murid
                     $now1 = Carbon::now();
                     $wali_murid = new WaliMurid;
-                    $wali_murid->id_wali_murid = auth_data()->sekolah_data->prefix . strtotime($now1) . uniqid();
-                    $wali_murid->id_pengguna = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+                    $wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $wali_murid->nm_wali_murid = $input->nm_ortu;
                     $wali_murid->is_aktif = 1;
                     $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
@@ -336,7 +336,7 @@ class SettingWaliMuridController extends BaseController
                     $pengguna = new Pengguna;
                     $pengguna->id_pengguna = $wali_murid->id_pengguna;
                     $pengguna->nm_pengguna = $input->nm_ortu;
-                    $pengguna->id_sekolah = auth_data()->sekolah_data->id_sekolah;
+                    $pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
                     $pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
                     $pengguna->username = $input->nomor_hp_ortu;
                     $pengguna->password = Hash::make($input->nomor_hp_ortu);
@@ -386,9 +386,9 @@ class SettingWaliMuridController extends BaseController
             //     $wali_murid = WaliMurid::where('nomor_hp_wali_murid', '=', $input->nomor_hp_wali_murid)->first();
 
             //     if ($wali_murid == null) {
-            //         $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            //         $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-            //         $id_pengguna        = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            //         $id_pengguna        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             //         $status_pengguna    = StatusPengguna::where('status_join_table', '=', '4')->where('aktif_status_pengguna', '=', '1')->first();
 
             //         DB::beginTransaction();
@@ -397,7 +397,7 @@ class SettingWaliMuridController extends BaseController
             //                 [
             //                     'id_pengguna'           => $id_pengguna,
             //                     'id_status_pengguna'    => $status_pengguna->id_status_pengguna,
-            //                     'id_sekolah'            => auth_data()->pengguna->id_sekolah,
+            //                     'id_sekolah'            => $input->auth_data->pengguna->id_sekolah,
             //                     'nm_pengguna'           => $input->nm_wali_murid,
             //                     'username'              => $input->nomor_hp_wali_murid,
             //                     'password'              => Hash::make($input->nomor_hp_wali_murid),
@@ -406,7 +406,7 @@ class SettingWaliMuridController extends BaseController
             //                     'must_change_password'  => 1,
             //                     'status_join_table'     => 4,
             //                     'created_at'            => $now,
-            //                     'created_by'            => auth_data()->pengguna->id_pengguna
+            //                     'created_by'            => $input->auth_data->pengguna->id_pengguna
             //                 ]
             //             );
 
@@ -418,7 +418,7 @@ class SettingWaliMuridController extends BaseController
             //                     'nomor_hp_wali_murid'   => $input->nomor_hp_wali_murid,
             //                     'is_aktif'              => 1,
             //                     'created_at'            => $now,
-            //                     'created_by'            => auth_data()->pengguna->id_pengguna
+            //                     'created_by'            => $input->auth_data->pengguna->id_pengguna
             //                 ]
             //             );
             //             DB::table('role_pengguna')->insert(
@@ -428,7 +428,7 @@ class SettingWaliMuridController extends BaseController
             //                     'keterangan_role_pengguna'  => "Input Wali Murid",
             //                     'is_aktif'              => 1,
             //                     'created_at'            => $now,
-            //                     'created_by'            => auth_data()->pengguna->id_pengguna
+            //                     'created_by'            => $input->auth_data->pengguna->id_pengguna
             //                 ]
             //             );
             //             DB::commit();
@@ -459,13 +459,13 @@ class SettingWaliMuridController extends BaseController
                     $siswa =  Siswa::where('id_siswa', $id)->first();
                     $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
                     CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->update(['nomor_telp_ortu' => null], ['nomor_hp_ortu' => null]);
-                    Pengguna::where('id_pengguna',  $wali_murid->id_pengguna)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    Pengguna::where('id_pengguna',  $wali_murid->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->delete();
-                    RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->delete();
                     $siswa->id_wali_murid = null;
                     $siswa->save();
-                    $wali_murid->deleted_by =  auth_data()->pengguna->id_pengguna;
+                    $wali_murid->deleted_by =  $input->auth_data->pengguna->id_pengguna;
                     $wali_murid->save();
                     $wali_murid->delete();
                     DB::commit();
@@ -489,7 +489,7 @@ class SettingWaliMuridController extends BaseController
     public function uploadFileExcel(Request $request, $id_jurusan, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $now = Carbon::now();
 
@@ -595,14 +595,14 @@ class SettingWaliMuridController extends BaseController
                             //     $siswa->save();
                             // } else {
                             // Insert Wali Murid
-                            $id_wali_murid = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $id_pengguna        = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_pengguna        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                             $batch_insert_data['pengguna'][] =
                                 [
                                     'id_pengguna'           => $id_pengguna,
                                     'id_status_pengguna'    => $status_pengguna->id_status_pengguna,
-                                    'id_sekolah'            => auth_data()->pengguna->id_sekolah,
+                                    'id_sekolah'            => $input->auth_data->pengguna->id_sekolah,
                                     'nm_pengguna'           => $item->nama_wali_murid,
                                     'username'              => $telp_wali_murid,
                                     'password'              => Hash::make($telp_wali_murid),
@@ -611,7 +611,7 @@ class SettingWaliMuridController extends BaseController
                                     'must_change_password'  => 1,
                                     'status_join_table'     => 4,
                                     'created_at'            => $now,
-                                    'created_by'            => auth_data()->pengguna->id_pengguna
+                                    'created_by'            => $input->auth_data->pengguna->id_pengguna
                                 ];
 
                             $batch_insert_data['wali_murid'][] = [
@@ -621,7 +621,7 @@ class SettingWaliMuridController extends BaseController
                                 'nomor_hp_wali_murid'   => $telp_wali_murid,
                                 'is_aktif'              => 1,
                                 'created_at'            => $now,
-                                'created_by'            => auth_data()->pengguna->id_pengguna
+                                'created_by'            => $input->auth_data->pengguna->id_pengguna
                             ];
 
                             $batch_insert_data['role_pengguna'][] = [
@@ -630,7 +630,7 @@ class SettingWaliMuridController extends BaseController
                                 'keterangan_role_pengguna'  => "Upload Wali Murid",
                                 'is_aktif'              => 1,
                                 'created_at'            => $now,
-                                'created_by'            => auth_data()->pengguna->id_pengguna
+                                'created_by'            => $input->auth_data->pengguna->id_pengguna
                             ];
 
                             $siswa->id_wali_murid = $id_wali_murid;
@@ -698,13 +698,13 @@ class SettingWaliMuridController extends BaseController
                 $siswa =  Siswa::where('id_siswa', $id_siswa)->first();
                 $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
                 CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->update(['nomor_telp_ortu' => null], ['nomor_hp_ortu' => null]);
-                Pengguna::where('id_pengguna',  $wali_murid->id_pengguna)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                Pengguna::where('id_pengguna',  $wali_murid->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                 Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->delete();
-                RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                 RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->delete();
                 $siswa->id_wali_murid = null;
                 $siswa->save();
-                $wali_murid->deleted_by =  auth_data()->pengguna->id_pengguna;
+                $wali_murid->deleted_by =  $input->auth_data->pengguna->id_pengguna;
                 $wali_murid->save();
                 $wali_murid->delete();
             }

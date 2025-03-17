@@ -36,7 +36,7 @@ class PenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('ppdb/pendaftaran/penerimaan/view-penerimaan', compact('auth_data'));
     }
@@ -45,7 +45,7 @@ class PenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jalur = LibDataAkademik::fetchDataJalur($auth_data);
 
@@ -56,7 +56,7 @@ class PenerimaanController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_penerimaan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_penerimaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('ppdb/pendaftaran/penerimaan/add-penerimaan', compact('auth_data', 'data_jalur', 'data_semester_tahun', 'data_semester_nama', 'id_penerimaan'));
     }
@@ -65,7 +65,7 @@ class PenerimaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jalur = LibDataAkademik::fetchDataJalur($auth_data);
 
@@ -91,7 +91,7 @@ class PenerimaanController extends BaseController
     public function datatablesPenerimaan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibPenerimaan::fetchDataPenerimaanAllJenisPenerimaan($auth_data);
 
         return Datatables::of($list_data)
@@ -183,7 +183,7 @@ class PenerimaanController extends BaseController
                 $semester = Semester::select('id_semester')
                     ->where('thn_akademik_semester', '=', $input->tahun_penerimaan)
                     ->where('nm_semester', '=', $input->nm_semester_penerimaan)
-                    ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
+                    ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                     ->first();
 
                 // apabila jenis penerimaan untuk siswa lama sebelum siakad
@@ -198,7 +198,7 @@ class PenerimaanController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $penerimaan                             = new Penerimaan;
                 $penerimaan->id_penerimaan              = $id;
@@ -224,8 +224,8 @@ class PenerimaanController extends BaseController
                 $penerimaan->jenis_penerimaan           = $input->jenis_penerimaan;
                 // $penerimaan->biaya_daftar_ulang         = $input->biaya_daftar_ulang;
                 $penerimaan->is_aktif                   = $input->is_aktif;
-                $penerimaan->id_sekolah                 = auth_data()->pengguna->id_sekolah;
-                $penerimaan->created_by                 = auth_data()->pengguna->id_pengguna;
+                $penerimaan->id_sekolah                 = $input->auth_data->pengguna->id_sekolah;
+                $penerimaan->created_by                 = $input->auth_data->pengguna->id_pengguna;
                 $penerimaan->save();
 
                 return [
@@ -258,7 +258,7 @@ class PenerimaanController extends BaseController
                 $penerimaan->jenis_penerimaan           = $input->jenis_penerimaan;
                 $penerimaan->biaya_daftar_ulang         = $input->biaya_daftar_ulang;
                 $penerimaan->is_aktif                   = $input->is_aktif;
-                $penerimaan->updated_by                 = auth_data()->pengguna->id_pengguna;
+                $penerimaan->updated_by                 = $input->auth_data->pengguna->id_pengguna;
                 $penerimaan->updated_at                 = $now;
                 $penerimaan->save();
 
@@ -276,7 +276,7 @@ class PenerimaanController extends BaseController
                 } else {
                     // make object to find id
                     $penerimaan               = Penerimaan::find($id);
-                    $penerimaan->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $penerimaan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $penerimaan->save();
 
                     $penerimaan->delete();

@@ -18,14 +18,31 @@
                         @endif
                         <br>
                         @if (auth_data()->pengguna->status_join_table == 1 || auth_data()->pengguna->status_join_table == 2)
-                            <form action="{{ route('update-foto-profil') }}" method="POST" enctype="multipart/form-data"
-                                style="margin-top: 10px">
-                                @method('PUT') 
+                            <form action="{{ route('update-foto-profil') }}" method="POST"
+                                enctype="multipart/form-data" style="margin-top: 10px">
+                                @method('PUT')
                                 @csrf
+                                <h2 class="card-inside-title">
+                                    Foto profile
+                                </h2>
                                 <input type="file" name="foto" accept="image/*" required>
-                                <button type="submit" class="btn btn-primary" style="margin-top: 10px">Upload</button>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px">Upload foto
+                                    profile</button>
                             </form>
+                        @endif
 
+                        @if (auth_data()->role_aktif->id_role == 2)
+                            <form
+                                action="{{ url(Request::segment(1)) . '/' . (Request::segment(2) . '/action-ttd/add') }}"
+                                method="POST" enctype="multipart/form-data" style="margin-top: 10px">
+                                @csrf
+                                <h2 class="card-inside-title">
+                                    Foto tanda tangan
+                                </h2>
+                                <input type="file" name="ttd" accept="image/*" required>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px">Upload foto
+                                    tanda tangan</button>
+                            </form>
                         @endif
 
                         @if (session('success'))

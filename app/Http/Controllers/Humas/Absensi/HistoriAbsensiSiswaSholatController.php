@@ -29,7 +29,7 @@ class HistoriAbsensiSiswaSholatController extends Controller
     public function viewHistoriAbsensiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $date = Carbon::now()->format('Y-m-d');
@@ -53,7 +53,7 @@ class HistoriAbsensiSiswaSholatController extends Controller
     {
         set_time_limit(9800);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
@@ -164,7 +164,7 @@ class HistoriAbsensiSiswaSholatController extends Controller
     {
         set_time_limit(9800);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');

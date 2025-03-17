@@ -41,7 +41,7 @@ class CariSiswaBIController extends BaseController
     public function viewCariSiswa(Request $request, $nis_nama_siswa = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('rapor-buku-induk/buku-induk/cari-siswa/view-cari-siswa', compact('auth_data', 'nis_nama_siswa'));
     }
@@ -49,7 +49,7 @@ class CariSiswaBIController extends BaseController
     public function actionViewCariSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'nis_nama_siswa' => 'required'
@@ -71,7 +71,7 @@ class CariSiswaBIController extends BaseController
     public function datatablesCariSiswa(Request $request, $nis_nama_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas', 'kelas.tingkat', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -107,7 +107,7 @@ class CariSiswaBIController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
         $beasiswa = CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
@@ -139,7 +139,7 @@ class CariSiswaBIController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $siswa1 = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);

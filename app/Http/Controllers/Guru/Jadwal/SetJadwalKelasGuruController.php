@@ -33,7 +33,7 @@ class SetJadwalKelasGuruController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
@@ -44,7 +44,7 @@ class SetJadwalKelasGuruController extends Controller
     public function actionSetJadwalKelas(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -67,7 +67,7 @@ class SetJadwalKelasGuruController extends Controller
     public function viewTambahJadwalKelas(Request $request, $id_kelas, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -187,7 +187,7 @@ class SetJadwalKelasGuruController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
         //validasi waktu
         if ($mode == 'add') {
@@ -251,7 +251,7 @@ class SetJadwalKelasGuruController extends Controller
         $now = Carbon::now();
 
         if ($mode == 'add') {
-            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $mapel = MataPelajaran::find($input->mapel);
             $kelas = Kelas::find($input->id_kelas);
 
@@ -262,35 +262,35 @@ class SetJadwalKelasGuruController extends Controller
             $kelas_mp->id_mata_pelajaran = $input->mapel;
             $kelas_mp->nm_kelas_mp = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
             $kelas_mp->jml_pertemuan_kelas_mp = '0';
-            $kelas_mp->created_by = auth_data()->pengguna->id_pengguna;
+            $kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
             $kelas_mp->created_at = $now;
             $kelas_mp->save();
 
 
             // $ruang = Ruangan::where('id_kelas', $input->id_kelas)->first();
 
-            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $jadwal_kelas_mp = new JadwalKelasMp;
-            $jadwal_kelas_mp->id_jadwal_kelas_mp = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $jadwal_kelas_mp->id_kelas_mp = $kelas_mp->id_kelas_mp;
             $jadwal_kelas_mp->id_jadwal_hari = $input->id_hari;
             $jadwal_kelas_mp->id_jadwal_jam = $input->jamMasuk;
             $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
             $jadwal_kelas_mp->id_ruangan = $input->ruangan;
             $jadwal_kelas_mp->created_at = $now;
-            $jadwal_kelas_mp->created_by = auth_data()->pengguna->id_pengguna;
+            $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
             $jadwal_kelas_mp->save();
 
-            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $pengampu_mp = new PengampuMp();
-            $pengampu_mp->id_pengampu_mp = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $pengampu_mp->id_pengampu_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $pengampu_mp->id_kelas_mp = $kelas_mp->id_kelas_mp;
             $pengampu_mp->id_guru = $input->guru;
             $pengampu_mp->pjmp_pengampu_mp = 1;
             // $pengampu_mp->pjmp_uts          = 1;
             // $pengampu_mp->pjmp_uas          = 1;
             $pengampu_mp->created_at = $now;
-            $pengampu_mp->created_by = auth_data()->pengguna->id_pengguna;
+            $pengampu_mp->created_by = $input->auth_data->pengguna->id_pengguna;
             $pengampu_mp->save();
             return [
                 'status_code' => 202, // SUCCESS AND LOAD CONTENT
@@ -306,13 +306,13 @@ class SetJadwalKelasGuruController extends Controller
             } else {
                 DB::beginTransaction();
                 try {
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     PengampuMp::where('id_kelas_mp', $id)->delete();
 
-                    KelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    KelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     KelasMp::where('id_kelas_mp', $id)->delete();
                     DB::commit();
                     return [
@@ -331,26 +331,26 @@ class SetJadwalKelasGuruController extends Controller
             }
         } elseif ($mode = 'edit') {
             $jadwal_kelas_mp = JadwalKelasMp::find($id);
-            // $jadwal_kelas_mp->id_jadwal_kelas_mp    = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+            // $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
             // $jadwal_kelas_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp;
             $jadwal_kelas_mp->id_jadwal_hari = $input->id_hari;
             $jadwal_kelas_mp->id_jadwal_jam = $input->jamMasuk;
             $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
             $jadwal_kelas_mp->id_ruangan = $input->ruangan;
             $jadwal_kelas_mp->updated_at = $now;
-            $jadwal_kelas_mp->updated_by = auth_data()->pengguna->id_pengguna;
+            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
             $jadwal_kelas_mp->save();
 
-            // $id = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+            // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
             $pengampu_mp = PengampuMp::find($input->id_pengampu_mp);
-            // $pengampu_mp->id_pengampu_mp    = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+            // $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
             // $pengampu_mp->id_kelas_mp       = $kelas_mp->id_kelas_mp;
             $pengampu_mp->id_guru = $input->guru;
             // $pengampu_mp->pjmp_pengampu_mp  = 1;
             // $pengampu_mp->pjmp_uts          = 1;
             // $pengampu_mp->pjmp_uas          = 1;
             $jadwal_kelas_mp->updated_at = $now;
-            $jadwal_kelas_mp->updated_by = auth_data()->pengguna->id_pengguna;
+            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
             $pengampu_mp->save();
             return [
                 'status_code' => 202, // SUCCESS AND LOAD CONTENT
@@ -380,7 +380,7 @@ class SetJadwalKelasGuruController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
@@ -391,7 +391,7 @@ class SetJadwalKelasGuruController extends Controller
     public function actionSetKBMTanpaJadwal(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
             'id_kelas' => 'required'
@@ -412,7 +412,7 @@ class SetJadwalKelasGuruController extends Controller
     public function viewKBMTanpaJadwal(Request $request, $id_kelas, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -426,7 +426,7 @@ class SetJadwalKelasGuruController extends Controller
     public function datatablesKBMTanpaJadwal(Request $request, $id_kelas, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = KelasMp::select('kelas_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas.id_kelas', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jurusan.nm_jurusan', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'semester.nm_semester', 'semester.tahun_ajaran', 'pengguna.nm_pengguna', 'pengguna.path_foto_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'jadwal_kelas_mp.id_jadwal_jam', 'jadwal_kelas_mp.id_jadwal_jam_selesai', 'pengampu_mp.id_guru', 'pengampu_mp.id_pengampu_mp')
             ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
             ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
@@ -469,7 +469,7 @@ class SetJadwalKelasGuruController extends Controller
     public function addKBMTanpaJadwal(Request $request, $id_kelas, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $id_semester = $semester->id_semester;
@@ -510,7 +510,7 @@ class SetJadwalKelasGuruController extends Controller
     public function editKBMTanpaJadwal(Request $request, $id_kelas, $id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $id_semester = $semester->id_semester;
@@ -554,7 +554,7 @@ class SetJadwalKelasGuruController extends Controller
     public function actionInputKBMTanpaJadwal(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         if ($mode == 'add') {
@@ -589,7 +589,7 @@ class SetJadwalKelasGuruController extends Controller
         }
 
         if ($mode == 'add') {
-            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $mapel = MataPelajaran::find($input->id_mata_pelajaran);
             $kelas = Kelas::find($input->id_kelas);
 
@@ -600,30 +600,30 @@ class SetJadwalKelasGuruController extends Controller
             $kelas_mp->id_mata_pelajaran = $input->id_mata_pelajaran;
             $kelas_mp->nm_kelas_mp = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
             $kelas_mp->jml_pertemuan_kelas_mp = '0';
-            $kelas_mp->created_by = auth_data()->pengguna->id_pengguna;
+            $kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
             $kelas_mp->created_at = $now;
             $kelas_mp->save();
 
-            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $jadwal_kelas_mp = new JadwalKelasMp;
-            $jadwal_kelas_mp->id_jadwal_kelas_mp = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $jadwal_kelas_mp->id_jadwal_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $jadwal_kelas_mp->id_kelas_mp = $kelas_mp->id_kelas_mp;
             $jadwal_kelas_mp->id_jadwal_hari = '0';
             $jadwal_kelas_mp->id_jadwal_jam = '0';
             $jadwal_kelas_mp->id_jadwal_jam_selesai = '0';
             $jadwal_kelas_mp->id_ruangan = '0';
             $jadwal_kelas_mp->created_at = $now;
-            $jadwal_kelas_mp->created_by = auth_data()->pengguna->id_pengguna;
+            $jadwal_kelas_mp->created_by = $input->auth_data->pengguna->id_pengguna;
             $jadwal_kelas_mp->save();
 
-            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $pengampu_mp = new PengampuMp();
-            $pengampu_mp->id_pengampu_mp = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $pengampu_mp->id_pengampu_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $pengampu_mp->id_kelas_mp = $kelas_mp->id_kelas_mp;
             $pengampu_mp->id_guru = $input->id_guru;
             $pengampu_mp->pjmp_pengampu_mp = 1;
             $pengampu_mp->created_at = $now;
-            $pengampu_mp->created_by = auth_data()->pengguna->id_pengguna;
+            $pengampu_mp->created_by = $input->auth_data->pengguna->id_pengguna;
             $pengampu_mp->save();
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
@@ -639,13 +639,13 @@ class SetJadwalKelasGuruController extends Controller
             } else {
                 DB::beginTransaction();
                 try {
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     PengampuMp::where('id_kelas_mp', $id)->delete();
 
-                    KelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
+                    KelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     KelasMp::where('id_kelas_mp', $id)->delete();
                     DB::commit();
                     return [
@@ -667,19 +667,19 @@ class SetJadwalKelasGuruController extends Controller
             $kelas_mp = KelasMp::find($id);
             $kelas_mp->id_mata_pelajaran = $input->id_mata_pelajaran;
             $kelas_mp->nm_kelas_mp = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
-            $kelas_mp->updated_by = auth_data()->pengguna->id_pengguna;
+            $kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
             $kelas_mp->updated_at = $now;
             $kelas_mp->save();
 
             $jadwal_kelas_mp = JadwalKelasMp::where('id_kelas_mp', $id)->first();
             $jadwal_kelas_mp->updated_at = $now;
-            $jadwal_kelas_mp->updated_by = auth_data()->pengguna->id_pengguna;
+            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
             $jadwal_kelas_mp->save();
 
             $pengampu_mp = PengampuMp::where('id_kelas_mp', $id)->first();
             $pengampu_mp->id_guru = $input->id_guru;
             $jadwal_kelas_mp->updated_at = $now;
-            $jadwal_kelas_mp->updated_by = auth_data()->pengguna->id_pengguna;
+            $jadwal_kelas_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
             $pengampu_mp->save();
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT

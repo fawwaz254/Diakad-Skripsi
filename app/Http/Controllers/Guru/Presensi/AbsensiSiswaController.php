@@ -33,7 +33,7 @@ class AbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $id_jadwal_hari = Carbon::now()->format('N');
 
@@ -60,7 +60,7 @@ class AbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
 
@@ -92,7 +92,7 @@ class AbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_jadwal_kelas_mp' => 'required',
@@ -116,7 +116,7 @@ class AbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $data = PresensiMp::where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)
             ->where('pertemuan_ke', $pertemuan_ke)->first();
 
@@ -142,7 +142,7 @@ class AbsensiSiswaController extends BaseController
     public function datatablesKBMAbsensiSiswa(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
@@ -241,7 +241,7 @@ class AbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_ujian_mp' => 'required'
@@ -264,7 +264,7 @@ class AbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -276,7 +276,7 @@ class AbsensiSiswaController extends BaseController
     public function datatablesUTSAbsensiSiswa(Request $request, $id_ujian_mp)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchDataSiswaUjianMp($auth_data, $id_ujian_mp);
         $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp', '=', $id_ujian_mp)->get();
@@ -314,7 +314,7 @@ class AbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_ujian_mp' => 'required'
@@ -337,7 +337,7 @@ class AbsensiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -349,7 +349,7 @@ class AbsensiSiswaController extends BaseController
     public function datatablesUASAbsensiSiswa(Request $request, $id_ujian_mp)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchDataSiswaUjianMp($auth_data, $id_ujian_mp);
         $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp', '=', $id_ujian_mp)->get();
@@ -403,7 +403,7 @@ class AbsensiSiswaController extends BaseController
             $now = Carbon::now();
 
             // Ini untuk apa?
-            // $id = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
+            // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
             // ACTION ADD
             if ($mode == 'add-kbm') {
@@ -420,12 +420,12 @@ class AbsensiSiswaController extends BaseController
                 DB::beginTransaction();
                 try {
                     if ($presensi_mp) {
-                        $presensi_mp->updated_by = auth_data()->pengguna->id_pengguna;
+                        $presensi_mp->updated_by = $input->auth_data->pengguna->id_pengguna;
                     } else {
                         // Buat ID baru
-                        $id_presensi_mp = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_presensi_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                        $auth_data = auth_data();
+                        $auth_data = $input->auth_data;
                         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
                         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
 
@@ -435,7 +435,7 @@ class AbsensiSiswaController extends BaseController
                         $presensi_mp->id_jadwal_kelas_mp = $id_jadwal_kelas_mp;
                         $presensi_mp->pertemuan_ke = $pertemuan_ke;
                         $presensi_mp->tgl_entry = $now;
-                        $presensi_mp->created_by = auth_data()->pengguna->id_pengguna;
+                        $presensi_mp->created_by = $input->auth_data->pengguna->id_pengguna;
                         $presensi_mp->is_task = $input->is_task ?? 0;
                         $presensi_mp->jenis_materi = 1;
                     }
@@ -452,12 +452,12 @@ class AbsensiSiswaController extends BaseController
 
                         $presensi_mp_siswa_data = [];
                         $presensi_mp_siswa_data[] = [
-                            'id_presensi_mp_siswa' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id_presensi_mp_siswa' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_presensi_mp' => $presensi_mp->id_presensi_mp,
                             'id_siswa' => $id_siswa,
                             'kehadiran' => $kehadiran,
-                            'created_by' => auth_data()->pengguna->id_pengguna,
-                            'updated_by' => auth_data()->pengguna->id_pengguna,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            'updated_by' => $input->auth_data->pengguna->id_pengguna,
                         ];
 
                         // Batch insert semua record siswa
@@ -479,15 +479,15 @@ class AbsensiSiswaController extends BaseController
                                     foreach ($data_karakter_siswa[$id_siswa] as $karakter_siswa) {
                                         // Buat data untuk batch insert
                                         $rewardData[] = [
-                                            'id_reward_siswa'   => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                            'id_reward_siswa'   => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                                             'model_event'       => 'PresensiMp',
                                             'id_event'          => $presensi_mp->id_presensi_mp,
                                             'id_kelas'          => $id_siswa,
                                             'id_siswa'          => $presensi_mp->kelas_mp->id_kelas,
                                             'nm_reward_siswa'   => $karakter_siswa,
-                                            'id_pengguna_reward_siswa' => auth_data()->pengguna->id_pengguna,
+                                            'id_pengguna_reward_siswa' => $input->auth_data->pengguna->id_pengguna,
                                             'is_aproved'        => 1,
-                                            'created_by'        => auth_data()->pengguna->id_pengguna,
+                                            'created_by'        => $input->auth_data->pengguna->id_pengguna,
                                             'created_at'        => $now,
                                             'updated_at'        => $now,
                                         ];
@@ -529,7 +529,7 @@ class AbsensiSiswaController extends BaseController
                     ->get();
 
                 foreach ($favourite_lists as $favourite_list) {
-                    $favourite_list->deleted_by = auth_data()->pengguna->id_pengguna;
+                    $favourite_list->deleted_by = $input->auth_data->pengguna->id_pengguna;
                     $favourite_list->save();
 
                     // softdelete reward_siswa
@@ -544,7 +544,7 @@ class AbsensiSiswaController extends BaseController
                 // $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id)->get();
                 // $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $pertemuan_ke);
 
-                // $presensiMp->deleted_by     = auth_data()->pengguna->id_pengguna;
+                // $presensiMp->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                 // $presensiMp->save();
 
                 // $presensiMp->delete();

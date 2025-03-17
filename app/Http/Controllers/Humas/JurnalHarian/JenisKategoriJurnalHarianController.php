@@ -18,7 +18,7 @@ class JenisKategoriJurnalHarianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data()->role_aktif->id_pengguna;
+        $auth_data = $input->auth_data->role_aktif->id_pengguna;
 
         return view('humas/jurnal-harian/data-jenis/view-data-jenis', compact('auth_data'));
     }
@@ -41,7 +41,7 @@ class JenisKategoriJurnalHarianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('humas/jurnal-harian/data-jenis/add-data-jenis', compact('auth_data'));
     }
@@ -64,11 +64,11 @@ class JenisKategoriJurnalHarianController extends Controller
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $data_jenis                               = new JenisJurnalHarianTendik();
                 $data_jenis->id_jenis_jurhart             = $id;
                 $data_jenis->jenis_jurhart                = $input->jenis_jurhart;
-                $data_jenis->created_by                   = auth_data()->pengguna->id_pengguna;
+                $data_jenis->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $data_jenis->save();
 
                 return [
@@ -79,7 +79,7 @@ class JenisKategoriJurnalHarianController extends Controller
             } elseif ($mode == 'delete') {
                 // make object to find id 
                 $data_jenis                       = JenisJurnalHarianTendik::where('id_jenis_jurhart', $id)->first();
-                $data_jenis->deleted_by           = auth_data()->pengguna->id_pengguna;
+                $data_jenis->deleted_by           = $input->auth_data->pengguna->id_pengguna;
                 $data_jenis->save();
                 $data_jenis->delete();
 
@@ -94,7 +94,7 @@ class JenisKategoriJurnalHarianController extends Controller
     public function importExcel(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('humas/jurnal-harian/data-jenis/import-excel', compact('auth_data'));
     }
@@ -102,7 +102,7 @@ class JenisKategoriJurnalHarianController extends Controller
     public function importExcelAction(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -132,11 +132,11 @@ class JenisKategoriJurnalHarianController extends Controller
                                 ];
                             }
 
-                            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $data_jenis                               = new JenisJurnalHarianTendik();
                             $data_jenis->id_jenis_jurhart             = $id;
                             $data_jenis->jenis_jurhart                = $value->nama_jenis_jurnal_harian;
-                            $data_jenis->created_by                   = auth_data()->pengguna->id_pengguna;
+                            $data_jenis->created_by                   = $input->auth_data->pengguna->id_pengguna;
                             $data_jenis->save();
                         }
                         DB::commit();

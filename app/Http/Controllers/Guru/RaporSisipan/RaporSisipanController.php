@@ -112,7 +112,7 @@ class RaporSisipanController extends Controller
     public function viewDaftarNilaiSTS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
         return view('guru/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'semester_aktif', 'data_semester'));
@@ -121,7 +121,7 @@ class RaporSisipanController extends Controller
     public function addDaftarNilaiSTS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // $data['list_mapel'] = MataPelajaran::with('jenis_mata_pelajaran')->get();
         $data['list_kelas'] = Kelas::where('is_aktif', 1)->get();
@@ -137,7 +137,7 @@ class RaporSisipanController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        // $auth_data = auth_data();
+        // $auth_data = $input->auth_data;
         // $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         if ($mode == 'delete') {
             DB::beginTransaction();
@@ -200,15 +200,15 @@ class RaporSisipanController extends Controller
                 DB::beginTransaction();
 
                 try {
-                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                     $rapor                      = new Rapor;
                     $rapor->id_rapor            = $id;
                     $rapor->id_semester         = $input->id_semester;
                     $rapor->id_mata_pelajaran   = $input->id_mata_pelajaran;
                     $rapor->id_kelas            = $input->id_kelas;
                     $rapor->nm_rapor            = 'sisipan';
-                    // $rapor->id_pengguna         = auth_data()->pengguna->id_pengguna;
-                    $rapor->created_by          = auth_data()->pengguna->id_pengguna;
+                    // $rapor->id_pengguna         = $input->auth_data->pengguna->id_pengguna;
+                    $rapor->created_by          = $input->auth_data->pengguna->id_pengguna;
                     $rapor->save();
 
                     $siswa = Siswa::where('id_kelas', $input->id_kelas)
@@ -224,7 +224,7 @@ class RaporSisipanController extends Controller
                     // $komponen_jenis_rapor = KomponenNilaiRapor::where('status', 1)->get();
                     foreach ($siswa as $s) {
                         foreach ($komponen_jenis_rapor as $komponen) {
-                            $id = auth_data()->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                            $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                             $list_data[] = [
                                 'id_nilai_rapor' =>  $id,
                                 'id_rapor' => $rapor->id_rapor,
@@ -232,7 +232,7 @@ class RaporSisipanController extends Controller
                                 'id_siswa' => $s->id_siswa,
                                 'nilai' => 0,
                                 'created_at' => Carbon::now(),
-                                'created_by' => auth_data()->pengguna->id_pengguna,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna,
                             ];
                         }
                     }
@@ -261,7 +261,7 @@ class RaporSisipanController extends Controller
                     DB::beginTransaction();
 
                     $rapor = Rapor::with('kelas')->find($id);
-                    $auth_data = auth_data();
+                    $auth_data = $input->auth_data;
                     $list_siswa = Siswa::where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
                         $query->where('aktif_status_pengguna', '=', '1');
                     })->orderBy('nis_siswa')->get();
@@ -443,7 +443,7 @@ class RaporSisipanController extends Controller
     {
         set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
 
@@ -509,7 +509,7 @@ class RaporSisipanController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $status = $input->status;
 
         if (empty($input->thn_akademik_semester)) {
@@ -575,7 +575,7 @@ class RaporSisipanController extends Controller
     public function editNilaiRaporSisipan(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $rapor = Rapor::with('keterangan_rapor.komponen_jenis_rapor', 'kelas', 'semester', 'mata_pelajaran')->find($id);
 
@@ -586,7 +586,7 @@ class RaporSisipanController extends Controller
     public function inputNilai(Request $request, $id_rapor)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
         // $list_data = KomponenJenisRapor::where('id_jenis_rapor', $rapor->kelas->id_jenis_rapor)->get();
         $list_data = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {
@@ -637,7 +637,7 @@ class RaporSisipanController extends Controller
     {
         $rapor = Rapor::find($id_rapor);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $siswa = Siswa::with('pengguna')->where('id_kelas', $rapor->id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
@@ -710,7 +710,7 @@ class RaporSisipanController extends Controller
 
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
 
@@ -787,7 +787,7 @@ class RaporSisipanController extends Controller
     public function imporExcelSTS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         return view('guru/rapor-sisipan/daftar-nilai-sts/view-upload-nilai-sts', compact('auth_data'));
     }
 
@@ -833,7 +833,7 @@ class RaporSisipanController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;
 
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas', 'semester', 'pengguna')->first();

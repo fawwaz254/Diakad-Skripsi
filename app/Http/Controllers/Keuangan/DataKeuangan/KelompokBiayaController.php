@@ -24,7 +24,7 @@ class KelompokBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('keuangan/data-keuangan/kelompok-biaya/view-kelompok-biaya', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class KelompokBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class KelompokBiayaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_kelompok_biaya = LibDataKeuangan::fetchDataKelompokBiaya($auth_data, $id);
 
@@ -57,7 +57,7 @@ class KelompokBiayaController extends BaseController
     public function datatablesKelompokBiaya(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataKelompokBiaya($auth_data);
 
         return Datatables::of($list_data)
@@ -99,7 +99,7 @@ class KelompokBiayaController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kelompokBiaya                              = new KelompokBiaya;
                 $kelompokBiaya->id_kelompok_biaya           = $id;
@@ -107,8 +107,8 @@ class KelompokBiayaController extends BaseController
                 $kelompokBiaya->keterangan_kelompok_biaya   = $input->keterangan_kelompok_biaya;
                 // $kelompokBiaya->status_kelompok_biaya       = $input->status_kelompok_biaya;
                 $kelompokBiaya->status_kelompok_biaya       = 1;
-                $kelompokBiaya->id_sekolah                  = auth_data()->pengguna->id_sekolah;
-                $kelompokBiaya->created_by                  = auth_data()->pengguna->id_pengguna;
+                $kelompokBiaya->id_sekolah                  = $input->auth_data->pengguna->id_sekolah;
+                $kelompokBiaya->created_by                  = $input->auth_data->pengguna->id_pengguna;
                 $kelompokBiaya->save();
 
                 return [
@@ -123,7 +123,7 @@ class KelompokBiayaController extends BaseController
                 $kelompokBiaya->keterangan_kelompok_biaya   = $input->keterangan_kelompok_biaya;
                 // $kelompokBiaya->status_kelompok_biaya       = $input->status_kelompok_biaya;
                 $kelompokBiaya->status_kelompok_biaya       = 1;
-                $kelompokBiaya->updated_by                  = auth_data()->pengguna->id_pengguna;
+                $kelompokBiaya->updated_by                  = $input->auth_data->pengguna->id_pengguna;
                 $kelompokBiaya->updated_at                  = $now;
                 $kelompokBiaya->save();
 
@@ -141,7 +141,7 @@ class KelompokBiayaController extends BaseController
                 } else {
                     // make object to find id
                     $kelompokBiaya               = KelompokBiaya::find($id);
-                    $kelompokBiaya->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $kelompokBiaya->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kelompokBiaya->save();
 
                     $kelompokBiaya->delete();

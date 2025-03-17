@@ -26,7 +26,7 @@ class JenisRuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sarana-prasarana/data-sarpras-ruangan/jenis-ruangan/view-jenis-ruangan', compact('auth_data'));
     }
@@ -35,7 +35,7 @@ class JenisRuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -49,7 +49,7 @@ class JenisRuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $data_jenis_ruangan = LibDataSarpras::fetchDataJenisRuangan($auth_data, $id);
 
@@ -59,7 +59,7 @@ class JenisRuanganController extends BaseController
     public function datatablesJenisRuangan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataJenisRuangan($auth_data);
 
         return Datatables::of($list_data)
@@ -100,14 +100,14 @@ class JenisRuanganController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jenisRuangan                       = new JenisRuangan;
                 $jenisRuangan->id_jenis_ruangan     = $id;
                 $jenisRuangan->nm_jenis_ruangan     = $input->nm_jenis_ruangan;
                 $jenisRuangan->tipe_ruangan         = $input->tipe_ruangan;
-                $jenisRuangan->id_sekolah           = auth_data()->pengguna->id_sekolah;
-                $jenisRuangan->created_by           = auth_data()->pengguna->id_pengguna;
+                $jenisRuangan->id_sekolah           = $input->auth_data->pengguna->id_sekolah;
+                $jenisRuangan->created_by           = $input->auth_data->pengguna->id_pengguna;
                 $jenisRuangan->save();
 
                 return [
@@ -120,7 +120,7 @@ class JenisRuanganController extends BaseController
                 $jenisRuangan                       = JenisRuangan::find($id);
                 $jenisRuangan->nm_jenis_ruangan     = $input->nm_jenis_ruangan;
                 $jenisRuangan->tipe_ruangan         = $input->tipe_ruangan;
-                $jenisRuangan->updated_by           = auth_data()->pengguna->id_pengguna;
+                $jenisRuangan->updated_by           = $input->auth_data->pengguna->id_pengguna;
                 $jenisRuangan->updated_at           = $now;
                 $jenisRuangan->save();
 
@@ -138,7 +138,7 @@ class JenisRuanganController extends BaseController
                 } else {
                     // make object to find id
                     $jenisRuangan               = JenisRuangan::find($id);
-                    $jenisRuangan->deleted_by   = auth_data()->pengguna->id_pengguna;
+                    $jenisRuangan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $jenisRuangan->save();
 
                     $jenisRuangan->delete();
@@ -156,7 +156,7 @@ class JenisRuanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('sarana-prasarana/data-sarpras-ruangan/jenis-ruangan/import-excel', compact('auth_data'));
     }
@@ -165,7 +165,7 @@ class JenisRuanganController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -226,8 +226,8 @@ class JenisRuanganController extends BaseController
                             $data->id_jenis_ruangan              = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $data->nm_jenis_ruangan              = $value->nama_jenis_ruangan;
                             $data->tipe_ruangan                  = $tipe_ruangan;
-                            $data->id_sekolah                    = auth_data()->pengguna->id_sekolah;
-                            $data->created_by                    = auth_data()->pengguna->id_pengguna;
+                            $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
+                            $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
                         }
 

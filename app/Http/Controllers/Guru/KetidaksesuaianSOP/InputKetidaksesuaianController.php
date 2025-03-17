@@ -23,7 +23,7 @@ class InputKetidaksesuaianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         return view('guru/ketidaksesuaian-sop/input-ketidaksesuaian-sop/view-input-ketidaksesuaian-sop', compact('auth_data'));
     }
@@ -32,7 +32,7 @@ class InputKetidaksesuaianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
         $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->whereHas('status_pengguna', function ($query) {
             $query->where('nm_status_pengguna', '=', 'AKTIF');
         })->get();
@@ -43,7 +43,7 @@ class InputKetidaksesuaianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
 
         $ketidaksesuaian_sop = KetidaksesuaianSOP::where('id_ketidaksesuaian_sop', $id)->with('pengguna')->first();
@@ -55,7 +55,7 @@ class InputKetidaksesuaianController extends Controller
     // {
     //     # code...
     //     $input = (object) $request->input();
-    //     // $auth_data = auth_data();
+    //     // $auth_data = $input->auth_data;
 
     //     if ($input->unitKerja == 'guru') {
     //         $pengguna = Pengguna::where('status_join_table', 2)->whereHas('status_pengguna', function ($query) {
@@ -75,7 +75,7 @@ class InputKetidaksesuaianController extends Controller
     public function datatablesInputKetidaksesuaianSOP(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $list_data = KetidaksesuaianSOP::where('id_pengguna_input', $auth_data->pengguna->id_pengguna)->with('pengguna');
 
@@ -124,15 +124,15 @@ class InputKetidaksesuaianController extends Controller
             // mengambil waktu sekarang
             $now = Carbon::now();
             if ($mode == 'add') {
-                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $data                               = new KetidaksesuaianSOP();
                 $data->id_ketidaksesuaian_sop       = $id;
                 $data->id_pengguna                  = $input->id_pengguna;
-                $data->id_pengguna_input            = auth_data()->pengguna->id_pengguna;
+                $data->id_pengguna_input            = $input->auth_data->pengguna->id_pengguna;
                 $data->catatan_pelanggaran          = $input->catatan;
                 $data->tgl_pelanggaran              = date_format(date_create($input->tgl), "Y-m-d H:i:s");
-                $data->created_by                   = auth_data()->pengguna->id_pengguna;
+                $data->created_by                   = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
 
@@ -146,7 +146,7 @@ class InputKetidaksesuaianController extends Controller
                             'message' => $validator->errors()->first()
                         ];
                     } else {
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ketidaksesuaiansop/' . $id, request()->file, 'public');
                         $data->path_file = $file;
 
@@ -168,7 +168,7 @@ class InputKetidaksesuaianController extends Controller
                 $data                               = KetidaksesuaianSOP::find($id);
                 $data->catatan_pelanggaran          = $input->catatan;
                 $data->tgl_pelanggaran              = date_format(date_create($input->tgl), "Y-m-d H:i:s");
-                $data->updated_by                   = auth_data()->pengguna->id_pengguna;
+                $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
 
@@ -182,7 +182,7 @@ class InputKetidaksesuaianController extends Controller
                             'message' => $validator->errors()->first()
                         ];
                     } else {
-                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/ketidaksesuaiansop/' . $id, request()->file, 'public');
                         $data->path_file = $file;
 
@@ -203,7 +203,7 @@ class InputKetidaksesuaianController extends Controller
 
                 // make object to find id
                 $pelanggaranSiswa               = KetidaksesuaianSOP::find($id);
-                $pelanggaranSiswa->deleted_by   = auth_data()->pengguna->id_pengguna;
+                $pelanggaranSiswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->save();
 
                 $pelanggaranSiswa->delete();
@@ -220,7 +220,7 @@ class InputKetidaksesuaianController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = auth_data();
+        $auth_data = $input->auth_data;
 
         $laporan_kerja_harian = KetidaksesuaianSOP::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
