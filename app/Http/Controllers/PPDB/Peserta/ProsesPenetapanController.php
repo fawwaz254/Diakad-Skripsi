@@ -458,63 +458,71 @@ class ProsesPenetapanController extends BaseController
 
     public function cetakKuitansi($id_siswa)
     {
-        // Pastikan folder kuitansi/temp ada
-        Settings::setTempDir(public_path('word/temp'));
+        // // Pastikan folder kuitansi/temp ada
+        // Settings::setTempDir(public_path('word/temp'));
 
-        // Ambil data siswa berdasarkan ID
-        $siswa = CalonSiswaBaru::where('id_c_siswa', $id_siswa)->first();
-        $kota = Kota::where('id_kota', $siswa->alamat_kota)->first();
-        $provinsi = Provinsi::where('id_provinsi', $siswa->alamat_provinsi)->first();
-        if (!$siswa) {
-            return back()->with('error', 'Data siswa tidak ditemukan.');
-        }
-
-        // dd($siswa);
-
-        // Cek apakah file template ada
-        $templatePath = public_path('word/template-kuitansi.docx');
-        if (!file_exists($templatePath)) {
-            return back()->with('error', 'File template tidak ditemukan.');
-        }
-
-        // Load template Word
-        $templateProcessor = new TemplateProcessor($templatePath);
-
-        // Isi template dengan data siswa
-        $templateProcessor->setValue('nama_siswa', $siswa->nm_c_siswa);
-        $templateProcessor->setValue('sekolah_asal', $siswa->asal_sekolah);
-        $templateProcessor->setValue('alamat_rumah', $siswa->alamat_jalan . ", " . $siswa->alamat_dusun . " RT " . $siswa->alamat_rt . "/" . "RW " . $siswa->alamat_rw . " " . $siswa->alamat_kelurahan . ", Kecamatan " . $siswa->alamat_kecamatan . ", " . $kota->nm_kota . ", " . $provinsi->nm_provinsi . ".");
-        $templateProcessor->setValue('nomor_telepon', $siswa->nomor_hp);
-
-        $jurusanIds = [
-            $siswa->id_pilihan_jurusan_1,
-            $siswa->id_pilihan_jurusan_2,
-            $siswa->id_pilihan_jurusan_3
-        ];
-
-        $jurusanList = Jurusan::whereIn('id_jurusan', $jurusanIds)->get()->keyBy('id_jurusan');
-
-        $templateProcessor->setValue('jurusan_1', $jurusanList->get($siswa->id_pilihan_jurusan_1)->kode_jurusan ?? '');
-        $templateProcessor->setValue('jurusan_2', $jurusanList->get($siswa->id_pilihan_jurusan_2)->kode_jurusan ?? '');
-        $templateProcessor->setValue('jurusan_3', $jurusanList->get($siswa->id_pilihan_jurusan_3)->kode_jurusan ?? '');
-        $templateProcessor->setValue('tanggal_pembuatan', now()->format('d-m-Y'));
-        $templateProcessor->setValue('nomor_pendaftaran', substr($siswa->kode_voucher, -3));
-
-        $outputFile = public_path('word/kuitansi-' . $siswa->id_c_siswa . '.docx');
-        $templateProcessor->saveAs($outputFile);
-
-        // Berikan file ke user untuk didownload
-        return response()->download($outputFile)->deleteFileAfterSend(true);
-
-        // $siswa = CalonSiswaBaru::find($id_siswa);
+        // // Ambil data siswa berdasarkan ID
+        // $siswa = CalonSiswaBaru::where('id_c_siswa', $id_siswa)->first();
         // $kota = Kota::where('id_kota', $siswa->alamat_kota)->first();
         // $provinsi = Provinsi::where('id_provinsi', $siswa->alamat_provinsi)->first();
+        // if (!$siswa) {
+        //     return back()->with('error', 'Data siswa tidak ditemukan.');
+        // }
 
-        // $alamat = $siswa->alamat_jalan . ", " . $siswa->alamat_dusun . " RT " . $siswa->alamat_rt . "/" . "RW " . $siswa->alamat_rw . " " . $siswa->alamat_kelurahan . ", Kecamatan " . $siswa->alamat_kecamatan . ", " . $kota->nm_kota . ", " . $provinsi->nm_provinsi . ".";
-        // $tanggal = date('d-m-Y');
-        // $nomer_pendaftaran = substr($siswa->kode_voucher, -3);
+        // // dd($siswa);
 
-        // return view('ppdb/peserta/proses-penetapan/cetak-kuitansi', compact('id_siswa', 'siswa', 'alamat', 'tanggal', 'nomer_pendaftaran'));
+        // // Cek apakah file template ada
+        // $templatePath = public_path('word/template-kuitansi.docx');
+        // if (!file_exists($templatePath)) {
+        //     return back()->with('error', 'File template tidak ditemukan.');
+        // }
+
+        // // Load template Word
+        // $templateProcessor = new TemplateProcessor($templatePath);
+
+        // // Isi template dengan data siswa
+        // $templateProcessor->setValue('nama_siswa', $siswa->nm_c_siswa);
+        // $templateProcessor->setValue('sekolah_asal', $siswa->asal_sekolah);
+        // $templateProcessor->setValue('alamat_rumah', $siswa->alamat_jalan . ", " . $siswa->alamat_dusun . " RT " . $siswa->alamat_rt . "/" . "RW " . $siswa->alamat_rw . " " . $siswa->alamat_kelurahan . ", Kecamatan " . $siswa->alamat_kecamatan . ", " . $kota->nm_kota . ", " . $provinsi->nm_provinsi . ".");
+        // $templateProcessor->setValue('nomor_telepon', $siswa->nomor_hp);
+
+        // $jurusanIds = [
+        //     $siswa->id_pilihan_jurusan_1,
+        //     $siswa->id_pilihan_jurusan_2,
+        //     $siswa->id_pilihan_jurusan_3
+        // ];
+
+        // $jurusanList = Jurusan::whereIn('id_jurusan', $jurusanIds)->get()->keyBy('id_jurusan');
+
+        // $templateProcessor->setValue('jurusan_1', $jurusanList->get($siswa->id_pilihan_jurusan_1)->kode_jurusan ?? '');
+        // $templateProcessor->setValue('jurusan_2', $jurusanList->get($siswa->id_pilihan_jurusan_2)->kode_jurusan ?? '');
+        // $templateProcessor->setValue('jurusan_3', $jurusanList->get($siswa->id_pilihan_jurusan_3)->kode_jurusan ?? '');
+        // $templateProcessor->setValue('tanggal_pembuatan', now()->format('d-m-Y'));
+        // $templateProcessor->setValue('nomor_pendaftaran', substr($siswa->kode_voucher, -3));
+
+        // $outputFile = public_path('word/kuitansi-' . $siswa->id_c_siswa . '.docx');
+        // $templateProcessor->saveAs($outputFile);
+
+        // // Berikan file ke user untuk didownload
+        // return response()->download($outputFile)->deleteFileAfterSend(true);
+
+        $siswa = CalonSiswaBaru::find($id_siswa);
+        $kota = Kota::where('id_kota', $siswa->alamat_kota)->first();
+        $provinsi = Provinsi::where('id_provinsi', $siswa->alamat_provinsi)->first();
+
+        $alamat = $siswa->alamat_jalan . ", " . $siswa->alamat_dusun . " RT " . $siswa->alamat_rt . "/" . "RW " . $siswa->alamat_rw . " " . $siswa->alamat_kelurahan . ", Kecamatan " . $siswa->alamat_kecamatan . ", " . $kota->nm_kota . ", " . $provinsi->nm_provinsi . ".";
+        $tanggal = date('d-m-Y');
+        $nomer_pendaftaran = substr($siswa->kode_voucher, -3);
+
+        $jurusan_1 = Jurusan::where('id_jurusan', $siswa->id_pilihan_jurusan_1)->first();
+        $jurusan_2 = Jurusan::where('id_jurusan', $siswa->id_pilihan_jurusan_2)->first();
+        $jurusan_3 = Jurusan::where('id_jurusan', $siswa->id_pilihan_jurusan_3)->first();
+
+        $jurusan_1 = $jurusan_1 ? $jurusan_1->kode_jurusan : '';
+        $jurusan_2 = $jurusan_2 ? $jurusan_2->kode_jurusan : '';
+        $jurusan_3 = $jurusan_3 ? $jurusan_3->kode_jurusan : '';
+
+        return view('ppdb/peserta/proses-penetapan/cetak-kuitansi', compact('id_siswa', 'siswa', 'alamat', 'tanggal', 'nomer_pendaftaran', 'jurusan_1', 'jurusan_2', 'jurusan_3'));
     }
 
     public function getKota($id_provinsi)
