@@ -83,6 +83,7 @@
         var base_url = document.getElementsByTagName('base')[0].getAttribute('href');
         var role_url = document.getElementsByTagName('meta')[2].getAttribute('content');
     </script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
 
     <style type="text/css">
         table.table.dataTable {
@@ -127,6 +128,8 @@
 </head>
 
 @yield('content')
+
+
 
 <!-- Jquery Core Js -->
 <!-- <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> -->
