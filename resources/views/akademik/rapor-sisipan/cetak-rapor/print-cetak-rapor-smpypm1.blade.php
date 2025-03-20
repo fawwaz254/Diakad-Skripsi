@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapor Sisipan STS ({{ $kelas->nm_kelas }})</title>
-    <td style="border-style : hidden;width: 25%;"> : I
-
-
+    <td style="border-style : hidden;width: 25%;">
 
         <style>
             * {
@@ -77,16 +75,16 @@
 
 <body>
     @foreach ($list_siswa as $siswa)
-        <div class="page">
+        <div class="page" style="margin-top: 50px">
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
 
-                <tr style="border-style : hidden">
+                <tr style="border-style: hidden">
                     <td width="15%" align="center" style="margin-right: 10px" style="border-style : hidden">
                         <img id="logo"
                             src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
                             height="150">
                     </td>
-                    <td width="85%" style="border-style : hidden">
+                    <td width="85%" style="border-style: hidden">
                         <span style="margin-top: -10px; font-family: 'Brush Script MT'; font-size:35px">
                             {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
                         </span>
@@ -111,7 +109,7 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr width="90%" style="background-color: black;color:white">
                     <td align="center" style="border-style : hidden">Alamat :
-                        {{ $auth_data->sekolah_data->alamat_jalan . ', ' . $auth_data->sekolah_data->alamat_kelurahan . ', ' . substr($auth_data->sekolah_data->nomor_telp_sekolah, 0, 3) . ' ' . substr($auth_data->sekolah_data->nomor_telp_sekolah, 3, 7) . ' - ' . substr($auth_data->sekolah_data->nomor_fax_sekolah, 3, 7) . ' ' . $auth_data->sekolah_data->alamat_kecamatan . ' - ' . App\Models\Kota::where('id_kota', $auth_data->sekolah_data->alamat_kota)->pluck('nm_kota')->first() . ' ' . $auth_data->sekolah_data->alamat_kodepos . ' ' . App\Models\Provinsi::where('id_provinsi', $auth_data->sekolah_data->alamat_provinsi)->pluck('nm_provinsi')->first() }}
+                        {{ $auth_data->sekolah_data->alamat_jalan . ', ' . $auth_data->sekolah_data->alamat_kelurahan . ', ' . substr($auth_data->sekolah_data->nomor_telp_sekolah, 0, 3) . ' ' . substr($auth_data->sekolah_data->nomor_telp_sekolah, 3, 7) . ' - ' . substr($auth_data->sekolah_data->nomor_fax_sekolah, 3, 7) . ' ' . $auth_data->sekolah_data->alamat_kecamatan . ' - ' . $kota . ' ' . $auth_data->sekolah_data->alamat_kodepos . ' ' . $provinsi }}
                     </td>
                 </tr>
             </table>
@@ -168,7 +166,6 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
                 <thead class="head" style="background-color: #C2D69B">
                     <tr>
-
                         <td colspan="2" rowspan="2" style="text-align: center;font-weight: bold;">MATA
                             PELAJARAN<br></td>
                         <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
@@ -176,8 +173,6 @@
                         <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
                         <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR <br> SISIPAN</td>
-
-
                     </tr>
                     <tr>
                         <td style="text-align: center;font-weight: bold;">1</td>
@@ -219,8 +214,6 @@
                                     </td>
                                     <td style="text-align: center;font-weight: bold;">
                                         {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah'] != '0' ? round(($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'jumlah']) * 0.6 + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . 'sts'] * 0.4) : '' }}
-
-
                                     </td>
                                 </tr>
                                 @for ($i = 1; $i < $jumlah; $i++)
@@ -238,7 +231,6 @@
                                         </td>
                                         <td style="text-align: center;font-weight: bold;">
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts']) ? $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts'] : '' }}
-
                                         </td>
                                         <td style="text-align: center;font-weight: bold;">
                                             {{ isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'total_nilai_sumatif']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah']) && isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts']) && $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah'] != '0' ? number_format((($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'total_nilai_sumatif'] / $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'jumlah']) * 2 + $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][$i] . 'sts']) / 3) : '' }}
@@ -250,11 +242,9 @@
                         @endif
                     @endforeach
                     </tr>
-
-
                 </tbody>
-
             </table>
+
             <table style="width: 90%; margin-left:10%; margin-top:20px">
                 <tr style="font-weight:bold;border-style : hidden;">
                     <td width="20%" style="border-style : hidden;">
@@ -289,7 +279,9 @@
                     </td>
                 </tr>
             </table>
+
             <br><br>
+
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin-left:10%; border-style : hidden">
                 <tr>
                     <td style=" border-style : hidden; width:15%; vertical-align: text-top; padding:0">
@@ -312,7 +304,6 @@
                                 {{ $wali_kelas->guru->pengguna->nm_pengguna }}
                                 {{ $wali_kelas->guru->pengguna->gelar_belakang }}</b></u>
                     </td>
-
                 </tr>
                 <tr>
                     <td></td>
@@ -330,9 +321,7 @@
                     </td>
                     <td></td>
                 </tr>
-
             </table>
-
         </div>
     @endforeach
 </body>
