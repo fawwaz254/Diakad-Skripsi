@@ -139,7 +139,10 @@ Route::middleware(['token_staff'])->group(function () {
 
 			Route::get('proses-penetapan/cetak-kuitansi/{id_siswa}', [ProsesPenetapanController::class, 'cetakKuitansi'])->name('cetak-kuitansi');
 
+			Route::get('proses-penetapan/input-calon-siswa/{id_penerimaan}', [ProsesPenetapanController::class, 'viewInputCalonSiswa']);
+			Route::post('proses-penetapan/input-calon-siswa/{id_penerimaan}/create', [ProsesPenetapanController::class, 'storeDataCalonSiswa'])->name('proses-penetapan.input-calon-siswa.create');
 
+			Route::get('proses-penetapan/input-calon-siswa/get-kota/{id_provinsi}', [ProsesPenetapanController::class, 'getKota']);
 
 			// MENU pindah penerimaan
 			Route::get('pindah-penerimaan', [PindahPenerimaanController::class, 'viewPindahPenerimaan']);

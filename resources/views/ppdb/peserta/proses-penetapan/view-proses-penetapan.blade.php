@@ -63,9 +63,13 @@
                 <a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/proses-penetapan/upload/' . $id) }}"
                     class="btn bg-green waves-effect">
                     <i class="material-icons" style="font-size: 15px;">print</i> Upload Siswa</a>
+
                 <a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/proses-penetapan/upload-calon-siswa/' . $id) }}"
                     class="btn btn-primary waves-effect">
                     <i class="material-icons" style="font-size: 15px;">print</i> Upload Calon Siswa</a>
+                <a href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/proses-penetapan/input-calon-siswa/' . $id) }}"
+                    class="btn btn-primary waves-effect">
+                    <i class="material-icons" style="font-size: 15px;">add</i> Input Calon Siswa</a>
                 <br>
             @endif
             <br>
