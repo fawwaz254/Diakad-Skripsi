@@ -7,11 +7,13 @@ use Session;
 use Validator;
 use Carbon\Carbon;
 use App\Models\Guru;
+use App\Models\Kota;
 use App\Models\Kelas;
 use App\Models\Rapor;
 use App\Models\Siswa;
 use App\Models\Sekolah;
 use App\Models\Setting;
+use App\Models\Provinsi;
 use App\Models\Semester;
 use App\Models\Kurikulum;
 use App\Models\WaliKelas;
@@ -45,7 +47,6 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Models\KomponenNilaiRaporSisipan;
 use Barryvdh\Debugbar\Twig\Extension\Debug;
 use App\Libraries\Pendidikan\LibDataAkademik;
-
 
 class CetakRaporController extends Controller
 {
@@ -394,14 +395,12 @@ class CetakRaporController extends Controller
                 $query->where('nm_jenis_rapor', 'sisipan');
             })->get();
 
-            $rapors = Rapor::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->with(['nilai_rapor' => function ($q) {
-                $q->where('nilai', '!=', '0');
-            }])->where('nm_rapor', 'sisipan')->get();
+            $rapors = Rapor::where('id_kelas', $id_kelas)->where('id_semester', $id_semester)->where('nm_rapor', 'sisipan')->get();
 
+            $nilai_rapors = NilaiRapor::whereIn('id_rapor', $rapors->pluck('id_rapor'))->where('nilai', '!=', '0')->get();
 
             foreach ($rapors as $rapor) {
                 //karna server tidak kuat terpaksa menggunakan cara ini
-                $nilai_rapors = NilaiRapor::where('id_rapor', $rapor->id_rapor)->where('nilai', '!=', '0')->get();
                 foreach ($nilai_rapors as  $nilai_rapor) {
                     if ($nilai_rapor->id_komponen_jenis_rapor == $typeuts?->id_komponen_jenis_rapor) {
                         $nilai_siswa[$nilai_rapor['id_siswa'] . $rapor['id_mata_pelajaran'] . 'sts'] = $nilai_rapor['nilai'];
@@ -856,6 +855,9 @@ class CetakRaporController extends Controller
                 $query->where('nm_kelompok_pribadi_sisipan', 'Ketidak Hadiran');
             })->get();
 
+            $provinsi = Provinsi::where('id_provinsi', $auth_data->sekolah_data->alamat_provinsi)->pluck('nm_provinsi')->first();
+            $kota = Kota::where('id_kota', $auth_data->sekolah_data->alamat_kota)->pluck('nm_kota')->first();
+
             $nilai_pengembangan_diri = [];
 
             foreach ($nilai_pribadi_siswa as $n) {
@@ -865,7 +867,6 @@ class CetakRaporController extends Controller
             }
 
             // $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8])->orderBy('urutan', 'asc')->get();
-
 
             $list_komponen = KomponenJenisRapor::whereNotIn('nm_komponen_jenis_rapor', ['uts', 'uas'])->whereHas('jenis_rapor', function ($query) {
                 $query->where('nm_jenis_rapor', 'sisipan'); //ini
@@ -878,7 +879,7 @@ class CetakRaporController extends Controller
                 $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
             }
 
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm1', compact('auth_data', 'pribadi_sisipan', 'nilai_pengembangan_diri', 'kelas', 'list_siswa', 'data', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'semester', 'tanggal_cetak'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-smpypm1', compact('auth_data', 'pribadi_sisipan', 'nilai_pengembangan_diri', 'kelas', 'list_siswa', 'data', 'wali_kelas', 'nilai_siswa', 'list_komponen', 'semester', 'tanggal_cetak', 'provinsi', 'kota'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manu') {
             if ($kelas->tingkat == 1) {
                 $urutan = [1, 2, 5]; // urutan komponen untuk kelas 10
@@ -1037,9 +1038,7 @@ class CetakRaporController extends Controller
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-manu', compact('auth_data', 'list_siswa', 'nilai_siswa', 'data', 'kelas', 'list_komponen', 'semester', 'wali_kelas', 'total_nilai', 'nilai_ekskul', 'pribadi_sisipan_kehadiran', 'pribadi_sisipan_perminatan', 'pribadi_sisipan_ekskul', 'nilai_pengembangan_diri', 'nilai_perminatan', 'jumlah_komponen', 'rata_rata_nilai', 'tanggal_cetak'));
         } else if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smknu') {
-
             if ($kelas->tingkat == '1') {
-
                 $list_komponen = KomponenJenisRapor::whereNotIn('nm_komponen_jenis_rapor', ['uts', 'uas'])->whereHas('jenis_rapor', function ($query) {
                     $query->where('nm_jenis_rapor', 'sisipan');
                 })->whereIn('urutan', [1, 2, 3, 11])->orderBy('urutan', 'asc')->get();
