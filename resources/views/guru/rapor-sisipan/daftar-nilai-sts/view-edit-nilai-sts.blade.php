@@ -1,8 +1,11 @@
 <style>
-     #spreadsheet tbody td:nth-child(2), #spreadsheet tbody td:nth-child(3) {
-        background-color: black; color: white;
+    #spreadsheet tbody td:nth-child(2),
+    #spreadsheet tbody td:nth-child(3) {
+        background-color: black;
+        color: white;
     }
 </style>
+
 <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
 <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
 
@@ -17,7 +20,6 @@
             <div class="card">
                 <div class="header bg-cyan">
                     <h2>Edit Nilai Rapor Sisipan</h2>
-
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
@@ -35,9 +37,7 @@
                                         class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
-
                     </form>
-
                 </div>
             </div>
         </div>
@@ -97,7 +97,6 @@
         });
     });
 
-
     $(function() {
         var primary_table = null;
         $('#form-validation').validate({
@@ -120,6 +119,28 @@
             },
             submitHandler: function(form) {
                 var data = $('#spreadsheet').jexcel('getData');
+                var error = false;
+
+                data.forEach(function(row, rowIndex) {
+                    row.forEach(function(value, colIndex) {
+                        // validasi dari index 2 hingga 11
+                        if (colIndex >= 2 || colIndex <= 11 || value === "" ||
+                            !value) {
+                            var cleanValue = value.trim();
+                            if (/[a-zA-Z\-=!@#$%^&*()]/.test(cleanValue)) {
+                                error = true;
+                            }
+                        }
+                    });
+                });
+
+                if (error) {
+                    swal({
+                        title: "Input harus diisi berupa angka",
+                    });
+                    return false;
+                }
+
                 $('#data').val(JSON.stringify(data));
                 $('button').attr('disabled', 'disabled');
                 $.ajax({
