@@ -121,13 +121,16 @@
                 var data = $('#spreadsheet').jexcel('getData');
                 var error = false;
 
+                // get panjang kolom dan dikurang 2 karena kolom 1 & 2 hanya data siswa bukan nilai
+                var maxColIndex = data[0].length - 2;
                 data.forEach(function(row, rowIndex) {
                     row.forEach(function(value, colIndex) {
-                        // validasi dari index 2 hingga 11
-                        if (colIndex >= 2 || colIndex <= 11 || value === "" ||
-                            !value) {
+                        // validasi dari index 2 hingga max kolom
+                        if (colIndex >= 2 && colIndex <= maxColIndex) {
                             var cleanValue = value.trim();
-                            if (/[a-zA-Z\-=!@#$%^&*()]/.test(cleanValue)) {
+
+                            if (!cleanValue || /[a-zA-Z\-=!@#$%^&*()]/.test(
+                                    cleanValue)) {
                                 error = true;
                             }
                         }
