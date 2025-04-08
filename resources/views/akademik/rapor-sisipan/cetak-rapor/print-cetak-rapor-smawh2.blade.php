@@ -146,9 +146,12 @@
                     </td>
                     <td style="border-style : hidden;width: 25%;">Semester
                     </td>
-                    <td style="border-style : hidden;width: 25%;"> : I
-
-
+                    <td style="border-style : hidden;width: 25%;"> :
+                        @if ($semester->nm_semester == 'Ganjil')
+                            I
+                        @else
+                            II
+                        @endif
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
@@ -205,20 +208,38 @@
                                     @foreach ($list_komponen as $komponen)
                                         <td style="text-align: center; font-weight: bold;">
                                             @php
-                                                $nilai_satuan = isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor])? (int) $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] : 0;
-                                                if(array_key_exists($komponen->id_komponen_jenis_rapor, $jumlah_nilai)) {
+                                                $nilai_satuan = isset(
+                                                    $nilai_siswa[
+                                                        $siswa->id_siswa .
+                                                            $data2['id_mata_pelajaran'][0] .
+                                                            $komponen->id_komponen_jenis_rapor
+                                                    ],
+                                                )
+                                                    ? (int) $nilai_siswa[
+                                                        $siswa->id_siswa .
+                                                            $data2['id_mata_pelajaran'][0] .
+                                                            $komponen->id_komponen_jenis_rapor
+                                                    ]
+                                                    : 0;
+                                                if (
+                                                    array_key_exists($komponen->id_komponen_jenis_rapor, $jumlah_nilai)
+                                                ) {
                                                     $jumlah_nilai[$komponen->id_komponen_jenis_rapor] += $nilai_satuan;
-                                                }else {
+                                                } else {
                                                     $jumlah_nilai[$komponen->id_komponen_jenis_rapor] = $nilai_satuan;
                                                 }
 
-                                                if(array_key_exists($komponen->id_komponen_jenis_rapor, $count_nilai)) {
-                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] += ($nilai_satuan > 0)? 1 : 0;
-                                                }else {
-                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] = ($nilai_satuan > 0)? 1 : 0;
+                                                if (
+                                                    array_key_exists($komponen->id_komponen_jenis_rapor, $count_nilai)
+                                                ) {
+                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] +=
+                                                        $nilai_satuan > 0 ? 1 : 0;
+                                                } else {
+                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] =
+                                                        $nilai_satuan > 0 ? 1 : 0;
                                                 }
                                             @endphp
-                                            {{ ($nilai_satuan > 0)? $nilai_satuan : '' }}
+                                            {{ $nilai_satuan > 0 ? $nilai_satuan : '' }}
                                         </td>
                                     @endforeach
                                 </tr>
@@ -245,7 +266,7 @@
                         </td>
                         @foreach ($list_komponen as $komponen)
                             <td style="text-align: center; font-weight: bold;">
-                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor])? $jumlah_nilai[$komponen->id_komponen_jenis_rapor] : '0' }}
+                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor]) ? $jumlah_nilai[$komponen->id_komponen_jenis_rapor] : '0' }}
                             </td>
                         @endforeach
                     </tr>
@@ -255,10 +276,10 @@
                         </td>
                         @foreach ($list_komponen as $komponen)
                             <td style="text-align: center; font-weight: bold;">
-                                @if($count_nilai[$komponen->id_komponen_jenis_rapor] > 0)
-                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor])? round($jumlah_nilai[$komponen->id_komponen_jenis_rapor]/$count_nilai[$komponen->id_komponen_jenis_rapor]) : '0' }}
+                                @if ($count_nilai[$komponen->id_komponen_jenis_rapor] > 0)
+                                    {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor]) ? round($jumlah_nilai[$komponen->id_komponen_jenis_rapor] / $count_nilai[$komponen->id_komponen_jenis_rapor]) : '0' }}
                                 @else
-                                0
+                                    0
                                 @endif
                             </td>
                         @endforeach
