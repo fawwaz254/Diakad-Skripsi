@@ -179,6 +179,12 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'viewSettingPesertaEkskul']);
             Route::post('post-view-setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'actionViewSettingPesertaEkskul']);
             Route::post('post-view-copy-setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'actionViewCopySettingPesertaEkskul']);
+            
+            Route::get('setting-peserta-ekskul/import/{id_semester}/{id_ekskul}', [SettingPesertaEkskulController::class, 'importPesertaEkskul']);
+            Route::get('/download-file-excel', [SettingPesertaEkskulController::class, 'downloadFileExcel'])->name('ekstrakurikuler/download-file-excel');
+            Route::post('setting-peserta-ekskul/import/{id_semester}/{id_ekskul}', [SettingPesertaEkskulController::class, 'handleImportPesertaEkskul']);
+            Route::post('setting-peserta-ekskul/import/{id_semester}/{id_ekskul}', [SettingPesertaEkskulController::class, 'handleImportPesertaEkskul'])->name('siswa-ekskul.post-file-excel');
+            
             Route::get('setting-peserta-ekskul/view-ekskul/{id_semester}/{id_eskul}', [SettingPesertaEkskulController::class, 'viewEkskulSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/datatables/{id_ekskul}/{id_semester}', [SettingPesertaEkskulController::class, 'datatablesSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/datatables-siswa/{id_kelas}', [SettingPesertaEkskulController::class, 'datatablesSiswaSettingPesertaEkskul']);
@@ -189,7 +195,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-peserta-ekskul/view-kelas/{id_semester}/{id_ekskul}/{id_kelas}', [SettingPesertaEkskulController::class, 'viewKelasSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/edit/{id}', [SettingPesertaEkskulController::class, 'editSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/setting/{id_ekskul}', [SettingPesertaEkskulController::class, 'setSettingPesertaEkskul']);
-
             Route::post('action-setting-peserta-ekskul/{mode}/{id}', [SettingPesertaEkskulController::class, 'actionSettingPesertaEkskul']);
 
             Route::prefix('monitoring-absensi-ekskul')->group(function () {

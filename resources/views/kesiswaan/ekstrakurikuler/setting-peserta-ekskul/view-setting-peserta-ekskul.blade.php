@@ -84,6 +84,9 @@
                                 <a class="btn bg-blue waves-effect target-link"
                                     href="{{ url(Request::segment(1) . '#ekstrakurikuler/setting-peserta-ekskul/copy/' . $semester_lalu->id_semester . '/' . $id_ekskul) }}"><i
                                         class="material-icons">content_copy</i><span>Copy Peserta Ekskul</span></a>
+                                <a class="btn bg-blue waves-effect target-link"
+                                    href="{{ url(Request::segment(1) . '#ekstrakurikuler/setting-peserta-ekskul/import/' . $id_semester . '/' . $id_ekskul) }}"><i 
+                                        class="material-icons">file_upload</i><span>Import Peserta Ekskul</span></a>                                
                                 {{-- <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ekstrakurikuler/setting-peserta-ekskul/setting/'.$id_ekskul)}}"><i class="material-icons">settings_applications</i><span>Setting Pengambilan Ekskul</span></a> --}}
                             </h2>
                         </div>
@@ -117,7 +120,6 @@
                                                     class="material-icons">delete_forever</i><span>Delete</span></button>
                                         </div>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
