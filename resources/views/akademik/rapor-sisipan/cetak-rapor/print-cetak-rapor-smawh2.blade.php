@@ -78,36 +78,6 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
-            {{-- <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
-
-                <tr style="border-style : hidden">
-                    <td width="15%" align="center" style="margin-right: 10px" style="border-style : hidden">
-                        <img id="logo"
-                            src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
-                            height="150">
-                    </td>
-                    <td width="85%" style="border-style : hidden">
-                        <span style="margin-top: -10px; font-family: 'Brush Script MT'; font-size:35px">
-                            {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
-                        </span>
-                        <br>
-                        <span style="margin-top: -10px; font-family: 'Impact'; font-size:50px">
-                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}
-                        </span>
-                        <br>
-                        {{-- <span style="margin-top: -10px; font-family: 'Impact'; font-size:25px">
-                            {{ $auth_data->sekolah_data->akreditasi }}
-                        </span>
-                        <br>
-                        <span style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
-                            {{ 'NSS : ' . $auth_data->sekolah_data->nss_sekolah . ',       ' }}
-                        </span>
-                        <span style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
-                            {{ 'NPSN : ' . $auth_data->sekolah_data->npsn_sekolah }}
-                        </span> --}}
-            {{-- </td> --}}
-            {{-- </tr> --}}
-            {{-- </table> --}}
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr width="90%" style="background-color: black;color:white">
                     <img src="{{ asset('media/ttd/kop_surat_smawh2.png') }}" alt="kop_surat" style="width: 100%">
@@ -119,9 +89,17 @@
                         <br>
                         <h2
                             style="margin-top: 3px; font-family:'Times New Roman', Times, serif; font-size:30px; text-align:center">
-                            LAPORAN HASIL BELAJAR SISWA MURNI <br><u>SEMESTER GASAL</u>
-                            {{-- <h2 style="font-family:'Times New Roman', Times, serif; font-size:30px; text-align:center">
-                                SEMESTER GASAL</h2> --}}
+                            LAPORAN HASIL BELAJAR SISWA MURNI 
+                            <br>
+                            <u>
+                                SEMESTER
+                                @if ($semester->nm_semester == 'Ganjil')
+                                    GANJIL
+                                @else
+                                    GENAP
+                                @endif
+                            </u>
+                        </h2>
                     </td>
                 <tr>
 
