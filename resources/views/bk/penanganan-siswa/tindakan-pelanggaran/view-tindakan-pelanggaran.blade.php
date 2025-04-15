@@ -17,7 +17,6 @@
                             <input type="date" class="form-control" id="filter_tanggal" name="tanggal"
                                 aria-required="true" aria-invalid="true">
                         </div>
-
                         <div class="col-md-3 col-sm-12 col-xs-12 mb-3">
                             <h4 class="card-inside-title">Kelas</h4>
                             <select class="form-control" id="filter_kelas" name="kelas">
