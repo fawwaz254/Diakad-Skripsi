@@ -108,7 +108,7 @@ class BukuAlatController extends BaseController
             /*'tingkat_pendidikan_buku_alat'  => 'required',
             'id_mata_pelajaran'             => 'required',*/
             'kode_buku_alat'                => 'required',
-            'tgl_pembelian'                 => 'required',
+            // 'tgl_pembelian'                 => 'required',
             'jumlah_buku_alat'              => 'required',
             'jumlah_kondisi_baik'           => 'required',
             'jumlah_kondisi_rusak'          => 'required',
@@ -139,7 +139,13 @@ class BukuAlatController extends BaseController
                 }
                 $bukuAlat->kode_buku_alat         = $input->kode_buku_alat;
                 // convert format date
-                $bukuAlat->tgl_pembelian          = date_format(date_create($input->tgl_pembelian), "Y-m-d H:i:s");
+
+
+                if (isset($input->tgl_pembelian)) {
+                    $bukuAlat->tgl_pembelian                  = date('Y-m-d', strtotime($input->tgl_pembelian));
+                } else {
+                    $bukuAlat->tgl_pembelian = null;
+                }
                 $bukuAlat->jumlah_buku_alat       = $input->jumlah_buku_alat;
                 $bukuAlat->jumlah_kondisi_baik    = $input->jumlah_kondisi_baik;
                 $bukuAlat->jumlah_kondisi_rusak   = $input->jumlah_kondisi_rusak;
@@ -149,7 +155,7 @@ class BukuAlatController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-buku/buku-alat',
+                    'path' => 'data-sarpras-buku-alat/buku-alat',
                     'message' => 'Save Buku/Alat Successfully'
                 ];
             } elseif ($mode == 'edit') {
@@ -164,8 +170,14 @@ class BukuAlatController extends BaseController
                     $bukuAlat->id_mata_pelajaran               = $input->id_mata_pelajaran;
                 }
                 $bukuAlat->kode_buku_alat         = $input->kode_buku_alat;
+
+                if (isset($input->tgl_pembelian)) {
+                    $bukuAlat->tgl_pembelian                  = date('Y-m-d', strtotime($input->tgl_pembelian));
+                } else {
+                    $bukuAlat->tgl_pembelian = null;
+                }
                 // convert format date
-                $bukuAlat->tgl_pembelian          = date_format(date_create($input->tgl_pembelian), "Y-m-d H:i:s");
+                // $bukuAlat->tgl_pembelian          = date_format(date_create($input->tgl_pembelian), "Y-m-d H:i:s");
                 $bukuAlat->jumlah_buku_alat       = $input->jumlah_buku_alat;
                 $bukuAlat->jumlah_kondisi_baik    = $input->jumlah_kondisi_baik;
                 $bukuAlat->jumlah_kondisi_rusak   = $input->jumlah_kondisi_rusak;
@@ -301,12 +313,12 @@ class BukuAlatController extends BaseController
                                 ];
                             }
 
-                            if (empty($value->tanggal_pembelian)) {
-                                return [
-                                    'status'    => 203, // GAGAL
-                                    'message'   => 'Upload data buku/alat gagal, ada tanggal pembelian yang kosong'
-                                ];
-                            }
+                            // if (empty($value->tanggal_pembelian)) {
+                            //     return [
+                            //         'status'    => 203, // GAGAL
+                            //         'message'   => 'Upload data buku/alat gagal, ada tanggal pembelian yang kosong'
+                            //     ];
+                            // }
 
                             if (empty($value->jumlah_buku_atau_alat)) {
                                 return [
@@ -343,7 +355,13 @@ class BukuAlatController extends BaseController
                             $data->kode_buku_alat                 = $value->kode_buku_atau_alat;
                             $data->tingkat_pendidikan_buku_alat   = $value->tingkat_pendidikan;
                             $data->id_mata_pelajaran              = $value->mata_pelajaran;
-                            $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian));
+
+                            if (isset($value->tanggal_pembelian)) {
+                                $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian));
+                            } else {
+                                $data->tgl_pembelian = null;
+                            }
+                            // $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian)) ?? null;
                             $data->jumlah_buku_alat               = $value->jumlah_buku_atau_alat;
                             $data->jumlah_kondisi_baik            = $value->kondisi_baik;
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
