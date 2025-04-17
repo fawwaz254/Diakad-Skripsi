@@ -65,9 +65,13 @@ class JenisRuanganController extends BaseController
         return Datatables::of($list_data)
             ->addColumn('tipe_ruangan', function ($item) {
                 if ($item->tipe_ruangan == 1) {
-                    return "Kelas";
+                    return "Teori";
+                } else if ($item->tipe_ruangan == 2) {
+                    return "Pendukung";
+                } else if ($item->tipe_ruangan == 3) {
+                    return "Praktik";
                 } else {
-                    return "Non-Kelas";
+                    return "Lain-lain";
                 }
             })
             ->addColumn('action', function ($item) {
