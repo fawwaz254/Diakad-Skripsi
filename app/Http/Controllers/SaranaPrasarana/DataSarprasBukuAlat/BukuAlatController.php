@@ -149,7 +149,7 @@ class BukuAlatController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-sarpras-buku-alat/buku-alat',
+                    'path' => 'data-buku/buku-alat',
                     'message' => 'Save Buku/Alat Successfully'
                 ];
             } elseif ($mode == 'edit') {
@@ -343,13 +343,7 @@ class BukuAlatController extends BaseController
                             $data->kode_buku_alat                 = $value->kode_buku_atau_alat;
                             $data->tingkat_pendidikan_buku_alat   = $value->tingkat_pendidikan;
                             $data->id_mata_pelajaran              = $value->mata_pelajaran;
-
-                            if (isset($value->tanggal_pembelian)) {
-                                $data->tgl_pembelian = date('Y-m-d', strtotime($value->tanggal_pembelian));
-                            } else {
-                                $data->tgl_pembelian = null;
-                            }
-                            // $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian)) ?? null;
+                            $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian)) || null;
                             $data->jumlah_buku_alat               = $value->jumlah_buku_atau_alat;
                             $data->jumlah_kondisi_baik            = $value->kondisi_baik;
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
