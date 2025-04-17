@@ -108,7 +108,7 @@ class BukuAlatController extends BaseController
             /*'tingkat_pendidikan_buku_alat'  => 'required',
             'id_mata_pelajaran'             => 'required',*/
             'kode_buku_alat'                => 'required',
-            'tgl_pembelian'                 => 'required',
+            // 'tgl_pembelian'                 => 'required',
             'jumlah_buku_alat'              => 'required',
             'jumlah_kondisi_baik'           => 'required',
             'jumlah_kondisi_rusak'          => 'required',
@@ -301,12 +301,12 @@ class BukuAlatController extends BaseController
                                 ];
                             }
 
-                            if (empty($value->tanggal_pembelian)) {
-                                return [
-                                    'status'    => 203, // GAGAL
-                                    'message'   => 'Upload data buku/alat gagal, ada tanggal pembelian yang kosong'
-                                ];
-                            }
+                            // if (empty($value->tanggal_pembelian)) {
+                            //     return [
+                            //         'status'    => 203, // GAGAL
+                            //         'message'   => 'Upload data buku/alat gagal, ada tanggal pembelian yang kosong'
+                            //     ];
+                            // }
 
                             if (empty($value->jumlah_buku_atau_alat)) {
                                 return [
@@ -343,7 +343,7 @@ class BukuAlatController extends BaseController
                             $data->kode_buku_alat                 = $value->kode_buku_atau_alat;
                             $data->tingkat_pendidikan_buku_alat   = $value->tingkat_pendidikan;
                             $data->id_mata_pelajaran              = $value->mata_pelajaran;
-                            $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian));
+                            $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian)) || null;
                             $data->jumlah_buku_alat               = $value->jumlah_buku_atau_alat;
                             $data->jumlah_kondisi_baik            = $value->kondisi_baik;
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
