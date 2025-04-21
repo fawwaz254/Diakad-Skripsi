@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers\BK\AktivitasSiswa;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\Semester;
+use Carbon\CarbonPeriod;
+use App\Models\RewardSiswa;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Imports\DataImportExcel;
-use App\Libraries\Pendidikan\LibKelas;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use App\Models\AktivitasRewardSiswa;
 use App\Models\JenisAktivitasReward;
-use App\Models\RewardSiswa;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
-use Yajra\DataTables\Facades\DataTables;
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Pendidikan\LibSiswa;
+use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Yajra\DataTables\Facades\DataTables;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class AktivitasRewardSiswaController extends Controller
 {
@@ -308,7 +311,85 @@ class AktivitasRewardSiswaController extends Controller
 
     public function viewRekapRewardSiswa(Request $request)
     {
-        return view('bk.aktivitas-siswa.view-rekap-reward-siswa');
+        $input = (object) $request->input();
+        $auth_data = auth_data();
+
+        $now = Carbon::now();
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_aktivitas_reward_siswa = AktivitasRewardSiswa::select('nilai_karakter')->where('is_aktif', 1)->groupBy('nilai_karakter')->get();
+        $data_aktivitas_reward_siswa_presensi = ['Komunikasi', 'Kolaborasi', 'Berpikir Kritis', 'Kreatif'];
+        $data_semester = Semester::get();
+        $data_jenis_aktivitas = JenisAktivitasReward::get();
+
+        if (!empty($input->kelas) && !empty($input->semester)) {
+            $semester = Semester::where('id_semester', $input->semester)->first();
+            if ($semester->nm_semester == 'Ganjil') {
+                $year = Str::before($semester->tahun_ajaran, '/');
+                $startOfMonth = Carbon::create($year, 7, 1)->startOfMonth();
+                $endOfMonth = Carbon::create($year, 12, 1)->endOfMonth();
+            } else {
+                // Genap
+                $year = Str::after($semester->tahun_ajaran, '/');
+                $startOfMonth = Carbon::create($year, 1, 1)->startOfMonth();
+                $endOfMonth = Carbon::create($year, 6, 1)->endOfMonth();
+            }
+            $months = CarbonPeriod::create($startOfMonth, $endOfMonth);
+
+            $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $input->kelas);
+            $reward = DB::table('reward_siswa as rs')
+                ->select(
+                    'rs.id_siswa',
+                    'rs.id_event',
+                    'rs.id_kelas',
+                    'rs.model_event',
+                    'ars.nilai_karakter',
+                    'ars.id_jenis_aktivitas_reward',
+                    'ars.nilai_aktivitas',
+                    DB::raw('COUNT(ars.nilai_aktivitas) AS point'),
+                )
+                ->leftJoin('aktivitas_reward_siswa as ars', 'rs.id_event', '=', 'ars.id_aktivitas_reward_siswa')
+                ->where('rs.id_kelas', $input->kelas)
+                ->whereIn('rs.id_siswa', $data_siswa->pluck('id_siswa'))
+                ->whereBetween('rs.created_at', [$startOfMonth, $endOfMonth])
+                ->whereNull('rs.deleted_at')
+                ->groupBy('rs.id_siswa', 'rs.id_event', 'rs.id_kelas', 'rs.model_event', 'ars.nilai_aktivitas', 'ars.nilai_karakter')->get();
+
+            $data_presensi = DB::table('reward_siswa as rs')
+                ->select(
+                    'rs.id_siswa', // id_siswa reward_siswa berisi id_kelas
+                    'rs.id_kelas', // id_kelas reward_siswa berisi id_siswa
+                    'rs.model_event',
+                    'rs.nm_reward_siswa',
+                    'pm.id_kelas_mp',
+                    'pm.id_presensi_mp',
+                    'km.created_at',
+                )
+                ->leftJoin('presensi_mp AS pm', 'pm.id_presensi_mp', '=', 'rs.id_event')
+                ->leftJoin('kelas_mp AS km', 'pm.id_kelas_mp', '=', 'km.id_kelas_mp')
+                ->where('km.id_kelas', $input->kelas)
+                ->whereIn('rs.nm_reward_siswa', $data_aktivitas_reward_siswa_presensi)
+                ->whereIn('rs.id_kelas', $data_siswa->pluck('id_siswa'))
+                ->whereNull('rs.deleted_at')
+                ->whereNull('pm.deleted_at')
+                ->whereNull('km.deleted_at')
+                ->whereBetween('km.created_at', [$startOfMonth, $endOfMonth])->get();
+
+            $data_reward = $reward->map(function ($item) {
+                $daily = $item->id_jenis_aktivitas_reward == 1 ? floor($item->point / 15) : 0;
+                $week = $item->id_jenis_aktivitas_reward == 2 ? floor($item->point / 3) : 0;
+                $month = $item->id_jenis_aktivitas_reward == 3 ? floor($item->point / 1) : 0;
+
+                $item->daily_point = $daily;
+                $item->week_point = $week;
+                $item->month_point = $month;
+                $item->total_point = $daily + $week + $month;
+                return $item;
+            });
+
+            return view('bk.aktivitas-siswa.view-rekap-reward-siswa', compact('data_kelas', 'data_aktivitas_reward_siswa', 'data_aktivitas_reward_siswa_presensi', 'data_jenis_aktivitas', 'data_semester', 'data_siswa', 'data_reward', 'data_presensi', 'months', 'startOfMonth', 'endOfMonth'));
+        } else {
+            return view('bk.aktivitas-siswa.view-rekap-reward-siswa', compact('data_kelas', 'data_aktivitas_reward_siswa', 'data_jenis_aktivitas', 'data_semester'));
+        }
     }
 
     public function viewApproveRewardSiswa(Request $request)
