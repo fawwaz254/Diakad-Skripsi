@@ -73,35 +73,35 @@ class AktivitasRewardSiswaController extends Controller
         $auth_data = $input->auth_data;
 
         $validatedData = $request->validate([
-            'jenis_aktivitas_reward'    => 'required',
-            'nm_aktivitas_reward'       => 'required',
-            'nilai_aktivitas'           => 'required',
-            'nilai_karakter'            => 'required',
-            'status'                    => 'required',
+            'jenis_aktivitas_reward' => 'required',
+            'nm_aktivitas_reward' => 'required',
+            'nilai_aktivitas' => 'required',
+            'nilai_karakter' => 'required',
+            'status' => 'required',
         ], [
             'jenis_aktivitas_reward.required' => 'Jenis aktivitas reward harus diisi.',
-            'nm_aktivitas_reward.required'    => 'Nama aktivitas reward harus diisi.',
-            'nilai_aktivitas.required'        => 'Nilai aktivitas harus diisi.',
-            'nilai_karakter.required'         => 'Nilai karakter harus diisi.',
-            'nilai_karakter'                  => 'Nilai karakter harus diisi',
-            'status.required'                 => 'Status harus diisi.',
+            'nm_aktivitas_reward.required' => 'Nama aktivitas reward harus diisi.',
+            'nilai_aktivitas.required' => 'Nilai aktivitas harus diisi.',
+            'nilai_karakter.required' => 'Nilai karakter harus diisi.',
+            'nilai_karakter' => 'Nilai karakter harus diisi',
+            'status.required' => 'Status harus diisi.',
         ]);
 
-        $aktivitas_reward_siswa                             = new AktivitasRewardSiswa();
-        $aktivitas_reward_siswa->id_jenis_aktivitas_reward  = $input->jenis_aktivitas_reward;
-        $aktivitas_reward_siswa->nm_aktivitas_reward_siswa  = $input->nm_aktivitas_reward;
-        $aktivitas_reward_siswa->nilai_aktivitas            = $input->nilai_aktivitas;
-        $aktivitas_reward_siswa->nilai_karakter             = $input->nilai_karakter;
-        $aktivitas_reward_siswa->is_guru                    = $input->is_guru;
-        $aktivitas_reward_siswa->is_siswa                   = $input->is_siswa;
-        $aktivitas_reward_siswa->is_aktif                   = $input->status;
-        $aktivitas_reward_siswa->created_by                 = $input->auth_data->pengguna->id_pengguna;
+        $aktivitas_reward_siswa = new AktivitasRewardSiswa();
+        $aktivitas_reward_siswa->id_jenis_aktivitas_reward = $input->jenis_aktivitas_reward;
+        $aktivitas_reward_siswa->nm_aktivitas_reward_siswa = $input->nm_aktivitas_reward;
+        $aktivitas_reward_siswa->nilai_aktivitas = $input->nilai_aktivitas;
+        $aktivitas_reward_siswa->nilai_karakter = $input->nilai_karakter;
+        $aktivitas_reward_siswa->is_guru = $input->is_guru;
+        $aktivitas_reward_siswa->is_siswa = $input->is_siswa;
+        $aktivitas_reward_siswa->is_aktif = $input->status;
+        $aktivitas_reward_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
         $aktivitas_reward_siswa->save();
 
         return response()->json([
-            'status'    => 202, // SUCCESS AND LOAD CONTENT
-            'path'      => 'reward-siswa/aktivitas-reward-siswa',
-            'message'   => 'Upload Data Successfully'
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'reward-siswa/aktivitas-reward-siswa',
+            'message' => 'Upload Data Successfully'
         ]);
     }
 
@@ -158,8 +158,8 @@ class AktivitasRewardSiswaController extends Controller
             $data_excel = Excel::toArray(new DataImportExcel, $request->file('file'));
         } catch (\Maatwebsite\Excel\Exceptions\NoTypeDetectedException $e) {
             return [
-                'status'    => 300, // FAILED
-                'message'   => "File yang diupload tidak valid atau tidak dapat dibaca."
+                'status' => 300, // FAILED
+                'message' => "File yang diupload tidak valid atau tidak dapat dibaca."
             ];
         }
 
@@ -198,42 +198,42 @@ class AktivitasRewardSiswaController extends Controller
                     if ($ok) {
                         // \Log::info('Processing row:', (array) $row_excel);
 
-                        $aktivitas_reward_siswa                             = new AktivitasRewardSiswa();
-                        $aktivitas_reward_siswa->id_jenis_aktivitas_reward  = JenisAktivitasReward::cekJenisAktivitas($row_excel->jenis_aktivitas_reward_siswa);
-                        $aktivitas_reward_siswa->nm_aktivitas_reward_siswa  = $row_excel->nama_aktivitas_reward_siswa;
-                        $aktivitas_reward_siswa->nilai_aktivitas            = $row_excel->nilai_aktivitas;
-                        $aktivitas_reward_siswa->is_guru                    = $row_excel->dinilai_oleh_guru;
-                        $aktivitas_reward_siswa->is_siswa                   = $row_excel->dinilai_oleh_siswa;
+                        $aktivitas_reward_siswa = new AktivitasRewardSiswa();
+                        $aktivitas_reward_siswa->id_jenis_aktivitas_reward = JenisAktivitasReward::cekJenisAktivitas($row_excel->jenis_aktivitas_reward_siswa);
+                        $aktivitas_reward_siswa->nm_aktivitas_reward_siswa = $row_excel->nama_aktivitas_reward_siswa;
+                        $aktivitas_reward_siswa->nilai_aktivitas = $row_excel->nilai_aktivitas;
+                        $aktivitas_reward_siswa->is_guru = $row_excel->dinilai_oleh_guru;
+                        $aktivitas_reward_siswa->is_siswa = $row_excel->dinilai_oleh_siswa;
 
                         $nilai_karakter_save = '';
                         foreach (explode(',', $row_excel->nilai_karakter) as $kk) {
                             $nilai_karakter_save .= rtrim(ltrim($kk)) . '#';
                         }
-                        $aktivitas_reward_siswa->nilai_karakter             = rtrim($nilai_karakter_save, '#');
-                        $aktivitas_reward_siswa->is_aktif                   = 1;
-                        $aktivitas_reward_siswa->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                        $aktivitas_reward_siswa->nilai_karakter = rtrim($nilai_karakter_save, '#');
+                        $aktivitas_reward_siswa->is_aktif = 1;
+                        $aktivitas_reward_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
                         $aktivitas_reward_siswa->save();
                     }
                 }
 
                 DB::commit();
                 return [
-                    'status'    => 202, // SUCCESS AND LOAD CONTENT
-                    'path'      => 'reward-siswa/aktivitas-reward-siswa',
-                    'message'   => 'Upload Data Successfully'
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'reward-siswa/aktivitas-reward-siswa',
+                    'message' => 'Upload Data Successfully'
                 ];
             } catch (\Exception $e) {
                 DB::rollback();
 
                 return [
-                    'status'    => 203, // GAGAL
-                    'message'   => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
+                    'status' => 203, // GAGAL
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
                 ];
             }
         } else {
             return [
-                'status'    => 300, // FAILED
-                'message'   => "File Excel Kosong"
+                'status' => 300, // FAILED
+                'message' => "File Excel Kosong"
             ];
         }
     }
@@ -249,7 +249,7 @@ class AktivitasRewardSiswaController extends Controller
             $data->delete();
 
             return response()->json([
-                'status'  => 200,
+                'status' => 200,
                 'success' => true,
                 'message' => 'Data berhasil dihapus'
             ]);
@@ -277,34 +277,34 @@ class AktivitasRewardSiswaController extends Controller
         $auth_data = $input->auth_data;
 
         $validatedData = $request->validate([
-            'jenis_aktivitas_reward'    => 'required',
+            'jenis_aktivitas_reward' => 'required',
             'nm_aktivitas_reward_siswa' => 'required',
-            'nilai_aktivitas'           => 'required',
-            'nilai_karakter'            => 'required',
-            'status'                    => 'required',
+            'nilai_aktivitas' => 'required',
+            'nilai_karakter' => 'required',
+            'status' => 'required',
         ], [
-            'jenis_aktivitas_reward.required'       => 'Jenis aktivitas reward harus diisi.',
-            'nm_aktivitas_reward_siswa.required'    => 'Nama aktivitas reward harus diisi.',
-            'nilai_aktivitas.required'              => 'Nilai aktivitas harus diisi.',
-            'nilai_karakter.required'               => 'Nilai karakter harus diisi.',
-            'nilai_karakter'                        => 'Nilai karakter harus diisi',
-            'status.required'                       => 'Status harus diisi.',
+            'jenis_aktivitas_reward.required' => 'Jenis aktivitas reward harus diisi.',
+            'nm_aktivitas_reward_siswa.required' => 'Nama aktivitas reward harus diisi.',
+            'nilai_aktivitas.required' => 'Nilai aktivitas harus diisi.',
+            'nilai_karakter.required' => 'Nilai karakter harus diisi.',
+            'nilai_karakter' => 'Nilai karakter harus diisi',
+            'status.required' => 'Status harus diisi.',
         ]);
 
-        $aktivitas_reward_siswa                             = AktivitasRewardSiswa::find($input->id_aktivitas_reward_siswa);
-        $aktivitas_reward_siswa->id_jenis_aktivitas_reward  = $input->jenis_aktivitas_reward;
-        $aktivitas_reward_siswa->nm_aktivitas_reward_siswa  = $input->nm_aktivitas_reward_siswa;
-        $aktivitas_reward_siswa->nilai_aktivitas            = $input->nilai_aktivitas;
-        $aktivitas_reward_siswa->nilai_karakter             = $input->nilai_karakter;
-        $aktivitas_reward_siswa->is_guru                    = $input->is_guru;
-        $aktivitas_reward_siswa->is_sekretaris              = $input->is_sekretaris;
-        $aktivitas_reward_siswa->is_aktif                   = $input->status;
-        $aktivitas_reward_siswa->created_by                 = $input->auth_data->pengguna->id_pengguna;
+        $aktivitas_reward_siswa = AktivitasRewardSiswa::find($input->id_aktivitas_reward_siswa);
+        $aktivitas_reward_siswa->id_jenis_aktivitas_reward = $input->jenis_aktivitas_reward;
+        $aktivitas_reward_siswa->nm_aktivitas_reward_siswa = $input->nm_aktivitas_reward_siswa;
+        $aktivitas_reward_siswa->nilai_aktivitas = $input->nilai_aktivitas;
+        $aktivitas_reward_siswa->nilai_karakter = $input->nilai_karakter;
+        $aktivitas_reward_siswa->is_guru = $input->is_guru;
+        $aktivitas_reward_siswa->is_sekretaris = $input->is_sekretaris;
+        $aktivitas_reward_siswa->is_aktif = $input->status;
+        $aktivitas_reward_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
         $aktivitas_reward_siswa->update();
 
         return response()->json([
             'status' => 200,
-            'path'      => 'reward-siswa/aktivitas-reward-siswa',
+            'path' => 'reward-siswa/aktivitas-reward-siswa',
             'message' => 'Data Berhasil di Update.'
         ]);
     }
@@ -453,4 +453,41 @@ class AktivitasRewardSiswaController extends Controller
 
         return view('bk.aktivitas-siswa.view-input-capaian-karakter', compact(['data_kelas', 'data_aktivitas']));
     }
+
+    public function detailRewardSiswa(Request $request, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = auth_data();
+
+        $semester = Semester::where('id_semester', $input->semester)->first();
+        if ($semester->nm_semester == 'Ganjil') {
+            $year = Str::before($semester->tahun_ajaran, '/');
+            $startOfMonth = Carbon::create($year, 7, 1)->startOfMonth();
+            $endOfMonth = Carbon::create($year, 12, 1)->endOfMonth();
+        } else {
+            // Genap
+            $year = Str::after($semester->tahun_ajaran, '/');
+            $startOfMonth = Carbon::create($year, 1, 1)->startOfMonth();
+            $endOfMonth = Carbon::create($year, 6, 1)->endOfMonth();
+        }
+        $data = DB::table('reward_siswa as rs')
+            ->leftJoin('aktivitas_reward_siswa as ars', 'rs.id_event', '=', 'ars.id_aktivitas_reward_siswa')
+            ->leftJoin('jenis_aktivitas_reward as jar', 'ars.id_jenis_aktivitas_reward', '=', 'jar.id_jenis_aktivitas_reward')
+            ->select(
+                'ars.nm_aktivitas_reward_siswa',
+                'jar.nm_jenis_aktivitas_reward',
+                DB::raw('COUNT(rs.id_event) as frekuensi')
+            )
+            ->where('rs.id_siswa', $id_siswa)
+            ->where('ars.nilai_karakter', $input->karakter)
+            ->whereBetween('rs.created_at', [$startOfMonth, $endOfMonth])
+            ->whereNull('rs.deleted_at')
+            ->groupBy('ars.id_aktivitas_reward_siswa', 'ars.nm_aktivitas_reward_siswa', 'jar.nm_jenis_aktivitas_reward')
+            ->get();
+
+        return response()->json([
+            'reward_list' => $data,
+        ]);
+    }
+
 }
