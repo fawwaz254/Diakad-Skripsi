@@ -179,7 +179,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PRESENSI MP PELANGGARAN **/
-    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-', $status_siswa = null, $filter_tanggal = null)
+    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-', $status_siswa = null, $filter_tanggal = null, $filter_kelas = null)
     {
         // get mode view
         if ($id == null) {
@@ -201,6 +201,9 @@ class LibDataPelanggaran
                 })
                 ->when($filter_tanggal !== null, function ($q) use ($filter_tanggal) {
                     $q->whereBetween('presensi_mp_pelanggaran.created_at', [$filter_tanggal . ' 00:00:00', $filter_tanggal . ' 23:59:59']);
+                })
+                ->when($filter_kelas !== null, function ($q) use ($filter_kelas) {
+                    $q->where('presensi_mp_pelanggaran.id_kelas', $filter_kelas);
                 })
                 ->orderBy('presensi_mp_pelanggaran.created_at', 'desc');
 
@@ -233,7 +236,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PELANGGARAN **/
-    public static function fetchDataTindakanPelanggaran($auth_data, $status = null, $id = null, $is_datatable = null, $status_siswa = null, $filter_tanggal = null)
+    public static function fetchDataTindakanPelanggaran($auth_data, $status = null, $id = null, $is_datatable = null, $status_siswa = null, $filter_tanggal = null, $filter_kelas = null)
     {
 
         // get mode view
@@ -258,6 +261,9 @@ class LibDataPelanggaran
                     })
                     ->when($status_siswa !== null && $status_siswa !== '0', function ($q) {
                         $q->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF');
+                    })
+                    ->when($filter_kelas !== null, function ($q) use ($filter_kelas) {
+                        $q->where('pelanggaran_siswa.id_kelas', $filter_kelas);
                     })
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
