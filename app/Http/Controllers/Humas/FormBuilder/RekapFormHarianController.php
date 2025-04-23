@@ -299,4 +299,79 @@ class RekapFormHarianController extends Controller
 
         return view('humas/form-builder/rekap-form-harian/view-detail-rekap-harian', compact('auth_data', 'form', 'data', 'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'date'));
     }
+
+    public function exportRekapBulanan(Request $request, $id_form, $bulan = null, $tahun = null, $id_kelas = null, $id_pertanyaan = '0')
+    {
+        $auth_data = $request->auth_data;
+        $form = Form::with('pertanyaan_form')->findOrFail($id_form);
+        $roles = $form->id_role;
+        // dd($auth_data);
+
+        if ($roles == '15') {
+            $data_pengguna = Pengguna::whereHas('role_pengguna', fn($q) => $q->where('id_role', 15))
+                ->whereHas('status_pengguna', fn($q) => $q->where('aktif_status_pengguna', 1))
+                ->orderBy('nm_pengguna')
+                ->get();
+        } elseif ($roles == '2') {
+            $data_pengguna = Pengguna::has('guru')
+                ->whereHas('status_pengguna', fn($q) => $q->where('aktif_status_pengguna', 1))
+                ->orderBy('nm_pengguna')
+                ->get();
+        } elseif ($roles == '3') {
+            $id_kelas = $id_kelas ?? Kelas::where('is_aktif', 1)->first()->id_kelas;
+            $data_pengguna = Pengguna::whereHas('status_pengguna', fn($q) => $q->where('aktif_status_pengguna', 1))
+                ->whereHas('siswa', fn($q) => $q->where('id_kelas', $id_kelas))
+                ->orderBy('nm_pengguna')
+                ->get();
+        }
+
+        $jawaban_form = JawabanForm::with(['detail_jawaban_form.pertanyaan_form'])
+            ->where('id_form', $id_form)
+            ->whereMonth('created_at', $bulan)
+            ->whereYear('created_at', $tahun)
+            ->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))
+            ->get();
+
+        $dataJawaban = [];
+        foreach ($jawaban_form as $form_jawaban) {
+            foreach ($form_jawaban->detail_jawaban_form as $j) {
+                $date = \Carbon\Carbon::parse($j->created_at)->format('Y-m-d');
+                $key = $j->created_by . $date;
+
+                $jawaban = $j->jawaban;
+                $decoded = json_decode($jawaban, true);
+
+                if ((is_null($jawaban) || $jawaban === '' || $jawaban === '[]') && $j->jawaban_lainnya) {
+                    $dataJawaban[$key][] = ' ' . $j->jawaban_lainnya;
+                } elseif (is_array($decoded)) {
+                    $dataJawaban[$key][] = ' ' . implode(', ', $decoded);
+                } else {
+                    $dataJawaban[$key][] = ' ' . $jawaban;
+                }
+            }
+        }
+
+
+        foreach ($dataJawaban as $key => $jawabans) {
+            $flattened = [];
+            foreach ($jawabans as $jawaban) {
+                if (is_array($jawaban)) {
+                    $flattened = array_merge($flattened, $jawaban);
+                } else {
+                    $flattened[] = $jawaban;
+                }
+            }
+            $dataJawaban[$key] = $flattened;
+        }
+        // dd($dataJawaban);
+
+        $bulan = Bulan::findOrFail($bulan);
+        $dates = \Carbon\CarbonPeriod::create(
+            \Carbon\Carbon::create($tahun, $bulan->id_bulan, 1),
+            \Carbon\Carbon::create($tahun, $bulan->id_bulan, 1)->endOfMonth()
+        );
+        // dd($dates);
+
+        return view('humas/form-builder/rekap-form-harian/export-rekap-bulanan', compact('auth_data', 'form', 'bulan', 'data_pengguna', 'dates', 'dataJawaban'));
+    }
 }
