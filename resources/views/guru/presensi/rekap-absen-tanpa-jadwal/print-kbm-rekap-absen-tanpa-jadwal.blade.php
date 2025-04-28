@@ -59,7 +59,7 @@
                 <th colspan="25">Pertemuan pekan ke</th>
             </tr>
             <tr>
-                @foreach($data_presensi as $presensi_mp)
+                @foreach($data_presensi_mp as $presensi_mp)
                 <th>{{$presensi_mp->pertemuan_ke}}<br>{{date_format(date_create($presensi_mp->tgl_presensi),"d/m/y")}}</th>
                 @endforeach
             </tr>
@@ -75,12 +75,12 @@
                 <td>{{$siswa->nis_siswa}}</td>
                 <td>{{$siswa->nisn_siswa}}</td>
                 <td>{{$siswa->nm_pengguna}}</td>
-                @foreach($data_presensi as $presensi_mp)
+                @foreach($data_presensi_mp as $presensi_mp)
                     @php
-                        $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa'] = $presensi_mp->presensi_mp_siswa->count();
-                        $rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] = $presensi_mp->presensi_mp_siswa->where('kehadiran', 1)->count();
+                        $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa'] = $data_presensi_siswa->count();
+                        $rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] = $data_presensi_siswa->where('kehadiran', 1)->count();
                     @endphp
-                    @if($presensi_mp_siswa = $presensi_mp->presensi_mp_siswa->firstWhere('id_siswa', $siswa->id_siswa))
+                    @if($presensi_mp_siswa = $data_presensi_siswa->firstWhere('id_siswa', $siswa->id_siswa))
                         @if($presensi_mp_siswa->kehadiran == 1)
                         <td class="is-center"> &#10004; </td>
                         @elseif($presensi_mp_siswa->kehadiran == 2)
@@ -100,7 +100,7 @@
             @endforeach
             <tr>
                 <th colspan="4">Persentase Absen</th>
-                @foreach($data_presensi as $presensi_mp)
+                @foreach($data_presensi_mp as $presensi_mp)
                 <td>{{round(($rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] / $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa'] * 100), 2)}}%</td>
                 @endforeach
             </tr>

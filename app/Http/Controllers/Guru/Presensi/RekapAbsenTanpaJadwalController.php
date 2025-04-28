@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\App;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
-
+use App\Models\PresensiMpSiswa;
 use Auth;
 use DB;
 use Session;
@@ -105,8 +105,10 @@ class RekapAbsenTanpaJadwalController extends BaseController
         $data_kelas = KelasMp::with('kelas', 'mata_pelajaran', 'pengampu_mp', 'presensi_mp')
             ->where('id_kelas_mp', $id_kelas_mp)
             ->first();
-        $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_kelas_mp', $id_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
-        return view('guru/presensi/rekap-absen-tanpa-jadwal/view-kbm-rekap-absen-tanpa-jadwal', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi', 'id_kelas_mp'));
+        $data_presensi_mp = PresensiMp::selectRaw('id_presensi_mp, pertemuan_ke, tgl_presensi')->where('id_kelas_mp', $id_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
+        $data_presensi_siswa = PresensiMpSiswa::selectRaw('id_siswa, kehadiran')->whereIn('id_presensi_mp', $data_presensi_mp->pluck('id_presensi_mp'))->get();
+
+        return view('guru/presensi/rekap-absen-tanpa-jadwal/view-kbm-rekap-absen-tanpa-jadwal', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi_mp', 'data_presensi_siswa', 'id_kelas_mp'));
     }
 
     public function printKBMRekapAbsenTanpaJadwal(Request $request, $id_kelas_mp)
@@ -160,8 +162,9 @@ class RekapAbsenTanpaJadwalController extends BaseController
             ->orderBy('presensi_mp.pertemuan_ke', 'desc')
             ->first();
 
-        $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_kelas_mp', $id_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
+            $data_presensi_mp = PresensiMp::selectRaw('id_presensi_mp, pertemuan_ke, tgl_presensi')->where('id_kelas_mp', $id_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
+            $data_presensi_siswa = PresensiMpSiswa::selectRaw('id_siswa, kehadiran')->whereIn('id_presensi_mp', $data_presensi_mp->pluck('id_presensi_mp'))->get();
 
-        return view('guru/presensi/rekap-absen-tanpa-jadwal/print-kbm-rekap-absen-tanpa-jadwal', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi'));
+        return view('guru/presensi/rekap-absen-tanpa-jadwal/print-kbm-rekap-absen-tanpa-jadwal', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi_mp', 'data_presensi_siswa'));
     }
 }
