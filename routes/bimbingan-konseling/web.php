@@ -235,10 +235,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('download-template', [AktivitasRewardSiswaController::class, 'downloadTemplate'])->name('downloadTemplate');
                 Route::post('upload-file', [AktivitasRewardSiswaController::class, 'uploadAktivitas']);
             });
-
             Route::prefix('rekap-reward-siswa')->group(function () {
                 Route::get('/', [AktivitasRewardSiswaController::class, 'viewRekapRewardSiswa']);
                 Route::get('datatables', [AktivitasRewardSiswaController::class, 'datatablesAktivitasRewardSiswa']);
+                Route::get('detail/{id_siswa}', [AktivitasRewardSiswaController::class, 'detailRewardSiswa']);
             });
 
             Route::get('approve-reward-siswa', [AktivitasRewardSiswaController::class, 'viewApproveRewardSiswa']);
