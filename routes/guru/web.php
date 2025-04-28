@@ -102,6 +102,7 @@ use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Guru\WaliMurid\RaporSemesterController;
 use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
 use App\Http\Controllers\Humas\FormBuilder\CustomFormController;
+use App\Http\Controllers\Humas\MagangSiswa\KunjunganMagangController;
 use App\Http\Controllers\Keuangan\SIM\SppController;
 use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
@@ -1147,6 +1148,15 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('/datatableApprovePestasi', [AktivitasRewardSiswaController::class, 'datatableApprovePestasi']);
 
             Route::get('/input-capaian-karakter', [AktivitasRewardSiswaController::class, 'viewInputCapaianKarakter']);
+        });
+
+        // Magang siswa
+        Route::prefix('magang-siswa')->group(function () {
+            Route::get('list-kunjungan-magang', [KunjunganMagangController::class, 'viewKunjunganMagang']);
+            Route::get('list-kunjungan-magang-datatables', [KunjunganMagangController::class, 'datatableKunjunganMagang']);
+            Route::get('add-kunjungan-magang', [KunjunganMagangController::class, 'addKunjunganMagang']);
+            Route::get('edit-kunjungan-magang/{id_kunjungan_magang}', [KunjunganMagangController::class, 'editKunjunganMagang']);
+            Route::post('action-kunjungan-magang/{mode}/{id_kunjungan_magang?}', [KunjunganMagangController::class, 'actionKunjunganMagang']);
         });
     });
 });

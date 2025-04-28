@@ -50,9 +50,11 @@ use App\Http\Controllers\Humas\FormBuilder\RekapFormHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
+use App\Http\Controllers\Humas\MagangSiswa\KunjunganMagangController;
 use App\Http\Controllers\Humas\MagangSiswa\PembimbingMagangController;
 use App\Http\Controllers\Humas\MagangSiswa\RekapAbsensiMagangController;
 use App\Http\Controllers\Humas\ShiftPengguna\ShiftSiswaController;
+use App\Models\KunjunganMagang;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
@@ -289,8 +291,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
                 Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'editShiftAbsensi']);
-                Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);
-                ;
+                Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);;
             });
 
             Route::prefix('shift_siswa')->group(function () {
@@ -577,6 +578,11 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absensi-magang', [RekapAbsensiMagangController::class, 'viewRekapAbsensiMagang']);
             Route::get('rekap-absensi-magang/detail/{id_rekanan}/{id_periode}/{date}', [RekapAbsensiMagangController::class, 'viewDetailRekapAbsensiMagang']);
             Route::get('rekap-absensi-magang/print/{id_siswa}', [RekapAbsensiMagangController::class, 'printRekapPresensiMagang']);
+
+            // Kunjungan magang
+            Route::get('kunjungan-magang/{id_periode_magang?}', [KunjunganMagangController::class, 'viewKunjunganMagang']);
+            Route::post('kunjungan-magang', [KunjunganMagangController::class, 'actionViewKunjunganMagang']);
+            Route::get('kunjungan-magang-datatables/{periode_magang?}', [KunjunganMagangController::class, 'datatableKunjunganMagang']);
         });
 
         /** === MODUL MAGANG ALUMNI === **/
@@ -608,7 +614,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('export-alumni2/{id_kelas}/{tahun}', [TracerAlumniController::class, 'exportAlumnni2']);
 
                 Route::get('export-alumni-pdf/{id_kelas}/{tahun}', [TracerAlumniController::class, 'exportAlumnniPdf']);
-
             });
         });
 
