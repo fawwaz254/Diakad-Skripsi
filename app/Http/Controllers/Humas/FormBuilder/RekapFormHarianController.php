@@ -46,7 +46,7 @@ class RekapFormHarianController extends Controller
                 return $item->is_aktif == '1' ? 'Aktif' : 'Tidak Aktif';
             })
             ->addColumn('jumlah_jawaban', function ($item) {
-                return $item->jawaban_form->count();
+                return $item->jawaban_form_count;
             })
             ->make(true);
     }
@@ -54,12 +54,12 @@ class RekapFormHarianController extends Controller
     public function viewRekapBulananFormHarian(Request $request, $id_form, $bulan = null, $tahun = null, $id_kelas = null, $id_pertanyaan = '0')
     {
         $input = (object) $request->input();
-        // dd($input);
         $auth_data = $input->auth_data;
         $now = Carbon::now();
 
-        $form = Form::with('pertanyaan_form')->find($id_form);
+        $form = Form::find($id_form);
         $roles = $form->id_role;
+
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
@@ -103,7 +103,9 @@ class RekapFormHarianController extends Controller
             $bulan = $now->month;
         }
 
-        $jawaban_form = JawabanForm::with('detail_jawaban_form.pertanyaan_form')->where('id_form', $id_form)->whereMonth('created_at', $bulan)
+        $data_jawaban_form = JawabanForm::selectRaw('id_jawaban_form, created_at, created_by')
+            ->where('id_form', $id_form)
+            ->whereMonth('created_at', $bulan)
             ->whereYear('created_at', $tahun)
             ->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))
             ->get();
@@ -113,73 +115,69 @@ class RekapFormHarianController extends Controller
         $nm_pertanyaan = '';
 
         if ($id_pertanyaan == '0') {
-            foreach ($jawaban_form as $j) {
-                $date = Carbon::parse($j->created_at)->format('Y-m-d');
-                $dataJawaban[$j->created_by . $date] = $j->id_jawaban_form;
+            foreach ($data_jawaban_form as $jawaban_form) {
+                $date = Carbon::parse($jawaban_form->created_at)->format('Y-m-d');
+                $dataJawaban[$jawaban_form->created_by . $date] = $jawaban_form->id_jawaban_form;
             }
         } else {
             $nm_pertanyaan = PertanyaanForm::find($id_pertanyaan)->nm_pertanyaan_form;
-            // dd('masuk sini');
-            // $detail_jawaban_form = DetailJawabanForm::with('pertanyaan_form')->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))->whereIn('id_jawaban_form', $jawaban_form->pluck('id_jawaban_form'))->where('id_pertanyaan_form', $id_pertanyaan)->get();
-            foreach ($jawaban_form as $data_jawaban_form) {
-                foreach ($data_jawaban_form->detail_jawaban_form as $j) {
-                    if ($j->id_pertanyaan_form == $id_pertanyaan) {
-                        // dd($id_pertanyaan);
-                        $date = Carbon::parse($j->created_at)->format('Y-m-d');
-                        if ($j->pertanyaan_form->jenis_pertanyaan == '4') {
-                            $data_opsi = [];
-                            $counter = 0;
-                            $warna = ['#ff0000', '#FFA500', '#008000'];
-                            if (!empty($j->jawaban)) {
-                                $options = json_decode($j->jawaban, true);
-                                $others = json_decode($j->jawaban_lainnya, true);
-                                $opsi = json_decode($j->pertanyaan_form->options, true);
-                                $colors = json_decode($j->pertanyaan_form->label_color, true);
-                                $hasil = count($data_opsi) / count($opsi);
-                                foreach ($options as $opsi) {
-                                    $data_opsi[] = $opsi;
-                                }
-                                foreach ($others as $lainnya) {
-                                    $data_opsi[] = $lainnya;
-                                }
-                                if ($hasil >= 0.5) {
-                                    $data_warna = $warna[2];
-                                } else if ($hasil < 0.5) {
-                                    $data_warna = $warna[1];
-                                } else {
-                                    $data_warna = $warna[0];
-                                }
 
-                                $data = array(
-                                    $data_opsi,
-                                    $data_warna
-                                );
+            $data_detail_jawaban = DetailJawabanForm::whereIn('id_jawaban_form', $data_jawaban_form->pluck('id_jawaban_form'))
+                                    ->get();
+            foreach ($data_detail_jawaban as $detail) {
+                if ($detail->id_pertanyaan_form == $id_pertanyaan) {
+                    $date = Carbon::parse($detail->created_at)->format('Y-m-d');
+                    if ($detail->pertanyaan_form->jenis_pertanyaan == '4') {
+                        $data_opsi = [];
+                        $counter = 0;
+                        $warna = ['#ff0000', '#FFA500', '#008000'];
+                        if (!empty($detail->jawaban)) {
+                            $options = json_decode($detail->jawaban, true);
+                            $others = json_decode($detail->jawaban_lainnya, true);
+                            $opsi = json_decode($detail->pertanyaan_form->options, true);
+                            $colors = json_decode($detail->pertanyaan_form->label_color, true);
+                            $hasil = count($data_opsi) / count($opsi);
+                            foreach ($options as $opsi) {
+                                $data_opsi[] = $opsi;
                             }
-                            $dataJawaban[$j->created_by . $date] = $data;
-                        } else if ($j->pertanyaan_form->jenis_pertanyaan == '3') {
-                            $warna = '#d4ffdf';
-                            if (!empty($j->jawaban)) {
-                                $options = json_decode($j->pertanyaan_form->options, true);
-                                $colors = json_decode($j->pertanyaan_form->label_color, true);
-                                foreach ($options as $key => $value) {
-                                    if ($value == $j->jawaban) {
-                                        $warna = $colors[$key];
-                                    }
-                                }
+                            foreach ($others as $lainnya) {
+                                $data_opsi[] = $lainnya;
+                            }
+                            if ($hasil >= 0.5) {
+                                $data_warna = $warna[2];
+                            } else if ($hasil < 0.5) {
+                                $data_warna = $warna[1];
+                            } else {
+                                $data_warna = $warna[0];
                             }
 
-                            $dataJawaban[$j->created_by . $date] = [$j->jawaban, $warna];
-                        } else {
-                            $dataJawaban[$j->created_by . $date] = [$j->jawaban, '#d4ffdf'];
+                            $data = array(
+                                $data_opsi,
+                                $data_warna
+                            );
                         }
+                        $dataJawaban[$detail->created_by . $date] = $data;
+                    } else if ($detail->pertanyaan_form->jenis_pertanyaan == '3') {
+                        $warna = '#d4ffdf';
+                        if (!empty($detail->jawaban)) {
+                            $options = json_decode($detail->pertanyaan_form->options, true);
+                            $colors = json_decode($detail->pertanyaan_form->label_color, true);
+                            foreach ($options as $key => $value) {
+                                if ($value == $detail->jawaban) {
+                                    $warna = $colors[$key];
+                                }
+                            }
+                        }
+
+                        $dataJawaban[$detail->created_by . $date] = [$detail->jawaban, $warna];
+                    } else {
+                        $dataJawaban[$detail->created_by . $date] = [$detail->jawaban, '#d4ffdf'];
                     }
                 }
             }
         }
 
         $list_pertanyaan = PertanyaanForm::where('id_form', $id_form)->orderBy('urutan', 'asc')->get();
-        // dd($list_pertanyaan);
-        // $list_kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat')->orderBy('nm_kelas')->get();
         $start_month = Carbon::create($tahun, $bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun, $bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
         $dates = CarbonPeriod::create($start_month, $end_month);
@@ -187,14 +185,15 @@ class RekapFormHarianController extends Controller
         $bulan = Bulan::find($bulan);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        return view('humas/form-builder/rekap-form-harian/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month',  'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan', 'nm_pertanyaan'));
+        return view('humas/form-builder/rekap-form-harian/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan', 'nm_pertanyaan'));
     }
 
     public function getDetailJawaban(Request $request)
     {
         $input = (object) $request->input();
-        $jawaban_form = JawabanForm::with('detail_jawaban_form.pertanyaan_form')->find($input->id_jawaban_form);
-        return $jawaban_form;
+        $data_jawaban_form = DetailJawabanForm::with('pertanyaan_form')->where('id_jawaban_form', $input->id_jawaban_form)->get();
+
+        return $data_jawaban_form;
     }
 
     public function viewHarianFormHarian(Request $request, $id_form, $date = null,  $id_kelas = null)
@@ -202,7 +201,7 @@ class RekapFormHarianController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $form = Form::with('pertanyaan_form')->find($id_form);
+        $form = Form::find($id_form);
         $list_pertanyaan = PertanyaanForm::where('id_form', $id_form)->orderBy('urutan', 'asc')->get();
 
         $roles = $form->id_role;
@@ -242,62 +241,38 @@ class RekapFormHarianController extends Controller
             ];
         }
 
-        $jawaban_form = JawabanForm::with('detail_jawaban_form.pertanyaan_form')->where('id_form', $id_form)
-            // ->whereMonth('created_at', $bulan)
-            // ->whereYear('created_at', $tahun)
+        $data_jawaban_form = JawabanForm::selectRaw('id_jawaban_form, created_by')->where('id_form', $id_form)
             ->whereDate('created_at', $date)
             ->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))
             ->get();
 
+        $data_detail_jawaban = DetailJawabanForm::whereIn('id_jawaban_form', $data_jawaban_form->pluck('id_jawaban_form'))
+            ->get();
+
         $dataJawaban = [];
 
-        // dd($jawaban_form);
-
-        // if ($id_pertanyaan == '0') {
-        // foreach ($jawaban_form as $j) {
-        //     $date = Carbon::parse($j->created_at)->format('Y-m-d');
-        //     $dataJawaban[$j->created_by . $date] = $j->id_jawaban_form;
-        // }
-        // } else {
-        // $detail_jawaban_form = DetailJawabanForm::with('pertanyaan_form')->whereIn('created_by', $data_pengguna->pluck('id_pengguna'))->whereIn('id_jawaban_form', $jawaban_form->pluck('id_jawaban_form'))->where('id_pertanyaan_form', $id_pertanyaan)->get();
-        foreach ($jawaban_form as $data_jawaban_form) { // loop data jawaban form
-            foreach ($data_jawaban_form->detail_jawaban_form as $j) { // loop data detail jawaban form
-                // if ($j->id_pertanyaan_form == $id_pertanyaan) {
-                // $date = Carbon::parse($j->created_at)->format('Y-m-d');
-                if ($j->pertanyaan_form->jenis_pertanyaan == '4') { // jika jenis pertanyaan banyak opsi
-                    //  handle jawaban
-                    $data_opsi = [];
-                    if (!empty($j->jawaban)) { // jika jawaban tidak kosong
-                        $options = json_decode($j->jawaban, true); // decode jawaban
-                        foreach ($options as $opsi) { // loop jawaban opsi
-                            $data_opsi[] = $opsi; // masukkan jawaban ke array
-                        }
+        foreach ($data_detail_jawaban as $detail_jawaban) { // loop data detail jawaban form
+            $pertanyaan_form = $list_pertanyaan->firstWhere('id_pertanyaan_form', $detail_jawaban->id_pertanyaan_form); // ambil pertanyaan form
+            if ($pertanyaan_form->jenis_pertanyaan == '4') { // jika jenis pertanyaan banyak opsi
+                //  handle jawaban
+                $data_opsi = [];
+                if (!empty($detail_jawaban->jawaban)) { // jika jawaban tidak kosong
+                    $options = json_decode($detail_jawaban->jawaban, true); // decode jawaban
+                    foreach ($options as $opsi) { // loop jawaban opsi
+                        $data_opsi[] = $opsi; // masukkan jawaban ke array
                     }
-                    // handle jawaban lainnya
-                    if (!empty($j->jawaban_lainnya)) { // jika jawaban lainnya tidak kosong
-                        $data_opsi[] = $j->jawaban_lainnya; // masukkan jawaban lainnya ke array
-                    }
-                    $dataJawaban[$j->created_by . $j->pertanyaan_form->id_pertanyaan_form] = $data_opsi;
-                } else {
-                    $dataJawaban[$j->created_by . $j->pertanyaan_form->id_pertanyaan_form] = $j->jawaban;
                 }
+                // handle jawaban lainnya
+                if (!empty($detail_jawaban->jawaban_lainnya)) { // jika jawaban lainnya tidak kosong
+                    $data_opsi[] = $detail_jawaban->jawaban_lainnya; // masukkan jawaban lainnya ke array
+                }
+                $dataJawaban[$detail_jawaban->created_by . $detail_jawaban->pertanyaan_form->id_pertanyaan_form] = $data_opsi;
+            } else {
+                $dataJawaban[$detail_jawaban->created_by . $detail_jawaban->pertanyaan_form->id_pertanyaan_form] = $detail_jawaban->jawaban;
             }
         }
-        /*
-        dd($dataJawaban);
-        }
-        }
 
-        $list_kelas = Kelas::orderBy('tingkat')->where('is_aktif', 1)->orderBy('nm_kelas')->get();
-        $start_month = Carbon::create($tahun, $bulan, 1, 0, 0, 0, 'Asia/Jakarta');
-        $end_month = Carbon::create($tahun, $bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
-        $dates = CarbonPeriod::create($start_month, $end_month);
-
-        $bulan = Bulan::find($bulan);
-        $data_bulan = Bulan::orderBy('id_bulan')->get();
-        */
-
-        return view('humas/form-builder/rekap-form-harian/view-detail-rekap-harian', compact('auth_data', 'form', 'data', 'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'date'));
+        return view('humas/form-builder/rekap-form-harian/view-detail-rekap-harian', compact('auth_data', 'form', 'data', 'data_pengguna', 'list_pertanyaan', 'dataJawaban', 'date'));
     }
 
     public function exportRekapBulanan(Request $request, $id_form, $bulan = null, $tahun = null, $id_kelas = null, $id_pertanyaan = '0')

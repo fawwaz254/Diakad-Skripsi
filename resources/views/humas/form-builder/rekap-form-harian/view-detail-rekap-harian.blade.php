@@ -69,11 +69,6 @@
                 <div class="header">
                     <h2>
                         Rekap Form Detail
-                        {{-- {{ $bulan->nm_bulan }} --}}
-                        {{-- <a target="_blank"
-                            href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/' . $bulan->id_bulan . '/' . $tahun . '/download') }}"
-                        class="btn btn-success waves-effect"><i class="material-icons">print</i><span>Download
-                            Excel</span></a> --}}
                     </h2>
                 </div>
                 <div class="body">
@@ -83,10 +78,10 @@
                                 <tr>
                                     <th rowspan="2">No. </th>
                                     <th rowspan="2">Nama</th>
-                                    <th colspan="{{ $form->pertanyaan_form->count() }}">Pertanyaan</th>
+                                    <th colspan="{{ $list_pertanyaan->count() }}">Pertanyaan</th>
                                 </tr>
                                 <tr>
-                                    @foreach ($form->pertanyaan_form as $pertanyaan_form)
+                                    @foreach ($list_pertanyaan as $pertanyaan_form)
                                         <th>
                                             {{ $pertanyaan_form->nm_pertanyaan_form }}
                                         </th>
@@ -101,7 +96,7 @@
                                     <tr>
                                         <td>{{ $no++ }}</td>
                                         <td>{{ $pengguna->fullname() }}</td>
-                                        @foreach ($form->pertanyaan_form as $pertanyaan_form)
+                                        @foreach ($list_pertanyaan as $pertanyaan_form)
                                             @if (isset($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]))
                                                 @if ($pertanyaan_form->jenis_pertanyaan == '4')
                                                     <td>
@@ -135,24 +130,6 @@
         </div>
     </div>
 </div>
-
-
-{{-- <div class="modal" tabindex="-1" role="dialog" id="myModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="alert alert-danger" style="display:none"></div>
-            <div class="modal-header">
-                <h4 class="modal-title" style="text-align: center">Detail Jawaban</h4>
-            </div>
-            <div id="place">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
 
 <script>
     // Custom header print PDF humas datatables
