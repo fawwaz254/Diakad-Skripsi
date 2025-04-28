@@ -109,10 +109,6 @@
                     <div class="header">
                         <h2>
                             Rekap Bulan {{ $bulan->nm_bulan }}
-                            {{-- <a target="_blank"
-                                    href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/' . $bulan->id_bulan . '/' . $tahun . '/download') }}"
-                            class="btn btn-success waves-effect"><i class="material-icons">print</i><span>Download
-                                Excel</span></a> --}}
                         </h2>
 
 
@@ -151,35 +147,35 @@
                                         <td>{{ $no++ }}</td>
                                         <td>{{ $pengguna->fullname() }}</td>
                                         @foreach ($dates as $date)
-                                        @if (isset($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][0]))
-                                        @if ($id_pertanyaan == '0')
-                                        <td style="text-align:center; vertical-align:middle !important; ">
-                                            <button onclick="cekJawaban(this)"
-                                                class="btn btn-success btn-circle waves-effect waves-circle waves-float"
-                                                data-id=" {{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')] }}"><i
-                                                    class="material-icons">remove_red_eye</i></button>
-                                        </td>
-                                        @else
-                                        @if (is_array($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][0]) &&
-                                        count($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][0]) > 0)
-                                        <td
-                                            @if (str_contains($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][1], '#')) style="color:white; text-align:center; vertical-align:middle !important; background-color:{{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][1] }}" @endif>
-                                            @foreach ($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][0] as $item)
-                                            {{ ' - ' . $item }}<br>
-                                            @endforeach
-                                        </td>
-                                        @else
-                                        <td
-                                            @if (str_contains($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][1], '#')) style="text-align:center; vertical-align:middle !important; background-color:{{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][1] }}"
+                                            @if (isset($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')]))
+                                                @if ($id_pertanyaan == '0')
+                                                <td style="text-align:center; vertical-align:middle !important; ">
+                                                    <button onclick="cekJawaban(this)"
+                                                        class="btn btn-success btn-circle waves-effect waves-circle waves-float"
+                                                        data-id=" {{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')] }}"><i
+                                                            class="material-icons">remove_red_eye</i></button>
+                                                </td>
+                                                @else
+                                                @if (is_array($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')]) && count($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')]) > 0)
+                                                    <td @if (str_contains($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][1], '#')) style="color:white; text-align:center; vertical-align:middle !important; background-color:{{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][1] }}" @endif>
+                                                        @foreach ($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')] as $item)
+                                                        {{ ' - ' . $item }}<br>
+                                                        @endforeach
+                                                    </td>
+                                                    @else
+                                                    <td
+                                                            @if (str_contains($dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][1], '#')) style="text-align:center; vertical-align:middle !important; background-color:{{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][1] }}"
+                                                            @else
+                                                            style="text-align:center; vertical-align:middle !important; background-color:#d4ffdf" 
+                                                            @endif
+                                                        >
+                                                        {{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')] }}
+                                                    </td>
+                                                    @endif
+                                                @endif
                                             @else
-                                            style="text-align:center; vertical-align:middle !important; background-color:#d4ffdf" @endif>
-                                            {{ $dataJawaban[$pengguna->id_pengguna . $date->format('Y-m-d')][0] }}
-                                        </td>
-                                        @endif
-                                        @endif
-                                        @else
-                                        <td></td>
-                                        @endif
+                                                <td></td>
+                                            @endif
                                         @endforeach
                                     </tr>
                                     @endforeach
@@ -219,7 +215,6 @@
 
         // var primary_table = $('#primary_table').DataTable({
         //     ordering: false,
-
         //     paging: false
         // });
 
@@ -242,7 +237,7 @@
                     html += '<th>Jawaban</th>';
                     html += '<th>Jawaban Lainnya</th>';
                     html += '</tr>';
-                    $.each(response.detail_jawaban_form, function(key, item) {
+                    $.each(response, function(key, item) {
                         html += '<tr >';
                         html += '<td>' + (key + 1) + '</td>';
                         html += '<td>' + item.pertanyaan_form.nm_pertanyaan_form + '</td>';
