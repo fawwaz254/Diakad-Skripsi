@@ -293,16 +293,23 @@
                     </td>
                     <td style="width:40%; border-style : hidden"></td>
 
-                    <td style="width:25%;border-style : hidden;">Sidoarjo,
+                    <td style="width:25%; position: relative;" align="center">Sidoarjo,
                         {{ $tanggal_cetak }}
                         <br>
-
                         Wali Kelas
+                        <img style="position: absolute; top: 20%; left:27%"
+                            src="{{ Storage::disk('spaces')->url($guru->path_foto_ttd) }}" alt="TTD"
+                            width="120px" height="120px">
                         <br><br><br><br><br><br><br>
-                        <u><b>
-                                {{ $wali_kelas->guru->pengguna->gelar_depan }}
-                                {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                                {{ $wali_kelas->guru->pengguna->gelar_belakang }}</b></u>
+                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                            {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                            {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                            {{ $wali_kelas->guru->pengguna->gelar_belakang }}
+                        @else
+                            <p style="width: 250px;
+                        border-bottom: 1px solid   black;"></p>
+                        @endif
+                        {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
                     </td>
                 </tr>
                 <tr>
