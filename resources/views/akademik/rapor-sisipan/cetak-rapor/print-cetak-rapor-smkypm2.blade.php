@@ -227,22 +227,23 @@
                         {{-- @endif --}}
                         <strong><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></strong>
                     </td>
-                    <td style="border-style: hidden; width: 33%;">
-                        <div style="margin-top: 40px;">
-                            Sidoarjo, {{ $tanggal_cetak }}<br>
-                            Wali Kelas,<br><br><br><br><br><br><br><br><br>
-                            @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
-                                <strong>
-                                    <u>
-                                        {{ $wali_kelas->guru->pengguna->gelar_depan }}
-                                        {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                                        {{ $wali_kelas->guru->pengguna->gelar_belakang }}
-                                    </u>
-                                </strong>
-                            @else
-                                ...........................
-                            @endif
-                        </div>
+                    <td style="width:25%; position: relative;" align="center">Sidoarjo,
+                        {{ $tanggal_cetak }}
+                        <br>
+                        Wali Kelas
+                        <img style="position: absolute; top: 20%; left:27%"
+                            src="{{ Storage::disk('spaces')->url($guru->path_foto_ttd) }}" alt="TTD"
+                            width="120px" height="120px">
+                        <br><br><br><br><br><br><br>
+                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                            {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                            {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                            {{ $wali_kelas->guru->pengguna->gelar_belakang }}
+                        @else
+                            <p style="width: 250px;
+                        border-bottom: 1px solid   black;"></p>
+                        @endif
+                        {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
                     </td>
                 </tr>
             </table>

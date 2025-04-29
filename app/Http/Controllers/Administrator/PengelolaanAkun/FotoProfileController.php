@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\VarDumper\VarDumper;
 
 class FotoProfileController extends Controller
 {
@@ -55,13 +56,14 @@ class FotoProfileController extends Controller
             $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
             $pengguna = auth_data()->pengguna->id_pengguna;
             $guru = Guru::where('id_pengguna', $pengguna)->first();
+
             if ($mode == 'add') {
+
                 DB::beginTransaction();
                 try {
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/ttd' . $guru->id_guru, $request->file('ttd'), 'public');
-
+                    $file = \Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/ttd' . $guru->id_guru, $request->file('ttd'), 'public');
                     $guru->path_foto_ttd = $file;
-                    $guru->updated_by = $pengguna->id_pengguna;
+                    $guru->updated_by = $pengguna;
                     $guru->save();
                     DB::commit();
 

@@ -1,3 +1,16 @@
+<style>
+    .wali-kelas-link {
+        color: black;
+        text-decoration: none;
+    }
+
+    .wali-kelas-link:hover {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+</style>
+
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
@@ -123,15 +136,17 @@
             {
                 data: 'nm_wali_kelas',
                 name: 'nm_wali_kelas',
-                render: function(data) {
+                render: function(data, type, row) {
                     if (data.nm_wali_kelas == 0) {
                         return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                            wali_kelas_url + '/' + data.id + '">' +
+                            wali_kelas_url + '/' + row.id_kelas + '">' +
                             '    <i class="material-icons">playlist_add</i>' +
                             '</a>';
                     } else {
-                        return data.nm_wali_kelas;
-                    };
+                        return '<a class="target-link wali-kelas-link" href="' + wali_kelas_url + '/' + row.id_kelas + '">' +
+                            data.nm_wali_kelas +
+                            '</a>';
+                    }
                 }
             },
             {

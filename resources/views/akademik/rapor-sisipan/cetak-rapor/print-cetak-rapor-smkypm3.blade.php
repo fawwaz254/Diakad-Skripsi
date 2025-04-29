@@ -232,10 +232,14 @@
                     </td>
                     <td style="width:50%; border-style : hidden"></td>
 
-                    <td style="width:25%" align="center">Sidoarjo,
+
+                    <td style="width:25%; position: relative;" align="center">Sidoarjo,
                         {{ $tanggal_cetak }}
                         <br>
                         Wali Kelas
+                        <img style="position: absolute; top: 20%; left:27%"
+                            src="{{ Storage::disk('spaces')->url($guru->path_foto_ttd) }}" alt="TTD"
+                            width="120px" height="120px">
                         <br><br><br><br><br><br><br>
                         @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
                             {{ $wali_kelas->guru->pengguna->gelar_depan }}
