@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guru\WaliKelas;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bulan;
+use App\Models\DetailJawabanForm;
 use App\Models\Form;
 use App\Models\Guru;
 use App\Models\JawabanForm;
@@ -57,8 +58,9 @@ class RekapFormWaliController extends Controller
     public function getDetailJawaban(Request $request)
     {
         $input = (object) $request->input();
-        $jawaban_form = JawabanForm::with('detail_jawaban_form.pertanyaan_form')->find($input->id_jawaban_form);
-        return $jawaban_form;
+        $data_jawaban_form = DetailJawabanForm::with('pertanyaan_form')->where('id_jawaban_form', $input->id_jawaban_form)->get();
+
+        return $data_jawaban_form;
     }
 
     public function viewRekapBulananFormWali(Request $request, $id_form, $bulan = null, $tahun = null, $id_pertanyaan = '0')
@@ -173,7 +175,7 @@ class RekapFormWaliController extends Controller
         $bulan = Bulan::find($bulan);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        return view('guru/wali-kelas/rekap-form-wali/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month',  'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan'));
+        return view('guru/wali-kelas/rekap-form-wali/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month', 'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan'));
     }
 
     public function viewHarianFormWali(Request $request, $id_form, $date = null)
