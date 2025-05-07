@@ -10,43 +10,52 @@
         <h2><a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
 
-    <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card is-gap">
-                <div class="header">
-                    <h2>
-                        Filter Form {{ $form->nm_form }}
-                    </h2>
-                </div>
+    @if (isset($data['allKelas']))
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card is-gap">
+                    <div class="header">
+                        <h2>
+                            Filter Form {{ $form->nm_form }}
+                        </h2>
+                    </div>
 
-                <div class="body">
-                    <div class="row clearfix">
-                        <div class="col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
-                                Kelas
-                            </h2>
-                            <input class="form-control" value="{{$data['kelas']->nm_kelas}}" disabled>
-                            
-                        </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-md-4 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Kelas
+                                </h2>
+                                <select class="form-control show-tick" name="id_kelas">
+                                    @foreach ($data['allKelas'] as $k)
+                                        <option value="{{ $k->id_kelas }}"
+                                            @if ($data['id_kelas'] == $k->id_kelas) SELECTED @endif>
+                                            {{ $k->nm_kelas }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
+                            <div class="col-md-4 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Tanggal
+                                </h2>
+                                <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY"
+                                    value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
+                            </div>
 
-                        <div class="col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
-                                Tanggal
-                            </h2>
-                            <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY" value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i
+                                        class="material-icons">save</i><span>Filter</span></button>
+                            </div>
                         </div>
                     </div>
+
+
                 </div>
-
-
             </div>
         </div>
-    </div>
+    @endif
 </div>
 </div>
 </div>
@@ -71,42 +80,49 @@
                                 <tr>
                                     <th rowspan="2">No. </th>
                                     <th rowspan="2">Nama</th>
-                                    <th colspan="{{ $form->pertanyaan_form->count() }}">Pertanyaan</th>
+                                    <th colspan="{{ $list_pertanyaan->count() }}">Pertanyaan</th>
                                 </tr>
                                 <tr>
-                                    @foreach ($form->pertanyaan_form as $pertanyaan_form)
-                                    <th>
-                                        {{ $pertanyaan_form->nm_pertanyaan_form }}
-                                    </th>
+                                    @foreach ($list_pertanyaan as $pertanyaan_form)
+                                        <th>
+                                            {{ $pertanyaan_form->nm_pertanyaan_form }}
+                                        </th>
                                     @endforeach
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
-                                $no = 1;
+                                    $no = 1;
                                 @endphp
                                 @foreach ($data_pengguna as $pengguna)
-                                <tr>
-                                    <td>{{ $no++ }}</td>
-                                    <td>{{ $pengguna->fullname() }}</td>
-                                    @foreach ($form->pertanyaan_form as $pertanyaan_form)
-                                    @if (isset($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]))
-                                    @if ($pertanyaan_form->jenis_pertanyaan == '4')
-                                    <td>
-                                        @foreach ($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form] as $item)
-                                        {{ ' - ' . $item }}<br>
+                                    <tr>
+                                        <td>{{ $no++ }}</td>
+                                        <td>{{ $pengguna->fullname() }}</td>
+                                        @foreach ($list_pertanyaan as $pertanyaan_form)
+                                            @if (isset($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]))
+                                                @if ($pertanyaan_form->jenis_pertanyaan == '4')
+                                                    <td>
+                                                        @foreach ($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form] as $item)
+                                                            {{ ' - ' . $item }}<br>
+                                                        @endforeach
+                                                    </td>
+                                                @elseif ($pertanyaan_form->jenis_pertanyaan == '2')
+                                                    <td><a
+                                                            href="{{ Storage::disk('spaces')->url($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]) }}">
+                                                            <img src="{{ Storage::disk('spaces')->url($dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form]) }}"
+                                                                alt="" style="width:300px; height:300px">
+                                                        </a>
+                                                    </td>
+                                                @else
+                                                    <td>{{ $dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form] }}
+                                                    </td>
+                                                @endif
+                                            @else
+                                                <td></td>
+                                            @endif
                                         @endforeach
-                                    </td>
-                                    @else
-                                    <td>{{ $dataJawaban[$pengguna->id_pengguna . $pertanyaan_form->id_pertanyaan_form] }}
-                                    </td>
-                                    @endif
-                                    @else
-                                    <td></td>
-                                    @endif
-                                    @endforeach
 
-                                </tr>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
