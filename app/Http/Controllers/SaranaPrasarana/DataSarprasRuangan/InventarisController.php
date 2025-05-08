@@ -96,12 +96,12 @@ class InventarisController extends BaseController
         $validator = Validator::make($request->all(), [
             'id_ruangan'                        => 'required',
             'nm_inventaris_ruangan'             => 'required',
-            'kode_inventaris_ruangan'           => 'required',
-            'tgl_pembelian'                     => 'required',
+            // 'kode_inventaris_ruangan'           => 'required',
+            // 'tgl_pembelian'                     => 'required',
             'jumlah_inventaris_ruangan'         => 'required',
             'jumlah_kondisi_baik'               => 'required',
             'jumlah_kondisi_rusak'              => 'required',
-            'spesifikasi_inventaris_ruangan'    => 'required',
+            // 'spesifikasi_inventaris_ruangan'    => 'required',
             'keterangan_inventaris_ruangan'     => 'required'
         ]);
 
@@ -240,18 +240,20 @@ class InventarisController extends BaseController
                                 ];
                             }
 
-                            if (empty($value->kode_inventaris)) {
-                                return [
-                                    'status'    => 203, // GAGAL
-                                    'message'   => 'Upload data inventaris gagal, ada kode inventaris yang kosong'
-                                ];
-                            }
+                            // if (empty($value->kode_inventaris)) {
+                            //     return [
+                            //         'status'    => 203, // GAGAL
+                            //         'message'   => 'Upload data inventaris gagal, ada kode inventaris yang kosong'
+                            //     ];
+                            // }
 
                             if (empty($value->tanggal_pembelian)) {
-                                return [
-                                    'status'    => 203, // GAGAL
-                                    'message'   => 'Upload data inventaris gagal, ada tanggal pembelian yang kosong'
-                                ];
+                                $now = Carbon::now();
+                                $value->tanggal_pembelian = $now->toDateString();
+                                // return [
+                                //     'status'    => 203, // GAGAL
+                                //     'message'   => 'Upload data inventaris gagal, ada tanggal pembelian yang kosong'
+                                // ];
                             }
 
                             if (empty($value->jumlah_inventaris) && ($value->kondisi_baik != 0)) {
@@ -275,12 +277,12 @@ class InventarisController extends BaseController
                                 ];
                             }
 
-                            if (empty($value->spesifikasi)) {
-                                return [
-                                    'status'    => 203, // GAGAL
-                                    'message'   => 'Upload data inventaris gagal, ada spesifikasi yang kosong'
-                                ];
-                            }
+                            // if (empty($value->spesifikasi)) {
+                            //     return [
+                            //         'status'    => 203, // GAGAL
+                            //         'message'   => 'Upload data inventaris gagal, ada spesifikasi yang kosong'
+                            //     ];
+                            // }
 
                             if (empty($value->keterangan)) {
                                 return [
