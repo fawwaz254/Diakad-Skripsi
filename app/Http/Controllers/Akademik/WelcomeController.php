@@ -71,7 +71,13 @@ class WelcomeController extends BaseController
             ->addSelect([
                 'jumlah_rpp' => MapelRPP::selectRaw('count(*)')
                     ->whereColumn('created_by', 'pengguna.id_pengguna')
+                    ->whereIn('id_semester', function ($q) {
+                        $q->select('id_semester')
+                            ->from('semester')
+                            ->where('is_aktif_semester', 1);
+                    })
             ]);
+
 
         if ($request->has('search') && $request->search['value'] != '') {
             $searchValue = $request->search['value'];
@@ -108,8 +114,10 @@ class WelcomeController extends BaseController
 
     public function modalDetailRpp($id)
     {
-        $detail_rpp = MapelRPP::select('mapel_rpp.*', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran')
+        $detail_rpp = MapelRPP::select('mapel_rpp.*','mata_pelajaran.kd_mata_pelajaran','mata_pelajaran.nm_mata_pelajaran','semester.nm_semester','semester.tahun_ajaran')
             ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'mapel_rpp.id_mata_pelajaran')
+            ->join('semester', 'semester.id_semester', '=', 'mapel_rpp.id_semester')
+            ->where('semester.is_aktif_semester', 1)
             ->where('mapel_rpp.created_by', $id)
             ->get();
 
@@ -121,5 +129,4 @@ class WelcomeController extends BaseController
 
         return view('akademik.detail_rpp', compact('detail_rpp', 'nama_guru'));
     }
-
 }
