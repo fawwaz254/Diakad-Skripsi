@@ -76,7 +76,7 @@ class MataPelajaranController extends BaseController
             $list_data = LibAkademik::fetchDataMataPelajaran($auth_data, null, "1");
         } else {
             $list_data = LibAkademik::fetchDataMataPelajaran($auth_data, null);
-        }    
+        }
 
         return Datatables::of($list_data)
             ->addColumn('status', function ($item) {
@@ -111,7 +111,7 @@ class MataPelajaranController extends BaseController
             // 'kredit_prak_lapangan'  => 'required',
             // 'kredit_simulasi'       => 'required',
             // 'tingkat_semester'      => 'required',
-            'nilai_kkm'             => 'required'
+            'nilai_kkm'             => 'sometimes'
             // 'ada_sap'               => 'required',
             // 'ada_silabus'           => 'required',
             // 'ada_bahan_ajar'        => 'required',
@@ -149,7 +149,8 @@ class MataPelajaranController extends BaseController
                 // $mataPelajaran->kredit_simulasi         = $input->kredit_simulasi;
                 // $mataPelajaran->tingkat_semester        = $input->tingkat_semester;
                 $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
-                $mataPelajaran->nilai_kkm               = '1';
+                // $mataPelajaran->nilai_kkm               = '1';
+                $mataPelajaran->is_aktif                 = 1;
                 // $mataPelajaran->ada_sap                 = $input->ada_sap;
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;

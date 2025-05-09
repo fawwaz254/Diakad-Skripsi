@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Administrator\Device\FingerprintRealtimeController;
+use App\Http\Controllers\Administrator\PengelolaanAkun\FotoProfileController;
 use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
 use App\Http\Controllers\Guru\WelcomeController;
 use App\Http\Controllers\Guru\Tutorial\VideoController;
@@ -58,7 +59,6 @@ use App\Http\Controllers\Guru\WaliKelas\RekapPelanggaranKelasController;
 use App\Http\Controllers\Guru\WaliKelas\TracerAlumniWaliKelasController;
 use App\Http\Controllers\Guru\PembinaEkskul\InputAbsensiEkskulController;
 use App\Http\Controllers\Guru\PembinaEkskul\RekapAbsensiEkskulController;
-use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Guru\PelanggaranSiswa\InputPelanggaranController;
 use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
 use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
@@ -102,6 +102,7 @@ use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Guru\WaliMurid\RaporSemesterController;
 use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
 use App\Http\Controllers\Humas\FormBuilder\CustomFormController;
+use App\Http\Controllers\Humas\MagangSiswa\KunjunganMagangController;
 use App\Http\Controllers\Keuangan\SIM\SppController;
 use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
@@ -167,6 +168,7 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('biodata')->group(function () {
             Route::get('data-pribadi', [DataPribadiController::class, 'viewDataPribadi']);
             Route::post('action-data-pribadi', [DataPribadiController::class, 'actionSaveDataPribadi']);
+            Route::post('action-ttd/{mode}', [FotoProfileController::class, 'actionUpdateTdd']);
 
             Route::prefix('data-kegiatan')->group(function () {
                 Route::get('/', [DataKegiatanController::class, 'viewDataKegiatan']);
@@ -942,19 +944,19 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
             });
 
-            Route::prefix('rapor-tengah-semester')->group(function () {
-                Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
-                Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesRaporTengahSemester']);
-                Route::get('add', [RaporTengahSemesterController::class, 'addRaporTengahSemester']);
-                Route::post('action-rapor-tengah-semester/{mode}/{id}', [RaporTengahSemesterController::class, 'actionRaporTengahSemester']);
-                // Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
-                // Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
-                // Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
-                Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfRaporTengahSemester']);
-                // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
-                // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
+            // Route::prefix('rapor-tengah-semester')->group(function () {
+            //     Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
+            //     Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesRaporTengahSemester']);
+            //     Route::get('add', [RaporTengahSemesterController::class, 'addRaporTengahSemester']);
+            //     Route::post('action-rapor-tengah-semester/{mode}/{id}', [RaporTengahSemesterController::class, 'actionRaporTengahSemester']);
+            // Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
+            // Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
+            // Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
+            // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfRaporTengahSemester']);
+            // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+            // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
 
-            });
+            // });
         });
 
         Route::prefix('rapor-semester')->group(function () {
@@ -1146,6 +1148,15 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('/datatableApprovePestasi', [AktivitasRewardSiswaController::class, 'datatableApprovePestasi']);
 
             Route::get('/input-capaian-karakter', [AktivitasRewardSiswaController::class, 'viewInputCapaianKarakter']);
+        });
+
+        // Magang siswa
+        Route::prefix('magang-siswa')->group(function () {
+            Route::get('list-kunjungan-magang', [KunjunganMagangController::class, 'viewKunjunganMagang']);
+            Route::get('list-kunjungan-magang-datatables', [KunjunganMagangController::class, 'datatableKunjunganMagang']);
+            Route::get('add-kunjungan-magang', [KunjunganMagangController::class, 'addKunjunganMagang']);
+            Route::get('edit-kunjungan-magang/{id_kunjungan_magang}', [KunjunganMagangController::class, 'editKunjunganMagang']);
+            Route::post('action-kunjungan-magang/{mode}/{id_kunjungan_magang?}', [KunjunganMagangController::class, 'actionKunjunganMagang']);
         });
     });
 });

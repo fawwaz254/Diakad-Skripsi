@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Nilai Rapor Tengah Semester</title>
 
-
     <style>
         * {
             font-family: 'Tahoma';
@@ -172,7 +171,6 @@
                 </thead>
                 <br>
                 <tbody class="body">
-
                     @foreach ($data as $kelompok)
                         <tr>
                             <td colspan="2" style="font-weight: bold;">
@@ -213,50 +211,46 @@
                 </tbody>
             </table>
 
-            <div style="width: 90%; margin: 3rem auto 1rem auto;font-weight: bold;">B. Ketidakhadiran</div>
-            <table cellspacing="0" cellpadding="10" style="width: 40%; margin-left:60px">
-                @foreach ($siswa->nilai_pribadi_sisipan as $item)
-                    <tr>
-                        <td style="width: 70%;">
-                            {{ $item->pribadi_sisipan->nm_pribadi_sisipan }}
-                        </td>
-                        <td style="width: 30%;">
-                            {{ $item->nilai }} hari
-                        </td>
-                    </tr>
-                @endforeach
-            </table>
-
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 4rem auto 0 auto;">
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto  auto;">
                 <tr style="border-style : hidden;">
-                    <td style="border-style : hidden;width: 33%;">
+                    <td style="border-style : hidden; width: 33%;">
                         <br>Mengetahui: <br>
                         Orang Tua/Wali,<br><br><br><br><br><br><br><br><br>
                         ...........................
                     </td>
-                    <td style="border-style : hidden;width: 33%;">
-                        <br><br>Wali Kelas,<br><br><br><br><br><br><br><br><br>
-                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
-                            <strong>
-                                <u>
-                                    {{ $wali_kelas->guru->pengguna->gelar_depan }}
-                                    {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                                    {{ $wali_kelas->guru->pengguna->gelar_belakang }}
-                                </u>
-                            </strong>
-                        @else
-                            ...........................
-                        @endif
-                    </td>
-                    <td style="border-style : hidden;width: 33%;position: relative;">
-                        Sidoarjo, {{ $tanggal_cetak }}<br><br>
+                    <td style="border-style : hidden; width: 33%; position: relative; padding-top: 12rem">
                         Kepala Sekolah,<br><br><br><br><br><br><br><br><br>
-                        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                            <img style="position: absolute; top: 5%; margin-left:-20px; margin-top:10px"
-                                src="{{ asset('media/ttd/08102024smpypm2.png') }}" alt="TTD" width="200px"
-                                height="200px" class="ttd">
-                        @endif
+                        {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') --}}
+                        <img style="position: absolute; top: 5%; margin-left: 20px; margin-top: 12.3rem"
+                            src="{{ asset('media/ttd/barcode_nur_musolin.png') }}" alt="TTD" width="150px"
+                            height="150px" class="ttd">
+                        {{-- @endif --}}
                         <strong><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></strong>
+                    </td>
+
+                    <td style="width:25%; position: relative;" align="center">Sidoarjo,
+                        {{ $tanggal_cetak }}
+                        <br><br>
+                        Wali Kelas
+                        @if (!empty($guru->path_foto_ttd))
+                            <img style="position: absolute; top: 37%; left:30%; z-index: 1;"
+                                src="{{ Storage::disk('spaces')->url($guru->path_foto_ttd) }}" alt="TTD"
+                                width="120px" height="120px">
+                        @endif
+                        
+                        <br><br><br><br><br><br><br>
+
+                        <div style="position: relative; z-index: 2;">
+                            @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                                {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                                {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                                {{ $wali_kelas->guru->pengguna->gelar_belakang }}
+                            @else
+                                <p style="width: 250px;
+                            border-bottom: 1px solid   black;"></p>
+                            @endif
+                            {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
+                        </div>
                     </td>
                 </tr>
             </table>

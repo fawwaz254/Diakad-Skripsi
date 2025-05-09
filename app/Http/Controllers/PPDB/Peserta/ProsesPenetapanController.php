@@ -4,9 +4,14 @@ namespace App\Http\Controllers\PPDB\Peserta;
 
 use App\Exports\ExportPenetapan;
 use App\Http\Controllers\SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController;
+use App\Models\Jurusan;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+use PhpOffice\PhpWord\TemplateProcessor;
+use PhpOffice\PhpWord\IOFactory;
+use Mpdf\Mpdf;
 use Yajra\Datatables\Datatables;
 
 use App\Models\CalonSiswaBaru as CalonSiswaBaru;
@@ -21,9 +26,12 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DataImportExcel;
 use App\Models\Admisi;
+use App\Models\CalonSiswaSekolah;
 use App\Models\Jalur;
 use App\Models\JalurSiswa;
+use App\Models\Kota;
 use App\Models\Pengguna;
+use App\Models\Provinsi;
 use App\Models\RolePengguna;
 use App\Models\Sekolah;
 use App\Models\Semester;
@@ -31,6 +39,10 @@ use App\Models\Siswa;
 use App\Models\StatusPengguna;
 use Auth;
 use DB;
+use Dompdf\Dompdf;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+use PhpOffice\PhpWord\Settings;
+use Ramsey\Uuid\Uuid;
 use Session;
 use Validator;
 
@@ -41,23 +53,63 @@ class ProsesPenetapanController extends BaseController
      * @param Request
      * @return View
      */
+    // public function viewProsesPenetapan(Request $request)
+    // {
+    //     $input      = (object) $request->input();
+    //     $auth_data  = $input->auth_data;
+
+    //     /** get all data penerimaan */
+
+    //     $currentYear = date("Y");
+
+    //     $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
+
+    //     /** groupping by year and semester */
+    //     $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
+    //         return $item->groupBy('nm_semester_penerimaan');
+    //     });
+
+    //     $mode = 'view';
+
+    //     return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun', 'mode'));
+    // }
+
+
     public function viewProsesPenetapan(Request $request)
     {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
-        /** get all data penerimaan */
-        $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
+        /** Tentukan semester aktif berdasarkan bulan saat ini */
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
 
-        /** groupping by year and semester */
-        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
-            return $item->groupBy('nm_semester_penerimaan');
-        });
+        if ($currentMonth >= 1 && $currentMonth <= 6) {
+            $activeSemester = 'Ganjil';
+            $previousSemester = ['Genap', $currentYear - 1]; // Semester sebelumnya (Genap tahun lalu)
+            $nextSemester = ['Genap', $currentYear]; // Semester berikutnya (Genap tahun ini)
+        } else {
+            $activeSemester = 'Genap';
+            $previousSemester = ['Ganjil', $currentYear]; // Semester sebelumnya (Ganjil tahun ini)
+            $nextSemester = ['Ganjil', $currentYear + 1]; // Semester berikutnya (Ganjil tahun depan)
+        }
+
+        /** Ambil data untuk semester sebelumnya, sekarang, dan berikutnya */
+        $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data)
+            ->filter(function ($item) use ($activeSemester, $currentYear, $previousSemester, $nextSemester) {
+                return ($item->nm_semester_penerimaan == $activeSemester && $item->tahun_penerimaan == $currentYear) ||
+                    ($item->nm_semester_penerimaan == $previousSemester[0] && $item->tahun_penerimaan == $previousSemester[1]) ||
+                    ($item->nm_semester_penerimaan == $nextSemester[0] && $item->tahun_penerimaan == $nextSemester[1]);
+            });
+
+        // dd($penerimaan);
 
         $mode = 'view';
 
-        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun', 'mode'));
+        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'penerimaan', 'mode'));
     }
+
+
 
     /**
      * Action post view for editing proses penetapan
@@ -105,7 +157,30 @@ class ProsesPenetapanController extends BaseController
         });
 
         /** get penerimaan by id */
-        $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        if ($currentMonth >= 1 && $currentMonth <= 6) {
+            $activeSemester = 'Ganjil';
+            $previousSemester = ['Genap', $currentYear - 1]; // Semester sebelumnya (Genap tahun lalu)
+            $nextSemester = ['Genap', $currentYear]; // Semester berikutnya (Genap tahun ini)
+        } else {
+            $activeSemester = 'Genap';
+            $previousSemester = ['Ganjil', $currentYear]; // Semester sebelumnya (Ganjil tahun ini)
+            $nextSemester = ['Ganjil', $currentYear + 1]; // Semester berikutnya (Ganjil tahun depan)
+        }
+
+        /** Ambil data untuk semester sebelumnya, sekarang, dan berikutnya */
+        $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data)
+            ->filter(function ($item) use ($activeSemester, $currentYear, $previousSemester, $nextSemester) {
+                return ($item->nm_semester_penerimaan == $activeSemester && $item->tahun_penerimaan == $currentYear) ||
+                    ($item->nm_semester_penerimaan == $previousSemester[0] && $item->tahun_penerimaan == $previousSemester[1]) ||
+                    ($item->nm_semester_penerimaan == $nextSemester[0] && $item->tahun_penerimaan == $nextSemester[1]);
+            });
+
+
+
+        $showPenerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
         /** data (id_penerimaan) tidak ditemukan */
         if (!$penerimaan) {
@@ -114,7 +189,14 @@ class ProsesPenetapanController extends BaseController
 
         $mode = 'show';
 
-        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'grup_penerimaan_tahun', 'penerimaan', 'mode', 'id'));
+        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'showPenerimaan', 'penerimaan', 'mode', 'id'));
+    }
+
+    public function viewInputCalonSiswa($id, Request $request)
+    {
+        $data_provinsi = Provinsi::all();
+        $data_jurusan = Jurusan::all();
+        return view('ppdb/peserta/proses-penetapan/view-input-calon-siswa', compact('id', 'data_provinsi', 'data_jurusan'));
     }
 
     public function datatablesProsesPenetapan($id, Request $request)
@@ -196,6 +278,15 @@ class ProsesPenetapanController extends BaseController
         $kelas_paling_rendah = Kelas::orderBy('tingkat')->first();
         $kelas = Kelas::where('tingkat', $kelas_paling_rendah->tingkat)->get();
         return view('ppdb/peserta/proses-penetapan/view-upload-penetapan', compact('auth_data', 'id_penerimaan', 'kelas'));
+    }
+
+    public function uploadPenetapanCalonSiswa(Request $request, $id_penerimaan)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelas_paling_rendah = Kelas::orderBy('tingkat')->first();
+        $kelas = Kelas::where('tingkat', $kelas_paling_rendah->tingkat)->get();
+        return view('ppdb/peserta/proses-penetapan/view-upload-penetapan-calon-siswa', compact('auth_data', 'id_penerimaan', 'kelas'));
     }
 
     public function postUploadPenetapan(Request $request)
@@ -336,5 +427,199 @@ class ProsesPenetapanController extends BaseController
                 ];
             }
         }
+    }
+
+    public function downloadFileExcel()
+    {
+        $file = public_path() . "/excel/ContohFileExcelUploadDataCalonSiswa.xlsx";
+        $headers = [
+            'Content-Type' => 'application/xls',
+        ];
+
+        return response()->download($file, 'ContohFileExcelUploadDataCalonSiswa.xlsx', $headers);
+    }
+
+    public function cekFileExcel(Request $request)
+    {
+        session()->forget('data_excel_siswa');
+        if ($request->hasFile('file-excel')) {
+            $datas = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+            $datas = $datas[0];
+            if (count($datas)) {
+                session(['data_excel_siswa' => $datas]);
+
+                return [
+                    'status' => 204, // SUCCESS AND LOAD CONTENT
+                    'path' => 'siswa/upload-data-siswa/cek-data-siswa'
+                ];
+            }
+        }
+    }
+
+    public function cetakKuitansi($id_siswa)
+    {
+        // // Pastikan folder kuitansi/temp ada
+        // Settings::setTempDir(public_path('word/temp'));
+
+        // // Ambil data siswa berdasarkan ID
+        // $siswa = CalonSiswaBaru::where('id_c_siswa', $id_siswa)->first();
+        // $kota = Kota::where('id_kota', $siswa->alamat_kota)->first();
+        // $provinsi = Provinsi::where('id_provinsi', $siswa->alamat_provinsi)->first();
+        // if (!$siswa) {
+        //     return back()->with('error', 'Data siswa tidak ditemukan.');
+        // }
+
+        // // dd($siswa);
+
+        // // Cek apakah file template ada
+        // $templatePath = public_path('word/template-kuitansi.docx');
+        // if (!file_exists($templatePath)) {
+        //     return back()->with('error', 'File template tidak ditemukan.');
+        // }
+
+        // // Load template Word
+        // $templateProcessor = new TemplateProcessor($templatePath);
+
+        // // Isi template dengan data siswa
+        // $templateProcessor->setValue('nama_siswa', $siswa->nm_c_siswa);
+        // $templateProcessor->setValue('sekolah_asal', $siswa->asal_sekolah);
+        // $templateProcessor->setValue('alamat_rumah', $siswa->alamat_jalan . ", " . $siswa->alamat_dusun . " RT " . $siswa->alamat_rt . "/" . "RW " . $siswa->alamat_rw . " " . $siswa->alamat_kelurahan . ", Kecamatan " . $siswa->alamat_kecamatan . ", " . $kota->nm_kota . ", " . $provinsi->nm_provinsi . ".");
+        // $templateProcessor->setValue('nomor_telepon', $siswa->nomor_hp);
+
+        // $jurusanIds = [
+        //     $siswa->id_pilihan_jurusan_1,
+        //     $siswa->id_pilihan_jurusan_2,
+        //     $siswa->id_pilihan_jurusan_3
+        // ];
+
+        // $jurusanList = Jurusan::whereIn('id_jurusan', $jurusanIds)->get()->keyBy('id_jurusan');
+
+        // $templateProcessor->setValue('jurusan_1', $jurusanList->get($siswa->id_pilihan_jurusan_1)->kode_jurusan ?? '');
+        // $templateProcessor->setValue('jurusan_2', $jurusanList->get($siswa->id_pilihan_jurusan_2)->kode_jurusan ?? '');
+        // $templateProcessor->setValue('jurusan_3', $jurusanList->get($siswa->id_pilihan_jurusan_3)->kode_jurusan ?? '');
+        // $templateProcessor->setValue('tanggal_pembuatan', now()->format('d-m-Y'));
+        // $templateProcessor->setValue('nomor_pendaftaran', substr($siswa->kode_voucher, -3));
+
+        // $outputFile = public_path('word/kuitansi-' . $siswa->id_c_siswa . '.docx');
+        // $templateProcessor->saveAs($outputFile);
+
+        // // Berikan file ke user untuk didownload
+        // return response()->download($outputFile)->deleteFileAfterSend(true);
+
+        $siswa = CalonSiswaBaru::find($id_siswa);
+        $kota = Kota::where('id_kota', $siswa->alamat_kota)->first();
+        $provinsi = Provinsi::where('id_provinsi', $siswa->alamat_provinsi)->first();
+
+        $alamat = $siswa->alamat_jalan . ", " . $siswa->alamat_dusun . " RT " . $siswa->alamat_rt . "/" . "RW " . $siswa->alamat_rw . " " . $siswa->alamat_kelurahan . ", Kecamatan " . $siswa->alamat_kecamatan . ", " . $kota->nm_kota . ", " . $provinsi->nm_provinsi . ".";
+        $tanggal = date('d-m-Y');
+        $nomer_pendaftaran = substr($siswa->kode_voucher, -3);
+
+        $jurusan_1 = Jurusan::where('id_jurusan', $siswa->id_pilihan_jurusan_1)->first();
+        $jurusan_2 = Jurusan::where('id_jurusan', $siswa->id_pilihan_jurusan_2)->first();
+        $jurusan_3 = Jurusan::where('id_jurusan', $siswa->id_pilihan_jurusan_3)->first();
+
+        $jurusan_1 = $jurusan_1 ? $jurusan_1->kode_jurusan : '';
+        $jurusan_2 = $jurusan_2 ? $jurusan_2->kode_jurusan : '';
+        $jurusan_3 = $jurusan_3 ? $jurusan_3->kode_jurusan : '';
+
+        return view('ppdb/peserta/proses-penetapan/cetak-kuitansi', compact('id_siswa', 'siswa', 'alamat', 'tanggal', 'nomer_pendaftaran', 'jurusan_1', 'jurusan_2', 'jurusan_3'));
+    }
+
+    public function getKota($id_provinsi)
+    {
+        $kota = Kota::where('id_provinsi', $id_provinsi)->get();
+
+        return response()->json($kota);
+    }
+
+    public function storeDataCalonSiswa(Request $request, $id)
+    {
+        $id = (string) $id; // Pastikan ID adalah string
+
+        // Validasi request
+        $data = $request->validate([
+            'nm_c_siswa' => 'required',
+            'nik_siswa' => 'required',
+            'jenis_kelamin' => 'required',
+            'asal_sekolah' => 'required',
+            'nomor_hp' => 'required',
+            'alamat_provinsi' => 'required',
+            'alamat_kota' => 'required',
+            'alamat_kecamatan' => 'required',
+            'alamat_kelurahan' => 'required',
+            'alamat_dusun' => 'required',
+            'alamat_rt' => 'required',
+            'alamat_rw' => 'required',
+            'alamat_jalan' => 'required',
+            'alamat_kodepos' => 'required',
+            'id_pilihan_jurusan_1' => 'required',
+            'id_pilihan_jurusan_2' => 'required',
+            'id_pilihan_jurusan_3' => 'required',
+        ]);
+
+        // Cek apakah calon siswa sudah terdaftar berdasarkan NIK
+        $calon_siswa_baru = CalonSiswaBaru::where('nik_siswa', $data['nik_siswa'])->first();
+
+        if ($calon_siswa_baru) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Siswa dengan NIK ' . $data['nik_siswa'] . " sudah terdaftar!",
+            ], 401);
+        }
+
+        // Cari satu voucher yang belum digunakan
+        $voucher = DB::table('voucher')
+            ->leftJoin('calon_siswa_baru', 'voucher.kode_voucher', '=', 'calon_siswa_baru.kode_voucher')
+            ->where('voucher.id_penerimaan', $id)
+            ->whereNull('calon_siswa_baru.kode_voucher')
+            ->select('voucher.kode_voucher') // Ambil hanya kode_voucher
+            ->first();
+
+        if (!$voucher) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher tidak tersedia!',
+            ], 404);
+        }
+
+
+
+        $id_c_siswa = Uuid::uuid4()->toString();
+        $id_pengguna = Auth::user()->id_pengguna;
+        // Buat calon siswa baru dengan voucher yang tersedia
+        CalonSiswaBaru::create([
+            "id_c_siswa" => $id_c_siswa,
+            "nm_c_siswa" => $data["nm_c_siswa"],
+            "nik_siswa" => $data["nik_siswa"],
+            "jenis_kelamin" => $data["jenis_kelamin"],
+            "asal_sekolah" => $data["asal_sekolah"],
+            "nomor_hp" => $data["nomor_hp"],
+            "alamat_provinsi" => $data["alamat_provinsi"],
+            "alamat_kota" => $data["alamat_kota"],
+            "alamat_kecamatan" => $data["alamat_kecamatan"],
+            "alamat_kelurahan" => $data["alamat_kelurahan"],
+            "alamat_dusun" => $data["alamat_dusun"],
+            "alamat_rt" => $data["alamat_rt"],
+            "alamat_rw" => $data["alamat_rw"],
+            "alamat_jalan" => $data["alamat_jalan"],
+            "alamat_kodepos" => $data["alamat_kodepos"],
+            "id_pilihan_jurusan_1" => $data["id_pilihan_jurusan_1"],
+            "id_pilihan_jurusan_2" => $data["id_pilihan_jurusan_2"],
+            "id_pilihan_jurusan_3" => $data["id_pilihan_jurusan_3"],
+            "kode_voucher" => $voucher->kode_voucher, // Simpan kode voucher yang dipilih
+            "id_penerimaan" => $id, // Pastikan ID penerimaan disimpan
+            "created_by" => $id_pengguna,
+            "status_verifikasi" => 2,
+        ]);
+
+        CalonSiswaSekolah::create([
+            "id_c_siswa" => $id_c_siswa,
+            "nm_sekolah_asal" => $data["asal_sekolah"],
+            "created_by" => $id_pengguna,
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => "Berhasil mendaftarkan calon siswa!",
+        ], 201);
     }
 }

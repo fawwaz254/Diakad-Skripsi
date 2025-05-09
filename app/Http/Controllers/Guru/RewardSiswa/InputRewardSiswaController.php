@@ -114,7 +114,8 @@ class InputRewardSiswaController extends BaseController
 
         $dates = CarbonPeriod::create($startOfMonth, $endOfMonth);
 
-        $week_dates = array();
+        $week_dates = [];
+        $count_per_day = [];
 
         $i = $startOfMonth;
         while ($i < $endOfMonth) {
@@ -128,7 +129,9 @@ class InputRewardSiswaController extends BaseController
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $data_jenis_aktivitas = JenisAktivitasReward::get();
 
-        $query_data_reward_siswa = DB::table('pengisian_kegiatan_harian')->select('*')->whereBetween('tgl_pengisian', [$startOfMonth, $endOfMonth]);
+        $query_data_reward_siswa = DB::table('reward_siswa')->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
+
+        $query_data_pengisian_harian = DB::table('pengisian_kegiatan_harian')->whereBetween('tgl_pengisian', [$startOfMonth, $endOfMonth]);
 
         $query_data_reward_siswa_join = DB::table('pengisian_kegiatan_harian as pkh')
             ->select(
@@ -149,17 +152,17 @@ class InputRewardSiswaController extends BaseController
             $data_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->jenis)->get();
 
             if ($id_aktivitas_reward === 0) {
-                // aktifitas input semua
+                // aktifitas input semua dari pengisian kegiatan harian
                 if ($id_jenis === 1) {
-                    $data_reward_siswa = $query_data_reward_siswa
+                    $data_reward_siswa = $query_data_pengisian_harian
                         ->where('id_kegiatan_harian', 'reward-siswa-harian')
                         ->get();
                 } elseif ($id_jenis === 2) {
-                    $data_reward_siswa = $query_data_reward_siswa
+                    $data_reward_siswa = $query_data_pengisian_harian
                         ->where('id_kegiatan_harian', 'reward-siswa-mingguan')
                         ->get();
                 } elseif ($id_jenis === 3) {
-                    $data_reward_siswa = $query_data_reward_siswa
+                    $data_reward_siswa = $query_data_pengisian_harian
                         ->where('id_kegiatan_harian', 'reward-siswa-bulanan')
                         ->get();
                 } else {
@@ -171,24 +174,21 @@ class InputRewardSiswaController extends BaseController
                     ];
                 }
             } else {
-                // aktifitas input berdasarkan id_event
+                // aktifitas input berdasarkan id_event reward siswa
                 if ($id_jenis === 1) {
-                    $data_reward_siswa = $query_data_reward_siswa_join
-                        ->where('pkh.id_kegiatan_harian', 'reward-siswa-harian')
-                        ->where('rs.id_event', $input->id_aktivitas_reward)
-                        ->whereBetween('pkh.tgl_pengisian', [$startOfMonth, $endOfMonth])
+                    $data_reward_siswa = $query_data_reward_siswa
+                        ->where('id_event', $input->id_aktivitas_reward)
+                        ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
                         ->get();
                 } elseif ($id_jenis === 2) {
-                    $data_reward_siswa = $query_data_reward_siswa_join
-                        ->where('pkh.id_kegiatan_harian', 'reward-siswa-mingguan')
-                        ->where('rs.id_event', $input->id_aktivitas_reward)
-                        ->whereBetween('pkh.tgl_pengisian', [$startOfMonth, $endOfMonth])
+                    $data_reward_siswa = $query_data_reward_siswa
+                        ->where('id_event', $input->id_aktivitas_reward)
+                        ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
                         ->get();
                 } elseif ($id_jenis === 3) {
-                    $data_reward_siswa = $query_data_reward_siswa_join
-                        ->where('pkh.id_kegiatan_harian', 'reward-siswa-bulanan')
-                        ->where('rs.id_event', $input->aktivitas_reward)
-                        ->whereBetween('pkh.tgl_pengisian', [$startOfMonth, $endOfMonth])
+                    $data_reward_siswa = $query_data_reward_siswa
+                        ->where('id_event', $input->id_aktivitas_reward)
+                        ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
                         ->get();
                 } else {
                     // kegiatan isidentil akan masuk ke error karena belum diperlukan
@@ -205,7 +205,7 @@ class InputRewardSiswaController extends BaseController
             $list_data = [];
         }
 
-        return view('guru/reward-siswa/input-reward-siswa/rekap-input-reward-siswa', compact('auth_data', 'dates', 'week_dates', 'data_reward_siswa', 'data_jenis_aktivitas', 'data_aktivitas_reward', 'list_data', 'data_kelas', 'now'));
+        return view('guru/reward-siswa/input-reward-siswa/rekap-input-reward-siswa', compact('auth_data', 'dates', 'week_dates', 'data_reward_siswa', 'data_jenis_aktivitas', 'data_aktivitas_reward', 'list_data', 'data_kelas', 'now', 'id_aktivitas_reward'));
     }
 
     public function actionViewInputRewardSiswa(Request $request)
@@ -253,6 +253,9 @@ class InputRewardSiswaController extends BaseController
             $date_input = 'minggu ini tanggal (' . Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('D MMM Y') . ' - ' . Carbon::now('Asia/Jakarta')->endOfWeek()->isoFormat('D MMM Y') . ')';
         } else if ($data_aktivitas_reward->id_jenis_aktivitas_reward == 3) {
             $date_input = 'bulan ' . Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('MMMM');
+        } else if ($data_aktivitas_reward->id_jenis_aktivitas_reward == 4) {
+            // insidentil
+            $date_input = 'bulan ' . Carbon::now('Asia/Jakarta')->startOfWeek()->isoFormat('MMMM');
         }
 
         return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'aktivitas_reward', 'data_aktivitas_reward', 'date_input'));
@@ -269,7 +272,8 @@ class InputRewardSiswaController extends BaseController
         $data_aktivitas_reward = AktivitasRewardSiswa::where('id_aktivitas_reward_siswa', $input->id_aktivitas_reward_siswa)
             ->where('is_guru', 1)->where('is_aktif', 1)->get();
 
-        $data_reward_siswa = RewardSiswa::where('id_kelas', $input->id_kelas)->whereDate('created_at', $now)->pluck('id_siswa')->toArray();
+        $data_reward_siswa = RewardSiswa::where('id_kelas', $input->id_kelas)
+            ->where('id_event', $input->id_aktivitas_reward_siswa)->whereDate('created_at', $now)->pluck('id_siswa')->toArray();
 
         return Datatables::of($list_data)
             ->addColumn('aktivitas_reward', function ($item) use ($data_aktivitas_reward, $data_reward_siswa) {

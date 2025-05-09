@@ -78,36 +78,6 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
-            {{-- <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
-
-                <tr style="border-style : hidden">
-                    <td width="15%" align="center" style="margin-right: 10px" style="border-style : hidden">
-                        <img id="logo"
-                            src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
-                            height="150">
-                    </td>
-                    <td width="85%" style="border-style : hidden">
-                        <span style="margin-top: -10px; font-family: 'Brush Script MT'; font-size:35px">
-                            {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
-                        </span>
-                        <br>
-                        <span style="margin-top: -10px; font-family: 'Impact'; font-size:50px">
-                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}
-                        </span>
-                        <br>
-                        {{-- <span style="margin-top: -10px; font-family: 'Impact'; font-size:25px">
-                            {{ $auth_data->sekolah_data->akreditasi }}
-                        </span>
-                        <br>
-                        <span style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
-                            {{ 'NSS : ' . $auth_data->sekolah_data->nss_sekolah . ',       ' }}
-                        </span>
-                        <span style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
-                            {{ 'NPSN : ' . $auth_data->sekolah_data->npsn_sekolah }}
-                        </span> --}}
-            {{-- </td> --}}
-            {{-- </tr> --}}
-            {{-- </table> --}}
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr width="90%" style="background-color: black;color:white">
                     <img src="{{ asset('media/ttd/kop_surat_smawh2.png') }}" alt="kop_surat" style="width: 100%">
@@ -119,9 +89,17 @@
                         <br>
                         <h2
                             style="margin-top: 3px; font-family:'Times New Roman', Times, serif; font-size:30px; text-align:center">
-                            LAPORAN HASIL BELAJAR SISWA MURNI <br><u>SEMESTER GASAL</u>
-                            {{-- <h2 style="font-family:'Times New Roman', Times, serif; font-size:30px; text-align:center">
-                                SEMESTER GASAL</h2> --}}
+                            LAPORAN HASIL BELAJAR SISWA MURNI
+                            <br>
+                            <u>
+                                SEMESTER
+                                @if ($semester->nm_semester == 'Ganjil')
+                                    GANJIL
+                                @else
+                                    GENAP
+                                @endif
+                            </u>
+                        </h2>
                     </td>
                 <tr>
 
@@ -146,9 +124,12 @@
                     </td>
                     <td style="border-style : hidden;width: 25%;">Semester
                     </td>
-                    <td style="border-style : hidden;width: 25%;"> : I
-
-
+                    <td style="border-style : hidden;width: 25%;"> :
+                        @if ($semester->nm_semester == 'Ganjil')
+                            I
+                        @else
+                            II
+                        @endif
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
@@ -205,20 +186,38 @@
                                     @foreach ($list_komponen as $komponen)
                                         <td style="text-align: center; font-weight: bold;">
                                             @php
-                                                $nilai_satuan = isset($nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor])? (int) $nilai_siswa[$siswa->id_siswa . $data2['id_mata_pelajaran'][0] . $komponen->id_komponen_jenis_rapor] : 0;
-                                                if(array_key_exists($komponen->id_komponen_jenis_rapor, $jumlah_nilai)) {
+                                                $nilai_satuan = isset(
+                                                    $nilai_siswa[
+                                                        $siswa->id_siswa .
+                                                            $data2['id_mata_pelajaran'][0] .
+                                                            $komponen->id_komponen_jenis_rapor
+                                                    ],
+                                                )
+                                                    ? (int) $nilai_siswa[
+                                                        $siswa->id_siswa .
+                                                            $data2['id_mata_pelajaran'][0] .
+                                                            $komponen->id_komponen_jenis_rapor
+                                                    ]
+                                                    : 0;
+                                                if (
+                                                    array_key_exists($komponen->id_komponen_jenis_rapor, $jumlah_nilai)
+                                                ) {
                                                     $jumlah_nilai[$komponen->id_komponen_jenis_rapor] += $nilai_satuan;
-                                                }else {
+                                                } else {
                                                     $jumlah_nilai[$komponen->id_komponen_jenis_rapor] = $nilai_satuan;
                                                 }
 
-                                                if(array_key_exists($komponen->id_komponen_jenis_rapor, $count_nilai)) {
-                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] += ($nilai_satuan > 0)? 1 : 0;
-                                                }else {
-                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] = ($nilai_satuan > 0)? 1 : 0;
+                                                if (
+                                                    array_key_exists($komponen->id_komponen_jenis_rapor, $count_nilai)
+                                                ) {
+                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] +=
+                                                        $nilai_satuan > 0 ? 1 : 0;
+                                                } else {
+                                                    $count_nilai[$komponen->id_komponen_jenis_rapor] =
+                                                        $nilai_satuan > 0 ? 1 : 0;
                                                 }
                                             @endphp
-                                            {{ ($nilai_satuan > 0)? $nilai_satuan : '' }}
+                                            {{ $nilai_satuan > 0 ? $nilai_satuan : '' }}
                                         </td>
                                     @endforeach
                                 </tr>
@@ -245,7 +244,7 @@
                         </td>
                         @foreach ($list_komponen as $komponen)
                             <td style="text-align: center; font-weight: bold;">
-                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor])? $jumlah_nilai[$komponen->id_komponen_jenis_rapor] : '0' }}
+                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor]) ? $jumlah_nilai[$komponen->id_komponen_jenis_rapor] : '0' }}
                             </td>
                         @endforeach
                     </tr>
@@ -255,10 +254,10 @@
                         </td>
                         @foreach ($list_komponen as $komponen)
                             <td style="text-align: center; font-weight: bold;">
-                                @if($count_nilai[$komponen->id_komponen_jenis_rapor] > 0)
-                                {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor])? round($jumlah_nilai[$komponen->id_komponen_jenis_rapor]/$count_nilai[$komponen->id_komponen_jenis_rapor]) : '0' }}
+                                @if ($count_nilai[$komponen->id_komponen_jenis_rapor] > 0)
+                                    {{ isset($jumlah_nilai[$komponen->id_komponen_jenis_rapor]) ? round($jumlah_nilai[$komponen->id_komponen_jenis_rapor] / $count_nilai[$komponen->id_komponen_jenis_rapor]) : '0' }}
                                 @else
-                                0
+                                    0
                                 @endif
                             </td>
                         @endforeach
@@ -326,16 +325,23 @@
                     </td>
                     <td style="width:40%; border-style : hidden"></td>
 
-                    <td style="width:25%;border-style : hidden;">Sidoarjo,
+                    <td style="width:25%; position: relative;" align="center">Sidoarjo,
                         {{ $tanggal_cetak }}
                         <br>
-
                         Wali Kelas
+                        <img style="position: absolute; top: 20%; left:27%"
+                            src="{{ Storage::disk('spaces')->url($guru->path_foto_ttd) }}" alt="TTD"
+                            width="120px" height="120px">
                         <br><br><br><br><br><br><br>
-                        <u><b>
-                                {{ $wali_kelas->guru->pengguna->gelar_depan }}
-                                {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                                {{ $wali_kelas->guru->pengguna->gelar_belakang }}</b></u>
+                        @if (isset($wali_kelas->guru->pengguna->nm_pengguna))
+                            {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                            {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                            {{ $wali_kelas->guru->pengguna->gelar_belakang }}
+                        @else
+                            <p style="width: 250px;
+                        border-bottom: 1px solid   black;"></p>
+                        @endif
+                        {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
                     </td>
 
                 </tr>

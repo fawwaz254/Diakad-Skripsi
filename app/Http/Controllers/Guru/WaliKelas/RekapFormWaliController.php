@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guru\WaliKelas;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bulan;
+use App\Models\DetailJawabanForm;
 use App\Models\Form;
 use App\Models\Guru;
 use App\Models\JawabanForm;
@@ -32,7 +33,7 @@ class RekapFormWaliController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = Form::with('role', 'jawaban_form')->where('id_role', '3');
+        $list_data = Form::with('role')->withCount('jawaban_form')->where('id_role', '3')->get();
 
         return DataTables::of($list_data)
             ->addColumn('action', function ($item) {
@@ -49,7 +50,7 @@ class RekapFormWaliController extends Controller
                 return $item->is_aktif == '1' ? 'Aktif' : 'Tidak Aktif';
             })
             ->addColumn('jumlah_jawaban', function ($item) {
-                return $item->jawaban_form->count();
+                return $item->jawaban_form_count;
             })
             ->make(true);
     }
@@ -57,10 +58,11 @@ class RekapFormWaliController extends Controller
     public function getDetailJawaban(Request $request)
     {
         $input = (object) $request->input();
-        $jawaban_form = JawabanForm::with('detail_jawaban_form.pertanyaan_form')->find($input->id_jawaban_form);
-        return $jawaban_form;
+        $data_jawaban_form = DetailJawabanForm::with('pertanyaan_form')->where('id_jawaban_form', $input->id_jawaban_form)->get();
+
+        return $data_jawaban_form;
     }
-    
+
     public function viewRekapBulananFormWali(Request $request, $id_form, $bulan = null, $tahun = null, $id_pertanyaan = '0')
     {
         $input = (object) $request->input();
@@ -77,7 +79,7 @@ class RekapFormWaliController extends Controller
         $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first();
         $id_kelas = $kelas->id_kelas;
-        $allKelas = Kelas::where('id_kelas',$id_kelas)->orderBy('tingkat')->where('is_aktif', 1)->orderBy('nm_kelas')->first();
+        $allKelas = Kelas::where('id_kelas', $id_kelas)->orderBy('tingkat')->where('is_aktif', 1)->orderBy('nm_kelas')->first();
 
         $data_pengguna = Pengguna::whereHas('status_pengguna', function ($q) {
             $q->where('aktif_status_pengguna', 1);
@@ -137,7 +139,8 @@ class RekapFormWaliController extends Controller
                                 }
 
                                 $data = array(
-                                    $data_opsi, $data_warna
+                                    $data_opsi,
+                                    $data_warna
                                 );
                             }
                             $dataJawaban[$j->created_by . $date] = $data;
@@ -172,7 +175,7 @@ class RekapFormWaliController extends Controller
         $bulan = Bulan::find($bulan);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        return view('guru/wali-kelas/rekap-form-wali/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month',  'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan'));
+        return view('guru/wali-kelas/rekap-form-wali/view-detail-rekap-bulanan', compact('auth_data', 'form', 'datas', 'tahun', 'bulan', 'data_bulan', 'dates', 'start_month', 'end_month', 'jawaban_form', 'data_pengguna', 'dataJawaban', 'list_pertanyaan', 'id_pertanyaan'));
     }
 
     public function viewHarianFormWali(Request $request, $id_form, $date = null)
@@ -195,7 +198,7 @@ class RekapFormWaliController extends Controller
         $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first();
         $id_kelas = $kelas->id_kelas;
-        $allKelas = Kelas::where('id_kelas',$id_kelas)->orderBy('tingkat')->where('is_aktif', 1)->orderBy('nm_kelas')->first();
+        $allKelas = Kelas::where('id_kelas', $id_kelas)->orderBy('tingkat')->where('is_aktif', 1)->orderBy('nm_kelas')->first();
 
         $data_pengguna = Pengguna::whereHas('status_pengguna', function ($q) {
             $q->where('aktif_status_pengguna', 1);

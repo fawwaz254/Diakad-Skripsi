@@ -1,5 +1,10 @@
+@if (!Auth::check() && Auth::user() === null)
+    <script>
+        alert('Maaf akun anda terkunci, silahkan hubungi tim akademik sekolah anda!');
+        window.location.href = "{{ route('login') }}";
+    </script>
+@endif
 @extends('app')
-
 @section('meta')
     <!-- Meta -->
 @endsection
@@ -8,6 +13,8 @@
     @include('topbar')
     @include('sidebar')
     <section class="content" id="content">
+
+
     </section>
     @include('footer')
 @endsection
@@ -190,9 +197,9 @@
             Pace.ignore(function() {
                 $.ajax({
                     type: "GET",
-                    @if (Auth::user()->must_change_password == 1)
+                    @if (Auth::check() && Auth::user()->must_change_password == 1)
                         url: base_url + '/' + role_url + '/' + 'must-change-password',
-                    @elseif (Auth::user()->status_join_table == 3 && check_biodata(Auth::user()->id_pengguna))
+                    @elseif (Auth::check() && Auth::user()->status_join_table == 3 && check_biodata(Auth::user()->id_pengguna))
                         url: base_url + '/' + role_url + '/' + 'must-update-biodata',
                     @else
                         url: base_url + '/' + role_url + '/' + target_url,
