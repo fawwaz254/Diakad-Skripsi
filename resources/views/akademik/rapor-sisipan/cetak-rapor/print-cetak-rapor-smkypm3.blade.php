@@ -253,6 +253,7 @@
                     </td>
                 </tr>
             </table>
+
         </div>
     @endforeach
 </body>

@@ -1,36 +1,37 @@
-<div class="container-fluid">
-    <div class="block-header">
-        <h2>
-            <a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#' . Request::segment(2)) . '/list-kunjungan-magang' }}">
-                <i class="material-icons">backspace</i>
-                Kembali
-            </a>
-        </h2>
-    </div>
+<div class="container" style="padding-bottom: 50px;">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="block-header">
+                <h2>
+                    <a class="btn bg-blue waves-effect target-link "
+                        href="{{ url(Request::segment(1) . '#' . Request::segment(2)) . '/list-kunjungan-magang' }}">
+                        <i class="material-icons">backspace</i>
+                        Kembali
+                    </a>
+                </h2>
+            </div>
             <div class="card">
-                <div class="header">
+                {{-- <div id="alert-message"></div> --}}
+                <div class="header d-flex justify-content-between">
                     <h2>
                         EDIT KUNJUNGAN MAGANG
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-upload" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2)) . '/action-kunjungan-magang/edit/' . $kunjungan_magang->id_kunjungan_magang }}"
-                        enctype="multipart/form-data">
-                        {{ csrf_field() }}
+                    <form id="form-upload" method="POST" enctype="multipart/form-data">
+                        {{-- {{ csrf_field() }} --}}
+                        @csrf
+                        @method('PUT')
                         <h2 class="card-inside-title">
-                            Periode Magang
+                            Periode Magang <span class="text-danger">*</span>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="periode_magang">
+                                <select id="select-periode-magang" class="form-control" name="periode_magang">
                                     <option value="">-- Pilih Periode Magang --</option>
                                     @foreach ($periode_magang as $periode)
                                         <option value="{{ $periode->id_periode_magang }}"
-                                            @if ($periode->id_periode_magang == $kunjungan_magang->periode_magang->id_periode_magang) selected @endif>
+                                            @if ($periode->id_periode_magang == $kunjungan_magang->id_periode_magang) selected @endif>
                                             {{ $periode->nm_periode_magang . ' ' }}{{ $periode->nomor_sk_periode_magang }}
                                         </option>
                                     @endforeach
@@ -38,15 +39,15 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Rekanan Magang
+                            Rekanan Magang <span class="text-danger">*</span>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="rekanan_magang">
+                                <select id="select-rekanan-magang" class="form-control" name="rekanan_magang">
                                     <option value="">-- Pilih Rekanan Magang --</option>
                                     @foreach ($rekanan_magang as $rekanan)
                                         <option value="{{ $rekanan->id_rekanan_magang }}"
-                                            @if ($rekanan->id_rekanan_magang == $kunjungan_magang->rekanan_magang->id_rekanan_magang) selected @endif>
+                                            @if ($rekanan->id_rekanan_magang == $kunjungan_magang->id_rekanan_magang) selected @endif>
                                             {{ $rekanan->nm_rekanan_magang }}
                                         </option>
                                     @endforeach
@@ -54,7 +55,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            keterangan Kunjungan
+                            keterangan Kunjungan <span class="text-danger">*</span>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -62,26 +63,27 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Foto Kunjungan
+                            Foto Kunjungan <span class="text-danger">*</span>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="file" class="form-control" name="foto_kunjungan" aria-required="true"
-                                    aria-invalid="true" accept=".png, .jpg, .jpeg"
-                                    value="{{ $kunjungan_magang->foto_kunjungan }}">
-                                @if ($kunjungan_magang->foto_kunjungan)
-                                    <h2 class="card-inside-title">
-                                        Preview foto kunjungan sebelumnya
-                                    </h2>
-                                    <img src="{{ Storage::disk('spaces')->url($kunjungan_magang->foto_kunjungan) }}"
-                                        alt="" srcset="" width="150">
-                                @endif
+                                <img class="img-thumbnail" style="margin-bottom: 10px;"
+                                    src="{{ Storage::disk('spaces')->url($kunjungan_magang->foto_kunjungan) }}"
+                                    alt="{{ $kunjungan_magang->foto_kunjungan }}">
+                                <input type="file" class="form-control" name="foto" aria-required="true"
+                                    value="{{ $kunjungan_magang->foto_kunjungan }}" aria-invalid="true"
+                                    accept="image/*">
+
                             </div>
                         </div>
 
+                        <p>Nb: <span class="text-danger">*</span> Wajib diisi</p>
+
+                        <div id="to-large-image"></div>
+                        <div id="alert-message"></div>
                         <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <button id="btn-submit" class="btn btn-block bg-red waves-effect" type="submit">
                                     <i class="material-icons">save</i>
                                     <span>Save</span>
                                 </button>
@@ -94,57 +96,50 @@
     </div>
 </div>
 <script type="text/javascript">
-    $('#form-upload').submit(function(e) {
-        e.preventDefault();
-    }).validate({
-        highlight: function(input) {
-            $(input).addClass('is-danger');
-        },
-        unhighlight: function(input) {
-            $(input).removeClass('is-danger');
-        },
-        errorPlacement: function(error, element) {
-            $(element).parents('.control').addClass('help').addClass('is-danger').append(error);
-        },
-        submitHandler: function(form) {
-            $('button').attr('disabled', 'disabled');
+    $(document).ready(function() {
+        $('#select-periode-magang').select2();
+        $('#select-rekanan-magang').select2();
 
-            var formData = new FormData(form);
+        $('#form-upload').submit(function(e) {
+            e.preventDefault();
+            $('#btn-submit').prop('disabled', true);
+            let formData = new FormData(this);
+            console.log([...formData.entries()]);
+            $.ajax({
+                url: "{{ route('update.kunjungan-magang', $kunjungan_magang->id_kunjungan_magang) }}",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                enctype: 'multipart/form-data',
+                success: function(response) {
+                    if (response.code === 400) {
+                        $('#btn-submit').prop('disabled', false);
+                        vex.dialog.alert(response.message);
+                        $('#alert-message').html(
+                            `<div class="alert alert-danger alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                      <strong>Gagal!</strong> ${response.message}.
+                    </div>`);
+                    } else {
+                        $('#form-upload')[0].reset();
 
-            setTimeout(() => {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    enctype: 'multipart/form-data',
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        if (response.status == 200) {
-                            vex.dialog.alert(response.message);
-                        } else if (response.status == 201) {
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        } else if (response.status == 202) {
-                            vex.dialog.alert(response.message);
-                            setTimeout(() => {
-                                loadURI(response.path);
-                            }, 2000);
-                        } else if (response.status == 203) {
-                            vex.dialog.alert(response.message);
-                            primary_table.ajax.reload(null, false);
-                        } else if (response.status == 204) {
-                            loadURI(response.path);
-                        } else if (response.status == 300) {
-                            vex.dialog.alert(response.message);
-                        }
-                    },
-                    complete: function() {
-                        $('button').removeAttr('disabled');
+                        vex.dialog.alert(response.message);
+                        setTimeout(() => {
+                            window.location.href = response.path;
+                        }, 1000)
                     }
-                });
-            }, 1000);
-        }
+                },
+                error: function(response) {
+                    $('#btn-submit').prop('disabled', false);
+                    $('#to-large-image').html(
+                        `<div class="alert alert-danger alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                      <strong>Error!</strong> Ukuran foto maksimal 2 MB
+                    </div>`
+                    )
+                }
+            })
+        })
     });
 </script>

@@ -50,7 +50,7 @@ use App\Http\Controllers\Humas\FormBuilder\RekapFormHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
-use App\Http\Controllers\Humas\MagangSiswa\KunjunganMagangController;
+use App\Http\Controllers\Humas\KunjunganMagangController;
 use App\Http\Controllers\Humas\MagangSiswa\PembimbingMagangController;
 use App\Http\Controllers\Humas\MagangSiswa\RekapAbsensiMagangController;
 use App\Http\Controllers\Humas\ShiftPengguna\ShiftSiswaController;
@@ -580,9 +580,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absensi-magang/print/{id_siswa}', [RekapAbsensiMagangController::class, 'printRekapPresensiMagang']);
 
             // Kunjungan magang
-            Route::get('kunjungan-magang/{id_periode_magang?}', [KunjunganMagangController::class, 'viewKunjunganMagang']);
-            Route::post('kunjungan-magang', [KunjunganMagangController::class, 'actionViewKunjunganMagang']);
-            Route::get('kunjungan-magang-datatables/{periode_magang?}', [KunjunganMagangController::class, 'datatableKunjunganMagang']);
+            Route::get('kunjungan-magang', [KunjunganMagangController::class, 'index'])->name('humas.kunjungan-magang');
+            Route::get('kunjungan-magang/datatables', [KunjunganMagangController::class, 'dataKunjunganMagang'])->name('humas.dataKunjunganMagang');
         });
 
         /** === MODUL MAGANG ALUMNI === **/
