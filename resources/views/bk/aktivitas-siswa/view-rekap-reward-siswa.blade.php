@@ -249,12 +249,6 @@
         margin-bottom: 10px;
       }
       table {
-        width: 100%;
-        table-layout: auto;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-      }
-      table {
         border: 1px solid #000;
         width: 100%;
         table-layout: auto;
@@ -336,7 +330,7 @@
     const pageBreak = document.createElement('div');
     pageBreak.style.pageBreakAfter = 'always';
     pdfContent.appendChild(pageBreak);
-    
+
     // Rekap Presensi Siswa
     const presensiTitle = document.createElement('div');
     presensiTitle.className = 'section-title';
