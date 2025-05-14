@@ -107,6 +107,7 @@ use App\Http\Controllers\Keuangan\SIM\SppController;
 use App\Http\Controllers\Siswa\FormSiswa\InputFormHarianController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Http\Controllers\Siswa\RewardSiswa\RewardSiswaController;
+use App\Http\Controllers\Guru\MagangController;
 use App\Models\WaliMurid;
 
 
@@ -1152,11 +1153,16 @@ Route::middleware(['token_staff'])->group(function () {
 
         // Magang siswa
         Route::prefix('magang-siswa')->group(function () {
-            Route::get('list-kunjungan-magang', [KunjunganMagangController::class, 'viewKunjunganMagang']);
-            Route::get('list-kunjungan-magang-datatables', [KunjunganMagangController::class, 'datatableKunjunganMagang']);
-            Route::get('add-kunjungan-magang', [KunjunganMagangController::class, 'addKunjunganMagang']);
-            Route::get('edit-kunjungan-magang/{id_kunjungan_magang}', [KunjunganMagangController::class, 'editKunjunganMagang']);
-            Route::post('action-kunjungan-magang/{mode}/{id_kunjungan_magang?}', [KunjunganMagangController::class, 'actionKunjunganMagang']);
+            Route::get('list-kunjungan-magang', [MagangController::class, 'index'])->name('index.kunjungan-magang');
+            Route::get('list-kunjungan-magang/data', [MagangController::class, 'dataKunjunganMagang'])->name('index.dataKunjunganMagang');
+            // Route::get('list-kunjungan-magang-datatables', [KunjunganMagangController::class, 'datatableKunjunganMagang']);
+            Route::get('add-kunjungan-magang', [MagangController::class, 'create']);
+            Route::get('list-kunjungan-magang/{id}/edit', [MagangController::class, 'edit'])->name('edit.kunjungan-magang');
+            Route::post('list-kunjungan-magang/store', [MagangController::class, 'store'])->name('store.kunjungan-magang');
+            Route::put('list-kunjungan-magang/{id}/update', [MagangController::class, 'update'])->name('update.kunjungan-magang');
+            Route::delete('list-kunjungan-magang/{id}/destroy', [MagangController::class, 'destroy'])->name('destroy.kunjungan-magang');
+            // Route::get('edit-kunjungan-magang/{id_kunjungan_magang}', [KunjunganMagangController::class, 'editKunjunganMagang']);
+            // Route::post('action-kunjungan-magang/{mode}/{id_kunjungan_magang?}', [KunjunganMagangController::class, 'actionKunjunganMagang']);
         });
     });
 });
