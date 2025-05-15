@@ -17,9 +17,7 @@ class MagangController extends Controller
 {
     public function index()
     {
-        $fiveYearsAgo = Carbon::now()->subYears(3);
         $kunjungan_magang = KunjunganMagang::with('periode_magang', 'rekanan_magang')
-            ->where('created_at', '>=', $fiveYearsAgo)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -28,9 +26,7 @@ class MagangController extends Controller
 
     public function dataKunjunganMagang()
     {
-        $fiveYearsAgo = Carbon::now()->subYears(3);
         $kunjungan_magang = KunjunganMagang::with('periode_magang', 'rekanan_magang')
-            ->where('created_at', '>=', $fiveYearsAgo)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -85,15 +81,12 @@ class MagangController extends Controller
 
     public function create()
     {
-
-        // $currYear = date('Y');
-        $fiveYearsAgo = Carbon::now()->subYears(3);
         // dd($fiveYearsAgo);
         $id_sekolah_pengguna = Auth::user()->id_sekolah;
 
-        $periode_magang = PeriodeMagang::where('is_aktif', 'Aktif')->where('created_at', '>=', $fiveYearsAgo)->orderBy('created_at', 'desc')->get();
+        $periode_magang = PeriodeMagang::where('is_aktif', 1)->orderBy('created_at', 'desc')->get();
         $rekanan_magang = RekananMagang::where('id_sekolah', $id_sekolah_pengguna)
-            ->where('created_at', '>=', $fiveYearsAgo)->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
         // return response()->json($rekanan_magang);
         // dd($rekanan_magang);
@@ -149,14 +142,12 @@ class MagangController extends Controller
     public function edit($id)
     {
         $kunjungan_magang = KunjunganMagang::where('id_kunjungan_magang', $id)->first();
-
-        $fiveYearsAgo = Carbon::now()->subYears(3);
         // dd($fiveYearsAgo);
         $id_sekolah_pengguna = Auth::user()->id_sekolah;
 
-        $periode_magang = PeriodeMagang::where('is_aktif', 'Aktif')->where('created_at', '>=', $fiveYearsAgo)->orderBy('created_at', 'desc')->get();
+        $periode_magang = PeriodeMagang::where('is_aktif', 1)->orderBy('created_at', 'desc')->get();
         $rekanan_magang = RekananMagang::where('id_sekolah', $id_sekolah_pengguna)
-            ->where('created_at', '>=', $fiveYearsAgo)->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
         // return response()->json($rekanan_magang);
         // dd($rekanan_magang);
@@ -168,7 +159,6 @@ class MagangController extends Controller
 
     public function update(Request $request, $id)
     {
-        $path = '';
 
         $periode_magang = $request->periode_magang;
         $rekanan_magang = $request->rekanan_magang;

@@ -143,6 +143,7 @@
                                             <th style="text-align: center;">NIS</th>
                                             <th>Nama</th>
                                             <th>Rekanan</th>
+                                            {{-- <th>Pembimbing</th> --}}
                                             <th style="text-align: center;">@php
                                                 $date = Carbon\Carbon::parse($date)->locale('id');
                                                 $date->settings(['formatFunction' => 'translatedFormat']);
@@ -168,6 +169,7 @@
                                                     {{ $pengambilan_magang->siswa->nis_siswa }}</td>
                                                 <td>{{ $pengambilan_magang->siswa->pengguna->nm_pengguna }}</td>
                                                 <td>{{ $pengambilan_magang->rekanan->nm_rekanan_magang }}</td>
+
 
                                                 @if (isset($pengambilan_magang->presensiMagangSiswa))
                                                     @if ($pengambilan_magang->presensiMagangSiswa->kehadiran == 1)

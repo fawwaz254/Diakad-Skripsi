@@ -41,4 +41,9 @@ class PembimbingMagang extends Model
     {
         return $this->belongsTo(RekananMagang::class, 'id_rekanan_magang');
     }
+
+    public function presensiMagangSiswa()
+    {
+        return $this->hasMany(PresensiMagangSiswa::class, 'id_pembimbing_magang');
+    }
 }

@@ -57,11 +57,15 @@ class RekapAbsensiMagangController extends Controller
             $q->where('id_rekanan_magang', $id_rekanan);
         })->when($id_periode != '0', function ($q) use ($id_periode) {
             $q->where('id_periode_magang', $id_periode);
-        })->get()->pluck('id_pembimbing_magang');
+        })->with('pengguna')->get()->pluck('id_pembimbing_magang');
 
         $presensi_magang_siswa = PresensiMagangSiswa::whereHas('presensiMagang', function ($query) use ($pembimbing_magang) {
             $query->whereIn('id_pembimbing_magang', $pembimbing_magang);
-        })->get();
+        })->with("presensiMagang")->get();
+
+        // dd($presensi_magang_siswa);
+
+
 
         return view('humas/magang-siswa/rekap-absensi-magang/view-detail-rekap-absensi-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang', 'id_rekanan', 'id_periode', 'list_pengambilan_magang', 'date', 'presensi_magang_siswa'));
     }
