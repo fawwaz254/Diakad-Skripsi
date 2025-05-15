@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Humas;
 
 use App\Http\Controllers\Controller;
 use App\Models\KunjunganMagang;
+use App\Models\PeriodeMagang;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,18 +15,24 @@ class KunjunganMagangController extends Controller
 {
     public function index()
     {
-        $fiveYearsAgo = Carbon::now()->subYears(3);
-        $kunjungan_magang = KunjunganMagang::with('periode_magang', 'rekanan_magang')->where('created_at', '>=', $fiveYearsAgo)->get();
-        return view('humas.magang-siswa.kunjungan-magang.view-kunjungan-magang', compact('kunjungan_magang'));
+        $kunjungan_magang = KunjunganMagang::with('periode_magang', 'rekanan_magang')->get();
+        $periode_magang = PeriodeMagang::where("is_aktif", 1)->orderBy('created_at', 'desc')->get();
+        return view('humas.magang-siswa.kunjungan-magang.view-kunjungan-magang', compact('kunjungan_magang', 'periode_magang'));
     }
 
-    public function dataKunjunganMagang()
+    public function dataKunjunganMagang(Request $request)
     {
-        $fiveYearsAgo = Carbon::now()->subYears(3);
         $kunjungan_magang = KunjunganMagang::with('periode_magang', 'rekanan_magang')
-            ->where('created_at', '>=', $fiveYearsAgo)
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc');
+
+
+        if ($request->has('id_periode_magang') && $request->id_periode_magang != '') {
+            $kunjungan_magang->where('id_periode_magang', $request->id_periode_magang);
+        }
+
+        $kunjungan_magang = $kunjungan_magang->get();
+
+
 
         return DataTables::of($kunjungan_magang)
             ->addIndexColumn()

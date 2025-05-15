@@ -84,8 +84,22 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 {{-- {{ csrf_field() }} --}}
-                <div class="header">
+                <div class="header" style="display: flex; align-items: center; justify-content: space-between;">
                     <h2>DATA KUNJUNGAN MAGANG</h2>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <form action="" method="GET">
+                            <select name="periode_magang" id="periode_magang" class="form-control">
+                                <option value="" selected>Pilih Periode Magang</option>
+                                @foreach ($periode_magang as $periode)
+                                    <option value="{{ $periode->id_periode_magang }}">
+                                        {{ $periode->nm_periode_magang . ' ' . $periode->nomor_sk_periode_magang }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                        <button type="button" id="btn-reset" class="btn btn-primary waves-effect">Reset Filter</button>
+                    </div>
+
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -112,6 +126,24 @@
 
 <script>
     $(document).ready(function() {
+
+        $('#periode_magang').on('change', function() {
+            filterData();
+        });
+
+        $('#btn-reset').on('click', function() {
+            $('#periode_magang').val('').trigger('change');
+        });
+
+        function filterData() {
+            var periode_magang = $('#periode_magang').val();
+            console.log(periode_magang);
+            $('#primary_table').DataTable().ajax.url('{{ route('humas.dataKunjunganMagang') }}' +
+                '?id_periode_magang=' +
+                periode_magang).load();
+        }
+
+        $('#periode_magang').select2();
         let table = $('#primary_table').DataTable({
             processing: true,
             serverSide: true,
