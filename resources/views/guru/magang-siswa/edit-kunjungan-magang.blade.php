@@ -31,10 +31,11 @@
                                     <option value="">-- Pilih Periode Magang --</option>
                                     @foreach ($periode_magang as $periode)
                                         <option value="{{ $periode->id_periode_magang }}"
-                                            @if ($periode->id_periode_magang == $kunjungan_magang->id_periode_magang) selected @endif>
-                                            {{ $periode->nm_periode_magang . ' ' }}{{ $periode->nomor_sk_periode_magang }}
+                                            {{ $periode->id_periode_magang == $kunjungan_magang->id_periode_magang ? 'selected' : '' }}>
+                                            {{ $periode->nm_periode_magang }} {{ $periode->nomor_sk_periode_magang }}
                                         </option>
                                     @endforeach
+
                                 </select>
                             </div>
                         </div>
@@ -47,10 +48,11 @@
                                     <option value="">-- Pilih Rekanan Magang --</option>
                                     @foreach ($rekanan_magang as $rekanan)
                                         <option value="{{ $rekanan->id_rekanan_magang }}"
-                                            @if ($rekanan->id_rekanan_magang == $kunjungan_magang->id_rekanan_magang) selected @endif>
+                                            {{ $rekanan->id_rekanan_magang == $kunjungan_magang->id_rekanan_magang ? 'selected' : '' }}>
                                             {{ $rekanan->nm_rekanan_magang }}
                                         </option>
                                     @endforeach
+
                                 </select>
                             </div>
                         </div>

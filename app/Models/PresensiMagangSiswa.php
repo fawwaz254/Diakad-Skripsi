@@ -37,4 +37,9 @@ class PresensiMagangSiswa extends Model
     {
         return $this->belongsTo(PresensiMagang::class, 'id_presensi_magang', 'id_presensi_magang');
     }
+
+    public function pembimbingMagang()
+    {
+        return $this->belongsTo(PembimbingMagang::class, 'id_pembimbing_magang');
+    }
 }
