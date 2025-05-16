@@ -12,14 +12,14 @@
                 <i class="material-icons">attach_file</i>
                 <span>Import Rekanan Magang</span>
             </a> --}}
-            {{-- <a class="btn bg-blue waves-effect target-link"
+            <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . 'add-kunjungan-magang') }}">
                 <i class="material-icons">note_add</i>
                 <span>Tambah Kunjungan</span>
             </a>
             <div>
 
-            </div> --}}
+            </div>
             {{-- <a class="btn bg-green waves-effect" href="#">
                 <i class="material-icons">attach_file</i>
                 <span>Import Rekanan Magang</span>
@@ -84,22 +84,8 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 {{-- {{ csrf_field() }} --}}
-                <div class="header" style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="header">
                     <h2>DATA KUNJUNGAN MAGANG</h2>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <form action="" method="GET">
-                            <select name="periode_magang" id="periode_magang" class="form-control">
-                                <option value="" selected>Pilih Periode Magang</option>
-                                @foreach ($periode_magang as $periode)
-                                    <option value="{{ $periode->id_periode_magang }}">
-                                        {{ $periode->nm_periode_magang . ' ' . $periode->nomor_sk_periode_magang }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </form>
-                        <button type="button" id="btn-reset" class="btn btn-primary waves-effect">Reset Filter</button>
-                    </div>
-
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -116,6 +102,20 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
+                            {{-- <tbody>
+                                @forelse ($kunjungan_magang as $km)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>-</td>
+                                        <td>{{ $km->periode_magang->nm_periode_magang }}</td>
+                                        <td>{{ $km->rekanan_magang->nm_rekanan_magang }}</td>
+                                        <td>{{ $km->keterangan_kunjungan }}</td>
+                                        <td>Action</td>
+                                    </tr>
+                                @empty
+                                    <p>Tidak ada data</p>
+                                @endforelse
+                            </tbody> --}}
                         </table>
                     </div>
                 </div>
@@ -125,29 +125,17 @@
 </div>
 
 <script>
+    // // var modul_url = location.hash.replace('#','').split('/')[0];
+    // var modul_url = 'magang-siswa';
+    // var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rekanan-magang/datatables';
+    // var edit_url = role_url + '#' + modul_url + '/' + 'rekanan-magang/edit';
+    // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-rekanan-magang/delete';
+
     $(document).ready(function() {
-
-        $('#periode_magang').on('change', function() {
-            filterData();
-        });
-
-        $('#btn-reset').on('click', function() {
-            $('#periode_magang').val('').trigger('change');
-        });
-
-        function filterData() {
-            var periode_magang = $('#periode_magang').val();
-            console.log(periode_magang);
-            $('#primary_table').DataTable().ajax.url('{{ route('humas.dataKunjunganMagang') }}' +
-                '?id_periode_magang=' +
-                periode_magang).load();
-        }
-
-        $('#periode_magang').select2();
         let table = $('#primary_table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('humas.dataKunjunganMagang') }}',
+            ajax: '{{ route('index.dataKunjunganMagang') }}',
             columns: [{
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex',
@@ -169,9 +157,79 @@
                 orderable: false
             }]
         });
-
-        // table.on('xhr.dt', function(e, settings, json, xhr) {
-        //     console.log(json);
-        // })
     })
+
+    // var primary_table = $('#primary_table').DataTable({
+    //     processing: true,
+    //     serverSide: true,
+    //     responsive: false,
+    //     ajax: {
+    //         url: datatable_url,
+    //         type: 'GET'
+    //     },
+    //     columns: [{
+    //             data: null,
+    //             searchable: false,
+    //             orderable: false
+    //         },
+    //         {
+    //             data: 'nm_rekanan_magang',
+    //             name: 'nm_rekanan_magang'
+    //         },
+    //         {
+    //             data: 'nomor_telp_rekanan_magang',
+    //             name: 'nomor_telp_rekanan_magang'
+    //         },
+    //         {
+    //             data: 'nomor_hp_rekanan_magang',
+    //             name: 'nomor_hp_rekanan_magang'
+    //         },
+    //         {
+    //             data: 'alamat_rekanan_magang',
+    //             name: 'alamat_rekanan_magang'
+    //         },
+    //         {
+    //             data: 'tgl_mulai',
+    //             name: 'tgl_mulai'
+    //         },
+    //         {
+    //             data: 'tgl_selesai',
+    //             name: 'tgl_selesai'
+    //         },
+    //         {
+    //             data: 'kuota_rekanan_magang',
+    //             name: 'kuota_rekanan_magang'
+    //         },
+    //         {
+    //             data: 'contact_person_rekanan_magang',
+    //             name: 'contact_person_rekanan_magang'
+    //         },
+    //         {
+    //             data: 'action',
+    //             name: 'action',
+    //             searchable: false,
+    //             orderable: false,
+    //             render: function(data) {
+    //                 return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+    //                     edit_url + '/' + data.id + '">' +
+    //                     '    <i class="material-icons">edit</i>' +
+    //                     '</a> ' +
+    //                     '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+    //                     delete_url + '\', this)" data-id="' + data.id + '">' +
+    //                     '    <i class="material-icons">delete_forever</i>' +
+    //                     '</button>';
+    //             }
+    //         }
+    //     ]
+    // });
+
+    // primary_table.on('draw', function() {
+    //     primary_table.column(0, {
+    //         search: 'applied',
+    //         order: 'applied'
+    //     }).nodes().each(function(cell, i) {
+    //         var start = this.page.info().page * this.page.info().length;
+    //         cell.innerHTML = start + i + 1;
+    //     });
+    // }).draw();
 </script>
