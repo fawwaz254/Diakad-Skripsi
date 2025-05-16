@@ -38,6 +38,7 @@
     <link href="{{ asset('plugins/multi-select/css/multi-select.css') }}" rel="stylesheet">
 
     <!-- Toast -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="{{ asset('plugins/vex-4.0.1/dist/css/vex.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/vex-4.0.1/dist/css/vex-theme-default.css') }}">
 
@@ -157,6 +158,7 @@
 
 <!-- Toast -->
 <script src="{{ asset('plugins/vex-4.0.1/dist/js/vex.combined.min.js') }}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 <!-- Autosize Plugin Js -->
 <script src="{{ asset('plugins/autosize/autosize.js') }}"></script>
