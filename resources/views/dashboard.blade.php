@@ -27,6 +27,7 @@
         // Show information on first screen
         $(document).ready(function(){
             if (target_url.includes('e-learning-soal/list-ujian/cek') || target_url.includes('e-learning-soal/list-ujian/test')){
+                checkIsSplitScreen();
                 $('#sidebar_signout').hide();
                 if (localStorage.getItem('count_blok_user_next')) {
                     let x = 5 - localStorage.getItem('count_blok_user_next');
@@ -54,6 +55,10 @@
 
         // Trigger while resize screen, like split screen
         window.addEventListener('resize', () => {
+            checkIsSplitScreen();
+        });
+
+        function checkIsSplitScreen() {
             if (target_url.includes('e-learning-soal/list-ujian/cek') || target_url.includes('e-learning-soal/list-ujian/test')){
                 if($(document.activeElement).attr('type') == "text"){
                     console.log("Keyboard is visible");
@@ -63,17 +68,18 @@
                     }
                 }
             }
-        });
+        }
 
         function isSplitScreen() {
-            return window.innerWidth < (window.screen.width * 90 / 100) || window.innerHeight < (window.screen.height * 80 / 100);
+            return window.screen.height < 600 || window.innerHeight < (window.screen.height * 80 / 100);
+            // return window.innerWidth < (window.screen.width * 90 / 100) || window.innerHeight < (window.screen.height * 80 / 100);
         }
 
         function givePenalty(){
             if (localStorage.getItem('blok_user_next')) {
-                alert('Kamu melakukan pelanggaran dengan membuka tab lain di browser. Hati-hati agar akun tidak terlock');
-                alert('Maaf akun anda akan di lock');
-                // window.location.href = `${base_url}/${role_url}/user-locked`;
+                // alert('Kamu melakukan pelanggaran dengan membuka tab lain di browser. Hati-hati agar akun tidak terlock');
+                alert('Maaf akun anda akan di lock sebab melanggar ketentuan');
+                window.location.href = `${base_url}/${role_url}/user-locked`;
             } else {
                 if (localStorage.getItem('count_blok_user_next')) {
                     localStorage.setItem('count_blok_user_next', parseInt(localStorage.getItem('count_blok_user_next')) + 1);
