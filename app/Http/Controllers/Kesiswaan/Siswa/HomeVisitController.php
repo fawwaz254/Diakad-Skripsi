@@ -11,6 +11,7 @@ use App\Models\Guru as Guru;
 use Illuminate\Http\Request;
 
 use App\Models\HomeVisitView;
+use App\Models\Semester;
 
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
@@ -28,9 +29,13 @@ class HomeVisitController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_semester = Semester::where('id_sekolah', $auth_data->pengguna->id_sekolah)
+                                ->orderBy('tahun_ajaran', 'desc')
+                                ->orderBy('nm_semester', 'desc')
+                                ->get();
         // dd($data_kelas);
 
-        return view('kesiswaan/siswa/home-visit/view-home-visit', compact('auth_data', 'data_kelas', 'id'));
+        return view('kesiswaan/siswa/home-visit/view-home-visit', compact('auth_data', 'data_kelas', 'data_semester', 'id'));
     }
 
     public function editHomeVisit(Request $request, $id)
@@ -92,6 +97,11 @@ class HomeVisitController extends BaseController
         if (!empty($input->id_kelas)) {
             $id_kelas = $input->id_kelas;
         }
+        
+        $id_semester = '';
+        if (!empty($input->id_semester)) {
+            $id_semester = $input->id_semester;
+        }
 
         if ($id == 1) {
             $list_data = HomeVisit::select(
@@ -137,6 +147,9 @@ class HomeVisitController extends BaseController
                 ->when(!empty($id_kelas), function ($q) use ($id_kelas) {
                     $q->where('kelas.id_kelas', $id_kelas);
                 })
+                ->when(!empty($id_semester), function ($q) use ($id_semester) {
+                    $q->where('semester.id_semester', $id_semester);
+                })
                 ->orderBy('home_visit.updated_at', 'desc');
         } else {
             $list_data = HomeVisit::select(
@@ -181,6 +194,9 @@ class HomeVisitController extends BaseController
                 ->where('home_visit.is_berkas_lengkap', '=', $id)
                 ->when(!empty($id_kelas), function ($q) use ($id_kelas) {
                     $q->where('kelas.id_kelas', $id_kelas);
+                })
+                ->when(!empty($id_semester), function ($q) use ($id_semester) {
+                    $q->where('semester.id_semester', $id_semester);
                 })
                 ->orderBy('home_visit.created_at', 'desc');
         }

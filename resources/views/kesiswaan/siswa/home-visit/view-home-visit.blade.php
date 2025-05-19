@@ -7,10 +7,10 @@
                         Data Home Visit
                     </h2>
                     <br>
-                    <h4>Kelas</h4>
                     <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <select name="id-kelas" id="id-kelas" class="form-control" onchange="filterKelas()">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <h4>Kelas</h4>
+                            <select name="id-kelas" id="id-kelas" class="form-control" onchange="filterData()">
                                 <option value="">-- Pilih Kelas --</option>
                                 @forelse ($data_kelas as $row)
                                     <option value="{{ $row->id_kelas }}">{{ $row->nm_kelas }}</option>
@@ -19,8 +19,20 @@
                                 @endforelse
                             </select>
                         </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <h4>Semester</h4>
+                            <select name="id-semester" id="id-semester" class="form-control" onchange="filterData()">
+                                <option value="">-- Pilih Semester --</option>
+                                @forelse ($data_semester as $row)
+                                    <option value="{{ $row->id_semester }}">{{ $row->tahun_ajaran }} ({{ $row->nm_semester }})</option>
+                                @empty
+                                    <option value="">Tidak ada data</option>
+                                @endforelse
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <br>
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
@@ -293,18 +305,21 @@
         });
     }).draw();
 
-    function filterKelas() {
+    function filterData() {
         let id_kelas = $('#id-kelas').val();
+        let id_semester = $('#id-semester').val();
 
         var primary_table_belum_lengkap = $('#primary_table_belum_lengkap').DataTable();
         primary_table_belum_lengkap.settings()[0].ajax.data = function(d) {
             d.id_kelas = id_kelas;
+            d.id_semester = id_semester;
         };
         primary_table_belum_lengkap.ajax.reload(null, false);
 
         var primary_table_sudah_lengkap = $('#primary_table_sudah_lengkap').DataTable();
         primary_table_sudah_lengkap.settings()[0].ajax.data = function(d) {
             d.id_kelas = id_kelas;
+            d.id_semester = id_semester;
         };
         primary_table_sudah_lengkap.ajax.reload(null, false);
     }
