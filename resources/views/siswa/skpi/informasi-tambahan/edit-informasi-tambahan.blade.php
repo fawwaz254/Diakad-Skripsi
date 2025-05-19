@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH INFORMASI TAMBAHAN
+                        EDIT INFORMASI TAMBAHAN
                     </h2>
                 </div>
                 <div class="body">
@@ -27,6 +27,9 @@
                                 <select class="form-control show-tick" name="jenis_informasi_tambahan" required="">
                                     <option value="ekstrakurikuler"{{$informasi_tambahan->jenis_informasi_tambahan == 'ekstrakurikuler' ? 'selected' : ''}}>Ekstrakurikuler</option>
                                     <option value="produk_lomba"{{$informasi_tambahan->jenis_informasi_tambahan == 'produk_lomba' ? 'selected' : ''}}>Produk Lomba</option>
+                                    <option value="nilai_praktik_kerja_lapangan"{{$informasi_tambahan->jenis_informasi_tambahan == 'nilai_praktik_kerja_lapangan' ? 'selected' : ''}}>Nilai Praktik Kerja Lapangan</option>
+                                    <option value="nilai_kompetensi_keahlian"{{$informasi_tambahan->jenis_informasi_tambahan == 'nilai_kompetensi_keahlian' ? 'selected' : ''}}>Nilai Kompetensi Keahlian</option>
+                                    <option value="nilai_kompetensi_bnsp"{{$informasi_tambahan->jenis_informasi_tambahan == 'nilai_kompetensi_bnsp' ? 'selected' : ''}}>Nilai Kompetensi oleh BNSP</option>
                                 </select>
                             </div>
                         </div>

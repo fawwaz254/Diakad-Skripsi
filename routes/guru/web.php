@@ -855,6 +855,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('prestasi-siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewPrestasiSiswa']);
 
                 Route::get('print/{id_siswa}', [ApprovePrestasiSiswaController::class, 'printSkpi']);
+                Route::get('print/{id_siswa}', [ApprovePrestasiSiswaController::class, 'printSkpi']);
+
+                Route::get('/informasi-tambahan/datatables', [WaliKelasSKPIController::class, 'datatablesInformasiTambahan']);
+                Route::get('/informasi-tambahan/{id_siswa}', [WaliKelasSKPIController::class, 'viewInformasiTambahan']);
+                Route::get('/informasi-tambahan/add/{id_siswa}', [WaliKelasSKPIController::class, 'addInformasiTambahan']);
+                Route::get('/informasi-tambahan/edit/{id}', [WaliKelasSKPIController::class, 'viewEditInformasiTambahan']);
+                Route::post('/informasi-tambahan/action/{mode}/{id}', [WaliKelasSKPIController::class, 'actionInformasiTambahan']);
             });
 
 
