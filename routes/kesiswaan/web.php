@@ -121,6 +121,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('approve-prestasi-siswa/datatables', [ApprovePrestasiSiswaController::class, 'datatablesApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/{id}/{param}', [ApprovePrestasiSiswaController::class, 'viewDetailPrestasiSiswa']);
             Route::get('approve-prestasi-siswa/print/skpi/{id}', [ApprovePrestasiSiswaController::class, 'printSkpi']);
+            Route::get('approve-prestasi-siswa/print/skpi/{id}', [ApprovePrestasiSiswaController::class, 'printSkpi']);
             Route::get('approve-prestasi-siswa/printkelas/skpi/{id_kelas}', [ApprovePrestasiSiswaController::class, 'printSkpikelas']);
 
             Route::get('approve-prestasi-siswa/prestasi/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesPrestasiApprovePrestasiSiswa']);

@@ -304,6 +304,7 @@ class LibSiswa
             'kelas.nm_kelas',
             'kelas.keterangan_kelas',
             'jurusan.nm_jurusan',
+            'jurusan.program_keahlian',
             'status_pengguna.nm_status_pengguna',
             'calon_siswa_baru.id_c_siswa',
             'calon_siswa_baru.id_penerimaan',
