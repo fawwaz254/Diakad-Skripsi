@@ -176,6 +176,11 @@ class Pengguna extends Authenticatable
         return $this->hasMany(LogAktivitasPengguna::class, 'id_pengguna', 'id_pengguna');
     }
 
+    public function pengambilangMagang()
+    {
+        return $this->hasMany(PengambilanMagang::class, 'created_by', 'id_pengguna');
+    }
+
 
     public function status_join_to_text()
     {
