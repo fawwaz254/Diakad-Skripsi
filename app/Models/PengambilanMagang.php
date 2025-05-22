@@ -62,6 +62,11 @@ class PengambilanMagang extends Model
         return $this->belongsTo(Siswa::class, 'id_siswa');
     }
 
+    public function createdBy()
+    {
+        return $this->belongsTo(Pengguna::class, 'created_by');
+    }
+
     public function presensiMagangSiswa()
     {
         return $this->belongsTo(PresensiMagangSiswa::class, 'id_siswa', 'id_siswa');
