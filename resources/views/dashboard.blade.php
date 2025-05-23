@@ -21,39 +21,98 @@
 
 @section('js')
     <script>
-        document.addEventListener("visibilitychange", () => {
-            var original_title = location.hash;
-            var target_url = original_title.replace('#', '');
+        var original_title = location.hash;
+        var target_url = original_title.replace('#', '');
 
-            if (target_url.includes('e-learning-soal/list-ujian/test')) {
-                if (document.visibilityState === 'visible') {
-                    if (localStorage.getItem('blok_user_next')) {
-                        // alert('Kamu melakukan pelanggaran dengan membuka tab lain di browser. Hati-hati agar akun tidak terlock');
-                        alert('Maaf akun anda akan di lock');
-                        window.location.href = `${base_url}/${role_url}/user-locked`;
-                    } else {
-
-                        if (localStorage.getItem('count_blok_user_next')) {
-                            localStorage.setItem('count_blok_user_next', parseInt(localStorage.getItem(
-                                'count_blok_user_next')) + 1);
-                        } else {
-                            localStorage.setItem('count_blok_user_next', 1);
-                        }
-
-                        if (localStorage.getItem('count_blok_user_next') == 5) {
-                            localStorage.setItem('blok_user_next', true);
-                        }
-
-
-                        let sisa = 5 - localStorage.getItem(
-                            'count_blok_user_next');
-                        alert(
-                            `Kamu melakukan pelanggaran dengan membuka tab lain di browser, ${sisa} lagi akun dapat terkena lock`
-                        );
-                    }
+        // Show information on first screen
+        $(document).ready(function(){
+            if (target_url.includes('e-learning-soal/list-ujian/cek') || target_url.includes('e-learning-soal/list-ujian/test')){
+                checkIsSplitScreen();
+                $('#sidebar_signout').hide();
+                if (localStorage.getItem('count_blok_user_next')) {
+                    let x = 5 - localStorage.getItem('count_blok_user_next');
+                    showToast(`Kamu melakukan pelanggaran dengan membuka tab lain di browser, ${x} lagi akun dapat terkena lock`);
                 }
             }
         });
+
+        // Trigger while change the tab screen, in 1 app
+        document.addEventListener("visibilitychange", () => {
+            if (target_url.includes('e-learning-soal/list-ujian/cek') || target_url.includes('e-learning-soal/list-ujian/test')){
+                if (document.visibilityState === 'visible') {
+                    givePenalty();
+                }
+            }
+        });
+
+        // Trigger while change the app, in different windows
+        window.addEventListener('blur', () => {
+            if (target_url.includes('e-learning-soal/list-ujian/cek') || target_url.includes('e-learning-soal/list-ujian/test')){
+                console.log('window is blurred');
+                givePenalty();
+            }
+        });
+
+        // Trigger while resize screen, like split screen
+        window.addEventListener('resize', () => {
+            checkIsSplitScreen();
+        });
+
+        function checkIsSplitScreen() {
+            if (target_url.includes('e-learning-soal/list-ujian/cek') || target_url.includes('e-learning-soal/list-ujian/test')){
+                if($(document.activeElement).attr('type') == "text"){
+                    console.log("Keyboard is visible");
+                }else{
+                    if (isSplitScreen()) {
+                        givePenalty();
+                    }
+                }
+            }
+        }
+
+        function isSplitScreen() {
+            return window.screen.height < 600 || window.innerHeight < (window.screen.height * 80 / 100);
+            // return window.innerWidth < (window.screen.width * 90 / 100) || window.innerHeight < (window.screen.height * 80 / 100);
+        }
+
+        function givePenalty(){
+            if (localStorage.getItem('blok_user_next')) {
+                // alert('Kamu melakukan pelanggaran dengan membuka tab lain di browser. Hati-hati agar akun tidak terlock');
+                alert('Maaf akun anda akan di lock sebab melanggar ketentuan');
+                window.location.href = `${base_url}/${role_url}/user-locked`;
+            } else {
+                if (localStorage.getItem('count_blok_user_next')) {
+                    localStorage.setItem('count_blok_user_next', parseInt(localStorage.getItem('count_blok_user_next')) + 1);
+                } else {
+                    localStorage.setItem('count_blok_user_next', 1);
+                }
+
+                if (localStorage.getItem('count_blok_user_next') == 5) {
+                    localStorage.setItem('blok_user_next', true);
+                }
+
+                let sisa = 5 - localStorage.getItem('count_blok_user_next');
+                showToast(`Kamu melakukan pelanggaran dengan membuka tab lain di browser, ${sisa} lagi akun dapat terkena lock`);
+            }
+        }
+
+        function showToast(message){
+            Toastify({
+                text: message,
+                duration: -1,
+                close: true,
+                gravity: "top",
+                position: "right",
+                stopOnFocus: true,
+                style: {
+                    background: "red",
+                },
+                offset: {
+                    x: 20,
+                    y: 50,
+                },
+            }).showToast();
+        }
     </script>
     <!-- Javascript -->
     <script>

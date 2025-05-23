@@ -27,6 +27,7 @@ use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\LogKelasSiswa;
 use App\Models\Pengguna;
+use App\Models\Setting;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -111,7 +112,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
 
 
-        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-kelas', compact('auth_data', 'data', 'kprestasi', 'kkegiatan', 'kinformasi_tambahan_ekstrakurikuler', 'kinformasi_produk_lomba', 'kinformasi_tambahan'));
+        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-kelas', compact('auth_data', 'data', 'kprestasi', 'kkegiatan', 'kinformasi_tambahan_ekstrakurikuler', 'kinformasi_produk_lomba', 'kinformasi_tambahan',));
     }
 
     public function printSkpi(Request $request, $id)
@@ -122,6 +123,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $data = Siswa::findOrFail($id);
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
         $jurusan = null;
+
         if (empty($siswa->nm_jurusan)) {
             $log_kelas = LogKelasSiswa::where('id_siswa', $siswa->id_siswa)->with('kelas.jurusan')->first();
             if (isset($log_kelas->kelas->jurusan)) {
@@ -175,9 +177,43 @@ class ApprovePrestasiSiswaController extends BaseController
             ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->get();
 
+        $informasi_tambahan_praktik_kerja_lapangan =  InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('jenis_informasi_tambahan', '=', 'nilai_praktik_kerja_lapangan')
+            ->get();
+
+        $informasi_tambahan_kompetensi_keahlian =  InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('jenis_informasi_tambahan', '=', 'nilai_kompetensi_keahlian')
+            ->get();
+
+        $informasi_tambahan_kompetensi_bnsp =  InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('informasi_tambahan.status', 1)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('jenis_informasi_tambahan', '=', 'nilai_kompetensi_bnsp')
+            ->get();
+
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if (isset($tanggal)) {
+            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        } else {
+            $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+        }
+
+        //  return dd($auth_data->sekolah_data->nm_singkat_sekolah);
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2') {
             return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-smk-ypm2', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan', 'jurusan'));
+        } elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
+            return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-smk-ypm3', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan', 'jurusan', 'informasi_tambahan_praktik_kerja_lapangan', 'informasi_tambahan_kompetensi_keahlian', 'informasi_tambahan_kompetensi_bnsp', 'tanggal_cetak'));
         }
 
         return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan'));
@@ -656,7 +692,7 @@ class ApprovePrestasiSiswaController extends BaseController
                             })
                             ->select('s.id_siswa', 'p.nm_pengguna', 's.nis_siswa', 's.id_kelas', 'k.nm_kelas', DB::raw('count(combined.status) as jumlah'))
                             ->groupBy('id_siswa', 's.nis_siswa', 'p.nm_pengguna', 'k.nm_kelas')->get();
-                    } else if($param == 0) {
+                    } else if ($param == 0) {
                         $data = DB::table(DB::raw('(
                             SELECT id_siswa, id_kelas, status, "kegiatan_siswa" AS source
                             FROM kegiatan_siswa
@@ -681,7 +717,6 @@ class ApprovePrestasiSiswaController extends BaseController
                             })
                             ->select('s.id_siswa', 'p.nm_pengguna', 's.nis_siswa', 's.id_kelas', 'k.nm_kelas', DB::raw('count(combined.status) as jumlah'))
                             ->groupBy('id_siswa', 's.nis_siswa', 'p.nm_pengguna', 'k.nm_kelas')->get();
-
                     }
                 } else {
                     $query = "
@@ -1269,7 +1304,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'skpi/edit-informasi-tambahan-siswa/' . $id,
+                'path' => 'skpi/approve-prestasi-siswa/' . $informasi->id_siswa . '/1',
                 'message' => 'Edit Informasi Tambahan Successfully'
             ];
         }

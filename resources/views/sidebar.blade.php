@@ -77,7 +77,7 @@
                         <li><a class="target-link" href="{{ url(Request::segment(1) . '#password') }}"><i
                                     class="material-icons">lock</i>Password</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="{{ url(Request::segment(1) . '/signout') }}"><i
+                        <li id="sidebar_signout"><a href="{{ url(Request::segment(1) . '/signout') }}"><i
                                     class="material-icons">input</i>Sign
                                 Out</a></li>
                     </ul>

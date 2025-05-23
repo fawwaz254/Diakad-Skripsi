@@ -115,7 +115,7 @@
             <h2 style="margin-top:-2px">{{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h2>
             <h3 style="margin-top:-2px">Laporan Pembayaran Kelas
                 {{ isset($data_kelas->nm_kelas) ? $data_kelas->nm_kelas : '' }} Tahun
-                {{ $tahun_akademik_semester }}</h3>
+                {{ $tahun_ajaran }}</h3>
         </center>
         </td>
 

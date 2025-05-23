@@ -478,7 +478,7 @@
                 </div>
 
                 <div class="signature" style="margin-top:50px;">
-                    Sidoarjo,
+                    {{ $auth_data->sekolah_data->alamat_kota == 136 ? 'Surabaya' : 'Sidoarjo' }},
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                         {{ $tanggal_cetak }}
                     @else

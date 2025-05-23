@@ -386,9 +386,9 @@ class AktivitasRewardSiswaController extends Controller
                 return $item;
             });
 
-            return view('bk.aktivitas-siswa.view-rekap-reward-siswa', compact('data_kelas', 'data_aktivitas_reward_siswa', 'data_aktivitas_reward_siswa_presensi', 'data_jenis_aktivitas', 'data_semester', 'data_siswa', 'data_reward', 'data_presensi', 'months', 'startOfMonth', 'endOfMonth'));
+            return view('bk.aktivitas-siswa.view-rekap-reward-siswa', compact('auth_data', 'data_kelas', 'data_aktivitas_reward_siswa', 'data_aktivitas_reward_siswa_presensi', 'data_jenis_aktivitas', 'data_semester', 'data_siswa', 'data_reward', 'data_presensi', 'months', 'startOfMonth', 'endOfMonth'));
         } else {
-            return view('bk.aktivitas-siswa.view-rekap-reward-siswa', compact('data_kelas', 'data_aktivitas_reward_siswa', 'data_jenis_aktivitas', 'data_semester'));
+            return view('bk.aktivitas-siswa.view-rekap-reward-siswa', compact('auth_data', 'data_kelas', 'data_aktivitas_reward_siswa', 'data_jenis_aktivitas', 'data_semester'));
         }
     }
 

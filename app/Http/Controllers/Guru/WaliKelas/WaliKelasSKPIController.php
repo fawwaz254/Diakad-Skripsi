@@ -9,6 +9,7 @@ use App\Models\Guru;
 use App\Models\Pengguna;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\InformasiTambahan;
 use App\Models\KegiatanSiswa;
 use App\Models\PrestasiSiswa;
 use App\Models\Siswa;
@@ -65,13 +66,13 @@ class WaliKelasSKPIController extends Controller
                 );
                 return $data;
             })
-            // ->addColumn('informasi_tambahan', function ($item) {
-            //     $data = array(
-            //         'id' => $item->id_siswa,
-            //         'count' => $item->informasi_tambahan->count()
-            //     );
-            //     return $data;
-            // })
+            ->addColumn('informasi_tambahan', function ($item) {
+                $data = array(
+                    'id' => $item->id_siswa,
+                    'count' => $item->informasi_tambahan->count()
+                );
+                return $data;
+            })
             ->make(true);
     }
 
@@ -495,5 +496,145 @@ class WaliKelasSKPIController extends Controller
         $auth_data = $input->auth_data;
 
         return view('guru/wali-kelas/skpi/prestasi-siswa/view-prestasi-siswa', compact('auth_data', 'id_siswa'));
+    }
+
+    public function viewInformasiTambahan(Request $request, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('guru/wali-kelas/skpi/informasi-tambahan/view-informasi-tambahan', compact('auth_data', 'id_siswa'));
+    }
+
+
+    public function addInformasiTambahan(Request $request, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('guru/wali-kelas/skpi/informasi-tambahan/add-informasi-tambahan', compact('auth_data', 'id_siswa'));
+    }
+
+    public function viewEditInformasiTambahan(Request $request, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $informasi_tambahan = InformasiTambahan::findOrFail($id);
+        return view('guru/wali-kelas/skpi/informasi-tambahan/edit-informasi-tambahan', compact('auth_data', 'informasi_tambahan'));
+    }
+
+    public function actionInformasiTambahan(Request $request, $mode, $id = null)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now();
+        
+        $validator = Validator::make($request->all(), [
+            'jenis_informasi_tambahan' => 'required',
+            'nm_informasi_tambahan' => 'required',
+            'nm_informasi_tambahan_eng' => 'required'
+        ]);
+        
+        if ($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            
+            if ($mode == 'add') {
+                $siswa = Siswa::where('id_siswa', $input->id_siswa)->first();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                $informasi = new InformasiTambahan;
+                $informasi->id_informasi_tambahan = $id;
+                $informasi->id_siswa = $siswa->id_siswa;
+                $informasi->id_kelas = $siswa->id_kelas ?? 'SISWA_LULUS';
+                $informasi->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
+                $informasi->jenis_informasi_tambahan = $input->jenis_informasi_tambahan;
+                $informasi->nm_informasi_tambahan = $input->nm_informasi_tambahan;
+                $informasi->nm_informasi_tambahan_eng = $input->nm_informasi_tambahan_eng;
+                $informasi->status = 0;
+                $informasi->created_by = $input->auth_data->pengguna->id_pengguna;
+                $informasi->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/input-skpi-siswa/informasi-tambahan/' . $input->id_siswa,
+                    'message' => 'Save Informasi Tambahan Successfully'
+                ];
+            } elseif ($mode == 'edit') {
+
+                $informasi =  InformasiTambahan::find($id);
+                $informasi->jenis_informasi_tambahan = $input->jenis_informasi_tambahan;
+                $informasi->nm_informasi_tambahan = $input->nm_informasi_tambahan;
+                $informasi->nm_informasi_tambahan_eng = $input->nm_informasi_tambahan_eng;
+                $informasi->updated_at = $now;
+                $informasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $informasi->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/input-skpi-siswa/informasi-tambahan/' . $input->id_siswa,
+                    'message' => 'Edit Informasi Tambahan Successfully'
+                ];
+            } elseif ($mode == 'delete') {
+
+                $kegiatan = InformasiTambahan::find($id);
+                $kegiatan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->deleted_at  = $now;
+                $kegiatan->save();
+
+                $kegiatan->delete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Informasi Tambahan Successfully'
+                ];
+            }
+        }
+    }
+
+    public function datatablesInformasiTambahan(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = InformasiTambahan::select(
+            'informasi_tambahan.id_informasi_tambahan',
+            'informasi_tambahan.jenis_informasi_tambahan',
+            'informasi_tambahan.nm_informasi_tambahan',
+            'informasi_tambahan.nm_informasi_tambahan_eng',
+            'informasi_tambahan.status',
+            'informasi_tambahan.keterangan'
+        )
+        ->where('informasi_tambahan.id_siswa', $input->id_siswa)
+        ->get();
+
+        return Datatables::of($list_data)
+            ->addColumn('keterangan_status', function ($item) {
+                if ($item->status == 0) {
+                    $status = 'Belum Diapprove';
+                    $color = 'pink';
+                } elseif ($item->status == 1) {
+                    $status = 'Sudah Diapprove';
+                    $color = 'teal';
+                } elseif ($item->status == 10) {
+                    $status = 'Ditolak';
+                    $color = 'red';
+                }
+                $data = array(
+                    'status' => $status,
+                    'color'  => $color
+                );
+                return $data;
+            })->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_informasi_tambahan,
+                    'status' => $item->status
+                );
+                return $data;
+            })->make(true);
     }
 }

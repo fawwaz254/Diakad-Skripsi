@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/approve-prestasi-siswa') }}"><i
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/approve-prestasi-siswa/' . $informasi_tambahan->id_siswa . '/1') }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -31,6 +31,18 @@
                                     <option
                                         value="produk_lomba"{{ $informasi_tambahan->jenis_informasi_tambahan == 'produk_lomba' ? 'selected' : '' }}>
                                         Produk Lomba
+                                    </option>
+                                    <option
+                                        value="nilai_praktik_kerja_lapangan"{{ $informasi_tambahan->jenis_informasi_tambahan == 'nilai_praktik_kerja_lapangan' ? 'selected' : '' }}>
+                                        Nilai Praktik Kerja Lapangan
+                                    </option>
+                                    <option
+                                        value="nilai_kompetensi_keahlian"{{ $informasi_tambahan->jenis_informasi_tambahan == 'nilai_kompetensi_keahlian' ? 'selected' : '' }}>
+                                        Nilai Kompetensi Keahlian
+                                    </option>
+                                    <option
+                                        value="nilai_kompetensi_bnsp"{{ $informasi_tambahan->jenis_informasi_tambahan == 'nilai_kompetensi_bnsp' ? 'selected' : '' }}>
+                                        Nilai Kompetensi BNSP
                                     </option>
                                 </select>
                             </div>
