@@ -262,6 +262,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('koreksi', [HasilTestController::class, 'actionKoreksiHasilTest']);
                 Route::get('detail/{id}', [HasilTestController::class, 'indexDetail']);
                 Route::post('detail/table/{id}', [HasilTestController::class, 'detailList']);
+                Route::put('edit/{id}/{id_test}', [HasilTestController::class, 'updateEndTimeTest'])->name("editEndTimeTest");
                 Route::post('delete/{id}', [HasilTestController::class, 'actionDeleteTest']);
                 Route::get('print/{id}', [HasilTestController::class, 'printHasilTest']);
                 Route::get('print2/{id}', [HasilTestController::class, 'printHasilTest2']);
