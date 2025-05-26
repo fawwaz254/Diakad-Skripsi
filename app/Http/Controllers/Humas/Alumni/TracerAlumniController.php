@@ -80,8 +80,7 @@ class TracerAlumniController extends BaseController
             return [
                 'status' => 200, // FAILED
                 'message' => "Upload Sukses"
-            ];
-            ;
+            ];;
         } else {
             return [
                 'status' => 300, // FAILED
@@ -142,6 +141,37 @@ class TracerAlumniController extends BaseController
         $alumni = null;
 
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
+    }
+
+    public function getSiswaByKelas(Request $request)
+    {
+        $input = (object) $request->input();
+        $id_kelas = $input->id_kelas;
+
+        if (!$id_kelas) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'ID Kelas tidak ditemukan'
+            ]);
+        }
+
+        $siswa = Siswa::whereHas('kelas', function ($query) use ($id_kelas) {
+            $query->where('id_kelas', $id_kelas);
+        })
+            ->with(['calon_siswa', 'kelas'])
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id_c_siswa' => $item->id_c_siswa,
+                    'nama_siswa' => $item->calon_siswa->nm_c_siswa ?? 'Nama tidak tersedia',
+                    'nis' => $item->nis_siswa ?? '-'
+                ];
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $siswa
+        ]);
     }
 
     public function editTracerAlumni($id, Request $request)

@@ -601,6 +601,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('add', [TracerAlumniController::class, 'addTracerAlumni']);
                 Route::get('edit/{id}', [TracerAlumniController::class, 'editTracerAlumni']);
                 Route::post('action/{mode}/{id}', [TracerAlumniController::class, 'actionTracerAlumni']);
+                Route::post('get-siswa-by-kelas', [TracerAlumniController::class, 'getSiswaByKelas']);
                 Route::get('cetak', [TracerAlumniController::class, 'cetakTracerAlumni']);
                 Route::get('cetak2', [TracerAlumniController::class, 'cetakTracerAlumni2']);
                 Route::post('cetak', [TracerAlumniController::class, 'changeTracerAlumni']);

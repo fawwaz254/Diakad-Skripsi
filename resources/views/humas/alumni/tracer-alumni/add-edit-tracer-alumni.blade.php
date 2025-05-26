@@ -28,19 +28,47 @@
                         <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
                         <input type="hidden" name="id_c_siswa"
                             value="{{ !empty($alumni) ? $alumni->id_c_siswa : '' }}">
+
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title"> Kelas </h2>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <select class="form-control show-tick" name="id_kelas" id="select_kelas" required
+                                        {{ !empty($alumni) ? 'readonly' : '' }}>
+                                        <option value="" selected disabled> Pilih Kelas </option>
+                                        @foreach ($data_kelas as $kelas)
+                                            <option value="{{ $kelas->id_kelas }}"
+                                                {{ isset($alumni) && $alumni->id_kelas == $kelas->id_kelas ? 'selected' : '' }}>
+                                                {{ $kelas->nm_kelas }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-8">
                             <h2 class="card-inside-title"> Nama Siswa </h2>
-                            <input type="text" class="form-control" name="nama_siswa" aria-required="true"
-                                aria-invalid="true"
-                                value="{{ !empty($alumni) ? $alumni->calon_siswa->nm_c_siswa : '' }}"
-                                {{ !empty($alumni) ? 'readonly' : '' }}>
+                            @if(!empty($alumni))
+                                <input type="text" class="form-control" name="nama_siswa" aria-required="true"
+                                    aria-invalid="true"
+                                    value="{{ !empty($alumni) ? $alumni->calon_siswa->nm_c_siswa : '' }}" readonly>
+                            @else
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <select class="form-control show-tick" name="id_c_siswa" id="select_siswa" required>
+                                            <option value="" selected disabled> Pilih Siswa (Pilih Kelas Terlebih Dahulu) </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Jurusan </h2>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <select class="form-control show-tick" name="jurusan"
+                                    <select class="form-control show-tick" name="jurusan" id="select_jurusan"
                                         {{ !empty($alumni) ? 'readonly' : '' }}>
                                         <option value="" selected disabled> Pilih Jurusan </option>
                                         @foreach ($data_jurusan as $jurusan)
@@ -53,29 +81,12 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Tahun Lulus </h2>
                             <input type="number" class="form-control" name="tahun_lulus" required=""
                                 aria-required="true" aria-invalid="true"
                                 value="{{ !empty($alumni) ? $alumni->tahun_lulus : '' }}">
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title"> Kelas </h2>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <select class="form-control show-tick" name="id_kelas"
-                                        {{ !empty($alumni) ? 'readonly' : '' }}>
-                                        <option value="" selected disabled> Pilih Kelas </option>
-                                        @foreach ($data_kelas as $kelas)
-                                            <option value="{{ $kelas->id_kelas }}"
-                                                {{ isset($alumni) && $alumni->id_kelas == $kelas->id_kelas ? 'selected' : '' }}>
-                                                {{ $kelas->nm_kelas }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -206,11 +217,26 @@
 </div>
 
 <script>
-    // hadle first load of page
     $(document).ready(function() {
         var alumni = {!! $alumni != null ? json_encode($alumni->toArray(), JSON_HEX_TAG) : "''" !!};
         var status = $("input[name='status']").value || alumni.status;
         toggleAlumniForm(status)
+        
+        $('#select_kelas').on('change', function() {
+            var id_kelas = $(this).val();
+            if(id_kelas) {
+                getSiswaByKelas(id_kelas);
+            } else {
+                $('#select_siswa').html('<option value="" selected disabled>Pilih Siswa (Pilih Kelas Terlebih Dahulu)</option>');
+            }
+        });
+        
+        $('#select_siswa').on('change', function() {
+            var id_c_siswa = $(this).val();
+            if(id_c_siswa) {
+                getSiswaDetail(id_c_siswa);
+            }
+        });
     })
 
     $("input[name='status']").change(function() {
@@ -238,6 +264,46 @@
                 $('button#submit').attr('disabled', false);
                 break;
         }
+    }
+    
+    function getSiswaByKelas(id_kelas) {
+        $.ajax({
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2)) }}/tracer-alumni/get-siswa-by-kelas',
+            type: 'POST',
+            data: {
+                id_kelas: id_kelas,
+                _token: $('meta[name="csrf-token"]').attr('content') || $('input[name="_token"]').val()
+            },
+            beforeSend: function() {
+                $('#select_siswa').html('<option value="" selected disabled>Loading...</option>');
+            },
+            success: function(response) {
+                if(response.status === 'success') {
+                    var options = '<option value="" selected disabled>Pilih Siswa</option>';
+                    $.each(response.data, function(index, siswa) {
+                        options += '<option value="' + siswa.id_c_siswa + '">' + 
+                                  siswa.nama_siswa + ' (' + siswa.nis + ')</option>';
+                    });
+                    $('#select_siswa').html(options);
+                } else {
+                    $('#select_siswa').html('<option value="" selected disabled>Tidak ada siswa ditemukan</option>');
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#select_siswa').html('<option value="" selected disabled>Error loading data</option>');
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengambil data siswa');
+            }
+        });
+    }
+    
+    function getSiswaDetail(id_c_siswa) {
+        $.each($('#select_siswa option'), function(index, option) {
+            if($(option).val() === id_c_siswa) {
+                return false;
+            }
+        });
     }
 </script>
 
