@@ -70,10 +70,12 @@ class HasilTestController extends Controller
             ->make(true);
     }
 
-    public function indexDetail(Request $request, $id_paket_soal = 0)
+    public function indexDetail(Request $request, $id)
     {
-        if ($question_package = PaketSoal::where('id_paket_soal', $id_paket_soal)->first()) {
-            return view('guru/e-learning-soal/hasil-test/detail-hasil-test', compact('question_package'));
+        $test = Test::where('test.id_paket_soal', $id)->with('pengguna.siswa.kelas', 'paket_soal', 'detail_paket_soal')->get();
+        $id_paket_soal = $id;
+        if ($question_package = PaketSoal::where('id_paket_soal', $id)->first()) {
+            return view('guru/e-learning-soal/hasil-test/detail-hasil-test', compact(['test', 'question_package', 'id_paket_soal']));
         } else {
             return abort(404);
         }
@@ -195,6 +197,18 @@ class HasilTestController extends Controller
                 return $data;
             })
             ->make(true);
+    }
+
+    public function updateEndTimeTest(Request $request, $id, $id_test)
+    {
+        $test = Test::find($id_test);
+        $test->waktu_selesai_pengerjaan = $request->waktu_selesai;
+        $test->save();
+        return response()->json([
+            "status" => 200,
+            "message" => 'Berhasil memperbarui waktu selesai pengerjaan!',
+            "path" => 'aktivitas-semester/hasil-test/detail/' . $id
+        ]);
     }
 
     public function actionDeleteTest(Request $request, $id)
