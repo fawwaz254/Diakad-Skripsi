@@ -717,12 +717,19 @@ class ReportController extends BaseController
         return $reward_siswas;
     }
 
-    public function viewReportGuru(Request $request)
+    public function viewReportGuru(Request $request, $start_date = null, $end_date = null)
     {
         $input = (object) $request->input();
 
         $filter_value = intval($request->filter_value ?? 1);
-        $filter_tanggal = intval($request->filter_tanggal ?? 1);
+
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+            $end_date = Carbon::parse($request->end_date)->format('Y-m-d');
+        } else {
+            $start_date = Carbon::now()->format('Y-m-d');
+            $end_date = Carbon::now()->format('Y-m-d');
+        }
 
         $chartData = [
             'labels' => [],
@@ -791,43 +798,13 @@ class ReportController extends BaseController
             ->whereNull('g.deleted_at')
             ->get();
 
-        $week = null;
-        $month = null;
-        $year = null;
-        if ($filter_value === 3 || $filter_value === 6) {
-            // Rapor sisipan dan presensi berdasarkan satu semester
-            switch ($filter_tanggal) {
-                case 30:
-                    $month = 6;
-                    break;
-            }
-        } else {
-            switch ($filter_tanggal) {
-                case 7:
-                    $week = 1;
-                    break;
-                case 30:
-                    $month = 1;
-                    break;
-                case 365:
-                    $year = 1;
-                    break;
-
-                default:
-                    $week = null;
-                    $month = null;
-                    $year = null;
-                    break;
-            }
-        }
-
         foreach ($guru as $key => $g) {
             $chartData['labels'][] = $g->nm_pengguna;
 
             if ($filter_value === 1) {
-                $temp = $this->checkDataGuruPlural($g, $filter_value, $datas, $week, $month, $year);
+                $temp = $this->checkDataGuruPlural($g, $filter_value, $datas, $start_date, $end_date);
             } else {
-                $temp = $this->checkDataGuruSingular($g, $datas, $week, $month, $year);
+                $temp = $this->checkDataGuruSingular($g, $datas, $start_date, $end_date);
             }
 
             $temp = $temp->original;
@@ -836,7 +813,7 @@ class ReportController extends BaseController
 
         array_multisort($chartData['data'], SORT_DESC, $chartData['labels']);
 
-        return view('reporting-dashboard.guru', compact('semester_aktif', 'sekolah', 'chartData', 'filter_value', 'filter_tanggal'));
+        return view('reporting-dashboard.guru', compact('semester_aktif', 'sekolah', 'chartData', 'filter_value', 'start_date', 'end_date'));
     }
 
     public function countDataCreatedBy($collection, $id_pengguna)
@@ -892,9 +869,10 @@ class ReportController extends BaseController
             ->count();
     }
 
-    public function checkDataGuruPlural($guru, $filter_value, $datas, $week = null, $month = null, $year = null, $semester_aktif = null)
+    public function checkDataGuruPlural($guru, $filter_value, $datas, $start_date = null, $end_date = null, $semester_aktif = null)
     {
         $param = 0;
+
         if ($filter_value === 1) {
             foreach ($datas as $data) {
                 $param += ($guru->nik_ptk) ? 1 : 0;
@@ -906,26 +884,25 @@ class ReportController extends BaseController
                 $param += ($guru->email) ? 1 : 0;
                 $param += ($guru->nomor_sk_penugasan) ? 1 : 0;
 
-                if ($week) {
-                    $param += $this->countDataBetweenWeek($data, $guru->id_pengguna);
-                } elseif ($month) {
-                    $param += $this->countDataBetweenMonth($month, $data, $guru->id_pengguna, $semester_aktif);
-                } elseif ($year) {
-                    $param += $this->countDataBetweenYear($year, $data, $guru->id_pengguna);
+                if ($start_date && $end_date) {
+                    $param += $data->where('created_by', $guru->id_pengguna)
+                        ->whereBetween('created_at', [$start_date, $end_date])
+                        ->count();
                 } else {
-                    $param += $this->countDataCreatedBy($data, $guru->id_pengguna);
+                    $param += $data->where('created_by', $guru->id_pengguna)
+                        ->count();
                 }
             }
         } else {
             foreach ($datas as $data) {
-                if ($week) {
-                    $param += $this->countDataBetweenWeek($data, $guru->id_pengguna);
-                } elseif ($month) {
-                    $param += $this->countDataBetweenMonth($month, $data, $guru->id_pengguna, $semester_aktif);
-                } elseif ($year) {
-                    $param += $this->countDataBetweenYear($year, $data, $guru->id_pengguna);
+                
+                if ($start_date && $end_date) {
+                    $param += $data->where('created_by', $guru->id_pengguna)
+                        ->whereBetween('created_at', [$start_date, $end_date])
+                        ->count();
                 } else {
-                    $param += $this->countDataCreatedBy($data, $guru->id_pengguna);
+                    $param += $data->where('created_by', $guru->id_pengguna)
+                        ->count();
                 }
             }
         }
@@ -933,18 +910,20 @@ class ReportController extends BaseController
         return response()->json($param);
     }
 
-    public function checkDataGuruSingular($guru, $datas, $week = null, $month = null, $year = null, $semester_aktif = null)
+    public function checkDataGuruSingular($guru, $datas, $start_date = null, $end_date = null, $semester_aktif = null)
     {
         $param = 0;
-        if ($week) {
-            $param += $this->countDataBetweenWeek($datas, $guru->id_pengguna);
-        } elseif ($month) {
-            $param += $this->countDataBetweenMonth($month, $datas, $guru->id_pengguna, $semester_aktif);
-        } elseif ($year) {
-            $param += $this->countDataBetweenYear($year, $datas, $guru->id_pengguna);
-        } else {
-            $param += $this->countDataCreatedBy($datas, $guru->id_pengguna);
-        }
+
+        $today = Carbon::now('Asia/Jakarta')->format('Y-m-d');
+
+        if($start_date && $end_date == $today) {
+            $param += $datas->where('created_by', $guru->id_pengguna)
+                ->count();
+        } elseif ($start_date && $end_date) {
+            $param += $datas->where('created_by', $guru->id_pengguna)
+                ->whereBetween('created_at', [$start_date, $end_date])
+                ->count();
+        } 
 
         return response()->json($param);
     }

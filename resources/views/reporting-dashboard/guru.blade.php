@@ -14,7 +14,6 @@
         }
     }
 </style>
-
 <body>
     <section class="section">
         <div class="container-fluid">
@@ -71,7 +70,20 @@
                                         </div>
                                     </div>
                                     <div class="row clearfix">
-                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <div class="col-lg-12 col-md-10 col-sm-4 col-xs-4">
+                                            <div class="col-md-5">
+                                                <label>Tanggal Mulai</label>
+                                                <input type="date" class="form-control" id="start_date" value="{{ $start_date }}"
+                                                    name="start_date" aria-required="true" aria-invalid="true">
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <label>Tanggal Akhir</label>
+                                                <input type="date" class="form-control" id="end_date" value="{{ $end_date }}"
+                                                    name="end_date" aria-required="true" aria-invalid="true">
+                                            </div>
+                                        </div>
+                                            {{-- <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                             <select class="form-control show-tick" name="filter_tanggal">
                                                 <option selected value="1"
                                                     {{ $filter_tanggal == '1' ? 'selected' : '' }}>Semua</option>
@@ -83,7 +95,7 @@
                                                     {{ $filter_tanggal == '365' ? 'selected' : '' }}>Satu Tahun
                                                 </option>
                                             </select>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 none">
                                         <button class="btn btn-block form-control bg-cyan waves-effect">
