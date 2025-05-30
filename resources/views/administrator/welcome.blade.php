@@ -1,5 +1,8 @@
 @php
     $today = Carbon\Carbon::today('Asia/Jakarta');
+
+    // $start = Carbon\Carbon::today()->format('Y-m-d');  
+    // $end = Carbon\Carbon::today()->format('Y-m-d'); 
 @endphp
 <div class="container-fluid">
     <div class="card">
@@ -78,6 +81,7 @@
 
                 <div class="col-md-4 col-xs-12">
                     <a href="{{ route('report.guru') }}" target="_blank">
+                    {{-- <a href="{{ route('report.guru', ['start_date' => $today->format('Y-m-d'), 'end_date' => $today->format('Y-m-d')]) }}" target="_blank"> --}}
                         <div class="card">
                             <div class="body bg-blue" style="text-align: -webkit-center;">
                                 <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"
