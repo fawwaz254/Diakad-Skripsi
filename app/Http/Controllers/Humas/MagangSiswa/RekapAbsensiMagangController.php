@@ -45,9 +45,10 @@ class RekapAbsensiMagangController extends Controller
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
         $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
 
-        $list_pengambilan_magang = PengambilanMagang::with(['siswa.pengguna', 'siswa.kelas', 'rekanan', 'presensiMagangSiswa.presensiMagang' => function ($query) use ($date) {
+        $list_pengambilan_magang = PengambilanMagang::with(['siswa.pengguna', 'siswa.kelas', 'rekanan', 'presensiMagangSiswa.presensiMagang.pembimbingMagang.pengguna',  'presensiMagangSiswa.presensiMagang' => function ($query) use ($date) {
+            // dd($query);
             $query->whereDate('tanggal', '=', $date);
-        }])->when($id_rekanan != '0', function ($q) use ($id_rekanan) {
+        }, 'createdBy'])->when($id_rekanan != '0', function ($q) use ($id_rekanan) {
             $q->where('id_rekanan_magang', $id_rekanan);
         })->when($id_periode != '0', function ($q) use ($id_periode) {
             $q->where('id_periode_magang', $id_periode);
@@ -61,9 +62,7 @@ class RekapAbsensiMagangController extends Controller
 
         $presensi_magang_siswa = PresensiMagangSiswa::whereHas('presensiMagang', function ($query) use ($pembimbing_magang) {
             $query->whereIn('id_pembimbing_magang', $pembimbing_magang);
-        })->with("presensiMagang")->get();
-
-        // dd($presensi_magang_siswa);
+        })->with("presensiMagang.pembimbingMagang.pengguna")->get();
 
 
 

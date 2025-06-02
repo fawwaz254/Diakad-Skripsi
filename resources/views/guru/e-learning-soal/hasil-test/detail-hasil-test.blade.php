@@ -1,3 +1,58 @@
+@foreach ($test as $t)
+    <div class="modal fade" id="myModal{{ $t->id_test }}" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel{{ $t->id_test }}">
+        <div class="modal-dialog" role="document">
+            <form id="form{{ $t->id_test }}" method="POST" class="modal-content">
+                @method('PUT')
+                @csrf
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel{{ $t->id_test }}">Edit Waktu Selesai Pengerjaan
+                        {{ $t->pengguna->nm_pengguna }}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div>
+                        <label for="waktu_selesai">Waktu Selesai Pengerjaan</label>
+                        <input value="{{ $t->waktu_selesai_pengerjaan }}" type="datetime-local" name="waktu_selesai"
+                            id="waktu_selesai" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#form{{ $t->id_test }}').submit(function(e) {
+                e.preventDefault();
+                const data = $(this).serialize();
+                $.ajax({
+                    url: "{{ route('editEndTimeTest', ['id_test' => $t->id_test, 'id' => $id_paket_soal]) }}",
+                    type: "POST",
+                    data,
+                    success: (response) => {
+                        if (response.status === 200) {
+                            vex.dialog.alert(response.message);
+                            $('#myModal{{ $t->id_test }}').modal('hide');
+                            primary_table.ajax.reload(null, false);
+                        }
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+
+                })
+            })
+        })
+    </script>
+@endforeach
+
 <div class="container-fluid">
     <h2><a type="button" class="btn bg-grey waves-effect"
             href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/hasil-test') }}">
@@ -45,7 +100,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/detail/table/' + paket_soal;
     var detail_url = role_url + '#' + modul_url + '/' + 'paket-soal';
     var koreksi_hasil_test_url = role_url + '#' + modul_url + '/' + 'hasil-test' + '/' + 'koreksi';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/delete';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -127,12 +182,21 @@
                 data: 'action',
                 searchable: false,
                 orderable: false,
-                render: function(data) {
-                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">' +
-                        '    <i class="material-icons">delete_forever</i>' +
-                        '</button>';
+                render: function(data, type, row) {
+                    return /*html*/ `<div class="" style="display: flex; align-items:center; justify-content:center; gap:4px;">
+                        <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" 
+                        onclick="deleteAction('${delete_url}', this)" 
+                        data-id="${row.id_test}">
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                        <button type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-toggle="modal" data-target="#myModal${row.id_test}" style="display: flex; align-items:center; justify-content:center;">
+                            <span class="glyphicon glyphicon-pencil 
+                                "></span>
+                        </button>
+                    </div>`;
                 }
             }
+
         ],
         // order: [
         //     [2, 'asc'],

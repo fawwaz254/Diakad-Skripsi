@@ -198,11 +198,16 @@
                     @endphp
                     <a href="/keuangan/utility/pembayaran-by-kelas/print/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
                         target="_blank" class="btn btn-success">Print Pembayaran Siswa</a>
-                    <a href="/keuangan/utility/pembayaran-by-kelas/print/0/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
-                        target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Ini</a>
                     @if ($ganjil)
+                        <a href="/keuangan/utility/pembayaran-by-kelas/print/0/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
+                            target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Ini</a>
                         <a href="/keuangan/utility/pembayaran-by-kelas/print/1/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
                             target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Depan</a>
+                    @else
+                        <a href="/keuangan/utility/pembayaran-by-kelas/print/1/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
+                            target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Ini</a>
+                        <a href="/keuangan/utility/pembayaran-by-kelas/print/0/{{ $tahun_akademik_semester }}/{{ $id_kelas }}"
+                            target="_blank" class="btn btn-success">Print Pembayaran Siswa Semester Sebelumnya</a>
                     @endif
 
                     <h2 class="card-inside-title">
