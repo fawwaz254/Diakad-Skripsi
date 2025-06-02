@@ -32,6 +32,7 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\AlumniSmp;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\TracerAlumniImport;
+use App\Imports\DataImportExcel;
 use Illuminate\Routing\Controller as BaseController;
 
 class TracerAlumniController extends BaseController
@@ -143,18 +144,50 @@ class TracerAlumniController extends BaseController
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
 
-    public function getSiswaByKelas(Request $request)
+    public function getJurusanByKelas(Request $request)
     {
         $input = (object) $request->input();
         $id_kelas = $input->id_kelas;
-
         if (!$id_kelas) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'ID Kelas tidak ditemukan'
             ]);
         }
+        try {
+            $kelas = Kelas::with('jurusan')->find($id_kelas);
+            if (!$kelas || !$kelas->jurusan) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Jurusan tidak ditemukan untuk kelas ini'
+                ]);
+            }
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'id_jurusan' => $kelas->jurusan->id_jurusan,
+                    'nm_jurusan' => $kelas->jurusan->nm_jurusan
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat mengambil data jurusan'
+            ]);
+        }
+    }
 
+    public function getSiswaByKelas(Request $request)
+    {
+        $input = (object) $request->input();
+        $id_kelas = $input->id_kelas;
+        if (!$id_kelas) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'ID Kelas tidak ditemukan'
+            ]);
+        }
+        $kelas = Kelas::with('jurusan')->find($id_kelas);
         $siswa = Siswa::whereHas('kelas', function ($query) use ($id_kelas) {
             $query->where('id_kelas', $id_kelas);
         })
@@ -167,10 +200,13 @@ class TracerAlumniController extends BaseController
                     'nis' => $item->nis_siswa ?? '-'
                 ];
             });
-
         return response()->json([
             'status' => 'success',
-            'data' => $siswa
+            'data' => $siswa,
+            'jurusan' => $kelas && $kelas->jurusan ? [
+                'id_jurusan' => $kelas->jurusan->id_jurusan,
+                'nm_jurusan' => $kelas->jurusan->nm_jurusan
+            ] : null
         ]);
     }
 
@@ -200,52 +236,70 @@ class TracerAlumniController extends BaseController
         $auth_data = $input->auth_data;
 
         if ($mode == 'add') {
-
             DB::beginTransaction();
 
             try {
 
-                $data['nm_c_siswa'] = $request->nama_siswa;
-                $data['nomor_hp'] = $request->nomor_hp;
-                $data['id_jurusan'] = $request->jurusan;
-                $data['alamat_jalan'] = $request->alamat_siswa;
-                $data['id_c_siswa'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                $data['id_penerimaan'] = 0;
-                $data['status_verifikasi'] = 0;
-                $data['created_by'] = $auth_data->pengguna->id_pengguna;
-                $data['created_at'] = Carbon::now();
+                if ($request->filled('id_c_siswa')) {
+                    $calon_siswa = CalonSiswaBaru::find($request->id_c_siswa);
 
-                CalonSiswaBaru::insert($data);
+                    if (!$calon_siswa) {
+                        return error_response('Data siswa tidak ditemukan');
+                    }
+                    $calon_siswa->nomor_hp = $request->nomor_hp;
+                    $calon_siswa->alamat_jalan = $request->alamat_siswa;
+                    if ($request->filled('jurusan')) {
+                        $calon_siswa->id_jurusan = $request->jurusan;
+                    }
+                    $calon_siswa->updated_by = $auth_data->pengguna->id_pengguna;
+                    $calon_siswa->save();
 
-                $data2 = [
-                    'id_c_siswa' => $data['id_c_siswa'],
-                    'created_by' => $auth_data->pengguna->id_pengguna,
-                    'created_at' => Carbon::now()
-                ];
+                    $id_c_siswa = $calon_siswa->id_c_siswa;
+                } else {
+                    $data['nm_c_siswa'] = $request->nama_siswa;
+                    $data['nomor_hp'] = $request->nomor_hp;
+                    $data['id_jurusan'] = $request->jurusan;
+                    $data['alamat_jalan'] = $request->alamat_siswa;
+                    $data['id_c_siswa'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                    $data['id_penerimaan'] = 0;
+                    $data['status_verifikasi'] = 0;
+                    $data['created_by'] = $auth_data->pengguna->id_pengguna;
+                    $data['created_at'] = Carbon::now();
 
-                CalonSiswaOrtu::insert($data2);
-                CalonSiswaFisik::insert($data2);
-                CalonSiswaSekolah::insert($data2);
+                    CalonSiswaBaru::insert($data);
 
-                $data3['nm_pengguna'] = $request->nama_siswa;
-                $data3['email_pengguna'] = $request->email;
-                $data3['nomor_hp_pengguna'] = $request->nomor_hp;
-                $data3['username'] = str_replace(' ', '_', $request->nama_siswa);
-                $data3['id_status_pengguna'] = StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna;
-                $data3['id_sekolah'] = $auth_data->pengguna->id_sekolah;
-                $data3['id_pengguna'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                $data3['created_by'] = $auth_data->pengguna->id_pengguna;
-                $data3['created_at'] = Carbon::now();
+                    $data2 = [
+                        'id_c_siswa' => $data['id_c_siswa'],
+                        'created_by' => $auth_data->pengguna->id_pengguna,
+                        'created_at' => Carbon::now()
+                    ];
 
-                Pengguna::insert($data3);
+                    CalonSiswaOrtu::insert($data2);
+                    CalonSiswaFisik::insert($data2);
+                    CalonSiswaSekolah::insert($data2);
 
-                Siswa::insert([
-                    'id_siswa' => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
-                    'id_pengguna' => $data3['id_pengguna'],
-                    'id_c_siswa' => $data['id_c_siswa'],
-                    'created_by' => $auth_data->pengguna->id_pengguna,
-                    'created_at' => Carbon::now()
-                ]);
+                    $data3['nm_pengguna'] = $request->nama_siswa;
+                    $data3['email_pengguna'] = $request->email;
+                    $data3['nomor_hp_pengguna'] = $request->nomor_hp;
+                    $data3['username'] = str_replace(' ', '_', $request->nama_siswa);
+                    $data3['id_status_pengguna'] = StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna;
+                    $data3['id_sekolah'] = $auth_data->pengguna->id_sekolah;
+                    $data3['id_pengguna'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                    $data3['created_by'] = $auth_data->pengguna->id_pengguna;
+                    $data3['created_at'] = Carbon::now();
+
+                    Pengguna::insert($data3);
+
+                    Siswa::insert([
+                        'id_siswa' => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
+                        'id_pengguna' => $data3['id_pengguna'],
+                        'id_c_siswa' => $data['id_c_siswa'],
+                        'created_by' => $auth_data->pengguna->id_pengguna,
+                        'created_at' => Carbon::now()
+                    ]);
+
+                    $id_c_siswa = $data['id_c_siswa'];
+                }
 
                 $data4['id_kelas'] = $request->id_kelas;
                 $data4['email'] = $request->email;
@@ -253,7 +307,7 @@ class TracerAlumniController extends BaseController
                 $data4['url_medsos'] = $request->url_medsos;
                 $data4['status'] = $request->status;
                 $data4['id_alumni'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                $data4['id_c_siswa'] = $data['id_c_siswa'];
+                $data4['id_c_siswa'] = $id_c_siswa;
                 $data4['created_by'] = $auth_data->pengguna->id_pengguna;
                 $data4['created_at'] = Carbon::now();
 
@@ -299,12 +353,9 @@ class TracerAlumniController extends BaseController
                 }
 
                 DB::commit();
-
                 return web_response(202, "Update Successfully", self::PATH);
             } catch (\Exception $e) {
-
                 DB::rollback();
-
                 return error_response($e);
             }
         } elseif ($mode == 'add2') {
@@ -499,6 +550,288 @@ class TracerAlumniController extends BaseController
                 ];
             }
         }
+    }
+
+    public function importTracerAlumni()
+    {
+        return view('humas.alumni.tracer-alumni.import-tracer-alumni');
+    }
+
+    public function handleImportTracerAlumni(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $request->validate([
+            'file-excel' => 'required|mimes:xlsx,xls'
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'))[0];
+            $nis_gagal = [];
+            $nis_berhasil = [];
+
+            foreach ($data as $index => $row) {
+                $nis = $row['nis'];
+
+                if (empty($nis)) {
+                    continue;
+                }
+
+                $siswa = Siswa::where('nis_siswa', $nis)->first();
+
+                if ($siswa) {
+                    $existing_alumni = Alumni::where('id_c_siswa', $siswa->id_c_siswa)->first();
+                    if ($existing_alumni) {
+                        $nis_gagal[] = [
+                            'nis' => $nis,
+                            'nama' => $row['nama_lengkap'],
+                            'alasan' => 'Sudah terdaftar sebagai Alumni'
+                        ];
+                        continue;
+                    }
+
+                    if ($siswa->id_c_siswa) {
+                        $calon_siswa = CalonSiswaBaru::find($siswa->id_c_siswa);
+
+                        if (!$calon_siswa) {
+                            $nis_gagal[] = [
+                                'nis' => $nis,
+                                'nama' => $row['nama_lengkap'],
+                                'alasan' => 'Data calon siswa tidak ditemukan'
+                            ];
+                            continue;
+                        }
+
+                        $calon_siswa->nomor_hp = $row['nomor_teleponhpwa'];
+                        $calon_siswa->alamat_jalan = $row['alamat'];
+                        $jurusan = Jurusan::where('nm_jurusan', $row['jurusan'])->first();
+                        $calon_siswa->id_jurusan = $jurusan ? $jurusan->id_jurusan : null;
+                        $calon_siswa->updated_by = $auth_data->pengguna->id_pengguna;
+                        $calon_siswa->save();
+
+                        $id_c_siswa = $calon_siswa->id_c_siswa;
+                    } else {
+                        $calon_siswa_data = [
+                            'nm_c_siswa' => $row['nama_lengkap'],
+                            'nomor_hp' => $row['nomor_teleponhpwa'],
+                            'alamat_jalan' => $row['alamat'],
+                            'id_c_siswa' => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
+                            'id_penerimaan' => 0,
+                            'status_verifikasi' => 0,
+                            'created_by' => $auth_data->pengguna->id_pengguna,
+                            'created_at' => Carbon::now()
+                        ];
+
+                        $jurusan = Jurusan::where('nm_jurusan', $row['jurusan'])->first();
+                        $calon_siswa_data['id_jurusan'] = $jurusan ? $jurusan->id_jurusan : null;
+
+                        CalonSiswaBaru::insert($calon_siswa_data);
+
+                        $related_data = [
+                            'id_c_siswa' => $calon_siswa_data['id_c_siswa'],
+                            'created_by' => $auth_data->pengguna->id_pengguna,
+                            'created_at' => Carbon::now()
+                        ];
+
+                        CalonSiswaOrtu::insert($related_data);
+                        CalonSiswaFisik::insert($related_data);
+                        CalonSiswaSekolah::insert($related_data);
+
+                        $pengguna_data = [
+                            'nm_pengguna' => $row['nama_lengkap'],
+                            'email_pengguna' => $row['email'],
+                            'nomor_hp_pengguna' => $row['nomor_teleponhpwa'],
+                            'username' => str_replace(' ', '_', $row['nama_lengkap']),
+                            'id_status_pengguna' => StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna,
+                            'id_sekolah' => $auth_data->pengguna->id_sekolah,
+                            'id_pengguna' => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
+                            'created_by' => $auth_data->pengguna->id_pengguna,
+                            'created_at' => Carbon::now()
+                        ];
+
+                        Pengguna::insert($pengguna_data);
+
+                        Siswa::insert([
+                            'id_siswa' => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
+                            'id_pengguna' => $pengguna_data['id_pengguna'],
+                            'id_c_siswa' => $calon_siswa_data['id_c_siswa'],
+                            'nis_siswa' => $nis,
+                            'created_by' => $auth_data->pengguna->id_pengguna,
+                            'created_at' => Carbon::now()
+                        ]);
+
+                        $id_c_siswa = $calon_siswa_data['id_c_siswa'];
+                    }
+
+                    $kelas = Kelas::where('nm_kelas', $row['kelas'])->first();
+                    $alumni_data = [
+                        'id_alumni' => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
+                        'id_c_siswa' => $id_c_siswa,
+                        'id_kelas' => $kelas ? $kelas->id_kelas : null,
+                        'email' => $row['email'],
+                        'tahun_lulus' => $row['tahun_lulus'],
+                        'status' => $request->status,
+                        'url_medsos' => $row['url_medsos'],
+                        'created_by' => $auth_data->pengguna->id_pengguna,
+                        'created_at' => Carbon::now()
+                    ];
+
+                    Alumni::insert($alumni_data);
+
+                    $status_data = [
+                        'id_alumni' => $alumni_data['id_alumni'],
+                        'created_by' => $auth_data->pengguna->id_pengguna,
+                        'created_at' => Carbon::now()
+                    ];
+
+                    switch ($request->status) {
+                        case 'bekerja':
+                            $status_data['id_alumni_bekerja'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                            $status_data['nm_instansi'] = $row['nama_instansi'];
+                            $status_data['alamat_instansi'] = $row['alamat_instansi'];
+                            $status_data['kontak_instansi'] = $row['kontak_instansi'];
+                            $status_data['bidang_usaha_instansi'] = $row['bidang_usaha_instansi'];
+                            $status_data['tahun_masuk_instansi'] = $row['tahun_masuk_instansi'];
+                            $status_data['kapan_mulai_bekerja'] = $row['kapan_mulai_bekerja'];
+                            $status_data['lama_bekerja'] = $row['lama_bekerja'];
+                            LibAlumni::storeWorkplace($status_data);
+                            break;
+
+                        case 'usaha':
+                            $status_data['id_alumni_wirausaha'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                            $status_data['nm_usaha'] = $row['nama_usaha'];
+                            $status_data['alamat_usaha'] = $row['alamat_usaha'];
+                            $status_data['kontak_usaha'] = $row['kontak_usaha'];
+                            $status_data['bidang_usaha'] = $row['bidang_usaha'];
+                            $status_data['jumlah_karyawan'] = $row['jumlah_karyawan'];
+                            $status_data['tahun_rintis'] = $row['tahun_rintis'];
+                            LibAlumni::storeBusiness($status_data);
+                            break;
+
+                        case 'kuliah':
+                            $status_data['id_alumni_kuliah'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                            $status_data['nm_perguruan'] = $row['nama_perguruan_tinggi'];
+                            $status_data['alamat_perguruan'] = $row['alamat_perguruan_tinggi'];
+                            $status_data['fakultas'] = $row['fakultas'];
+                            $status_data['prodi'] = $row['program_studi'];
+                            $status_data['jenjang'] = $row['jenjang'];
+                            $status_data['tahun_masuk_perguruan'] = $row['tahun_masuk_perguruan_tinggi'];
+                            LibAlumni::storeUniversity($status_data);
+                            break;
+
+                        case 'menunggu':
+                            $status_data['id_alumni_menunggu'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                            $status_data['status_menunggu'] = $row['status_menunggu'];
+                            LibAlumni::storeIdleAlumni($status_data);
+                            break;
+                    }
+
+                    $nis_berhasil[] = [
+                        'nis' => $nis,
+                        'nama' => $row['nama_lengkap'],
+                        'status' => ucfirst($request->status)
+                    ];
+                } else {
+                    $nis_gagal[] = [
+                        'nis' => $nis,
+                        'nama' => $row['nama_lengkap'],
+                        'alasan' => 'Siswa tidak ditemukan dengan NIS ini'
+                    ];
+                }
+            }
+
+            DB::commit();
+
+            $total_berhasil = count($nis_berhasil);
+            $total_gagal = count($nis_gagal);
+            $total_data = $total_berhasil + $total_gagal;
+
+            if ($total_gagal > 0 && $total_berhasil > 0) {
+                return response()->json([
+                    'status' => 202,
+                    'message' => "Import selesai! {$total_berhasil} dari {$total_data} data berhasil diimpor.",
+                    'nis_berhasil' => $nis_berhasil,
+                    'nis_gagal' => $nis_gagal,
+                    'summary' => [
+                        'total_data' => $total_data,
+                        'berhasil' => $total_berhasil,
+                        'gagal' => $total_gagal
+                    ]
+                ]);
+            } else if ($total_gagal > 0 && $total_berhasil == 0) {
+                return response()->json([
+                    'status' => 300,
+                    'message' => "Import gagal! Semua {$total_gagal} data gagal diimpor.",
+                    'nis_gagal' => $nis_gagal,
+                    'summary' => [
+                        'total_data' => $total_data,
+                        'berhasil' => $total_berhasil,
+                        'gagal' => $total_gagal
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Import berhasil! Semua {$total_berhasil} data alumni berhasil diimpor.",
+                    'nis_berhasil' => $nis_berhasil,
+                    'summary' => [
+                        'total_data' => $total_data,
+                        'berhasil' => $total_berhasil,
+                        'gagal' => $total_gagal
+                    ]
+                ]);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            \Log::error('Import Alumni Error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Gagal mengimpor data: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function downloadFileExcelAlumniBekerja()
+    {
+        $file = public_path() . "/excel/ContohFileExcelUploadAlumniBekerja.xlsx";
+        $headers = [
+            'Content-Type' => 'application/xls',
+        ];
+
+        return response()->download($file, 'ContohFileExcelUploadAlumniBekerja.xlsx', $headers);
+    }
+
+    public function downloadFileExcelAlumniWirausaha()
+    {
+        $file = public_path() . "/excel/ContohFileExcelUploadAlumniWirausaha.xlsx";
+        $headers = [
+            'Content-Type' => 'application/xls',
+        ];
+
+        return response()->download($file, 'ContohFileExcelUploadAlumniWirausaha.xlsx', $headers);
+    }
+
+    public function downloadFileExcelAlumniKuliah()
+    {
+        $file = public_path() . "/excel/ContohFileExcelUploadAlumniKuliah.xlsx";
+        $headers = [
+            'Content-Type' => 'application/xls',
+        ];
+
+        return response()->download($file, 'ContohFileExcelUploadAlumniKuliah.xlsx', $headers);
+    }
+
+    public function downloadFileExcelAlumniMenunggu()
+    {
+        $file = public_path() . "/excel/ContohFileExcelUploadAlumniMenunggu.xlsx";
+        $headers = [
+            'Content-Type' => 'application/xls',
+        ];
+
+        return response()->download($file, 'ContohFileExcelUploadAlumniMenunggu.xlsx', $headers);
     }
 
     public function cetakTracerAlumni(Request $request, $id_kelas = null, $tahun_lulus = null)

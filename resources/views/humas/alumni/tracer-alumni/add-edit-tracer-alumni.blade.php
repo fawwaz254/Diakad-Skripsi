@@ -28,6 +28,7 @@
                         <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
                         <input type="hidden" name="id_c_siswa"
                             value="{{ !empty($alumni) ? $alumni->id_c_siswa : '' }}">
+                        <input type="hidden" name="jurusan" id="hidden_jurusan" value="{{ !empty($alumni) ? $alumni->calon_siswa->jurusan->id_jurusan : '' }}">
 
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Kelas </h2>
@@ -37,10 +38,10 @@
                                         {{ !empty($alumni) ? 'readonly' : '' }}>
                                         <option value="" selected disabled> Pilih Kelas </option>
                                         @foreach ($data_kelas as $kelas)
-                                            <option value="{{ $kelas->id_kelas }}"
-                                                {{ isset($alumni) && $alumni->id_kelas == $kelas->id_kelas ? 'selected' : '' }}>
-                                                {{ $kelas->nm_kelas }}
-                                            </option>
+                                        <option value="{{ $kelas->id_kelas }}"
+                                            {{ isset($alumni) && $alumni->id_kelas == $kelas->id_kelas ? 'selected' : '' }}>
+                                            {{ $kelas->nm_kelas }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -50,17 +51,17 @@
                         <div class="col-md-8">
                             <h2 class="card-inside-title"> Nama Siswa </h2>
                             @if(!empty($alumni))
-                                <input type="text" class="form-control" name="nama_siswa" aria-required="true"
-                                    aria-invalid="true"
-                                    value="{{ !empty($alumni) ? $alumni->calon_siswa->nm_c_siswa : '' }}" readonly>
+                            <input type="text" class="form-control" name="nama_siswa" aria-required="true"
+                                aria-invalid="true"
+                                value="{{ !empty($alumni) ? $alumni->calon_siswa->nm_c_siswa : '' }}" readonly>
                             @else
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <select class="form-control show-tick" name="id_c_siswa" id="select_siswa" required>
-                                            <option value="" selected disabled> Pilih Siswa (Pilih Kelas Terlebih Dahulu) </option>
-                                        </select>
-                                    </div>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <select class="form-control show-tick" name="id_c_siswa" id="select_siswa" required>
+                                        <option value="" selected disabled> Pilih Siswa (Pilih Kelas Terlebih Dahulu) </option>
+                                    </select>
                                 </div>
+                            </div>
                             @endif
                         </div>
 
@@ -68,20 +69,15 @@
                             <h2 class="card-inside-title"> Jurusan </h2>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <select class="form-control show-tick" name="jurusan" id="select_jurusan"
-                                        {{ !empty($alumni) ? 'readonly' : '' }}>
-                                        <option value="" selected disabled> Pilih Jurusan </option>
-                                        @foreach ($data_jurusan as $jurusan)
-                                            <option value="{{ $jurusan->id_jurusan }}"
-                                                {{ isset($alumni) && isset($alumni->calon_siswa->jurusan) && $alumni->calon_siswa->jurusan->id_jurusan == $jurusan->id_jurusan ? 'selected' : '' }}>
-                                                {{ $jurusan->nm_jurusan }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" class="form-control" id="display_jurusan" 
+                                        value="{{ !empty($alumni) && isset($alumni->calon_siswa->jurusan) ? $alumni->calon_siswa->jurusan->nm_jurusan : '' }}" 
+                                        placeholder="Terisi Otomatis" 
+                                        readonly 
+                                        style="cursor: not-allowed;">
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Tahun Lulus </h2>
                             <input type="number" class="form-control" name="tahun_lulus" required=""
@@ -113,69 +109,69 @@
                         </div>
 
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ||
-                            $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
-                            $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                            <input type="hidden"name="status" value="smp">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <hr>
-                                <h2 class="card-inside-title">Jenis Sekolah:</h2>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <select class="form-control show-tick" name="jenis_sekolah">
-                                            <option @if (!isset($alumni)) selected @endif disabled>Pilih
-                                                Jenis</option>
-                                            <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'sma') selected @endif value="sma">SMA
-                                                (Sekolah Menengah Atas)</option>
-                                            <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'smk') selected @endif value="smk">SMK
-                                                (Sekolah Menengah Kejuruan)</option>
-                                            <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'ma') selected @endif value="ma"> MA
-                                                (Madrasah Aliyah)</option>
-                                        </select>
-                                    </div>
+                        $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
+                        $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                        <input type="hidden" name="status" value="smp">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <hr>
+                            <h2 class="card-inside-title">Jenis Sekolah:</h2>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <select class="form-control show-tick" name="jenis_sekolah">
+                                        <option @if (!isset($alumni)) selected @endif disabled>Pilih
+                                            Jenis</option>
+                                        <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'sma') selected @endif value="sma">SMA
+                                            (Sekolah Menengah Atas)</option>
+                                        <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'smk') selected @endif value="smk">SMK
+                                            (Sekolah Menengah Kejuruan)</option>
+                                        <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'ma') selected @endif value="ma"> MA
+                                            (Madrasah Aliyah)</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title"> Nama Sekolah</h2>
-                                <textarea class="form-control" name="nm_sekolah" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->nm_sekolah : '' }} </textarea>
-                            </div>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title"> Alamat Sekolah</h2>
-                                <textarea class="form-control" name="alamat_sekolah" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->alamat_sekolah : '' }} </textarea>
-                            </div>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title">Jurusan</h2>
-                                <textarea class="form-control" name="jurusan" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->jurusan : '' }} </textarea>
-                            </div>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title">Tahun Masuk Sekolah</h2>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title"> Nama Sekolah</h2>
+                            <textarea class="form-control" name="nm_sekolah" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->nm_sekolah : '' }} </textarea>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title"> Alamat Sekolah</h2>
+                            <textarea class="form-control" name="alamat_sekolah" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->alamat_sekolah : '' }} </textarea>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Jurusan</h2>
+                            <textarea class="form-control" name="jurusan" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->jurusan : '' }} </textarea>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Tahun Masuk Sekolah</h2>
 
-                                <input type="number" class="form-control" name="tahun_masuk_sekolah" required=""
-                                    aria-required="true" aria-invalid="true"
-                                    value="{{ !empty($alumni) ? $alumni->smp->tahun_masuk_sekolah : '' }}">
+                            <input type="number" class="form-control" name="tahun_masuk_sekolah" required=""
+                                aria-required="true" aria-invalid="true"
+                                value="{{ !empty($alumni) ? $alumni->smp->tahun_masuk_sekolah : '' }}">
 
-                                {{-- <textarea class="form-control" name="tahun_masuk_sekolah" required="" aria-required="true"
+                            {{-- <textarea class="form-control" name="tahun_masuk_sekolah" required="" aria-required="true"
 								aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea> --}}
-                            </div>
+                        </div>
                         @else
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title"> Status </h2>
-                                <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                    name="status" value="bekerja" id="work_status" required="required"
-                                    {{ isset($alumni) && $alumni->status == 'bekerja' ? 'checked' : '' }}>
-                                <label for="work_status"> Bekerja </label>
-                                <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                    name="status" value="usaha" id="enterpreneur_status" required="required"
-                                    {{ isset($alumni) && $alumni->status == 'usaha' ? 'checked' : '' }}>
-                                <label for="enterpreneur_status"> Wirausaha </label>
-                                <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                    name="status" value="kuliah" id="college_status" required="required"
-                                    {{ isset($alumni) && $alumni->status == 'kuliah' ? 'checked' : '' }}>
-                                <label for="college_status"> Kuliah </label>
-                                <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                    name="status" value="menunggu" id="idle_status" required="required"
-                                    {{ isset($alumni) && $alumni->status == 'menunggu' ? 'checked' : '' }}>
-                                <label for="idle_status"> Belum Bekerja </label>
-                            </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title"> Status </h2>
+                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                name="status" value="bekerja" id="work_status" required="required"
+                                {{ isset($alumni) && $alumni->status == 'bekerja' ? 'checked' : '' }}>
+                            <label for="work_status"> Bekerja </label>
+                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                name="status" value="usaha" id="enterpreneur_status" required="required"
+                                {{ isset($alumni) && $alumni->status == 'usaha' ? 'checked' : '' }}>
+                            <label for="enterpreneur_status"> Wirausaha </label>
+                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                name="status" value="kuliah" id="college_status" required="required"
+                                {{ isset($alumni) && $alumni->status == 'kuliah' ? 'checked' : '' }}>
+                            <label for="college_status"> Kuliah </label>
+                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                name="status" value="menunggu" id="idle_status" required="required"
+                                {{ isset($alumni) && $alumni->status == 'menunggu' ? 'checked' : '' }}>
+                            <label for="idle_status"> Belum Bekerja </label>
+                        </div>
                         @endif
                         {{-- handle work data --}}
                         <div class="form_layout" id="work_state">
@@ -195,18 +191,18 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ||
-                                $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
-                                $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                                <button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
-                                    <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
-                                    </span>
-                                </button>
+                            $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
+                            $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                            <button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
+                                <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
+                                </span>
+                            </button>
                             @else
-                                <button id="submit" disabled class="btn btn-block bg-red waves-effect"
-                                    type="submit">
-                                    <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
-                                    </span>
-                                </button>
+                            <button id="submit" disabled class="btn btn-block bg-red waves-effect"
+                                type="submit">
+                                <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
+                                </span>
+                            </button>
                             @endif
                         </div>
                     </form>
@@ -218,22 +214,25 @@
 
 <script>
     $(document).ready(function() {
-        var alumni = {!! $alumni != null ? json_encode($alumni->toArray(), JSON_HEX_TAG) : "''" !!};
+        var alumni = {!! $alumni != null ? json_encode($alumni->toArray(), JSON_HEX_TAG) : "''"!!};
         var status = $("input[name='status']").value || alumni.status;
         toggleAlumniForm(status)
-        
+
         $('#select_kelas').on('change', function() {
             var id_kelas = $(this).val();
-            if(id_kelas) {
+            if (id_kelas) {
                 getSiswaByKelas(id_kelas);
+                updateJurusanByKelas(id_kelas);
             } else {
                 $('#select_siswa').html('<option value="" selected disabled>Pilih Siswa (Pilih Kelas Terlebih Dahulu)</option>');
+                $('#display_jurusan').val('');
+                $('#hidden_jurusan').val('');
             }
         });
-        
+
         $('#select_siswa').on('change', function() {
             var id_c_siswa = $(this).val();
-            if(id_c_siswa) {
+            if (id_c_siswa) {
                 getSiswaDetail(id_c_siswa);
             }
         });
@@ -265,7 +264,7 @@
                 break;
         }
     }
-    
+
     function getSiswaByKelas(id_kelas) {
         $.ajax({
             url: '{{ url(Request::segment(1) . '/' . Request::segment(2)) }}/tracer-alumni/get-siswa-by-kelas',
@@ -278,13 +277,18 @@
                 $('#select_siswa').html('<option value="" selected disabled>Loading...</option>');
             },
             success: function(response) {
-                if(response.status === 'success') {
+                if (response.status === 'success') {
                     var options = '<option value="" selected disabled>Pilih Siswa</option>';
                     $.each(response.data, function(index, siswa) {
-                        options += '<option value="' + siswa.id_c_siswa + '">' + 
-                                  siswa.nama_siswa + ' (' + siswa.nis + ')</option>';
+                        options += '<option value="' + siswa.id_c_siswa + '">' +
+                                siswa.nama_siswa + ' (' + siswa.nis + ')</option>';
                     });
                     $('#select_siswa').html(options);
+
+                    if (response.jurusan) {
+                        $('#display_jurusan').val(response.jurusan.nm_jurusan);
+                        $('#hidden_jurusan').val(response.jurusan.id_jurusan);
+                    }
                 } else {
                     $('#select_siswa').html('<option value="" selected disabled>Tidak ada siswa ditemukan</option>');
                     alert('Error: ' + response.message);
@@ -297,10 +301,35 @@
             }
         });
     }
-    
+
+    function updateJurusanByKelas(id_kelas) {
+        $.ajax({
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2)) }}/tracer-alumni/get-jurusan-by-kelas',
+            type: 'POST',
+            data: {
+                id_kelas: id_kelas,
+                _token: $('meta[name="csrf-token"]').attr('content') || $('input[name="_token"]').val()
+            },
+            success: function(response) {
+                if (response.status === 'success' && response.data) {
+                    $('#display_jurusan').val(response.data.nm_jurusan);
+                    $('#hidden_jurusan').val(response.data.id_jurusan);
+                } else {
+                    $('#display_jurusan').val('');
+                    $('#hidden_jurusan').val('');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error getting jurusan:', error);
+                $('#display_jurusan').val('');
+                $('#hidden_jurusan').val('');
+            }
+        });
+    }
+
     function getSiswaDetail(id_c_siswa) {
         $.each($('#select_siswa option'), function(index, option) {
-            if($(option).val() === id_c_siswa) {
+            if ($(option).val() === id_c_siswa) {
                 return false;
             }
         });

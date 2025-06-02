@@ -7,6 +7,10 @@
                 class="btn bg-green waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/tracer-alumni/cetak2') }}">
                 <i class="material-icons">local_printshop</i><span>Cetak Data Alumni</span></a>
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/tracer-alumni/import') }}">
+                <i class="material-icons">file_upload</i><span>Import Data Alumni</span>
+            </a>
         </h2>
     </div>
     <div class="row clearfix">

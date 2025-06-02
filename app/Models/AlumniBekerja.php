@@ -18,13 +18,14 @@ class AlumniBekerja extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id_alumni_bekerja',
         'id_alumni',
         'nm_instansi',
         'alamat_instansi',
         'kontak_instansi',
         'bidang_usaha_instansi',
         'tahun_masuk_instansi',
+        'kapan_mulai_bekerja',
+        'lama_bekerja',
         'created_by',
         'updated_by',
         'deleted_by'
@@ -34,5 +35,4 @@ class AlumniBekerja extends Model
     {
         return $this->belongsTo(Alumni::class, 'id_alumni');
     }
-
 }
