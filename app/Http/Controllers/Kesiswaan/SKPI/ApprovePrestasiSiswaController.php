@@ -110,9 +110,14 @@ class ApprovePrestasiSiswaController extends BaseController
 
         // dd($data);
 
+        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+        if (isset($tanggal)) {
+            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        } else {
+            $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+        }
 
-
-        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-kelas', compact('auth_data', 'data', 'kprestasi', 'kkegiatan', 'kinformasi_tambahan_ekstrakurikuler', 'kinformasi_produk_lomba', 'kinformasi_tambahan',));
+        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-kelas', compact('auth_data', 'data', 'kprestasi', 'kkegiatan', 'kinformasi_tambahan_ekstrakurikuler', 'kinformasi_produk_lomba', 'kinformasi_tambahan', 'tanggal_cetak'));
     }
 
     public function printSkpi(Request $request, $id)

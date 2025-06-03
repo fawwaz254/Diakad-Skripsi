@@ -282,7 +282,7 @@
                 <h5 class="text-center"><b>Diploma Supplement</b></h5>
                 <h5 class="text-center">Nomor :
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                        429/C-3/WH-2/V/2024
+                        616/C-3/WH-2/V/2025
                     @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                         421.3/090/E/404.3.1.15.4.4/VI/2024
                     @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
@@ -353,7 +353,7 @@
                             <br><i>School and National Student Identification Number</i>
                             {{-- @endif --}}
                         </td>
-                        <td> {{ $siswa->nis_siswa }}</td>
+                        <td> {{ $siswa->nis_siswa }} / {{ $siswa->nisn_siswa }}</td>
                     </tr>
                     <tr>
                         <td style="width: 5%;">1.A4</td>
@@ -460,6 +460,8 @@
                         </td>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                             <td> 1346/BAN-SM/SK/2021</td>
+                        @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                            <td> 087/BAN-PDM/SK/2024</td>
                         @else
                             <td> 599/BAN-SM/SK/2019</td>
                         @endif
@@ -878,7 +880,7 @@
                         {{-- @endif --}}
                         <td style="border: none;">Kab. Sidoarjo,
                             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                                8 Mei 2023
+                                {{ $tanggal_cetak }}
                             @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
                                 8 Mei 2024
                             @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
@@ -904,8 +906,8 @@
                             <br>
                             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                                 <br>
-                                <img src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD"
-                                    style="height:90px; margin-left:-40px;" width="220px" />
+                                <img style="top: 5%; margin-left:-20px;"
+                                    src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD" height="100px" class="ttd">
                                 <br>
                             @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
                                 <img style="position: absolute; top: 5%; margin-left:-40px;"
@@ -933,7 +935,7 @@
                         <br>
                         <br>
                     @endif --}}
-                            <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
+                            <b><u>{{ str_replace('S.Pd.I.,', '', $auth_data->sekolah_data->nm_kepala_sekolah) }}</u></b>
                         </td>
                     </tr>
                     </tr>
