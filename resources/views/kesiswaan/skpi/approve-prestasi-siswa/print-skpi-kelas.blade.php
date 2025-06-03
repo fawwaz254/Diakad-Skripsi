@@ -907,7 +907,7 @@
                             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                                 <br>
                                 <img style="top: 5%; margin-left:-20px;"
-                                    src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD" height="100px" class="ttd">
+                                    src="{{ asset('media/ttd/smawh2-new.png') }}" alt="TTD" height="100px" class="ttd">
                                 <br>
                             @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
                                 <img style="position: absolute; top: 5%; margin-left:-40px;"
