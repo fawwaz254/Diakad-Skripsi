@@ -216,7 +216,7 @@ class ApprovePrestasiSiswaController extends BaseController
             return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi-smk-ypm3', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan', 'jurusan', 'informasi_tambahan_praktik_kerja_lapangan', 'informasi_tambahan_kompetensi_keahlian', 'informasi_tambahan_kompetensi_bnsp', 'tanggal_cetak'));
         }
 
-        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan'));
+        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi', compact('auth_data', 'siswa', 'prestasi', 'kegiatan', 'informasi_tambahan_ekstrakurikuler', 'informasi_produk_lomba', 'informasi_tambahan', 'tanggal_cetak'));
     }
 
     public function datatablesKegiatanApprovePrestasiSiswa(Request $request, $id, $param)
