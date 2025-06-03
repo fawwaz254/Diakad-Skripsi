@@ -439,6 +439,8 @@
                     </td>
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                         <td> 1346/BAN-SM/SK/2021</td>
+                    @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                        <td> 087/BAN-PDM/SK/2024</td>
                     @else
                         <td> 087/BAN-PDM/SK/2024</td>
                     @endif
@@ -888,8 +890,8 @@
                         <br>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                             <br>
-                            <img src="{{ asset('media/ttd/smawh2-baru.png') }}" alt="TTD"
-                                style="height:90px; margin-left:-40px;" width="220px" />
+                            <img style="top: 5%; margin-left:-20px;"
+                                src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD" height="100px" class="ttd">
                             <br>
                         @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
                             <img style="position: absolute; top: 5%; margin-left:-40px;"
