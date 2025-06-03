@@ -332,7 +332,7 @@
                         <br><i>School and National Student Identification Number</i>
                         {{-- @endif --}}
                     </td>
-                    <td> {{ $siswa->nis_siswa / $siswa->nisn_siswa }}</td>
+                    <td> {{ $siswa->nis_siswa }} / {{ $siswa->nisn_siswa }}</td>
                 </tr>
                 <tr>
                     <td style="width: 5%;">1.A4</td>
@@ -888,7 +888,7 @@
                         <br>
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                             <br>
-                            <img src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD"
+                            <img src="{{ asset('media/ttd/smawh2-baru.png') }}" alt="TTD"
                                 style="height:90px; margin-left:-40px;" width="220px" />
                             <br>
                         @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
