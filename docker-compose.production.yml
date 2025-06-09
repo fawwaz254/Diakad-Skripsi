@@ -58,6 +58,8 @@ services:
       - no-new-privileges:true
     volumes:
       - 'stack-redis:/data'
+    ports:
+      - '6379:6379'
     networks:
       - stack
     logging: *default-logging
