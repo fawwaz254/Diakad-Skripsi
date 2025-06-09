@@ -21,7 +21,7 @@ class DataKategoriJurnalHarianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data->role_aktif->id_pengguna;
+        $auth_data = auth_data()->role_aktif->id_pengguna;
 
         return view('humas/jurnal-harian/data-kategori/view-data-kategori', compact('auth_data'));
     }
@@ -54,7 +54,7 @@ class DataKategoriJurnalHarianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $unit_kerja = UnitKerja::all();
 
 
@@ -74,7 +74,7 @@ class DataKategoriJurnalHarianController extends Controller
     public function editDataKategori(Request $request, $id_category_jh_tendik = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $unit_kerja = UnitKerja::all();
         $name = CategoryJurnalHarianTendik::find($id_category_jh_tendik)->first();
         $data_kategori = CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik', $id_category_jh_tendik)->first();
@@ -109,16 +109,16 @@ class DataKategoriJurnalHarianController extends Controller
 
             if ($mode == 'add') {
                 if ($input->allowed_tendik ?? false) {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $datakategori                               = new CategoryJurnalHarianTendik();
                     $datakategori->id_category_jh_tendik        = $id;
                     $datakategori->id_unit_kerja                = $input->id_unit_kerja;
                     $datakategori->description                  = $input->description;
-                    $datakategori->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $datakategori->created_by                   = auth_data()->pengguna->id_pengguna;
                     $datakategori->save();
 
                     foreach ($input->allowed_tendik as $key => $value) {
-                        $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $uuid = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $datakategori_tendik = new CategoryKelompokJurnalHarianTendik();
                         $datakategori_tendik->id_c_k_jh_tendik = $uuid;
                         $datakategori_tendik->id_pengguna = $input->allowed_tendik[$key];
@@ -142,7 +142,7 @@ class DataKategoriJurnalHarianController extends Controller
                 $datakategori                               = CategoryJurnalHarianTendik::find($id);
                 $datakategori->id_unit_kerja                = $input->id_unit_kerja;
                 $datakategori->description                  = $input->description;
-                $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $datakategori->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $datakategori->updated_at                   = $now;
                 $datakategori->save();
 
@@ -150,7 +150,7 @@ class DataKategoriJurnalHarianController extends Controller
                 CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik', $id)->delete();
                 $now = Carbon::now();
                 foreach ($input->allowed_tendik as $key => $value) {
-                    $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $uuid = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $datakategori_role = new CategoryKelompokJurnalHarianTendik();
                     $datakategori_role->id_c_k_jh_tendik = $uuid;
                     $datakategori_role->id_pengguna = $input->allowed_tendik[$key];
@@ -180,7 +180,7 @@ class DataKategoriJurnalHarianController extends Controller
                     }
                     // make object to find id 
                     $datakategori                       = CategoryJurnalHarianTendik::where('id_category_jh_tendik', $id)->first();
-                    $datakategori->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                    $datakategori->deleted_by           = auth_data()->pengguna->id_pengguna;
                     $datakategori->save();
 
                     $datakategori->delete();
@@ -199,7 +199,7 @@ class DataKategoriJurnalHarianController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/jurnal-harian/data-kategori/laporan-data-jurnal-harian', compact('auth_data'));
     }
@@ -208,7 +208,7 @@ class DataKategoriJurnalHarianController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);

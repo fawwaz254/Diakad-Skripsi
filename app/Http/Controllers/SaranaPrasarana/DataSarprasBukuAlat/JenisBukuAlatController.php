@@ -26,7 +26,7 @@ class JenisBukuAlatController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-buku-alat/jenis-buku-alat/view-jenis-buku-alat', compact('auth_data'));
     }
@@ -35,7 +35,7 @@ class JenisBukuAlatController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -49,7 +49,7 @@ class JenisBukuAlatController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jenis_buku_alat = LibDataSarpras::fetchDataJenisBukuAlat($auth_data, $id);
 
@@ -59,7 +59,7 @@ class JenisBukuAlatController extends BaseController
     public function datatablesJenisBukuAlat(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataJenisBukuAlat($auth_data);
 
         return Datatables::of($list_data)
@@ -93,14 +93,14 @@ class JenisBukuAlatController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jenisBukuAlat                        = new JenisBukuAlat;
                 $jenisBukuAlat->id_jenis_buku_alat    = $id;
                 $jenisBukuAlat->kode_jenis_buku_alat  = $input->kode_jenis_buku_alat;
                 $jenisBukuAlat->nm_jenis_buku_alat    = $input->nm_jenis_buku_alat;
-                $jenisBukuAlat->id_sekolah            = $input->auth_data->pengguna->id_sekolah;
-                $jenisBukuAlat->created_by            = $input->auth_data->pengguna->id_pengguna;
+                $jenisBukuAlat->id_sekolah            = auth_data()->pengguna->id_sekolah;
+                $jenisBukuAlat->created_by            = auth_data()->pengguna->id_pengguna;
                 $jenisBukuAlat->save();
 
                 return [
@@ -113,7 +113,7 @@ class JenisBukuAlatController extends BaseController
                 $jenisBukuAlat                        = JenisBukuAlat::find($id);
                 $jenisBukuAlat->kode_jenis_buku_alat  = $input->kode_jenis_buku_alat;
                 $jenisBukuAlat->nm_jenis_buku_alat    = $input->nm_jenis_buku_alat;
-                $jenisBukuAlat->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                $jenisBukuAlat->updated_by            = auth_data()->pengguna->id_pengguna;
                 $jenisBukuAlat->updated_at            = $now;
                 $jenisBukuAlat->save();
 
@@ -131,7 +131,7 @@ class JenisBukuAlatController extends BaseController
                 } else {
                     // make object to find id
                     $jenisBukuAlat               = JenisBukuAlat::find($id);
-                    $jenisBukuAlat->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $jenisBukuAlat->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $jenisBukuAlat->save();
 
                     $jenisBukuAlat->delete();
@@ -149,7 +149,7 @@ class JenisBukuAlatController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-buku-alat/jenis-buku-alat/import-excel', compact('auth_data'));
     }
@@ -158,7 +158,7 @@ class JenisBukuAlatController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -204,8 +204,8 @@ class JenisBukuAlatController extends BaseController
                             $data->id_jenis_buku_alat             = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $data->kode_jenis_buku_alat           = $value->kode_jenis_buku_atau_alat;
                             $data->nm_jenis_buku_alat             = $value->nama_jenis_buku_atau_alat;
-                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
-                            $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                            $data->id_sekolah                     = auth_data()->pengguna->id_sekolah;
+                            $data->created_by                     = auth_data()->pengguna->id_pengguna;
                             $data->save();
                         }
 

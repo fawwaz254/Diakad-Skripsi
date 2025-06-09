@@ -25,7 +25,7 @@ class DataEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('kesiswaan/ekstrakurikuler/data-ekskul/view-data-ekskul', compact('auth_data'));
     }
@@ -34,12 +34,12 @@ class DataEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/ekstrakurikuler/data-ekskul/add-data-ekskul', compact('auth_data'));
     }
@@ -48,13 +48,13 @@ class DataEkskulController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
         $ekskul = Ekskul::where('id_ekskul', '=', $id)->first();
 
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/ekstrakurikuler/data-ekskul/edit-data-ekskul', compact('auth_data', 'ekskul'));
     }
@@ -62,7 +62,7 @@ class DataEkskulController extends BaseController
     public function datatablesDataEkskul(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
@@ -81,7 +81,7 @@ class DataEkskulController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -98,14 +98,14 @@ class DataEkskulController extends BaseController
         } else {
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $ekskul                     = new Ekskul;
                 $ekskul->id_ekskul        = $id;
                 $ekskul->nm_ekskul         = $input->nm_ekskul;
                 $ekskul->nomor_sk_ekskul = $input->nomor_sk_ekskul;
                 $ekskul->tgl_sk_ekskul     = date_format(date_create($input->tgl_sk_ekskul), "Y-m-d");
-                $ekskul->created_by        = $input->auth_data->pengguna->id_pengguna;
+                $ekskul->created_by        = auth_data()->pengguna->id_pengguna;
                 $ekskul->id_sekolah      = $auth_data->pengguna->id_sekolah;
                 $ekskul->created_at        = $now;
                 $ekskul->save();
@@ -120,7 +120,7 @@ class DataEkskulController extends BaseController
                 $ekskul->nm_ekskul         = $input->nm_ekskul;
                 $ekskul->nomor_sk_ekskul = $input->nomor_sk_ekskul;
                 $ekskul->tgl_sk_ekskul     = date_format(date_create($input->tgl_sk_ekskul), "Y-m-d");
-                $ekskul->updated_by        = $input->auth_data->pengguna->id_pengguna;
+                $ekskul->updated_by        = auth_data()->pengguna->id_pengguna;
                 $ekskul->updated_at        = $now;
                 $ekskul->save();
 
@@ -138,7 +138,7 @@ class DataEkskulController extends BaseController
                 } else {
                     // make object to find id
                     $ekskul                 = Ekskul::find($id);
-                    $ekskul->deleted_by     = $input->auth_data->pengguna->id_pengguna;
+                    $ekskul->deleted_by     = auth_data()->pengguna->id_pengguna;
                     $ekskul->save();
 
                     $ekskul->delete();

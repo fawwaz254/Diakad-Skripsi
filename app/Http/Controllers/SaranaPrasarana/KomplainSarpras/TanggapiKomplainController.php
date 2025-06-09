@@ -24,7 +24,7 @@ class TanggapiKomplainController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/komplain-sarpras/tanggapi-komplain/view-tanggapi-komplain', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class TanggapiKomplainController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_komplain_sarpras = LibDataSarpras::fetchDataTanggapiKomplain($auth_data, 0, $id);
 
@@ -75,7 +75,7 @@ class TanggapiKomplainController extends BaseController
     public function datatablesTanggapiKomplainBelum(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataTanggapiKomplain($auth_data, 0);
 
         return Datatables::of($list_data)
@@ -131,7 +131,7 @@ class TanggapiKomplainController extends BaseController
     public function datatablesTanggapiKomplainSudah(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataTanggapiKomplain($auth_data, 1);
 
         return Datatables::of($list_data)
@@ -238,10 +238,10 @@ class TanggapiKomplainController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'edit') {
-                if ($input->auth_data->pengguna->status_join_table == 2) {
+                if (auth_data()->pengguna->status_join_table == 2) {
                     // get id_guru
                     $guru = Guru::select('id_guru')
-                        ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                        ->where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)
                         ->first();
 
                     $id_guru_sarpras = $guru->id_guru;
@@ -256,7 +256,7 @@ class TanggapiKomplainController extends BaseController
                 // convert format date
                 $komplainSarpras->tgl_perbaikan         = date_format(date_create($input->tgl_perbaikan), "Y-m-d H:i:s");
                 $komplainSarpras->keterangan_perbaikan  = $input->keterangan_perbaikan;
-                $komplainSarpras->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                $komplainSarpras->updated_by            = auth_data()->pengguna->id_pengguna;
                 $komplainSarpras->updated_at            = $now;
                 $komplainSarpras->save();
 
@@ -268,7 +268,7 @@ class TanggapiKomplainController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $komplainSarpras               = KomplainSarpras::find($id);
-                $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $komplainSarpras->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $komplainSarpras->save();
 
                 $komplainSarpras->delete();

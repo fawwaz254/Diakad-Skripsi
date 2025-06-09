@@ -28,7 +28,7 @@ class PengajuanSiswaMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
         $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
@@ -41,7 +41,7 @@ class PengajuanSiswaMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             /*'id_semester' => 'required'*/
@@ -72,7 +72,7 @@ class PengajuanSiswaMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data, $id_periode_magang);
         $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data, $id_rekanan_magang);
@@ -83,7 +83,7 @@ class PengajuanSiswaMagangController extends BaseController
     public function datatablesPengajuanMagang(Request $request, $id_periode_magang, $id_rekanan_magang, $nis_nama_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibMagangSiswa::fetchDataPengajuanSiswaMagang($auth_data, $id_periode_magang, $id_rekanan_magang, $nis_nama_siswa);
 
         return Datatables::of($list_data)
@@ -143,7 +143,7 @@ class PengajuanSiswaMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_pengambilan_magang = LibMagangSiswa::fetchDataPengajuanSiswaMagangDetail($auth_data, $id);
 
@@ -188,7 +188,7 @@ class PengajuanSiswaMagangController extends BaseController
                     // get status_pengguna kode AKTIF
                     $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', "AKTIF")
                         ->where('status_join_table', '=', 3)
-                        ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                         ->first();
 
                     // get siswa->id_pengguna
@@ -199,7 +199,7 @@ class PengajuanSiswaMagangController extends BaseController
                     $PengajuanSiswaMagang->keterangan_batal      = $input->keterangan_batal;
                     $PengajuanSiswaMagang->status_magang         = 10;
                     $PengajuanSiswaMagang->status_apv_pengambilan_magang = 0;
-                    $PengajuanSiswaMagang->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                    $PengajuanSiswaMagang->updated_by            = auth_data()->pengguna->id_pengguna;
                     $PengajuanSiswaMagang->updated_at            = $now;
                     $PengajuanSiswaMagang->save();
 
@@ -213,12 +213,12 @@ class PengajuanSiswaMagangController extends BaseController
             } elseif ($mode == 'pengajuan') {
                 try {
                     // make id
-                    $id_pengambilan_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_pengambilan_magang = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     // get status_pengguna kode AKTIF
                     $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', "AKTIF")
                         ->where('status_join_table', '=', 3)
-                        ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                         ->first();
 
                     // get siswa->id_pengguna
@@ -235,7 +235,7 @@ class PengajuanSiswaMagangController extends BaseController
                         $PengajuanSiswaMagang->id_rekanan_magang     = $id_rekanan_magang;
                         $PengajuanSiswaMagang->status_magang         = 0;
                         $PengajuanSiswaMagang->status_apv_pengambilan_magang = 0;
-                        $PengajuanSiswaMagang->created_by            = $input->auth_data->pengguna->id_pengguna;
+                        $PengajuanSiswaMagang->created_by            = auth_data()->pengguna->id_pengguna;
                         $PengajuanSiswaMagang->save();
 
                         return [
@@ -260,7 +260,7 @@ class PengajuanSiswaMagangController extends BaseController
                             $PengajuanSiswaMagang->id_rekanan_magang     = $id_rekanan_magang;
                             $PengajuanSiswaMagang->status_magang         = 0;
                             $PengajuanSiswaMagang->status_apv_pengambilan_magang = 0;
-                            $PengajuanSiswaMagang->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $PengajuanSiswaMagang->created_by            = auth_data()->pengguna->id_pengguna;
                             $PengajuanSiswaMagang->save();
 
                             return [
@@ -291,7 +291,7 @@ class PengajuanSiswaMagangController extends BaseController
                     // get status_pengguna kode AKTIF
                     $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', "AKTIF")
                         ->where('status_join_table', '=', 3)
-                        ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                         ->first();
 
                     // get siswa->id_pengguna
@@ -302,7 +302,7 @@ class PengajuanSiswaMagangController extends BaseController
                         // -- INSERT tabel pengambilan_magang --
                         $PengajuanSiswaMagang->status_magang         = 0;
                         $PengajuanSiswaMagang->status_apv_pengambilan_magang = 1;
-                        $PengajuanSiswaMagang->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                        $PengajuanSiswaMagang->updated_by            = auth_data()->pengguna->id_pengguna;
                         $PengajuanSiswaMagang->save();
 
                         return [
@@ -321,7 +321,7 @@ class PengajuanSiswaMagangController extends BaseController
                             // -- INSERT tabel pengambilan_magang --
                             $PengajuanSiswaMagang->status_magang         = 0;
                             $PengajuanSiswaMagang->status_apv_pengambilan_magang = 1;
-                            $PengajuanSiswaMagang->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                            $PengajuanSiswaMagang->updated_by           = auth_data()->pengguna->id_pengguna;
                             $PengajuanSiswaMagang->save();
 
                             return [

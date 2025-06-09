@@ -15,7 +15,7 @@ class SiswaAsramaController extends Controller
     public function  viewSiswaAsrama(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/asrama/data-siswa/view-data-siswa', compact('auth_data'));
     }
@@ -23,7 +23,7 @@ class SiswaAsramaController extends Controller
     public function datatablesSiswaAsrama(Request $request, $jenis)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if ($jenis == 'asrama') {
             $list_siswa = Siswa::whereHas('siswaAsrama')->with('siswaAsrama.ruangan', 'kelas', 'pengguna')->orderBy('created_at', 'DESC');;
@@ -55,7 +55,7 @@ class SiswaAsramaController extends Controller
         if ($siswa_asrama = SiswaAsrama::where('id_siswa', $input->id_siswa)->first()) { } else {
             $now = Carbon::now();
             $siswa_asrama = new SiswaAsrama;
-            $siswa_asrama->id_siswa_asrama = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $siswa_asrama->id_siswa_asrama = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
             $siswa_asrama->id_siswa = $input->id_siswa;
             $siswa_asrama->save();
 
@@ -71,7 +71,7 @@ class SiswaAsramaController extends Controller
     {
         $input = (object) $request->input();
         if ($siswa_asrama = SiswaAsrama::where('id_siswa', $input->id_siswa)->first()) {
-            $siswa_asrama->deleted_by = $input->auth_data->pengguna->id_pengguna;
+            $siswa_asrama->deleted_by = auth_data()->pengguna->id_pengguna;
             $siswa_asrama->save();
             $siswa_asrama->delete();
             return [
@@ -85,7 +85,7 @@ class SiswaAsramaController extends Controller
     public function viewAddRuangan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // $list_siswa = Siswa::whereHas('siswaAsrama')->with('siswaAsrama.ruangan', 'kelas', 'pengguna');
         $list_ruangan = Ruangan::get();
         return view('humas/asrama/data-siswa/view-add-ruangan-siswa', compact('list_ruangan'));
@@ -94,7 +94,7 @@ class SiswaAsramaController extends Controller
     public function datatablesRuanganSiswa(Request $request, $type)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if ($type == 'belum') {
             $list_siswa = Siswa::whereHas('siswaAsrama')->doesntHave('siswaAsrama.ruangan')->with('siswaAsrama', 'kelas', 'pengguna')->orderBy('created_at', 'DESC');
@@ -129,7 +129,7 @@ class SiswaAsramaController extends Controller
     public function setRuanganSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($input->id_ruangan) || empty($input->id_siswa)) {
             return [
@@ -152,7 +152,7 @@ class SiswaAsramaController extends Controller
     public function editRuanganSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         if (empty($input->id_ruangan) || empty($input->id_siswa)) {
             return [
                 'status' => 300, // SUCCESS AND LOAD TABLE
@@ -174,7 +174,7 @@ class SiswaAsramaController extends Controller
     public function deleteRuanganSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         if (empty($input->id_siswa)) {
             return [
                 'status' => 300, // SUCCESS AND LOAD TABLE

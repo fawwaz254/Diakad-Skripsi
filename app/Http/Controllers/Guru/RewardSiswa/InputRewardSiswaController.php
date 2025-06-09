@@ -41,7 +41,7 @@ class InputRewardSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $date_input = '';
         $pengisian_kegiatan_harian = false;
@@ -95,7 +95,7 @@ class InputRewardSiswaController extends BaseController
     public function viewRekapInputRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $now = Carbon::now();
 
@@ -213,7 +213,7 @@ class InputRewardSiswaController extends BaseController
         $input = (object) $request->input();
         // dd($input);
         // dd($input->id_aktivitas_reward);
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $validator = Validator::make($request->all(), [
         //     'jenis_aktivitas'   => 'required',
@@ -239,7 +239,7 @@ class InputRewardSiswaController extends BaseController
     public function viewKelasInputRewardSiswa(Request $request, $id_kelas, $aktivitas_reward)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -264,7 +264,7 @@ class InputRewardSiswaController extends BaseController
     public function datatablesInputRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibSiswa::fetchDataSiswa($auth_data, $input->id_kelas);
         $now =  Carbon::now('Asia/Jakarta')->format('Y-m-d');
@@ -293,7 +293,7 @@ class InputRewardSiswaController extends BaseController
     public function saveRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         $validator = Validator::make($request->all(), [
             // 'uraian_materi' => 'required',
@@ -311,7 +311,7 @@ class InputRewardSiswaController extends BaseController
             $data_master_aktivitas_reward = AktivitasRewardSiswa::where('id_jenis_aktivitas_reward', $input->jenis_aktivitas_reward)->where('is_guru', 1)->where('is_aktif', 1)->get();
             foreach ($input->id_aktivitas_reward_siswa as $id_siswa => $data_aktivitas_reward) {
                 foreach ($data_aktivitas_reward as $id_aktivitas_reward) {
-                    $id_reward_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_reward_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $reward_siswa = new RewardSiswa();
                     $reward_siswa->id_reward_siswa = $id_reward_siswa;
@@ -322,8 +322,8 @@ class InputRewardSiswaController extends BaseController
                     $reward_siswa->id_siswa = $id_siswa;
 
                     $reward_siswa->nm_reward_siswa = $data_master_aktivitas_reward->firstWhere('id_aktivitas_reward_siswa', $id_aktivitas_reward)->nilai_karakter;
-                    $reward_siswa->id_pengguna_reward_siswa = $input->auth_data->pengguna->id_pengguna;
-                    $reward_siswa->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $reward_siswa->id_pengguna_reward_siswa = auth_data()->pengguna->id_pengguna;
+                    $reward_siswa->created_by = auth_data()->pengguna->id_pengguna;
                     $reward_siswa->save();
                 }
             }
@@ -339,7 +339,7 @@ class InputRewardSiswaController extends BaseController
     public function datatablesRekapInputRewardSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $date = Carbon::now()->subMonths(3)->format('Y-m-d');
 
@@ -358,7 +358,7 @@ class InputRewardSiswaController extends BaseController
     public function addInputRewardSiswa(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -371,7 +371,7 @@ class InputRewardSiswaController extends BaseController
     public function editInputRewardSiswa(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $reward_siswa = RewardSiswa::find($id);
 
@@ -401,7 +401,7 @@ class InputRewardSiswaController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 if ($siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first()) {
                     $reward_siswa                               = new RewardSiswa;
@@ -409,11 +409,11 @@ class InputRewardSiswaController extends BaseController
                     $reward_siswa->id_reward_siswa   = $id;
                     $reward_siswa->id_siswa                     = $input->id_siswa;
                     $reward_siswa->id_kelas                     = $input->id_kelas;
-                    $reward_siswa->id_pengguna_reward_siswa     = $input->auth_data->pengguna->id_pengguna;
+                    $reward_siswa->id_pengguna_reward_siswa     = auth_data()->pengguna->id_pengguna;
                     $reward_siswa->nm_reward_siswa              = $input->nm_reward_siswa;
                     $reward_siswa->deskripsi_reward_siswa       = $input->deskripsi_reward_siswa;
                     // convert format date
-                    $reward_siswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $reward_siswa->created_by                   = auth_data()->pengguna->id_pengguna;
                     $reward_siswa->save();
 
                     $token_siswa = $siswa->pengguna->api_token;
@@ -428,11 +428,11 @@ class InputRewardSiswaController extends BaseController
                         );
 
                         $notifikasi = array(
-                            'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_pengguna' => $siswa->pengguna->id_pengguna,
                             'id_sekolah' => $siswa->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                            'created_by' => auth_data()->pengguna->id_pengguna
                         );
 
                         LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
@@ -453,11 +453,11 @@ class InputRewardSiswaController extends BaseController
                             );
 
                             $notifikasi = array(
-                                'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                                 'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                 'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                 'isi_notifikasi' => $message,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             );
 
                             LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -476,7 +476,7 @@ class InputRewardSiswaController extends BaseController
                 $reward_siswa->nm_reward_siswa              = $input->nm_reward_siswa;
                 $reward_siswa->deskripsi_reward_siswa       = $input->deskripsi_reward_siswa;
                 // convert format date
-                $reward_siswa->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $reward_siswa->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $reward_siswa->updated_at                   = $now;
                 $reward_siswa->save();
 
@@ -488,7 +488,7 @@ class InputRewardSiswaController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $reward_siswa               = RewardSiswa::find($id);
-                $reward_siswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $reward_siswa->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $reward_siswa->save();
 
                 $reward_siswa->delete();

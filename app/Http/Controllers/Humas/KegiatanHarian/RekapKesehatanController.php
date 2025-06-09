@@ -31,14 +31,14 @@ class RekapKesehatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('humas/kegiatan-harian/rekap-kesehatan/view-rekap-kesehatan', compact('auth_data'));
     }
 
     public function viewRekapFormKesehatan(Request $request, $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $now = Carbon::today();
         if (empty($id_bulan)) {
@@ -67,7 +67,7 @@ class RekapKesehatanController extends BaseController
     public function downloadRekapFormKesehatan(Request $request, $id_bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $now = Carbon::today();
         if (empty($id_bulan)) {

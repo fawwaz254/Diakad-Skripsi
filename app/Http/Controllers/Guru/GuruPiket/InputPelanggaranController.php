@@ -33,7 +33,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/guru-piket/input-pelanggaran/view-input-pelanggaran', compact('auth_data'));
     }
@@ -42,7 +42,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -64,7 +64,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // get id_guru
         $guru = Guru::select('id_guru')
@@ -98,7 +98,7 @@ class InputPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // ambil data all siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $input->kelas);
@@ -109,7 +109,7 @@ class InputPelanggaranController extends BaseController
     public function datatablesInputPelanggaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, null, "1", 'only-me');
 
@@ -224,10 +224,10 @@ class InputPelanggaranController extends BaseController
 
 
 
-                if ($input->auth_data->pengguna->status_join_table == 2) {
+                if (auth_data()->pengguna->status_join_table == 2) {
                     // get id_guru
                     $guru = Guru::select('id_guru')
-                        ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                        ->where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)
                         ->first();
 
                     $id_guru_input = $guru->id_guru;
@@ -235,7 +235,7 @@ class InputPelanggaranController extends BaseController
                     $id_guru_input = null;
                 }
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
@@ -251,7 +251,7 @@ class InputPelanggaranController extends BaseController
                 $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
                 $pelanggaranSiswa->aktor_input_pelanggaran      = $aktor_input;
                 $pelanggaranSiswa->is_sudah_tindakan            = 0;
-                $pelanggaranSiswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->created_by                   = auth_data()->pengguna->id_pengguna;
                 $pelanggaranSiswa->save();
 
                 if (!empty($siswa->id_wali_murid)) {
@@ -269,11 +269,11 @@ class InputPelanggaranController extends BaseController
                         );
 
                         $notifikasi = array(
-                            'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                             'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                            'created_by' => auth_data()->pengguna->id_pengguna
                         );
 
                         LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -297,7 +297,7 @@ class InputPelanggaranController extends BaseController
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
                 $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran), "Y-m-d H:i:s");
-                $pelanggaranSiswa->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $pelanggaranSiswa->updated_at                   = $now;
                 $pelanggaranSiswa->save();
 
@@ -315,7 +315,7 @@ class InputPelanggaranController extends BaseController
                 } else {
                     // make object to find id
                     $pelanggaranSiswa               = PelanggaranSiswa::find($id);
-                    $pelanggaranSiswa->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $pelanggaranSiswa->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $pelanggaranSiswa->save();
 
                     $pelanggaranSiswa->delete();

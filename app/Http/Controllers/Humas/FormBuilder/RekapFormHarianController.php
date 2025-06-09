@@ -23,7 +23,7 @@ class RekapFormHarianController extends Controller
     public function viewListRekapFormHarian(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/form-builder/rekap-form-harian/view-list-rekap-form-harian', compact('auth_data'));
     }
@@ -54,7 +54,7 @@ class RekapFormHarianController extends Controller
     public function viewRekapBulananFormHarian(Request $request, $id_form, $bulan = null, $tahun = null, $id_kelas = null, $id_pertanyaan = '0')
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $form = Form::find($id_form);
@@ -199,7 +199,7 @@ class RekapFormHarianController extends Controller
     public function viewHarianFormHarian(Request $request, $id_form, $date = null,  $id_kelas = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $form = Form::find($id_form);
         $list_pertanyaan = PertanyaanForm::where('id_form', $id_form)->orderBy('urutan', 'asc')->get();

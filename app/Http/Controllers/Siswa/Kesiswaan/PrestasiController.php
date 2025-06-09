@@ -33,7 +33,7 @@ class PrestasiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('siswa/kesiswaan/prestasi/view-prestasi', compact('auth_data'));
     }
@@ -41,7 +41,7 @@ class PrestasiController extends BaseController
     public function datatablesPrestasi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',

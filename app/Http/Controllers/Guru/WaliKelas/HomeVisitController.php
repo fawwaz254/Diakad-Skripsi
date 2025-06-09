@@ -30,7 +30,7 @@ class HomeVisitController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // get id_guru
         $guru = Guru::select('id_guru')
@@ -53,7 +53,7 @@ class HomeVisitController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
 
         $validator = Validator::make($request->all(), [
@@ -77,7 +77,7 @@ class HomeVisitController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -103,7 +103,7 @@ class HomeVisitController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // get id_guru
         $guru = Guru::select('id_guru')
@@ -125,7 +125,7 @@ class HomeVisitController extends BaseController
     public function datatablesHomeVisit(Request $request, $id_semester = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // get id_guru
         $guru = Guru::select('id_guru')
@@ -223,17 +223,17 @@ class HomeVisitController extends BaseController
             // mengambil waktu sekarang
             $now = Carbon::now();
 
-            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($input->auth_data);
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif(auth_data());
 
             if ($mode == 'add') {
                 // get id_guru
                 $guru = Guru::select('id_guru')
-                    ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                    ->where('id_pengguna', '=', auth_data()->pengguna->id_pengguna)
                     ->first();
 
                 $id_guru_input = $guru->id_guru;
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 // Dalam satu semester ternyata bisa bebrapa kali home visit
                 /*// cek dobel home visit
@@ -260,9 +260,9 @@ class HomeVisitController extends BaseController
                     $homeVisit->alamat_wali_murid               = $input->alamat_wali_murid;
                     $homeVisit->rangkuman_home_visit            = $input->rangkuman_home_visit;
                     $homeVisit->is_berkas_lengkap               = 0;
-                    $homeVisit->created_by                      = $input->auth_data->pengguna->id_pengguna;
+                    $homeVisit->created_by                      = auth_data()->pengguna->id_pengguna;
                     if (!empty($request->file('image'))) {
-                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $id, $request->file('image'), 'public');
                         $homeVisit->dokumentasi_home_visit   = $file;
                     }
@@ -291,7 +291,7 @@ class HomeVisitController extends BaseController
                     $homeVisit->nomor_hp_wali_murid             = $input->nomor_hp_wali_murid;
                     $homeVisit->alamat_wali_murid               = $input->alamat_wali_murid;
                     $homeVisit->rangkuman_home_visit            = $input->rangkuman_home_visit;
-                    $homeVisit->updated_by                      = $input->auth_data->pengguna->id_pengguna;
+                    $homeVisit->updated_by                      = auth_data()->pengguna->id_pengguna;
                     $homeVisit->updated_at                      = $now;
                     // add new image
                     if (!empty($request->file('image'))) {
@@ -299,7 +299,7 @@ class HomeVisitController extends BaseController
                         if (isset($homeVisit->dokumentasi_home_visit)) {
                             $old = Storage::disk('spaces')->delete($homeVisit->dokumentasi_home_visit);
                         }
-                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $id, $request->file('image'), 'public');
                         $homeVisit->dokumentasi_home_visit   = $file;
                     }
@@ -326,7 +326,7 @@ class HomeVisitController extends BaseController
                 } else {
                     // make object to find id
                     $homeVisit               = HomeVisit::find($id);
-                    $homeVisit->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $homeVisit->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $homeVisit->save();
 
                     $image = Storage::disk('spaces')->delete($homeVisit->dokumentasi_home_visit);

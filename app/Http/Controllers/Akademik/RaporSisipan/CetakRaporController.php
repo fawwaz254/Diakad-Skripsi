@@ -53,7 +53,7 @@ class CetakRaporController extends Controller
     public function viewCetakRapor(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $kelas = Kelas::with('jenis_rapor.komponen_jenis_rapor')->get();
@@ -71,7 +71,7 @@ class CetakRaporController extends Controller
     public function viewCetakRaporWaliKelas(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $wali_kelas = WaliKelas::where('is_aktif', 1)->where('id_guru', $guru->id_guru)->first();
@@ -93,7 +93,7 @@ class CetakRaporController extends Controller
     {
         set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($input->id_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -150,7 +150,7 @@ class CetakRaporController extends Controller
     public function viewSetting(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('akademik/rapor-sisipan/cetak-rapor/view-setting-cetak-rapor', compact('auth_data'));
     }
@@ -158,14 +158,14 @@ class CetakRaporController extends Controller
     public function viewDeskripsi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('akademik/rapor-sisipan/cetak-rapor/view-deskripsi-cetak-rapor', compact('auth_data'));
     }
 
     public function addSetting(Request $request, $mata_pelajaran)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $mapel = MataPelajaran::where('id_mata_pelajaran', $mata_pelajaran)->with('urutan_rapor_sisipan')->first();
 
         return view('akademik/rapor-sisipan/cetak-rapor/add-setting-cetak-rapor', compact('auth_data', 'mapel'));
@@ -174,7 +174,7 @@ class CetakRaporController extends Controller
     public function editDeskripsi(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $rapor_sisipan_deskripsi = RaporSisipanDeskripsi::find($id);
         $mata_pelajaran = MataPelajaran::select('nm_mata_pelajaran')->groupBy('nm_mata_pelajaran')->get();
         return view('akademik/rapor-sisipan/cetak-rapor/edit-deskripsi-rapor-sisipan', compact('auth_data', 'rapor_sisipan_deskripsi', 'mata_pelajaran'));
@@ -183,7 +183,7 @@ class CetakRaporController extends Controller
     public function actionDeskripsi(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         $validator = Validator::make($request->all(), [
             'nm_mata_pelajaran' => 'required',
@@ -201,7 +201,7 @@ class CetakRaporController extends Controller
         } else {
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $rapor_sisipan_deskripsi = new RaporSisipanDeskripsi;
                 $rapor_sisipan_deskripsi->id_rapor_sisipan_deskripsi = $id;
                 $rapor_sisipan_deskripsi->nm_mata_pelajaran = $input->nm_mata_pelajaran;
@@ -236,7 +236,7 @@ class CetakRaporController extends Controller
             } elseif ($mode == 'delete') {
 
                 // $kegiatan = KegiatanGuru::find($id);
-                // $kegiatan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                // $kegiatan->deleted_by  = auth_data()->pengguna->id_pengguna;
                 // $kegiatan->deleted_at  = $now;
                 // $kegiatan->save();
 
@@ -253,20 +253,20 @@ class CetakRaporController extends Controller
     public function postSetting(Request $request, $mata_pelajaran)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if ($urutan_rapor_sisipan = UrutanRaporSisipan::find($mata_pelajaran)) {
             $urutan_rapor_sisipan->urutan               = $input->urutan;
-            $urutan_rapor_sisipan->updated_by          = $input->auth_data->pengguna->id_pengguna;
+            $urutan_rapor_sisipan->updated_by          = auth_data()->pengguna->id_pengguna;
             $urutan_rapor_sisipan->save();
         } else {
             $now = Carbon::now();
-            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
             $urutan_rapor_sisipan               = new UrutanRaporSisipan;
             $urutan_rapor_sisipan->id_urutan_rapor_sisipan    = $id;
             $urutan_rapor_sisipan->urutan               = $input->urutan;
             $urutan_rapor_sisipan->id_mata_pelajaran   = $mata_pelajaran;
-            $urutan_rapor_sisipan->created_by          = $input->auth_data->pengguna->id_pengguna;
+            $urutan_rapor_sisipan->created_by          = auth_data()->pengguna->id_pengguna;
             $urutan_rapor_sisipan->save();
         }
 
@@ -280,7 +280,7 @@ class CetakRaporController extends Controller
     public function datatablesViewSetting(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $mapel = MataPelajaran::with('urutan_rapor_sisipan', 'jurusan', 'jenis_mata_pelajaran')->isAktif()->get()->sortBy('urutan_rapor_sisipan.urutan');
 
@@ -301,7 +301,7 @@ class CetakRaporController extends Controller
     public function datatablesViewDeskripsi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $deskripsi = RaporSisipanDeskripsi::get()->sortBy(['nm_mata_pelajaran', 'kd_deskripsi']);
         // ->sortBy('kd_deskripsi')->sortBy('nm_mata_pelajaran');
@@ -333,7 +333,7 @@ class CetakRaporController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan')->first();
         $semester = Semester::find($id_semester);
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
@@ -1430,7 +1430,7 @@ class CetakRaporController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan')->first();
         $semester = Semester::find($id_semester);
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
@@ -1646,14 +1646,14 @@ class CetakRaporController extends Controller
     public function viewSiswaUas(Request $request, $id_semester, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('akademik/rapor-sisipan/cetak-rapor/view-siswa-cetak-uas', compact('auth_data', 'id_semester', 'id_kelas'));
     }
 
     public function datatablesSiswaUas(Request $request, $id_semester, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna')->get();
 
         return Datatables::of($list_siswa)
@@ -1685,7 +1685,7 @@ class CetakRaporController extends Controller
         set_time_limit(1800);
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa = Siswa::where('id_siswa', $id_siswa)->with('pengguna')->first();
         $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->with('jurusan')->first();
         $sekolah = Sekolah::first();
@@ -1810,7 +1810,7 @@ class CetakRaporController extends Controller
     public function addDeskripsi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $mata_pelajaran = MataPelajaran::select('nm_mata_pelajaran')->isAktif()->groupBy('nm_mata_pelajaran')->get();
         return view('akademik/rapor-sisipan/cetak-rapor/add-deskripsi-rapor-sisipan', compact('auth_data', 'mata_pelajaran'));
     }
@@ -1818,7 +1818,7 @@ class CetakRaporController extends Controller
     public function viewPengembanganDiri(Request $request, $id_semester, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
         return view('akademik/rapor-sisipan/cetak-rapor/view-pengembangan-diri', compact('auth_data', 'id_semester', 'id_kelas', 'kelompok_pribadi_sisipan'));
     }
@@ -1874,7 +1874,7 @@ class CetakRaporController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelompok_pribadi_sisipan = KelompokPribadiSisipan::with('pribadi_sisipan')->get();
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
@@ -1890,7 +1890,7 @@ class CetakRaporController extends Controller
     public function imporExcelPengembanganDiri(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('akademik/rapor-sisipan/cetak-rapor/view-import-excel-pengembangan-diri', compact('auth_data'));
     }
 
@@ -1920,12 +1920,12 @@ class CetakRaporController extends Controller
     public function actionPengembanganDiri(Request $request, $mode, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         if ($mode == 'delete') {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $nilai_pengembangan_diri = NilaiPribadiSisipan::where('id_siswa', $id_siswa)->where('id_semester', $semester_aktif->id_semester)->get();
             foreach ($nilai_pengembangan_diri as $pengembangan_diri) {
-                $pengembangan_diri->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                $pengembangan_diri->deleted_by           = auth_data()->pengguna->id_pengguna;
                 $pengembangan_diri->save();
                 $pengembangan_diri->delete();
             }

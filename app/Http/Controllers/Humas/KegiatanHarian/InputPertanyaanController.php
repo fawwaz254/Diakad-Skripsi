@@ -24,7 +24,7 @@ class InputPertanyaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/kegiatan-harian/input-pertanyaan/view-input-pertanyaan', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class InputPertanyaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (!empty($id)) {
             $item = KegiatanHarianPertanyaan::find($id);
@@ -50,7 +50,7 @@ class InputPertanyaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $item = KegiatanHarianPertanyaan::find($id_kegiatan_harian);
 
@@ -61,7 +61,7 @@ class InputPertanyaanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (!empty($id)) {
             $item = KegiatanHarianJawaban::find($id);
@@ -75,7 +75,7 @@ class InputPertanyaanController extends BaseController
     public function showDatatablesInputPertanyaan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = KegiatanHarianPertanyaan::with('kategori_pertanyaan', 'jawaban');
 
         return Datatables::of($list_data)
@@ -98,7 +98,7 @@ class InputPertanyaanController extends BaseController
     public function showDatatablesInputJawaban(Request $request, $id_kegiatan_harian_pertanyaan)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = KegiatanHarianJawaban::where('id_kegiatan_harian_pertanyaan', $id_kegiatan_harian_pertanyaan);
 
         return Datatables::of($list_data)
@@ -143,14 +143,14 @@ class InputPertanyaanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan_harian_pertanyaan                        = new KegiatanHarianPertanyaan;
                 $kegiatan_harian_pertanyaan->id_kegiatan_harian_pertanyaan  = $id;
                 $kegiatan_harian_pertanyaan->id_kegiatan_harian_kategori    = $input->id_kegiatan_harian_kategori;
                 $kegiatan_harian_pertanyaan->show_order                     = $input->show_order;
                 $kegiatan_harian_pertanyaan->isi_pertanyaan                 = $input->isi_pertanyaan;
-                $kegiatan_harian_pertanyaan->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian_pertanyaan->created_by                     = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian_pertanyaan->save();
 
                 return [
@@ -163,7 +163,7 @@ class InputPertanyaanController extends BaseController
                 $kegiatan_harian_pertanyaan->id_kegiatan_harian_kategori    = $input->id_kegiatan_harian_kategori;
                 $kegiatan_harian_pertanyaan->show_order                     = $input->show_order;
                 $kegiatan_harian_pertanyaan->isi_pertanyaan                 = $input->isi_pertanyaan;
-                $kegiatan_harian_pertanyaan->updated_by                     = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian_pertanyaan->updated_by                     = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian_pertanyaan->save();
 
                 return [
@@ -180,7 +180,7 @@ class InputPertanyaanController extends BaseController
                 } else {
                     // make object to find id
                     $kategoriPemasukan               = KegiatanHarianPertanyaan::find($id);
-                    $kategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $kategoriPemasukan->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $kategoriPemasukan->save();
 
                     $kategoriPemasukan->delete();
@@ -238,7 +238,7 @@ class InputPertanyaanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan_harian_jawaban                                = new KegiatanHarianJawaban;
                 $kegiatan_harian_jawaban->id_kegiatan_harian_jawaban    = $id;
@@ -247,7 +247,7 @@ class InputPertanyaanController extends BaseController
                 $kegiatan_harian_jawaban->warna_keadaan                 = $input->warna_keadaan;
                 $kegiatan_harian_jawaban->show_order                    = $input->show_order;
                 $kegiatan_harian_jawaban->isi_jawaban                   = $input->isi_jawaban;
-                $kegiatan_harian_jawaban->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian_jawaban->created_by                    = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian_jawaban->save();
 
                 return [
@@ -261,7 +261,7 @@ class InputPertanyaanController extends BaseController
                 $kegiatan_harian_jawaban->warna_keadaan                  = $input->warna_keadaan;
                 $kegiatan_harian_jawaban->show_order                     = $input->show_order;
                 $kegiatan_harian_jawaban->isi_jawaban                    = $input->isi_jawaban;
-                $kegiatan_harian_jawaban->updated_by                     = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian_jawaban->updated_by                     = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian_jawaban->save();
 
                 return [
@@ -272,7 +272,7 @@ class InputPertanyaanController extends BaseController
             } elseif ($mode == 'delete') {
                 $kegiatan_harian_jawaban                = KegiatanHarianJawaban::find($input->id_kegiatan_harian_jawaban);
                 $kegiatan_harian_jawaban->deleted_at     = $now;
-                $kegiatan_harian_jawaban->deleted_by    = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian_jawaban->deleted_by    = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian_jawaban->save();
 
                 return [

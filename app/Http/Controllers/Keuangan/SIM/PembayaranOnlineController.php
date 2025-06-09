@@ -29,7 +29,7 @@ class PembayaranOnlineController extends BaseController
     public function viewIndex(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -50,7 +50,7 @@ class PembayaranOnlineController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
@@ -114,7 +114,7 @@ class PembayaranOnlineController extends BaseController
     public function datatables(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = PembayaranTrs::with('siswa', 'siswa.pengguna')->orderBy('created_at', 'desc');
 
         if (!empty($input->start_date) && !empty($input->end_date)) {
@@ -164,7 +164,7 @@ class PembayaranOnlineController extends BaseController
     public function actionSave(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_siswa' => 'required',
@@ -359,11 +359,11 @@ class PembayaranOnlineController extends BaseController
                             );
 
                             $notifikasi = array(
-                                'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                                 'id_pengguna' => $siswa->pengguna->id_pengguna,
                                 'id_sekolah' => $siswa->pengguna->id_sekolah,
                                 'isi_notifikasi' => $message,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna,
+                                'created_by' => auth_data()->pengguna->id_pengguna,
                             );
 
                             LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
@@ -384,11 +384,11 @@ class PembayaranOnlineController extends BaseController
                                 );
 
                                 $notifikasi = array(
-                                    'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                                    'id' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                                     'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                     'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                     'isi_notifikasi' => $message,
-                                    'created_by' => $input->auth_data->pengguna->id_pengguna,
+                                    'created_by' => auth_data()->pengguna->id_pengguna,
                                 );
 
                                 LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -440,7 +440,7 @@ class PembayaranOnlineController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // ambil data all siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $input->kelas);

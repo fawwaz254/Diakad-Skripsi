@@ -23,7 +23,7 @@ class SettingDashboardController extends BaseController
   {
     # code..
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     $data_role = Role::select('id_role', 'nm_role')
       ->orderBy('role.nm_role', 'asc')
@@ -54,7 +54,7 @@ class SettingDashboardController extends BaseController
   {
     # code...
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     $validator = Validator::make($request->all(), [
       'id_role' => 'required'
@@ -76,7 +76,7 @@ class SettingDashboardController extends BaseController
   {
     # code...
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     $data_role = Role::select('id_role', 'nm_role')
       ->orderBy('role.nm_role', 'asc')
@@ -115,7 +115,7 @@ class SettingDashboardController extends BaseController
   public function actionSettingDashboard(Request $request)
   {
     $input      = (object) $request->input();
-    $auth_data  = $input->auth_data;
+    $auth_data  = auth_data();
 
     $validator = Validator::make($request->all(), [
       'id_role'       => 'required',
@@ -137,7 +137,7 @@ class SettingDashboardController extends BaseController
 
       if ($data_dashboard == null) { // CREATE INFORMASI DATA
         /** generate id_data_informasi */
-        $id_role_dashboard = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_role_dashboard = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         /** create data dashboard */
         $data_dashboard                     = new RoleDashboard;
@@ -145,15 +145,15 @@ class SettingDashboardController extends BaseController
         $data_dashboard->id_role            = $input->id_role;
         $data_dashboard->isi_dashboard      = $input->isi_dashboard;
         $data_dashboard->is_aktif           = 1;
-        $data_dashboard->id_sekolah         = $input->auth_data->sekolah_data->id_sekolah;
-        $data_dashboard->created_by         = $input->auth_data->pengguna->id_pengguna;
+        $data_dashboard->id_sekolah         = auth_data()->sekolah_data->id_sekolah;
+        $data_dashboard->created_by         = auth_data()->pengguna->id_pengguna;
         $data_dashboard->save();
       } else { // UPDATE
         /** update data dashboard */
         $data_dashboard->isi_dashboard      = $input->isi_dashboard;
         $data_dashboard->is_aktif           = 1;
         $data_dashboard->updated_at         = $now;
-        $data_dashboard->updated_by         = $input->auth_data->pengguna->id_pengguna;
+        $data_dashboard->updated_by         = auth_data()->pengguna->id_pengguna;
         $data_dashboard->save();
       }
 

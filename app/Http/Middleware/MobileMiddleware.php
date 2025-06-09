@@ -20,7 +20,7 @@ class MobileMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $api_key = $request->input('api_key');
         $id_pengguna = $request->input('user_id');
@@ -46,7 +46,7 @@ class MobileMiddleware
                 'sekolah_data' => $pengguna->sekolah,
                 'actor' => $actor
             );
-            $request->request->add(['auth_data' => $auth_data]);
+            Session::put('auth_data', $auth_data);
 
             return $next($request);
         } else {

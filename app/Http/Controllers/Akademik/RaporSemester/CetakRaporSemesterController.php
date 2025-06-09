@@ -35,7 +35,7 @@ class CetakRaporSemesterController extends Controller
     public function viewCetakRaporSemester(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
@@ -85,7 +85,7 @@ class CetakRaporSemesterController extends Controller
     public function datatablesCetakRaporSemester(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($input->id_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -135,7 +135,7 @@ class CetakRaporSemesterController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->orderBy('nis_siswa')->get();
         $siswa = Siswa::find($id_semester);
         if (!empty($siswa)) {
@@ -980,7 +980,7 @@ class CetakRaporSemesterController extends Controller
     public function viewDataTambahan(Request $request, $id_semester, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
         return view('akademik/rapor-semester/cetak-rapor/view-data-tambahan', compact('auth_data', 'id_semester', 'id_kelas', 'kelompok_tambahan_rapor'));
     }
@@ -1033,7 +1033,7 @@ class CetakRaporSemesterController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelompok_tambahan_rapor = KelompokTambahanRapor::with('tambahan_rapor')->get();
 
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('pengguna.status_pengguna', function ($query) {
@@ -1051,12 +1051,12 @@ class CetakRaporSemesterController extends Controller
     public function actionDataTambahan(Request $request, $mode, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         if ($mode == 'delete') {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $nilai_tambahan_rapor = NilaiTambahanRapor::where('id_siswa', $id_siswa)->where('id_semester', $semester_aktif->id_semester)->get();
             foreach ($nilai_tambahan_rapor as $n) {
-                $n->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                $n->deleted_by = auth_data()->pengguna->id_pengguna;
                 $n->save();
                 $n->delete();
             }
@@ -1072,7 +1072,7 @@ class CetakRaporSemesterController extends Controller
     public function imporExcelDataTambahan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('akademik/rapor-semester/cetak-rapor/view-import-excel-tambahan-data', compact('auth_data'));
     }
 

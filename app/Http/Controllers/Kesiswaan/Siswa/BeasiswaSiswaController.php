@@ -28,7 +28,7 @@ class BeasiswaSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('kesiswaan/siswa/beasiswa-siswa/view-beasiswa-siswa', compact('auth_data', 'id_kelas'));
     }
@@ -37,13 +37,13 @@ class BeasiswaSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/siswa/beasiswa-siswa/add-beasiswa-siswa', compact('auth_data', 'data_kelas'));
     }
@@ -52,7 +52,7 @@ class BeasiswaSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -65,7 +65,7 @@ class BeasiswaSiswaController extends BaseController
             ->where('beasiswa_siswa.id_beasiswa_siswa', '=', $id_beasiswa_siswa)
             ->first();
         // dd($beasiswa);
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        // $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/siswa/beasiswa-siswa/edit-beasiswa-siswa', compact('auth_data', 'beasiswa'));
     }
@@ -74,7 +74,7 @@ class BeasiswaSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // ambil data all siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $input->kelas);
@@ -85,7 +85,7 @@ class BeasiswaSiswaController extends BaseController
     public function datatablesBeasiswaSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa')
             ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
             ->join('kelas', 'kelas.id_kelas', '=', 'beasiswa_siswa.id_kelas')
@@ -119,7 +119,7 @@ class BeasiswaSiswaController extends BaseController
     public function actionBeasiswaSiswa(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -136,7 +136,7 @@ class BeasiswaSiswaController extends BaseController
         } else {
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $siswa = Siswa::find($input->id_siswa);
 
@@ -148,7 +148,7 @@ class BeasiswaSiswaController extends BaseController
                 $beasiswa->tahun_mulai_beasiswa_siswa     = $input->tahun_mulai_beasiswa_siswa;
                 $beasiswa->tahun_selesai_beasiswa_siswa = $input->tahun_selesai_beasiswa_siswa;
                 $beasiswa->keterangan_beasiswa_siswa     = $input->keterangan_beasiswa_siswa;
-                $beasiswa->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                $beasiswa->created_by                     = auth_data()->pengguna->id_pengguna;
                 $beasiswa->created_at                     = $now;
                 $beasiswa->save();
 
@@ -174,7 +174,7 @@ class BeasiswaSiswaController extends BaseController
                 $beasiswa->tahun_mulai_beasiswa_siswa     = $input->tahun_mulai_beasiswa_siswa;
                 $beasiswa->keterangan_beasiswa_siswa     = $input->keterangan_beasiswa_siswa;
                 $beasiswa->tahun_selesai_beasiswa_siswa = $input->tahun_selesai_beasiswa_siswa;
-                $beasiswa->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                $beasiswa->created_by                     = auth_data()->pengguna->id_pengguna;
                 $beasiswa->created_at                     = $now;
                 $beasiswa->save();
 
@@ -185,7 +185,7 @@ class BeasiswaSiswaController extends BaseController
                 ];
             } elseif ($mode == 'delete') {
                 $beasiswa                 = BeasiswaSiswa::find($id);
-                $beasiswa->deleted_by     = $input->auth_data->pengguna->id_pengguna;
+                $beasiswa->deleted_by     = auth_data()->pengguna->id_pengguna;
                 $beasiswa->save();
 
                 $beasiswa->delete();

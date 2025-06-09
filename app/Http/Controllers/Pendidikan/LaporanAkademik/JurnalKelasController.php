@@ -31,7 +31,7 @@ class JurnalKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
@@ -55,7 +55,7 @@ class JurnalKelasController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibGuru::fetchDataJadwalKBMByKelas($auth_data, $id_semester, $id_kelas);
 
@@ -84,7 +84,7 @@ class JurnalKelasController extends BaseController
     public function printPdfJurnalKelas(Request $request, $id_kelas_mp)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $kelas_mp = KelasMp::with('mata_pelajaran', 'kelas')->where('id_kelas_mp', $id_kelas_mp)->first();
         $presensi_mp = PresensiMp::with(['kelas_mp', 'jadwal_kelas_mp.jadwal_hari'])->where('id_kelas_mp', $id_kelas_mp)->get();

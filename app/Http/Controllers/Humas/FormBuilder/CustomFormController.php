@@ -42,7 +42,7 @@ class CustomFormController extends Controller
     public function index(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/form-builder/custom-form/view-custom-form', compact('auth_data'));
     }
@@ -76,7 +76,7 @@ class CustomFormController extends Controller
     public function create(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $roles = Role::all();
 
         return view('humas/form-builder/custom-form/add-custom-form-bulk', compact('auth_data', 'roles'));
@@ -86,7 +86,7 @@ class CustomFormController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         try {
 
@@ -122,7 +122,7 @@ class CustomFormController extends Controller
                 }
 
 
-                $id_custom_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id_custom_form = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $custom_form = new CustomForm();
                 $custom_form->id_custom_form    = $id_custom_form;
                 $custom_form->id_role           = $input->id_role;
@@ -150,7 +150,7 @@ class CustomFormController extends Controller
                         ];
                         unset($d['jenis_file']);
                     }
-                    $id_custom_komponen = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_custom_komponen = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $d['id_custom_form'] = $custom_form->id_custom_form;
                     $d['id_custom_form_komponen'] = $id_custom_komponen;
                     $d['nm_custom_form_komponen'] = $d['tipe_custom_form_komponen'] . "_" . $custom_form->nm_custom_form;
@@ -187,7 +187,7 @@ class CustomFormController extends Controller
         try {
 
             $input = (object) $request->input();
-            $auth_data = $input->auth_data;
+            $auth_data = auth_data();
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             $form = CustomForm::with(['form_komponen' => function ($query) {
@@ -208,7 +208,7 @@ class CustomFormController extends Controller
     {
         try {
             $input = (object) $request->input();
-            $auth_data = $input->auth_data;
+            $auth_data = auth_data();
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             $request->validate(
                 [
@@ -288,7 +288,7 @@ class CustomFormController extends Controller
 
                         $d['komponen_settings'] = json_encode($kom_rules);
 
-                        $id_custom_komponen = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_custom_komponen = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $d['id_custom_form_komponen'] = $id_custom_komponen;
                         CustomFormKomponen::insert($d);
                     }
@@ -323,7 +323,7 @@ class CustomFormController extends Controller
         try {
 
             $input = (object) $request->input();
-            $auth_data = $input->auth_data;
+            $auth_data = auth_data();
 
             $record = CustomForm::with('form_komponen.form_respon')->findOrFail($id);
             $record->form_komponen->each(function ($komponen) {

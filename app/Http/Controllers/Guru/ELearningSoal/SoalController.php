@@ -94,9 +94,9 @@ class SoalController extends Controller
 
         $now = Carbon::now();
         $kategori_soal = new KategoriSoal();
-        $kategori_soal->id_kategori_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $kategori_soal->id_kategori_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
         $kategori_soal->nm_kategori_soal = $input->nm_kategori_soal;
-        $kategori_soal->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+        $kategori_soal->id_pengguna = auth_data()->pengguna->id_pengguna;
         $kategori_soal->save();
         return [
             'status' => 203,
@@ -122,7 +122,7 @@ class SoalController extends Controller
     public function commonListKategori(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $list_data = KategoriSoal::orderBy('created_at', 'DESC')->with('soal', 'paket_soal', 'pengguna');
 
@@ -158,7 +158,7 @@ class SoalController extends Controller
             ];
         } else {
             $kategori_soal = KategoriSoal::find($input->id_kategori_soal);
-            $kategori_soal->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+            $kategori_soal->deleted_by =  auth_data()->pengguna->id_pengguna;
             $kategori_soal->save();
             $kategori_soal->delete();
             return [
@@ -210,7 +210,7 @@ class SoalController extends Controller
             ];
         } else {
             $question = Soal::find($input->id_soal);
-            $question->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+            $question->deleted_by =  auth_data()->pengguna->id_pengguna;
             $question->save();
             $question->delete();
             return [
@@ -323,12 +323,12 @@ class SoalController extends Controller
                     if (empty($pilihan_pertanyaan)) {
                         $now = Carbon::now();
                         $pertanyaan = new PilihanPertanyaan;
-                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_pilihan_pertanyaan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pertanyaan->id_soal =  $question->id_soal;
                         $pertanyaan->nomer = $no_array;
                         $pertanyaan->text = $input->pertanyaan[$no_array];
                         $pertanyaan->jawaban = $input->jawaban_benar[$no_array];
-                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pertanyaan->created_by = auth_data()->pengguna->id_pengguna;
                         $opsi = [];
                         foreach ($input->jawaban[$no_array] as $key => $options) {
                             $opsi[$key] = $options;
@@ -381,15 +381,15 @@ class SoalController extends Controller
                 if ($input->id_tipe_soal == 1) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         //validasi ketika ada data yg sama
-                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => auth_data()->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                         $question = new Soal;
                         $question->id_kategori_soal = $input->kategori;
-                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
                         $question->content = $input->soal[$i];
                         $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i]) : 'gambar';
-                        $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $question->created_by = auth_data()->pengguna->id_pengguna;
                         if (empty($input->soal[$i])) {
                             DB::rollback();
                             return [
@@ -401,12 +401,12 @@ class SoalController extends Controller
                         foreach ($input->jawaban[$i] as $no_answer => $answer) {
                             $now = Carbon::now();
                             $question_option = new PilihanSoal;
-                            $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question_option->id_pilihan_soal = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                             $question_option->number_option = $no_answer;
                             $question_option->id_soal = $question->id_soal;
                             $question_option->content = $answer;
                             $question_option->text = strip_tags($answer) ? strip_tags($answer) : 'gambar';
-                            $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
+                            $question_option->created_by = auth_data()->pengguna->id_pengguna;
                             if (empty($answer)) {
                                 DB::rollback();
                                 return [
@@ -431,16 +431,16 @@ class SoalController extends Controller
                     }
                 } else if ($input->id_tipe_soal == 2) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => auth_data()->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                         $question = new Soal;
                         $question->id_kategori_soal = $input->kategori;
-                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
                         $question->content = $input->soal[$i];
                         $question->text = strip_tags($input->soal[$i]) ?  strip_tags($input->soal[$i]) : 'gambar';
                         $question->jawaban = $input->jawaban[$i];
-                        $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $question->created_by = auth_data()->pengguna->id_pengguna;
                         if (empty($input->soal[$i])) {
                             DB::rollback();
                             return [
@@ -454,12 +454,12 @@ class SoalController extends Controller
                 } else if ($input->id_tipe_soal == 3) {
                     $question = new Soal;
                     $question->id_kategori_soal = $input->kategori;
-                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
                     $question->content = $input->soal;
                     $question->text = strip_tags($input->soal) ? strip_tags($input->soal) : 'gambar';
-                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $question->created_by = auth_data()->pengguna->id_pengguna;
                     // $question->jawaban = $input->jawaban;
                     if (empty($input->soal)) {
                         DB::rollback();
@@ -472,15 +472,15 @@ class SoalController extends Controller
                 } else if ($input->id_tipe_soal == 4) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         //validasi ketika ada data yg sama
-                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => auth_data()->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                         $question = new Soal;
                         $question->id_kategori_soal = $input->kategori;
-                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
                         $question->content = $input->soal[$i];
                         $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i]) : 'gambar';
-                        $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $question->created_by = auth_data()->pengguna->id_pengguna;
                         if (empty($input->soal[$i])) {
                             DB::rollback();
                             return [
@@ -492,12 +492,12 @@ class SoalController extends Controller
                         foreach ($input->jawaban[$i] as $no_answer => $answer) {
                             $now = Carbon::now();
                             $question_option = new PilihanSoal;
-                            $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question_option->id_pilihan_soal = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                             $question_option->number_option = $no_answer;
                             $question_option->id_soal = $question->id_soal;
                             $question_option->content = $answer;
                             $question_option->text = strip_tags($answer) ? strip_tags($answer) : 'gambar';
-                            $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
+                            $question_option->created_by = auth_data()->pengguna->id_pengguna;
                             if (empty($answer)) {
                                 DB::rollback();
                                 return [
@@ -522,11 +522,11 @@ class SoalController extends Controller
                     }
                 } else if ($input->id_tipe_soal == 5) {
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        // if (Soal::where(['id_kategori_soal' => $input->kategori, 'id_pengguna' => auth_data()->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                         $question = new Soal;
                         $question->id_kategori_soal = $input->kategori;
-                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
                         $question->content = $input->soal[$i];
                         $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i]) : 'gambar';
@@ -535,7 +535,7 @@ class SoalController extends Controller
                         $question->alternatif_jawaban3 = $input->jawaban[3];
                         $question->alternatif_jawaban4 = $input->jawaban[4];
                         $question->alternatif_jawaban5 = $input->jawaban[5];
-                        $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $question->created_by = auth_data()->pengguna->id_pengguna;
 
                         if (empty($input->soal[$i])) {
                             DB::rollback();
@@ -551,12 +551,12 @@ class SoalController extends Controller
                 } else if ($input->id_tipe_soal == 6) {
                     $question = new Soal;
                     $question->id_kategori_soal = $input->kategori;
-                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
                     $question->content = $input->soal;
                     $question->text = strip_tags($input->soal) ? strip_tags($input->soal) : 'gambar';
-                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $question->created_by = auth_data()->pengguna->id_pengguna;
                     if (empty($input->soal)) {
                         DB::rollback();
                         return [
@@ -567,12 +567,12 @@ class SoalController extends Controller
                     $question->save();
                     for ($i = 1; $i <= count($input->pertanyaan); $i++) {
                         $pertanyaan = new PilihanPertanyaan;
-                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_pilihan_pertanyaan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pertanyaan->id_soal =  $question->id_soal;
                         $pertanyaan->nomer = $i;
                         $pertanyaan->text = $input->pertanyaan[$i];
                         $pertanyaan->jawaban = $input->noJawaban[$i];
-                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pertanyaan->created_by = auth_data()->pengguna->id_pengguna;
                         if (empty($input->pertanyaan[$i])) {
                             DB::rollback();
                             return [
@@ -585,11 +585,11 @@ class SoalController extends Controller
 
                     for ($i = 1; $i <= count($input->jawaban); $i++) {
                         $jawaban = new PilihanJawaban;
-                        $jawaban->id_pilihan_jawaban = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $jawaban->id_pilihan_jawaban = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $jawaban->id_soal =  $question->id_soal;
                         $jawaban->nomer = $i;
                         $jawaban->text = $input->jawaban[$i];
-                        $jawaban->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $jawaban->created_by = auth_data()->pengguna->id_pengguna;
                         if (empty($input->jawaban[$i])) {
                             DB::rollback();
                             return [
@@ -603,22 +603,22 @@ class SoalController extends Controller
                 } else if ($input->id_tipe_soal == 7) {
                     $question = new Soal;
                     $question->id_kategori_soal = $input->kategori;
-                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
                     $question->content = $input->soal;
                     $question->text = strip_tags($input->soal) ? strip_tags($input->soal) : 'gambar';
-                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $question->created_by = auth_data()->pengguna->id_pengguna;
                     $question->save();
 
                     for ($i = 1; $i <= count($input->pertanyaan); $i++) {
                         $pertanyaan = new PilihanPertanyaan;
-                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_pilihan_pertanyaan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pertanyaan->id_soal =  $question->id_soal;
                         $pertanyaan->nomer = $i;
                         $pertanyaan->text = $input->pertanyaan[$i];
                         $pertanyaan->jawaban = $input->noJawaban[$i];
-                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pertanyaan->created_by = auth_data()->pengguna->id_pengguna;
                         if (empty($input->pertanyaan[$i])) {
                             DB::rollback();
                             return [
@@ -712,8 +712,8 @@ class SoalController extends Controller
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         $question = new Soal;
                         $question->id_kategori_soal = $input->id_kategori_soal;
-                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
                         $question->content = $input->soal[$i];
                         $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i]) : 'gambar';
@@ -726,14 +726,14 @@ class SoalController extends Controller
                         }
                         $question->save();
                         $detail_paket_soal = new DetailPaketSoal;
-                        $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $detail_paket_soal->id_detail_paket_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                         $detail_paket_soal->id_soal = $question->id_soal;
                         $detail_paket_soal->save();
                         foreach ($input->jawaban[$i] as $no_answer => $answer) {
                             $now = Carbon::now();
                             $question_option = new PilihanSoal;
-                            $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question_option->id_pilihan_soal = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                             $question_option->number_option = $no_answer;
                             $question_option->id_soal = $question->id_soal;
                             $question_option->content = $answer;
@@ -762,8 +762,8 @@ class SoalController extends Controller
                     for ($i = 1; $i <= count($input->soal); $i++) {
                         $question = new Soal;
                         $question->id_kategori_soal = $input->id_kategori_soal;
-                        $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                        $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                         $question->id_tipe_soal = $input->id_tipe_soal;
                         $question->content = $input->soal[$i];
                         $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i]) : 'gambar';
@@ -778,7 +778,7 @@ class SoalController extends Controller
                         }
                         $question->save();
                         $detail_paket_soal = new DetailPaketSoal;
-                        $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $detail_paket_soal->id_detail_paket_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                         $detail_paket_soal->id_soal = $question->id_soal;
                         $detail_paket_soal->save();
@@ -786,8 +786,8 @@ class SoalController extends Controller
                 } else if ($input->id_tipe_soal == 3) { // File
                     $question = new Soal;
                     $question->id_kategori_soal = $input->id_kategori_soal;
-                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
                     $question->content = $input->soal;
                     $question->text = strip_tags($input->soal) ?  strip_tags($input->soal) : 'gambar';
@@ -802,17 +802,17 @@ class SoalController extends Controller
                     $question->save();
 
                     $detail_paket_soal = new DetailPaketSoal;
-                    $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $detail_paket_soal->id_detail_paket_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
                 } else if ($input->id_tipe_soal == 4) { // Pilihan Ganda Kompleks
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => auth_data()->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                             $question = new Soal;
                             $question->id_kategori_soal = $input->id_kategori_soal;
-                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                             $question->id_tipe_soal = $input->id_tipe_soal;
                             $question->content = $input->soal[$i];
                             $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i]) : 'gambar';
@@ -825,19 +825,19 @@ class SoalController extends Controller
                             }
                             $question->save();
                             $detail_paket_soal = new DetailPaketSoal;
-                            $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $detail_paket_soal->id_detail_paket_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                             $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                             $detail_paket_soal->id_soal = $question->id_soal;
                             $detail_paket_soal->save();
                             foreach ($input->jawaban[$i] as $no_answer => $answer) {
                                 $now = Carbon::now();
                                 $question_option = new PilihanSoal;
-                                $question_option->id_pilihan_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $question_option->id_pilihan_soal = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $question_option->number_option = $no_answer;
                                 $question_option->id_soal = $question->id_soal;
                                 $question_option->content = $answer;
                                 $question_option->text = strip_tags($answer) ?  strip_tags($answer) : 'gambar';
-                                $question_option->created_by = $input->auth_data->pengguna->id_pengguna;
+                                $question_option->created_by = auth_data()->pengguna->id_pengguna;
                                 if (empty($answer)) {
                                     DB::rollback();
                                     return [
@@ -858,11 +858,11 @@ class SoalController extends Controller
                     }
                 } else if ($input->id_tipe_soal == 5) { // Isian Singkat
                     for ($i = 1; $i <= count($input->soal); $i++) {
-                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => $input->auth_data->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
+                        if (Soal::where(['id_kategori_soal' => $input->id_kategori_soal, 'id_pengguna' => auth_data()->pengguna->id_pengguna, 'id_tipe_soal' => $input->id_tipe_soal, 'text' => strip_tags($input->soal[$i])])->first()) { } else {
                             $question = new Soal;
                             $question->id_kategori_soal = $input->id_kategori_soal;
-                            $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                            $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                             $question->id_tipe_soal = $input->id_tipe_soal;
                             $question->content = $input->soal[$i];
                             $question->text = strip_tags($input->soal[$i]) ? strip_tags($input->soal[$i])  : 'gambar';
@@ -871,7 +871,7 @@ class SoalController extends Controller
                             $question->alternatif_jawaban3 = $input->jawaban[3];
                             $question->alternatif_jawaban4 = $input->jawaban[4];
                             $question->alternatif_jawaban5 = $input->jawaban[5];
-                            $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                            $question->created_by = auth_data()->pengguna->id_pengguna;
 
                             if (empty($input->soal[$i])) {
                                 DB::rollback();
@@ -882,7 +882,7 @@ class SoalController extends Controller
                             }
                             $question->save();
                             $detail_paket_soal = new DetailPaketSoal;
-                            $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $detail_paket_soal->id_detail_paket_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                             $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                             $detail_paket_soal->id_soal = $question->id_soal;
                             $detail_paket_soal->save();
@@ -891,12 +891,12 @@ class SoalController extends Controller
                 } else if ($input->id_tipe_soal == 6) { // Menjodohkan
                     $question = new Soal;
                     $question->id_kategori_soal = $input->id_kategori_soal;
-                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
                     $question->content = $input->soal;
                     $question->text = strip_tags($input->soal) ? strip_tags($input->soal) : 'gambar';
-                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $question->created_by = auth_data()->pengguna->id_pengguna;
                     if (empty($input->soal)) {
                         DB::rollback();
                         return [
@@ -908,12 +908,12 @@ class SoalController extends Controller
 
                     for ($i = 1; $i <= count($input->pertanyaan); $i++) {
                         $pertanyaan = new PilihanPertanyaan;
-                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_pilihan_pertanyaan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pertanyaan->id_soal =  $question->id_soal;
                         $pertanyaan->nomer = $i;
                         $pertanyaan->text = $input->pertanyaan[$i];
                         $pertanyaan->jawaban = $input->noJawaban[$i];
-                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pertanyaan->created_by = auth_data()->pengguna->id_pengguna;
 
                         if (empty($input->pertanyaan[$i])) {
                             DB::rollback();
@@ -927,11 +927,11 @@ class SoalController extends Controller
 
                     for ($i = 1; $i <= count($input->jawaban); $i++) {
                         $jawaban = new PilihanJawaban;
-                        $jawaban->id_pilihan_jawaban = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $jawaban->id_pilihan_jawaban = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $jawaban->id_soal =  $question->id_soal;
                         $jawaban->nomer = $i;
                         $jawaban->text = $input->jawaban[$i];
-                        $jawaban->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $jawaban->created_by = auth_data()->pengguna->id_pengguna;
                         if (empty($input->jawaban[$i])) {
                             DB::rollback();
                             return [
@@ -943,19 +943,19 @@ class SoalController extends Controller
                     }
 
                     $detail_paket_soal = new DetailPaketSoal;
-                    $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $detail_paket_soal->id_detail_paket_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
                 } else if ($input->id_tipe_soal == 7) { // True/False
                     $question = new Soal;
                     $question->id_kategori_soal = $input->id_kategori_soal;
-                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
                     $question->content = $input->soal;
                     $question->text = strip_tags($input->soal) ? strip_tags($input->soal) : 'gambar';
-                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $question->created_by = auth_data()->pengguna->id_pengguna;
                     if (empty($input->soal)) {
                         DB::rollback();
                         return [
@@ -966,12 +966,12 @@ class SoalController extends Controller
                     $question->save();
                     for ($i = 1; $i <= count($input->pertanyaan); $i++) {
                         $pertanyaan = new PilihanPertanyaan;
-                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_pilihan_pertanyaan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pertanyaan->id_soal =  $question->id_soal;
                         $pertanyaan->nomer = $i;
                         $pertanyaan->text = $input->pertanyaan[$i];
                         $pertanyaan->jawaban = $input->noJawaban[$i];
-                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pertanyaan->created_by = auth_data()->pengguna->id_pengguna;
                         if (empty($input->pertanyaan[$i])) {
                             DB::rollback();
                             return [
@@ -984,7 +984,7 @@ class SoalController extends Controller
                     }
 
                     $detail_paket_soal = new DetailPaketSoal;
-                    $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $detail_paket_soal->id_detail_paket_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
                     $detail_paket_soal->save();
@@ -998,12 +998,12 @@ class SoalController extends Controller
 
                     $question = new Soal;
                     $question->id_kategori_soal = $input->id_kategori_soal;
-                    $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+                    $question->id_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $question->id_pengguna = auth_data()->pengguna->id_pengguna;
                     $question->id_tipe_soal = $input->id_tipe_soal;
                     $question->content = $input->soal;
                     $question->text = Str::limit($input->soal, 200);
-                    $question->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $question->created_by = auth_data()->pengguna->id_pengguna;
                     if (empty($input->soal)) {
                         DB::rollback();
                         return [
@@ -1015,12 +1015,12 @@ class SoalController extends Controller
 
                     for ($i = 1; $i <= count($input->pertanyaan); $i++) {
                         $pertanyaan = new PilihanPertanyaan;
-                        $pertanyaan->id_pilihan_pertanyaan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $pertanyaan->id_pilihan_pertanyaan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $pertanyaan->id_soal =  $question->id_soal;
                         $pertanyaan->nomer = $i;
                         $pertanyaan->text = $input->pertanyaan[$i];
                         $pertanyaan->jawaban = $input->jawaban_benar[$i];
-                        $pertanyaan->created_by = $input->auth_data->pengguna->id_pengguna;
+                        $pertanyaan->created_by = auth_data()->pengguna->id_pengguna;
                         $opsi = [];
                         foreach ($input->jawaban[$i] as $key => $options) {
                             $opsi[$key] = $options;
@@ -1040,7 +1040,7 @@ class SoalController extends Controller
 
 
                     $detail_paket_soal = new DetailPaketSoal;
-                    $detail_paket_soal->id_detail_paket_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $detail_paket_soal->id_detail_paket_soal =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $detail_paket_soal->id_paket_soal = $input->id_paket_soal;
                     $detail_paket_soal->id_soal = $question->id_soal;
 
@@ -1094,7 +1094,7 @@ class SoalController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = Soal::with('pengguna', 'kategori_soal', 'detail_paket_soal.paket_soal.paket_soal_kelas.kelas')->orderBy('created_at', 'DESC')->when($input->status == 0, function ($q) use ($auth_data) {
             $q->where('soal.id_pengguna', $auth_data->pengguna->id_pengguna);
         });

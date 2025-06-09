@@ -19,7 +19,7 @@ class CustomFormRekapController extends Controller
     public function index(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas\form-builder\rekap-custom-form\view-list-rekap-custom-form', compact('auth_data'));
     }
@@ -44,7 +44,7 @@ class CustomFormRekapController extends Controller
     public function show(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $form = CustomForm::with('form_komponen.form_respon', 'role')->findOrFail($id);
 
         $tabel_kolom = [

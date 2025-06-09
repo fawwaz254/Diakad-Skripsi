@@ -24,7 +24,7 @@ class DataLokerAlmariController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sekretariat/data-sekretariat/data-loker-almari/view-data-loker-almari', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class DataLokerAlmariController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $unit = UnitKerja::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
@@ -44,7 +44,7 @@ class DataLokerAlmariController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $unit     = UnitKerja::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $arsip     = ArsipLoker::where('id_arsip_loker', '=', $id)->first();
@@ -55,7 +55,7 @@ class DataLokerAlmariController extends BaseController
     public function datatablesDataLokerAlmari(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = ArsipLoker::select('arsip_loker.id_arsip_loker', 'unit_kerja.nm_unit_kerja', 'arsip_loker.nm_arsip_loker', 'arsip_loker.id_unit_kerja')
             ->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'arsip_loker.id_unit_kerja')
             ->where('arsip_loker.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
@@ -74,7 +74,7 @@ class DataLokerAlmariController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -90,7 +90,7 @@ class DataLokerAlmariController extends BaseController
         } else {
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $arsip                     = new ArsipLoker;
                 $arsip->id_arsip_loker    = $id;
@@ -98,7 +98,7 @@ class DataLokerAlmariController extends BaseController
                 $arsip->id_unit_kerja     = $input->id_unit_kerja;
                 $arsip->id_sekolah         = $auth_data->pengguna->id_sekolah;
                 $arsip->created_at         = $now;
-                $arsip->created_by        = $input->auth_data->pengguna->id_pengguna;
+                $arsip->created_by        = auth_data()->pengguna->id_pengguna;
                 $arsip->save();
 
                 return [
@@ -111,7 +111,7 @@ class DataLokerAlmariController extends BaseController
                 $arsip->nm_arsip_loker    = $input->nm_arsip_loker;
                 $arsip->id_unit_kerja    = $input->id_unit_kerja;
                 $arsip->updated_at         = $now;
-                $arsip->updated_by        = $input->auth_data->pengguna->id_pengguna;
+                $arsip->updated_by        = auth_data()->pengguna->id_pengguna;
                 $arsip->save();
 
                 return [
@@ -127,7 +127,7 @@ class DataLokerAlmariController extends BaseController
                     ];
                 } else {
                     $arsip     = ArsipLoker::find($id);
-                    $arsip->deleted_by    = $input->auth_data->pengguna->id_pengguna;
+                    $arsip->deleted_by    = auth_data()->pengguna->id_pengguna;
                     $arsip->deleted_at     = $now;
                     $arsip->save();
 

@@ -33,7 +33,7 @@ class RaporSisipanController extends Controller
     public function viewDaftarNilaiSTS(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
 
@@ -80,7 +80,7 @@ class RaporSisipanController extends Controller
         set_time_limit(-1);
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($input->thn_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -151,7 +151,7 @@ class RaporSisipanController extends Controller
 
         set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas')->first();
 
@@ -205,7 +205,7 @@ class RaporSisipanController extends Controller
 
         set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $rapor = Rapor::where('id_rapor', $id_rapor)->with('mata_pelajaran', 'kelas', 'semester', 'pengguna')->first();
 

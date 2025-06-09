@@ -24,7 +24,7 @@ class AbsensiPKLController extends Controller
 	public function viewAbsensiMagang(Request $request){
 
 		$input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
@@ -49,7 +49,7 @@ class AbsensiPKLController extends Controller
     public function viewDetailRekapAbsensiMagang(Request $request, $id_rekanan, $id_periode, $date)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
@@ -81,7 +81,7 @@ class AbsensiPKLController extends Controller
     public function printRekapPresensiMagang(Request $request, $id_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $pengambilan_magang = PengambilanMagang::where('id_siswa', $id_siswa)->first();
         $pembimbing_magang = PembimbingMagang::with('rekanan', 'periode', 'pengguna')->where('id_periode_magang', $pengambilan_magang->id_periode_magang)->where('id_rekanan_magang', $pengambilan_magang->id_rekanan_magang)->first();
 

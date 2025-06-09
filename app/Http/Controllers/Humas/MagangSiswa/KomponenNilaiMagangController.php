@@ -26,7 +26,7 @@ class KomponenNilaiMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
@@ -36,7 +36,7 @@ class KomponenNilaiMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_periode_magang' => 'required'
@@ -58,7 +58,7 @@ class KomponenNilaiMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode = LibMagangSiswa::fetchDataKomponenNilaiMagang($auth_data, $id_periode_magang);
 
@@ -67,7 +67,7 @@ class KomponenNilaiMagangController extends BaseController
     public function datatablesKomponenNilaiMagang(Request $request, $id_periode_magang)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibMagangSiswa::fetchDataKomponenNilaiMagangDetail($auth_data, $id_periode_magang);
 
         return Datatables::of($list_data)
@@ -84,14 +84,14 @@ class KomponenNilaiMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode = LibMagangSiswa::fetchDataKomponenNilaiMagang($auth_data, $id_periode_magang);
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_komponen_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_komponen_magang = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('humas/magang-siswa/komponen-nilai-magang/add-komponen-nilai-magang', compact('auth_data', 'data_periode', 'id_komponen_magang', 'id_periode_magang'));
     }
@@ -100,7 +100,7 @@ class KomponenNilaiMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode = LibMagangSiswa::fetchDataKomponenNilaiMagang($auth_data, $id_periode_magang);
 
@@ -141,7 +141,7 @@ class KomponenNilaiMagangController extends BaseController
                         'message' => 'Failed To Save Komponen Nilai  Magang(Urutan Sudah Ada)!'
                     ];
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $komponenMagang                             = new KomponenMagang;
                     $komponenMagang->id_komponen_magang         = $id;
@@ -149,7 +149,7 @@ class KomponenNilaiMagangController extends BaseController
                     $komponenMagang->nm_komponen_magang         = $input->nm_komponen_magang;
                     $komponenMagang->persentase_komponen_magang = $input->persentase_komponen_magang;
                     $komponenMagang->urutan_komponen_magang         = $input->urutan_komponen_magang;
-                    $komponenMagang->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                    $komponenMagang->created_by                 = auth_data()->pengguna->id_pengguna;
                     $komponenMagang->save();
 
                     return [
@@ -172,7 +172,7 @@ class KomponenNilaiMagangController extends BaseController
                     $komponenMagang->nm_komponen_magang         = $input->nm_komponen_magang;
                     $komponenMagang->persentase_komponen_magang = $input->persentase_komponen_magang;
                     $komponenMagang->urutan_komponen_magang     = $input->urutan_komponen_magang;
-                    $komponenMagang->updated_by                 = $input->auth_data->pengguna->id_pengguna;
+                    $komponenMagang->updated_by                 = auth_data()->pengguna->id_pengguna;
                     $komponenMagang->updated_at                 = $now;
                     $komponenMagang->save();
 
@@ -191,7 +191,7 @@ class KomponenNilaiMagangController extends BaseController
                 } else {
                     // make object to find id
                     $komponenMagang               = KomponenMagang::find($id);
-                    $komponenMagang->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $komponenMagang->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $komponenMagang->save();
 
                     $komponenMagang->delete();

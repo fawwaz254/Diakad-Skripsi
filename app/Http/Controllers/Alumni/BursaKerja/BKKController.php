@@ -21,7 +21,7 @@ class BKKController extends BaseController{
     public function viewBkk(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
     	return view('alumni/bursa-kerja/bkk/view-bkk',compact('auth_data'));
     }
@@ -29,7 +29,7 @@ class BKKController extends BaseController{
     public function showDatatablesBkk(Request $request){
 
     	$input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
     	$list_data = LowonganKerja::all();
 
     	return Datatables::of($list_data)
@@ -63,7 +63,7 @@ class BKKController extends BaseController{
     public function viewDetailBkk(Request $request,$id){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $item = LowonganKerja::findOrFail($id);
         return view('alumni/bursa-kerja/bkk/view-detail-bkk',compact('auth_data','item'));

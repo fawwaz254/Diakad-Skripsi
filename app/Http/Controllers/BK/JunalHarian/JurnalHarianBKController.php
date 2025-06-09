@@ -24,7 +24,7 @@ class JurnalHarianBKController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('bk/jurnal-harian/tambah-jurnal-harian/view-tambah-jurnal-harian', compact('auth_data'));
     }
@@ -32,7 +32,7 @@ class JurnalHarianBKController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $waktu = Carbon::today()->toDateString();
         $all_siswa = Siswa::with('kelas', 'pengguna')->whereHas('kelas')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('nm_status_pengguna', '=', 'AKTIF');
@@ -43,7 +43,7 @@ class JurnalHarianBKController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
@@ -81,7 +81,7 @@ class JurnalHarianBKController extends Controller
         } else {
             $now = Carbon::now();
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $category_jurnal_harian_tendik = CategoryJurnalHarianTendik::whereHas('unit_kerja', function ($q) {
                     $q->where('nm_unit_kerja', 'BK')->orWhere('nm_unit_kerja', 'Bimbingan Konseling');;
                 })->first();
@@ -95,9 +95,9 @@ class JurnalHarianBKController extends Controller
                     $data->keterangan_progres           = $input->keterangan;
                     $data->status                       = $input->status;
                     $data->catatan                      = $input->keterangan;
-                    $data->id_pengguna                  = $input->auth_data->pengguna->id_pengguna;
+                    $data->id_pengguna                  = auth_data()->pengguna->id_pengguna;
                     $data->id_siswa                     = $input->id_siswa;
-                    $data->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $data->created_by                   = auth_data()->pengguna->id_pengguna;
 
                     if ($request->hasFile('file')) {
                         $validator = Validator::make($request->all(), [
@@ -110,7 +110,7 @@ class JurnalHarianBKController extends Controller
                                 'message' => $validator->errors()->first()
                             ];
                         } else {
-                            $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                            $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
                             $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/tendik/' . $id, request()->file, 'public');
                             $data->path_file = $file;
 
@@ -139,7 +139,7 @@ class JurnalHarianBKController extends Controller
                 $data->status                       = $input->status;
                 $data->catatan                      = $input->keterangan;
                 $data->id_siswa                     = $input->id_siswa;
-                $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $data->updated_by                   = auth_data()->pengguna->id_pengguna;
 
                 if ($request->hasFile('file')) {
                     $validator = Validator::make($request->all(), [
@@ -151,7 +151,7 @@ class JurnalHarianBKController extends Controller
                             'message' => $validator->errors()->first()
                         ];
                     } else {
-                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/tendik/' . $id, request()->file, 'public');
                         $data->path_file = $file;
                         $upload = $request->file('file');
@@ -170,7 +170,7 @@ class JurnalHarianBKController extends Controller
             } elseif ($mode == 'delete') {
 
                 $data               = LaporanKerjaHarianTendik::find($id);
-                $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $data->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $data->save();
                 $data->delete();
 
@@ -186,9 +186,9 @@ class JurnalHarianBKController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
-        $list_data = LaporanKerjaHarianTendik::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->orderBy('created_at', 'desc');
+        $list_data = LaporanKerjaHarianTendik::where('id_pengguna', auth_data()->pengguna->id_pengguna)->orderBy('created_at', 'desc');
 
         return Datatables::of($list_data)
             ->editColumn('tanggal', function ($item) {
@@ -226,7 +226,7 @@ class JurnalHarianBKController extends Controller
     public function editKerjaHarian(Request $request, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $laporan_kerja_harian_tendik = LaporanKerjaHarianTendik::findOrFail($id);
         $all_siswa = Siswa::with('kelas', 'pengguna')->whereHas('kelas')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('nm_status_pengguna', '=', 'AKTIF');

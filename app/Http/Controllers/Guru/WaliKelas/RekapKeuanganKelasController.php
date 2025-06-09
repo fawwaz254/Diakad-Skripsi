@@ -23,7 +23,7 @@ class RekapKeuanganKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $wali_kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first();
         $id_kelas = $wali_kelas->id_kelas;
@@ -40,7 +40,7 @@ class RekapKeuanganKelasController extends BaseController
         $waktu = Carbon::today()->toDateString();
         // }
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $semester = Semester::orderBy('tahun_ajaran', 'asc')->get();
 
         if (empty($tahun_akademik_semester)) {
@@ -165,7 +165,7 @@ class RekapKeuanganKelasController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
