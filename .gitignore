@@ -20,3 +20,7 @@ yarn-error.log
 frankenphp
 frankenphp-worker.php
 frankenphp-worker.php
+/.cache
+/data
+/letsencrypt
+.ash_history
