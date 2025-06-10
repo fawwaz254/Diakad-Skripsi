@@ -126,6 +126,27 @@ COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/php.ini ${PHP_INI_DIR}/conf
 
 RUN chmod +x /usr/local/bin/start-container /usr/local/bin/healthcheck
 
+###########################################
+
+FROM base AS runner
+
+USER ${USER}
+
+COPY --link --chown=${WWWUSER}:${WWWUSER} . .
+COPY --link --chown=${WWWUSER}:${WWWUSER} --from=build ${ROOT}/public public
+
+RUN mkdir -p \
+    storage/framework/{sessions,views,cache,testing} \
+    storage/logs \
+    bootstrap/cache && chmod -R a+rw storage
+
+RUN composer install \
+    --classmap-authoritative \
+    --no-interaction \
+    --no-ansi \
+    --no-dev \
+    && composer clear-cache
+
 EXPOSE 8000
 EXPOSE 443
 EXPOSE 443/udp
