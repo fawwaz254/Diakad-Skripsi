@@ -26,7 +26,7 @@ COPY --from=upstream /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 
 ARG WWWUSER=1000
 ARG WWWGROUP=1000
-ARG TZ=UTC
+ARG TZ=ID
 ARG APP_DIR=/var/www/html
 ARG APP_ENV
 ARG APP_HOST

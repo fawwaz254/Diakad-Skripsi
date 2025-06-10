@@ -59,7 +59,7 @@ services:
     volumes:
       - 'stack-redis:/data'
     ports:
-      - '6379:6379'
+      - '16379:6379'
     networks:
       - stack
     logging: *default-logging
@@ -82,7 +82,7 @@ services:
       - /etc/os-release:/etc/os-release:ro
     environment:
       - "GLANCES_OPT=-w"
-      - TZ="UTC"
+      - TZ="ID"
     networks:
       - stack
     logging: *default-logging
@@ -97,7 +97,7 @@ services:
     security_opt:
       - no-new-privileges:true
     ports:
-      - '3366:3306'
+      - '13306:3306'
     environment:
       MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
       MYSQL_DATABASE: '${DB_DATABASE}'
