@@ -108,7 +108,7 @@ services:
     networks:
       - stack
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-U", "${DB_USERNAME}", "-p${DB_PASSWORD}"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "mysql", "-u", "${DB_USERNAME}", "-p${DB_PASSWORD}"]
       interval: 15s
       retries: 12
       timeout: 20s

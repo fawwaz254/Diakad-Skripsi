@@ -124,6 +124,8 @@ COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/start-container /usr/local/
 COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/healthcheck /usr/local/bin/healthcheck
 COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
 
+RUN composer install
+
 RUN chmod +x /usr/local/bin/start-container /usr/local/bin/healthcheck
 
 EXPOSE 8000
