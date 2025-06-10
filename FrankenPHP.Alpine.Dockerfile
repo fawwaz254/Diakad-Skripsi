@@ -134,23 +134,6 @@ USER ${USER}
 
 COPY --link --chown=${WWWUSER}:${WWWUSER} . .
 
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-autoloader \
-    --no-ansi \
-    --no-scripts \
-    --audit
-
-###########################################
-
-FROM base AS runner
-
-USER ${USER}
-
-COPY --link --chown=${WWWUSER}:${WWWUSER} . .
-COPY --link --chown=${WWWUSER}:${WWWUSER} --from=build ${ROOT}/public public
-
 RUN mkdir -p \
     storage/framework/{sessions,views,cache,testing} \
     storage/logs \
