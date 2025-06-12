@@ -26,7 +26,7 @@ COPY --from=upstream /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 
 ARG WWWUSER=1000
 ARG WWWGROUP=1000
-ARG TZ=UTC
+ARG TZ=ID
 ARG APP_DIR=/var/www/html
 ARG APP_ENV
 ARG APP_HOST
@@ -125,6 +125,26 @@ COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/healthcheck /usr/local/bin/
 COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
 
 RUN chmod +x /usr/local/bin/start-container /usr/local/bin/healthcheck
+
+###########################################
+
+FROM base AS common
+
+USER ${USER}
+
+COPY --link --chown=${WWWUSER}:${WWWUSER} . .
+
+RUN mkdir -p \
+    storage/framework/{sessions,views,cache,testing} \
+    storage/logs \
+    bootstrap/cache && chmod -R a+rw storage
+
+RUN composer install \
+    --classmap-authoritative \
+    --no-interaction \
+    --no-ansi \
+    --no-dev \
+    && composer clear-cache
 
 EXPOSE 8000
 EXPOSE 443

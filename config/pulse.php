@@ -121,8 +121,7 @@ return [
     */
 
     'middleware' => [
-        'web',
-        Authorize::class,
+        'token_staff'
     ],
 
     /*

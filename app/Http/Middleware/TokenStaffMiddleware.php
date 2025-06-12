@@ -38,7 +38,7 @@ class TokenStaffMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->segment(1) === 'pulse') {
+        if ($request->segment(1) == 'pulse') {
             return  $next($request);
         }
         if (Auth::check()) {
