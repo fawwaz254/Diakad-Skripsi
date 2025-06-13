@@ -245,7 +245,7 @@
                         <label for="test">Jenis Mapel : <span style="color: red">(Opsional)</span></label>
                         <select class="form-control show-tick" onchange="changeJurusan(this)" name="jenismapel">
                             <option value="" selected>Semua</option>
-                            @foreach ($data_jenis_mata_pelajaran as $jenis_mata_pelajaran)
+                            @foreach ($list_jenis_mata_pelajaran as $jenis_mata_pelajaran)
                                 <option value="{{ $jenis_mata_pelajaran->id_jenis_mata_pelajaran }}">
                                     {{ $jenis_mata_pelajaran->nm_jenis_mata_pelajaran }}
                                     ({{ $jenis_mata_pelajaran->kode_jenis_mata_pelajaran }})
