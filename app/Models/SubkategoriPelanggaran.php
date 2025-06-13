@@ -16,10 +16,10 @@ class SubkategoriPelanggaran extends Model
 
     protected $primaryKey = 'id_subkategori_pelanggaran';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_kategori_pelanggaran',
         'nm_subkategori_pelanggaran',
@@ -31,11 +31,10 @@ class SubkategoriPelanggaran extends Model
         'deleted_by'
     ];
 
+    public function pelanggaran_siswa()
+    {
+        return $this->hasMany(PelanggaranSiswa::class, 'id_subkategori_pelanggaran');
+    }
+
     protected $guarded = [];
-
-
-
-
-
-
 }

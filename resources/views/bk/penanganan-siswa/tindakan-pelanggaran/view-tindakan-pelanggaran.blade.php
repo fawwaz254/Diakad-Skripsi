@@ -21,8 +21,8 @@
                             <h4 class="card-inside-title">Kelas</h4>
                             <select class="form-control" id="filter_kelas" name="kelas">
                                 <option value="">-- Pilih Kelas --</option>
-                                @foreach($kelas_list as $kelas)
-                                <option value="{{ $kelas->id_kelas }}">{{ $kelas->nm_kelas }}</option>
+                                @foreach ($kelas_list as $kelas)
+                                    <option value="{{ $kelas->id_kelas }}">{{ $kelas->nm_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -119,14 +119,14 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>NIS</th>
-                                                <th>Nama Siswa</th>
+                                                <th style="width: 20rem">Nama Siswa</th>
                                                 <th>Kelas</th>
-                                                <th>Sub Kategori</th>
+                                                <th style="width: 20rem">Sub Kategori</th>
                                                 <th>Tanggal Tindakan</th>
+                                                <th style="width: 25%">Catatan Tindakan</th>
                                                 <th>Nama Guru Input</th>
                                                 <th>Nama Input Tindakan</th>
-                                                <!-- <th>Catatan Tindakan</th>
-                                                <th>Catatan Khusus</th> -->
+                                                {{-- <th>Catatan Khusus</th> --}}
 
                                                 <!--    <th>Tanggal Tindakan</th>
                                                 <th>Aktor Input Tindakan</th> -->
@@ -402,6 +402,12 @@
             {
                 data: 'tgl_tindakan',
                 name: 'tgl_tindakan',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'keterangan_tindakan',
+                name: 'keterangan_tindakan',
                 searchable: false,
                 orderable: false
             },
