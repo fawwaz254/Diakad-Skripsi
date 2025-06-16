@@ -262,7 +262,7 @@
             <h5 class="text-center"><b>Diploma Supplement</b></h5>
             <h5 class="text-center">Nomor :
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                    616/C-3/WH-2/V/2025
+                    556/C-3/WH-2/V/2025
                 @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                     421.3/090/E/404.3.1.15.4.4/VI/2024
                 @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
