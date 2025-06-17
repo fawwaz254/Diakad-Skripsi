@@ -220,6 +220,10 @@
                                             ->first()?->predikat;
                                     @endphp
                                     <td style="text-align:center">{{ $predikat }}</td>
+                                @else
+                                    @php
+                                        $predikat = '';
+                                    @endphp
                                 @endif
                                 @if ($jumlah_kelompok > 1)
                                     @if ($urutan_x != $point_kpi->urutan)
