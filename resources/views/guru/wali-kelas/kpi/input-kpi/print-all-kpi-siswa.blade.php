@@ -385,8 +385,10 @@
                     </td>
                     <td width="30%" style="border-style : hidden; text-align:center"><br>Kepala Sekolah,
                         <br><br><br><br><br><br>
+                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
                         <img style="width: 11rem; position: absolute; top: 29%; right: 43%; "
-                            src="{{ asset('kepsek-ttd.png') }}" alt="Tanda Tangan Kepala Sekolah">
+                            src="{{ asset('media/ttd/kepsek-ttd-smkypm3.png') }}" alt="Tanda Tangan Kepala Sekolah">
+                        @endif
                         <div>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</div>
                     </td>
                     <td width="30%" style="border-style : hidden;text-align:center ">
