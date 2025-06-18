@@ -373,9 +373,16 @@
                         {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
                         <br>
                         Wali Kelas
-                        <br><br><br><br><br><br><u><b>
-                                {{ $auth_data->pengguna->nm_pengguna }}
-                                {{ $auth_data->pengguna->gelar_belakang }}</b></u>
+                        <br><br><br><br><br><br>
+                        @if($wali_kelas)
+                        <u>
+                            <b>
+                                {{ $wali_kelas->gelar_depan }}
+                                {{ $wali_kelas->nm_wali_kelas }}
+                                {{ $wali_kelas->gelar_belakang }}
+                            </b>
+                        </u>
+                        @endif
                     </td>
                 </tr>
             </table>
