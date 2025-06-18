@@ -16,6 +16,7 @@ use App\Models\Kota as Kota;
 
 use App\Models\FileSekolah;
 use DB;
+use Illuminate\Support\Facades\Storage;
 use Session;
 use Validator;
 
@@ -94,23 +95,32 @@ class InputDataSekolahController extends BaseController
 					$alamat_kota = $input->alamat_kota;
 				}
 				$sekolah->alamat_kota					= $alamat_kota;
-				$sekolah->alamat_dusun				= $input->alamat_dusun;
-				$sekolah->alamat_rt					= $input->alamat_rt;
-				$sekolah->alamat_rw					= $input->alamat_rw;
+				$sekolah->alamat_dusun					= $input->alamat_dusun;
+				$sekolah->alamat_rt						= $input->alamat_rt;
+				$sekolah->alamat_rw						= $input->alamat_rw;
 				$sekolah->alamat_kodepos				= $input->alamat_kodepos;
 				$sekolah->nomor_telp_sekolah			= $input->nomor_telp_sekolah;
-				$sekolah->nomor_fax_sekolah			= $input->nomor_fax_sekolah;
-				$sekolah->email_sekolah				= $input->email_sekolah;
+				$sekolah->nomor_fax_sekolah				= $input->nomor_fax_sekolah;
+				$sekolah->email_sekolah					= $input->email_sekolah;
 				$sekolah->website_sekolah				= $input->website_sekolah;
+				if($request->hasFile('path_ttd_kepsek')) {
+					$uploadedFile   = storeFileToCloud('sekolah', $sekolah->id_sekolah, $request->path_ttd_kepsek);
+					$sekolah->path_ttd_kepsek			= Storage::disk('spaces')->url($uploadedFile);
+				}
 				$sekolah->updated_by					= $input->auth_data->pengguna->id_pengguna;
 				$sekolah->updated_at					= $now;
 				$sekolah->save();
 
+				$auth_data->sekolah_data = $sekolah;
+                Session::put('auth_data', $auth_data);
+
 				if ($input->fileSekolah ?? false) {
 					foreach ($input->fileSekolah as $file_sekolah) {
-						$uuid = $prefix . strtotime($now) . uniqid();
-						$file_sekolah['id_file_sekolah'] = $uuid;
-						FileSekolah::create($file_sekolah);
+						if(!empty($file_sekolah['link_gdrive'])){
+							$uuid = $prefix . strtotime($now) . uniqid();
+							$file_sekolah['id_file_sekolah'] = $uuid;
+							FileSekolah::create($file_sekolah);
+						}
 					}
 				}
 

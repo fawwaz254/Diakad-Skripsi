@@ -7,29 +7,28 @@
                         Input Data Sekolah 
                     </h2>
                 </div>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a  href="#1" data-toggle="tab">DATA SEKOLAH</a>
+                    </li>
+                    <li >
+                        <a href="#2" data-toggle="tab">KEPEMILIKAN SEKOLAH</a>
+                    </li>
+                    <li>
+                        <a href="#3" data-toggle="tab">ALAMAT SEKOLAH</a>
+                    </li>
+                    <li>
+                        <a href="#4" data-toggle="tab">KONTAK SEKOLAH</a>
+                    </li>
+                    <li>
+                        <a href="#5" data-toggle="tab">FILE SEKOLAH</a>
+                    </li>
+                </ul>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-data-sekolah/edit/'.$sekolah->id_sekolah)}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-data-sekolah/edit/'.$sekolah->id_sekolah)}}" enctype="multipart/form-data">
                         {{csrf_field()}}
 
-                        <div id="exTab2" class="container">	
-                            <ul class="nav nav-tabs">
-                                <li class="active">
-                                    <a  href="#1" data-toggle="tab">DATA SEKOLAH</a>
-                                </li>
-                                <li >
-                                    <a href="#2" data-toggle="tab">KEPEMILIKAN SEKOLAH</a>
-                                </li>
-                                <li>
-                                    <a href="#3" data-toggle="tab">ALAMAT SEKOLAH</a>
-                                </li>
-                                <li>
-                                    <a href="#4" data-toggle="tab">KONTAK SEKOLAH</a>
-                                </li>
-                                <li>
-                                    <a href="#5" data-toggle="tab">FILE SEKOLAH</a>
-                                </li>
-                            </ul>
-                            
+                        <div id="exTab2" style="padding:0rem 2rem;">
                             <div class="tab-content ">
                                 <div class="tab-pane active" id="1">
                                     <h2 class="card-inside-title">
@@ -203,11 +202,11 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane " id="3">
-                                    <h2 class="card-inside-title">
-                                        Alamat Jalan
-                                    </h2>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <h2 class="card-inside-title">
+                                            Alamat Jalan
+                                        </h2>
+                                        <div class="row clearfix">
                                             <input type="text" class="form-control" name="alamat_jalan" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_jalan}}">
                                         </div>
                                     </div>
@@ -216,9 +215,7 @@
                                             Kelurahan
                                         </h2>
                                         <div class="row clearfix">
-                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                                <input type="text" class="form-control" name="alamat_kelurahan" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_kelurahan}}">
-                                            </div>
+                                            <input type="text" class="form-control" name="alamat_kelurahan" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_kelurahan}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -226,9 +223,7 @@
                                             Kecamatan
                                         </h2>
                                         <div class="row clearfix">
-                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                                <input type="text" class="form-control" name="alamat_kecamatan" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_kecamatan}}">
-                                            </div>
+                                            <input type="text" class="form-control" name="alamat_kecamatan" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_kecamatan}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -236,25 +231,23 @@
                                             Provinsi
                                         </h2>
                                         <div class="row clearfix">
-                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                                <select class="form-control show-tick" name="alamat_provinsi" id="alamat_provinsi">
-                                                    @if($sekolah->alamat_provinsi == NULL)
-                                                        <option value="0">-- Pilih Provinsi --</option>
-                                                        @foreach($provinsi as $provinsi)
+                                            <select class="form-control show-tick" name="alamat_provinsi" id="alamat_provinsi">
+                                                @if($sekolah->alamat_provinsi == NULL)
+                                                    <option value="0">-- Pilih Provinsi --</option>
+                                                    @foreach($provinsi as $provinsi)
+                                                        <option value="{{$provinsi->id_provinsi}}">{{$provinsi->nm_provinsi}}</option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="0">-- Pilih Provinsi --</option>
+                                                    @foreach($provinsi as $provinsi)
+                                                        @if($provinsi->id_provinsi == $sekolah->alamat_provinsi)
+                                                            <option value="{{$provinsi->id_provinsi}}" selected >{{$provinsi->nm_provinsi}}</option>
+                                                        @else
                                                             <option value="{{$provinsi->id_provinsi}}">{{$provinsi->nm_provinsi}}</option>
-                                                        @endforeach
-                                                    @else
-                                                        <option value="0">-- Pilih Provinsi --</option>
-                                                        @foreach($provinsi as $provinsi)
-                                                            @if($provinsi->id_provinsi == $sekolah->alamat_provinsi)
-                                                                <option value="{{$provinsi->id_provinsi}}" selected >{{$provinsi->nm_provinsi}}</option>
-                                                            @else
-                                                                <option value="{{$provinsi->id_provinsi}}">{{$provinsi->nm_provinsi}}</option>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -262,25 +255,23 @@
                                             Kota
                                         </h2>
                                         <div class="row clearfix">
-                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                                <select class="form-control show-tick" name="alamat_kota" id="alamat_kota">
-                                                    @if($sekolah->alamat_kota == NULL)
-                                                        <option value="0">-- Pilih Kota --</option>
-                                                        @foreach($kota as $kota)
+                                            <select class="form-control show-tick" name="alamat_kota" id="alamat_kota">
+                                                @if($sekolah->alamat_kota == NULL)
+                                                    <option value="0">-- Pilih Kota --</option>
+                                                    @foreach($kota as $kota)
+                                                        <option value="{{$kota->id_kota}}">{{$kota->nm_kota}}</option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="0">-- Pilih Kota --</option>
+                                                    @foreach($kota as $kota)
+                                                        @if($kota->id_kota == $sekolah->alamat_kota)
+                                                            <option value="{{$kota->id_kota}}" selected >{{$kota->nm_kota}}</option>
+                                                        @else
                                                             <option value="{{$kota->id_kota}}">{{$kota->nm_kota}}</option>
-                                                        @endforeach
-                                                    @else
-                                                        <option value="0">-- Pilih Kota --</option>
-                                                        @foreach($kota as $kota)
-                                                            @if($kota->id_kota == $sekolah->alamat_kota)
-                                                                <option value="{{$kota->id_kota}}" selected >{{$kota->nm_kota}}</option>
-                                                            @else
-                                                                <option value="{{$kota->id_kota}}">{{$kota->nm_kota}}</option>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -288,9 +279,7 @@
                                             Dusun
                                         </h2>
                                         <div class="row clearfix">
-                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                                <input type="text" class="form-control" name="alamat_dusun" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_dusun}}">
-                                            </div>
+                                            <input type="text" class="form-control" name="alamat_dusun" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_dusun}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -298,9 +287,7 @@
                                             RT
                                         </h2>
                                         <div class="row clearfix">
-                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                                <input type="text" class="form-control" name="alamat_rt" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_rt}}">
-                                            </div>
+                                            <input type="text" class="form-control" name="alamat_rt" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_rt}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -308,9 +295,7 @@
                                             RW
                                         </h2>
                                         <div class="row clearfix">
-                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                                <input type="text" class="form-control" name="alamat_rw" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_rw}}">
-                                            </div>
+                                            <input type="text" class="form-control" name="alamat_rw" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_rw}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -318,46 +303,34 @@
                                             Kodepos
                                         </h2>
                                         <div class="row clearfix">
-                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                                <input type="text" class="form-control" name="alamat_kodepos" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_kodepos}}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                            <input type="text" class="form-control" name="alamat_kodepos" aria-required="true" aria-invalid="true" value="{{$sekolah->alamat_kodepos}}">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane " id="4">
-                                    <h2 class="card-inside-title">
-                                        Nomor Telepon Sekolah
-                                    </h2>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <h2 class="card-inside-title">
+                                            Nomor Telepon Sekolah
+                                        </h2>
+                                        <div class="row clearfix">
                                             <input type="text" class="form-control" name="nomor_telp_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->nomor_telp_sekolah}}">
                                         </div>
-                                    </div>
-                                    <h2 class="card-inside-title">
-                                        Nomor Fax Sekolah
-                                    </h2>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                        <h2 class="card-inside-title">
+                                            Nomor Fax Sekolah
+                                        </h2>
+                                        <div class="row clearfix">
                                             <input type="text" class="form-control" name="nomor_fax_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->nomor_fax_sekolah}}">
                                         </div>
-                                    </div>
-                                    <h2 class="card-inside-title">
-                                        Email Sekolah
-                                    </h2>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                        <h2 class="card-inside-title">
+                                            Email Sekolah
+                                        </h2>
+                                        <div class="row clearfix">
                                             <input type="text" class="form-control" name="email_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->email_sekolah}}">
                                         </div>
-                                    </div>
-                                    <h2 class="card-inside-title">
-                                        Website Sekolah
-                                    </h2>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                        <h2 class="card-inside-title">
+                                            Website Sekolah
+                                        </h2>
+                                        <div class="row clearfix">
                                             <input type="text" class="form-control" name="website_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->website_sekolah}}">
                                         </div>
                                     </div>
@@ -369,6 +342,17 @@
                                             <th>Link Gdrive</th>
                                             <th>Action</th>
                                         </tr>
+                                        <tr>  
+                                            <td>Tanda Tangan Kepsek (200px x 150px)</td>
+                                            <td>
+                                                @if(!empty($sekolah->path_ttd_kepsek))
+                                                <a href="{{$sekolah->path_ttd_kepsek}}" target="_blank">Link</a>
+                                                @else
+                                                <span class="text-danger">Belum ada tanda tangan</span>
+                                                @endif
+                                            </td>
+                                            <td><input type="file" name="path_ttd_kepsek" /> <small>*Pilih untuk tambah/timpa</small></td>
+                                        </tr>
                                         @foreach ($file_sekolah as $file)
                                             <tr>  
                                                 <td>{{$file->nama_file}}</td>
@@ -377,8 +361,8 @@
                                             </tr>
                                         @endforeach
                                         <tr>
-                                        <td><input type="text" name="fileSekolah[0][nama_file]" placeholder="Nama File" class="form-control" required /></td>  
-                                        <td><input type="text" name="fileSekolah[0][link_gdrive]" placeholder="Link Google Drive" class="form-control" required /></td> 
+                                        <td><input type="text" name="fileSekolah[0][nama_file]" placeholder="Nama File" class="form-control" /></td>  
+                                        <td><input type="text" name="fileSekolah[0][link_gdrive]" placeholder="Link Google Drive" class="form-control" /></td> 
                                         <input type="hidden" name="fileSekolah[0][id_sekolah]" value="{{ $sekolah->id_sekolah }}" />
                                         <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
                                         </tr> 
@@ -387,9 +371,9 @@
                             </div>                        
                         </div>
                         
-                        <div class="row clearfix">
-                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                        <div class="row clearfix" style="padding:0rem 2rem;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <button class="btn bg-red btn-block waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </form>
