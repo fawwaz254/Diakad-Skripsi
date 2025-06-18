@@ -75,6 +75,15 @@
 </head>
 
 <body>
+    @php
+        $need_page_break = false;
+
+        if($kelompok_kpi->first()) {
+            if($kelompok_kpi->first()->point_kpi->count() > 10) {
+                $need_page_break = true;
+            }
+        }
+    @endphp
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
@@ -117,12 +126,9 @@
                 $last_key = 0;
             @endphp
 
-
-            {{-- <h1>{{ $siswa->pengguna->nm_pengguna }}</h1> --}}
-
             @foreach ($siswa->kelompok_kpi as $key => $kelompok_kpi)
                 <!-- dimunculkan per 3 kategori -->
-                @if ($key == 3)
+                @if ($key == 3 && $need_page_break)
                     <div class="page-break"></div>
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                         <img id="kop" src="{{ asset('media/kop-surat-logo-sma-wh-2.png') }}">
