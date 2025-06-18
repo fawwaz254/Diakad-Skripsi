@@ -403,7 +403,7 @@
                         @endif
 
                         @if(!empty($auth_data->sekolah_data->path_ttd_kepsek))
-                        <img style="width: 9rem;position: absolute;top: 22%;right: 43%;" src="{{ $auth_data->sekolah_data->path_ttd_kepsek }}" alt="Tanda Tangan Kepala Sekolah">
+                        <img style="width: 11rem;position: absolute;top: 22%;right: 42%;" src="{{ $auth_data->sekolah_data->path_ttd_kepsek }}" alt="Tanda Tangan Kepala Sekolah">
                         @endif
                         <div>
                             <u><b>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</b></u>
