@@ -257,12 +257,40 @@ class InputKPIController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        // Check wali kelas berdasarkan semester aktif dan siswa
+        $data_guru = DB::select("select wk.* 
+                from siswa s
+                join kelas k on s.id_kelas = k.id_kelas
+                left join wali_kelas wk on wk.id_kelas = k.id_kelas and wk.id_semester = '$semester->id_semester'
+            where s.id_siswa = '$id_siswa'
+                and wk.deleted_at is null
+            limit 1");
+
+        if(isset($data_guru[0])){
+            $guru = Guru::find($data_guru[0]->id_guru);
+        }else{
+            // Check wali kelas terakhir kelas siswa tersebut
+            $data_guru = DB::select("select wk.* 
+                from siswa s
+                join kelas k on s.id_kelas = k.id_kelas
+                left join wali_kelas wk on wk.id_kelas = k.id_kelas
+                left join semester sm on sm.id_semester = wk.id_semester
+            where s.id_siswa = '$id_siswa'
+                and wk.deleted_at is null
+            order by sm.kode_semester desc
+            limit 1");
+
+            if(isset($data_guru[0])){
+                $guru = Guru::find($data_guru[0]->id_guru);
+            }else{
+                return redirect()->back()->with('error', 'Wali kelas tidak ditemukan untuk siswa ini.');
+            }
+        }
+        
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester->id_semester);
         $kelas = Kelas::find($wali_kelas->id_kelas);
-        $list_siswa = Siswa::with('kelas')->where('id_kelas', $wali_kelas->id_kelas)->where('id_siswa', $id_siswa)
-            ->get();
+        $list_siswa = Siswa::with('kelas')->where('id_kelas', $wali_kelas->id_kelas)->where('id_siswa', $id_siswa)->get();
 
         $kelompok_kpi = KelompokKPI::with([
             'point_kpi' => function ($q) use ($kelas, $semester) {

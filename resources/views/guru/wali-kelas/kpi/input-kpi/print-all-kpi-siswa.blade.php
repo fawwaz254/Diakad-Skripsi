@@ -225,7 +225,7 @@
                                         $predikat = '';
                                     @endphp
                                 @endif
-                                @if ($jumlah_kelompok > 1)
+                                {{-- @if ($jumlah_kelompok > 1)
                                     @if ($urutan_x != $point_kpi->urutan)
                                         <td rowspan="{{ $jumlah_kelompok }}">
                                             <table>
@@ -249,7 +249,7 @@
                                             </table>
                                         </td>
                                     @endif
-                                @else
+                                @else --}}
                                     <td>
                                         <table>
                                             @foreach ($data_kelompok_kpi as $unit_point_kpi)
@@ -271,13 +271,14 @@
                                             @endforeach
                                         </table>
                                     </td>
-                                @endif
+                                {{-- @endif --}}
                             </tr>
 
                             @if ($jumlah_kelompok > 1)
                                 @if ($urutan_x != $point_kpi->urutan)
                                     @php
                                         $urutan_x = $point_kpi->urutan;
+                                        // $urutan_x++;
                                     @endphp
                                 @endif
                             @endif
