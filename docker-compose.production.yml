@@ -116,7 +116,7 @@ services:
     logging: *default-logging
     labels:
       docker-volume-backup.stop-during-backup: true
-      docker-volume-backup.archive-pre: /bin/sh -c 'mysql_dump -U ${DB_USERNAME} -F t ${DB_DATABASE} > /backup/${DB_DATABASE}-database.tar'
+      docker-volume-backup.archive-pre: /bin/sh -c 'mysqldump -u${DB_USERNAME} -p${DB_PASSWORD} diakademik | gzip > /backup/$(date +"%Y%m%d_%H%M%S").diakademik.sql.gz'
   backup:
     profiles: [administration]
     image: offen/docker-volume-backup:v2
@@ -149,8 +149,6 @@ services:
       - SYS_ADMIN
     security_opt:
       - apparmor:unconfined
-    ports:
-      - '19999:19999'
     logging: *default-logging
     networks:
       - stack
