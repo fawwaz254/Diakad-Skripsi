@@ -87,6 +87,9 @@
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
+            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                <img id="kop" style="width:99%;" src="{{ asset('media/kop-surat-logo-sma-wh-2.png') }}">
+            @endif
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 20px  auto;" style="border-style : hidden">
                 <tr>
                     <td colspan="10" style="border-style : hidden">
