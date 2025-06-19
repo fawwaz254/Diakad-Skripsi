@@ -59,13 +59,13 @@ class AddingModulDanMenuRapbRoleKeuangan extends Migration
 
 
         // disable Modul Pemasukan Sekolah dan Pengeluaran Sekolah
-        $modul = Modul::find(69);
-        $menu->akses = 0;
-        $menu->save();
+        // $modul = Modul::find(69);
+        // $menu->akses = 0;
+        // $menu->save();
 
-        $modul = Modul::find(64);
-        $menu->akses = 0;
-        $menu->save();
+        // $modul = Modul::find(64);
+        // $menu->akses = 0;
+        // $menu->save();
 
         // ubah nm_realisasi menjadi text agar bisa memakai CKEditor
         Schema::table('realisasi', function (Blueprint $table) {

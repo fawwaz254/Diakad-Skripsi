@@ -15,18 +15,18 @@ class AddingChangeRoleUtkModulDanMenuRapbRoleKeuangan extends Migration
      */
     public function up()
     {
-        $modul = Modul::find(72);
-        $modul->id_role = 9;
-        $modul->save();
+        // $modul = Modul::find(72);
+        // $modul->id_role = 9;
+        // $modul->save();
 
         // disable Modul Pemasukan Sekolah dan Pengeluaran Sekolah
-        $modul = Modul::find(69);
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::find(69);
+        // $modul->akses = 0;
+        // $modul->save();
 
-        $modul = Modul::find(64);
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::find(64);
+        // $modul->akses = 0;
+        // $modul->save();
     }
 
     /**

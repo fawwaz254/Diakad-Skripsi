@@ -19,8 +19,8 @@ class CreatePaketSoalsTable extends Migration
             $table->string('id_kelas', 40)->nullable();
             $table->string('text', 256)->nullable();
             $table->integer('nilai')->nullable();
-            $table->dateTime('waktu_mulai')->nullable();
-            $table->dateTime('waktu_selesai')->nullable();
+            $table->timestamp('waktu_mulai')->nullable();
+            $table->timestamp('waktu_selesai')->nullable();
             $table->integer('waktu_pengerjaan')->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

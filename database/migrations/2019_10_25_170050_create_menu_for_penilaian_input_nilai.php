@@ -16,9 +16,9 @@ class CreateMenuForPenilaianInputNilai extends Migration
     public function up()
     {
         //
-        $menu               = Menu::find(49);
-        $menu->page         = "input-nilai";
-        $menu->save();
+        // $menu               = Menu::find(49);
+        // $menu->page         = "input-nilai";
+        // $menu->save();
     }
 
     /**

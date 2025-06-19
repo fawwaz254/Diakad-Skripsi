@@ -14,7 +14,7 @@ class AddColumnJmlTunggakanInTableTbBulKas extends Migration
     public function up()
     {
         Schema::table('tutup_buku_bulanan_kas', function (Blueprint $table) {
-            $table->float('sisa_tunggakan_biaya', 10, 0)->nullable()->after('kas_akhir_bulan');
+            $table->decimal('sisa_tunggakan_biaya', 10, 0)->nullable()->after('kas_akhir_bulan');
         });
     }
 

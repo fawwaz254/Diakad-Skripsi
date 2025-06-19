@@ -18,26 +18,26 @@ class AddModulFormTendik extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "Form Tendik",
-            "route"         => "form-tendik",
-            "urutan"        => 5,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "Form Tendik",
+        //     "route"         => "form-tendik",
+        //     "urutan"        => 5,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Input Form Harian",
-                "page"         => "input-form-harian",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ]
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Input Form Harian",
+        //         "page"         => "input-form-harian",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ]
+        // ]);
     }
 
     /**

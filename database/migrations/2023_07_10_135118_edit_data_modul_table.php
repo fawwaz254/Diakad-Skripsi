@@ -14,9 +14,9 @@ class EditDataModulTable extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('route','laporan')->where('id_role',2)->first();
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::where('route','laporan')->where('id_role',2)->first();
+        // $modul->akses = 0;
+        // $modul->save();
     }
 
     /**

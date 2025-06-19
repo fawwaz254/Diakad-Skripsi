@@ -19,12 +19,12 @@ class RemoveMenuInputPelanggaranSiswaRoleBk extends Migration
     public function up()
     {
         $now = Carbon::now();
-        $role_id = Role::where('nm_role', 'Bimbingan Konseling')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Bimbingan Konseling')->first()->id_role;
 
-        $modul_id = Modul::where('id_role', $role_id)->where('nm_modul', 'Penanganan Siswa')->first()->id_modul;
-        $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Input Pelanggaran Siswa')->first();
-        $menu->akses = 0;
-        $menu->save();
+        // $modul_id = Modul::where('id_role', $role_id)->where('nm_modul', 'Penanganan Siswa')->first()->id_modul;
+        // $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Input Pelanggaran Siswa')->first();
+        // $menu->akses = 0;
+        // $menu->save();
     }
 
     /**

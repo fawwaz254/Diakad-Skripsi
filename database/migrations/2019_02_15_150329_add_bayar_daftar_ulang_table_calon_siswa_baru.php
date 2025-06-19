@@ -14,7 +14,7 @@ class AddBayarDaftarUlangTableCalonSiswaBaru extends Migration
     public function up()
     {
         Schema::table('calon_siswa_baru', function (Blueprint $table) {
-            $table->double('bayar_daftar_ulang')->after('tgl_penetapan')->nullable()->comment('biaya daftar ulang yang dibayarkan calon siswa ketika penetapan');
+            $table->decimal('bayar_daftar_ulang', 10, 2)->after('tgl_penetapan')->nullable()->comment('biaya daftar ulang yang dibayarkan calon siswa ketika penetapan');
         });
     }
 

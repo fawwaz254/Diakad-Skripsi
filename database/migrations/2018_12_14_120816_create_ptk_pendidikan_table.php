@@ -29,7 +29,7 @@ class CreatePtkPendidikanTable extends Migration {
 			$table->string('nomor_induk_pendidikan', 32)->nullable()->comment('Nomor induk PTK saat menempuh pendidikan. NIS atau NISN untuk jenjang pendidikan usia dini, dasar, dan menengah, NIM untuk pendidikan tinggi');
 			$table->boolean('is_masih_studi')->nullable()->comment('1 = Ya; 0 = Tidak; (apakah masih studi/kuliah?)');
 			$table->boolean('jumlah_semester_pendidikan')->nullable()->comment('Jumlah semester yang berhasil ditempuh pada pendidikan PTK. Contoh jika sekolah selesai ditempuh dalam 3 tahun, maka diisi dengan 9. Jika kuliah selesai ditempuh dalam waktu 4 tahun, maka diisi 8. Jika sekarang masih aktif kuliah di akhir tahun ke-3 maka diisi dengan 6');
-			$table->float('rata_rata_nilai', 10, 0)->nullable()->comment('Rata-rata nilai ujian akhir untuk jenjang dasar dan menengah. Nilai IPK (Indeks Prestrasi Akademik) atau GPA (Grade Point Average) bagi pendidikan tinggi. Apabila masih berkuliah, isi dengan nilai IPK/GPA yang paling baru diperoleh');
+			$table->decimal('rata_rata_nilai', 10, 0)->nullable()->comment('Rata-rata nilai ujian akhir untuk jenjang dasar dan menengah. Nilai IPK (Indeks Prestrasi Akademik) atau GPA (Grade Point Average) bagi pendidikan tinggi. Apabila masih berkuliah, isi dengan nilai IPK/GPA yang paling baru diperoleh');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
 			$table->string('updated_by', 40)->nullable();

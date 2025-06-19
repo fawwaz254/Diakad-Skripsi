@@ -20,7 +20,7 @@ class CreateNilaiRaporSisipansTable20092022 extends Migration
             $table->string('id_komponen_nilai');
             $table->string('id_siswa', 40);
 			// $table->text('nm_nilai')->nullable();
-			$table->float('nilai', 10, 0)->nullable();
+			$table->decimal('nilai', 10, 0)->nullable();
             // $table->integer('urutan')->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

@@ -16,9 +16,9 @@ class AddRouteInModulPenetapanRolePpdb extends Migration
     public function up()
     {
         //
-        $modul = Modul::find(44);
-        $modul->route = 'penetapan';
-        $modul->save();
+        // $modul = Modul::find(44);
+        // $modul->route = 'penetapan';
+        // $modul->save();
     }
 
     /**

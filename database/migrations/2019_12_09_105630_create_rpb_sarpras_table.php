@@ -20,7 +20,7 @@ class CreateRpbSarprasTable extends Migration
             $table->string('id_unit_kerja', 40)->comment('FK: unit_kerja.id_unit_kerja');
             $table->string('id_buku_alat', 40)->nullable()->comment('FK: buku_alat.id_buku_alat, sarpras yg diajukan pengadaan (salah satu)');
             $table->string('id_inventaris_ruangan', 40)->nullable()->comment('FK: inventaris_ruangan.id_inventaris_ruangan, sarpras yg diajukan pengadaan (salah satu)');
-            $table->float('harga_satuan_rpb_sarpras', 10, 0)->nullable();
+            $table->decimal('harga_satuan_rpb_sarpras', 10, 0)->nullable();
             $table->integer('qty_rpb_sarpras')->nullable();
             $table->date('tgl_rpb_sarpras')->nullable();
             $table->boolean('prioritas_rpb_sarpras')->nullable()->comment('1 = Rendah; 2 = Sedang; 3 = Tinggi;');

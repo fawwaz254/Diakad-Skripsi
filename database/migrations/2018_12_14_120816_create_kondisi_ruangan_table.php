@@ -18,7 +18,7 @@ class CreateKondisiRuanganTable extends Migration {
 			$table->string('id_kondisi_ruangan', 40)->primary();
 			$table->string('id_ruangan', 40)->comment('FK: ruangan.id_ruangan');
 			$table->boolean('id_kerusakan_ruangan')->comment('FK: kerusakan_ruangan.id_kerusakan_ruangan');
-			$table->float('persentase_kerusakan_ruangan', 10, 0)->nullable();
+			$table->decimal('persentase_kerusakan_ruangan', 10, 0)->nullable();
 			$table->string('keterangan_kerusakan_ruangan', 64)->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

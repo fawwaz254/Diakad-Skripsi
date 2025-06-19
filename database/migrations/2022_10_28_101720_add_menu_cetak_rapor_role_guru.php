@@ -15,15 +15,15 @@ class AddMenuCetakRaporRoleGuru extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Wali Kelas')->where('id_role', '2')->first();
+        // $modul = Modul::where('nm_modul', 'Wali Kelas')->where('id_role', '2')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Cetak Rapor Siswa';
-        $menu->page = 'cetak-rapor-siswa';
-        $menu->urutan = 13;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Cetak Rapor Siswa';
+        // $menu->page = 'cetak-rapor-siswa';
+        // $menu->urutan = 13;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

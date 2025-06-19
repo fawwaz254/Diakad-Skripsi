@@ -16,15 +16,15 @@ class AddMenuUpdateFotoInRoleSumberData extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Data Sumber Daya')->where('id_role', '8')->first();
+        // $modul = Modul::where('nm_modul', 'Data Sumber Daya')->where('id_role', '8')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Update Foto';
-        $menu->page = 'update-foto';
-        $menu->urutan = 5;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Update Foto';
+        // $menu->page = 'update-foto';
+        // $menu->urutan = 5;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

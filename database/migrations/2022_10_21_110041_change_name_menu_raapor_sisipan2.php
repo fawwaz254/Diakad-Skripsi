@@ -15,22 +15,22 @@ class ChangeNameMenuRaaporSisipan2 extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_role', 2)->where('nm_modul', 'Rapor Sisipan')->first();
+        // $modul = Modul::where('id_role', 2)->where('nm_modul', 'Rapor Sisipan')->first();
 
-        $modul->menus()->where('nm_menu', 'Daftar Nilai UTS')->update([
-            "nm_menu" => "Daftar Nilai Tengah Semester"
-        ]);
-        $modul->menus()->where('nm_menu', 'Daftar Nilai UAS')->update([
-            "nm_menu" => "Daftar Nilai Akhir Semester"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Daftar Nilai UTS')->update([
+        //     "nm_menu" => "Daftar Nilai Tengah Semester"
+        // ]);
+        // $modul->menus()->where('nm_menu', 'Daftar Nilai UAS')->update([
+        //     "nm_menu" => "Daftar Nilai Akhir Semester"
+        // ]);
 
-        $modul2 = Modul::where('id_role', 7)->where('nm_modul', 'Rapor Sisipan')->first();
-        $modul2->menus()->where('nm_menu', 'Daftar Nilai UTS')->update([
-            "nm_menu" => "Daftar Nilai Tengah Semester"
-        ]);
-        $modul2->menus()->where('nm_menu', 'Daftar Nilai UAS')->update([
-            "nm_menu" => "Daftar Nilai Akhir Semester"
-        ]);
+        // $modul2 = Modul::where('id_role', 7)->where('nm_modul', 'Rapor Sisipan')->first();
+        // $modul2->menus()->where('nm_menu', 'Daftar Nilai UTS')->update([
+        //     "nm_menu" => "Daftar Nilai Tengah Semester"
+        // ]);
+        // $modul2->menus()->where('nm_menu', 'Daftar Nilai UAS')->update([
+        //     "nm_menu" => "Daftar Nilai Akhir Semester"
+        // ]);
     }
 
     /**

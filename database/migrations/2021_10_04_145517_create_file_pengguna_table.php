@@ -20,7 +20,7 @@ class CreateFilePenggunaTable extends Migration
             $table->string('link_file', 150);
             $table->text('judul');
             $table->text('keterangan');
-            $table->tinyInteger('is_google_drive');
+            $table->integer('is_google_drive');
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

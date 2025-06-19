@@ -15,14 +15,14 @@ class MoveMagangSiswaRolePendidikanToHumas extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Magang Siswa')->where('id_role', 1)->first();
-        $modul->id_role      = 19;
-        $modul->urutan       = 2;
-        $modul->save();
+        // $modul = Modul::where('nm_modul', 'Magang Siswa')->where('id_role', 1)->first();
+        // $modul->id_role      = 19;
+        // $modul->urutan       = 2;
+        // $modul->save();
 
-        $modul = Modul::where('nm_modul', 'Alumni')->where('id_role', 19)->first();
-        $modul->urutan       = 3;
-        $modul->save();
+        // $modul = Modul::where('nm_modul', 'Alumni')->where('id_role', 19)->first();
+        // $modul->urutan       = 3;
+        // $modul->save();
     }
 
     /**

@@ -16,10 +16,10 @@ class AddingRouteOnMenuUpdateFotoModulSiswaKesiswaan extends Migration
      */
     public function up()
     {
-        $menu = Menu::find(243);
-        $menu->page = 'update-foto';
-        $menu->updated_at = Carbon::now();
-        $menu->save();
+        // $menu = Menu::find(243);
+        // $menu->page = 'update-foto';
+        // $menu->updated_at = Carbon::now();
+        // $menu->save();
     }
 
     /**

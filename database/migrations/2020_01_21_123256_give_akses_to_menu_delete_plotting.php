@@ -15,9 +15,9 @@ class GiveAksesToMenuDeletePlotting extends Migration
      */
     public function up()
     {
-        $menu = Menu::find(260);
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = Menu::find(260);
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

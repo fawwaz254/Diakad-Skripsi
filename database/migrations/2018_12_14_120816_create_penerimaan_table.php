@@ -28,7 +28,7 @@ class CreatePenerimaanTable extends Migration {
 			$table->date('tgl_awal_verifikasi')->nullable();
 			$table->date('tgl_akhir_verifikasi')->nullable();
 			$table->date('tgl_penetapan')->nullable();
-			$table->dateTime('tgl_pengumuman')->nullable();
+			$table->timestamp('tgl_pengumuman')->nullable();
 			$table->date('tgl_awal_voucher')->nullable()->comment('tgl pembukaan voucher online');
 			$table->date('tgl_akhir_voucher')->nullable()->comment('tgl penutupan voucher online');
 			$table->boolean('is_pendaftaran_online')->nullable()->comment('0 = offline; 1 = online');

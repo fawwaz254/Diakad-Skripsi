@@ -21,29 +21,29 @@ class AddSomeMenuModulMonitoringRoleAkademik extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Monitoring')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Monitoring')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Monitoring Kelas Kosong",
-                "page"         => "monitoring-kelas-kosong",
-                "urutan"       => 3,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Monitoring Kelas Kosong",
+        //         "page"         => "monitoring-kelas-kosong",
+        //         "urutan"       => 3,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Rekap Monitoring Kelas Kosong",
-                "page"         => "rekap-monitoring-kelas-kosong",
-                "urutan"       => 4,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Rekap Monitoring Kelas Kosong",
+        //         "page"         => "rekap-monitoring-kelas-kosong",
+        //         "urutan"       => 4,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

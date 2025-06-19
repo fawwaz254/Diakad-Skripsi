@@ -14,7 +14,7 @@ class ChangeTglPengeluaranBiayaTablePengeluaranBiaya extends Migration
     public function up()
     {
         Schema::table('pengeluaran_biaya', function (Blueprint $table) {
-            $table->dateTime('tgl_pengeluaran_biaya')->nullable()->change();
+            $table->timestamp('tgl_pengeluaran_biaya')->nullable()->change();
         });
     }
 

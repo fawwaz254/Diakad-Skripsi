@@ -21,7 +21,7 @@ class CreateTableNotifikasiPengguna extends Migration
 			$table->string('id_sekolah', 40)->comment('FK: sekolah.id_sekolah');
 			$table->string('isi_notifikasi', 512)->nullable()->comment('Isi notifikasi');
 			$table->string('link_url', 512)->nullable()->comment('Link redirect apabila notifikasi diklik (Hanya untuk website)');
-            $table->tinyInteger('status')->default('1')->comment('Status dibaca, 1: belum dibaca; 0: sudah dibaca;');
+            $table->integer('status')->default('1')->comment('Status dibaca, 1: belum dibaca; 0: sudah dibaca;');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
 		});

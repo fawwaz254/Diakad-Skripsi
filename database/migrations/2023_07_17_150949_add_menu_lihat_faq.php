@@ -16,15 +16,15 @@ class AddMenuLihatFaq extends Migration
      */
     public function up()
     {
-        $role = Role::where('path','guru')->first();
-        $modul = Modul::where('id_role',$role->id_role)->where('route','faq')->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Lihat FAQ';
-        $menu->page = 'lihat-faq';
-        $menu->urutan = 1;
-        $menu->akses = 1;
-        $menu->save();
+        // $role = Role::where('path','guru')->first();
+        // $modul = Modul::where('id_role',$role->id_role)->where('route','faq')->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Lihat FAQ';
+        // $menu->page = 'lihat-faq';
+        // $menu->urutan = 1;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

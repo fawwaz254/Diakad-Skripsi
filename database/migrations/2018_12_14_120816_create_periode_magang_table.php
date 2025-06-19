@@ -20,7 +20,7 @@ class CreatePeriodeMagangTable extends Migration {
 			$table->string('id_semester', 40)->comment('FK: semester.id_semester');
 			$table->string('nm_periode_magang', 64)->nullable();
 			$table->string('nomor_sk_periode_magang', 64)->nullable();
-			$table->float('besar_biaya', 10, 0)->nullable();
+			$table->decimal('besar_biaya', 10, 0)->nullable();
 			$table->date('tgl_magang_mulai')->nullable();
 			$table->date('tgl_magang_selesai')->nullable();
 			$table->boolean('is_aktif')->nullable()->comment('0 = tidak aktif; 1 = aktif;');

@@ -16,17 +16,17 @@ class CreateMenuAbsensiMagangInWaliMuridModulKesiswaan extends Migration
      */
     public function up()
     {
-        $sekolah_now = Sekolah::first();
-        if(str_contains($sekolah_now->nm_sekolah,'SMK')){
-            $modul = Modul::where('nm_modul', 'Kesiswaan')->where('id_role',4)->first();
-            $menu1 = new Menu();
-            $menu1->id_modul = $modul->id_modul;
-            $menu1->nm_menu = 'Presensi Magang';
-            $menu1->page = 'absensi-magang';
-            $menu1->urutan = 6;
-            $menu1->akses = 1;
-            $menu1->save();
-        }
+        // $sekolah_now = Sekolah::first();
+        // if(str_contains($sekolah_now->nm_sekolah,'SMK')){
+        //     $modul = Modul::where('nm_modul', 'Kesiswaan')->where('id_role',4)->first();
+        //     $menu1 = new Menu();
+        //     $menu1->id_modul = $modul->id_modul;
+        //     $menu1->nm_menu = 'Presensi Magang';
+        //     $menu1->page = 'absensi-magang';
+        //     $menu1->urutan = 6;
+        //     $menu1->akses = 1;
+        //     $menu1->save();
+        // }
     }
 
     /**

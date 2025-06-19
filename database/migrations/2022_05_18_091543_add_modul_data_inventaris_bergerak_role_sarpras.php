@@ -22,26 +22,26 @@ class AddModulDataInventarisBergerakRoleSarpras extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Sarana Prasarana')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Sarana Prasarana')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "Data Inventaris Bergerak",
-            "route"         => "data-inventaris-bergerak",
-            "urutan"        => 4,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "Data Inventaris Bergerak",
+        //     "route"         => "data-inventaris-bergerak",
+        //     "urutan"        => 4,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Data Inventaris",
-                "page"         => "data-inventaris",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Data Inventaris",
+        //         "page"         => "data-inventaris",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

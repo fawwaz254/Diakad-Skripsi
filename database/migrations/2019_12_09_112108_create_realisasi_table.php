@@ -24,7 +24,7 @@ class CreateRealisasiTable extends Migration
             $table->string('id_ket_subkategori_rapb', 40)->nullable()->comment('FK: ket_subkategori_rapb.id_ket_subkategori_rapb, diisi ketika dibutuhkan keterangan tambahan subkategori rapb');
             $table->boolean('termin_dana_realisasi')->nullable()->default(1);
             $table->boolean('is_hutang_realisasi')->nullable()->default(0)->comment('0 = Realisasi Sudah Lunas/Realisasi Tanpa Termin; 1 = Masih Terdapat Hutang Realisasi;');
-            $table->float('dana_realisasi', 10, 0)->nullable();
+            $table->decimal('dana_realisasi', 10, 0)->nullable();
             $table->date('tgl_realisasi')->nullable();
             $table->string('id_pengguna_cek_keuangan', 40)->nullable()->comment('FK: pengguna.id_pengguna, staf keuangan yg melakukan cek Realisasi');
             $table->string('id_pengguna_kepala_keuangan', 40)->nullable()->comment('FK: pengguna.id_pengguna, kepala keuangan yg melakukan approve Realisasi');

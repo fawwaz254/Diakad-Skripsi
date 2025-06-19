@@ -14,7 +14,7 @@ class AddTahunBeasiswaTableCalonSiswaBaru extends Migration
     public function up()
     {
         Schema::table('calon_siswa_baru', function (Blueprint $table) {
-            $table->tinyInteger('thn_penerima_kps')->after('is_penerima_kps')->nullable();
+            $table->integer('thn_penerima_kps')->after('is_penerima_kps')->nullable();
         });
     }
 

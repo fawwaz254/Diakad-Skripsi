@@ -14,7 +14,7 @@ class AddColoumInTableLaporanKerjaHarian extends Migration
     public function up()
     {
         Schema::table('laporan_kerja_harian', function($table) {
-            $table->tinyInteger('kesesuaian_program_98')->nullable()->after('uraian_kegiatan');
+            $table->integer('kesesuaian_program_98')->nullable()->after('uraian_kegiatan');
             $table->string('hasil')->nullable()->after('uraian_kegiatan');
         });
 

@@ -22,10 +22,10 @@ class AddDbMenuDataPenetapanModulPenetapanRolePpdb extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(166);
-        $menu->page         = "data-penetapan";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(166);
+        // $menu->page         = "data-penetapan";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**

@@ -15,9 +15,9 @@ class ChangeMenuPembukaanVoucher extends Migration
      */
     public function up()
     {
-        $menu                   = Menu::find(163);
-        $menu->nm_menu          = 'Pembukaan Nomor Pendaftaran';
-        $menu->save();
+        // $menu                   = Menu::find(163);
+        // $menu->nm_menu          = 'Pembukaan Nomor Pendaftaran';
+        // $menu->save();
     }
 
     /**

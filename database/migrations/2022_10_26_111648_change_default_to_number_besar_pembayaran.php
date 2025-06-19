@@ -13,7 +13,7 @@ class ChangeDefaultToNumberBesarPembayaran extends Migration
     public function up()
     {
         Schema::table('tagihan_biaya', function ($table) {
-            $table->float('besar_pembayaran')->default('0')->change();
+            $table->decimal('besar_pembayaran', 10, 0)->default('0')->change();
         });
     }
 

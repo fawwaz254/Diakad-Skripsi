@@ -24,8 +24,8 @@ class CreateRaporSiswaTable extends Migration {
 			$table->integer('jumlah_tanpa_keterangan')->nullable()->comment('kategori KETIDAKHADIRAN');
 			$table->string('id_prestasi_siswa', 40)->nullable()->comment('kategori PRESTASI');
 			$table->text('deskripsi_catatan_wali_kelas', 65535)->nullable()->comment('kategori CATATAN_WALI_KELAS');
-			$table->float('nilai_kkm', 10, 0)->nullable()->comment('diisi ketika join id_rapor_deskripsi dan hanya id_rapor_kelompok_mp yg not null');
-			$table->float('nilai_angka', 10, 0)->nullable()->comment('diisi ketika join id_rapor_deskripsi dan hanya id_rapor_kelompok_mp yg not null');
+			$table->decimal('nilai_kkm', 10, 0)->nullable()->comment('diisi ketika join id_rapor_deskripsi dan hanya id_rapor_kelompok_mp yg not null');
+			$table->decimal('nilai_angka', 10, 0)->nullable()->comment('diisi ketika join id_rapor_deskripsi dan hanya id_rapor_kelompok_mp yg not null');
 			$table->string('nilai_huruf', 3)->nullable()->comment('diisi ketika join id_rapor_deskripsi dan hanya id_rapor_kelompok_mp yg not null');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

@@ -17,7 +17,7 @@ class CreateMateriAjarTable extends Migration
             $table->engine = 'InnoDB';
             $table->string('id_materi_ajar', 40)->primary();
             $table->text('judul_materi');
-            $table->tinyInteger('status');
+            $table->integer('status');
             $table->string('id_guru', 40)->comment('FK: guru.id_guru');
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

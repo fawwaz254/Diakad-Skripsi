@@ -19,7 +19,7 @@ class CreatePeriodeWisudaTable extends Migration {
 			$table->string('id_wisuda', 40)->comment('FK: wisuda.id_wisuda');
 			$table->string('id_semester', 40)->comment('FK: semester.id_semester');
 			$table->string('nm_periode_wisuda', 64)->nullable();
-			$table->float('besar_biaya', 10, 0)->nullable();
+			$table->decimal('besar_biaya', 10, 0)->nullable();
 			$table->date('tgl_bayar_mulai')->nullable();
 			$table->date('tgl_bayar_selesai')->nullable();
 			$table->boolean('is_aktif')->nullable()->comment('0 = tidak aktif; 1 = aktif;');

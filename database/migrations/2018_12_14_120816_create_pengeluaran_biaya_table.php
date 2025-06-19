@@ -20,7 +20,7 @@ class CreatePengeluaranBiayaTable extends Migration {
 			$table->string('id_semester', 40)->comment('FK: semester.id_semester');
 			$table->string('id_staff', 40)->comment('FK: staff.id_staff (staff yg melakukan input pengeluaran)');
 			$table->date('tgl_pengeluaran_biaya')->nullable();
-			$table->float('besar_pengeluaran_biaya', 10, 0)->nullable();
+			$table->decimal('besar_pengeluaran_biaya', 10, 0)->nullable();
 			$table->boolean('is_upload_file')->nullable()->comment('0 = tidak upload file; 1 = ada upload file;');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

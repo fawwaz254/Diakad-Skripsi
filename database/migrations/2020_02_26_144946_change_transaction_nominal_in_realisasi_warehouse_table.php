@@ -14,7 +14,7 @@ class ChangeTransactionNominalInRealisasiWarehouseTable extends Migration
     public function up()
     {
         Schema::table('realisasi_warehouses', function (Blueprint $table) {
-            $table->float('transaction_nominal', 10, 0)->nullable()->change();
+            $table->decimal('transaction_nominal', 10, 0)->nullable()->change();
         });
     }
 

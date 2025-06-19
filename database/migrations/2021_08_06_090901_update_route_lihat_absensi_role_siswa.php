@@ -18,13 +18,13 @@ class UpdateRouteLihatAbsensiRoleSiswa extends Migration
     public function up()
     {
         
-        $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Akademik')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Akademik')->first();
 
-        $modul->menus()->where('nm_menu', 'Lihat Absensi')->update([
-            "page" => "lihat-absensi"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Lihat Absensi')->update([
+        //     "page" => "lihat-absensi"
+        // ]);
 
     }
 

@@ -15,9 +15,9 @@ class AddingUpdateMenuInputJadwalRoleGuru extends Migration
      */
     public function up()
     {
-        $menu = Menu::find(255);
-        $menu->id_modul = 9;
-        $menu->save();
+        // $menu = Menu::find(255);
+        // $menu->id_modul = 9;
+        // $menu->save();
     }
 
     /**

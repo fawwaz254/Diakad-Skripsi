@@ -20,7 +20,7 @@ class CreateModulTable extends Migration {
 			$table->string('nm_modul', 32)->nullable();
 			$table->string('route', 64)->nullable();
 			$table->string('page', 64)->nullable();
-			$table->boolean('urutan')->nullable();
+			$table->integer('urutan')->nullable();
 			$table->boolean('akses')->nullable()->default(0)->comment('Default Akses');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

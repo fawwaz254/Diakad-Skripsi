@@ -15,9 +15,9 @@ class AddRouteInModulReportRolePpdb extends Migration
     public function up()
     {
         //
-        $modul = Modul::find(42);
-        $modul->route = 'report';
-        $modul->save();
+        // $modul = Modul::find(42);
+        // $modul->route = 'report';
+        // $modul->save();
     }
 
     /**

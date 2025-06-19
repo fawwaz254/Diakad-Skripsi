@@ -18,7 +18,7 @@ class CreateKomponenMpTable extends Migration {
 			$table->string('id_komponen_mp', 40)->primary();
 			$table->string('id_kelas_mp', 40)->comment('FK: kelas_mp.id_kelas_mp');
 			$table->string('nm_komponen_mp', 32)->nullable();
-			$table->float('persentase_komponen_mp', 10, 0)->nullable();
+			$table->decimal('persentase_komponen_mp', 10, 0)->nullable();
 			$table->boolean('urutan_komponen_mp')->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

@@ -15,19 +15,19 @@ class AddMenuAktivitasRewardSayaInRewardSiswaRoleSiswa extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Reward Siswa')->where('id_role', 3)->first();
+        // $modul = Modul::where('nm_modul', 'Reward Siswa')->where('id_role', 3)->first();
 
-        if ($modul) {
-            $menu = new Menu();
-            $menu->id_modul = $modul->id_modul;
-            $menu->nm_menu = 'Aktivitas Reward Saya';
-            $menu->page = 'aktivitas-reward-saya';
-            $menu->urutan = 2;
-            $menu->akses = 1;
-            $menu->save();
-        } else {
-            throw new \Exception("Modul 'Reward Siswa' untuk role 3 tidak ditemukan");
-        }
+        // if ($modul) {
+        //     $menu = new Menu();
+        //     $menu->id_modul = $modul->id_modul;
+        //     $menu->nm_menu = 'Aktivitas Reward Saya';
+        //     $menu->page = 'aktivitas-reward-saya';
+        //     $menu->urutan = 2;
+        //     $menu->akses = 1;
+        //     $menu->save();
+        // } else {
+        //     throw new \Exception("Modul 'Reward Siswa' untuk role 3 tidak ditemukan");
+        // }
     }
 
     /**
@@ -37,12 +37,12 @@ class AddMenuAktivitasRewardSayaInRewardSiswaRoleSiswa extends Migration
      */
     public function down()
     {
-        $modul = Modul::where('nm_modul', 'Reward Siswa')->where('id_role', 3)->first();
+        // $modul = Modul::where('nm_modul', 'Reward Siswa')->where('id_role', 3)->first();
 
-        if ($modul) {
-            Menu::where('id_modul', $modul->id_modul)
-                ->where('nm_menu', 'Aktivitas Reward Saya')
-                ->delete();
-        }
+        // if ($modul) {
+        //     Menu::where('id_modul', $modul->id_modul)
+        //         ->where('nm_menu', 'Aktivitas Reward Saya')
+        //         ->delete();
+        // }
     }
 }

@@ -17,28 +17,28 @@ class AddDataKelompokPribadiSisipan extends Migration
      */
     public function up()
     {
-        $now = Carbon::now();
-        $sekolah = Sekolah::first();
-        $kelompok_pribadi_sisipan = new KelompokPribadiSisipan;
-        $kelompok_pribadi_sisipan->id_kelompok_pribadi_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_pribadi_sisipan->nm_kelompok_pribadi_sisipan = 'Kepribadian';
-        $kelompok_pribadi_sisipan->urutan = '1';
-        $kelompok_pribadi_sisipan->save();
-        $kelompok_pribadi_sisipan = null;
+        // $now = Carbon::now();
+        // $sekolah = Sekolah::first();
+        // $kelompok_pribadi_sisipan = new KelompokPribadiSisipan;
+        // $kelompok_pribadi_sisipan->id_kelompok_pribadi_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_pribadi_sisipan->nm_kelompok_pribadi_sisipan = 'Kepribadian';
+        // $kelompok_pribadi_sisipan->urutan = '1';
+        // $kelompok_pribadi_sisipan->save();
+        // $kelompok_pribadi_sisipan = null;
 
-        $kelompok_pribadi_sisipan = new KelompokPribadiSisipan;
-        $kelompok_pribadi_sisipan->id_kelompok_pribadi_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_pribadi_sisipan->nm_kelompok_pribadi_sisipan = 'Ketidak Hadiran';
-        $kelompok_pribadi_sisipan->urutan = '2';
-        $kelompok_pribadi_sisipan->save();
-        $kelompok_pribadi_sisipan = null;
+        // $kelompok_pribadi_sisipan = new KelompokPribadiSisipan;
+        // $kelompok_pribadi_sisipan->id_kelompok_pribadi_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_pribadi_sisipan->nm_kelompok_pribadi_sisipan = 'Ketidak Hadiran';
+        // $kelompok_pribadi_sisipan->urutan = '2';
+        // $kelompok_pribadi_sisipan->save();
+        // $kelompok_pribadi_sisipan = null;
 
-        $kelompok_pribadi_sisipan = new KelompokPribadiSisipan;
-        $kelompok_pribadi_sisipan->id_kelompok_pribadi_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_pribadi_sisipan->nm_kelompok_pribadi_sisipan = 'Ekstra Kurikuler';
-        $kelompok_pribadi_sisipan->urutan = '3';
-        $kelompok_pribadi_sisipan->save();
-        $kelompok_pribadi_sisipan = null;
+        // $kelompok_pribadi_sisipan = new KelompokPribadiSisipan;
+        // $kelompok_pribadi_sisipan->id_kelompok_pribadi_sisipan = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_pribadi_sisipan->nm_kelompok_pribadi_sisipan = 'Ekstra Kurikuler';
+        // $kelompok_pribadi_sisipan->urutan = '3';
+        // $kelompok_pribadi_sisipan->save();
+        // $kelompok_pribadi_sisipan = null;
     }
 
     /**

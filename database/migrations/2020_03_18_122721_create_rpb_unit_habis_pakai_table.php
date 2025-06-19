@@ -19,7 +19,7 @@ class CreateRpbUnitHabisPakaiTable extends Migration
             $table->string('id_semester', 40)->comment('FK: semester.id_semester');
             $table->string('id_unit_kerja', 40)->comment('FK: unit_kerja.id_unit_kerja');
             $table->string('id_inventaris_habis_pakai', 40)->comment('FK: inventaris_habis_pakai.id_inventaris_habis_pakai');
-            $table->float('harga_satuan', 10, 0)->nullable()->comment('diisi oleh sistem berdasarkan harga terbaru tabel inventaris_habis_pakai');
+            $table->decimal('harga_satuan', 10, 0)->nullable()->comment('diisi oleh sistem berdasarkan harga terbaru tabel inventaris_habis_pakai');
             $table->integer('qty')->nullable();
             $table->date('tgl_rpb_unit_habis_pakai')->nullable();
             $table->boolean('prioritas')->nullable()->comment('1 = Rendah; 2 = Sedang; 3 = Tinggi;');

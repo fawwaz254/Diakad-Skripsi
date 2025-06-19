@@ -16,15 +16,15 @@ class AddMenuAbsensiQrcode extends Migration
      */
     public function up()
     {
-        $role = Role::where('path','guru')->first();
-        $modul = Modul::where('id_role',$role->id_role)->where('nm_modul','Presensi Kelas')->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Absensi Kode QR';
-        $menu->page = 'absensi-kode-qr';
-        $menu->urutan = 5;
-        $menu->akses = 1;
-        $menu->save();
+        // $role = Role::where('path','guru')->first();
+        // $modul = Modul::where('id_role',$role->id_role)->where('nm_modul','Presensi Kelas')->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Absensi Kode QR';
+        // $menu->page = 'absensi-kode-qr';
+        // $menu->urutan = 5;
+        // $menu->akses = 1;
+        // $menu->save();
 
         //
     }

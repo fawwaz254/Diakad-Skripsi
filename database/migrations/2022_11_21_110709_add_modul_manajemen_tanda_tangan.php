@@ -19,16 +19,16 @@ class AddModulManajemenTandaTangan extends Migration
         //
         $now = Carbon::now();
 
-        $id_role = Role::where('id_role', 14)->first()->id_role;
+        // $id_role = Role::where('id_role', 14)->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $id_role,
-            "nm_modul"      => "Manajemen Tanda Tangan",
-            "route"         => "manajemen-tanda-tangan",
-            "urutan"        => 3,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $id_role,
+        //     "nm_modul"      => "Manajemen Tanda Tangan",
+        //     "route"         => "manajemen-tanda-tangan",
+        //     "urutan"        => 3,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
     }
 
     /**

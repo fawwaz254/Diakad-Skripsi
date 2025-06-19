@@ -14,18 +14,18 @@ class HideModulKesehatan extends Migration
      */
     public function up()
     {
-        $menu1 = Menu::where('nm_menu', 'Rekap Kesehatan Guru/Tendik')->get();
-        $menu2 = Menu::where('nm_menu', 'Mengisi form kesehatan')->get();
+        // $menu1 = Menu::where('nm_menu', 'Rekap Kesehatan Guru/Tendik')->get();
+        // $menu2 = Menu::where('nm_menu', 'Mengisi form kesehatan')->get();
 
-        foreach ($menu1 as $menu) {
-            $menu->akses = 0;
-            $menu->save();
-        }
+        // foreach ($menu1 as $menu) {
+        //     $menu->akses = 0;
+        //     $menu->save();
+        // }
 
-        foreach ($menu2 as $menu) {
-            $menu->akses = 0;
-            $menu->save();
-        }
+        // foreach ($menu2 as $menu) {
+        //     $menu->akses = 0;
+        //     $menu->save();
+        // }
     }
 
     /**

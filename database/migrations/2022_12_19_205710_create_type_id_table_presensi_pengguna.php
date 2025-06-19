@@ -15,13 +15,13 @@ class CreateTypeIdTablePresensiPengguna extends Migration
      */
     public function up()
     {
-        $sekolah =  Sekolah::first();
-        if ($sekolah->nm_singkat_sekolah == "smkypm2" || $sekolah->nm_singkat_sekolah == "smkypm3taman") {
+        // $sekolah =  Sekolah::first();
+        // if ($sekolah->nm_singkat_sekolah == "smkypm2" || $sekolah->nm_singkat_sekolah == "smkypm3taman") {
 
-            Schema::table('presensi_pengguna', function ($table) {
-                $table->integer('id_presensi_pengguna', true)->change();
-            });
-        }
+        //     Schema::table('presensi_pengguna', function ($table) {
+        //         $table->integer('id_presensi_pengguna', true)->change();
+        //     });
+        // }
     }
 
     /**

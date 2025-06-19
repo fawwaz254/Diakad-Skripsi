@@ -14,13 +14,13 @@ class RemoveLaporanWaliKelasOtherRole2 extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_role', 5)->where('nm_modul', 'Laporan')->first();
-        $modul->update([
-            "akses" => 0
-        ]);
-        $modul1 = Modul::where('id_role', 15)->where('nm_modul', 'Laporan')->first();
-        $modul1->update([
-            "akses" => 0 ]);
+        // $modul = Modul::where('id_role', 5)->where('nm_modul', 'Laporan')->first();
+        // $modul->update([
+        //     "akses" => 0
+        // ]);
+        // $modul1 = Modul::where('id_role', 15)->where('nm_modul', 'Laporan')->first();
+        // $modul1->update([
+        //     "akses" => 0 ]);
     }
 
     /**

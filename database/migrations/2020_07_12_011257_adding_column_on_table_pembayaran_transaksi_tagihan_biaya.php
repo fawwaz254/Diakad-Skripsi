@@ -16,7 +16,7 @@ class AddingColumnOnTablePembayaranTransaksiTagihanBiaya extends Migration
         Schema::table('pembayaran_transaksi', function (Blueprint $table) {
             $table->string('payment_channel', 64)->after('token')->nullable();
             $table->string('payment_code', 64)->after('payment_channel')->nullable();
-            $table->double('fee_admin')->after('payment_code')->nullable();
+            $table->decimal('fee_admin', 10, 2)->after('payment_code')->nullable();
         });
 
         Schema::table('tagihan_biaya', function (Blueprint $table) {

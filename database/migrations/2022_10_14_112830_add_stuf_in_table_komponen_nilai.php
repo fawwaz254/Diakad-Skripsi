@@ -14,7 +14,7 @@ class AddStufInTableKomponenNilai extends Migration
     public function up()
     {
         Schema::table('komponen_nilai_rapor_sisipan', function($table) {
-            $table->tinyInteger('status')->nullable()->after('urutan');
+            $table->integer('status')->nullable()->after('urutan');
             $table->string('type', 64)->nullable()->after('urutan');
         });
     }

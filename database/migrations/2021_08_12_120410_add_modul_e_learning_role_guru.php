@@ -22,26 +22,26 @@ class AddModulELearningRoleGuru extends Migration
 
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "E-Learning",
-            "route"         => "e-learning",
-            "urutan"        => 2,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "E-Learning",
+        //     "route"         => "e-learning",
+        //     "urutan"        => 2,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Manajemen Materi Ajar",
-                "page"         => "manajemen-materi-ajar",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Manajemen Materi Ajar",
+        //         "page"         => "manajemen-materi-ajar",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

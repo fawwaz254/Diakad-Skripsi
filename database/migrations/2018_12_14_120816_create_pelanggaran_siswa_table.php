@@ -20,7 +20,7 @@ class CreatePelanggaranSiswaTable extends Migration {
 			$table->string('id_guru_input', 40)->nullable()->comment('FK: guru.id_guru (guru yg melakukan input pelanggaran) >> null apabila yg input adalah staff');
 			$table->string('catatan_pelanggaran', 256)->nullable();
 			$table->string('catatan_pelanggaran_khusus', 256)->nullable()->comment('private konseling dari individu BK (tidak dapat diakses oleh aktor yg lain)');
-			$table->dateTime('tgl_pelanggaran')->nullable();
+			$table->timestamp('tgl_pelanggaran')->nullable();
 			$table->boolean('aktor_input_pelanggaran')->nullable()->comment('1 = Role BK; 2 = Role Kesiswaan; 3 = Wali Kelas; (Guru Mapel ada di tabel presensi_mp_pelanggaran)');
 			$table->boolean('is_sudah_tindakan')->nullable()->comment('0 = belum ada tindakan; 1 = sudah ada tindakan;');
 			$table->timestamps();

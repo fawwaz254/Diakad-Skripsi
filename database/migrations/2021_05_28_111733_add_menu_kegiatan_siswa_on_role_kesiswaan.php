@@ -21,19 +21,19 @@ class AddMenuKegiatanSiswaOnRoleKesiswaan extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Data Kesiswaan')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Data Kesiswaan')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Kegiatan Siswa",
-                "page"         => "kegiatan-siswa",
-                "urutan"       => 7,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Kegiatan Siswa",
+        //         "page"         => "kegiatan-siswa",
+        //         "urutan"       => 7,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

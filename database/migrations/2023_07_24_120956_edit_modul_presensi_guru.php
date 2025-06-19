@@ -15,17 +15,17 @@ class EditModulPresensiGuru extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('route','presensi')->where('id_role',2)->first();
-        $modul->nm_modul = 'Presensi Kelas';
-        $modul->save();
+        // $modul = Modul::where('route','presensi')->where('id_role',2)->first();
+        // $modul->nm_modul = 'Presensi Kelas';
+        // $modul->save();
 
-        $menu1 = Menu::where('id_modul',$modul->id_modul)->where('page','absensi-siswa')->first();
-        $menu1->nm_menu = 'Absensi Siswa Kelas';
-        $menu1->save();
+        // $menu1 = Menu::where('id_modul',$modul->id_modul)->where('page','absensi-siswa')->first();
+        // $menu1->nm_menu = 'Absensi Siswa Kelas';
+        // $menu1->save();
 
-        $menu2 = Menu::where('id_modul',$modul->id_modul)->where('page','rekap-absen')->first();
-        $menu2->nm_menu = 'Rekap Absen Kelas';
-        $menu2->save();
+        // $menu2 = Menu::where('id_modul',$modul->id_modul)->where('page','rekap-absen')->first();
+        // $menu2->nm_menu = 'Rekap Absen Kelas';
+        // $menu2->save();
         
     }
 

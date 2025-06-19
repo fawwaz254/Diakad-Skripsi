@@ -18,19 +18,19 @@ class CreateMenuCustomFormRekapInFormBuilderModul extends Migration
     {
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Form Builder')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Form Builder')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Rekap Custom Form",
-                "page"         => "form-rekap",
-                "urutan"       => 5,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Rekap Custom Form",
+        //         "page"         => "form-rekap",
+        //         "urutan"       => 5,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

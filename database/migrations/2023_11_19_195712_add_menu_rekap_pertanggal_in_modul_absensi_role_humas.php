@@ -15,14 +15,14 @@ class AddMenuRekapPertanggalInModulAbsensiRoleHumas extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Absensi')->where('id_role', 19)->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Rekap PerTanggal';
-        $menu->page = 'rekap-pertanggal';
-        $menu->urutan = 6;
-        $menu->akses = 1;
-        $menu->save();
+        // $modul = Modul::where('nm_modul', 'Absensi')->where('id_role', 19)->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Rekap PerTanggal';
+        // $menu->page = 'rekap-pertanggal';
+        // $menu->urutan = 6;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

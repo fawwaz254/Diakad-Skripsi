@@ -23,33 +23,33 @@ class AddingModulSkpiAndMenuRoleSiswa extends Migration
 
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "SKPI",
-            "route"         => "skpi",
-            "urutan"        => 1,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "SKPI",
+        //     "route"         => "skpi",
+        //     "urutan"        => 1,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Data Kegiatan Siswa",
-                "page"         => "data-kegiatan-siswa",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-            [
-                "nm_menu"      => "Data Prestasi Siswa",
-                "page"         => "data-prestasi-siswa",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Data Kegiatan Siswa",
+        //         "page"         => "data-kegiatan-siswa",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        //     [
+        //         "nm_menu"      => "Data Prestasi Siswa",
+        //         "page"         => "data-prestasi-siswa",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

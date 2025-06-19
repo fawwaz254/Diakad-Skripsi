@@ -14,7 +14,7 @@ class AddColumnStatusVerifikasiTableAlumni extends Migration
     public function up()
     {
         Schema::table('alumni', function (Blueprint $table) {
-            $table->tinyInteger('status_verifikasi')->default('1')->after('status');
+            $table->integer('status_verifikasi')->default('1')->after('status');
         });
     }
 

@@ -16,8 +16,8 @@ class CreatePotonganBiayaTable extends Migration
         Schema::create('potongan_biaya', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 			$table->string('id_potongan_biaya', 40)->primary();
-			$table->float('total_potongan', 10, 0)->nullable();
-			$table->dateTime('tanggal_potongan')->nullable();
+			$table->decimal('total_potongan', 10, 0)->nullable();
+			$table->timestamp('tanggal_potongan')->nullable();
 			$table->string('keterangan')->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
@@ -34,6 +34,6 @@ class CreatePotonganBiayaTable extends Migration
      */
     public function down()
     {
-        // 
+        //
     }
 }

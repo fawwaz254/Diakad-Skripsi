@@ -22,8 +22,8 @@ class CreateCalonSiswaSyaratTable extends Migration {
 			$table->string('nm_file_asli', 128)->nullable()->comment('nama file asli ketika di upload');
 			$table->boolean('is_verified')->nullable()->comment('0 = Belum Terverifikasi; 1 = Sudah Terverifikasi;');
 			$table->string('pesan_verifikator', 128)->nullable()->comment('keterangan dari verifikator');
-			$table->dateTime('tgl_valid_syarat')->nullable()->comment('tgl disetujui verifikator');
-			$table->dateTime('tgl_invalid_syarat')->nullable()->comment('tgl ditolak verifikator');
+			$table->timestamp('tgl_valid_syarat')->nullable()->comment('tgl disetujui verifikator');
+			$table->timestamp('tgl_invalid_syarat')->nullable()->comment('tgl ditolak verifikator');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
 			$table->string('updated_by', 40)->nullable();

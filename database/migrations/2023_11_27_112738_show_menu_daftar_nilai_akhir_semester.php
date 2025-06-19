@@ -14,11 +14,11 @@ class ShowMenuDaftarNilaiAkhirSemester extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('nm_menu', 'Daftar Nilai Akhir Semester')->get();
-        foreach ($menu as $m) {
-            $m->akses = '1';
-            $m->save();
-        }
+        // $menu = Menu::where('nm_menu', 'Daftar Nilai Akhir Semester')->get();
+        // foreach ($menu as $m) {
+        //     $m->akses = '1';
+        //     $m->save();
+        // }
     }
 
     /**

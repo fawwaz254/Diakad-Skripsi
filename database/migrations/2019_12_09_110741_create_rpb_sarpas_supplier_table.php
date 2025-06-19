@@ -18,11 +18,11 @@ class CreateRpbSarpasSupplierTable extends Migration
             $table->string('id_rpb_sarpras_supplier', 40)->primary();
             $table->string('id_rpb_sarpras', 40)->comment('FK: rpb_sarpras.id_rpb_sarpras');
             $table->string('id_supplier', 40)->comment('FK: supplier.id_suppplier');
-            $table->float('harga_supplier', 10, 0)->nullable();
-            $table->float('harga_penawaran', 10, 0)->nullable();
+            $table->decimal('harga_supplier', 10, 0)->nullable();
+            $table->decimal('harga_penawaran', 10, 0)->nullable();
             $table->integer('qty_penawaran')->nullable();
             $table->boolean('termin_penawaran')->nullable();
-            $table->float('harga_approve_supplier', 10, 0)->nullable();
+            $table->decimal('harga_approve_supplier', 10, 0)->nullable();
             $table->integer('qty_approve_supplier')->nullable();
             $table->boolean('termin_approve_supplier')->nullable();
             $table->boolean('is_approve')->nullable()->default(0)->comment('0 = Tidak Approve; 1 = Supplier yg dipilih utk Realisasi;');

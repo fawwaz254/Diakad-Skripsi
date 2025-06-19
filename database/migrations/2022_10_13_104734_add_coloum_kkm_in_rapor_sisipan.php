@@ -14,7 +14,7 @@ class AddColoumKkmInRaporSisipan extends Migration
     public function up()
     {
         Schema::table('rapor_sisipan', function($table) {
-            $table->tinyInteger('kkm')->nullable()->after('id_mata_pelajaran');
+            $table->integer('kkm')->nullable()->after('id_mata_pelajaran');
         });
     }
 

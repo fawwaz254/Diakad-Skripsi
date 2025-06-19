@@ -20,7 +20,7 @@ class CreateTableFpAttendance220607 extends Migration
             $table->string('username', 512)->nullable();
             $table->integer('status')->nullable()->comment('0:Datang; 1:Keluar; 4:Lembur Datang; 5:Lembur Keluar;');
             $table->date('tanggal')->nullable();
-            $table->datetime('fp_date')->nullable();
+            $table->timestamp('fp_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

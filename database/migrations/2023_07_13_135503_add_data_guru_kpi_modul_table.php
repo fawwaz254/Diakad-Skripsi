@@ -18,16 +18,16 @@ class AddDataGuruKpiModulTable extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "Guru KPI",
-            "route"         => "guru-kpi",
-            "urutan"        => 11,
-            "akses"         => 0,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "Guru KPI",
+        //     "route"         => "guru-kpi",
+        //     "urutan"        => 11,
+        //     "akses"         => 0,
+        //     "created_at"    => $now
+        // ]);
     }
 
     /**

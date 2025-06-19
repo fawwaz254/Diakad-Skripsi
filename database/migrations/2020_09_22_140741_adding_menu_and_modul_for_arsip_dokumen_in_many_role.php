@@ -102,9 +102,9 @@ class AddingMenuAndModulForArsipDokumenInManyRole extends Migration
         $menu->save();
 
 
-        $menu = Menu::where(['id_modul' => 16, 'nm_menu' => 'Jurnal Tindakan'])->first();
-        $menu->page = 'jurnal-tindakan';
-        $menu->save();
+        // $menu = Menu::where(['id_modul' => 16, 'nm_menu' => 'Jurnal Tindakan'])->first();
+        // $menu->page = 'jurnal-tindakan';
+        // $menu->save();
 
     }
 

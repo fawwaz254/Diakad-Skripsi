@@ -17,15 +17,15 @@ class AddRouteModulBiodataRoleTendik extends Migration
      */
     public function up()
     {
-        $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Biodata')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Biodata')->first();
 
-        $modul->update(['route'=>'biodata']);
+        // $modul->update(['route'=>'biodata']);
 
-        $modul->menus()->where('nm_menu', 'Data Pribadi')->update([
-            "page" => "data-pribadi"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Data Pribadi')->update([
+        //     "page" => "data-pribadi"
+        // ]);
     }
 
     /**

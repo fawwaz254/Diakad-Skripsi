@@ -14,7 +14,7 @@ class AddTglPerbaikanTableKomplainSarpras extends Migration
     public function up()
     {
         Schema::table('komplain_sarpras', function (Blueprint $table) {
-            $table->dateTime('tgl_perbaikan')->after('id_guru_sarpras')->nullable()->comment('tgl ketika sarpras melakukan perbaikan');
+            $table->timestamp('tgl_perbaikan')->after('id_guru_sarpras')->nullable()->comment('tgl ketika sarpras melakukan perbaikan');
         });
     }
 
