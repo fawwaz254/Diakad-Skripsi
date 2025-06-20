@@ -16,10 +16,10 @@ class PelanggaranSiswa extends Model
 
     protected $primaryKey = 'id_pelanggaran_siswa';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_siswa',
         'id_guru_input',
@@ -37,24 +37,32 @@ class PelanggaranSiswa extends Model
 
     protected $guarded = [];
 
-    public function aktor_input_to_text(){
-        switch($this->aktor_input_pelanggaran){
-            case 1: 
-                return 'Role BK'; break;
-            case 2: 
-                return 'Kesiswaan'; break;
-            case 3: 
-                return 'Wali Kelas'; break;
+    public function aktor_input_to_text()
+    {
+        switch ($this->aktor_input_pelanggaran) {
+            case 1:
+                return 'Role BK';
+                break;
+            case 2:
+                return 'Kesiswaan';
+                break;
+            case 3:
+                return 'Wali Kelas';
+                break;
             case 4:
-                return 'Guru Reguler'; break;
+                return 'Guru Reguler';
+                break;
             case 5:
-                return 'Guru Piket'; break;
+                return 'Guru Piket';
+                break;
             default:
-                return ''; break;
+                return '';
+                break;
         }
     }
 
-
-
-
+    public function subkategori_pelanggaran()
+    {
+        return $this->belongsTo(SubkategoriPelanggaran::class, 'id_subkategori_pelanggaran');
+    }
 }

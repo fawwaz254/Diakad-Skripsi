@@ -118,6 +118,13 @@ class InputKPIController extends Controller
 
     public function actionImportKPI(Request $request)
     {
+        $kpi_rule = [
+            'komponen_lain' => ['A','B','C','D', ''. null],
+            'sertifikasi' => ['Y', 'T', ''. null],
+            'nilai_sertifikasi' => ['A','B','C','D', ''. null],
+            'tingkatjilid' =>  ['1', '2', '3', '4', ''. null],
+            'nilai' => ['A','B','C','D', ''. null],
+        ];
         set_time_limit(-1);
         if ($request->hasFile('file-excel')) {
             try {
@@ -141,24 +148,39 @@ class InputKPIController extends Controller
                     $predikatMengajiKPIs = PredikatKPI::whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->whereIn('id_point_kpi', $pointMengajiKPIs->pluck('id_point_kpi'))->with('siswa')->get();
                     foreach ($data as $row) {
                         foreach ($pointKPIs as $pointKPI) {
-                            if (isset($row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))])) {
-                                $siswa = $list_siswa->where('nis_siswa', $row['nis'])->first();
-                                if ($siswa) {
-                                    $predikatKPI = $predikatKPIs->where('id_siswa', $siswa->id_siswa)->where('id_point_kpi', $pointKPI->id_point_kpi)->first();
-                                    if ($predikatKPI) {
-                                        if ($predikatKPI->predikat != $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))]) {
-                                            $predikatKPI->predikat = $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))];
-                                            $predikatKPI->updated_by = $id_pengguna;
-                                            $predikatKPI->updated_at = $now;
-                                            $predikatKPI->save();
-                                        }
-                                    } else {
+                            $siswa = $list_siswa->where('nis_siswa', $row['nis'])->first();
+
+                            if ($siswa) {
+                                $nama_kolom = strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)));
+                                if(isset($row[$nama_kolom])){
+                                    $content_column = $row[$nama_kolom];
+                                }else{
+                                    $content_column = '';
+                                }
+                                
+                                if(!in_array($content_column, $kpi_rule['komponen_lain'])){
+                                    return [
+                                        'status' => 200, // FAILED
+                                        'message' => "Predikat '$content_column' di komponen $pointKPI->nm_point_kpi a.n. siswa $row[nama_siswa] tidak sesuai dengan aturan"
+                                    ];
+                                }
+
+                                $predikatKPI = $predikatKPIs->where('id_siswa', $siswa->id_siswa)->where('id_point_kpi', $pointKPI->id_point_kpi)->first();
+                                if ($predikatKPI) {
+                                    if ($predikatKPI->predikat != $content_column) {
+                                        $predikatKPI->predikat = $content_column;
+                                        $predikatKPI->updated_by = $id_pengguna;
+                                        $predikatKPI->updated_at = $now;
+                                        $predikatKPI->save();
+                                    }
+                                } else {
+                                    if ($content_column != '') {
                                         $predikatKPI = new PredikatKPI;
                                         $predikatKPI->id_predikat_kpi = $sekolah->prefix . strtotime($now) . uniqid();
                                         $predikatKPI->id_point_kpi = $pointKPI->id_point_kpi;
                                         $predikatKPI->id_kelas = $siswa->id_kelas;
                                         $predikatKPI->id_siswa = $siswa->id_siswa;
-                                        $predikatKPI->predikat = $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))];
+                                        $predikatKPI->predikat = $row[$nama_kolom];
                                         $predikatKPI->created_by = $id_pengguna;
                                         $predikatKPI->save();
                                     }
@@ -168,24 +190,38 @@ class InputKPIController extends Controller
 
                         //untuk nilai mengaji
                         foreach ($pointMengajiKPIs as $pointKPI) {
-                            if (isset($row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))])) {
-                                $siswa = $list_siswa->where('nis_siswa', $row['nis'])->first();
-                                if ($siswa) {
-                                    $predikatKPI = $predikatMengajiKPIs->where('id_siswa', $siswa->id_siswa)->where('id_point_kpi', $pointKPI->id_point_kpi)->first();
-                                    if ($predikatKPI) {
-                                        if ($predikatKPI->predikat != $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))]) {
-                                            $predikatKPI->predikat = $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))];
-                                            $predikatKPI->updated_by = $id_pengguna;
-                                            $predikatKPI->updated_at = $now;
-                                            $predikatKPI->save();
-                                        }
-                                    } else {
+                            $nama_kolom = strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)));
+                            if(isset($row[$nama_kolom])){
+                                $content_column = $row[$nama_kolom];
+                            }else{
+                                $content_column = '';
+                            }
+
+                            if(!in_array($content_column, $kpi_rule[$nama_kolom])){
+                                return [
+                                    'status' => 200, // FAILED
+                                    'message' => "Predikat '$content_column' di komponen $pointKPI->nm_point_kpi a.n. siswa $row[nama_siswa] tidak sesuai dengan aturan"
+                                ];
+                            }
+                            
+                            $siswa = $list_siswa->where('nis_siswa', $row['nis'])->first();
+                            if ($siswa) {
+                                $predikatKPI = $predikatMengajiKPIs->where('id_siswa', $siswa->id_siswa)->where('id_point_kpi', $pointKPI->id_point_kpi)->first();
+                                if ($predikatKPI) {
+                                    if ($predikatKPI->predikat != $content_column) {
+                                        $predikatKPI->predikat = $content_column;
+                                        $predikatKPI->updated_by = $id_pengguna;
+                                        $predikatKPI->updated_at = $now;
+                                        $predikatKPI->save();
+                                    }
+                                } else {
+                                    if ($content_column != '') {
                                         $predikatKPI = new PredikatKPI;
                                         $predikatKPI->id_predikat_kpi = $sekolah->prefix . strtotime($now) . uniqid();
                                         $predikatKPI->id_point_kpi = $pointKPI->id_point_kpi;
                                         $predikatKPI->id_kelas = $siswa->id_kelas;
                                         $predikatKPI->id_siswa = $siswa->id_siswa;
-                                        $predikatKPI->predikat = $row[strtolower(preg_replace('/[ _-]+/', '_', preg_replace("/[^A-Za-z0-9\- ]/", '', $pointKPI->nm_point_kpi)))];
+                                        $predikatKPI->predikat = $content_column;
                                         $predikatKPI->created_by = $id_pengguna;
                                         $predikatKPI->save();
                                     }
@@ -221,12 +257,40 @@ class InputKPIController extends Controller
         $input = (object) $request->input();
         $auth_data = auth_data();
 
-        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        // Check wali kelas berdasarkan semester aktif dan siswa
+        $data_guru = DB::select("select wk.* 
+                from siswa s
+                join kelas k on s.id_kelas = k.id_kelas
+                left join wali_kelas wk on wk.id_kelas = k.id_kelas and wk.id_semester = '$semester->id_semester'
+            where s.id_siswa = '$id_siswa'
+                and wk.deleted_at is null
+            limit 1");
+
+        if(isset($data_guru[0])){
+            $guru = Guru::find($data_guru[0]->id_guru);
+        }else{
+            // Check wali kelas terakhir kelas siswa tersebut
+            $data_guru = DB::select("select wk.* 
+                from siswa s
+                join kelas k on s.id_kelas = k.id_kelas
+                left join wali_kelas wk on wk.id_kelas = k.id_kelas
+                left join semester sm on sm.id_semester = wk.id_semester
+            where s.id_siswa = '$id_siswa'
+                and wk.deleted_at is null
+            order by sm.kode_semester desc
+            limit 1");
+
+            if(isset($data_guru[0])){
+                $guru = Guru::find($data_guru[0]->id_guru);
+            }else{
+                return redirect()->back()->with('error', 'Wali kelas tidak ditemukan untuk siswa ini.');
+            }
+        }
+        
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester->id_semester);
         $kelas = Kelas::find($wali_kelas->id_kelas);
-        $list_siswa = Siswa::with('kelas')->where('id_kelas', $wali_kelas->id_kelas)->where('id_siswa', $id_siswa)
-            ->get();
+        $list_siswa = Siswa::with('kelas')->where('id_kelas', $wali_kelas->id_kelas)->where('id_siswa', $id_siswa)->get();
 
         $kelompok_kpi = KelompokKPI::with([
             'point_kpi' => function ($q) use ($kelas, $semester) {

@@ -75,9 +75,21 @@
 </head>
 
 <body>
+    @php
+        $need_page_break = false;
+
+        if($kelompok_kpi->first()) {
+            if($kelompok_kpi->first()->point_kpi->count() > 10) {
+                $need_page_break = true;
+            }
+        }
+    @endphp
 
     @foreach ($list_siswa as $siswa)
         <div class="page">
+            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                <img id="kop" style="width:99%;" src="{{ asset('media/kop-surat-logo-sma-wh-2.png') }}">
+            @endif
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 20px  auto;" style="border-style : hidden">
                 <tr>
                     <td colspan="10" style="border-style : hidden">
@@ -117,17 +129,15 @@
                 $last_key = 0;
             @endphp
 
-
-            {{-- <h1>{{ $siswa->pengguna->nm_pengguna }}</h1> --}}
-
             @foreach ($siswa->kelompok_kpi as $key => $kelompok_kpi)
                 <!-- dimunculkan per 3 kategori -->
-                @if($key == 3)
-                <div class="page-break"></div>
+                @if ($key == 3 && $need_page_break)
+                    <div class="page-break"></div>
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                        <img id="kop" src="{{ asset('media/kop-surat-logo-sma-wh-2.png') }}">
+                        <img id="kop" style="width:99%;" src="{{ asset('media/kop-surat-logo-sma-wh-2.png') }}">
                     @endif
-                    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 20px  auto;" style="border-style : hidden">
+                    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 20px  auto;"
+                        style="border-style : hidden">
                         <tr>
                             <td colspan="10" style="border-style : hidden">
                                 <h2 align="center" style="margin-top: 3px">
@@ -176,7 +186,8 @@
                 </table>
 
                 {{-- <h3>{{ $kelompok_kpi->nm_kelompok_kpi }}</h3> --}}
-                <table cellspacing="0" cellpadding="10" style="width: 90%;  margin-top: 0;margin-bottom: 20px;margin-right: auto;margin-left: auto;">
+                <table cellspacing="0" cellpadding="10"
+                    style="width: 90%;  margin-top: 0;margin-bottom: 20px;margin-right: auto;margin-left: auto;">
                     <thead class="head">
                         <tr style="background-color: #e3e1e1">
                             <th>No</th>
@@ -192,20 +203,21 @@
                         @foreach ($kelompok_kpi->point_kpi as $key => $point_kpi)
                             <tr @if ($point_kpi->urutan != 0 && $point_kpi->urutan % 2 == 0) style="background-color: #e3e1e1" @endif>
                                 @php
-                                    $data_kelompok_kpi = $kelompok_kpi->point_kpi->where('urutan', $point_kpi->urutan)->values();
+                                    $data_kelompok_kpi = $kelompok_kpi->point_kpi
+                                        ->where('urutan', $point_kpi->urutan)
+                                        ->values();
                                     $jumlah_kelompok = $data_kelompok_kpi->count();
                                 @endphp
                                 @if ($jumlah_kelompok > 1)
                                     @if ($urutan_x != $point_kpi->urutan)
-                                    <td style="text-align:center" rowspan="{{$jumlah_kelompok}}">
+                                        <td style="text-align:center" rowspan="{{ $jumlah_kelompok }}">
+                                            {{ $point_kpi->urutan }}
+                                        </td>
+                                    @endif
+                                @else
+                                    <td style="text-align:center">
                                         {{ $point_kpi->urutan }}
                                     </td>
-                                    @endif
-
-                                @else
-                                <td style="text-align:center">
-                                    {{ $point_kpi->urutan }}
-                                </td>
                                 @endif
                                 <td @if ($point_kpi->jenis == '0') colspan="2" @endif>
                                     {{ $point_kpi->nm_point_kpi }}
@@ -217,53 +229,61 @@
                                             ->first()?->predikat;
                                     @endphp
                                     <td style="text-align:center">{{ $predikat }}</td>
+                                @else
+                                    @php
+                                        $predikat = '';
+                                    @endphp
                                 @endif
                                 @if ($jumlah_kelompok > 1)
-                                    @if ($urutan_x != $point_kpi->urutan)
-                                    <td rowspan="{{$jumlah_kelompok}}">
+                                    @php
+                                        $array = explode(
+                                            '<br>',
+                                            $point_kpi->deskripsi[$predikat] ?? '',
+                                        );
+                                    @endphp
+                                        <td>
+                                            <table>
+                                                @foreach ($array as $item)
+                                                    @if (!empty($item))
+                                                        <tr style="border-style : hidden">
+                                                            <td style=" vertical-align: top;border-style : hidden">-
+                                                            </td>
+                                                            <td> {{ trim($item) }}<br></td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            </table>
+                                        </td>
+                                @else
+                                    <td>
                                         <table>
                                             @foreach ($data_kelompok_kpi as $unit_point_kpi)
-                                            @php
-                                                $array = explode('<br>', $unit_point_kpi->deskripsi[$predikat] ?? '');
-                                            @endphp
-                                            @foreach ($array as $item)
-                                                @if(!empty($item))
-                                                <tr style="border-style : hidden">
-                                                    <td style=" vertical-align: top;border-style : hidden">- </td>
-                                                    <td> {{ trim($item) }}<br></td>
-                                                </tr>
-                                                @endif
-                                            @endforeach
+                                                @php
+                                                    $array = explode(
+                                                        '<br>',
+                                                        $unit_point_kpi->deskripsi[$predikat] ?? '',
+                                                    );
+                                                @endphp
+                                                @foreach ($array as $item)
+                                                    @if (!empty($item))
+                                                        <tr style="border-style : hidden">
+                                                            <td style=" vertical-align: top;border-style : hidden">-
+                                                            </td>
+                                                            <td> {{ trim($item) }}<br></td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
                                             @endforeach
                                         </table>
                                     </td>
-                                    @endif
-                                @else
-                                <td>
-                                    <table>
-                                        @foreach ($data_kelompok_kpi as $unit_point_kpi)
-                                        @php
-                                            $array = explode('<br>', $unit_point_kpi->deskripsi[$predikat] ?? '');
-                                        @endphp
-                                        @foreach ($array as $item)
-                                            @if(!empty($item))
-                                            <tr style="border-style : hidden">
-                                                <td style=" vertical-align: top;border-style : hidden">- </td>
-                                                <td> {{ trim($item) }}<br></td>
-                                            </tr>
-                                            @endif
-                                        @endforeach
-                                        @endforeach
-                                    </table>
-                                </td>
                                 @endif
                             </tr>
 
                             @if ($jumlah_kelompok > 1)
                                 @if ($urutan_x != $point_kpi->urutan)
-                                @php
-                                    $urutan_x = $point_kpi->urutan;
-                                @endphp
+                                    @php
+                                        $urutan_x = $point_kpi->urutan;
+                                    @endphp
                                 @endif
                             @endif
                         @endforeach
@@ -271,8 +291,8 @@
                 </table>
             @endforeach
 
-        
-        {{-- mengaji --}}
+
+            {{-- mengaji --}}
 
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
                 <tr>
@@ -339,7 +359,8 @@
 
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
                 <tr>
-                    <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang Tua/Wali Murid
+                    <td width="30%" style="border-style : hidden; text-align:center"><br>Mengetahui,<br>Orang
+                        Tua/Wali Murid
                         <br><br><br><br><br><br>
                         ____________________
                     </td>
@@ -361,18 +382,35 @@
                         {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} --}}
                         <br>
                         Wali Kelas
-                        <br><br><br><br><br><br><u><b>
-                                {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}</b></u>
+                        <br><br><br><br><br><br>
+                        @if($wali_kelas)
+                        <u>
+                            <b>
+                                {{ $wali_kelas->gelar_depan }}
+                                {{ $wali_kelas->nm_wali_kelas }}
+                                {{ $wali_kelas->gelar_belakang }}
+                            </b>
+                        </u>
+                        @endif
                     </td>
                 </tr>
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style : hidden;">
-                <tr>
+                <tr style="position: relative">
                     <td width="30%" style="border-style : hidden; text-align:center">
                     </td>
                     <td width="30%" style="border-style : hidden; text-align:center"><br>Kepala Sekolah,
                         <br><br><br><br><br><br>
-                        <div>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</div>
+                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman')
+                        <img style="width: 11rem; position: absolute; top: 29%; right: 43%; " src="{{ asset('media/ttd/kepsek-ttd-smkypm3.png') }}" alt="Tanda Tangan Kepala Sekolah">
+                        @endif
+
+                        @if(!empty($auth_data->sekolah_data->path_ttd_kepsek))
+                        <img style="width: 11rem;position: absolute;top: 22%;right: 42%;" src="{{ $auth_data->sekolah_data->path_ttd_kepsek }}" alt="Tanda Tangan Kepala Sekolah">
+                        @endif
+                        <div>
+                            <u><b>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</b></u>
+                        </div>
                     </td>
                     <td width="30%" style="border-style : hidden;text-align:center ">
                     </td>

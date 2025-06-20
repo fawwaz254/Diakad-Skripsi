@@ -76,9 +76,9 @@
                                 </thead>
                             </table>
                         </div>
-                        <button class="btn bg-blue waves-effect" type="submit">
+                        <!-- <button class="btn bg-blue waves-effect" type="submit">
                             <span>Bayar yang dicentang</span>
-                        </button>
+                        </button> -->
                     </div>
                 </form>
             </div>

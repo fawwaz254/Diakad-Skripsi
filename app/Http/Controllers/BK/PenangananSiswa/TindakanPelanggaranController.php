@@ -413,6 +413,13 @@ class TindakanPelanggaranController extends BaseController
                     return strftime("%d %B %Y %H:%M:%S", strtotime($item->tgl_tindakan_pelanggaran));
                 }
             })
+            ->addColumn('keterangan_tindakan', function ($item) {
+                if (!empty($item->id_pelanggaran_siswa)) {
+                    return $item->catatan_tindakan_pelanggaran;
+                } else {
+                    return "";
+                }
+            })
             ->addColumn('aktor_input_pelanggaran', function ($item) {
                 if (!empty($item->id_pelanggaran_siswa)) {
                     if ($item->aktor_input_pelanggaran == 1) {
