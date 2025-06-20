@@ -18,28 +18,28 @@ class AddingRouteAndPageToPembinaEkskul extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modulPenilaian = Modul::where('id_role', $role_id)->where('nm_modul', 'Penilaian')->first();
+        // $modulPenilaian = Modul::where('id_role', $role_id)->where('nm_modul', 'Penilaian')->first();
 
-        $modulPenilaian->menus()->where('nm_menu', 'Rekap Nilai')->update([
-            "page" => "rekap-nilai"
-        ]);
+        // $modulPenilaian->menus()->where('nm_menu', 'Rekap Nilai')->update([
+        //     "page" => "rekap-nilai"
+        // ]);
 
-        $modulPembina = Modul::where('id_role', $role_id)->where('nm_modul', 'Pembina Ekskul')->first();
+        // $modulPembina = Modul::where('id_role', $role_id)->where('nm_modul', 'Pembina Ekskul')->first();
 
-        $modulPembina->menus()->where('nm_menu', 'Rekap Absensi Ekskul')->update([
-            "page" => "rekap-absensi-ekskul"
-        ]);
-        $modulPembina->menus()->where('nm_menu', 'Input Nilai Ekskul')->update([
-            "page" => "input-nilai-ekskul"
-        ]);
-        $modulPembina->menus()->where('nm_menu', 'Rekap Nilai Ekskul')->update([
-            "page" => "rekap-nilai-ekskul"
-        ]);
-        $modulPembina->menus()->where('nm_menu', 'Komponen Nilai Ekskul')->update([
-            "page" => "komponen-nilai-ekskul"
-        ]);
+        // $modulPembina->menus()->where('nm_menu', 'Rekap Absensi Ekskul')->update([
+        //     "page" => "rekap-absensi-ekskul"
+        // ]);
+        // $modulPembina->menus()->where('nm_menu', 'Input Nilai Ekskul')->update([
+        //     "page" => "input-nilai-ekskul"
+        // ]);
+        // $modulPembina->menus()->where('nm_menu', 'Rekap Nilai Ekskul')->update([
+        //     "page" => "rekap-nilai-ekskul"
+        // ]);
+        // $modulPembina->menus()->where('nm_menu', 'Komponen Nilai Ekskul')->update([
+        //     "page" => "komponen-nilai-ekskul"
+        // ]);
     }
 
     /**

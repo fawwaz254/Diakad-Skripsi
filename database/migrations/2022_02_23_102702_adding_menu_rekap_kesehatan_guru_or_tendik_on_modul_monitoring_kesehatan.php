@@ -16,15 +16,15 @@ class AddingMenuRekapKesehatanGuruOrTendikOnModulMonitoringKesehatan extends Mig
     public function up()
     {
         //
-        $modul = Modul::where('nm_modul', 'Monitoring Kesehatan')->where('id_role', '6')->first();
+        // $modul = Modul::where('nm_modul', 'Monitoring Kesehatan')->where('id_role', '6')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Rekap Kesehatan Guru/Tendik';
-        $menu->page = 'rekap-kesehatan-guru';
-        $menu->urutan = 2;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Rekap Kesehatan Guru/Tendik';
+        // $menu->page = 'rekap-kesehatan-guru';
+        // $menu->urutan = 2;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

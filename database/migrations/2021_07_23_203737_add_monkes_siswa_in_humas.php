@@ -21,26 +21,26 @@ class AddMonkesSiswaInHumas extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
 
-        $modul              = new Modul;
-        $modul->id_role     = $role_id;
-        $modul->nm_modul    = "Monitoring Kesehatan";
-        $modul->route       = "monitoring-kesehatan";
-        $modul->urutan      = 0;
-        $modul->akses       = 1;
-        $modul->created_at  = $now;
-        $modul->save();
+        // $modul              = new Modul;
+        // $modul->id_role     = $role_id;
+        // $modul->nm_modul    = "Monitoring Kesehatan";
+        // $modul->route       = "monitoring-kesehatan";
+        // $modul->urutan      = 0;
+        // $modul->akses       = 1;
+        // $modul->created_at  = $now;
+        // $modul->save();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Rekap Kesehatan Siswa",
-                "page"         => "rekap-kesehatan",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Rekap Kesehatan Siswa",
+        //         "page"         => "rekap-kesehatan",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

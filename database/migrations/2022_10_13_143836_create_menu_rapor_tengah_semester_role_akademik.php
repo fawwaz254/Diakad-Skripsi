@@ -15,23 +15,23 @@ class CreateMenuRaporTengahSemesterRoleAkademik extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '7')->first();
+        // $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '7')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Nilai Rapor Tengah Semester';
-        $menu->page = 'nilai-rapor-tengah-semester';
-        $menu->urutan = 3;
-        $menu->akses = 0;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Nilai Rapor Tengah Semester';
+        // $menu->page = 'nilai-rapor-tengah-semester';
+        // $menu->urutan = 3;
+        // $menu->akses = 0;
+        // $menu->save();
 
-        $menu2 = new Menu;
-        $menu2->id_modul = $modul->id_modul;
-        $menu2->nm_menu = 'Cetak Rapor Tengah Semester';
-        $menu2->page = 'cetak-rapor-tengah-semester';
-        $menu2->urutan = 4;
-        $menu2->akses = 0;
-        $menu2->save();
+        // $menu2 = new Menu;
+        // $menu2->id_modul = $modul->id_modul;
+        // $menu2->nm_menu = 'Cetak Rapor Tengah Semester';
+        // $menu2->page = 'cetak-rapor-tengah-semester';
+        // $menu2->urutan = 4;
+        // $menu2->akses = 0;
+        // $menu2->save();
     }
 
     /**

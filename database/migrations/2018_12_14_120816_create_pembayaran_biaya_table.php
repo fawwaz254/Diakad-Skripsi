@@ -19,8 +19,8 @@ class CreatePembayaranBiayaTable extends Migration {
 			$table->string('id_tagihan_biaya', 40)->comment('FK: tagihan_biaya.id_tagihan_biaya');
 			$table->string('id_staff_bayar', 40)->comment('FK: staff.id_staff &gt; staff yg melakukan input pembayaran');
 			$table->string('id_semester_bayar', 40)->comment('FK: semester.id_semester &gt; dibayarkan pada semester berapa');
-			$table->float('besar_pembayaran', 10, 0)->nullable();
-			$table->dateTime('tgl_pembayaran')->nullable();
+			$table->decimal('besar_pembayaran', 10, 0)->nullable();
+			$table->timestamp('tgl_pembayaran')->nullable();
 			$table->integer('id_bank')->nullable()->comment('FK: bank.id_bank &amp;gt; optional apabila dibayarkan lewat bank');
 			$table->boolean('id_bank_via')->nullable()->comment('FK: bank_via.id_bank_via &gt; optional apabila dibayarkan lewat bank');
 			$table->string('nomor_transaksi', 64)->nullable();

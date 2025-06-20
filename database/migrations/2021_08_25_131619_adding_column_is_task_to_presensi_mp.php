@@ -14,7 +14,7 @@ class AddingColumnIsTaskToPresensiMp extends Migration
     public function up()
     {
         Schema::table('presensi_mp', function (Blueprint $table) {
-            $table->tinyInteger('is_task')->default('0')->after('is_daring');
+            $table->integer('is_task')->default('0')->after('is_daring');
         });
     }
 

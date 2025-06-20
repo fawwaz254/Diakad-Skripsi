@@ -23,7 +23,7 @@ class CreateLaporanKerjaHarianTendiksTable extends Migration
             $table->text('keterangan_progres')->nullable();
             $table->string('nm_file', 256)->nullable();
             $table->string('path_file', 256)->nullable();
-            $table->tinyInteger('status')->nullable()->comment('0=Belum Tuntas, 1 = Tuntas');
+            $table->integer('status')->nullable()->comment('0=Belum Tuntas, 1 = Tuntas');
             $table->text('catatan')->nullable();
             $table->string('id_pengguna', 40)->nullable();
             $table->timestamps();

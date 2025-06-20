@@ -15,10 +15,10 @@ class HideMenuRekapNilaiKelasWaliMurid extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Wali Kelas')->first();
-        $menu = Menu::where('nm_menu', 'Rekap Nilai Kelas')->where('id_modul', $modul->id_modul)->first();
-        $menu->akses = 0;
-        $menu->save();
+        // $modul = Modul::where('nm_modul', 'Wali Kelas')->first();
+        // $menu = Menu::where('nm_menu', 'Rekap Nilai Kelas')->where('id_modul', $modul->id_modul)->first();
+        // $menu->akses = 0;
+        // $menu->save();
     }
 
     /**

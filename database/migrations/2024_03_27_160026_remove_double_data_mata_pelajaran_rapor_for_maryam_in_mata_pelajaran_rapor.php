@@ -19,14 +19,14 @@ class RemoveDoubleDataMataPelajaranRaporForMaryamInMataPelajaranRapor extends Mi
     {
         DB::beginTransaction(); // Start transaction
         try {
-            Schema::table('mata_pelajaran_rapor', function (Blueprint $table) {
-                $sekolah = Sekolah::first();
+            // Schema::table('mata_pelajaran_rapor', function (Blueprint $table) {
+            //     $sekolah = Sekolah::first();
 
-                if ($sekolah->nm_singkat_sekolah == 'smamaryamsby') {
-                    $mata_pelajaran_rapor = new MataPelajaranRapor;
-                    $mata_pelajaran_rapor->where('id_mata_pelajaran_rapor', 'Qjh121697525450652e2ecad9978')->delete();
-                }
-            });
+            //     if ($sekolah->nm_singkat_sekolah == 'smamaryamsby') {
+            //         $mata_pelajaran_rapor = new MataPelajaranRapor;
+            //         $mata_pelajaran_rapor->where('id_mata_pelajaran_rapor', 'Qjh121697525450652e2ecad9978')->delete();
+            //     }
+            // });
 
             DB::commit(); // Commit transaction
         } catch (\Exception $e) {

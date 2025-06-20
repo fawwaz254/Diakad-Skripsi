@@ -24,7 +24,7 @@ class CreateRealisasiPakTable extends Migration
             $table->string('id_ket_subkategori_rapb', 40)->nullable()->comment('FK: ket_subkategori_rapb.id_ket_subkategori_rapb, diisi ketika dibutuhkan keterangan tambahan subkategori rapb');
             $table->boolean('termin_dana_realisasi_pak')->nullable()->default(1);
             $table->boolean('is_hutang_realisasi_pak')->nullable()->default(0)->comment('0 = Realisasi PAK Sudah Lunas/Realisasi PAK Tanpa Termin; 1 = Masih Terdapat Hutang Realisasi PAK;');
-            $table->float('dana_realisasi_pak', 10, 0)->nullable();
+            $table->decimal('dana_realisasi_pak', 10, 0)->nullable();
             $table->date('tgl_realisasi_pak')->nullable();
             $table->string('id_pengguna_cek_keuangan', 40)->nullable()->comment('FK: pengguna.id_pengguna, staf keuangan yg melakukan cek Realisasi PAK');
             $table->string('id_pengguna_kepala_keuangan', 40)->nullable()->comment('FK: pengguna.id_pengguna, kepala keuangan yg melakukan approve Realisasi PAK');

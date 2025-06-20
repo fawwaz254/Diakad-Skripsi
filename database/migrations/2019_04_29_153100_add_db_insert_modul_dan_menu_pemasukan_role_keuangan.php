@@ -31,15 +31,15 @@ class AddDbInsertModulDanMenuPemasukanRoleKeuangan extends Migration
         $modul->save();
 
         // update urutan modul lain
-        $modul               = Modul::find(64);
-        $modul->urutan       = 4;
-        $modul->updated_at   = $now;
-        $modul->save();
+        // $modul               = Modul::find(64);
+        // $modul->urutan       = 4;
+        // $modul->updated_at   = $now;
+        // $modul->save();
 
-        $modul               = Modul::find(30);
-        $modul->urutan       = 5;
-        $modul->updated_at   = $now;
-        $modul->save();
+        // $modul               = Modul::find(30);
+        // $modul->urutan       = 5;
+        // $modul->updated_at   = $now;
+        // $modul->save();
 
 
         // insert menu

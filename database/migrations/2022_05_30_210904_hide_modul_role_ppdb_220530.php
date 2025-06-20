@@ -18,11 +18,11 @@ class HideModulRolePpdb220530 extends Migration
      */
     public function up()
     {
-        $role_id = Role::where('nm_role', 'PPDB')->first()->id_role;
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Penetapan')->first();
+        // $role_id = Role::where('nm_role', 'PPDB')->first()->id_role;
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Penetapan')->first();
 
-        $modul->akses = 0;
-        $modul->save();
+        // $modul->akses = 0;
+        // $modul->save();
     }
 
     /**

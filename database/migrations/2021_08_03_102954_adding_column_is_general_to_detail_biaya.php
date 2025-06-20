@@ -14,7 +14,7 @@ class AddingColumnIsGeneralToDetailBiaya extends Migration
     public function up()
     {
         Schema::table('detail_biaya', function (Blueprint $table) {
-            $table->tinyInteger('is_general')->default('1')->after('id_bulan');
+            $table->integer('is_general')->default('1')->after('id_bulan');
         });
     }
 

@@ -38,9 +38,9 @@
     <link href="{{ asset('plugins/multi-select/css/multi-select.css') }}" rel="stylesheet">
 
     <!-- Toast -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <link rel="stylesheet" href="{{ asset('plugins/vex-4.0.1/dist/css/vex.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/vex-4.0.1/dist/css/vex-theme-default.css') }}">
+    <link href="{{ asset('vendor/css/toastify/toastify.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/vex-4.0.1/dist/css/vex.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/vex-4.0.1/dist/css/vex-theme-default.css') }}" rel="stylesheet">
 
     <!-- Bootstrap Select Css -->
     <link href="{{ asset('plugins/bootstrap-select/css/bootstrap-select.css') }}" rel="stylesheet" />
@@ -51,10 +51,10 @@
     <link href="{{ asset('plugins/sweetalert/sweetalert.css') }}" rel="stylesheet" />
 
     <!-- JQuery DataTable Css -->
-    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/buttons/1.5.4/css/buttons.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" rel="stylesheet">
+    <link href="{{ asset('vendor/css/datatables/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/datatables/responsive.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/datatables/buttons.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/datatables/select.dataTables.min.css') }}" rel="stylesheet">
 
     <!-- Bootstrap Material Datetime Picker Css -->
     <link href="{{ asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}"
@@ -68,17 +68,15 @@
     <link href="{{ asset('css/themes/all-themes.css') }}" rel="stylesheet" />
 
     <!-- Select2 Css -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ asset('vendor/css/select2/select2.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('plugins/dropzone/dropzone.css') }}" rel="stylesheet">
     <link href="{{ asset('css/pace.css') }}" rel="stylesheet">
 
-    <link href="https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css">
+    <link href="{{ asset('vendor/css/datatables/fixedColumns.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/datatables/fixedHeader.dataTables.min.css') }}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-        integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw=="
-        crossorigin="anonymous" />
+    <link href="{{ asset('vendor/css/fontawesome/font-awesome.min.css') }}" rel="stylesheet">
 
     <script>
         var base_url = document.getElementsByTagName('base')[0].getAttribute('href');
@@ -133,10 +131,9 @@
 
 
 <!-- Jquery Core Js -->
-<!-- <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="{{ asset('vendor/js/jquery/jquery.min.js') }}"></script>
 <script data-pace-options='{ "document": false, "startOnPageLoad": false }'
-    src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    src="{{ asset('vendor/js/pace/pace.min.js') }}"></script>
 
 <!-- Bootstrap Core Js -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.js') }}"></script>
@@ -158,25 +155,24 @@
 
 <!-- Toast -->
 <script src="{{ asset('plugins/vex-4.0.1/dist/js/vex.combined.min.js') }}"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="{{ asset('vendor/js/toastify/toastify.min.js') }}"></script>
 
 <!-- Autosize Plugin Js -->
 <script src="{{ asset('plugins/autosize/autosize.js') }}"></script>
 
 <!-- Jquery DataTable Plugin Js -->
-<!-- <script src="{{ asset('plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
-    <script src="{{ asset('plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js') }}"></script> -->
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.4/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script>
+
+<script src="{{ asset('vendor/js/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/dataTables.select.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/buttons.flash.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/jszip.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/pdfmake.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/vfs_fonts.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/buttons.print.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/buttons.colVis.min.js') }}"></script>
 
 <!-- NP Progress -->
 <!-- <script src="{{ asset('plugins/nprogress-0.2.0//nprogress.js') }}"></script> -->
@@ -187,7 +183,8 @@
 <!-- Moment Plugin Js -->
 <script src="{{ asset('plugins/momentjs/moment-with-locales.min.js') }}"></script>
 
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<!-- HTML5 QrCode -->
+<script src="{{ asset('vendor/js/qrcode/html5-qrcode.min.js') }}"></script>
 
 <!-- Bootstrap Material Datetime Picker Plugin Js -->
 <script src="{{ asset('plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}">
@@ -205,28 +202,24 @@
 <script src="{{ asset('plugins/dropzone/dropzone.js') }}"></script>
 
 <!-- Select2 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+<script src="{{ asset('vendor/js/select2/select2.min.js') }}"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"
-    integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
+<script src="{{ asset('vendor/js/numeral.min.js') }}"></script>
 
-<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js">
-</script>
-<script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
+<script src="{{ asset('vendor/js/datatables/dataTables.fixedColumns.min.js') }}"></script>
+<script src="{{ asset('vendor/js/datatables/dataTables.fixedHeader.min.js') }}"></script>
 
+<script src="{{ asset('vendor/js/moment-with-locales.min.js') }}"></script>
+<script src="{{ asset('vendor/js/locale-id.min.js') }}"></script>
 
 {{-- cart.js --}}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ asset('vendor/js/charts/chart.min.js') }}"></script>
 
 <!-- ApexChart.js #humas-chart -->
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
+<script src="{{ asset('vendor/js/charts/apexcharts.min.js') }}"></script>
 
 <!-- Signature Pad -->
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-
+<script src="{{ asset('vendor/js/signature/signature_pad.umd.min.js') }}"></script>
 
 {{-- jexcel --}}
 <script src="{{ asset('js/jexcel/jexcel.js') }}"></script>

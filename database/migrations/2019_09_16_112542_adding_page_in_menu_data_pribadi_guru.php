@@ -16,9 +16,9 @@ class AddingPageInMenuDataPribadiGuru extends Migration
     public function up()
     {
         //
-        $menu = Menu::find(41);
-        $menu->page = 'data-pribadi';
-        $menu->save();
+        // $menu = Menu::find(41);
+        // $menu->page = 'data-pribadi';
+        // $menu->save();
     }
 
     /**

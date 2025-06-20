@@ -16,14 +16,14 @@ class AddMenuJenisMgmp220608 extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'MGMP')->where('id_role', '7')->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Jenis MGMP';
-        $menu->page = 'jenis-mgmp';
-        $menu->urutan = 1;
-        $menu->akses = 1;
-        $menu->save();
+        // $modul = Modul::where('nm_modul', 'MGMP')->where('id_role', '7')->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Jenis MGMP';
+        // $menu->page = 'jenis-mgmp';
+        // $menu->urutan = 1;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

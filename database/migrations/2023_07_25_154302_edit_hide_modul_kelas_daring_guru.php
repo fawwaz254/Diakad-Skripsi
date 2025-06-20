@@ -14,9 +14,9 @@ class EditHideModulKelasDaringGuru extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('route','kelas-daring')->where('id_role',2)->first();
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::where('route','kelas-daring')->where('id_role',2)->first();
+        // $modul->akses = 0;
+        // $modul->save();
     }
 
     /**
@@ -26,8 +26,8 @@ class EditHideModulKelasDaringGuru extends Migration
      */
     public function down()
     {
-        $modul = Modul::where('route','kelas-daring')->where('id_role',2)->first();
-        $modul->akses = 1;
-        $modul->save();
+        // $modul = Modul::where('route','kelas-daring')->where('id_role',2)->first();
+        // $modul->akses = 1;
+        // $modul->save();
     }
 }

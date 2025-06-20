@@ -17,15 +17,15 @@ class AddDataJenisRaporAgamaAndSisipan extends Migration
     public function up()
     {
         $now = Carbon::now();
-        $sekolah = Sekolah::first();
-        $jenis_rapor = new JenisRapor;
-        $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $jenis_rapor->nm_jenis_rapor = 'agama';
-        $jenis_rapor->save();
-        $jenis_rapor = new JenisRapor;
-        $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $jenis_rapor->nm_jenis_rapor = 'sisipan';
-        $jenis_rapor->save();
+        // $sekolah = Sekolah::first();
+        // $jenis_rapor = new JenisRapor;
+        // $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $jenis_rapor->nm_jenis_rapor = 'agama';
+        // $jenis_rapor->save();
+        // $jenis_rapor = new JenisRapor;
+        // $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $jenis_rapor->nm_jenis_rapor = 'sisipan';
+        // $jenis_rapor->save();
     }
 
     /**

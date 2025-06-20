@@ -20,8 +20,8 @@ class CreateRuanganTable extends Migration {
 			$table->string('id_pemilik_sarpras', 40)->comment('FK: pemilik_sarpras.id_pemilik_sarpras');
 			$table->string('id_gedung', 40)->comment('FK: gedung.id_gedung');
 			$table->string('nm_ruangan', 64)->nullable();
-			$table->float('panjang_ruangan', 10, 0)->nullable()->comment('dalam satuan meter(boleh dalam desimal)');
-			$table->float('lebar_ruangan', 10, 0)->nullable()->comment('dalam satuan meter(boleh dalam desimal)');
+			$table->decimal('panjang_ruangan', 10, 0)->nullable()->comment('dalam satuan meter(boleh dalam desimal)');
+			$table->decimal('lebar_ruangan', 10, 0)->nullable()->comment('dalam satuan meter(boleh dalam desimal)');
 			$table->boolean('kapasitas_ruangan')->nullable()->comment('kapasitas untuk KBM biasa');
 			$table->boolean('kapasitas_ujian')->nullable()->comment('kapasitas untuk ujian');
 			$table->string('deskripsi_ruangan', 128)->nullable();

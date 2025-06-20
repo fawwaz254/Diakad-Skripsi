@@ -19,9 +19,9 @@ class CreateDompetJurnalTable extends Migration
             $table->string('id_dompet', 40)->comment('FK: dompet.id_dompet');
             $table->string('id_realisasi', 40)->comment('FK: realisasi.id_realisasi, jika null berarti saldo awal di bulan tersebut')->nullable();
             $table->date('tgl_dompet_jurnal')->nullable();
-            $table->float('debit', 10, 0)->default(0)->nullable();
-            $table->float('kredit', 10, 0)->default(0)->nullable();
-            $table->float('saldo_akhir', 10, 0)->nullable();
+            $table->decimal('debit', 10, 0)->default(0)->nullable();
+            $table->decimal('kredit', 10, 0)->default(0)->nullable();
+            $table->decimal('saldo_akhir', 10, 0)->nullable();
             $table->string('keterangan_dompet_jurnal', 1024)->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

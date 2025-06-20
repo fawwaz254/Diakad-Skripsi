@@ -20,7 +20,7 @@ class CreatePengambilanMagangTable extends Migration {
 			$table->string('id_rekanan_magang', 40)->comment('FK: rekanan_magang.id_rekanan_magang');
 			$table->string('id_siswa', 40)->comment('FK: siswa.id_siswa');
 			$table->boolean('status_apv_pengambilan_magang')->nullable()->comment('0 = belum approve; 1 = sudah approve;');
-			$table->float('nilai_angka', 10, 0)->nullable();
+			$table->decimal('nilai_angka', 10, 0)->nullable();
 			$table->string('nilai_huruf', 3)->nullable();
 			$table->boolean('is_tampil')->nullable()->comment('0 = belum tampil ke siswa dan wali murid; 1 = sudah tampil ke siswa dan wali murid;');
 			$table->boolean('status_magang')->nullable()->comment('0 = proses; 1 = selesai; 10 = batal;');

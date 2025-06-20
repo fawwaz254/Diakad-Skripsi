@@ -14,7 +14,7 @@ class AddColumnStatusKoreksiTableJawabanTest extends Migration
     public function up()
     {
         Schema::table('jawaban_test', function (Blueprint $table) {
-            $table->tinyInteger('status_koreksi')->comment('0 belum di koreksi, 1 sudah dikoreksi')->nullable()->after('id_tipe_soal');
+            $table->integer('status_koreksi')->comment('0 belum di koreksi, 1 sudah dikoreksi')->nullable()->after('id_tipe_soal');
         });
     }
 

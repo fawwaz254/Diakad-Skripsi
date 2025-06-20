@@ -18,7 +18,7 @@ class CreateManajemenHariLiburTable extends Migration
             $table->string('manajemen_hari_libur_id', 40)->primary();
             $table->date('date');
             $table->text('explanation');
-            $table->double('extra_money')->nullable();
+            $table->decimal('extra_money')->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

@@ -20,8 +20,8 @@ class CreatePresensiHarianTable extends Migration {
 			$table->string('id_semester', 40)->comment('FK: semester.id_semester');
 			$table->boolean('id_jadwal_hari')->comment('FK: jadwal_hari.id_jadwal_hari');
 			$table->string('id_siswa_entry', 40)->comment('FK: siswa.id_siswa');
-			$table->dateTime('tgl_entry')->nullable();
-			$table->float('persentase_presensi_harian', 10, 0)->nullable();
+			$table->timestamp('tgl_entry')->nullable();
+			$table->decimal('persentase_presensi_harian', 10, 0)->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
 			$table->string('updated_by', 40)->nullable();

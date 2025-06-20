@@ -27,7 +27,7 @@ class CreatePtkTunjanganTable extends Migration {
 			$table->string('sumber_dana_tunjangan', 64)->nullable();
 			$table->integer('tahun_mulai_tunjangan')->nullable();
 			$table->integer('tahun_selesai_tunjangan')->nullable();
-			$table->float('jumlah_dana_tunjangan', 10, 0)->nullable();
+			$table->decimal('jumlah_dana_tunjangan', 10, 0)->nullable();
 			$table->boolean('is_masih_menerima')->nullable()->comment('1 = Ya; 0 = Tidak; (apakah masih menerima tunjangan?)');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

@@ -14,6 +14,11 @@ class ChangeTypeColumnKomponenSettingsInCustomFormKomponenTable extends Migratio
     public function up()
     {
         Schema::table('custom_form_komponen', function (Blueprint $table) {
+            DB::statement('
+                ALTER TABLE custom_form_komponen 
+                ALTER COLUMN komponen_settings TYPE json 
+                USING komponen_settings::json
+            ');
             $table->json('komponen_settings')->nullable()->change();
         });
     }

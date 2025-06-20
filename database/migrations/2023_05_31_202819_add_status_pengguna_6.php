@@ -17,27 +17,27 @@ class AddStatusPengguna6 extends Migration
      */
     public function up()
     {
-        $sekolah = Sekolah::first();
-        $pengguna = Pengguna::where('username', 'admin')->first();
+        // $sekolah = Sekolah::first();
+        // $pengguna = Pengguna::where('username', 'admin')->first();
 
-        $now = Carbon::now();
-        $status_pengguna = new StatusPengguna;
-        $status_pengguna->id_status_pengguna = $sekolah->prefix . strtotime($now) . uniqid();
-        $status_pengguna->status_join_table = 6;
-        $status_pengguna->nm_status_pengguna = 'AKTIF';
-        $status_pengguna->aktif_status_pengguna = 1;
-        $status_pengguna->id_sekolah = $sekolah->id_sekolah;
-        $status_pengguna->created_by = $pengguna->id_pengguna;
-        $status_pengguna->save();
+        // $now = Carbon::now();
+        // $status_pengguna = new StatusPengguna;
+        // $status_pengguna->id_status_pengguna = $sekolah->prefix . strtotime($now) . uniqid();
+        // $status_pengguna->status_join_table = 6;
+        // $status_pengguna->nm_status_pengguna = 'AKTIF';
+        // $status_pengguna->aktif_status_pengguna = 1;
+        // $status_pengguna->id_sekolah = $sekolah->id_sekolah;
+        // $status_pengguna->created_by = $pengguna->id_pengguna;
+        // $status_pengguna->save();
 
-        $status_pengguna = new StatusPengguna;
-        $status_pengguna->id_status_pengguna = $sekolah->prefix  . strtotime($now) . uniqid();
-        $status_pengguna->status_join_table = 6;
-        $status_pengguna->nm_status_pengguna = 'NON-AKTIF';
-        $status_pengguna->aktif_status_pengguna = 0;
-        $status_pengguna->id_sekolah = $sekolah->id_sekolah;
-        $status_pengguna->created_by = $pengguna->id_pengguna;
-        $status_pengguna->save();
+        // $status_pengguna = new StatusPengguna;
+        // $status_pengguna->id_status_pengguna = $sekolah->prefix  . strtotime($now) . uniqid();
+        // $status_pengguna->status_join_table = 6;
+        // $status_pengguna->nm_status_pengguna = 'NON-AKTIF';
+        // $status_pengguna->aktif_status_pengguna = 0;
+        // $status_pengguna->id_sekolah = $sekolah->id_sekolah;
+        // $status_pengguna->created_by = $pengguna->id_pengguna;
+        // $status_pengguna->save();
     }
 
     /**

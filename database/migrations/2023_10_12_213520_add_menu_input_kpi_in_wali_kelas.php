@@ -16,14 +16,14 @@ class AddMenuInputKpiInWaliKelas extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Wali Kelas')->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Input KPI';
-        $menu->page = 'input-kpi';
-        $menu->urutan = 1;
-        $menu->akses = 1;
-        $menu->save();
+        // $modul = Modul::where('nm_modul', 'Wali Kelas')->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Input KPI';
+        // $menu->page = 'input-kpi';
+        // $menu->urutan = 1;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

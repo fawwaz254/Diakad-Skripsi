@@ -14,7 +14,7 @@ class ChangeNullableExtensionFileTableFile extends Migration
     public function up()
     {
         Schema::table('sub_category_file', function (Blueprint $table) {
-            $table->tinyInteger('extension_file')->nullable();
+            $table->integer('extension_file')->nullable();
         });
     }
 

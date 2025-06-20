@@ -14,7 +14,7 @@ class AddingJenisKategoriInTableKategoriRapb extends Migration
     public function up()
     {
         Schema::table('kategori_rapb', function (Blueprint $table) {
-            $table->tinyInteger('jenis_kategori_rapb')->default('0')->after('tipe_kategori_rapb')->comment('0 = Non-SPP; 1 = SPP;');
+            $table->integer('jenis_kategori_rapb')->default('0')->after('tipe_kategori_rapb')->comment('0 = Non-SPP; 1 = SPP;');
         });
     }
 

@@ -15,14 +15,14 @@ class MakeMenuApproveSkpiSiswaInModulDataKesiswaan extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Data Kesiswaan')->where('id_role', 6)->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Approve SKPI Siswa';
-        $menu->page = 'approve-prestasi-siswa';
-        $menu->urutan = 8;
-        $menu->akses = 1;
-        $menu->save();
+        // $modul = Modul::where('nm_modul', 'Data Kesiswaan')->where('id_role', 6)->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Approve SKPI Siswa';
+        // $menu->page = 'approve-prestasi-siswa';
+        // $menu->urutan = 8;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

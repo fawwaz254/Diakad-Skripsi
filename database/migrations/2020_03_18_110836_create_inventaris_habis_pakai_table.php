@@ -22,8 +22,8 @@ class CreateInventarisHabisPakaiTable extends Migration
             $table->string('nm_inventaris_habis_pakai', 512)->nullable();
             $table->date('tgl_masuk_terakhir')->nullable();
             $table->integer('qty_inventaris_habis_pakai')->nullable();
-            $table->float('harga_inventaris_habis_pakai', 10, 0)->nullable();
-            $table->float('jumlah_inventaris_habis_pakai', 10, 0)->nullable()->comment('qty * harga');
+            $table->decimal('harga_inventaris_habis_pakai', 10, 0)->nullable();
+            $table->decimal('jumlah_inventaris_habis_pakai', 10, 0)->nullable()->comment('qty * harga');
             $table->string('keterangan_inventaris_habis_pakai', 1024)->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

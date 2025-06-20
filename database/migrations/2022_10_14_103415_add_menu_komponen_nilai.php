@@ -15,21 +15,21 @@ class AddMenuKomponenNilai extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '7')->first();
+        // $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '7')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Komponen Nilai';
-        $menu->page = 'komponen-nilai';
-        $menu->urutan = 1;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Komponen Nilai';
+        // $menu->page = 'komponen-nilai';
+        // $menu->urutan = 1;
+        // $menu->akses = 1;
+        // $menu->save();
 
-        $modul = Modul::where('id_role', '7')->where('nm_modul', 'Rapor Sisipan')->first();
+        // $modul = Modul::where('id_role', '7')->where('nm_modul', 'Rapor Sisipan')->first();
 
-        $modul->menus()->where('nm_menu', 'Daftar Nilai STS')->update([
-            "urutan" => "2"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Daftar Nilai STS')->update([
+        //     "urutan" => "2"
+        // ]);
     }
 
     /**

@@ -15,8 +15,8 @@ class DeleteRoleKeuanganFromAdministrator extends Migration
      */
     public function up()
     {
-        $pengguna = Pengguna::where('username', 'admin')->first();
-        RolePengguna::where('id_role',9)->where('id_pengguna', $pengguna->id_pengguna)->delete();
+        // $pengguna = Pengguna::where('username', 'admin')->first();
+        // RolePengguna::where('id_role',9)->where('id_pengguna', $pengguna->id_pengguna)->delete();
 
     }
 

@@ -14,11 +14,11 @@ class HideMenuSetupMapelKurikulum extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('nm_menu', 'Setup Mapel Kurikulum')->first();
-        if ($menu) {
-            $menu->akses = 0;
-            $menu->save();
-        }
+        // $menu = Menu::where('nm_menu', 'Setup Mapel Kurikulum')->first();
+        // if ($menu) {
+        //     $menu->akses = 0;
+        //     $menu->save();
+        // }
     }
 
     /**

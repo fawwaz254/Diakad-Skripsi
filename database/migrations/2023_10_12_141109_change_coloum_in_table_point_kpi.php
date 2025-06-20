@@ -13,9 +13,9 @@ class ChangeColoumInTablePointKpi extends Migration
      */
     public function up()
     {
-        Schema::table('point_kpi', function (Blueprint $table) {
-            $table->json('deskripsi')->change();
-        });
+     Schema::table('point_kpi', function (Blueprint $table) {
+        DB::statement('ALTER TABLE point_kpi ALTER COLUMN deskripsi TYPE json USING deskripsi::json');
+    });
     }
 
     /**

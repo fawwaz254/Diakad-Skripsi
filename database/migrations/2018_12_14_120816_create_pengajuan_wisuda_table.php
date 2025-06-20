@@ -26,8 +26,8 @@ class CreatePengajuanWisudaTable extends Migration {
 			$table->date('tgl_sk_kelulusan')->nullable();
 			$table->string('nomor_ijasah', 64)->nullable();
 			$table->date('tgl_kelulusan')->nullable();
-			$table->float('ipk', 10, 0)->nullable();
-			$table->dateTime('tgl_pengajuan_wisuda')->nullable()->comment('sysdate ketika melakukan pengajuan wisuda');
+			$table->decimal('ipk', 10, 0)->nullable();
+			$table->timestamp('tgl_pengajuan_wisuda')->nullable()->comment('sysdate ketika melakukan pengajuan wisuda');
 			$table->boolean('status_wisuda')->nullable()->comment('1 = proses; 2 = selesai (lulus); 3 = batal;');
 			$table->string('keterangan_batal', 128)->nullable()->comment('diisi hanya ketika siswa batal wisuda (status_wisuda = 3)');
 			$table->timestamps();

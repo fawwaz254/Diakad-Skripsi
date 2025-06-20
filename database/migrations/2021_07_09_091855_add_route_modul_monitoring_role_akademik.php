@@ -17,19 +17,19 @@ class AddRouteModulMonitoringRoleAkademik extends Migration
      */
     public function up()
     {
-        $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Monitoring')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Monitoring')->first();
 
-        $modul->update(['route'=>'monitoring']);
+        // $modul->update(['route'=>'monitoring']);
 
-        $modul->menus()->where('nm_menu', 'Monitoring Presensi')->update([
-            "page" => "monitoring-presensi"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Monitoring Presensi')->update([
+        //     "page" => "monitoring-presensi"
+        // ]);
 
-        $modul->menus()->where('nm_menu', 'Status Entri Nilai')->update([
-            "page" => "status-entri-nilai"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Status Entri Nilai')->update([
+        //     "page" => "status-entri-nilai"
+        // ]);
     }
 
     /**

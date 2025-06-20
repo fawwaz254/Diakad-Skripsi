@@ -20,29 +20,29 @@ class RemoveSomeMenuRoleTendik extends Migration
     {
 
         $now = Carbon::now();
-        $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
 
         // remove menu pesan masuk, pesan keluar, pesan dihapus modul pesan
 
-        $modul_id = Modul::where('id_role', $role_id)->where('nm_modul', 'Pesan')->first()->id_modul;
+        // $modul_id = Modul::where('id_role', $role_id)->where('nm_modul', 'Pesan')->first()->id_modul;
 
-        $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Pesan Masuk')->first();
-        $menu->deleted_at = $now;
-        $menu->deleted_by = 'A8bT515358553655b8b4b05a6d86';
-        $menu->save();
-        $menu->delete();
+        // $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Pesan Masuk')->first();
+        // $menu->deleted_at = $now;
+        // $menu->deleted_by = 'A8bT515358553655b8b4b05a6d86';
+        // $menu->save();
+        // $menu->delete();
 
-        $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Pesan Keluar')->first();
-        $menu->deleted_at = $now;
-        $menu->deleted_by = 'A8bT515358553655b8b4b05a6d86';
-        $menu->save();
-        $menu->delete();
+        // $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Pesan Keluar')->first();
+        // $menu->deleted_at = $now;
+        // $menu->deleted_by = 'A8bT515358553655b8b4b05a6d86';
+        // $menu->save();
+        // $menu->delete();
 
-        $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Pesan Dihapus')->first();
-        $menu->deleted_at = $now;
-        $menu->deleted_by = 'A8bT515358553655b8b4b05a6d86';
-        $menu->save();
-        $menu->delete();
+        // $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Pesan Dihapus')->first();
+        // $menu->deleted_at = $now;
+        // $menu->deleted_by = 'A8bT515358553655b8b4b05a6d86';
+        // $menu->save();
+        // $menu->delete();
     }
 
     /**

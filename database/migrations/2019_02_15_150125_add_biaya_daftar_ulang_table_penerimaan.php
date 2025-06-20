@@ -14,7 +14,7 @@ class AddBiayaDaftarUlangTablePenerimaan extends Migration
     public function up()
     {
         Schema::table('penerimaan', function (Blueprint $table) {
-            $table->double('biaya_daftar_ulang')->after('nomor_rekening_transfer')->nullable()->comment('biaya daftar ulang sebelum fix menjadi siswa');
+            $table->decimal('biaya_daftar_ulang', 10, 2)->after('nomor_rekening_transfer')->nullable()->comment('biaya daftar ulang sebelum fix menjadi siswa');
         });
     }
 

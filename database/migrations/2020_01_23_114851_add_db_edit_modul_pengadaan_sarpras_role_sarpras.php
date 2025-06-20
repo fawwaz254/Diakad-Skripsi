@@ -22,10 +22,10 @@ class AddDbEditModulPengadaanSarprasRoleSarpras extends Migration
         $now = Carbon::now();
 
         // update modul
-        $modul               = Modul::find(68);
-        $modul->nm_modul     = "Pengadaan/Perawatan Sarpras";
-        $modul->updated_at   = $now;
-        $modul->save();
+        // $modul               = Modul::find(68);
+        // $modul->nm_modul     = "Pengadaan/Perawatan Sarpras";
+        // $modul->updated_at   = $now;
+        // $modul->save();
     }
 
     /**

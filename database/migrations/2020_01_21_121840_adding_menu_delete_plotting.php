@@ -23,13 +23,13 @@ class AddingMenuDeletePlotting extends Migration
         $menu->created_by = 'A8bT515358553655b8b4b05a6d86';
         $menu->save();
         
-        $menu = Menu::find(84);
-        $menu->urutan = 5;
-        $menu->save();
+        // $menu = Menu::find(84);
+        // $menu->urutan = 5;
+        // $menu->save();
 
-        $menu = Menu::find(85);
-        $menu->urutan = 6;
-        $menu->save();
+        // $menu = Menu::find(85);
+        // $menu->urutan = 6;
+        // $menu->save();
     }
 
     /**

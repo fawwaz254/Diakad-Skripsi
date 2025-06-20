@@ -24,7 +24,7 @@ class CreatePerpusBukuTable extends Migration {
 			$table->string('judul_perpus_buku', 128)->nullable();
 			$table->integer('kota_penerbit_perpus_buku')->nullable()->comment('FK: kota.id_kota');
 			$table->string('nm_penerbit_perpus_buku', 128)->nullable();
-			$table->float('jumlah_perpus_buku', 10, 0)->nullable();
+			$table->decimal('jumlah_perpus_buku', 10, 0)->nullable();
 			$table->boolean('is_upload_cover')->nullable()->comment('1 = sudah upload cover buku; 0 = belum upload cover buku;');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

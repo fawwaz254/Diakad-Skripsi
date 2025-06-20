@@ -14,19 +14,19 @@ class ChangeNameMenuUsulanMataAjarAndPlottingMapelSiswa extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_role', '7')->where('nm_modul', 'Aktivitas Semester')->first();
+        // $modul = Modul::where('id_role', '7')->where('nm_modul', 'Aktivitas Semester')->first();
 
-        if ($modul) {
-            $modul->menus()->where('nm_menu', 'Usulan Mata Ajar')->update([
-                "nm_menu" => "View Jadwal Kelas",
-                "page" => "view-jadwal-kelas"
-            ]);
+        // if ($modul) {
+        //     $modul->menus()->where('nm_menu', 'Usulan Mata Ajar')->update([
+        //         "nm_menu" => "View Jadwal Kelas",
+        //         "page" => "view-jadwal-kelas"
+        //     ]);
 
-            $modul->menus()->where('nm_menu', 'Plotting Mapel Siswa')->update([
-                "nm_menu" => "Total Jadwal Kelas",
-                "page" => "total-jadwal-kelas"
-            ]);
-        }
+        //     $modul->menus()->where('nm_menu', 'Plotting Mapel Siswa')->update([
+        //         "nm_menu" => "Total Jadwal Kelas",
+        //         "page" => "total-jadwal-kelas"
+        //     ]);
+        // }
     }
 
     /**

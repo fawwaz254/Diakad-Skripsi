@@ -16,11 +16,11 @@ class HideModulBiodataInRoleSiswa extends Migration
      */
     public function up()
     {
-        $now = Carbon::now();
-        $modul = Modul::find(12);
-        $modul->akses = 0;
-        $modul->updated_at = $now;
-        $modul->save();
+        // $now = Carbon::now();
+        // $modul = Modul::find(12);
+        // $modul->akses = 0;
+        // $modul->updated_at = $now;
+        // $modul->save();
     }
 
     /**

@@ -23,8 +23,8 @@ class CreatePresensiMpTable extends Migration {
 			$table->string('waktu_selesai', 5)->nullable();
 			$table->string('id_guru_pengganti', 40)->nullable()->comment('FK: guru.id_guru &gt; diisi oleh guru piket ketika guru pjmp tidak hadir');
 			$table->string('alasan_tidak_hadir', 256)->nullable()->comment('diisi oleh guru piket ketika guru pjmp tidak hadir');
-			$table->dateTime('tgl_entry')->nullable();
-			$table->float('persentase_presensi_mp', 10, 0)->nullable();
+			$table->timestamp('tgl_entry')->nullable();
+			$table->decimal('persentase_presensi_mp', 10, 0)->nullable();
 			$table->string('keterangan', 256)->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

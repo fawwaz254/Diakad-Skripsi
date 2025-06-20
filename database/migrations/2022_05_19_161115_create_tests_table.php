@@ -18,8 +18,8 @@ class CreateTestsTable extends Migration
             $table->string('id_test', 40)->primary();
             $table->string('id_pengguna', 40)->nullable();
             $table->string('id_paket_soal', 40)->nullable();
-            $table->dateTime('waktu_mulai_pengerjaan')->nullable();
-            $table->dateTime('waktu_selesai_pengerjaan')->nullable();
+            $table->timestamp('waktu_mulai_pengerjaan')->nullable();
+            $table->timestamp('waktu_selesai_pengerjaan')->nullable();
             $table->boolean('status')->nullable()->comment("0 untuk belum mengumpulkan, 1 untuk sudah mengumpulkan");
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

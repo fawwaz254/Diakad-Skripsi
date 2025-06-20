@@ -18,23 +18,23 @@ class AddRouteModulLaporanAkademikRolePendidikan extends Migration
     public function up()
     {
         
-        $role_id = Role::where('nm_role', 'Pendidikan')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Pendidikan')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Laporan Akademik')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Laporan Akademik')->first();
 
-        $modul->update(['route'=>'laporan-akademik']);
+        // $modul->update(['route'=>'laporan-akademik']);
 
-        $modul->menus()->where('nm_menu', 'Absensi Siswa')->update([
-            "page" => "absensi-siswa"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Absensi Siswa')->update([
+        //     "page" => "absensi-siswa"
+        // ]);
 
-        $modul->menus()->where('nm_menu', 'Jurnal Kelas')->update([
-            "page" => "jurnal-kelas"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Jurnal Kelas')->update([
+        //     "page" => "jurnal-kelas"
+        // ]);
 
-        $modul->menus()->where('nm_menu', 'Jurnal Guru')->update([
-            "page" => "jurnal-guru"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Jurnal Guru')->update([
+        //     "page" => "jurnal-guru"
+        // ]);
 
     }
 

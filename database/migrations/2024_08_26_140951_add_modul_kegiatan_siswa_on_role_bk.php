@@ -18,26 +18,26 @@ class AddModulKegiatanSiswaOnRoleBk extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Bimbingan Konseling')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Bimbingan Konseling')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "Aktivitas Siswa",
-            "route"         => "aktivitas-siswa",
-            "urutan"        => 6,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "Aktivitas Siswa",
+        //     "route"         => "aktivitas-siswa",
+        //     "urutan"        => 6,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Aktivitas Reward Siswa",
-                "page"         => "aktivitas-reward-siswa",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Aktivitas Reward Siswa",
+        //         "page"         => "aktivitas-reward-siswa",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**
@@ -47,11 +47,11 @@ class AddModulKegiatanSiswaOnRoleBk extends Migration
      */
     public function down()
     {
-        $modul = Modul::where('nm_modul', 'Aktivitas Siswa')->first();
+        // $modul = Modul::where('nm_modul', 'Aktivitas Siswa')->first();
 
-        if ($modul) {
-            $modul->menus()->delete();
-            $modul->delete();
-        }
+        // if ($modul) {
+        //     $modul->menus()->delete();
+        //     $modul->delete();
+        // }
     }
 }

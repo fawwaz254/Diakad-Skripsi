@@ -18,33 +18,33 @@ class AddDataInKelompokTambahanRapor extends Migration
     public function up()
     {
         $now = Carbon::now();
-        $sekolah = Sekolah::first();
-        $kelompok_tambahan_rapor = new KelompokTambahanRapor;
-        $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_tambahan_rapor->nm_kelompok_tambahan_rapor = 'Sikap';
-        $kelompok_tambahan_rapor->urutan = '1';
-        $kelompok_tambahan_rapor->save();
+        // $sekolah = Sekolah::first();
+        // $kelompok_tambahan_rapor = new KelompokTambahanRapor;
+        // $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_tambahan_rapor->nm_kelompok_tambahan_rapor = 'Sikap';
+        // $kelompok_tambahan_rapor->urutan = '1';
+        // $kelompok_tambahan_rapor->save();
 
 
-        $kelompok_tambahan_rapor = new KelompokTambahanRapor;
-        $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_tambahan_rapor->nm_kelompok_tambahan_rapor = 'Ketidak Hadiran';
-        $kelompok_tambahan_rapor->urutan = '2';
-        $kelompok_tambahan_rapor->save();
+        // $kelompok_tambahan_rapor = new KelompokTambahanRapor;
+        // $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_tambahan_rapor->nm_kelompok_tambahan_rapor = 'Ketidak Hadiran';
+        // $kelompok_tambahan_rapor->urutan = '2';
+        // $kelompok_tambahan_rapor->save();
 
 
-        $kelompok_tambahan_rapor = new KelompokTambahanRapor;
-        $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_tambahan_rapor->nm_kelompok_tambahan_rapor = 'Catatan Wali Kelas';
-        $kelompok_tambahan_rapor->urutan = '3';
-        $kelompok_tambahan_rapor->save();
+        // $kelompok_tambahan_rapor = new KelompokTambahanRapor;
+        // $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_tambahan_rapor->nm_kelompok_tambahan_rapor = 'Catatan Wali Kelas';
+        // $kelompok_tambahan_rapor->urutan = '3';
+        // $kelompok_tambahan_rapor->save();
 
 
-        $kelompok_tambahan_rapor = new KelompokTambahanRapor;
-        $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_tambahan_rapor->nm_kelompok_tambahan_rapor = 'Kelulusan';
-        $kelompok_tambahan_rapor->urutan = '4';
-        $kelompok_tambahan_rapor->save();
+        // $kelompok_tambahan_rapor = new KelompokTambahanRapor;
+        // $kelompok_tambahan_rapor->id_kelompok_tambahan_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_tambahan_rapor->nm_kelompok_tambahan_rapor = 'Kelulusan';
+        // $kelompok_tambahan_rapor->urutan = '4';
+        // $kelompok_tambahan_rapor->save();
     }
 
     /**

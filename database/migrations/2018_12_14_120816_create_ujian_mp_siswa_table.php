@@ -20,7 +20,7 @@ class CreateUjianMpSiswaTable extends Migration {
 			$table->string('id_siswa', 40)->comment('FK: siswa.id_siswa');
 			$table->boolean('jawaban_pilihan')->nullable();
 			$table->text('jawaban_esai', 65535)->nullable();
-			$table->dateTime('tgl_entry_jawaban')->nullable()->comment('tgl dan jam ketika siswa input jawaban atau terakhir kali merubah jawabannya');
+			$table->timestamp('tgl_entry_jawaban')->nullable()->comment('tgl dan jam ketika siswa input jawaban atau terakhir kali merubah jawabannya');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
 			$table->string('updated_by', 40)->nullable();

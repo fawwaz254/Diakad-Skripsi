@@ -16,21 +16,21 @@ class CreateMenuCustomFormInFormGuruModul extends Migration
      */
     public function up()
     {
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        // $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Form Guru')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Form Guru')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Custom Form",
-                "page"         => "custom-form",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Custom Form",
+        //         "page"         => "custom-form",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

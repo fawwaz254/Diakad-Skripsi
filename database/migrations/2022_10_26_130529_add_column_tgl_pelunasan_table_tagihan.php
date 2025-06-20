@@ -13,7 +13,7 @@ class AddColumnTglPelunasanTableTagihan extends Migration
     public function up()
     {
         Schema::table('tagihan_biaya', function ($table) {
-            $table->dateTime('tgl_pelunasan')->nullable()->after('is_request');
+            $table->timestamp('tgl_pelunasan')->nullable()->after('is_request');
         });
     }
 

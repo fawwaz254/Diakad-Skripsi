@@ -19,10 +19,10 @@ class AddMenuRekapAbsenRoleGuru extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(47);
-        $menu->page         = "rekap-absen";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(47);
+        // $menu->page         = "rekap-absen";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**
@@ -33,9 +33,9 @@ class AddMenuRekapAbsenRoleGuru extends Migration
     public function down()
     {
         // rollback
-        $menu               = Menu::find(47);
-        $menu->page         = null;
-        $menu->updated_at   = null;
-        $menu->save();
+        // $menu               = Menu::find(47);
+        // $menu->page         = null;
+        // $menu->updated_at   = null;
+        // $menu->save();
     }
 }

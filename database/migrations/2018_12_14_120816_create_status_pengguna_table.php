@@ -16,7 +16,7 @@ class CreateStatusPenggunaTable extends Migration {
 		{
 			$table->engine = 'InnoDB';
 			$table->string('id_status_pengguna', 40)->primary();
-			$table->boolean('status_join_table')->comment('1 = Pegawai; 2 = Guru; 3 = Siswa;  4 = Wali Murid; 5 = Pelatih Ekskul;');
+			$table->integer('status_join_table')->comment('1 = Pegawai; 2 = Guru; 3 = Siswa;  4 = Wali Murid; 5 = Pelatih Ekskul;');
 			$table->string('nm_status_pengguna', 64)->nullable();
 			$table->boolean('aktif_status_pengguna')->nullable()->comment('0 = status keluar/non-aktif; 1 = status aktif;');
 			$table->string('kode_status_pengguna', 32)->nullable();

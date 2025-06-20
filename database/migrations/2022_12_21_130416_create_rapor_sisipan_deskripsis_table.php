@@ -16,8 +16,8 @@ class CreateRaporSisipanDeskripsisTable extends Migration
         Schema::create('rapor_sisipan_deskripsi', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('id_rapor_sisipan_deskripsi', 40)->primary();
-            $table->tinyInteger('tingkat');
-            $table->tinyInteger('kd_deskripsi');
+            $table->integer('tingkat');
+            $table->integer('kd_deskripsi');
             $table->string('nm_mata_pelajaran', 40);
             $table->string('deskripsi1', 256);
             $table->string('deskripsi2', 256);

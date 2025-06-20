@@ -14,13 +14,13 @@ class HideStatusEntriNilaiRoleAkademik extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_role', '7')->where('nm_modul', 'Monitoring')->first();
+        // $modul = Modul::where('id_role', '7')->where('nm_modul', 'Monitoring')->first();
 
-        if ($modul) {
-            $modul->menus()->where('nm_menu', 'Status Entri Nilai')->update([
-                "akses" => "0"
-            ]);
-        }
+        // if ($modul) {
+        //     $modul->menus()->where('nm_menu', 'Status Entri Nilai')->update([
+        //         "akses" => "0"
+        //     ]);
+        // }
     }
 
     /**

@@ -14,11 +14,13 @@ class AddColoumnImageInPresensiEkskul extends Migration
     public function up()
     {
         Schema::table('presensi_ekskul', function (Blueprint $table) {
-            $table->dropColumn('image');
+            if (Schema::hasColumn('presensi_ekskul', 'image')) {
+                $table->dropColumn('image');
+            }
         });
 
         Schema::table('presensi_ekskul', function (Blueprint $table) {
-            $table->addColumn('text', 'image')->nullable()->after('waktu_selesai');
+            $table->text('image')->nullable()->after('waktu_selesai');
         });
     }
 

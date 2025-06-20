@@ -19,21 +19,21 @@ class ChangeMenuNameApprovePrestasiSiswa extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modulWalas = Modul::where('id_role', $role_id)->where('nm_modul', 'Wali Kelas')->first();
+        // $modulWalas = Modul::where('id_role', $role_id)->where('nm_modul', 'Wali Kelas')->first();
 
-        $modulWalas->menus()->where('nm_menu', 'Approve Prestasi Siswa')->update([
-            "nm_menu" => "Approve SKPI Siswa"
-        ]);
+        // $modulWalas->menus()->where('nm_menu', 'Approve Prestasi Siswa')->update([
+        //     "nm_menu" => "Approve SKPI Siswa"
+        // ]);
 
-        $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
 
-        $modulSkpi = Modul::where('id_role', $role_id)->where('nm_modul', 'SKPI')->first();
+        // $modulSkpi = Modul::where('id_role', $role_id)->where('nm_modul', 'SKPI')->first();
 
-        $modulSkpi->menus()->where('nm_menu', 'Approve Prestasi Siswa')->update([
-            "nm_menu" => "Approve SKPI Siswa"
-        ]);
+        // $modulSkpi->menus()->where('nm_menu', 'Approve Prestasi Siswa')->update([
+        //     "nm_menu" => "Approve SKPI Siswa"
+        // ]);
     }
 
     /**

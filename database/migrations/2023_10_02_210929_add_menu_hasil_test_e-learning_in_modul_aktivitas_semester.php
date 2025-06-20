@@ -16,15 +16,15 @@ class AddMenuHasilTestELearningInModulAktivitasSemester extends Migration
      */
     public function up()
     {
-        $role = Role::where('path', 'akademik')->first();
-        $modul = Modul::where('id_role', $role->id_role)->where('nm_modul', 'Aktivitas Semester')->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Hasil Test E-Learning';
-        $menu->page = 'hasil-test';
-        $menu->urutan = 6;
-        $menu->akses = 1;
-        $menu->save();
+        // $role = Role::where('path', 'akademik')->first();
+        // $modul = Modul::where('id_role', $role->id_role)->where('nm_modul', 'Aktivitas Semester')->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Hasil Test E-Learning';
+        // $menu->page = 'hasil-test';
+        // $menu->urutan = 6;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

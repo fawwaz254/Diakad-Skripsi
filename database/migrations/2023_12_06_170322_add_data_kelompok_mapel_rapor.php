@@ -18,26 +18,26 @@ class AddDataKelompokMapelRapor extends Migration
     public function up()
     {
         $now = Carbon::now();
-        $sekolah = Sekolah::first();
-        $kelompok_mapel_rapor = new KelompokMapelRapor;
-        $kelompok_mapel_rapor->id_kelompok_mapel_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_mapel_rapor->nm_kelompok_mapel_rapor = 'Kelompok A ( UMUM )';
-        $kelompok_mapel_rapor->urutan = '1';
-        $kelompok_mapel_rapor->save();
-        $kelompok_mapel_rapor = null;
+        // $sekolah = Sekolah::first();
+        // $kelompok_mapel_rapor = new KelompokMapelRapor;
+        // $kelompok_mapel_rapor->id_kelompok_mapel_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_mapel_rapor->nm_kelompok_mapel_rapor = 'Kelompok A ( UMUM )';
+        // $kelompok_mapel_rapor->urutan = '1';
+        // $kelompok_mapel_rapor->save();
+        // $kelompok_mapel_rapor = null;
 
-        $kelompok_mapel_rapor = new KelompokMapelRapor;
-        $kelompok_mapel_rapor->id_kelompok_mapel_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_mapel_rapor->nm_kelompok_mapel_rapor = 'Kelompok B ( UMUM )';
-        $kelompok_mapel_rapor->urutan = '2';
-        $kelompok_mapel_rapor->save();
-        $kelompok_mapel_rapor = null;
+        // $kelompok_mapel_rapor = new KelompokMapelRapor;
+        // $kelompok_mapel_rapor->id_kelompok_mapel_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_mapel_rapor->nm_kelompok_mapel_rapor = 'Kelompok B ( UMUM )';
+        // $kelompok_mapel_rapor->urutan = '2';
+        // $kelompok_mapel_rapor->save();
+        // $kelompok_mapel_rapor = null;
 
-        $kelompok_mapel_rapor = new KelompokMapelRapor;
-        $kelompok_mapel_rapor->id_kelompok_mapel_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $kelompok_mapel_rapor->nm_kelompok_mapel_rapor = 'Kelompok C ( Peminatan )';
-        $kelompok_mapel_rapor->urutan = '3';
-        $kelompok_mapel_rapor->save();
+        // $kelompok_mapel_rapor = new KelompokMapelRapor;
+        // $kelompok_mapel_rapor->id_kelompok_mapel_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $kelompok_mapel_rapor->nm_kelompok_mapel_rapor = 'Kelompok C ( Peminatan )';
+        // $kelompok_mapel_rapor->urutan = '3';
+        // $kelompok_mapel_rapor->save();
     }
 
     /**

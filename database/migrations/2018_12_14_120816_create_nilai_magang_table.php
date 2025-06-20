@@ -18,7 +18,7 @@ class CreateNilaiMagangTable extends Migration {
 			$table->string('id_nilai_magang', 40)->primary();
 			$table->string('id_pengambilan_magang', 40)->comment('FK: pengambilan_magang.id_pengambilan_magang');
 			$table->string('id_komponen_magang', 40)->comment('FK: komponen_magang.id_komponen_magang');
-			$table->float('besar_nilai_magang', 10, 0)->nullable();
+			$table->decimal('besar_nilai_magang', 10, 0)->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
 			$table->string('updated_by', 40)->nullable();

@@ -21,10 +21,10 @@ class AddMenuCetakModulPenetapanRolePpdb extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(168);
-        $menu->page         = "cetak";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(168);
+        // $menu->page         = "cetak";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**

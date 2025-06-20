@@ -19,16 +19,16 @@ class AddingRouteOnModulAndMenuJadwalUjianMagangAkademikWaliMurid extends Migrat
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(157);
-        $menu->page         = "jadwal-ujian";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(157);
+        // $menu->page         = "jadwal-ujian";
+        // $menu->updated_at   = $now;
+        // $menu->save();
 
         // update menu
-        $menu               = Menu::find(158);
-        $menu->page         = "magang";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(158);
+        // $menu->page         = "magang";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**

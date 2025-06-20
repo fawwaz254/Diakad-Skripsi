@@ -14,7 +14,7 @@ class ChangeTypeDataNilaiInTableJawabanTest extends Migration
     public function up()
     {
         Schema::table('jawaban_test', function (Blueprint $table) {
-            $table->float('nilai', 2, 1)->change();
+            $table->decimal('nilai', 2, 1)->change();
         });
     }
 

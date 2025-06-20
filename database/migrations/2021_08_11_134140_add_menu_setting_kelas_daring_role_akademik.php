@@ -22,19 +22,19 @@ class AddMenuSettingKelasDaringRoleAkademik extends Migration
 
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kelas Daring')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kelas Daring')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Setting Kelas Daring",
-                "page"         => "setting-kelas-daring",
-                "urutan"       => 3,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Setting Kelas Daring",
+        //         "page"         => "setting-kelas-daring",
+        //         "urutan"       => 3,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

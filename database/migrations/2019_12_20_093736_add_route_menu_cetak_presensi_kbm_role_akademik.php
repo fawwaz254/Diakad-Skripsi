@@ -20,16 +20,16 @@ class AddRouteMenuCetakPresensiKbmRoleAkademik extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(88);
-        $menu->page         = "cetak-presensi-kbm";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(88);
+        // $menu->page         = "cetak-presensi-kbm";
+        // $menu->updated_at   = $now;
+        // $menu->save();
 
         // update modul
-        $menu               = Modul::find(22);
-        $menu->page         = "presensi";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Modul::find(22);
+        // $menu->page         = "presensi";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**

@@ -24,17 +24,17 @@ class AddingMenuPembayaranOnlineOnWaliKelas extends Migration
         $menu->created_by = 'A8bT515358553655b8b4b05a6d86';
         $menu->save();
 
-        $menu = Menu::where('id_modul', 36)->where('nm_menu', 'Data Inventaris Kelas/Sarana')->first();
-        $menu->urutan = 6;
-        $menu->save();
+        // $menu = Menu::where('id_modul', 36)->where('nm_menu', 'Data Inventaris Kelas/Sarana')->first();
+        // $menu->urutan = 6;
+        // $menu->save();
 
-        $menu = Menu::where('id_modul', 36)->where('nm_menu', 'Input Pelanggaran Siswa')->first();
-        $menu->urutan = 7;
-        $menu->save();
+        // $menu = Menu::where('id_modul', 36)->where('nm_menu', 'Input Pelanggaran Siswa')->first();
+        // $menu->urutan = 7;
+        // $menu->save();
 
-        $menu = Menu::where('id_modul', 36)->where('nm_menu', 'Home Visit')->first();
-        $menu->urutan = 8;
-        $menu->save();
+        // $menu = Menu::where('id_modul', 36)->where('nm_menu', 'Home Visit')->first();
+        // $menu->urutan = 8;
+        // $menu->save();
     }
 
     /**

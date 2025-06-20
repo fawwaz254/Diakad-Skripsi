@@ -24,9 +24,9 @@ class AddingMenuAbsensiTanpaJadwal extends Migration
         $menu->akses        = 1;
         $menu->save();
         
-        $menu = Menu::where('id_modul', 10)->where('nm_menu', 'Rekap Absen')->first();
-        $menu->urutan       = 3;
-        $menu->save();
+        // $menu = Menu::where('id_modul', 10)->where('nm_menu', 'Rekap Absen')->first();
+        // $menu->urutan       = 3;
+        // $menu->save();
     }
 
     /**

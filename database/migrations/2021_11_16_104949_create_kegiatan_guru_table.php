@@ -21,7 +21,7 @@ class CreateKegiatanGuruTable extends Migration
             $table->string('nm_kegiatan', 128)->nullable()->comment('nama kegiatan (seminar lingkungan, workshop , dll)');
             $table->string('id_tingkat_prestasi_siswa', 40)->comment('FK: tingkat_prestasi_siswa.id_tingkat_prestasi_siswa');
             $table->string('link_kegiatan', 128)->nullable();
-            $table->tinyInteger('status')->comment('0 = Belum diapprove; 2 = Sudah diapprove;');
+            $table->integer('status')->comment('0 = Belum diapprove; 2 = Sudah diapprove;');
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

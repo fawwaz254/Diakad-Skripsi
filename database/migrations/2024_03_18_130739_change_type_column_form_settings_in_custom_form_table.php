@@ -14,6 +14,12 @@ class ChangeTypeColumnFormSettingsInCustomFormTable extends Migration
     public function up()
     {
         Schema::table('custom_form', function (Blueprint $table) {
+            DB::statement('
+                ALTER TABLE custom_form 
+                ALTER COLUMN form_settings TYPE json 
+                USING form_settings::json
+            ');
+            
             $table->json('form_settings')->nullable()->change();
         });
     }

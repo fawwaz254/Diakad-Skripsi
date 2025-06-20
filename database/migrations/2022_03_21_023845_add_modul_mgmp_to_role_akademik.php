@@ -23,41 +23,41 @@ class AddModulMgmpToRoleAkademik extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "MGMP",
-            "route"         => "mpmp",
-            "urutan"        => 1,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "MGMP",
+        //     "route"         => "mpmp",
+        //     "urutan"        => 1,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Data Kategori Mapel",
-                "page"         => "data-kategori-mapel",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-            [
-                "nm_menu"      => "Data Sub Folder Kategori Mapel",
-                "page"         => "data-sub-folder-kategori-mapel",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-            [
-                "nm_menu"      => "Data File",
-                "page"         => "data-file-mapel",
-                "urutan"       => 3,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Data Kategori Mapel",
+        //         "page"         => "data-kategori-mapel",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        //     [
+        //         "nm_menu"      => "Data Sub Folder Kategori Mapel",
+        //         "page"         => "data-sub-folder-kategori-mapel",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        //     [
+        //         "nm_menu"      => "Data File",
+        //         "page"         => "data-file-mapel",
+        //         "urutan"       => 3,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
 
-        ]); //
+        // ]); //
     }
 
     /**

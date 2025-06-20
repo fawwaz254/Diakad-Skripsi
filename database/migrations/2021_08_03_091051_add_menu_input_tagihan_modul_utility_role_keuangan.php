@@ -21,19 +21,19 @@ class AddMenuInputTagihanModulUtilityRoleKeuangan extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Keuangan')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Keuangan')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Utility')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Utility')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Input Tagihan Siswa",
-                "page"         => "input-tagihan-siswa",
-                "urutan"       => 6,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Input Tagihan Siswa",
+        //         "page"         => "input-tagihan-siswa",
+        //         "urutan"       => 6,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

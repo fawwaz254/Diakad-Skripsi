@@ -21,47 +21,47 @@ class AddingMenuUploadDokumenOnRoleGuruTendik extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesekretariatan')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesekretariatan')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Upload Dokumen",
-                "page"         => "upload-dokumen",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Upload Dokumen",
+        //         "page"         => "upload-dokumen",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
 
-        $role_id = Role::where('nm_role', 'Pelatih Ekskul')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Pelatih Ekskul')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesekretariatan')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesekretariatan')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Upload Dokumen",
-                "page"         => "upload-dokumen",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Upload Dokumen",
+        //         "page"         => "upload-dokumen",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
 
-        $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesekretariatan')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesekretariatan')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Upload Dokumen",
-                "page"         => "upload-dokumen",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Upload Dokumen",
+        //         "page"         => "upload-dokumen",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

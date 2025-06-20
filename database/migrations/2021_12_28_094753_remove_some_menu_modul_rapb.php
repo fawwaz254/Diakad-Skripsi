@@ -20,16 +20,16 @@ class RemoveSomeMenuModulRapb extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Keuangan')->first()->id_role;
-        $modul_id = Modul::where('id_role', $role_id)->where('nm_modul', 'RAPB')->first()->id_modul;
+        // $role_id = Role::where('nm_role', 'Keuangan')->first()->id_role;
+        // $modul_id = Modul::where('id_role', $role_id)->where('nm_modul', 'RAPB')->first()->id_modul;
 
-        $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Input RAPB')->first();
-        $menu->akses = 0;
-        $menu->save();
+        // $menu = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Input RAPB')->first();
+        // $menu->akses = 0;
+        // $menu->save();
 
-        $menu2 = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Realisasi RAPB')->first();
-        $menu2->akses = 0;
-        $menu2->save();
+        // $menu2 = Menu::where('id_modul', $modul_id)->where('nm_menu', 'Realisasi RAPB')->first();
+        // $menu2->akses = 0;
+        // $menu2->save();
     }
 
     /**

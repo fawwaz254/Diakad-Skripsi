@@ -22,10 +22,10 @@ class AddDbMenuReportPendaftaranRolePpdb extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(159);
-        $menu->page         = "report-pendaftaran";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(159);
+        // $menu->page         = "report-pendaftaran";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**

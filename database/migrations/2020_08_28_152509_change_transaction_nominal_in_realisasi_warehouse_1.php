@@ -18,7 +18,7 @@ class ChangeTransactionNominalInRealisasiWarehouse1 extends Migration
         });
 
         Schema::table('realisasi_warehouses', function (Blueprint $table) {
-            $table->float('transaction_nominal', 10, 0)->after('transaction_date')->nullable();
+            $table->decimal('transaction_nominal', 10, 0)->after('transaction_date')->nullable();
         });
 
         Schema::table('realisasi_warehouse_categories', function (Blueprint $table) {

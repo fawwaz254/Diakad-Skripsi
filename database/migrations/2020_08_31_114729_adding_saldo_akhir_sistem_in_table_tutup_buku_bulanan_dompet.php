@@ -14,7 +14,7 @@ class AddingSaldoAkhirSistemInTableTutupBukuBulananDompet extends Migration
     public function up()
     {
         Schema::table('tutup_buku_bulanan_dompet', function (Blueprint $table) {
-            $table->float('saldo_akhir_sistem', 10, 0)->nullable()->after('saldo_akhir_dompet');
+            $table->decimal('saldo_akhir_sistem', 10, 0)->nullable()->after('saldo_akhir_dompet');
         });
     }
 

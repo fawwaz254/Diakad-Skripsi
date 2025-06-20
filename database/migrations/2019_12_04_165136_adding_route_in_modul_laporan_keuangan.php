@@ -15,9 +15,9 @@ class AddingRouteInModulLaporanKeuangan extends Migration
      */
     public function up()
     {
-        $modul = Modul::find(30);
-        $modul->route = 'laporan-keuangan';
-        $modul->save();
+        // $modul = Modul::find(30);
+        // $modul->route = 'laporan-keuangan';
+        // $modul->save();
     }
 
     /**
