@@ -76,7 +76,7 @@
     <link href="{{ asset('vendor/css/datatables/fixedColumns.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/css/datatables/fixedHeader.dataTables.min.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('vendor/css/fontawesome/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
 
     <script>
         var base_url = document.getElementsByTagName('base')[0].getAttribute('href');
