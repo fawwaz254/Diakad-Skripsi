@@ -780,12 +780,8 @@
             @endif
 
             {{-- //informasi tambahan --}}
-            {{-- @if ($informasi_tambahan->count() > 0) --}}
-            {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') --}}
             <h6 style="margin-top: 15px;margin-left: 110px">{{ $urutan }}. Informasi Tambahan
-                {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                 <br><i style="margin-left: 17px">Additional Information</i>
-                {{-- @endif --}}
             </h6>
 
             <table class="bg-color"
@@ -793,28 +789,20 @@
                 <tr>
                     <td>3.{{ $urutan }}1</td>
                     <td>Bahasa Internasional
-                        {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                         <br><i>International Language</i>
-                        {{-- @endif --}}
                     </td>
                     <td>Bahasa Inggris
-                        {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                         <br><i>English</i>
-                        {{-- @endif --}}
                     </td>
                 </tr>
                 <tr>
                     <td>3.{{ $urutan }}2</td>
                     <td>Kegiatan Melatih Keterampilan Hidup
-                        {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                         <br><i>Life Skills Training Activities</i>
-                        {{-- @endif --}}
                     </td>
                     <td>Pramuka dan Kemah Wisata <br> (Kedisiplinan, kemandirian, kerjasama dan tanggung jawab)
-                        {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                         <br><i>Scouting and Tourism Camp <br> (Discipline, independence, cooperation and
                             responsibility)</i>
-                        {{-- @endif --}}
                     </td>
                 </tr>
 
@@ -827,41 +815,32 @@
                         <p style=" display:none">{{ $no++ }}</p>
                         <td>3.{{ $urutan }}{{ $no }}</td>
                         <td>Ekstrakurikuler<br>
-                            {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                             <i>Extracurricular</i>
                         </td>
-                        {{-- @endif --}}
                         <td style="width: 55%;">
                             @foreach ($informasi_tambahan_ekstrakurikuler as $r)
                                 {{ $r->nm_informasi_tambahan }}
-                                {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                                 <br>
                                 <i>{{ $r->nm_informasi_tambahan_eng }}</i>
-                                {{-- @endif --}}
                                 <br>
                             @endforeach
                         </td>
                     </tr>
                 @endif
 
-                {{-- produk lomba sosial --}}
                 @if ($informasi_produk_lomba->count() > 0)
                     <tr>
                         <p style=" display:none">{{ $no++ }}</p>
                         <td>3.{{ $urutan }}{{ $no }}</td>
                         <td>Produk Lomba
-                            {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                             <br>
                             <i>Competition Product</i>
                         </td>
-                        {{-- @endif --}}
                         <td style="width: 55%;">
                             @foreach ($informasi_produk_lomba as $r)
                                 {{ $r->nm_informasi_tambahan }}
-                                {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
                                 <br>
                                 <i>{{ $r->nm_informasi_tambahan_eng }}</i>
-                                {{-- @endif --}}
                                 <br>
                             @endforeach
                         </td>
@@ -870,37 +849,24 @@
 
                 <br>
             </table>
-            {{-- @endif --}}
             <div class="avoid-break mt-4 mb-4">
                 <table cellspacing="0" style="width: 80%; border:none; margin:auto; text-align:left; ">
                     <tr>
                         <td style="width: 70%; border: none;"></td>
-                        {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2') --}}
                         <td style="border: none;"></td>
-                        {{-- @endif --}}
                         <td style="border: none;">Kab. Sidoarjo,
-                            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                                {{ $tanggal_cetak }}
-                            @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
-                                8 Mei 2024
-                            @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                                11 Juni 2024
-                            @else
-                                {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
-                            @endif
+                            {{ $tanggal_cetak }}
                         </td>
                     </tr>
                     <tr>
                     <tr style="vertical-align: top;top:20px">
                         <td style="width: 70%; border: none;"></td>
-                        {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2') --}}
                         <td style="border: none;">
                             @if (isset($siswa->pengguna->path_foto_pengguna))
                                 <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $siswa->pengguna->path_foto_pengguna }}"
                                     alt="" style="height:165px; width:124px; margin-left:-160px;" />
                             @endif
                         </td>
-                        {{-- @endif --}}
                         <td style="border: none; position: relative;">
                             Kepala Sekolah
                             <br>
@@ -931,16 +897,11 @@
                                 <br>
                                 <br>
                             @endif
-                            {{-- @if ($siswa->keterangan_kelas == 'Internasional')
-                        <br>
-                        <br>
-                    @endif --}}
                             <b><u>{{ str_replace('S.Pd.I.,', '', $auth_data->sekolah_data->nm_kepala_sekolah) }}</u></b>
                         </td>
                     </tr>
                     </tr>
                 </table>
-                {{-- @endif --}}
             </div>
             <div>
                 <div class="pagebreak"> </div>
