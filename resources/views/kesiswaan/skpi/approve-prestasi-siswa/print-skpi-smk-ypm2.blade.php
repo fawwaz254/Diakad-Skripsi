@@ -619,7 +619,6 @@
                 </td>
             </tr>
 
-
             <p style="display:none">{{ $no = 2 }}</p>
 
             @if ($informasi_tambahan_ekstrakurikuler->count() > 0)
@@ -678,7 +677,7 @@
                 <tr style="background-color: white;border:none;">
                     <td style="width: 70%; border: none;"></td>
                     <td style="border: none;"></td>
-                    <td style="border: none">pada tanggal 8 Mei 2024
+                    <td style="border: none">pada {{ $tanggal_cetak }}
                     </td>
                 </tr>
                 <tr>
