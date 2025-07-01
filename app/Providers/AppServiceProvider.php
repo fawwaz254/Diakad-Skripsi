@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Pengguna;
 use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,5 +33,9 @@ class AppServiceProvider extends ServiceProvider
         config(['app.locale' => 'id']);
         Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta');
+
+        Gate::define('viewPulse', function (Pengguna $pengguna) {
+            return $pengguna->username == 'admin';
+        });
     }
 }
