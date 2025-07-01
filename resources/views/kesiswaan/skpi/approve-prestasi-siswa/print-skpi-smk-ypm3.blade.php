@@ -981,15 +981,16 @@
                     <td style="border: none;"></td>
                     {{-- @endif --}}
                     <td style="border: none;">Kab. Sidoarjo,
-                        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                        {{ $tanggal_cetak }}
+                        {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                             8 Mei 2023
                         @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2')
-                            8 Mei 2024
+                            {{ $tanggal_cetak }}
                         @elseif ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                            11 Juni 2024
+                            {{ $tanggal_cetak }}
                         @else
                             {{ $tanggal_cetak }}
-                        @endif
+                        @endif --}}
                     </td>
                 </tr>
                 <tr>
