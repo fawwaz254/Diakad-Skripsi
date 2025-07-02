@@ -15,15 +15,15 @@ class AddMenuLaporanMGMP extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'MGMP')->where('id_role', '7')->first();
+        // $modul = Modul::where('nm_modul', 'MGMP')->where('id_role', '7')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Laporan MGMP';
-        $menu->page = 'laporan-mgmp';
-        $menu->urutan = 2;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Laporan MGMP';
+        // $menu->page = 'laporan-mgmp';
+        // $menu->urutan = 2;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

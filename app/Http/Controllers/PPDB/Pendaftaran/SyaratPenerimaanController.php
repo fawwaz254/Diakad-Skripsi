@@ -28,7 +28,7 @@ class SyaratPenerimaanController extends Controller
     public function viewSyaratPenerimaan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         /** get all data penerimaan */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
@@ -49,7 +49,7 @@ class SyaratPenerimaanController extends Controller
     public function actionViewSyaratPenerimaan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator  = Validator::make($request->all(), [
             'id_penerimaan' => 'required'
@@ -76,7 +76,7 @@ class SyaratPenerimaanController extends Controller
     public function syaratPenerimaan($id, Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
@@ -105,7 +105,7 @@ class SyaratPenerimaanController extends Controller
     public function addSyaratPenerimaan($id, Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
@@ -128,7 +128,7 @@ class SyaratPenerimaanController extends Controller
     public function actionAddSyaratPenerimaan(Request $request, $id)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_penerimaan'                 => 'required',
@@ -158,7 +158,7 @@ class SyaratPenerimaanController extends Controller
             ];
 
             /** generate id_penerimaan_syarat */
-            $id_penerimaan_syarat = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id_penerimaan_syarat = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
             /** action for add data syarat penerimaan */
             $penerimaan_syarat                                  = new PenerimaanSyarat;
@@ -170,7 +170,7 @@ class SyaratPenerimaanController extends Controller
             $penerimaan_syarat->urutan                          = $input->urutan;
             $penerimaan_syarat->is_upload_file                  = $input->is_upload_file;
             $penerimaan_syarat->keterangan_penerimaan_syarat    = $input->keterangan_penerimaan_syarat;
-            $penerimaan_syarat->created_by                      = $input->auth_data->pengguna->id_pengguna;
+            $penerimaan_syarat->created_by                      = auth_data()->pengguna->id_pengguna;
             $penerimaan_syarat->save();
 
             return [
@@ -189,7 +189,7 @@ class SyaratPenerimaanController extends Controller
     public function editSyaratPenerimaan(Request $request, $id_penerimaan, $id_penerimaan_syarat)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         /** get syarat penerimaan by id_penerimaan_syarat */
         $input              = (object) $request->input();
@@ -219,7 +219,7 @@ class SyaratPenerimaanController extends Controller
     public function actionEditSyaratPenerimaan(Request $request, $id_penerimaan, $id_syarat_penerimaan)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_penerimaan'                 => 'required',
@@ -257,7 +257,7 @@ class SyaratPenerimaanController extends Controller
         $penerimaan_syarat->is_upload_file                  = $input->is_upload_file;
         $penerimaan_syarat->keterangan_penerimaan_syarat    = $input->keterangan_penerimaan_syarat;
         $penerimaan_syarat->updated_at                      = $now;
-        $penerimaan_syarat->updated_by                      = $input->auth_data->pengguna->id_pengguna;
+        $penerimaan_syarat->updated_by                      = auth_data()->pengguna->id_pengguna;
         $penerimaan_syarat->save();
 
         return [
@@ -286,7 +286,7 @@ class SyaratPenerimaanController extends Controller
         }
 
         /** deleting data syarat penerimaan */
-        $penerimaan_syarat->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+        $penerimaan_syarat->deleted_by  = auth_data()->pengguna->id_pengguna;
         $penerimaan_syarat->save();
         $penerimaan_syarat->delete();
 

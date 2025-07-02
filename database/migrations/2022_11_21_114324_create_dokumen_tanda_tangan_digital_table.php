@@ -22,7 +22,7 @@ class CreateDokumenTandaTanganDigitalTable extends Migration
             $table->string('link_dokumen', 150)->nullable();
             $table->boolean('is_approve')->comment('0 = sudah di approve; 1=belum di approve')->nullable();
             $table->string('approve_by', 40)->comment('FK: pengguna.id_pengguna')->nullable();
-            $table->dateTime('approve_at')->nullable();
+            $table->timestamp('approve_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->string('created_by', 40)->nullable();

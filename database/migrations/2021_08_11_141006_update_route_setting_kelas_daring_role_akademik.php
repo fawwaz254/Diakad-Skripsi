@@ -18,13 +18,13 @@ class UpdateRouteSettingKelasDaringRoleAkademik extends Migration
     public function up()
     {
         
-        $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kelas Daring')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kelas Daring')->first();
 
-        $modul->menus()->where('nm_menu', 'Setting Kelas Daring')->update([
-            "page" => "jadwal-kelas"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Setting Kelas Daring')->update([
+        //     "page" => "jadwal-kelas"
+        // ]);
 
     }
 

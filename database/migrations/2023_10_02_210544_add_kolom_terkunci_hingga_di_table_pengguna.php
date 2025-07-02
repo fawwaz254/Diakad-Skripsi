@@ -14,7 +14,7 @@ class AddKolomTerkunciHinggaDiTablePengguna extends Migration
     public function up()
     {
         Schema::table('pengguna', function (Blueprint $table) {
-            $table->dateTime('terkunci_hingga')->nullable()->after('remember_token');
+            $table->timestamp('terkunci_hingga')->nullable()->after('remember_token');
         });
     }
 

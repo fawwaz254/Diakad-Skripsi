@@ -23,7 +23,7 @@ class SettingPengampuController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('akademik/kelas-daring/setting-pengampu/view-setting-pengampu', compact('auth_data'));
     }
@@ -31,7 +31,7 @@ class SettingPengampuController extends BaseController
     public function datatablesSettingPengampu(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = Guru::with('pengguna', 'pengampu_mapel');
 
@@ -55,7 +55,7 @@ class SettingPengampuController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $item = Guru::find($id_guru);
 
@@ -65,7 +65,7 @@ class SettingPengampuController extends BaseController
     public function datatablesGuruSettingPengampu(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $id_guru = $input->id;
 
@@ -126,10 +126,10 @@ class SettingPengampuController extends BaseController
         } else {
             if ($mode == 'set') {
                 $now = Carbon::now();
-                $auth_data = $input->auth_data;
+                $auth_data = auth_data();
 
                 $pengampu_mapel                     = new PengampuMapel;
-                $pengampu_mapel->id_pengampu_mapel  = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $pengampu_mapel->id_pengampu_mapel  = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $pengampu_mapel->id_mata_pelajaran  = $input->id_mata_pelajaran;
                 $pengampu_mapel->id_guru            = $input->id;
                 $pengampu_mapel->created_by         = $auth_data->pengguna->id_pengguna;
@@ -141,7 +141,7 @@ class SettingPengampuController extends BaseController
                 ];
             } else {
                 $now = Carbon::now();
-                $auth_data = $input->auth_data;
+                $auth_data = auth_data();
 
                 $pengampu_mapel = PengampuMapel::where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_guru', $input->id)->first();
                 $pengampu_mapel->forceDelete();

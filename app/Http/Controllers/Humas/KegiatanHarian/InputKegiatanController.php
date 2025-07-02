@@ -23,7 +23,7 @@ class InputKegiatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/kegiatan-harian/input-kegiatan/view-input-kegiatan', compact('auth_data'));
     }
@@ -32,7 +32,7 @@ class InputKegiatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (!empty($id)) {
             $item = KegiatanHarian::find($id);
@@ -47,7 +47,7 @@ class InputKegiatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $item = KegiatanHarian::find($id_kegiatan_harian);
 
@@ -58,7 +58,7 @@ class InputKegiatanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (!empty($id)) {
             $item = KegiatanHarianKategori::find($id);
@@ -72,7 +72,7 @@ class InputKegiatanController extends BaseController
     public function showDatatablesInputKegiatan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = KegiatanHarian::with('kategori_pertanyaan');
 
         return Datatables::of($list_data)
@@ -98,7 +98,7 @@ class InputKegiatanController extends BaseController
     public function showDatatablesInputKategoriPertanyaan(Request $request, $id_kegiatan_harian)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = KegiatanHarianKategori::where('id_kegiatan_harian', $id_kegiatan_harian);
 
         return Datatables::of($list_data)
@@ -130,13 +130,13 @@ class InputKegiatanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan_harian                        = new KegiatanHarian;
                 $kegiatan_harian->id_kegiatan_harian    = $id;
                 $kegiatan_harian->nm_kegiatan_harian    = $input->nm_kegiatan_harian;
                 $kegiatan_harian->is_aktif              = $input->is_aktif;
-                $kegiatan_harian->created_by            = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian->created_by            = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian->save();
 
                 return [
@@ -148,7 +148,7 @@ class InputKegiatanController extends BaseController
                 $kegiatan_harian                        = KegiatanHarian::find($id);
                 $kegiatan_harian->nm_kegiatan_harian    = $input->nm_kegiatan_harian;
                 $kegiatan_harian->is_aktif              = $input->is_aktif;
-                $kegiatan_harian->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian->updated_by            = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian->save();
 
                 return [
@@ -165,7 +165,7 @@ class InputKegiatanController extends BaseController
                 } else {
                     // make object to find id
                     $kategoriPemasukan               = KegiatanHarian::find($id);
-                    $kategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $kategoriPemasukan->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $kategoriPemasukan->save();
 
                     $kategoriPemasukan->delete();
@@ -198,13 +198,13 @@ class InputKegiatanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan_harian                                 = new KegiatanHarianKategori;
                 $kegiatan_harian->id_kegiatan_harian_kategori    = $id;
                 $kegiatan_harian->id_kegiatan_harian             = $input->id_kegiatan_harian;
                 $kegiatan_harian->nm_kegiatan_harian_kategori    = $input->nm_kegiatan_harian_kategori;
-                $kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian->created_by                     = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian->save();
 
                 return [
@@ -215,7 +215,7 @@ class InputKegiatanController extends BaseController
             } elseif ($mode == 'edit') {
                 $kegiatan_harian                                 = KegiatanHarianKategori::find($input->id_kegiatan_harian_kategori);
                 $kegiatan_harian->nm_kegiatan_harian_kategori    = $input->nm_kegiatan_harian_kategori;
-                $kegiatan_harian->updated_by                     = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan_harian->updated_by                     = auth_data()->pengguna->id_pengguna;
                 $kegiatan_harian->save();
 
                 return [
@@ -233,7 +233,7 @@ class InputKegiatanController extends BaseController
                 // else{
                 // make object to find id
                 $kategoriPemasukan               = KegiatanHarianKategori::find($id);
-                $kategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $kategoriPemasukan->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $kategoriPemasukan->save();
 
                 $kategoriPemasukan->delete();

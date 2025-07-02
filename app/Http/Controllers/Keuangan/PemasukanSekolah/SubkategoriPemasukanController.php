@@ -24,7 +24,7 @@ class SubkategoriPemasukanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('keuangan/pemasukan-sekolah/subkategori-pemasukan/view-subkategori-pemasukan', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class SubkategoriPemasukanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -49,7 +49,7 @@ class SubkategoriPemasukanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kategori_pemasukan = LibDataKeuangan::fetchDataKategoriPemasukan($auth_data);
 
@@ -61,7 +61,7 @@ class SubkategoriPemasukanController extends BaseController
     public function datatablesSubkategoriPemasukan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataKeuangan::fetchDataSubkategoriPemasukan($auth_data);
 
         return Datatables::of($list_data)
@@ -96,14 +96,14 @@ class SubkategoriPemasukanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $subKategoriPemasukan                                             = new PemasukanBiayaSubkategori;
                 $subKategoriPemasukan->id_pemasukan_biaya_subkategori           = $id;
                 $subKategoriPemasukan->id_pemasukan_biaya_kategori              = $input->id_pemasukan_biaya_kategori;
                 $subKategoriPemasukan->nm_pemasukan_biaya_subkategori           = $input->nm_pemasukan_biaya_subkategori;
                 $subKategoriPemasukan->keterangan_pemasukan_biaya_subkategori   = $input->keterangan_pemasukan_biaya_subkategori;
-                $subKategoriPemasukan->created_by                                 = $input->auth_data->pengguna->id_pengguna;
+                $subKategoriPemasukan->created_by                                 = auth_data()->pengguna->id_pengguna;
                 $subKategoriPemasukan->save();
 
                 return [
@@ -117,7 +117,7 @@ class SubkategoriPemasukanController extends BaseController
                 $subKategoriPemasukan->id_pemasukan_biaya_kategori              = $input->id_pemasukan_biaya_kategori;
                 $subKategoriPemasukan->nm_pemasukan_biaya_subkategori           = $input->nm_pemasukan_biaya_subkategori;
                 $subKategoriPemasukan->keterangan_pemasukan_biaya_subkategori   = $input->keterangan_pemasukan_biaya_subkategori;
-                $subKategoriPemasukan->updated_by                                 = $input->auth_data->pengguna->id_pengguna;
+                $subKategoriPemasukan->updated_by                                 = auth_data()->pengguna->id_pengguna;
                 $subKategoriPemasukan->updated_at                                 = $now;
                 $subKategoriPemasukan->save();
 
@@ -135,7 +135,7 @@ class SubkategoriPemasukanController extends BaseController
                 } else {
                     // make object to find id
                     $subKategoriPemasukan               = PemasukanBiayaSubkategori::find($id);
-                    $subKategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $subKategoriPemasukan->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $subKategoriPemasukan->save();
 
                     $subKategoriPemasukan->delete();

@@ -20,7 +20,7 @@ class CreateAlumniSmpTable2 extends Migration
             $table->string('nm_sekolah', 40);
             $table->string('alamat_sekolah', 40);
             $table->string('jurusan', 40);
-            $table->tinyInteger('jenis_sekolah')->comment('0=tidak melanjutkan sekolah 1=SMA; 2=SMK; 3=MA;');
+            $table->integer('jenis_sekolah')->comment('0=tidak melanjutkan sekolah 1=SMA; 2=SMK; 3=MA;');
             $table->integer('tahun_masuk_sekolah');
             $table->timestamps();
             $table->softDeletes();

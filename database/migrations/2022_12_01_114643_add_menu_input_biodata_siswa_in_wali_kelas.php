@@ -18,15 +18,15 @@ class AddMenuInputBiodataSiswaInWaliKelas extends Migration
     public function up()
     {
 
-        $id_modul = Modul::where('id_role', 2)->where('nm_modul', 'Wali Kelas')->first()->id_modul;
+        // $id_modul = Modul::where('id_role', 2)->where('nm_modul', 'Wali Kelas')->first()->id_modul;
 
-        $menu = new Menu;
-        $menu->id_modul = $id_modul;
-        $menu->nm_menu = 'Input Biodata Siswa';
-        $menu->page = 'input-biodata-siswa';
-        $menu->urutan = 7;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $id_modul;
+        // $menu->nm_menu = 'Input Biodata Siswa';
+        // $menu->page = 'input-biodata-siswa';
+        // $menu->urutan = 7;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

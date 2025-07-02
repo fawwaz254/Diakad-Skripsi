@@ -24,7 +24,7 @@ class CreatePtkGajiBerkalaTable extends Migration {
 			$table->date('tgl_mulai_gaji_berkala')->nullable()->comment('Tanggal mulai berlakunya gaji baru sesuai SK kenaikan gaji berkala');
 			$table->integer('masa_kerja_tahun_gaji_berkala')->nullable();
 			$table->integer('masa_kerja_bulan_gaji_berkala')->nullable();
-			$table->float('gaji_pokok', 10, 0)->nullable()->comment('Jumlah gaji pokok baru sesuai yang tertera pada SK kenaikan gaji berkala');
+			$table->decimal('gaji_pokok', 10, 0)->nullable()->comment('Jumlah gaji pokok baru sesuai yang tertera pada SK kenaikan gaji berkala');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
 			$table->string('updated_by', 40)->nullable();

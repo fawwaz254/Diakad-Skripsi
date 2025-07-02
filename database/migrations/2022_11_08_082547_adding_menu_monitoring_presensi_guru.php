@@ -16,20 +16,20 @@ class AddingMenuMonitoringPresensiGuru extends Migration
      */
     public function up()
     {
-        $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Akademik')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Monitoring')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Monitoring')->first();
 
-        $modul->menus()->where('nm_menu', 'Monitoring Presensi')->update([
-            "nm_menu" => "Monitoring Presensi Siswa",
-            "urutan" => 3
-        ]);
-        $modul->menus()->where('nm_menu', 'Monitoring Kelas Kosong')->update([
-            "urutan" => 4
-        ]);
-        $modul->menus()->where('nm_menu', 'Rekap Monitoring Kelas Kosong')->update([
-            "urutan" => 5
-        ]);
+        // $modul->menus()->where('nm_menu', 'Monitoring Presensi')->update([
+        //     "nm_menu" => "Monitoring Presensi Siswa",
+        //     "urutan" => 3
+        // ]);
+        // $modul->menus()->where('nm_menu', 'Monitoring Kelas Kosong')->update([
+        //     "urutan" => 4
+        // ]);
+        // $modul->menus()->where('nm_menu', 'Rekap Monitoring Kelas Kosong')->update([
+        //     "urutan" => 5
+        // ]);
 
         $menu = new Menu;
         $menu->id_modul = 24;

@@ -22,7 +22,7 @@ class TracerAlumniWaliKelasController extends BaseController
     public function cetakTracerAlumniWaliKelas(Request $request, $id_kelas = null, $tahun_lulus = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $wali_kelas = WaliKelas::where('is_aktif', 1)->with('guru')
             ->whereHas('guru', function ($query) use ($auth_data) {
@@ -48,7 +48,7 @@ class TracerAlumniWaliKelasController extends BaseController
     public function editTracerAlumniWaliKelas(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_jurusan = Jurusan::all();
 
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
@@ -65,7 +65,7 @@ class TracerAlumniWaliKelasController extends BaseController
     public function exportAlumnniWaliKelas(Request $request, $id_kelas, $tahun_lulus)
     {
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
+        // $auth_data = auth_data();
         $alumni = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->with('smp', 'calon_siswa', 'kelas')->get();
         return Excel::download(new ExportAlumni($alumni), 'download_harian.xlsx');
     }
@@ -74,7 +74,7 @@ class TracerAlumniWaliKelasController extends BaseController
     public function datatablesCetakTracerAlumniWaliKelas(Request $request, $id_kelas, $tahun_lulus)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             $alumnis    = LibAlumni::getAlumnisSearchSmp($id_kelas, $tahun_lulus);
             return Datatables::of($alumnis)->addColumn('status', function ($item) {

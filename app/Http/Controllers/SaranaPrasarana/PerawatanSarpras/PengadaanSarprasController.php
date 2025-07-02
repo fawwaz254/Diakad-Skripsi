@@ -28,7 +28,7 @@ class PengadaanSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/perawatan-sarpras/pengadaan-sarpras/view-pengadaan-sarpras', compact('auth_data'));
     }
@@ -36,7 +36,7 @@ class PengadaanSarprasController extends BaseController
     public function datatablesPengadaanSarprasTinggi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataPengadaanSarpras($auth_data, 3, null, 1);
 
         return Datatables::of($list_data)
@@ -90,7 +90,7 @@ class PengadaanSarprasController extends BaseController
     public function datatablesPengadaanSarprasSedang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataPengadaanSarpras($auth_data, 2, null, 1);
 
         return Datatables::of($list_data)
@@ -144,7 +144,7 @@ class PengadaanSarprasController extends BaseController
     public function datatablesPengadaanSarprasRendah(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataPengadaanSarpras($auth_data, 1, null, 1);
 
         return Datatables::of($list_data)
@@ -199,7 +199,7 @@ class PengadaanSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -221,7 +221,7 @@ class PengadaanSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // ambil data inventaris ruangan
         $data_inventaris = LibDataSarpras::fetchDataInventarisRuangan($auth_data, $input->id_ruangan);
@@ -234,7 +234,7 @@ class PengadaanSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_rpb_sarpras = LibDataSarpras::fetchDataPengadaanSarpras($auth_data, null, $id_rpb_sarpras, null);
 
@@ -244,7 +244,7 @@ class PengadaanSarprasController extends BaseController
     public function datatablesPengadaanSarprasSupplier(Request $request, $id_rpb_sarpras)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataPengadaanSarprasSupplier($auth_data, $id_rpb_sarpras, null, 1);
 
         return Datatables::of($list_data)
@@ -299,7 +299,7 @@ class PengadaanSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -317,7 +317,7 @@ class PengadaanSarprasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -347,34 +347,34 @@ class PengadaanSarprasController extends BaseController
             if ($tipe_unit_kerja == 'SARPRAS') {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.jenis_jabatan', '=', 1)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.jenis_jabatan', '=', 1)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
             } elseif ($tipe_unit_kerja == 'KEUANGAN') {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.jenis_jabatan', '=', 2)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.jenis_jabatan', '=', 2)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
             } else {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.id_unit_kerja', '=', $id_unit_kerja)
                     ->where('guru.jenis_jabatan', '=', 98)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.id_unit_kerja', '=', $id_unit_kerja)
                     ->where('staff.jenis_jabatan', '=', 98)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
             }
 
@@ -382,7 +382,7 @@ class PengadaanSarprasController extends BaseController
                 // make object to find id
                 $rpb_sarpras                           = RpbSarpras::find($id);
                 $rpb_sarpras->id_pengguna_kepala_unit  = $guru->id_pengguna;
-                $rpb_sarpras->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                $rpb_sarpras->updated_by               = auth_data()->pengguna->id_pengguna;
                 $rpb_sarpras->updated_at               = $now;
                 $rpb_sarpras->save();
 
@@ -394,7 +394,7 @@ class PengadaanSarprasController extends BaseController
                 // make object to find id
                 $rpb_sarpras                           = RpbSarpras::find($id);
                 $rpb_sarpras->id_pengguna_kepala_unit  = $staff->id_pengguna;
-                $rpb_sarpras->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                $rpb_sarpras->updated_by               = auth_data()->pengguna->id_pengguna;
                 $rpb_sarpras->updated_at               = $now;
                 $rpb_sarpras->save();
 
@@ -411,19 +411,19 @@ class PengadaanSarprasController extends BaseController
         } elseif ($mode == 'approve-kepala-sarpras') {
             $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                 ->where('guru.jenis_jabatan', '=', 1)
-                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                 ->first();
 
             $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                 ->where('staff.jenis_jabatan', '=', 1)
-                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                 ->first();
 
             if (!empty($guru->id_pengguna)) {
                 // make object to find id
                 $rpb_sarpras                               = RpbSarpras::find($id);
                 $rpb_sarpras->id_pengguna_kepala_sarpras   = $guru->id_pengguna;
-                $rpb_sarpras->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $rpb_sarpras->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $rpb_sarpras->updated_at                   = $now;
                 $rpb_sarpras->save();
 
@@ -435,7 +435,7 @@ class PengadaanSarprasController extends BaseController
                 // make object to find id
                 $rpb_sarpras                               = RpbSarpras::find($id);
                 $rpb_sarpras->id_pengguna_kepala_sarpras   = $staff->id_pengguna;
-                $rpb_sarpras->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $rpb_sarpras->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $rpb_sarpras->updated_at                   = $now;
                 $rpb_sarpras->save();
 
@@ -457,19 +457,19 @@ class PengadaanSarprasController extends BaseController
             if (!empty($rpb_sarpras_supplier->id_rpb_sarpras_supplier)) {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.jenis_jabatan', '=', 1)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.jenis_jabatan', '=', 1)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 if (!empty($guru->id_pengguna)) {
                     // make object to find id
                     $rpb_sarpras                                        = RpbSarpras::find($id);
                     $rpb_sarpras->id_pengguna_kepala_sarpras_approve    = $guru->id_pengguna;
-                    $rpb_sarpras->updated_by                            = $input->auth_data->pengguna->id_pengguna;
+                    $rpb_sarpras->updated_by                            = auth_data()->pengguna->id_pengguna;
                     $rpb_sarpras->updated_at                            = $now;
                     $rpb_sarpras->save();
 
@@ -481,7 +481,7 @@ class PengadaanSarprasController extends BaseController
                     // make object to find id
                     $rpb_sarpras                                        = RpbSarpras::find($id);
                     $rpb_sarpras->id_pengguna_kepala_sarpras_approve    = $staff->id_pengguna;
-                    $rpb_sarpras->updated_by                            = $input->auth_data->pengguna->id_pengguna;
+                    $rpb_sarpras->updated_by                            = auth_data()->pengguna->id_pengguna;
                     $rpb_sarpras->updated_at                            = $now;
                     $rpb_sarpras->save();
 
@@ -514,16 +514,16 @@ class PengadaanSarprasController extends BaseController
                 $data->is_approve           = 0;
                 $data->id_pengguna_approve  = null;
                 $data->tgl_approve          = null;
-                $data->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                $data->updated_by           = auth_data()->pengguna->id_pengguna;
                 $data->updated_at           = $now;
                 $data->save();
             }
 
             if (!empty($rpb_sarpras_supplier->harga_approve_supplier) && !empty($rpb_sarpras_supplier->qty_approve_supplier) && !empty($rpb_sarpras_supplier->termin_approve_supplier)) {
                 $rpb_sarpras_supplier->is_approve           = 1;
-                $rpb_sarpras_supplier->id_pengguna_approve  = $input->auth_data->pengguna->id_pengguna;
+                $rpb_sarpras_supplier->id_pengguna_approve  = auth_data()->pengguna->id_pengguna;
                 $rpb_sarpras_supplier->tgl_approve          = $now;
-                $rpb_sarpras_supplier->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                $rpb_sarpras_supplier->updated_by           = auth_data()->pengguna->id_pengguna;
                 $rpb_sarpras_supplier->updated_at           = $now;
                 $rpb_sarpras_supplier->save();
 
@@ -595,7 +595,7 @@ class PengadaanSarprasController extends BaseController
                 if (!empty($input->id_inventaris_ruangan) or !empty($input->id_buku_alat)) {
                     // make object to find id
                     $rpbSarpras                             = new RpbSarpras;
-                    $rpbSarpras->id_rpb_sarpras             = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $rpbSarpras->id_rpb_sarpras             = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $rpbSarpras->id_semester                = $input->id_semester;
                     $rpbSarpras->id_unit_kerja              = $input->id_unit_kerja;
                     if (!empty($input->id_buku_alat)) {
@@ -609,7 +609,7 @@ class PengadaanSarprasController extends BaseController
                     // convert format date
                     $rpbSarpras->tgl_rpb_sarpras            = date_format(date_create($input->tgl_rpb_sarpras), "Y-m-d H:i:s");
                     $rpbSarpras->prioritas_rpb_sarpras      = $input->prioritas_rpb_sarpras;
-                    $rpbSarpras->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                    $rpbSarpras->created_by                 = auth_data()->pengguna->id_pengguna;
                     $rpbSarpras->save();
 
                     return [
@@ -626,7 +626,7 @@ class PengadaanSarprasController extends BaseController
             } elseif ($mode == 'add-supplier') {
                 // make object to find id
                 $rpbSarprasSupplier                             = new RpbSarprasSupplier;
-                $rpbSarprasSupplier->id_rpb_sarpras_supplier    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $rpbSarprasSupplier->id_rpb_sarpras_supplier    = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $rpbSarprasSupplier->id_rpb_sarpras             = $input->id_rpb_sarpras;
                 $rpbSarprasSupplier->id_supplier                = $input->id_supplier;
                 $rpbSarprasSupplier->harga_supplier             = $input->harga_supplier;
@@ -642,7 +642,7 @@ class PengadaanSarprasController extends BaseController
                 if (!empty($input->termin_approve_supplier)) {
                     $rpbSarprasSupplier->termin_approve_supplier    = $input->termin_approve_supplier;
                 }
-                $rpbSarprasSupplier->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                $rpbSarprasSupplier->created_by                 = auth_data()->pengguna->id_pengguna;
                 $rpbSarprasSupplier->save();
 
                 return [
@@ -661,7 +661,7 @@ class PengadaanSarprasController extends BaseController
                 $rpbSarprasSupplier->harga_approve_supplier     = $input->harga_approve_supplier;
                 $rpbSarprasSupplier->qty_approve_supplier       = $input->qty_approve_supplier;
                 $rpbSarprasSupplier->termin_approve_supplier    = $input->termin_approve_supplier;
-                $rpbSarprasSupplier->updated_by                 = $input->auth_data->pengguna->id_pengguna;
+                $rpbSarprasSupplier->updated_by                 = auth_data()->pengguna->id_pengguna;
                 $rpbSarprasSupplier->updated_at                 = $now;
                 $rpbSarprasSupplier->save();
 

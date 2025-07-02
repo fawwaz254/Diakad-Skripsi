@@ -22,10 +22,10 @@ class AddDbMenuRekapPelanggaranSiswaRoleGuru extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(136);
-        $menu->page         = "rekap-input-pelanggaran-mp";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(136);
+        // $menu->page         = "rekap-input-pelanggaran-mp";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**

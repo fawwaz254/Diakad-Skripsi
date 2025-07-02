@@ -25,7 +25,7 @@ class GedungController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-gedung/gedung/view-gedung', compact('auth_data'));
     }
@@ -34,7 +34,7 @@ class GedungController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jenis_gedung = LibDataSarpras::fetchDataJenisGedung($auth_data);
 
@@ -50,7 +50,7 @@ class GedungController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jenis_gedung = LibDataSarpras::fetchDataJenisGedung($auth_data);
 
@@ -62,7 +62,7 @@ class GedungController extends BaseController
     public function datatablesGedung(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataGedung($auth_data);
 
         return Datatables::of($list_data)
@@ -99,7 +99,7 @@ class GedungController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $gedung                         = new Gedung;
                 $gedung->id_gedung              = $id;
@@ -108,8 +108,8 @@ class GedungController extends BaseController
                 $gedung->nm_gedung              = $input->nm_gedung;
                 $gedung->lokasi_gedung          = $input->lokasi_gedung;
                 $gedung->deskripsi_gedung       = $input->deskripsi_gedung;
-                $gedung->id_sekolah             = $input->auth_data->pengguna->id_sekolah;
-                $gedung->created_by             = $input->auth_data->pengguna->id_pengguna;
+                $gedung->id_sekolah             = auth_data()->pengguna->id_sekolah;
+                $gedung->created_by             = auth_data()->pengguna->id_pengguna;
                 $gedung->save();
 
                 return [
@@ -125,7 +125,7 @@ class GedungController extends BaseController
                 $gedung->nm_gedung              = $input->nm_gedung;
                 $gedung->lokasi_gedung          = $input->lokasi_gedung;
                 $gedung->deskripsi_gedung       = $input->deskripsi_gedung;
-                $gedung->updated_by             = $input->auth_data->pengguna->id_pengguna;
+                $gedung->updated_by             = auth_data()->pengguna->id_pengguna;
                 $gedung->updated_at             = $now;
                 $gedung->save();
 
@@ -143,7 +143,7 @@ class GedungController extends BaseController
                 } else {
                     // make object to find id
                     $gedung               = Gedung::find($id);
-                    $gedung->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $gedung->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $gedung->save();
 
                     $gedung->delete();

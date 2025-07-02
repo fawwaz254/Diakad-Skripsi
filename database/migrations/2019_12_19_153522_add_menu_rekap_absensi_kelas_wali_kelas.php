@@ -19,10 +19,10 @@ class AddMenuRekapAbsensiKelasWaliKelas extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(139);
-        $menu->page         = "rekap-absensi-kelas";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(139);
+        // $menu->page         = "rekap-absensi-kelas";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**
@@ -34,9 +34,9 @@ class AddMenuRekapAbsensiKelasWaliKelas extends Migration
     {
         //
         // rollback
-        $menu               = Menu::find(139);
-        $menu->page         = null;
-        $menu->updated_at   = null;
-        $menu->save();
+        // $menu               = Menu::find(139);
+        // $menu->page         = null;
+        // $menu->updated_at   = null;
+        // $menu->save();
     }
 }

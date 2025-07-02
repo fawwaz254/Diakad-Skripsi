@@ -15,15 +15,15 @@ class CreateMenuRapor2TengahSemester extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '2')->first();
-        //ini menu khusus untuk ypm 3
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Rapor Tengah Semester';
-        $menu->page = 'rapor-tengah-semester';
-        $menu->urutan = 3;
-        $menu->akses = 0;
-        $menu->save();
+        // $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '2')->first();
+        // //ini menu khusus untuk ypm 3
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Rapor Tengah Semester';
+        // $menu->page = 'rapor-tengah-semester';
+        // $menu->urutan = 3;
+        // $menu->akses = 0;
+        // $menu->save();
     }
 
     /**

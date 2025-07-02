@@ -19,7 +19,7 @@ class CreateTutupBukuBulananDompetTable extends Migration
             $table->string('id_dompet', 40)->comment('FK: dompet.id_dompet');
             $table->boolean('id_bulan')->comment('1 = Januari, 2 = Februari, dst');
             $table->integer('tahun')->comment('2019, 2020, 2021, dst');
-            $table->float('saldo_akhir_dompet', 10, 0)->nullable();
+            $table->decimal('saldo_akhir_dompet', 10, 0)->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

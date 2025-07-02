@@ -16,9 +16,9 @@ class AddingMenuMonitoringKelasKosongInModulGuruPiket extends Migration
     public function up()
     {
         //
-        $menu               = Menu::find(138);
-        $menu->page         = "monitoring-kelas-kosong";
-        $menu->save();
+        // $menu               = Menu::find(138);
+        // $menu->page         = "monitoring-kelas-kosong";
+        // $menu->save();
     }
 
     /**

@@ -18,16 +18,16 @@ class UpdateTipeUnitKerjaNullTabelUnitKerja extends Migration
     public function up()
     {
         //
-        $now = Carbon::now();
+        // $now = Carbon::now();
 
-        $unit_kerja = UnitKerja::get();
+        // $unit_kerja = UnitKerja::get();
 
-        foreach ($unit_kerja as $uk) {
-            // update modul
-            $uk->tipe_unit_kerja    = null;
-            $uk->updated_at         = $now;
-            $uk->save();
-        }
+        // foreach ($unit_kerja as $uk) {
+        //     // update modul
+        //     $uk->tipe_unit_kerja    = null;
+        //     $uk->updated_at         = $now;
+        //     $uk->save();
+        // }
     }
 
     /**

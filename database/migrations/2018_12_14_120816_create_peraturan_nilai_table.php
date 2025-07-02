@@ -17,9 +17,9 @@ class CreatePeraturanNilaiTable extends Migration {
 			$table->engine = 'InnoDB';
 			$table->string('id_peraturan_nilai', 40)->primary();
 			$table->string('id_standar_nilai', 40)->comment('FK: standar_nilai.id_standar_nilai');
-			$table->float('nilai_kkm', 10, 0)->nullable()->comment('khusus is_mata_pelajaran = 1');
-			$table->float('nilai_min_peraturan_nilai', 10, 0)->nullable();
-			$table->float('nilai_max_peraturan_nilai', 10, 0)->nullable();
+			$table->decimal('nilai_kkm', 10, 0)->nullable()->comment('khusus is_mata_pelajaran = 1');
+			$table->decimal('nilai_min_peraturan_nilai', 10, 0)->nullable();
+			$table->decimal('nilai_max_peraturan_nilai', 10, 0)->nullable();
 			$table->boolean('is_mata_pelajaran')->nullable()->comment('0 = untuk umum (magang, ekskul, dll); 1 = untuk mapel;');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

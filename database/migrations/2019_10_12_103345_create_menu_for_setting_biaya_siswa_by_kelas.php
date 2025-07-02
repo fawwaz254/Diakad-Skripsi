@@ -23,21 +23,21 @@ class CreateMenuForSettingBiayaSiswaByKelas extends Migration
         $menu->akses        = 1;
         $menu->save();
         
-        $menu               = Menu::find(115);
-        $menu->urutan       = 3;
-        $menu->save();
+        // $menu               = Menu::find(115);
+        // $menu->urutan       = 3;
+        // $menu->save();
 
-        $menu               = Menu::find(116);
-        $menu->urutan       = 4;
-        $menu->save();
+        // $menu               = Menu::find(116);
+        // $menu->urutan       = 4;
+        // $menu->save();
 
-        $menu               = Menu::find(253);
-        $menu->urutan       = 5;
-        $menu->save();
+        // $menu               = Menu::find(253);
+        // $menu->urutan       = 5;
+        // $menu->save();
 
-        $menu               = Menu::find(134);
-        $menu->urutan       = 6;
-        $menu->save();
+        // $menu               = Menu::find(134);
+        // $menu->urutan       = 6;
+        // $menu->save();
     }
 
     /**

@@ -14,11 +14,11 @@ class AddKewarganegaraanTableCalonSiswaOrtu extends Migration
     public function up()
     {
         Schema::table('calon_siswa_ortu', function (Blueprint $table) {
-            $table->tinyInteger('kewarganegaraan_ayah')->after('alamat_jalan_ayah')->nullable();
+            $table->integer('kewarganegaraan_ayah')->after('alamat_jalan_ayah')->nullable();
             $table->string('nm_kewarganegaraan_ayah')->after('kewarganegaraan_ayah')->nullable();
-            $table->tinyInteger('kewarganegaraan_ibu')->after('alamat_jalan_ibu')->nullable();
+            $table->integer('kewarganegaraan_ibu')->after('alamat_jalan_ibu')->nullable();
             $table->string('nm_kewarganegaraan_ibu')->after('kewarganegaraan_ibu')->nullable();
-            $table->tinyInteger('kewarganegaraan_wali')->after('tgl_lahir_wali')->nullable();
+            $table->integer('kewarganegaraan_wali')->after('tgl_lahir_wali')->nullable();
             $table->string('nm_kewarganegaraan_wali')->after('kewarganegaraan_wali')->nullable();
         });
     }

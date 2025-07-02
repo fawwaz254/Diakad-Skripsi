@@ -15,14 +15,14 @@ class AddMenuRaporSisipanBukanMapelInWaliKelas extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Wali Kelas')->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Rapor Sisipan Input Non Mapel';
-        $menu->page = 'rapor-sisipan-input-non-mapel';
-        $menu->urutan = 13;
-        $menu->akses = 1;
-        $menu->save();
+        // $modul = Modul::where('nm_modul', 'Wali Kelas')->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Rapor Sisipan Input Non Mapel';
+        // $menu->page = 'rapor-sisipan-input-non-mapel';
+        // $menu->urutan = 13;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

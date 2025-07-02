@@ -20,10 +20,10 @@ class CreateVoucherTable extends Migration {
 			$table->string('id_voucher_tarif', 40)->comment('FK: voucher_tarif.id_voucher_tarif');
 			$table->string('kode_voucher', 32)->nullable();
 			$table->string('pin_password', 8)->nullable()->comment('pin di generate oleh sistem');
-			$table->dateTime('tgl_ambil')->nullable()->comment('tanggal ambil voucher di aplikasi PPDB online');
+			$table->timestamp('tgl_ambil')->nullable()->comment('tanggal ambil voucher di aplikasi PPDB online');
 			$table->boolean('is_aktif')->nullable()->comment('0 = sudah diambil oleh calon siswa; 1 = tersedia (belum diambil);');
-			$table->dateTime('tgl_bayar')->nullable()->comment('tanggal bayar saat set bayar di aplikasi SSI');
-			$table->float('besar_biaya', 10, 0)->nullable();
+			$table->timestamp('tgl_bayar')->nullable()->comment('tanggal bayar saat set bayar di aplikasi SSI');
+			$table->decimal('besar_biaya', 10, 0)->nullable();
 			$table->string('nomor_transaksi', 256)->nullable()->comment('diisi apabila transaksi dilakukan oleh bank');
 			$table->integer('id_bank')->nullable()->comment('FK: bank.id_bank (diisi apabila transaksi dilakukan oleh bank)');
 			$table->boolean('id_bank_via')->nullable()->comment('FK: bank_via.id_bank_via (diisi apabila transaksi dilakukan oleh bank)');

@@ -19,7 +19,7 @@ class CreateMenuTable extends Migration {
 			$table->integer('id_modul')->comment('FK: modul.id_modul');
 			$table->string('nm_menu', 32)->nullable();
 			$table->string('page', 64)->nullable();
-			$table->boolean('urutan')->nullable();
+			$table->integer('urutan')->nullable();
 			$table->boolean('akses')->nullable()->default(0)->comment('Default Akses');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

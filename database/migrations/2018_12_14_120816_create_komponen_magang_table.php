@@ -18,7 +18,7 @@ class CreateKomponenMagangTable extends Migration {
 			$table->string('id_komponen_magang', 40)->primary();
 			$table->string('id_periode_magang', 40)->comment('FK: periode_magang.id_periode_magang');
 			$table->string('nm_komponen_magang', 64)->nullable();
-			$table->float('persentase_komponen_magang', 10, 0)->nullable();
+			$table->decimal('persentase_komponen_magang', 10, 0)->nullable();
 			$table->boolean('urutan_komponen_magang')->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

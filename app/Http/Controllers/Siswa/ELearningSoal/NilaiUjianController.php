@@ -18,7 +18,7 @@ class NilaiUjianController extends Controller
     public function commonList(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $test = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('status', 1)->with('paket_soal.kategori_soal')->withCount('jawaban_test', 'detail_paket_soal')->get();
 
         return Datatables::of($test)
@@ -54,7 +54,7 @@ class NilaiUjianController extends Controller
     public function indexPenilaian(Request $request, $id_test = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $questions = JawabanTest::where('id_test', $id_test)->whereIn('id_tipe_soal', [2, 3])->where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('soal')->get();
 
         return view('siswa/e-learning-soal/nilai-ujian/view-penilaian-ujian', compact('questions'));

@@ -23,7 +23,7 @@ class GuruController extends BaseController
     // {
     //     # code..
     //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
+    //     $auth_data = auth_data();
 
     //     $data_role = Role::select(
     //         DB::raw("role.id_role, nm_role, (SELECT COUNT(*) FROM role_pengguna JOIN pengguna ON pengguna.id_pengguna = role_pengguna.id_pengguna WHERE role_pengguna.id_role = role.id_role AND role_pengguna.deleted_at IS NULL AND pengguna.status_join_table = 2 AND pengguna.id_sekolah = ? ) AS total_role")
@@ -50,7 +50,7 @@ class GuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_role' => 'required'
@@ -72,7 +72,7 @@ class GuruController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_role = Role::select(
             DB::raw("role.id_role, nm_role, (SELECT COUNT(*) FROM role_pengguna JOIN pengguna ON pengguna.id_pengguna = role_pengguna.id_pengguna WHERE role_pengguna.id_role = role.id_role AND role_pengguna.deleted_at IS NULL AND pengguna.status_join_table = 2 AND pengguna.id_sekolah = ? ) AS total_role")
@@ -95,7 +95,7 @@ class GuruController extends BaseController
     public function datatablesGuru(Request $request, $id_role)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $rolePengguna = RolePengguna::select('pengguna.id_pengguna', 'guru.nip_guru', 'pengguna.username', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'role.nm_role', 'unit_kerja.nm_unit_kerja')
             ->join('role', function ($q) {

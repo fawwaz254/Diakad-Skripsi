@@ -15,9 +15,9 @@ class AddingRouteModulGuruPiket extends Migration
      */
     public function up()
     {
-        $modul = Modul::find(35);
-        $modul->route = 'guru-piket';
-        $modul->save();
+        // $modul = Modul::find(35);
+        // $modul->route = 'guru-piket';
+        // $modul->save();
     }
 
     /**

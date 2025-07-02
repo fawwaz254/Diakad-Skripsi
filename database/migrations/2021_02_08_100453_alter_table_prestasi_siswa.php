@@ -15,9 +15,9 @@ class AlterTablePrestasiSiswa extends Migration
     {
         Schema::table('prestasi_siswa', function (Blueprint $table) {
 
-            $table->tinyInteger('status')->default('0')->after('link_sertif_prestasi_siswa')->comment('0 = belum diapprove, 1 = sudah diapprove');
+            $table->integer('status')->default('0')->after('link_sertif_prestasi_siswa')->comment('0 = belum diapprove, 1 = sudah diapprove');
             $table->string('approved_by', 40)->nullable()->after('status');
-            $table->dateTime('approved_at')->nullable()->after('approved_by');
+            $table->timestamp('approved_at')->nullable()->after('approved_by');
 
         });
     }

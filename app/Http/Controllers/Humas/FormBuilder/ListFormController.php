@@ -17,7 +17,7 @@ class ListFormController extends Controller
     public function viewListForm(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/form-builder/list-form/view-list-form', compact('auth_data'));
     }
@@ -26,7 +26,7 @@ class ListFormController extends Controller
     public function addListForm(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $roles = Role::whereIn('id_role', [2, 3, 15])->get();
 
         return view('humas/form-builder/list-form/add-list-form', compact('auth_data', 'roles'));
@@ -35,7 +35,7 @@ class ListFormController extends Controller
     public function editListForm(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $roles = Role::whereIn('id_role', [2, 3, 15])->get();
         $form = Form::findOrFail($id);
 
@@ -66,7 +66,7 @@ class ListFormController extends Controller
             ];
         } else {
             if ($mode == 'add') {
-                $id_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id_form = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $form                               = new Form;
                 $form->id_form                      = $id_form;
                 $form->id_role                      = $input->id_role;
@@ -75,7 +75,7 @@ class ListFormController extends Controller
                 $form->is_aktif                     = $input->is_aktif;
                 $form->start_time                   = $input->start_time;
                 $form->end_time                     = $input->end_time;
-                $form->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $form->created_by                   = auth_data()->pengguna->id_pengguna;
                 $form->save();
 
                 return [
@@ -91,7 +91,7 @@ class ListFormController extends Controller
                 $form->is_aktif                     = $input->is_aktif;
                 $form->start_time                   = $input->start_time;
                 $form->end_time                     = $input->end_time;
-                $form->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $form->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $form->save();
 
                 return [
@@ -139,14 +139,14 @@ class ListFormController extends Controller
     public function viewPertanyaanForm(Request $request, $id_form)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('humas/form-builder/list-form/view-pertanyaan-form', compact('auth_data', 'id_form'));
     }
 
     public function viewAddPertanyaanForm(Request $request, $jenis_pertanyaan, $id_form)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $form = Form::with('pertanyaan_form')->find($id_form);
         $urutan = $form->pertanyaan_form->count() + 1;
         if ($jenis_pertanyaan == '1' || $jenis_pertanyaan == '2') {
@@ -159,7 +159,7 @@ class ListFormController extends Controller
     public function viewEditPertanyaanForm(Request $request, $jenis_pertanyaan, $id_form, $id_pertanyaan_form)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $pertanyaan_form = PertanyaanForm::findOrFail($id_pertanyaan_form);
         $opsi = [];
         if (isset($pertanyaan_form->options)) {
@@ -238,14 +238,14 @@ class ListFormController extends Controller
             ];
         } else {
             if ($mode == 'add') {
-                $id_pertanyaan_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id_pertanyaan_form = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $pertanyaan_form                               = new PertanyaanForm;
                 $pertanyaan_form->id_pertanyaan_form           = $id_pertanyaan_form;
                 $pertanyaan_form->id_form                      = $input->id_form;
                 $pertanyaan_form->nm_pertanyaan_form           = $input->nm_pertanyaan_form;
                 $pertanyaan_form->jenis_pertanyaan             = $input->jenis_pertanyaan;
                 $pertanyaan_form->urutan                       = $input->urutan;
-                $pertanyaan_form->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $pertanyaan_form->created_by                   = auth_data()->pengguna->id_pengguna;
 
                 if ($input->jenis_pertanyaan == '3' || $input->jenis_pertanyaan == '4') {
                     // Handle opsi pertanyaan
@@ -290,7 +290,7 @@ class ListFormController extends Controller
                 $pertanyaan_form->nm_pertanyaan_form           = $input->nm_pertanyaan_form;
                 $pertanyaan_form->jenis_pertanyaan             = $input->jenis_pertanyaan;
                 $pertanyaan_form->urutan                       = $input->urutan;
-                $pertanyaan_form->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $pertanyaan_form->updated_by                   = auth_data()->pengguna->id_pengguna;
 
                 if ($input->jenis_pertanyaan == '3' || $input->jenis_pertanyaan == '4') {
                     $opsi = [];

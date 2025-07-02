@@ -29,7 +29,7 @@ class DataKegiatanController extends BaseController
 
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/biodata/data-kegiatan/view-data-kegiatan', compact('auth_data'));
     }
@@ -38,7 +38,7 @@ class DataKegiatanController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
         $guru = LibGuru::fetchDataAllGuru($auth_data);
@@ -50,7 +50,7 @@ class DataKegiatanController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
         $kegiatan = KegiatanGuru::find($id);
@@ -63,7 +63,7 @@ class DataKegiatanController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         $role = $auth_data->role_aktif->nm_role;
 
@@ -85,7 +85,7 @@ class DataKegiatanController extends BaseController
 
             if ($mode == 'add') {
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan = new KegiatanGuru;
 
@@ -107,7 +107,7 @@ class DataKegiatanController extends BaseController
                 $kegiatan->tgl_mulai_kegiatan = date("Y-m-d", strtotime($input->tgl_mulai_kegiatan));
                 $kegiatan->tgl_berakhir_kegiatan = date("Y-m-d", strtotime($input->tgl_berakhir_kegiatan));
                 $kegiatan->link_kegiatan = $input->link_kegiatan;
-                $kegiatan->created_by = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->created_by = auth_data()->pengguna->id_pengguna;
                 $kegiatan->save();
 
                 return [
@@ -135,7 +135,7 @@ class DataKegiatanController extends BaseController
                 $kegiatan->tgl_berakhir_kegiatan = date("Y-m-d", strtotime($input->tgl_berakhir_kegiatan));
                 $kegiatan->link_kegiatan = $input->link_kegiatan;
                 $kegiatan->updated_at = $now;
-                $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->updated_by = auth_data()->pengguna->id_pengguna;
                 $kegiatan->save();
 
                 return [
@@ -146,7 +146,7 @@ class DataKegiatanController extends BaseController
             } elseif ($mode == 'delete') {
 
                 $kegiatan = KegiatanGuru::find($id);
-                $kegiatan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $kegiatan->deleted_by  = auth_data()->pengguna->id_pengguna;
                 $kegiatan->deleted_at  = $now;
                 $kegiatan->save();
 
@@ -164,7 +164,7 @@ class DataKegiatanController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $role = $auth_data->role_aktif->nm_role;
 
         $list_data = KegiatanGuru::Select(

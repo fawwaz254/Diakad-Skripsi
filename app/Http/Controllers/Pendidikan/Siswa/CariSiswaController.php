@@ -35,7 +35,7 @@ class CariSiswaController extends BaseController
   {
     # code..
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     return view('pendidikan/siswa/cari-siswa/view-cari-siswa', compact('auth_data', 'nis_nama_siswa'));
   }
@@ -44,7 +44,7 @@ class CariSiswaController extends BaseController
   {
     # code...
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     $validator = Validator::make($request->all(), [
       'nis_nama_siswa' => 'required'
@@ -67,7 +67,7 @@ class CariSiswaController extends BaseController
   {
     # code...
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     $siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
 
@@ -77,7 +77,7 @@ class CariSiswaController extends BaseController
   public function datatablesCariSiswa(Request $request, $nis_nama_siswa)
   {
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur')
       ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -110,7 +110,7 @@ class CariSiswaController extends BaseController
   {
     # code...
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
     $siswa1 = Siswa::where('nis_siswa', $nis_siswa)->first();
     $emailSiswa = Pengguna::where('id_pengguna', $siswa1->id_pengguna)->first();
     $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
@@ -267,14 +267,14 @@ class CariSiswaController extends BaseController
       $pengguna->password             = Hash::make($pengguna->username);
       $pengguna->must_change_password = 1;
       $pengguna->last_time_password   = $now;
-      $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
+      $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
       $pengguna->updated_at           = $now;
       $pengguna->save();
 
       $log = new LogResetPassword;
-      $log->id_log_reset_password = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+      $log->id_log_reset_password = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
       $log->id_pengguna = $pengguna->id_pengguna;
-      $log->created_by  = $input->auth_data->pengguna->id_pengguna;
+      $log->created_by  = auth_data()->pengguna->id_pengguna;
       $log->save();
 
       DB::commit();
@@ -314,14 +314,14 @@ class CariSiswaController extends BaseController
             $pengguna->password = Hash::make($pengguna->username);
             $pengguna->must_change_password = 1;
             $pengguna->last_time_password = $now;
-            $pengguna->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $pengguna->updated_by = auth_data()->pengguna->id_pengguna;
             $pengguna->updated_at = $now;
             $pengguna->save();
 
             $log = new LogResetPassword;
-            $log->id_log_reset_password = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $log->id_log_reset_password = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
             $log->id_pengguna = $pengguna->id_pengguna;
-            $log->created_by = $input->auth_data->pengguna->id_pengguna;
+            $log->created_by = auth_data()->pengguna->id_pengguna;
             $log->save();
           }
         }
@@ -354,7 +354,7 @@ class CariSiswaController extends BaseController
   {
 
     $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    $auth_data = auth_data();
 
     DB::beginTransaction();
     try {
@@ -362,13 +362,13 @@ class CariSiswaController extends BaseController
       $wali_murid = WaliMurid::where('id_pengguna', $input->id_pengguna)->first();
       $siswa =  Siswa::where('id_wali_murid', $wali_murid->id_wali_murid)->first();
       CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->update(['nomor_telp_ortu' => null], ['nomor_hp_ortu' => null]);
-      Pengguna::where('id_pengguna', $input->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+      Pengguna::where('id_pengguna', $input->id_pengguna)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
       Pengguna::where('id_pengguna', $input->id_pengguna)->delete();
-      RolePengguna::where('id_pengguna', $input->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+      RolePengguna::where('id_pengguna', $input->id_pengguna)->update(['deleted_by' => auth_data()->pengguna->id_pengguna]);
       RolePengguna::where('id_pengguna', $input->id_pengguna)->delete();
       $siswa->id_wali_murid = null;
       $siswa->save();
-      $wali_murid->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+      $wali_murid->deleted_by =  auth_data()->pengguna->id_pengguna;
       $wali_murid->save();
       $wali_murid->delete();
       DB::commit();

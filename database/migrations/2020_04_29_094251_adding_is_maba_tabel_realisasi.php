@@ -14,7 +14,7 @@ class AddingIsMabaTabelRealisasi extends Migration
     public function up()
     {
         Schema::table('realisasi', function (Blueprint $table) {
-            $table->tinyInteger('is_maba')->default('2')->after('tgl_realisasi')->comment('1 = Realisasi Maba; 2 = Realisasi Non-Maba;')->nullable();
+            $table->integer('is_maba')->default('2')->after('tgl_realisasi')->comment('1 = Realisasi Maba; 2 = Realisasi Non-Maba;')->nullable();
         });
     }
 

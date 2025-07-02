@@ -15,13 +15,13 @@ class AddingUrlMenuPrestasiBeasiswaOnRoleSiswa extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('id_modul', 15)->where('nm_menu', 'Prestasi')->first();
-        $menu->page = 'prestasi';
-        $menu->save();
+        // $menu = Menu::where('id_modul', 15)->where('nm_menu', 'Prestasi')->first();
+        // $menu->page = 'prestasi';
+        // $menu->save();
         
-        $menu = Menu::where('id_modul', 15)->where('nm_menu', 'Beasiswa')->first();
-        $menu->page = 'beasiswa';
-        $menu->save();
+        // $menu = Menu::where('id_modul', 15)->where('nm_menu', 'Beasiswa')->first();
+        // $menu->page = 'beasiswa';
+        // $menu->save();
     }
 
     /**

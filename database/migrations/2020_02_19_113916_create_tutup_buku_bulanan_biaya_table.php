@@ -21,10 +21,10 @@ class CreateTutupBukuBulananBiayaTable extends Migration
             $table->boolean('id_bulan')->comment('1 = Januari, 2 = Februari, dst');
             $table->integer('tingkat')->comment('tingkat/angkatan')->nullable();
             $table->integer('jml_siswa')->nullable();
-            $table->float('jml_tagihan_biaya', 10, 0)->nullable();
-            $table->float('jml_pembayaran_biaya', 10, 0)->nullable();
-            $table->float('jml_tunggakan_biaya', 10, 0)->nullable();
-            $table->float('jml_pembayaran_biaya_bulan_lalu', 10, 0)->nullable();
+            $table->decimal('jml_tagihan_biaya', 10, 0)->nullable();
+            $table->decimal('jml_pembayaran_biaya', 10, 0)->nullable();
+            $table->decimal('jml_tunggakan_biaya', 10, 0)->nullable();
+            $table->decimal('jml_pembayaran_biaya_bulan_lalu', 10, 0)->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

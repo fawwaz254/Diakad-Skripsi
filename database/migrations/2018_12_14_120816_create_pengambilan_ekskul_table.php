@@ -19,9 +19,9 @@ class CreatePengambilanEkskulTable extends Migration {
 			$table->string('id_ekskul', 40)->comment('FK: ekskul.id_ekskul');
 			$table->string('id_siswa', 40)->comment('FK: siswa.id_siswa');
 			$table->string('id_semester', 40)->comment('FK: semester.id_semester');
-			$table->float('nilai_angka', 10, 0)->nullable();
+			$table->decimal('nilai_angka', 10, 0)->nullable();
 			$table->string('nilai_huruf', 3)->nullable();
-			$table->float('persentase_presensi', 10, 0)->nullable()->comment('akumulasi dari presensi_ekskul');
+			$table->decimal('persentase_presensi', 10, 0)->nullable()->comment('akumulasi dari presensi_ekskul');
 			$table->boolean('is_tampil')->nullable()->comment('0 = belum ditampilkan ke siswa; 1 = ditampilkan ke siswa;');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

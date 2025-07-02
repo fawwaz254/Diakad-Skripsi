@@ -19,7 +19,7 @@ class CreateBiayaSekolahTable extends Migration {
 			$table->string('id_kelompok_biaya', 40)->comment('FK: kelompok_biaya.id_kelompok_biaya');
 			$table->string('id_semester', 40)->comment('FK: semester.id_semester');
 			$table->string('id_jalur', 40)->nullable()->comment('FK: jalur.id_jalur &gt; optional biaya khusus jalur tertentu');
-			$table->float('besar_biaya_sekolah', 10, 0)->nullable();
+			$table->decimal('besar_biaya_sekolah', 10, 0)->nullable();
 			$table->boolean('validasi_biaya_sekolah')->nullable()->comment('0 = belum di validasi; 1 = sudah di validasi;');
 			$table->integer('keterangan_biaya_sekolah')->nullable();
 			$table->timestamps();

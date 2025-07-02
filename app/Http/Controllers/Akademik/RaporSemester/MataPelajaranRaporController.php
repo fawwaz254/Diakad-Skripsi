@@ -19,7 +19,7 @@ class MataPelajaranRaporController extends Controller
     public function viewKomponenMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('is_aktif', '1')->get();
         return view('akademik/rapor-semester/komponen-mata-pelajaran/view-komponen-mata-pelajaran', compact('auth_data', 'kelas'));
     }
@@ -47,7 +47,7 @@ class MataPelajaranRaporController extends Controller
     public function viewDetailKomponenMataPelajaran(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('is_aktif', '1')->get();
         return view('akademik/rapor-semester/komponen-mata-pelajaran/detail-komponen-mata-pelajaran', compact('auth_data', 'kelas', 'id_kelas'));
     }
@@ -91,7 +91,7 @@ class MataPelajaranRaporController extends Controller
     public function addKomponenMataPelajaran(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('is_aktif', '1')->get();
         $mata_pelajaran = MataPelajaran::with('jenis_mata_pelajaran')->isAktif()->get();
         $kelompok_mapel_rapor = KelompokMapelRapor::where('nm_rapor', 'semester')->with('sub_kelompok_mapel_rapor')->get();
@@ -101,7 +101,7 @@ class MataPelajaranRaporController extends Controller
     public function copyKomponenMataPelajaran(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('is_aktif', '1')->get();
         $kelas_rapor = KelasRapor::whereHas('mata_pelajaran_rapor.kelompok_mapel_rapor', function ($q) {
             $q->where('nm_rapor', 'semester');
@@ -134,7 +134,7 @@ class MataPelajaranRaporController extends Controller
 
                 if (empty($mata_pelajaran_rapor)) {
                     $mata_pelajaran_rapor = new MataPelajaranRapor;
-                    $mata_pelajaran_rapor->id_mata_pelajaran_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $mata_pelajaran_rapor->id_mata_pelajaran_rapor = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     if (KelompokMapelRapor::find($input->id_kelompok_mapel_rapor)) {
                         $mata_pelajaran_rapor->id_kelompok_mapel_rapor = $input->id_kelompok_mapel_rapor;
@@ -154,10 +154,10 @@ class MataPelajaranRaporController extends Controller
                 }
 
                 $kelas_rapor = new KelasRapor;
-                $kelas_rapor->id_kelas_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $kelas_rapor->id_kelas_rapor = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $kelas_rapor->id_mata_pelajaran_rapor = $mata_pelajaran_rapor->id_mata_pelajaran_rapor;
                 $kelas_rapor->id_kelas = $input->id_kelas;
-                $kelas_rapor->created_by = $input->auth_data->pengguna->id_pengguna;
+                $kelas_rapor->created_by = auth_data()->pengguna->id_pengguna;
                 $kelas_rapor->save();
 
                 return [
@@ -178,7 +178,7 @@ class MataPelajaranRaporController extends Controller
 
                 KelasRapor::whereIn('id_kelas_rapor', $list_id_komponen)
                     ->update([
-                        'deleted_by' => $input->auth_data->pengguna->id_pengguna,
+                        'deleted_by' => auth_data()->pengguna->id_pengguna,
                     ]);
 
                 KelasRapor::whereIn('id_kelas_rapor', $list_id_komponen)->delete();
@@ -194,10 +194,10 @@ class MataPelajaranRaporController extends Controller
                 })->get();
                 foreach ($kelas_rapors as $kelas_rapor) {
                     $k = new KelasRapor;
-                    $k->id_kelas_rapor = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $k->id_kelas_rapor = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $k->id_kelas = $input->kelas;
                     $k->id_mata_pelajaran_rapor = $kelas_rapor->id_mata_pelajaran_rapor;
-                    $k->created_by =  $input->auth_data->pengguna->id_pengguna;
+                    $k->created_by =  auth_data()->pengguna->id_pengguna;
                     $k->save();
                 }
 

@@ -18,7 +18,7 @@ class CreateTutupBukuTahunanBiayaTable extends Migration
             $table->string('id_tutup_buku_tahunan_biaya', 40)->primary();
             $table->string('id_semester_mulai', 40)->comment('FK: semester.id_semester');
             $table->string('id_semester_selesai', 40)->comment('FK: semester.id_semester');
-            $table->float('jml_tunggakan_biaya', 10, 0)->nullable();
+            $table->decimal('jml_tunggakan_biaya', 10, 0)->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

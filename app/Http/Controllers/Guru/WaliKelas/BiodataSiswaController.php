@@ -48,7 +48,7 @@ class BiodataSiswaController extends Controller
     public function viewListSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/wali-kelas/biodata-siswa/view-list-siswa', compact('auth_data'));
     }
@@ -56,7 +56,7 @@ class BiodataSiswaController extends Controller
     public function datatablesListSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
@@ -82,7 +82,7 @@ class BiodataSiswaController extends Controller
     {
         // dd($id_pengguna);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
 
         if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data_siswa->nis_siswa)) {
@@ -115,7 +115,7 @@ class BiodataSiswaController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
         $beasiswa = CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
@@ -146,7 +146,7 @@ class BiodataSiswaController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         // dd($id);
         // $pengguna = Pengguna::whereHas('siswa', function ($query) use ($id) {
@@ -165,15 +165,15 @@ class BiodataSiswaController extends Controller
         else {
             $siswa                      = Siswa::where('nis_siswa', '=', $input->nis_siswa)->orWhere('nisn_siswa', '=', $input->nisn_siswa)->first();
             $calonSiswa                 = CalonSiswaBaru::where('id_c_siswa', '=', $input->id_c_siswa)->first();
-            $id_c_siswa_prestasi        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $id_c_siswa_beasiswa        = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id_c_siswa_prestasi        = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id_c_siswa_beasiswa        = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
             $wali_murid                 = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
 
             if ($wali_murid) {
                 $wali_murid->nm_wali_murid = strtoupper($input->nm_ayah);
                 $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
                 $wali_murid->updated_at = $now;
-                $wali_murid->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $wali_murid->updated_by = auth_data()->pengguna->id_pengguna;
                 $wali_murid->save();
 
                 $pengguna_wali_murid = Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->first();
@@ -190,13 +190,13 @@ class BiodataSiswaController extends Controller
                         'nm_pengguna'             => strtoupper($input->nm_pengguna),
                         'username'                 => $input->nis_siswa,
                         'password'                 => Hash::make($input->nis_siswa),
-                        'id_sekolah'             => $input->auth_data->pengguna->id_sekolah,
+                        'id_sekolah'             => auth_data()->pengguna->id_sekolah,
                         'id_status_pengguna'    => $input->id_status_pengguna,
                         // 'must_change_password' 	=> 1,
                         'status_join_table'     => 3,
                         'updated_at'             => $now,
                         'email_pengguna'        => $input->email_pengguna,
-                        'updated_by'             => $input->auth_data->pengguna->id_pengguna
+                        'updated_by'             => auth_data()->pengguna->id_pengguna
                     ]);
 
                     DB::table('calon_siswa_baru')->where('id_c_siswa', $input->id_c_siswa)->update([
@@ -244,7 +244,7 @@ class BiodataSiswaController extends Controller
                         'id_jenis_layak_pip'    => $input->id_jenis_layak_pip,
                         'bahasa_sehari_hari'    => strtoupper($input->bahasa_sehari_hari),
                         'updated_at'             => $now,
-                        'updated_by'             => $input->auth_data->pengguna->id_pengguna
+                        'updated_by'             => auth_data()->pengguna->id_pengguna
                     ]);
 
                     DB::table('calon_siswa_ortu')->where('id_c_siswa', $input->id_c_siswa)->update([
@@ -294,19 +294,19 @@ class BiodataSiswaController extends Controller
                         'nomor_telp_ortu'            => $input->nomor_telp_ortu,
                         'nomor_hp_ortu'                => $input->nomor_hp_ortu,
                         'updated_at'                 => $now,
-                        'updated_by'                 => $input->auth_data->pengguna->id_pengguna
+                        'updated_by'                 => auth_data()->pengguna->id_pengguna
                     ]);
 
                     DB::table('calon_siswa_fisik')->where('id_c_siswa', $input->id_c_siswa)->update([
                         'tinggi_badan'                => $input->tinggi_badan,
                         'berat_badan'                => $input->berat_badan,
                         'updated_at'                 => $now,
-                        'updated_by'                 => $input->auth_data->pengguna->id_pengguna
+                        'updated_by'                 => auth_data()->pengguna->id_pengguna
                     ]);
 
                     DB::table('calon_siswa_prestasi')->where('id_c_siswa', $input->id_c_siswa)->update([
                         'updated_at'                 => $now,
-                        'updated_by'                 => $input->auth_data->pengguna->id_pengguna
+                        'updated_by'                 => auth_data()->pengguna->id_pengguna
                     ]);
 
                     DB::commit();

@@ -15,11 +15,11 @@ class HideModulKegiatanHarian extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Kegiatan Harian')->get();
-        foreach ($modul as $m) {
-            $m->akses = '0';
-            $m->save();
-        }
+        // $modul = Modul::where('nm_modul', 'Kegiatan Harian')->get();
+        // foreach ($modul as $m) {
+        //     $m->akses = '0';
+        //     $m->save();
+        // }
     }
 
     /**

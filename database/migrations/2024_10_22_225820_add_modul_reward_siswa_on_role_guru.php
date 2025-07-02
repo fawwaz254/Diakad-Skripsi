@@ -19,40 +19,40 @@ class AddModulRewardSiswaOnRoleGuru extends Migration
     {
         DB::transaction(function () {
             $now = Carbon::now();
-            $role = Role::where('nm_role', 'Guru')->firstOrFail();
+            // $role = Role::where('nm_role', 'Guru')->firstOrFail();
 
-            $modul = Modul::create([
-                "id_role"       => $role->id_role,
-                "nm_modul"      => "Reward Siswa",
-                "route"         => "reward-siswa",
-                "urutan"        => 12,
-                "akses"         => 1,
-                "created_at"    => $now
-            ]);
+            // $modul = Modul::create([
+            //     "id_role"       => $role->id_role,
+            //     "nm_modul"      => "Reward Siswa",
+            //     "route"         => "reward-siswa",
+            //     "urutan"        => 12,
+            //     "akses"         => 1,
+            //     "created_at"    => $now
+            // ]);
 
-            $modul->menus()->createMany([
-                [
-                    "nm_menu"      => "Input Capaian Karakter",
-                    "page"         => "input-capaian-karakter",
-                    "urutan"       => 1,
-                    "akses"        => 1,
-                    "created_at"   => $now
-                ],
-                [
-                    "nm_menu"      => "Approve Reward Siswa",
-                    "page"         => "approve-reward-siswa",
-                    "urutan"       => 2,
-                    "akses"        => 1,
-                    "created_at"   => $now
-                ],
-                [
-                    "nm_menu"      => "Rekap Aktivitas Reward",
-                    "page"         => "rekap-aktivitas-reward",
-                    "urutan"       => 3,
-                    "akses"        => 1,
-                    "created_at"   => $now
-                ],
-            ]);
+            // $modul->menus()->createMany([
+            //     [
+            //         "nm_menu"      => "Input Capaian Karakter",
+            //         "page"         => "input-capaian-karakter",
+            //         "urutan"       => 1,
+            //         "akses"        => 1,
+            //         "created_at"   => $now
+            //     ],
+            //     [
+            //         "nm_menu"      => "Approve Reward Siswa",
+            //         "page"         => "approve-reward-siswa",
+            //         "urutan"       => 2,
+            //         "akses"        => 1,
+            //         "created_at"   => $now
+            //     ],
+            //     [
+            //         "nm_menu"      => "Rekap Aktivitas Reward",
+            //         "page"         => "rekap-aktivitas-reward",
+            //         "urutan"       => 3,
+            //         "akses"        => 1,
+            //         "created_at"   => $now
+            //     ],
+            // ]);
         });
     }
 
@@ -63,11 +63,11 @@ class AddModulRewardSiswaOnRoleGuru extends Migration
      */
     public function down()
     {
-        $modul = Modul::where('nm_modul', 'Reward Siswa')->first();
+        // $modul = Modul::where('nm_modul', 'Reward Siswa')->first();
 
-        if ($modul) {
-            $modul->menus()->delete();
-            $modul->delete();
-        }
+        // if ($modul) {
+        //     $modul->menus()->delete();
+        //     $modul->delete();
+        // }
     }
 }

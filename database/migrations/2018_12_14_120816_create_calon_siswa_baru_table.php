@@ -48,9 +48,9 @@ class CreateCalonSiswaBaruTable extends Migration {
 			$table->boolean('id_jenis_tinggal')->nullable()->comment('FK: jenis_tinggal.id_jenis_tinggal');
 			$table->boolean('anak_ke')->nullable();
 			$table->boolean('dari_x_bersaudara')->nullable();
-			$table->float('jarak_rumah_sekolah', 10, 0)->nullable()->comment('dalam km');
-			$table->float('waktu_tempuh_sekolah_jam', 10, 0)->nullable()->comment('waktu tempuh dari rumah ke sekolah dalam jam');
-			$table->float('waktu_tempuh_sekolah_menit', 10, 0)->nullable()->comment('waktu tempuh dari rumah ke sekolah dalam menit');
+			$table->decimal('jarak_rumah_sekolah', 10, 0)->nullable()->comment('dalam km');
+			$table->decimal('waktu_tempuh_sekolah_jam', 10, 0)->nullable()->comment('waktu tempuh dari rumah ke sekolah dalam jam');
+			$table->decimal('waktu_tempuh_sekolah_menit', 10, 0)->nullable()->comment('waktu tempuh dari rumah ke sekolah dalam menit');
 			$table->boolean('id_jenis_transportasi')->nullable()->comment('jenis_transportasi.id_jenis_transportasi');
 			$table->string('nomor_kks', 32)->nullable()->comment('diisi apabila ada Kartu Keluarga Sejahtera');
 			$table->boolean('is_penerima_kps')->nullable()->comment('1 = Ya; 0 = Tidak; (Kartu Perlindungan Sosial)');

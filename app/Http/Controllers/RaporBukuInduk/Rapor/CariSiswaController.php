@@ -34,14 +34,14 @@ class CariSiswaController extends BaseController
 {
     public function viewCariSiswa(Request $request, $nis_nama_siswa = null){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
     	return view('rapor-buku-induk/rapor/cari-siswa/view-cari-siswa', compact('auth_data','nis_nama_siswa'));
     }
 
     public function actionViewCariSiswa(Request $request){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
   
         $validator = Validator::make($request->all(), [
             'nis_nama_siswa' =>'required'
@@ -63,7 +63,7 @@ class CariSiswaController extends BaseController
 
     public function datatablesCariSiswa(Request $request, $nis_nama_siswa){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas', 'kelas.tingkat','status_pengguna.nm_status_pengguna','jalur.nm_jalur')
             ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
@@ -118,7 +118,7 @@ class CariSiswaController extends BaseController
 
     public function previewRaporSiswa(Request $request){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         
         $data = [
             'id_siswa' => $input->id_siswa,

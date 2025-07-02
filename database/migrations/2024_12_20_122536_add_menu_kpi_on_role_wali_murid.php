@@ -15,19 +15,19 @@ class AddMenuKpiOnRoleWaliMurid extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Akademik')->where('id_role', 4)->first();
+        // $modul = Modul::where('nm_modul', 'Akademik')->where('id_role', 4)->first();
 
-        if ($modul) {
-            $menu = new Menu();
-            $menu->id_modul = $modul->id_modul;
-            $menu->nm_menu = 'Rapor KPI';
-            $menu->page = 'kpi';
-            $menu->urutan = 11;
-            $menu->akses = 1;
-            $menu->save();
-        } else {
-            throw new \Exception("Modul 'Akademik' untuk role 4 tidak ditemukan");
-        }
+        // if ($modul) {
+        //     $menu = new Menu();
+        //     $menu->id_modul = $modul->id_modul;
+        //     $menu->nm_menu = 'Rapor KPI';
+        //     $menu->page = 'kpi';
+        //     $menu->urutan = 11;
+        //     $menu->akses = 1;
+        //     $menu->save();
+        // } else {
+        //     throw new \Exception("Modul 'Akademik' untuk role 4 tidak ditemukan");
+        // }
     }
 
     /**

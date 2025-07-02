@@ -15,7 +15,7 @@ class TracerAlumniController extends Controller
     public function addTracerAlumni(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $data_jurusan = Jurusan::all();
         // $data_kelas = Kelas::where('is_aktif', 1)->where('tingkat', 12)->orWhere('tingkat', 9)->orWhere('tingkat', 3)->get();

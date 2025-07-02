@@ -14,18 +14,18 @@ class ChangeMenuRekapForm extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('nm_menu', 'Rekap Form Bebas')->get();
-        foreach ($menu as $m) {
-            $m->akses = 0;
-            $m->save();
-        }
+        // $menu = Menu::where('nm_menu', 'Rekap Form Bebas')->get();
+        // foreach ($menu as $m) {
+        //     $m->akses = 0;
+        //     $m->save();
+        // }
 
-        $menu = Menu::where('nm_menu', 'Rekap Form Harian')->get();
-        foreach ($menu as $m) {
-            $m->page = 'rekap-form';
-            $m->nm_menu = 'Rekap Form';
-            $m->save();
-        }
+        // $menu = Menu::where('nm_menu', 'Rekap Form Harian')->get();
+        // foreach ($menu as $m) {
+        //     $m->page = 'rekap-form';
+        //     $m->nm_menu = 'Rekap Form';
+        //     $m->save();
+        // }
     }
 
     /**

@@ -15,9 +15,9 @@ class AddingRouteModulLaporanKeuanganMenuTagihanSiswa extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('nm_menu', 'Tagihan Siswa')->where('id_modul', 30)->first();
-        $menu->page = 'tagihan-siswa';
-        $menu->save();
+        // $menu = Menu::where('nm_menu', 'Tagihan Siswa')->where('id_modul', 30)->first();
+        // $menu->page = 'tagihan-siswa';
+        // $menu->save();
     }
 
     /**

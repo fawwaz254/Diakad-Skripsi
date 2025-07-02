@@ -19,7 +19,7 @@ class CreateRpbSarprasHabisPakaiTable extends Migration
             $table->string('id_semester', 40)->comment('FK: semester.id_semester');
             $table->string('id_supplier', 40)->comment('FK: supplier.id_supplier');
             $table->string('id_inventaris_habis_pakai', 40)->comment('FK: inventaris_habis_pakai.id_inventaris_habis_pakai');
-            $table->float('harga_satuan', 10, 0)->nullable();
+            $table->decimal('harga_satuan', 10, 0)->nullable();
             $table->integer('qty')->nullable();
             $table->date('tgl_rpb_sarpras_habis_pakai')->nullable();
             $table->boolean('prioritas')->nullable()->comment('1 = Rendah; 2 = Sedang; 3 = Tinggi;');

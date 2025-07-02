@@ -16,14 +16,14 @@ class RemoveRouteOnModulUtilityAkademik extends Migration
      */
     public function up()
     {
-        $modul = Modul::find(23);
-        $modul->delete();
+        // $modul = Modul::find(23);
+        // $modul->delete();
 
-        $menu = Menu::find(91);
-        $menu->delete();
+        // $menu = Menu::find(91);
+        // $menu->delete();
 
-        $menu = Menu::find(92);
-        $menu->delete();
+        // $menu = Menu::find(92);
+        // $menu->delete();
     }
 
     /**

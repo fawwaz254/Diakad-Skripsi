@@ -25,7 +25,7 @@ class JabatanPegawaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sumber-daya/data-sumber-daya/jabatan-pegawai/view-jabatan-pegawai', compact('auth_data'));
     }
@@ -34,12 +34,12 @@ class JabatanPegawaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_jabatan_pegawai = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_jabatan_pegawai = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('sumber-daya/data-sumber-daya/jabatan-pegawai/add-jabatan-pegawai', compact('auth_data', 'id_jabatan_pegawai'));
     }
@@ -48,7 +48,7 @@ class JabatanPegawaiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jabatan_pegawai = $this->fetchDataJabatanPegawai($auth_data, $id);
 
@@ -58,7 +58,7 @@ class JabatanPegawaiController extends BaseController
     public function datatablesJabatanPegawai(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = $this->fetchDataJabatanPegawai($auth_data);
 
         return Datatables::of($list_data)
@@ -114,7 +114,7 @@ class JabatanPegawaiController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jabatanPegawai                             = new JabatanPegawai;
                 $jabatanPegawai->id_jabatan_pegawai         = $id;
@@ -122,8 +122,8 @@ class JabatanPegawaiController extends BaseController
                 $jabatanPegawai->deskripsi_jabatan_pegawai  = $input->deskripsi_jabatan_pegawai;
                 $jabatanPegawai->tipe_jabatan_pegawai       = $input->tipe_jabatan_pegawai;
                 $jabatanPegawai->kode_jabatan_pegawai       = $input->kode_jabatan_pegawai;
-                $jabatanPegawai->id_sekolah                 = $input->auth_data->pengguna->id_sekolah;
-                $jabatanPegawai->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                $jabatanPegawai->id_sekolah                 = auth_data()->pengguna->id_sekolah;
+                $jabatanPegawai->created_by                 = auth_data()->pengguna->id_pengguna;
                 $jabatanPegawai->save();
 
                 return [
@@ -138,7 +138,7 @@ class JabatanPegawaiController extends BaseController
                 $jabatanPegawai->deskripsi_jabatan_pegawai  = $input->deskripsi_jabatan_pegawai;
                 $jabatanPegawai->tipe_jabatan_pegawai       = $input->tipe_jabatan_pegawai;
                 $jabatanPegawai->kode_jabatan_pegawai       = $input->kode_jabatan_pegawai;
-                $jabatanPegawai->updated_by                 = $input->auth_data->pengguna->id_pengguna;
+                $jabatanPegawai->updated_by                 = auth_data()->pengguna->id_pengguna;
                 $jabatanPegawai->updated_at                 = $now;
                 $jabatanPegawai->save();
 
@@ -156,7 +156,7 @@ class JabatanPegawaiController extends BaseController
                 } else {
                     // make object to find id
                     $jabatanPegawai               = JabatanPegawai::find($id);
-                    $jabatanPegawai->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $jabatanPegawai->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $jabatanPegawai->save();
 
                     $jabatanPegawai->delete();

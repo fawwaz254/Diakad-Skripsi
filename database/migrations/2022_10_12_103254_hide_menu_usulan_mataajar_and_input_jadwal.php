@@ -15,13 +15,13 @@ class HideMenuUsulanMataajarAndInputJadwal extends Migration
      */
     public function up()
     {
-        $role = Role::where('nm_role', 'Guru')->first();
+        // $role = Role::where('nm_role', 'Guru')->first();
 
-        $modul = Modul::where('id_role', $role->id_role)->where('nm_modul', 'Jadwal')->first();
+        // $modul = Modul::where('id_role', $role->id_role)->where('nm_modul', 'Jadwal')->first();
 
-        $modul->menus()->where('nm_menu', 'Input Jadwal')->update([
-            "akses" => 0
-        ]);
+        // $modul->menus()->where('nm_menu', 'Input Jadwal')->update([
+        //     "akses" => 0
+        // ]);
     }
 
     /**

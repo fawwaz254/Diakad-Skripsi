@@ -21,7 +21,7 @@ class CreateLaporanKerjaHarianTable extends Migration
             $table->text('uraian_kegiatan')->nullable();
             $table->string('nm_file', 256)->nullable();
             $table->string('path_file', 256)->nullable();
-            $table->tinyInteger('status')->nullable()->comment('0=Belum Tuntas, 1 = Tuntas');
+            $table->integer('status')->nullable()->comment('0=Belum Tuntas, 1 = Tuntas');
             $table->text('catatan')->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

@@ -16,15 +16,15 @@ class CreateMenuCetakRapor extends Migration
     public function up()
     {
 
-        $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '7')->first();
+        // $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '7')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Cetak Rapor';
-        $menu->page = 'cetak-rapor';
-        $menu->urutan = 3;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Cetak Rapor';
+        // $menu->page = 'cetak-rapor';
+        // $menu->urutan = 3;
+        // $menu->akses = 1;
+        // $menu->save();
         // Schema::create('menu_cetak_rapor', function (Blueprint $table) {
         //     $table->id();
         //     $table->timestamps();

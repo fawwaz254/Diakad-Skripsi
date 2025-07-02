@@ -18,7 +18,7 @@ class CreateDompetTable extends Migration
             $table->string('id_dompet', 40)->primary();
             $table->string('id_bank', 40)->comment('FK: bank.id_bank')->nullable();
             $table->boolean('is_tunai')->comment('khusus tunai diisi 1')->nullable();
-            $table->float('saldo_dompet', 10, 0)->nullable();
+            $table->decimal('saldo_dompet', 10, 0)->nullable();
             $table->boolean('is_spp')->comment('khusus bank digunakan menampung rekening diisi 1')->nullable();
             $table->string('keterangan_dompet', 1024)->nullable();
             $table->timestamps();

@@ -19,7 +19,7 @@ class CreateTableKetidaksesuaianSop extends Migration
             $table->string('id_pengguna', 40);
             $table->string('id_pengguna_input', 40);
             $table->string('catatan_pelanggaran', 256);
-            $table->dateTime('tgl_pelanggaran');
+            $table->timestamp('tgl_pelanggaran');
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

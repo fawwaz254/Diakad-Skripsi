@@ -28,7 +28,7 @@ class ReportPendaftaranController extends Controller
     public function viewReportPendaftaran(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $mode = 'view';
 
@@ -38,7 +38,7 @@ class ReportPendaftaranController extends Controller
     public function datatablesReportPendaftaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibPenerimaan::fetchDataReportPendaftaran($auth_data);
         $sekolah = Sekolah::first();
 
@@ -57,7 +57,7 @@ class ReportPendaftaranController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
@@ -72,7 +72,7 @@ class ReportPendaftaranController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
@@ -86,7 +86,7 @@ class ReportPendaftaranController extends Controller
     public function datatablesDetailReportPendaftaran(Request $request, $id_penerimaan, $id_jurusan)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         if ($id_jurusan != '0') {
             $list_data = LibPenerimaan::fetchDataDetailPendaftaran($auth_data, $id_penerimaan, $id_jurusan);
         } else {

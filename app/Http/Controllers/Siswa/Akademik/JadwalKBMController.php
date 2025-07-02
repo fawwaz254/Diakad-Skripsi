@@ -22,7 +22,7 @@ class JadwalKBMController extends BaseController{
     public function viewJadwalKBM(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -32,7 +32,7 @@ class JadwalKBMController extends BaseController{
 
     public function datatablesJadwalKBM(Request $request){
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

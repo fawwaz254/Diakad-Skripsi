@@ -33,7 +33,7 @@ class SetLulusController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data);
 
@@ -47,7 +47,7 @@ class SetLulusController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_periode_wisuda' => 'required',
@@ -71,7 +71,7 @@ class SetLulusController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data, $id_periode_wisuda);
 
@@ -81,7 +81,7 @@ class SetLulusController extends BaseController
     public function datatablesSetLulus(Request $request, $id_periode_wisuda, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = $this->fetchDataSetLulus($auth_data, $id_periode_wisuda, $id_kelas);
 
         return Datatables::of($list_data)
@@ -242,20 +242,20 @@ class SetLulusController extends BaseController
                         // get status_pengguna kode CALON_LULUS
                         $statusPengguna = StatusPengguna::where('kode_status_pengguna', '=', "LULUS")
                             ->where('status_join_table', '=', 3)
-                            ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                            ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                             ->first();
 
                         // -- UPDATE id_kelas = null tabel siswa --
                         $siswa                      = Siswa::find($pengajuanWisudaSet->id_siswa);
                         $siswa->id_kelas            = null;
-                        $siswa->updated_by          = $input->auth_data->pengguna->id_pengguna;
+                        $siswa->updated_by          = auth_data()->pengguna->id_pengguna;
                         $siswa->updated_at          = $now;
                         $siswa->save();
 
                         // -- UPDATE status_pengguna tabel pengguna --
                         $pengguna                       = Pengguna::find($siswa->id_pengguna);
                         $pengguna->id_status_pengguna   = $statusPengguna->id_status_pengguna;
-                        $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                        $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
                         $pengguna->updated_at           = $now;
                         $pengguna->save();
 
@@ -267,14 +267,14 @@ class SetLulusController extends BaseController
                         // -- UPDATE role tabel role_pengguna --
                         $rolePengguna                   = RolePengguna::find($rolePenggunaSet->id_role_pengguna);
                         $rolePengguna->id_role          = 12;
-                        $rolePengguna->updated_by       = $input->auth_data->pengguna->id_pengguna;
+                        $rolePengguna->updated_by       = auth_data()->pengguna->id_pengguna;
                         $rolePengguna->updated_at       = $now;
                         $rolePengguna->save();
 
                         // -- UPDATE tabel pengajuan_wisuda --
                         $pengajuanWisuda                        = PengajuanWisuda::find($id);
                         $pengajuanWisuda->status_wisuda         = 2;
-                        $pengajuanWisuda->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                        $pengajuanWisuda->updated_by            = auth_data()->pengguna->id_pengguna;
                         $pengajuanWisuda->updated_at            = $now;
                         $pengajuanWisuda->save();
 
@@ -288,7 +288,7 @@ class SetLulusController extends BaseController
 
                         $admisi                         = Admisi::find($admisi->id_admisi);
                         $admisi->id_status_pengguna     = $statusPengguna->id_status_pengguna;
-                        $admisi->updated_by             = $input->auth_data->pengguna->id_pengguna;
+                        $admisi->updated_by             = auth_data()->pengguna->id_pengguna;
                         $admisi->updated_at             = $now;
                         $admisi->save();
                     }

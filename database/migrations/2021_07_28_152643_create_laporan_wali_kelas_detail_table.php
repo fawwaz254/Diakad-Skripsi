@@ -19,7 +19,7 @@ class CreateLaporanWaliKelasDetailTable extends Migration
             $table->string('id_laporan_wali_kelas', 40)->comment('FK: laporan_wali_kelas.id_laporan_wali_kelas');
             $table->string('id_guru', 40)->comment('FK: guru.id_guru');
             $table->string('id_kelas', 40)->comment('FK: kelas.id_kelas');
-            $table->tinyInteger('status')->nullable()->comment('0=Belum Tuntas, 1 = Tuntas');
+            $table->integer('status')->nullable()->comment('0=Belum Tuntas, 1 = Tuntas');
             $table->text('catatan')->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

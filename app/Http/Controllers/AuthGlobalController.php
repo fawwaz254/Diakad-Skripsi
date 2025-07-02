@@ -30,14 +30,14 @@ class AuthGlobalController extends BaseController
     public function indexMustChangePassword(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('must-change-password', compact('auth_data'));
     }
 
     public function indexMustAddBiodata(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $siswa =  Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna', 'wali_murid')->first();
         return view('must-update-biodata', compact('auth_data', 'siswa'));
     }
@@ -67,8 +67,8 @@ class AuthGlobalController extends BaseController
             // if siswa doesnt have wali murid
             $now1 = Carbon::now();
             $wali_murid = new WaliMurid;
-            $wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
-            $wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $wali_murid->id_wali_murid = auth_data()->sekolah_data->prefix . strtotime($now1) . uniqid();
+            $wali_murid->id_pengguna = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
             $wali_murid->nm_wali_murid = $input->nm_ortu;
             $wali_murid->is_aktif = 1;
             $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
@@ -78,7 +78,7 @@ class AuthGlobalController extends BaseController
             $pengguna = new Pengguna;
             $pengguna->id_pengguna = $wali_murid->id_pengguna;
             $pengguna->nm_pengguna = $input->nm_ortu;
-            $pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
+            $pengguna->id_sekolah = auth_data()->sekolah_data->id_sekolah;
             $pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
             $pengguna->username = $input->nomor_hp_ortu;
             $pengguna->password = Hash::make($input->nomor_hp_ortu);
@@ -96,7 +96,7 @@ class AuthGlobalController extends BaseController
                 $role_wali_murid->save();
             }
 
-            $siswa1 = Siswa::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
+            $siswa1 = Siswa::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first();
             $siswa1->id_wali_murid = $wali_murid->id_wali_murid;
             $siswa1->save();
 
@@ -106,7 +106,7 @@ class AuthGlobalController extends BaseController
             $calon_siswa_ortu->nm_wali = $input->nm_ortu;
             $calon_siswa_ortu->save();
 
-            $pengguna1 = Pengguna::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
+            $pengguna1 = Pengguna::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first();
             $pengguna1->email_pengguna = $input->email_pengguna;
             $pengguna1->save();
         };
@@ -120,7 +120,7 @@ class AuthGlobalController extends BaseController
     public function indexProfile(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $roles = RolePengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->join('role', 'role.id_role', '=', 'role_pengguna.id_role')->orderBy('nm_role')->get();
         return view('profile', compact('auth_data', 'roles'));
@@ -129,14 +129,14 @@ class AuthGlobalController extends BaseController
     public function indexPassword(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('password', compact('auth_data'));
     }
 
     public function indexSearch(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $search = $input->q;
 
         return view('search-result', compact('auth_data', 'search'));
@@ -159,7 +159,7 @@ class AuthGlobalController extends BaseController
         $now = Carbon::now();
 
         $input = (object) $request->input();
-        $pengguna = $input->auth_data->pengguna;
+        $pengguna = auth_data()->pengguna;
 
         $pengguna->must_change_password = 0;
         $pengguna->last_time_password = $now;
@@ -190,7 +190,7 @@ class AuthGlobalController extends BaseController
         $now = Carbon::now();
 
         $input = (object) $request->input();
-        $pengguna = $input->auth_data->pengguna;
+        $pengguna = auth_data()->pengguna;
         if ($input->new_password == $input->new_confirm_password) {
             if (Auth::once(['username' => $pengguna->username, 'password' => $input->old_password])) {
                 $pengguna->password = Hash::make($input->new_password);
@@ -266,7 +266,7 @@ class AuthGlobalController extends BaseController
     {
         $input = (object) $request->input();
 
-        $pengguna = $input->auth_data->pengguna;
+        $pengguna = auth_data()->pengguna;
         $pengguna->nm_pengguna = $input->name;
         $pengguna->save();
 
@@ -302,7 +302,7 @@ class AuthGlobalController extends BaseController
     {
         $input = (object) $request->input();
 
-        $pengguna = $input->auth_data->pengguna;
+        $pengguna = auth_data()->pengguna;
         $pengguna->is_online = 0;
         $pengguna->save();
 
@@ -315,7 +315,7 @@ class AuthGlobalController extends BaseController
     {
         $input = (object) $request->input();
 
-        $pengguna = $input->auth_data->pengguna;
+        $pengguna = auth_data()->pengguna;
         $pengguna->is_online = 0;
         $pengguna->terkunci_hingga = now()->addHours(24);
         $pengguna->save();

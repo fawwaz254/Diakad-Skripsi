@@ -30,7 +30,7 @@ class PersidanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_semester_tahun = LibDataAkademik::fetchDataTahunSemester($auth_data);
 
         $data_tahun_penetapan = Penetapan::distinct()->get([DB::raw('YEAR(tgl_penetapan) as tgl_penetapan')]);
@@ -42,10 +42,10 @@ class PersidanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         // mengambil waktu sekarang
         $now = Carbon::now();
-        $id_penetapan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_penetapan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
         return view('ppdb/penetapan/data-penetapan/add-penetapan', compact('auth_data', 'id_penetapan'));
     }
 
@@ -53,7 +53,7 @@ class PersidanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_penetapan = Penetapan::where('id_penetapan', $id)->first();
         // dd($data_penetapan);
         return view('ppdb/penetapan/persidangan/edit-persidangan', compact('auth_data', 'data_penetapan'));
@@ -62,7 +62,7 @@ class PersidanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_penetapan = Penetapan::where('id_penetapan', $id)->first();
         $data_penetapan_penerimaan = PenetapanPenerimaan::where('id_penetapan', $id)->first();
         $data_penerimaan = Penerimaan::where('id_penerimaan', $data_penetapan_penerimaan->id_penerimaan)->first();
@@ -76,7 +76,7 @@ class PersidanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('ppdb/penetapan/persidangan/view-persidangan2', compact('auth_data', 'tahun'));
     }
 
@@ -84,7 +84,7 @@ class PersidanganController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_penetapan = Penetapan::where('id_penetapan', $id)->first();
         return view('ppdb/penetapan/persidangan/view-sidang-penetapan', compact('auth_data', 'data_penetapan'));
     }
@@ -92,7 +92,7 @@ class PersidanganController extends BaseController
     public function actionViewPersidangan(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator  = Validator::make($request->all(), [
             'tahun_penetapan' => 'required'
@@ -116,7 +116,7 @@ class PersidanganController extends BaseController
     public function datatablesPersidangan(Request $request, $tahun)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = Penetapan::orderBy('id_penetapan', 'desc')->where('tgl_penetapan', 'like', '%' . $tahun . '%')->get();
         return Datatables::of($list_data)
             ->addColumn('nm_penetapan', function ($item) {
@@ -145,7 +145,7 @@ class PersidanganController extends BaseController
     public function datatablesPersidanganViewGelombang(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data  = PenetapanPenerimaan::select(
             'penetapan_penerimaan.id_penetapan_penerimaan',
             'penerimaan.nm_penerimaan',
@@ -206,7 +206,7 @@ class PersidanganController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $penetapan                            = new Penetapan;
                 $penetapan->id_penetapan              = $id;
@@ -218,8 +218,8 @@ class PersidanganController extends BaseController
 
                 $penetapan->periode                     = $input->periode;
                 $penetapan->is_aktif                   = $input->is_aktif;
-                $penetapan->id_sekolah                 = $input->auth_data->pengguna->id_sekolah;
-                $penetapan->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                $penetapan->id_sekolah                 = auth_data()->pengguna->id_sekolah;
+                $penetapan->created_by                 = auth_data()->pengguna->id_pengguna;
                 $penetapan->save();
 
                 return [
@@ -240,9 +240,9 @@ class PersidanganController extends BaseController
 
                 $penetapan->periode                     = $input->periode;
                 $penetapan->is_aktif                   = $input->is_aktif;
-                $penetapan->id_sekolah                 = $input->auth_data->pengguna->id_sekolah;
+                $penetapan->id_sekolah                 = auth_data()->pengguna->id_sekolah;
 
-                $penetapan->updated_by                 = $input->auth_data->pengguna->id_pengguna;
+                $penetapan->updated_by                 = auth_data()->pengguna->id_pengguna;
                 $penetapan->updated_at                 = $now;
                 $penetapan->save();
 
@@ -255,7 +255,7 @@ class PersidanganController extends BaseController
 
                 // make object to find id
                 $penetapan               = Penetapan::find($id);
-                $penetapan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $penetapan->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $penetapan->save();
 
                 $penetapan->delete();

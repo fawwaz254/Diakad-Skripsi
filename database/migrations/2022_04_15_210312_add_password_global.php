@@ -19,9 +19,9 @@ class AddPasswordGlobal extends Migration
             $table->string('password_global',100)->after('email_sekolah');
         });
 
-        $password_global = Sekolah::where('deleted_at', null)->first();
-        $password_global->password_global = Hash::make('passwordglobal');
-        $password_global->save();
+        // $password_global = Sekolah::where('deleted_at', null)->first();
+        // $password_global->password_global = Hash::make('passwordglobal');
+        // $password_global->save();
 
     }
 

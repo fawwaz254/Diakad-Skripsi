@@ -17,8 +17,8 @@ class CreatePenggunaTokenTable extends Migration
             $table->increments('id');
             $table->string('email', 128);
             $table->string('token', 128);
-            $table->tinyInteger('is_valid');
-            $table->dateTime('created_at');
+            $table->integer('is_valid');
+            $table->timestamp('created_at');
 
         });
     }

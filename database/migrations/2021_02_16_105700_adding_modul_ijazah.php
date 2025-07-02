@@ -19,26 +19,26 @@ class AddingModulIjazah extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "Ijazah",
-            "route"         => "ijazah",
-            "urutan"        => 9,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "Ijazah",
+        //     "route"         => "ijazah",
+        //     "urutan"        => 9,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Pengambilan Ijazah",
-                "page"         => "pengambilan-ijazah",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Pengambilan Ijazah",
+        //         "page"         => "pengambilan-ijazah",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**
@@ -48,13 +48,13 @@ class AddingModulIjazah extends Migration
      */
     public function down()
     {
-        $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
 
-        $modul = Modul::where('route', 'ijazah')->where('id_role', $role_id)->first();
+        // $modul = Modul::where('route', 'ijazah')->where('id_role', $role_id)->first();
 
-        $menu = Menu::where('id_modul', $modul->id_modul)->where('page', 'pengambilan-ijazah')->first();
-        $menu->forceDelete();
+        // $menu = Menu::where('id_modul', $modul->id_modul)->where('page', 'pengambilan-ijazah')->first();
+        // $menu->forceDelete();
 
-        $modul->forceDelete();
+        // $modul->forceDelete();
     }
 }

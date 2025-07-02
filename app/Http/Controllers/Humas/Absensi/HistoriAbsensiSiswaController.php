@@ -31,7 +31,7 @@ class HistoriAbsensiSiswaController extends Controller
     public function viewHistoriAbsensiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $date = Carbon::now()->format('Y-m-d');
@@ -60,7 +60,7 @@ class HistoriAbsensiSiswaController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $jumlah_hadir = 0;
         $jumlah_sakit = 0;
         $jumlah_izin = 0;
@@ -206,7 +206,7 @@ class HistoriAbsensiSiswaController extends Controller
     {
         set_time_limit(-1);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         if ($id_kelas == "1") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -412,7 +412,7 @@ class HistoriAbsensiSiswaController extends Controller
                         }
                     }
 
-                    if ($input->auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman') {
+                    if (auth_data()->sekolah_data->nm_singkat_sekolah == 'smkypm1taman') {
                         if (isset($shiftMaster['end_time'])) {
                             if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
 
@@ -457,7 +457,7 @@ class HistoriAbsensiSiswaController extends Controller
     public function batch_edit_status(Request $request, $id_kelas = null, $date = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('id_kelas', $id_kelas)->first();
         return view('humas/absensi/histori-absensi-siswa/batch-edit-status', compact('auth_data',  'kelas', 'date', 'id_kelas'));
     }
@@ -465,7 +465,7 @@ class HistoriAbsensiSiswaController extends Controller
     public function action_batch_edit_status(Request $request, $id_kelas = null, $date = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         foreach ($input->id_pengguna as $id_pengguna) {
             $presences = PresensiPengguna::where('id_pengguna', $id_pengguna)->where('date', $date)->first();
             if ($presences) {
@@ -672,7 +672,7 @@ class HistoriAbsensiSiswaController extends Controller
                     $hasil[$key]['check_out'] = $attendance->check_out;
                 }
 
-                if ($input->auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm1taman') {
+                if (auth_data()->sekolah_data->nm_singkat_sekolah == 'smkypm1taman') {
                     if (isset($shiftMaster['end_time'])) {
                         if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
 

@@ -15,10 +15,10 @@ class EditMenuFormLainnyaGuru extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('route','kegiatan-harian')->where('id_role',2)->first();
-        $menu = Menu::where('id_modul',$modul->id_modul)->where('page','form-lainnya')->first();
-        $menu->akses = 0;
-        $menu->save();
+        // $modul = Modul::where('route','kegiatan-harian')->where('id_role',2)->first();
+        // $menu = Menu::where('id_modul',$modul->id_modul)->where('page','form-lainnya')->first();
+        // $menu->akses = 0;
+        // $menu->save();
 
     }
 

@@ -15,15 +15,15 @@ class AddMenuNilaiUjianModulElearningSoal extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'E-Learning Soal')->where('id_role', '3')->first();
+        // $modul = Modul::where('nm_modul', 'E-Learning Soal')->where('id_role', '3')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Nilai Ujian';
-        $menu->page = 'nilai-ujian';
-        $menu->urutan = 2;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Nilai Ujian';
+        // $menu->page = 'nilai-ujian';
+        // $menu->urutan = 2;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

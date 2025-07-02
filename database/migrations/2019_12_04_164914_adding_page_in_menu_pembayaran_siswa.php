@@ -15,9 +15,9 @@ class AddingPageInMenuPembayaranSiswa extends Migration
      */
     public function up()
     {
-        $menu = Menu::find(119);
-        $menu->page = 'pembayaran-siswa';
-        $menu->save();
+        // $menu = Menu::find(119);
+        // $menu->page = 'pembayaran-siswa';
+        // $menu->save();
     }
 
     /**

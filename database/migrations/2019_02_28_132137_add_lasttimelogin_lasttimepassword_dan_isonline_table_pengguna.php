@@ -14,8 +14,8 @@ class AddLasttimeloginLasttimepasswordDanIsonlineTablePengguna extends Migration
     public function up()
     {
         Schema::table('pengguna', function (Blueprint $table) {
-            $table->dateTime('last_time_password')->after('nomor_hp_pengguna')->nullable()->comment('terakhir kali ganti password');
-            $table->dateTime('last_time_login')->after('last_time_password')->nullable()->comment('terakhir kali login');
+            $table->timestamp('last_time_password')->after('nomor_hp_pengguna')->nullable()->comment('terakhir kali ganti password');
+            $table->timestamp('last_time_login')->after('last_time_password')->nullable()->comment('terakhir kali login');
             $table->boolean('is_online')->after('last_time_login')->nullable()->comment('0 = offline; 1 = user sedang online;');
         });
     }

@@ -15,9 +15,9 @@ class AddRouteMenuAbsensiHarianSiswa extends Migration
      */
     public function up()
     {
-        $menu = Menu::find(137);
-        $menu->page = 'absensi-harian-siswa';
-        $menu->save();
+        // $menu = Menu::find(137);
+        // $menu->page = 'absensi-harian-siswa';
+        // $menu->save();
     }
 
     /**

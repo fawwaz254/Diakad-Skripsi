@@ -19,33 +19,33 @@ class AddModulPresensiMagangRolePembimbingMagang extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Pembimbing Magang')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Pembimbing Magang')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "Presensi Magang",
-            "route"         => "presensi-magang",
-            "urutan"        => 1,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "Presensi Magang",
+        //     "route"         => "presensi-magang",
+        //     "urutan"        => 1,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Input Presensi Magang",
-                "page"         => "input-presensi-magang",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-            [
-                "nm_menu"      => "Rekap Presensi Magang",
-                "page"         => "rekap-presensi-magang",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ]
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Input Presensi Magang",
+        //         "page"         => "input-presensi-magang",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        //     [
+        //         "nm_menu"      => "Rekap Presensi Magang",
+        //         "page"         => "rekap-presensi-magang",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ]
+        // ]);
     }
 
     /**

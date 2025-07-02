@@ -22,7 +22,7 @@ class JamKBMController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('pendidikan/data-akademik/jam-kbm/view-jam-kbm', compact('auth_data'));
     }
@@ -31,7 +31,7 @@ class JamKBMController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -45,7 +45,7 @@ class JamKBMController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jadwal_jam = $this->fetchDataJamKBM($auth_data, $id);
 
@@ -55,7 +55,7 @@ class JamKBMController extends BaseController
     public function datatablesJamKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = $this->fetchDataJamKBM($auth_data);
 
         return Datatables::of($list_data)
@@ -112,7 +112,7 @@ class JamKBMController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jadwalJam                      = new JadwalJam;
                 $jadwalJam->id_jadwal_jam       = $id;
@@ -122,8 +122,8 @@ class JamKBMController extends BaseController
                 $jadwalJam->menit_mulai         = substr($input->jam_menit_mulai, 3, 4);
                 $jadwalJam->jam_selesai         = substr($input->jam_menit_selesai, 0, 2);
                 $jadwalJam->menit_selesai       = substr($input->jam_menit_selesai, 3, 4);
-                $jadwalJam->id_sekolah          = $input->auth_data->pengguna->id_sekolah;
-                $jadwalJam->created_by          = $input->auth_data->pengguna->id_pengguna;
+                $jadwalJam->id_sekolah          = auth_data()->pengguna->id_sekolah;
+                $jadwalJam->created_by          = auth_data()->pengguna->id_pengguna;
                 $jadwalJam->save();
 
                 return [
@@ -140,7 +140,7 @@ class JamKBMController extends BaseController
                 $jadwalJam->menit_mulai         = substr($input->jam_menit_mulai, 3, 4);
                 $jadwalJam->jam_selesai         = substr($input->jam_menit_selesai, 0, 2);
                 $jadwalJam->menit_selesai       = substr($input->jam_menit_selesai, 3, 4);
-                $jadwalJam->updated_by          = $input->auth_data->pengguna->id_pengguna;
+                $jadwalJam->updated_by          = auth_data()->pengguna->id_pengguna;
                 $jadwalJam->updated_at          = $now;
                 $jadwalJam->save();
 
@@ -158,7 +158,7 @@ class JamKBMController extends BaseController
                 } else {
                     // make object to find id
                     $jadwalJam               = JadwalJam::find($id);
-                    $jadwalJam->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $jadwalJam->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $jadwalJam->save();
 
                     $jadwalJam->delete();

@@ -48,23 +48,23 @@ class InsertUpdateSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $status_pengguna = StatusPengguna::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+        $auth_data = auth_data();
+        $status_pengguna = StatusPengguna::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
             ->where('status_join_table', '=', 3)
             ->get();
-        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('is_aktif', 1)->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('kelas.tingkat', 'asc')->get();
-        $semester = Semester::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'asc')->get();
+        $kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('is_aktif', 1)->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->orderBy('kelas.tingkat', 'asc')->get();
+        $semester = Semester::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'asc')->get();
         $thn_masuk_siswa = $semester->pluck('thn_akademik_semester')->unique();
-        $jalur = Jalur::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
+        $jalur = Jalur::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->get();
 
-        $sekolah = Sekolah::where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->first();
+        $sekolah = Sekolah::where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->first();
         return view('pendidikan/siswa/insert-update-siswa/view-insert-update-siswa', compact('auth_data', 'status_pengguna', 'kelas', 'thn_masuk_siswa', 'semester', 'jalur', 'sekolah'));
     }
     public function actionViewUpdateSiswa(Request $request)
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'nis_nama_siswa' => 'required'
@@ -98,7 +98,7 @@ class InsertUpdateSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)) {
         } else {
@@ -130,7 +130,7 @@ class InsertUpdateSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
         $beasiswa = CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
@@ -162,7 +162,7 @@ class InsertUpdateSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa1 = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -173,7 +173,7 @@ class InsertUpdateSiswaController extends BaseController
     public function viewExcelSiswaKelas(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $kelas = Kelas::where('id_kelas', $id_kelas)->first();
         $siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
 
@@ -183,7 +183,7 @@ class InsertUpdateSiswaController extends BaseController
     public function viewCariUpdateSiswa(Request $request, $nis_nama_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
 
@@ -193,7 +193,7 @@ class InsertUpdateSiswaController extends BaseController
     public function datatablesCariSiswa(Request $request, $nis_nama_siswa)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -225,7 +225,7 @@ class InsertUpdateSiswaController extends BaseController
     public function actionInsertUpdateSiswa(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
         // dd($input->link_google_drive);
 
@@ -268,11 +268,11 @@ class InsertUpdateSiswaController extends BaseController
                 //jika tidak ada siswa
                 if ($siswa == null) {
                     DB::beginTransaction();
-                    $id_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $id_c_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $id_admisi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $id_jalur_siswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_pengguna = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_c_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_admisi = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id_jalur_siswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     try {
                         DB::table('calon_siswa_baru')->insert(
@@ -284,14 +284,14 @@ class InsertUpdateSiswaController extends BaseController
                                 'nisn_siswa' => $input->nisn_siswa,
                                 'nis_siswa' => $input->nis_siswa,
                                 'created_at' => $now,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             ]
                         );
                         DB::table('calon_siswa_fisik')->insert(
                             [
                                 'id_c_siswa' => $id_c_siswa,
                                 'created_at' => $now,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             ]
                         );
 
@@ -299,7 +299,7 @@ class InsertUpdateSiswaController extends BaseController
                             [
                                 'id_c_siswa' => $id_c_siswa,
                                 'created_at' => $now,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             ]
                         );
 
@@ -311,7 +311,7 @@ class InsertUpdateSiswaController extends BaseController
                                     'nm_sekolah_mutasi' => $input->nm_sekolah_asal_mutasi,
                                     'link_google_drive' => $input->link_google_drive,
                                     'created_at' => $now,
-                                    'created_by' => $input->auth_data->pengguna->id_pengguna
+                                    'created_by' => auth_data()->pengguna->id_pengguna
                                 ]
                             );
                         } else {
@@ -319,7 +319,7 @@ class InsertUpdateSiswaController extends BaseController
                                 [
                                     'id_c_siswa' => $id_c_siswa,
                                     'created_at' => $now,
-                                    'created_by' => $input->auth_data->pengguna->id_pengguna
+                                    'created_by' => auth_data()->pengguna->id_pengguna
                                 ]
                             );
                         }
@@ -328,14 +328,14 @@ class InsertUpdateSiswaController extends BaseController
                             [
                                 'id_pengguna' => $id_pengguna,
                                 'id_status_pengguna' => $input->id_status_pengguna,
-                                'id_sekolah' => $input->auth_data->pengguna->id_sekolah,
+                                'id_sekolah' => auth_data()->pengguna->id_sekolah,
                                 'nm_pengguna' => $input->nm_pengguna,
                                 'username' => $input->nis_siswa,
                                 'password' => Hash::make($input->nis_siswa),
                                 'must_change_password' => 1,
                                 'status_join_table' => 3,
                                 'created_at' => $now,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             ]
                         );
 
@@ -350,7 +350,7 @@ class InsertUpdateSiswaController extends BaseController
                                 'nisn_siswa' => $input->nisn_siswa,
                                 'thn_masuk_siswa' => $input->thn_masuk_siswa,
                                 'created_at' => $now,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             ]
                         );
 
@@ -362,7 +362,7 @@ class InsertUpdateSiswaController extends BaseController
                                 'id_status_pengguna' => $input->id_status_pengguna,
                                 'id_jalur' => $input->id_jalur,
                                 'created_at' => $now,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             ]
                         );
 
@@ -375,7 +375,7 @@ class InsertUpdateSiswaController extends BaseController
                                 'id_admisi' => $id_admisi,
                                 'is_jalur_aktif' => 1,
                                 'created_at' => $now,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             ]
                         );
 
@@ -386,14 +386,14 @@ class InsertUpdateSiswaController extends BaseController
                                 'keterangan_role_pengguna' => "Input Pendidikan",
                                 'is_aktif' => 1,
                                 'created_at' => $now,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => auth_data()->pengguna->id_pengguna
                             ]
                         );
 
                         LibGlobal::insertUpdateUserInCenter([
                             [
                                 "id_pengguna" => $id_pengguna,
-                                "id_sekolah" => $input->auth_data->pengguna->id_sekolah,
+                                "id_sekolah" => auth_data()->pengguna->id_sekolah,
                                 "username" => $input->nis_siswa
                             ]
                         ]);
@@ -431,8 +431,8 @@ class InsertUpdateSiswaController extends BaseController
             else {
                 $siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->orWhere('nisn_siswa', '=', $input->nisn_siswa)->first();
                 $calonSiswa = CalonSiswaBaru::where('id_c_siswa', '=', $input->id_c_siswa)->first();
-                $id_c_siswa_prestasi = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $id_c_siswa_beasiswa = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id_c_siswa_prestasi = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id_c_siswa_beasiswa = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 if ($siswa != null || $calonSiswa != null) {
                     DB::beginTransaction();
@@ -441,13 +441,13 @@ class InsertUpdateSiswaController extends BaseController
                             'nm_pengguna' => $input->nm_pengguna,
                             'username' => $input->nis_siswa,
                             'password' => Hash::make($input->nis_siswa),
-                            'id_sekolah' => $input->auth_data->pengguna->id_sekolah,
+                            'id_sekolah' => auth_data()->pengguna->id_sekolah,
                             'id_status_pengguna' => $input->id_status_pengguna,
                             // 'must_change_password' 	=> 1,
                             'status_join_table' => 3,
                             'updated_at' => $now,
                             'email_pengguna' => $input->email_pengguna,
-                            'updated_by' => $input->auth_data->pengguna->id_pengguna
+                            'updated_by' => auth_data()->pengguna->id_pengguna
                         ]);
 
                         DB::table('calon_siswa_baru')->where('id_c_siswa', $input->id_c_siswa)->update([
@@ -498,7 +498,7 @@ class InsertUpdateSiswaController extends BaseController
                             'nm_beasiswa_thn_2' => $input->nm_beasiswa_thn_2,
                             'nm_beasiswa_thn_3' => $input->nm_beasiswa_thn_3,
                             'updated_at' => $now,
-                            'updated_by' => $input->auth_data->pengguna->id_pengguna
+                            'updated_by' => auth_data()->pengguna->id_pengguna
                         ]);
 
                         DB::table('calon_siswa_ortu')->where('id_c_siswa', $input->id_c_siswa)->update([
@@ -548,25 +548,25 @@ class InsertUpdateSiswaController extends BaseController
                             'nomor_telp_ortu' => $input->nomor_telp_ortu,
                             'nomor_hp_ortu' => $input->nomor_hp_ortu,
                             'updated_at' => $now,
-                            'updated_by' => $input->auth_data->pengguna->id_pengguna
+                            'updated_by' => auth_data()->pengguna->id_pengguna
                         ]);
 
                         DB::table('calon_siswa_fisik')->where('id_c_siswa', $input->id_c_siswa)->update([
                             'tinggi_badan' => $input->tinggi_badan,
                             'berat_badan' => $input->berat_badan,
                             'updated_at' => $now,
-                            'updated_by' => $input->auth_data->pengguna->id_pengguna
+                            'updated_by' => auth_data()->pengguna->id_pengguna
                         ]);
 
                         DB::table('calon_siswa_prestasi')->where('id_c_siswa', $input->id_c_siswa)->update([
                             'updated_at' => $now,
-                            'updated_by' => $input->auth_data->pengguna->id_pengguna
+                            'updated_by' => auth_data()->pengguna->id_pengguna
                         ]);
 
                         LibGlobal::insertUpdateUserInCenter([
                             [
                                 "id_pengguna" => $input->id_pengguna,
-                                "id_sekolah" => $input->auth_data->pengguna->id_sekolah,
+                                "id_sekolah" => auth_data()->pengguna->id_sekolah,
                                 "username" => $input->nis_siswa
                             ]
                         ]);
@@ -604,7 +604,7 @@ class InsertUpdateSiswaController extends BaseController
     public function addKota(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [

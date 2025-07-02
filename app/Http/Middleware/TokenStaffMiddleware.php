@@ -36,8 +36,11 @@ class TokenStaffMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
+        if ($request->segment(1) == 'pulse') {
+            return  $next($request);
+        }
         if (Auth::check()) {
             $pengguna = Auth::user();
             if(!empty($pengguna->terkunci_hingga) && now()->lt(Carbon::parse($pengguna->terkunci_hingga))){
@@ -129,7 +132,6 @@ class TokenStaffMiddleware
                 return redirect($auth_data->role_aktif->path);
             }
 
-            $request->request->add(['auth_data' => $auth_data]);
             return $next($request);
         } else {
             //barcode

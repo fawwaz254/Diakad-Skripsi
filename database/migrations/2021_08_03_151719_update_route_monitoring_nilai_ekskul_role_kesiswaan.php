@@ -18,13 +18,13 @@ class UpdateRouteMonitoringNilaiEkskulRoleKesiswaan extends Migration
      */
     public function up()
     {
-        $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Ekstrakurikuler')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Ekstrakurikuler')->first();
 
-        $modul->menus()->where('nm_menu', 'Monitoring Nilai Ekskul')->update([
-            "page" => "monitoring-nilai-ekskul"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Monitoring Nilai Ekskul')->update([
+        //     "page" => "monitoring-nilai-ekskul"
+        // ]);
     }
 
     /**

@@ -32,7 +32,7 @@ class JadwalKelasDaringController extends BaseController{
     public function viewJadwalKelasDaring(Request $request){
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -43,7 +43,7 @@ class JadwalKelasDaringController extends BaseController{
     public function datatablesJadwalKelasDaring(Request $request){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $siswa = Siswa::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
@@ -126,7 +126,7 @@ class JadwalKelasDaringController extends BaseController{
     public function uploadTugas(Request $request,$id){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'file' => 'file|required|max:10240' // 10 MB
@@ -141,7 +141,7 @@ class JadwalKelasDaringController extends BaseController{
 
         else{
 
-            $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+            $singkat_sekolah = auth_data()->sekolah_data->nm_singkat_sekolah;
             $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/tugas-siswa/'.$id, request()->file, 'public');
 
             $data = PresensiMpSiswa::find($id);
@@ -165,7 +165,7 @@ class JadwalKelasDaringController extends BaseController{
     public function downloadMateri(Request $request,$id){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data = PresensiMpSiswa::find($id);
         $data->kehadiran = 1;
@@ -179,7 +179,7 @@ class JadwalKelasDaringController extends BaseController{
     public function viewDetailJadwalKelasDaring(Request $request,$id){
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
 

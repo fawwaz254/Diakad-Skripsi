@@ -15,15 +15,15 @@ class AddMenuFormLainnyaInRoleSiswa extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Kegiatan Harian')->where('id_role', '3')->first();
+        // $modul = Modul::where('nm_modul', 'Kegiatan Harian')->where('id_role', '3')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Form Lainnya';
-        $menu->page = 'form-lainnya';
-        $menu->urutan = 2;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Form Lainnya';
+        // $menu->page = 'form-lainnya';
+        // $menu->urutan = 2;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

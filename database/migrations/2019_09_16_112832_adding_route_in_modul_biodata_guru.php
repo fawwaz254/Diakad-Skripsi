@@ -16,9 +16,9 @@ class AddingRouteInModulBiodataGuru extends Migration
     public function up()
     {
         //
-        $modul = Modul::find(8);
-        $modul->route = 'biodata';
-        $modul->save();
+        // $modul = Modul::find(8);
+        // $modul->route = 'biodata';
+        // $modul->save();
     }
 
     /**

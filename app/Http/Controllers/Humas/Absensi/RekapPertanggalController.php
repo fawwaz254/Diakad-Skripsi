@@ -27,7 +27,7 @@ class RekapPertanggalController extends Controller
     {
         // set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $date = Carbon::now()->format('Y-m-d');
         if (empty($tahun)) {
@@ -117,7 +117,7 @@ class RekapPertanggalController extends Controller
     public function selectRekapPertanggal(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun)) {
             $tahun = Carbon::now()->year;
@@ -137,7 +137,7 @@ class RekapPertanggalController extends Controller
     {
         // set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun)) {
             $tahun = Carbon::now()->year();
@@ -224,7 +224,7 @@ class RekapPertanggalController extends Controller
     {
         // set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun)) {
             $tahun = Carbon::now()->year();
@@ -315,7 +315,7 @@ class RekapPertanggalController extends Controller
     public function selectRekapPertanggalSiswa(Request $request, $bulan = null, $tahun = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun)) {
             $tahun = Carbon::now()->year;
@@ -336,7 +336,7 @@ class RekapPertanggalController extends Controller
     {
         // set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $date = Carbon::now()->format('Y-m-d');
 
@@ -431,7 +431,7 @@ class RekapPertanggalController extends Controller
     {
         // set_time_limit(1800);
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun)) {
             $tahun = Carbon::now()->year();
@@ -524,7 +524,7 @@ class RekapPertanggalController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         if (empty($tahun)) {
             $tahun = Carbon::now()->year();

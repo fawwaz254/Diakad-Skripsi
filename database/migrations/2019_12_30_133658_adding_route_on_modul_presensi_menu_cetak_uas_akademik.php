@@ -19,10 +19,10 @@ class AddingRouteOnModulPresensiMenuCetakUasAkademik extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(90);
-        $menu->page         = "cetak-presensi-uas";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(90);
+        // $menu->page         = "cetak-presensi-uas";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**

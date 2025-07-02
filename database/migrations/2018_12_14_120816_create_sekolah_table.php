@@ -44,8 +44,8 @@ class CreateSekolahTable extends Migration {
 			$table->string('nomor_sk_izin_operasional', 64)->nullable();
 			$table->date('tgl_sk_izin_operasional')->nullable();
 			$table->boolean('is_mbs')->nullable()->comment('manajemen berbasis sekolah (1 = Ya; 0 = Tidak;)');
-			$table->float('luas_tanah_milik_sekolah', 10, 0)->nullable()->comment('luas tanah yg dipakai oleh sekolah dengan kepemilikan sendiri; dalam meter persegi (m2)');
-			$table->float('luas_tanah_non_milik_sekolah', 10, 0)->nullable()->comment('luas tanah yg dipakai oleh sekolah namun bukan kepemilikan sendiri; dalam meter persegi (m2)');
+			$table->decimal('luas_tanah_milik_sekolah', 10, 0)->nullable()->comment('luas tanah yg dipakai oleh sekolah dengan kepemilikan sendiri; dalam meter persegi (m2)');
+			$table->decimal('luas_tanah_non_milik_sekolah', 10, 0)->nullable()->comment('luas tanah yg dipakai oleh sekolah namun bukan kepemilikan sendiri; dalam meter persegi (m2)');
 			$table->string('nm_wajib_pajak_sekolah', 64)->nullable();
 			$table->string('npwp_sekolah', 64)->nullable();
 			$table->string('nomor_telp_sekolah', 16)->nullable();

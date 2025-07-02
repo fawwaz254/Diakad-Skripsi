@@ -26,7 +26,7 @@ class InputDataSekolahController extends BaseController
 	{
 		# code..
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 		$sekolah = Sekolah::join('bentuk_pendidikan', 'sekolah.id_bentuk_pendidikan', '=', 'bentuk_pendidikan.id_bentuk_pendidikan')
 			->leftJoin('provinsi', 'sekolah.alamat_provinsi', '=', 'provinsi.id_provinsi')
 			->where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
@@ -48,7 +48,7 @@ class InputDataSekolahController extends BaseController
 	{
 
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 		$now = Carbon::now();
 		$prefix = Sekolah::first()->prefix;
 
@@ -107,7 +107,7 @@ class InputDataSekolahController extends BaseController
 					$uploadedFile   = storeFileToCloud('sekolah', $sekolah->id_sekolah, $request->path_ttd_kepsek);
 					$sekolah->path_ttd_kepsek			= Storage::disk('spaces')->url($uploadedFile);
 				}
-				$sekolah->updated_by					= $input->auth_data->pengguna->id_pengguna;
+				$sekolah->updated_by					= auth_data()->pengguna->id_pengguna;
 				$sekolah->updated_at					= $now;
 				$sekolah->save();
 

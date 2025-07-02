@@ -14,7 +14,7 @@ class AddingPlafonInventarisHabisPakaiTabelUnitKerja extends Migration
     public function up()
     {
         Schema::table('unit_kerja', function (Blueprint $table) {
-            $table->float('plafon_inventaris_habis_pakai', 10, 0)->after('nm_singkatan_unit')->comment('batas permintaan barang inventaris habis pakai');
+            $table->decimal('plafon_inventaris_habis_pakai', 10, 0)->after('nm_singkatan_unit')->comment('batas permintaan barang inventaris habis pakai');
         });
     }
 

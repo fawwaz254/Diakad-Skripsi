@@ -68,7 +68,7 @@ class UploadDataSiswaController extends BaseController
 	public function viewCekFileExcel(Request $request)
 	{
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 		$datas = session('data_excel_siswa');
 		$data_status_pengguna = StatusPengguna::where('status_join_table', '=', '3')->get();
 		$data_kelas = Kelas::where('is_aktif', 1)->orderBy('tingkat')->orderBy('nm_kelas')->get();
@@ -1625,7 +1625,7 @@ class UploadDataSiswaController extends BaseController
 	public function viewUploadDataSiswa(Request $request)
 	{
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 
 		return view('pendidikan/siswa/upload-data-siswa/view-upload-data-siswa', compact('auth_data'));
 	}
@@ -1717,7 +1717,7 @@ class UploadDataSiswaController extends BaseController
 	{
 		set_time_limit(-1);
 		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
+		$auth_data = auth_data();
 		$now = Carbon::now();
 		if ($request->hasFile('file-excel')) {
 			$data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
@@ -3231,7 +3231,7 @@ class UploadDataSiswaController extends BaseController
 	// public function uploadFileExcel(Request $request)
 	// {
 	// 	$input = (object) $request->input();
-	// 	$auth_data = $input->auth_data;
+	// 	$auth_data = auth_data();
 	// 	$now = Carbon::now();
 
 	// 	if ($request->hasFile('file-excel')) {

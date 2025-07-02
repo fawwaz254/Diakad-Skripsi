@@ -15,15 +15,15 @@ class AddMenuCatatSiswaTerlambatOnGuruPiket extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_modul', 35)->where('id_role', 2)->first();
+        // $modul = Modul::where('id_modul', 35)->where('id_role', 2)->first();
 
-        $menu = new Menu();
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Catat Siswa Terlambat';
-        $menu->page = 'catat-siswa-terlambat';
-        $menu->urutan = 7;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu();
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Catat Siswa Terlambat';
+        // $menu->page = 'catat-siswa-terlambat';
+        // $menu->urutan = 7;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

@@ -21,10 +21,10 @@ class AddMenuPersidanganModulPenetapanRolePpdb extends Migration
         $now = Carbon::now();
 
         // update menu
-        $menu               = Menu::find(167);
-        $menu->page         = "persidangan";
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(167);
+        // $menu->page         = "persidangan";
+        // $menu->updated_at   = $now;
+        // $menu->save();
     }
 
     /**

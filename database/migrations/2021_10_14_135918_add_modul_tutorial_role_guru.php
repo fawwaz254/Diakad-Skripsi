@@ -20,26 +20,26 @@ class AddModulTutorialRoleGuru extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "Tutorial",
-            "route"         => "tutorial",
-            "urutan"        => 10,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "Tutorial",
+        //     "route"         => "tutorial",
+        //     "urutan"        => 10,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Video",
-                "page"         => "video",
-                "urutan"       => 12,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Video",
+        //         "page"         => "video",
+        //         "urutan"       => 12,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

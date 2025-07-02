@@ -15,15 +15,15 @@ class AddMenuSetJadwalKelasInRoleGuru extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Jadwal')->where('id_role', '2')->first();
+        // $modul = Modul::where('nm_modul', 'Jadwal')->where('id_role', '2')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Set Jadwal Kelas';
-        $menu->page = 'set-jadwal-kelas';
-        $menu->urutan = 4;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Set Jadwal Kelas';
+        // $menu->page = 'set-jadwal-kelas';
+        // $menu->urutan = 4;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

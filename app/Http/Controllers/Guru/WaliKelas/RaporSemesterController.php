@@ -18,7 +18,7 @@ class RaporSemesterController extends Controller
     public function viewRaporSemester(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
@@ -76,7 +76,7 @@ class RaporSemesterController extends Controller
     public function  imporExcelDataTambahan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('guru/wali-kelas/rapor-semester/view-import-excel-tambahan-data', compact('auth_data'));
     }
 

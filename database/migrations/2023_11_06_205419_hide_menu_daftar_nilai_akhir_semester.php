@@ -14,11 +14,11 @@ class HideMenuDaftarNilaiAkhirSemester extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('nm_menu', 'Daftar Nilai Akhir Semester')->get();
-        foreach ($menu as $m) {
-            $m->akses = '0';
-            $m->save();
-        }
+        // $menu = Menu::where('nm_menu', 'Daftar Nilai Akhir Semester')->get();
+        // foreach ($menu as $m) {
+        //     $m->akses = '0';
+        //     $m->save();
+        // }
     }
 
     /**

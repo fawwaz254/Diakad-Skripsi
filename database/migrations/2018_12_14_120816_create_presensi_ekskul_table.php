@@ -22,8 +22,8 @@ class CreatePresensiEkskulTable extends Migration {
 			$table->string('materi_ekskul', 128)->nullable();
 			$table->string('waktu_mulai', 5)->nullable();
 			$table->string('waktu_selesai', 5)->nullable();
-			$table->dateTime('tgl_entry')->nullable()->comment('sama seperti created_at');
-			$table->float('persentase_presensi_ekskul', 10, 0)->nullable();
+			$table->timestamp('tgl_entry')->nullable()->comment('sama seperti created_at');
+			$table->decimal('persentase_presensi_ekskul', 10, 0)->nullable();
 			$table->string('keterangan_presensi_ekskul', 128)->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
