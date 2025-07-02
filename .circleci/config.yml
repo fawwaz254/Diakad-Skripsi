@@ -16,23 +16,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMPYPM1 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
-
-  deploy-to-sma-wh-2:
-    machine:
-      enabled: true
-    steps:
-      - run:
-          command: |
-            ssh -t $SSH_USER@$SERVER_SMAWH2 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
-
-  deploy-to-smk-ypm-1:
-    machine:
-      enabled: true
-    steps:
-      - run:
-          command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM1 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smpypm1/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smk-ypm-2:
     machine:
@@ -40,7 +24,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM1 "cd /var/www/smkypm2taman/diakademik && git pull origin latest-release && php artisan migrate --force"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smkypm2/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smp-ypm-2:
     machine:
@@ -48,7 +32,23 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM1 "cd /var/www/smpypm2sukodono/diakademik && git pull origin latest-release && php artisan migrate --force"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smpypm2/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+
+  deploy-to-sma-wh-2:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SGC_2 "cd /var/www/smawh2/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+
+  deploy-to-smk-ypm-1:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          command: |
+            ssh -t $SSH_USER@$SGC_2 "cd /var/www/smkypm1/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smk-ypm-3:
     machine:
@@ -56,7 +56,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force"
+            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-sma-maryam:
     machine:
@@ -64,40 +64,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin latest-release && php artisan migrate --force"
-
-  # deploy-to-ytpnu:
-  #   machine:
-  #     enabled: true
-  #   steps:
-  #     - run:
-  #         name: Deploy to MANU
-  #         command: |
-  #           ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/manu/diakademik && git pull origin latest-release && php artisan migrate --force"
-  #     - run:
-  #         name: Deploy to MINU
-  #         command: |
-  #           ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/minu/diakademik && git pull origin latest-release && php artisan migrate --force"
-  #     - run:
-  #         name: Deploy to MTSNU
-  #         command: |
-  #           ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/mtsnu/diakademik && git pull origin latest-release && php artisan migrate --force"
-  #     - run:
-  #         name: Deploy to SDNU
-  #         command: |
-  #           ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/sdnu/diakademik && git pull origin latest-release && php artisan migrate --force"
-  #     - run:
-  #         name: Deploy to SMKNU
-  #         command: |
-  #           ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/smknu/diakademik && git pull origin latest-release && php artisan migrate --force"
-  #     - run:
-  #         name: Deploy to SMPNU
-  #         command: |
-  #           ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/smpnu/diakademik && git pull origin latest-release && php artisan migrate --force"
-  #     - run:
-  #         name: Deploy to TKQNU
-  #         command: |
-  #           ssh -t $SSH_USER@$SERVER_YTPNU "cd /var/www/tkqnu/diakademik && git pull origin latest-release && php artisan migrate --force"
+            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
 workflows:
   # to-staging-only-master:
@@ -116,4 +83,3 @@ workflows:
       - deploy-to-smp-ypm-2
       - deploy-to-smk-ypm-3
       - deploy-to-sma-maryam
-      # - deploy-to-ytpnu
