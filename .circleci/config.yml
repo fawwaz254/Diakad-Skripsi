@@ -16,7 +16,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smpypm1/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smpypm1/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smk-ypm-2:
     machine:
@@ -24,7 +24,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smkypm2/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smkypm2/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smp-ypm-2:
     machine:
@@ -32,7 +32,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smpypm2/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/smpypm2/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-sma-wh-2:
     machine:
@@ -40,7 +40,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_2 "cd /var/www/smawh2/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_2 "cd /var/www/smawh2/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smk-ypm-1:
     machine:
@@ -48,7 +48,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_2 "cd /var/www/smkypm1/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_2 "cd /var/www/smkypm1/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smk-ypm-3:
     machine:
@@ -56,7 +56,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-sma-maryam:
     machine:
@@ -64,7 +64,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin laravel-11-latest && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
 workflows:
   # to-staging-only-master:
