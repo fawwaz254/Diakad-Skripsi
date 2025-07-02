@@ -94,7 +94,7 @@ class TagihanSiswaController extends BaseController
                 if ($status == 1) {
                     return $item->kelas->nm_kelas;
                 } else if ($status == 2) {
-                    return $item->last_kelas_siswa->kelas->nm_kelas . ' (Alumni)';
+                    return $item->last_kelas_siswa?->kelas?->nm_kelas . ' (Alumni)';
                 } else {
                     return '';
                 }
