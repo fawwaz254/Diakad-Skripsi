@@ -12,10 +12,10 @@ class KeuanganController extends BaseController
 {
     public function getTagihanBy(Request $request)
     {
-        $pengguna = $request->auth_data->pengguna;
+        $pengguna = auth_data()->pengguna;
 
         if($pengguna->isWaliMurid){
-            $wali_murid = $request->auth_data->actor;
+            $wali_murid = auth_data()->actor;
     
             $siswa_wali_aktif = Siswa::penggunaSekolah($pengguna->id_sekolah)->isAktifWaliMurid($wali_murid->id_wali_murid)->first();
             
@@ -23,7 +23,7 @@ class KeuanganController extends BaseController
     
             return api_response(200, null, ['tagihan' => $data_tagihan]);
         }else if($pengguna->isSiswa){
-            $siswa = $request->auth_data->actor;
+            $siswa = auth_data()->actor;
     
             $data_tagihan = $siswa->all_tagihan();
     

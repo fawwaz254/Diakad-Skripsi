@@ -484,7 +484,7 @@ class PengeluaranController extends BaseController
 
     public function printKuitansiPengeluaran(Request $request, $id)
     {
-        $auth_data = $request->auth_data;
+        $auth_data = auth_data();
 
         $pengeluaran = Realisasi::find($id);
 

@@ -277,7 +277,7 @@ class RekapFormHarianController extends Controller
 
     public function exportRekapBulanan(Request $request, $id_form, $bulan = null, $tahun = null, $id_kelas = null, $id_pertanyaan = '0')
     {
-        $auth_data = $request->auth_data;
+        $auth_data = auth_data();
         $form = Form::with('pertanyaan_form')->findOrFail($id_form);
         $roles = $form->id_role;
         // dd($auth_data);

@@ -2240,7 +2240,7 @@ class SppController extends BaseController
 
     public function printPembayaran(Request $request, $id)
     {
-        $auth_data = $request->auth_data;
+        $auth_data = auth_data();
 
         if ($pembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')
             ->select('pembayaran_biaya.*', 'db.id_bulan')
@@ -2260,7 +2260,7 @@ class SppController extends BaseController
 
     public function printPembayaranAll(Request $request, $id_siswa)
     {
-        $auth_data = $request->auth_data;
+        $auth_data = auth_data();
 
         $startYear = Carbon::now()->startOfYear();
         $endYear = Carbon::now()->endOfYear();
@@ -2507,7 +2507,7 @@ class SppController extends BaseController
 
     public function tunggakanSudahDihapus(Request $request)
     {
-        $auth_data = $request->auth_data;
+        $auth_data = auth_data();
         return view('keuangan/sim/spp/view-menu-tunggakan-sudah-dihapus', compact('auth_data'));
     }
 
