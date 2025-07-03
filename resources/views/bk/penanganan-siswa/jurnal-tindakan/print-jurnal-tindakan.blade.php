@@ -77,7 +77,7 @@
         @if ($is_ypm == '1')
             <div class="row">
                 <div class="col-md-2">
-                    <img src="{{ asset('logo/logo-yayasan.png') }}" width="120">
+                    <img src="{{ asset('logo/logo-ypm-1.png') }}" width="120">
                 </div>
                 <div class="col-md-8">
                     <h3>YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF <br> TAMAN – SEPANJANG – SIDOARJO</h3>
