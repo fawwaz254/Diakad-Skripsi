@@ -83,7 +83,20 @@ class RekapAbsensiKelasController extends BaseController
 
         $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp);
 
-        $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->get();
-        return view('guru/wali-kelas/rekap-absensi-kelas/view-rekap-absensi-kelas-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi'));
+        $data_presensi = DB::table('presensi_mp')
+            ->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)
+            ->orderBy('pertemuan_ke')
+            ->get();
+
+        $presensi_siswa = DB::table('presensi_mp_siswa')
+            ->whereIn('id_presensi_mp', $data_presensi->pluck('id_presensi_mp'))
+            ->get();
+
+        $data_presensi_siswa = [];
+        foreach ($presensi_siswa as $item) {
+            $data_presensi_siswa[$item->id_presensi_mp][$item->id_siswa] = $item;
+        }
+
+        return view('guru/wali-kelas/rekap-absensi-kelas/view-rekap-absensi-kelas-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi', 'data_presensi_siswa'));
     }
 }

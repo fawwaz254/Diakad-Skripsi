@@ -28,63 +28,78 @@
                         <table
                             class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             style="overflow-x:auto;" id="primary_table">
-                            <thead>
+                         <thead>
+                            <tr>
+                                <th rowspan="2">No.</th>
+                                <th rowspan="2">NIS</th>
+                                <th rowspan="2">NISN</th>
+                                <th rowspan="2">Nama</th>
+                                <th colspan="{{ count($data_presensi) }}">Pertemuan pekan ke</th>
+                            </tr>
+                            <tr>
+                                @foreach ($data_presensi as $presensi_mp)
+                                    <th>{{ $presensi_mp->pertemuan_ke }}<br>{{ date('d/m/y', strtotime($presensi_mp->tgl_presensi)) }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $no = 1;
+                                $rekap_absen = [];
+                            @endphp
+                            
+                            @foreach ($data_siswa as $siswa)
                                 <tr>
-                                    <th rowspan="2">No. </th>
-                                    <th rowspan="2">NIS</th>
-                                    <th rowspan="2">NISN</th>
-                                    <th rowspan="2">Nama</th>
-                                    <th colspan="25">Pertemuan pekan ke</th>
-                                </tr>
-                                <tr>
+                                    <td>{{ $no++ }}</td>
+                                    <td>{{ $siswa->nis_siswa }}</td>
+                                    <td>{{ $siswa->nisn_siswa }}</td>
+                                    <td>{{ $siswa->nm_pengguna }}</td>
+                                    
                                     @foreach ($data_presensi as $presensi_mp)
-                                        <th>{{ $presensi_mp->pertemuan_ke }}<br>{{ date_format(date_create($presensi_mp->tgl_presensi), 'd/m/y') }}
-                                        </th>
-                                    @endforeach
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $no = 1;
-                                    $rekap_presensi = [];
-                                @endphp
-                                @foreach ($data_siswa as $siswa)
-                                    <tr>
-                                        <td>{{ $no++ }}</td>
-                                        <td>{{ $siswa->nis_siswa }}</td>
-                                        <td>{{ $siswa->nisn_siswa }}</td>
-                                        <td>{{ $siswa->nm_pengguna }}</td>
-                                        @foreach ($data_presensi as $presensi_mp)
-                                            @php
-                                                $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa'] = $presensi_mp->presensi_mp_siswa->count();
-                                                $rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] = $presensi_mp->presensi_mp_siswa->where('kehadiran', 1)->count();
-                                            @endphp
-                                            @if ($presensi_mp_siswa = $presensi_mp->presensi_mp_siswa->firstWhere('id_siswa', $siswa->id_siswa))
-                                                @if ($presensi_mp_siswa->kehadiran == 1)
-                                                    <td class="is-center bg-light-green"></td>
-                                                @elseif($presensi_mp_siswa->kehadiran == 2)
-                                                    <td class="is-center bg-amber">S</td>
-                                                @elseif($presensi_mp_siswa->kehadiran == 3)
-                                                    <td class="is-center bg-cyan">I</td>
-                                                @elseif($presensi_mp_siswa->kehadiran == 4)
-                                                    <td class="is-center bg-red">A</td>
-                                                @else
-                                                    <td></td>
-                                                @endif
+                                        @php
+                                            $siswa_presensi = $data_presensi_siswa[$presensi_mp->id_presensi_mp][$siswa->id_siswa] ?? null;
+
+                                            $rekap_absen[$presensi_mp->id_presensi_mp]['total_siswa'] = 
+                                                ($rekap_absen[$presensi_mp->id_presensi_mp]['total_siswa'] ?? 0) + 1;
+
+                                            if ($siswa_presensi && $siswa_presensi->kehadiran == 1) {
+                                                $rekap_absen[$presensi_mp->id_presensi_mp]['total_hadir'] =
+                                                    ($rekap_absen[$presensi_mp->id_presensi_mp]['total_hadir'] ?? 0) + 1;
+                                            }
+                                        @endphp
+                                        @if ($siswa_presensi)
+                                            @if ($siswa_presensi->kehadiran == 1)
+                                                <td class="is-center bg-light-green"></td>
+                                            @elseif($siswa_presensi->kehadiran == 2)
+                                                <td class="is-center bg-amber">S</td>
+                                            @elseif($siswa_presensi->kehadiran == 3)
+                                                <td class="is-center bg-cyan">I</td>
+                                            @elseif($siswa_presensi->kehadiran == 4)
+                                                <td class="is-center bg-red">A</td>
                                             @else
                                                 <td></td>
                                             @endif
-                                        @endforeach
-                                    </tr>
-                                @endforeach
-                                <tr>
-                                    <th colspan="4">Persentase Absen</th>
-                                    @foreach ($data_presensi as $presensi_mp)
-                                        <td>{{ round(($rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] / $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa']) * 100, 2) }}%
-                                        </td>
+                                        @else
+                                            <td></td>
+                                        @endif
                                     @endforeach
                                 </tr>
-                            </tbody>
+                            @endforeach
+                            
+                            <tr>
+                                <th colspan="4">Persentase Absen</th>
+                                @foreach ($data_presensi as $presensi_mp)
+                                    @php
+                                        $rekap = $rekap_absen[$presensi_mp->id_presensi_mp] ?? ['total_siswa' => 0, 'total_hadir' => 0];
+                                        $persentase = $rekap['total_siswa'] > 0
+                                            ? round(($rekap['total_hadir'] / $rekap['total_siswa']) * 100, 2)
+                                            : 0;
+                                    @endphp
+                                    <td>{{ $persentase }}%</td>
+                                @endforeach
+                            </tr>
+                        </tbody>
+
                         </table>
                     </div>
                 </div>
