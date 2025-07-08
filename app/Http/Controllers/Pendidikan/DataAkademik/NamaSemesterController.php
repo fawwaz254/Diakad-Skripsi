@@ -18,11 +18,6 @@ use Validator;
 
 class NamaSemesterController extends BaseController
 {
-    //Note
-    // Kode semester menganut tahun dan semester(Ganjil/Genap)
-    // Contoh: Tahun akademik semester 2025 dan tahun ajaran 2025/2026
-    // Semester Ganjil: 20251
-    // Semester Genap: 20262 (Karena sudah masuk tahun akademik baru)
     public function viewNamaSemester(Request $request)
     {
         # code...
@@ -156,7 +151,7 @@ class NamaSemesterController extends BaseController
                 $semester                           = Semester::find($id);
                 // $semester->tahun_ajaran             = $input->tahun_ajaran;
                 // $semester->nm_semester              = $input->nm_semester;
-                // $semester->thn_akademik_semester    = $input->thn_akademik_semester;
+                $semester->thn_akademik_semester    = $input->thn_akademik_semester;
                 // $semester->kode_semester            = $input->kode_semester;
                 $semester->is_aktif_semester        = $input->is_aktif_semester;
                 $semester->updated_by               = $input->auth_data->pengguna->id_pengguna;
