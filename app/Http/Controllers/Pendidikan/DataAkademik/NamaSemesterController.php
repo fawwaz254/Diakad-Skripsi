@@ -18,14 +18,35 @@ use Validator;
 
 class NamaSemesterController extends BaseController
 {
-
+    //Note
+    // Kode semester menganut tahun dan semester(Ganjil/Genap)
+    // Contoh: Tahun akademik semester 2025 dan tahun ajaran 2025/2026
+    // Semester Ganjil: 20251
+    // Semester Genap: 20262 (Karena sudah masuk tahun akademik baru)
     public function viewNamaSemester(Request $request)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = auth_data();
 
-        return view('pendidikan/data-akademik/nama-semester/view-nama-semester', compact('auth_data'));
+        $now = Carbon::now();
+        $this_month = $now->month;
+        $this_year = $now->year;
+        $next_year = $this_year + 1;
+        
+        $active_semester = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('is_aktif_semester', '=', 1)
+            ->first();
+
+        $availableTahunAjaranBaru =  Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where(function ($query) use ($this_year, $next_year) {
+                $query->where('tahun_ajaran', '=', $this_year . '/' . $next_year);
+            })
+            ->first();
+        
+        $timeToChangeTahunAjaran =  ($this_month >= 6 && $this_month <= 8) && ($active_semester->tahun_ajaran == $this_year -1 . '/' . $this_year) && ($active_semester->nm_semester == 'Genap') && ($active_semester->thn_akademik_semester == $this_year);
+
+        return view('pendidikan/data-akademik/nama-semester/view-nama-semester', compact('auth_data', 'active_semester', 'availableTahunAjaranBaru', 'timeToChangeTahunAjaran'));
     }
 
     public function addNamaSemester(Request $request)
@@ -58,7 +79,7 @@ class NamaSemesterController extends BaseController
         $input = (object) $request->input();
         $auth_data = auth_data();
 
-        $list_data = $semester = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'desc')->get();
+        $list_data = $semester = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('tahun_ajaran', 'desc')->orderBy('nm_semester', 'desc')->get();
 
         return Datatables::of($list_data)
             ->addColumn('status_aktif', function ($item) {
@@ -180,5 +201,38 @@ class NamaSemesterController extends BaseController
                 }
             }
         }
+    }
+
+    //Generate Tahun Ajaran Baru
+    public function actionGenerateTahunAjaranBaru(Request $request)
+    {
+        $input = (object) $request->input();
+        $now = Carbon::now();
+
+        $commonData = [
+            'tahun_ajaran' => $now->year . '/' . ($now->year + 1),
+            'id_sekolah' => $input->auth_data->pengguna->id_sekolah,
+            'created_by' => $input->auth_data->pengguna->id_pengguna,
+            'is_aktif_semester' => 0
+        ];
+
+        Semester::create(array_merge($commonData, [
+            'id_semester' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+            'nm_semester' => 'Ganjil',
+            'thn_akademik_semester' => $now->year,
+            'kode_semester' => $now->year . '1'
+        ]));
+
+        Semester::create(array_merge($commonData, [
+            'id_semester' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+            'nm_semester' => 'Genap',
+            'thn_akademik_semester' => $now->year + 1,
+            'kode_semester' => $now->year . '2'
+        ]));
+
+        return [
+            'status' => 202,
+            'message' => 'Generate Tahun Ajaran Baru Successfully'
+        ];
     }
 }
