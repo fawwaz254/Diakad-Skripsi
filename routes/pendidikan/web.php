@@ -103,7 +103,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('nama-semester/edit/{id}', [NamaSemesterController::class, 'editNamaSemester']);
 
             Route::post('action-nama-semester/{mode}/{id}', [NamaSemesterController::class, 'actionNamaSemester']);
-
+            Route::post('action-generate-tahun-ajaran-baru', [NamaSemesterController::class, 'actionGenerateTahunAjaranBaru']);
+            
             // MENU Data Jalur
             Route::get('jalur', [JalurController::class, 'viewJalur']);
             Route::get('jalur/datatables', [JalurController::class, 'datatablesJalur']);

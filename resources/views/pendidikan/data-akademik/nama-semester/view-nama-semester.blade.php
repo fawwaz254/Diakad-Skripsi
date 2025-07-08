@@ -2,6 +2,20 @@
     <!-- <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#data-akademik/nama-semester/add') }}"><i class="material-icons">note_add</i><span>Tambah Nama Semester</span></a></h2>
     </div> -->
+    <div class="block-header">
+        @if($availableTahunAjaranBaru)
+            <div class="alert alert-info">
+                <strong>Info:</strong> Tahun Ajaran Baru Sudah Dibuat
+            </div>
+        @elseif ($timeToChangeTahunAjaran) 
+            <h2><a class="btn bg-blue waves-effect target-link" onclick="confirmGenerateTahunAjaranBaru()"><i class="material-icons">note_add</i><span>Generate Tahun Ajaran Baru</span></a></h2>
+         @else
+            <div class="alert alert-info">
+                <strong>Info:</strong> Belum Saatnya Ganti Tahun Ajaran
+            </div>
+        @endif
+
+    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -33,6 +47,30 @@
     </div>
 </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modal_generate_tahun_ajaran_baru">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+                <h5 class="modal-title">Apakah Anda Yakin Ingin Mengenerate Tahun Ajaran Baru?</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <label for="Name">Nama :</label>
+                        <input type="text" name="nama" value="" disabled class="col-lg-12">
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'data-akademik';
@@ -100,4 +138,39 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+
+    function confirmGenerateTahunAjaranBaru() {
+        swal({
+            title: "Are you sure to generate tahun ajaran baru?",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#2596be",
+            confirmButtonText: "Yes, generate it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+         }, function(result) {
+            if (result) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + '/' + role_url + '/' + modul_url + '/' + 'action-generate-tahun-ajaran-baru',
+                    success: function(response) {
+                        if (response.status) {
+                            swal({
+                                title: "Success",
+                                text: response.message,
+                                type: "success"
+                            }, function() {
+                                location.reload();
+                            });
+                        } else {
+                            swal("Error", response.message, "error");
+                        }
+                    },
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
 </script>
