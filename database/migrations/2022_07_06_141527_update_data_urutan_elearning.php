@@ -14,20 +14,20 @@ class UpdateDataUrutanElearning extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_role', 2)->where('nm_modul', 'Jadwal')->first();
-        $modul->update([
-            "urutan" => 3
-        ]);
+        // $modul = Modul::where('id_role', 2)->where('nm_modul', 'Jadwal')->first();
+        // $modul->update([
+        //     "urutan" => 3
+        // ]);
 
-        $modul_elerning = Modul::where('id_role', 2)->where('nm_modul', 'E-Learning Soal')->first();
-        $modul_elerning->update([
-            "urutan" => 2
-        ]);
+        // $modul_elerning = Modul::where('id_role', 2)->where('nm_modul', 'E-Learning Soal')->first();
+        // $modul_elerning->update([
+        //     "urutan" => 2
+        // ]);
 
-        $modul_elerning1 = Modul::where('id_role', 2)->where('nm_modul', 'E-Learning')->first();
-        $modul_elerning1->update([
-            "urutan" => 2
-        ]);
+        // $modul_elerning1 = Modul::where('id_role', 2)->where('nm_modul', 'E-Learning')->first();
+        // $modul_elerning1->update([
+        //     "urutan" => 2
+        // ]);
 
     }
 

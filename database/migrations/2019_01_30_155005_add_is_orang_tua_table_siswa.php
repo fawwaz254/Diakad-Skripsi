@@ -14,7 +14,7 @@ class AddIsOrangTuaTableSiswa extends Migration
     public function up()
     {
         Schema::table('siswa', function (Blueprint $table) {
-            $table->boolean('is_orang_tua')->after('id_wali_murid')->nullable()->comment('0 = wali (bukan orang tua kandung); 1 = orang tua kandung;')->change();
+            $table->boolean('is_orang_tua')->after('id_wali_murid')->nullable()->comment('0 = wali (bukan orang tua kandung); 1 = orang tua kandung;');
         });
     }
 

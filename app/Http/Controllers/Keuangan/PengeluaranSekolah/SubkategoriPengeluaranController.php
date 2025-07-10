@@ -24,7 +24,7 @@ class SubkategoriPengeluaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('keuangan/pengeluaran-sekolah/subkategori-pengeluaran/view-subkategori-pengeluaran', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class SubkategoriPengeluaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -49,7 +49,7 @@ class SubkategoriPengeluaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kategori_pengeluaran = LibDataKeuangan::fetchDataKategoriPengeluaran($auth_data);
 
@@ -61,7 +61,7 @@ class SubkategoriPengeluaranController extends BaseController
     public function datatablesSubkategoriPengeluaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataKeuangan::fetchDataSubkategoriPengeluaran($auth_data);
 
         return Datatables::of($list_data)
@@ -96,14 +96,14 @@ class SubkategoriPengeluaranController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $subKategoriPengeluaran                                             = new PengeluaranBiayaSubkategori;
                 $subKategoriPengeluaran->id_pengeluaran_biaya_subkategori           = $id;
                 $subKategoriPengeluaran->id_pengeluaran_biaya_kategori              = $input->id_pengeluaran_biaya_kategori;
                 $subKategoriPengeluaran->nm_pengeluaran_biaya_subkategori           = $input->nm_pengeluaran_biaya_subkategori;
                 $subKategoriPengeluaran->keterangan_pengeluaran_biaya_subkategori   = $input->keterangan_pengeluaran_biaya_subkategori;
-                $subKategoriPengeluaran->created_by                                 = $input->auth_data->pengguna->id_pengguna;
+                $subKategoriPengeluaran->created_by                                 = auth_data()->pengguna->id_pengguna;
                 $subKategoriPengeluaran->save();
 
                 return [
@@ -117,7 +117,7 @@ class SubkategoriPengeluaranController extends BaseController
                 $subKategoriPengeluaran->id_pengeluaran_biaya_kategori              = $input->id_pengeluaran_biaya_kategori;
                 $subKategoriPengeluaran->nm_pengeluaran_biaya_subkategori           = $input->nm_pengeluaran_biaya_subkategori;
                 $subKategoriPengeluaran->keterangan_pengeluaran_biaya_subkategori   = $input->keterangan_pengeluaran_biaya_subkategori;
-                $subKategoriPengeluaran->updated_by                                 = $input->auth_data->pengguna->id_pengguna;
+                $subKategoriPengeluaran->updated_by                                 = auth_data()->pengguna->id_pengguna;
                 $subKategoriPengeluaran->updated_at                                 = $now;
                 $subKategoriPengeluaran->save();
 
@@ -135,7 +135,7 @@ class SubkategoriPengeluaranController extends BaseController
                 } else {
                     // make object to find id
                     $subKategoriPengeluaran               = PengeluaranBiayaSubkategori::find($id);
-                    $subKategoriPengeluaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $subKategoriPengeluaran->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $subKategoriPengeluaran->save();
 
                     $subKategoriPengeluaran->delete();

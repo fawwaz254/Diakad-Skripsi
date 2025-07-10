@@ -20,8 +20,8 @@ class CreateTablePembayaranTunggakan extends Migration
 			$table->string('id_siswa', 40)->comment('FK: siswa.id_siswa, untuk keperluan apabila pembayarannya mencantumkan siswa')->nullable();
 			$table->string('id_semester_mulai', 40)->comment('FK: semester.id_semester');
 			$table->string('id_semester_selesai', 40)->comment('FK: semester.id_semester');
-			$table->float('besar_pembayaran', 10, 0)->nullable();
-			$table->dateTime('tgl_pembayaran')->nullable();
+			$table->decimal('besar_pembayaran', 10, 0)->nullable();
+			$table->timestamp('tgl_pembayaran')->nullable();
 			$table->string('keterangan', 128)->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

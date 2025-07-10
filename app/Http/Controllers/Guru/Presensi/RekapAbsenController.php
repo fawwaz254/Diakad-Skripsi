@@ -28,7 +28,7 @@ class RekapAbsenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -44,7 +44,7 @@ class RekapAbsenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_jadwal_kelas_mp' => 'required'
@@ -67,7 +67,7 @@ class RekapAbsenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         
@@ -84,7 +84,7 @@ class RekapAbsenController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 

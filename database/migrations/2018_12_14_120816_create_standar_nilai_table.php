@@ -17,7 +17,7 @@ class CreateStandarNilaiTable extends Migration {
 			$table->engine = 'InnoDB';
 			$table->string('id_standar_nilai', 40)->primary();
 			$table->string('nm_standar_nilai', 64)->nullable();
-			$table->float('mutu_standar_nilai', 10, 0)->nullable();
+			$table->decimal('mutu_standar_nilai', 10, 0)->nullable();
 			$table->string('keterangan_standar_nilai', 128)->nullable();
 			$table->string('id_sekolah', 40)->comment('FK: sekolah.id_sekolah (ada di DB lain)');
 			$table->timestamps();

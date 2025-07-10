@@ -15,9 +15,9 @@ class ChangingPageOnMenuRekapKesehatanTendikGuru extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('page', 'rekap-kesahatan')->first();
-        $menu->page = 'rekap-kesehatan';
-        $menu->save();
+        // $menu = Menu::where('page', 'rekap-kesahatan')->first();
+        // $menu->page = 'rekap-kesehatan';
+        // $menu->save();
     }
 
     /**

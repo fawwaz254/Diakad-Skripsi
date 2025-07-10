@@ -27,7 +27,7 @@ class BiayaSekolahController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
@@ -45,7 +45,7 @@ class BiayaSekolahController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -65,7 +65,7 @@ class BiayaSekolahController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelompok_biaya = LibDataKeuangan::fetchDataKelompokBiaya($auth_data);
 
@@ -82,7 +82,7 @@ class BiayaSekolahController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester   = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -102,7 +102,7 @@ class BiayaSekolahController extends BaseController
     public function datatablesBiayaSekolah(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataKeuangan::fetchDataBiayaSekolah($auth_data, null, null, true);
 
@@ -172,7 +172,7 @@ class BiayaSekolahController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $biayaSekolah                               = new BiayaSekolah;
                 $biayaSekolah->id_biaya_sekolah             = $id;
@@ -185,7 +185,7 @@ class BiayaSekolahController extends BaseController
                 $biayaSekolah->besar_biaya_sekolah          = 0;
                 $biayaSekolah->validasi_biaya_sekolah       = $input->validasi_biaya_sekolah;
                 $biayaSekolah->keterangan_biaya_sekolah     = $input->keterangan_biaya_sekolah;
-                $biayaSekolah->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $biayaSekolah->created_by                   = auth_data()->pengguna->id_pengguna;
                 $biayaSekolah->save();
 
                 return [
@@ -205,7 +205,7 @@ class BiayaSekolahController extends BaseController
                 $biayaSekolah->besar_biaya_sekolah          = 0;
                 $biayaSekolah->validasi_biaya_sekolah       = $input->validasi_biaya_sekolah;
                 $biayaSekolah->keterangan_biaya_sekolah     = $input->keterangan_biaya_sekolah;
-                $biayaSekolah->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $biayaSekolah->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $biayaSekolah->updated_at                   = $now;
                 $biayaSekolah->save();
 
@@ -227,7 +227,7 @@ class BiayaSekolahController extends BaseController
                     $batch_insert_biaya_sekolah = [];
                     $batch_insert_detail_biaya = [];
                     foreach ($biaya_sekolah_set as $biaya_sekolah) {
-                        $id_biaya_sekolah           = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $id_biaya_sekolah           = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $id_kelompok_biaya          = $biaya_sekolah->id_kelompok_biaya;
                         $id_semester                = $input->id_semester_paste;
                         $id_jalur                   = $biaya_sekolah->id_jalur;
@@ -243,7 +243,7 @@ class BiayaSekolahController extends BaseController
                             'besar_biaya_sekolah'       => $besar_biaya_sekolah,
                             'validasi_biaya_sekolah'    => $validasi_biaya_sekolah,
                             'keterangan_biaya_sekolah'  => $keterangan_biaya_sekolah,
-                            'created_by'                => $input->auth_data->pengguna->id_pengguna,
+                            'created_by'                => auth_data()->pengguna->id_pengguna,
                             'created_at'                => $now
                         );
 
@@ -251,7 +251,7 @@ class BiayaSekolahController extends BaseController
                         $detail_biaya_set = DetailBiaya::where('id_biaya_sekolah', '=', $biaya_sekolah->id_biaya_sekolah)->get();
 
                         foreach ($detail_biaya_set as $detail_biaya) {
-                            $id_detail_biaya            = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $id_detail_biaya            = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                             $id_biaya                   = $detail_biaya->id_biaya;
                             $id_kelompok_biaya_internal = $detail_biaya->id_kelompok_biaya_internal;
                             $validasi_biaya             = $detail_biaya->validasi_biaya;
@@ -277,7 +277,7 @@ class BiayaSekolahController extends BaseController
                                 'keterangan_biaya'              => $keterangan_biaya,
                                 'id_jenis_detail_biaya'         => $id_jenis_detail_biaya,
                                 'id_bulan'                      => $id_bulan,
-                                'created_by'                    => $input->auth_data->pengguna->id_pengguna,
+                                'created_by'                    => auth_data()->pengguna->id_pengguna,
                                 'created_at'                    => $now
                             );
                         }
@@ -311,7 +311,7 @@ class BiayaSekolahController extends BaseController
                 } else {
                     // make object to find id
                     $biayaSekolah               = BiayaSekolah::find($id);
-                    $biayaSekolah->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $biayaSekolah->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $biayaSekolah->save();
 
                     $biayaSekolah->delete();

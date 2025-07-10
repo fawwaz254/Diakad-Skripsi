@@ -14,7 +14,7 @@ class AddStatusOrtuToCalonSiswaOrtuTable extends Migration
     public function up()
     {
         Schema::table('calon_siswa_ortu', function (Blueprint $table) {
-            $table->tinyInteger('status_ortu')->after('id_c_siswa')->nullable();
+            $table->integer('status_ortu')->after('id_c_siswa')->nullable();
         });
     }
 

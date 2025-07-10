@@ -16,9 +16,9 @@ class AddingMenuProsesPenetapanRolePpdb extends Migration
     public function up()
     {
         //
-        $menu               = Menu::find(170);
-        $menu->page         = "proses-penetapan";
-        $menu->save();
+        // $menu               = Menu::find(170);
+        // $menu->page         = "proses-penetapan";
+        // $menu->save();
     }
 
     /**

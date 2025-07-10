@@ -17,7 +17,7 @@ class CreatePresensiMagangTable01062023 extends Migration
             $table->engine = 'InnoDB';
             $table->string('id_presensi_magang', 40)->primary();
             $table->string('id_pembimbing_magang', 40);
-            $table->dateTime('tanggal');
+            $table->timestamp('tanggal');
             $table->string('keterangan', 40)->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

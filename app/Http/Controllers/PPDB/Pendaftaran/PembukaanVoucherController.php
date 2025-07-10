@@ -30,7 +30,7 @@ class PembukaanVoucherController extends Controller
     public function viewPembukaanVoucher(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         /** get all data penerimaan */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
@@ -51,7 +51,7 @@ class PembukaanVoucherController extends Controller
     public function actionViewPembuatanVoucher(Request $request)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator  = Validator::make($request->all(), [
             'id_penerimaan' => 'required'
@@ -78,7 +78,7 @@ class PembukaanVoucherController extends Controller
     public function pembukaanVoucher(Request $request, $id_penerimaan)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
@@ -108,7 +108,7 @@ class PembukaanVoucherController extends Controller
     public function addPembukaanVoucher(Request $request, $id_penerimaan)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         /** get penerimaan by id_penerimaan */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
@@ -133,7 +133,7 @@ class PembukaanVoucherController extends Controller
     public function actionAddPembukaanVoucher(Request $request, $id_penerimaan)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_penerimaan'     => 'required',
@@ -174,7 +174,7 @@ class PembukaanVoucherController extends Controller
             }
 
             /** generate id voucher tarif */
-            $id_voucher_tarif = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $id_voucher_tarif = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
             $VoucherTarif                   = new VoucherTarif;
             $VoucherTarif->id_voucher_tarif = $id_voucher_tarif;
@@ -182,7 +182,7 @@ class PembukaanVoucherController extends Controller
             $VoucherTarif->id_jurusan       = ($input->status_tarif == "2" ? $input->id_jurusan : 0); // general
             $VoucherTarif->tarif            = $input->tarif;
             $VoucherTarif->deskripsi        = $input->deskripsi;
-            $VoucherTarif->created_by       = $input->auth_data->pengguna->id_pengguna;
+            $VoucherTarif->created_by       = auth_data()->pengguna->id_pengguna;
             $VoucherTarif->save();
 
             /** send return result */
@@ -225,7 +225,7 @@ class PembukaanVoucherController extends Controller
         }
 
         /** deleting data voucher tarif */
-        $VoucherTarif->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+        $VoucherTarif->deleted_by  = auth_data()->pengguna->id_pengguna;
         $VoucherTarif->save();
         $VoucherTarif->delete();
 
@@ -244,7 +244,7 @@ class PembukaanVoucherController extends Controller
     public function generateVoucher(Request $request, $id_penerimaan)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
@@ -269,7 +269,7 @@ class PembukaanVoucherController extends Controller
     public function actionGenerateVoucher(Request $request, $id_penerimaan)
     {
         $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
+        $auth_data  = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_penerimaan'     => 'required',
@@ -318,14 +318,14 @@ class PembukaanVoucherController extends Controller
             }
 
             $vouchers[] = [
-                'id_voucher'        => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                'id_voucher'        => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
                 'id_voucher_tarif'  => $input->id_voucher_tarif,
                 'id_penerimaan'     => $input->id_penerimaan,
                 'kode_voucher'      => $kode_voucher,
                 'pin_password'      => strtoupper(Str::random(6)), // uppercase string random
                 'is_aktif'          => 1,
                 'created_at'        => new \DateTime(),
-                'created_by'        => $input->auth_data->pengguna->id_pengguna
+                'created_by'        => auth_data()->pengguna->id_pengguna
             ];
         }
 
@@ -360,7 +360,7 @@ class PembukaanVoucherController extends Controller
         // cek apakah voucher sudah di ambil
         // =================================
 
-        $voucher->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+        $voucher->deleted_by  = auth_data()->pengguna->id_pengguna;
         $voucher->save();
         $voucher->delete();
 

@@ -31,13 +31,13 @@ class MoveModulSiswaPendaftaranWisudaRolePendidikanToRoleKesiswaan extends Migra
             $new_menu->save();
         }
 
-        $modul = Modul::find(4);
-        $modul->id_role = 6;
-        $modul->save();
+        // $modul = Modul::find(4);
+        // $modul->id_role = 6;
+        // $modul->save();
 
-        $modul = Modul::find(6);
-        $modul->id_role = 6;
-        $modul->save();
+        // $modul = Modul::find(6);
+        // $modul->id_role = 6;
+        // $modul->save();
     }
 
     /**

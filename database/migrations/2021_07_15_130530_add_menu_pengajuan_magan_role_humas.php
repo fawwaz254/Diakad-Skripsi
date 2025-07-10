@@ -22,19 +22,19 @@ class AddMenuPengajuanMaganRoleHumas extends Migration
 
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Magang Siswa')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Magang Siswa')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Pengajuan Magang",
-                "page"         => "pengajuan-magang",
-                "urutan"       => 9,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Pengajuan Magang",
+        //         "page"         => "pengajuan-magang",
+        //         "urutan"       => 9,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

@@ -18,7 +18,7 @@ class RekapNomorHpController extends Controller
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // get id_guru
         $guru = Guru::select('id_guru')
@@ -34,7 +34,7 @@ class RekapNomorHpController extends Controller
     public function datatablesRekapNomorHp(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $guru = Guru::select('id_guru')
             ->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)

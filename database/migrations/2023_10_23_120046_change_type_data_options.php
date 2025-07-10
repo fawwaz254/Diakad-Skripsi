@@ -12,8 +12,9 @@ class ChangeTypeDataOptions extends Migration
      * @return void
      */
     public function up()
-    {
+   {
         Schema::table('pertanyaan_form', function (Blueprint $table) {
+            DB::statement('ALTER TABLE pertanyaan_form ALTER COLUMN options TYPE json USING options::json');
             $table->json('options')->nullable()->change();
         });
     }

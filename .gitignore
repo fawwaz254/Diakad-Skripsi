@@ -6,6 +6,7 @@
 /storage/framework/laravel-excel/*
 /vendor
 .env
+.env.production
 .env.backup
 .phpunit.result.cache
 docker-compose.override.yml
@@ -15,3 +16,12 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+**/caddy
+frankenphp
+frankenphp-worker.php
+frankenphp-worker.php
+/.cache
+/data
+/letsencrypt
+.ash_history

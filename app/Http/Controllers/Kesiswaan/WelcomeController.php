@@ -24,7 +24,7 @@ class WelcomeController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $data_tingkat = Kelas::select('tingkat')->distinct()->orderBy('tingkat', 'asc')->get();
         $count_siswa = Siswa::with('pengguna')->whereHas('pengguna.status_pengguna', function ($q) {

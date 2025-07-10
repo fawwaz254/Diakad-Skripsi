@@ -19,11 +19,11 @@ class CreateKelasMpGrupMateriTable extends Migration
             $table->string('id_kelas_mp_grup', 40)->comment('FK: kelas_mp_grup.id_kelas_mp_grup');
             $table->boolean('pertemuan_ke')->nullable();
             $table->longText('uraian_materi')->nullable()->comment('input lewat CKEditor, isian tulisan materi dan/atau gambar dan embed video, utk file lainnya ada di tabel keas_mp_grup_file');
-            $table->dateTime('tgl_rencana_mulai')->nullable();
-            $table->dateTime('tgl_rencana_selesai')->nullable();
-            $table->dateTime('tgl_pelaksanaan_mulai')->nullable();
-            $table->dateTime('tgl_pelaksanaan_selesai')->nullable();
-            $table->float('persentase_kehadiran_siswa', 10, 0)->nullable();
+            $table->timestamp('tgl_rencana_mulai')->nullable();
+            $table->timestamp('tgl_rencana_selesai')->nullable();
+            $table->timestamp('tgl_pelaksanaan_mulai')->nullable();
+            $table->timestamp('tgl_pelaksanaan_selesai')->nullable();
+            $table->decimal('persentase_kehadiran_siswa', 10, 0)->nullable();
             $table->string('keterangan', 2048)->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

@@ -14,11 +14,11 @@ class EditHideMenuRaporSisipanWalimurid extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('route','rapor-sisipan')->where('id_role',4)->first();
-        if($modul){
-            $modul->akses = 0;
-            $modul->save();
-        }
+        // $modul = Modul::where('route','rapor-sisipan')->where('id_role',4)->first();
+        // if($modul){
+        //     $modul->akses = 0;
+        //     $modul->save();
+        // }
     }
 
     /**
@@ -28,10 +28,10 @@ class EditHideMenuRaporSisipanWalimurid extends Migration
      */
     public function down()
     {
-        $modul = Modul::where('route','rapor-sisipan')->where('id_role',4)->first();
-        if($modul){
-            $modul->akses = 1;
-            $modul->save();
-        }
+        // $modul = Modul::where('route','rapor-sisipan')->where('id_role',4)->first();
+        // if($modul){
+        //     $modul->akses = 1;
+        //     $modul->save();
+        // }
     }
 }

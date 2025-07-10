@@ -15,9 +15,9 @@ class AlterTableKegiatanSiswa extends Migration
     {
         Schema::table('kegiatan_siswa', function (Blueprint $table) {
 
-            $table->tinyInteger('status')->default('0')->after('nm_kegiatan_scan_sertif')->comment('0 = belum diapprove, 1 = sudah diapprove');
+            $table->integer('status')->default('0')->after('nm_kegiatan_scan_sertif')->comment('0 = belum diapprove, 1 = sudah diapprove');
             $table->string('approved_by', 40)->nullable()->after('status');
-            $table->dateTime('approved_at')->nullable()->after('approved_by');
+            $table->timestamp('approved_at')->nullable()->after('approved_by');
 
         });
     }

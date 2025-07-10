@@ -14,20 +14,15 @@ class CreateMenuDataInternasional extends Migration
      */
     public function up()
     {
-      
+            // $modul = Modul::where('nm_modul', 'SKPI')->where('id_role', '3')->first();
 
-      
-
-
-            $modul = Modul::where('nm_modul', 'SKPI')->where('id_role', '3')->first();
-
-            $menu = new Menu;
-            $menu->id_modul = $modul->id_modul;
-            $menu->nm_menu = 'Informasi Tambahan';
-            $menu->page = 'informasi_tambahan';
-            $menu->urutan = 3;
-            $menu->akses = 1;
-            $menu->save();
+            // $menu = new Menu;
+            // $menu->id_modul = $modul->id_modul;
+            // $menu->nm_menu = 'Informasi Tambahan';
+            // $menu->page = 'informasi_tambahan';
+            // $menu->urutan = 3;
+            // $menu->akses = 1;
+            // $menu->save();
        }
 
     /**

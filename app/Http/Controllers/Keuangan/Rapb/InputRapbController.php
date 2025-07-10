@@ -30,7 +30,7 @@ class InputRapbController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -41,7 +41,7 @@ class InputRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_semester_mulai'   => 'required',
@@ -65,7 +65,7 @@ class InputRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -75,7 +75,7 @@ class InputRapbController extends BaseController
     public function datatablesInputRapb(Request $request, $id_semester_mulai, $id_semester_selesai)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $jenis_jabatan = '-';
         if ($staff = Staff::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first()) {
@@ -144,7 +144,7 @@ class InputRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -164,7 +164,7 @@ class InputRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // ambil data subkategori by kategori
         $data_kategori = LibDataKeuangan::fetchDataKategoriRapb($auth_data, $input->jenis);
@@ -176,7 +176,7 @@ class InputRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // ambil data subkategori by kategori
         $data_subkategori = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $input->id_kategori_rapb);
@@ -188,7 +188,7 @@ class InputRapbController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -236,34 +236,34 @@ class InputRapbController extends BaseController
             if ($tipe_unit_kerja == 'SARPRAS') {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.jenis_jabatan', '=', 1)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.jenis_jabatan', '=', 1)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
             } elseif ($tipe_unit_kerja == 'KEUANGAN') {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.jenis_jabatan', '=', 2)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.jenis_jabatan', '=', 2)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
             } else {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.id_unit_kerja', '=', $id_unit_kerja)
                     ->where('guru.jenis_jabatan', '=', 98)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.id_unit_kerja', '=', $id_unit_kerja)
                     ->where('staff.jenis_jabatan', '=', 98)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
             }
 
@@ -271,7 +271,7 @@ class InputRapbController extends BaseController
                 // make object to find id
                 $rapb                           = Rapb::find($id);
                 $rapb->id_pengguna_kepala_unit  = $guru->id_pengguna;
-                $rapb->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                $rapb->updated_by               = auth_data()->pengguna->id_pengguna;
                 $rapb->updated_at               = $now;
                 $rapb->save();
 
@@ -283,7 +283,7 @@ class InputRapbController extends BaseController
                 // make object to find id
                 $rapb                           = Rapb::find($id);
                 $rapb->id_pengguna_kepala_unit  = $staff->id_pengguna;
-                $rapb->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                $rapb->updated_by               = auth_data()->pengguna->id_pengguna;
                 $rapb->updated_at               = $now;
                 $rapb->save();
 
@@ -300,19 +300,19 @@ class InputRapbController extends BaseController
         } elseif ($mode == 'approve-kepala-keuangan') {
             $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                 ->where('guru.jenis_jabatan', '=', 2)
-                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                 ->first();
 
             $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                 ->where('staff.jenis_jabatan', '=', 2)
-                ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                 ->first();
 
             if (!empty($guru->id_pengguna)) {
                 // make object to find id
                 $rapb                               = Rapb::find($id);
                 $rapb->id_pengguna_kepala_keuangan  = $guru->id_pengguna;
-                $rapb->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $rapb->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $rapb->updated_at                   = $now;
                 $rapb->save();
 
@@ -324,7 +324,7 @@ class InputRapbController extends BaseController
                 // make object to find id
                 $rapb                               = Rapb::find($id);
                 $rapb->id_pengguna_kepala_keuangan  = $staff->id_pengguna;
-                $rapb->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $rapb->updated_by                   = auth_data()->pengguna->id_pengguna;
                 $rapb->updated_at                   = $now;
                 $rapb->save();
 
@@ -366,7 +366,7 @@ class InputRapbController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $rapb                         = new Rapb;
                 $rapb->id_rapb                = $id;
@@ -377,7 +377,7 @@ class InputRapbController extends BaseController
                 $rapb->dana_perkiraan_rapb    = $input->dana_perkiraan_rapb;
                 $rapb->tgl_rapb               = date_format(date_create($input->tgl_rapb), "Y-m-d");
                 $rapb->prioritas_rapb         = $input->prioritas_rapb;
-                $rapb->created_by             = $input->auth_data->pengguna->id_pengguna;
+                $rapb->created_by             = auth_data()->pengguna->id_pengguna;
                 $rapb->save();
 
                 return [
@@ -395,7 +395,7 @@ class InputRapbController extends BaseController
                 $rapb->dana_perkiraan_rapb    = $input->dana_perkiraan_rapb;
                 $rapb->tgl_rapb               = date_format(date_create($input->tgl_rapb), "Y-m-d");
                 $rapb->prioritas_rapb         = $input->prioritas_rapb;
-                $rapb->updated_by             = $input->auth_data->pengguna->id_pengguna;
+                $rapb->updated_by             = auth_data()->pengguna->id_pengguna;
                 $rapb->updated_at             = $now;
                 $rapb->save();
 
@@ -413,7 +413,7 @@ class InputRapbController extends BaseController
                 } else {
                     // make object to find id
                     $rapb               = Rapb::find($id);
-                    $rapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $rapb->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $rapb->save();
 
                     $rapb->delete();

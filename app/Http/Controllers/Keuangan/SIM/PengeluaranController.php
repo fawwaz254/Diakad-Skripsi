@@ -23,7 +23,7 @@ class PengeluaranController extends BaseController
     public function viewMenuPengeluaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('keuangan/sim/pengeluaran/view-menu-pengeluaran', compact('auth_data'));
     }
@@ -31,7 +31,7 @@ class PengeluaranController extends BaseController
     public function viewMenuInput(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
@@ -68,7 +68,7 @@ class PengeluaranController extends BaseController
     public function viewMenuTarget(Request $request, $tahun_akademik_semester = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
@@ -109,7 +109,7 @@ class PengeluaranController extends BaseController
             })
             ->where('id_semester_mulai', $semester_mulai->id_semester)
             ->where('id_semester_selesai', $semester_selesai->id_semester)
-            ->isInputByPengguna($input->auth_data->pengguna->id_pengguna)
+            ->isInputByPengguna(auth_data()->pengguna->id_pengguna)
             ->get();
 
         return Datatables::of($list_data)
@@ -132,7 +132,7 @@ class PengeluaranController extends BaseController
     public function viewMenuEditTarget(Request $request, $tahun_akademik_semester, $id_subkategori_rapb)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester . '1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester . '2')->first();
@@ -168,7 +168,7 @@ class PengeluaranController extends BaseController
     public function actionSaveEditTarget(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
@@ -197,33 +197,33 @@ class PengeluaranController extends BaseController
                 }
 
                 if ($rapb) {
-                    $rapb->updated_by = $input->auth_data->pengguna->id_pengguna;
+                    $rapb->updated_by = auth_data()->pengguna->id_pengguna;
                 } else {
                     $rapb = new Rapb;
-                    $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $rapb->id_rapb = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $rapb->id_semester_mulai = $semester_mulai->id_semester;
                     $rapb->id_semester_selesai = $semester_selesai->id_semester;
                     $rapb->id_subkategori_rapb = $input->subkategori;
                     $rapb->tgl_rapb = $now->format('Y-m-d');
                     $rapb->prioritas_rapb = 3;
-                    $rapb->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $rapb->created_by = auth_data()->pengguna->id_pengguna;
 
-                    if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    if ($actor = Staff::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                         $rapb->id_unit_kerja = $actor->id_unit_kerja;
-                    } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    } else if ($actor = Guru::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                         $rapb->id_unit_kerja = $actor->id_unit_kerja;
                     }
 
                     if ($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                         ->where('guru.jenis_jabatan', '=', 2)
-                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                         ->first()
                     ) {
                         $rapb->id_pengguna_kepala_unit = $kepala_unit_keuangan->id_pengguna;
                     } else if ($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                         ->where('staff.jenis_jabatan', '=', 2)
-                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                         ->first()
                     ) {
                         $rapb->id_pengguna_kepala_keuangan = $kepala_unit_keuangan->id_pengguna;
@@ -255,7 +255,7 @@ class PengeluaranController extends BaseController
     public function viewMenuTampilkan(Request $request, $tahun_akademik_semester = null)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
@@ -278,7 +278,7 @@ class PengeluaranController extends BaseController
     public function datatablesMenuTampilkan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $tahun = $input->tahun;
         $tgl_awal = $input->tgl_awal;
@@ -312,7 +312,7 @@ class PengeluaranController extends BaseController
     public function actionSaveInputPengeluaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
@@ -339,7 +339,7 @@ class PengeluaranController extends BaseController
             if ($rapb) {
             } else {
                 $rapb = new Rapb;
-                $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $rapb->id_rapb = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $rapb->id_semester_mulai = $semester_mulai->id_semester;
                 $rapb->id_semester_selesai = $semester_selesai->id_semester;
@@ -347,23 +347,23 @@ class PengeluaranController extends BaseController
                 $rapb->tgl_rapb = $now->format('Y-m-d');
                 $rapb->prioritas_rapb = 3;
                 $rapb->dana_perkiraan_rapb = 0;
-                $rapb->created_by = $input->auth_data->pengguna->id_pengguna;
+                $rapb->created_by = auth_data()->pengguna->id_pengguna;
 
-                if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                if ($actor = Staff::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                     $rapb->id_unit_kerja = $actor->id_unit_kerja;
-                } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                } else if ($actor = Guru::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                     $rapb->id_unit_kerja = $actor->id_unit_kerja;
                 }
 
                 if ($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->where('guru.jenis_jabatan', '=', 2)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first()
                 ) {
                     $rapb->id_pengguna_kepala_unit = $kepala_unit_keuangan->id_pengguna;
                 } else if ($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                     ->where('staff.jenis_jabatan', '=', 2)
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first()
                 ) {
                     $rapb->id_pengguna_kepala_keuangan = $kepala_unit_keuangan->id_pengguna;
@@ -383,7 +383,7 @@ class PengeluaranController extends BaseController
             DB::beginTransaction();
             try {
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 if ($input->id_realisasi) {
                     $realisasi = Realisasi::find($input->id_realisasi);
@@ -393,9 +393,9 @@ class PengeluaranController extends BaseController
                 }
                 $realisasi->id_semester_realisasi = $id_semester;
                 $realisasi->id_rapb = $rapb->id_rapb;
-                if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                if ($actor = Staff::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                     $realisasi->id_unit_kerja = $actor->id_unit_kerja;
-                } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                } else if ($actor = Guru::where('id_pengguna', auth_data()->pengguna->id_pengguna)->first()) {
                     $realisasi->id_unit_kerja = $actor->id_unit_kerja;
                 }
                 $realisasi->nm_realisasi = $input->nm_realisasi;
@@ -403,9 +403,9 @@ class PengeluaranController extends BaseController
                 $realisasi->is_hutang_realisasi = 0;
                 $realisasi->dana_realisasi = $input->dana_realisasi;
                 $realisasi->tgl_realisasi = date_format(date_create($input->tgl_realisasi), "Y-m-d");
-                $realisasi->created_by = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->created_by = auth_data()->pengguna->id_pengguna;
                 if ($input->id_realisasi) {
-                    $realisasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+                    $realisasi->updated_by = auth_data()->pengguna->id_pengguna;
                 }
 
                 $realisasi->save();
@@ -433,7 +433,7 @@ class PengeluaranController extends BaseController
     public function editPengeluaran(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $pengeluaran = Realisasi::findOrFail($id);
         $tahun_akademik_semester = Semester::find($pengeluaran->id_semester_realisasi)->thn_akademik_semester;
@@ -471,7 +471,7 @@ class PengeluaranController extends BaseController
         $input = (object) $request->input();
 
         $pengeluaran = Realisasi::find($id);
-        $pengeluaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
+        $pengeluaran->deleted_by = auth_data()->pengguna->id_pengguna;
         $pengeluaran->save();
 
         $pengeluaran->delete();
@@ -484,7 +484,7 @@ class PengeluaranController extends BaseController
 
     public function printKuitansiPengeluaran(Request $request, $id)
     {
-        $auth_data = $request->auth_data;
+        $auth_data = auth_data();
 
         $pengeluaran = Realisasi::find($id);
 

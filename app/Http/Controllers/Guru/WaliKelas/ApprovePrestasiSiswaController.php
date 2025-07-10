@@ -32,7 +32,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/wali-kelas/approve-prestasi-siswa/view-approve-prestasi-siswa', compact('auth_data'));
     }
@@ -41,7 +41,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('guru/wali-kelas/approve-prestasi-siswa/view-detail-prestasi-siswa', compact('auth_data'));
     }
@@ -50,7 +50,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::findOrFail($id);
 
@@ -107,7 +107,7 @@ class ApprovePrestasiSiswaController extends BaseController
     public function datatablesPrestasiApprovePrestasiSiswa(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',
             'prestasi_siswa.link_sertif_prestasi_siswa',
@@ -210,7 +210,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data = Siswa::findOrFail($id);
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
@@ -263,7 +263,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         if ($data == 'prestasi') {
@@ -272,7 +272,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
             $prestasi = PrestasiSiswa::findOrFail($id);
             $prestasi->status = 1;
-            $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $prestasi->approved_by = auth_data()->pengguna->id_pengguna;
             $prestasi->approved_at = $now;
 
             $prestasi->save();
@@ -282,7 +282,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
             $kegiatan = KegiatanSiswa::findOrFail($id);
             $kegiatan->status = 1;
-            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_by = auth_data()->pengguna->id_pengguna;
             $kegiatan->approved_at = $now;
 
             $kegiatan->save();
@@ -298,7 +298,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         if ($data == 'prestasi') {
@@ -307,7 +307,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
             $prestasi = PrestasiSiswa::findOrFail($id);
             $prestasi->status = 10;
-            $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $prestasi->approved_by = auth_data()->pengguna->id_pengguna;
             $prestasi->approved_at = $now;
 
             $prestasi->save();
@@ -317,7 +317,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
             $kegiatan = KegiatanSiswa::findOrFail($id);
             $kegiatan->status = 10;
-            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_by = auth_data()->pengguna->id_pengguna;
             $kegiatan->approved_at = $now;
 
             $kegiatan->save();
@@ -334,7 +334,7 @@ class ApprovePrestasiSiswaController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);

@@ -14,7 +14,7 @@ class AddingIsReportTabelRealisasi extends Migration
     public function up()
     {
         Schema::table('realisasi', function (Blueprint $table) {
-            $table->tinyInteger('is_report')->default('1')->after('is_maba')->comment('1 = Masuk ke dalam report; 2 = Tidak masuk dalam report;')->nullable();
+            $table->integer('is_report')->default('1')->after('is_maba')->comment('1 = Masuk ke dalam report; 2 = Tidak masuk dalam report;')->nullable();
         });
     }
 

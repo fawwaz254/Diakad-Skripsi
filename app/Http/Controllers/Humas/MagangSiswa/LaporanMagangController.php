@@ -30,7 +30,7 @@ class LaporanMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
@@ -58,7 +58,7 @@ class LaporanMagangController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $id_periode_magang = $input->id_periode_magang;
 
@@ -122,7 +122,7 @@ class LaporanMagangController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/magang-siswa/laporan-magang/view-laporan-input-magang', compact('auth_data', 'id_rekanan_magang', 'id_periode_magang'));
     }
@@ -131,7 +131,7 @@ class LaporanMagangController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data = link_laporan_magang::where(['id_rekanan_magang' => $id_rekanan_magang, 'id_periode_magang' => $id_periode_magang])->first();
         // $data = link_laporan_magang::where('id_rekanan_magang',$id_rekanan_magang)->where('id_periode_magang', $id_periode_magang)->first();
 
@@ -159,14 +159,14 @@ class LaporanMagangController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $linkLaporanMagang                                  = new link_laporan_magang();
                 $linkLaporanMagang->link_laporan_magang_id          = $id;
                 $linkLaporanMagang->id_rekanan_magang               = $input->id_rekanan_magang;
                 $linkLaporanMagang->id_periode_magang               = $input->id_periode_magang;
                 $linkLaporanMagang->link_google_drive               = $input->link_google_drive;
-                $linkLaporanMagang->created_by                      = $input->auth_data->pengguna->id_pengguna;
+                $linkLaporanMagang->created_by                      = auth_data()->pengguna->id_pengguna;
                 $linkLaporanMagang->save();
 
                 return [
@@ -177,7 +177,7 @@ class LaporanMagangController extends BaseController
             } else if ($mode == 'edit') {
                 $linkLaporanMagang          = link_laporan_magang::find($id);
                 $linkLaporanMagang->link_google_drive               = $input->link_google_drive;
-                $linkLaporanMagang->updated_by                       = $input->auth_data->pengguna->id_pengguna;
+                $linkLaporanMagang->updated_by                       = auth_data()->pengguna->id_pengguna;
                 $linkLaporanMagang->save();
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -195,7 +195,7 @@ class LaporanMagangController extends BaseController
 
         $linkLaporanMagang->delete();
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
         return view('humas/magang-siswa/laporan-magang/view-laporan-magangsmk3', compact('auth_data', 'data_periode_magang'));
@@ -206,7 +206,7 @@ class LaporanMagangController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data = PengajuanSiswaMagang::where(['id_rekanan_magang' => $id_rekanan_magang, 'id_periode_magang' => $id_periode_magang])->first();
         $list_komponen = KomponenMagang::where('id_periode_magang', $id_periode_magang)->get();

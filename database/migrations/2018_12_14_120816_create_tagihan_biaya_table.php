@@ -18,8 +18,8 @@ class CreateTagihanBiayaTable extends Migration {
 			$table->string('id_tagihan_biaya', 40)->primary();
 			$table->string('id_siswa', 40)->comment('FK: siswa.id_siswa');
 			$table->string('id_detail_biaya', 40)->comment('FK: detail_biaya.id_detail_biaya');
-			$table->float('besar_biaya', 10, 0)->nullable();
-			$table->float('denda_biaya', 10, 0)->nullable();
+			$table->decimal('besar_biaya', 10, 0)->nullable();
+			$table->decimal('denda_biaya', 10, 0)->nullable();
 			$table->boolean('is_tagih')->nullable()->comment('0 = tidak ditagihkan; 1 = ditagihkan;');
 			$table->string('keterangan', 128)->nullable();
 			$table->timestamps();

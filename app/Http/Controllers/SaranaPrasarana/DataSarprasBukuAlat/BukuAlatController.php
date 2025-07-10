@@ -29,7 +29,7 @@ class BukuAlatController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-buku-alat/buku-alat/view-buku-alat', compact('auth_data'));
     }
@@ -38,7 +38,7 @@ class BukuAlatController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -58,7 +58,7 @@ class BukuAlatController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jenis_buku_alat = LibDataSarpras::fetchDataJenisBukuAlat($auth_data);
 
@@ -77,7 +77,7 @@ class BukuAlatController extends BaseController
     public function datatablesBukuAlat(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataSarpras::fetchDataBukuAlat($auth_data);
 
         return Datatables::of($list_data)
@@ -125,7 +125,7 @@ class BukuAlatController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $bukuAlat                         = new BukuAlat;
                 $bukuAlat->id_buku_alat           = $id;
@@ -150,7 +150,7 @@ class BukuAlatController extends BaseController
                 $bukuAlat->jumlah_kondisi_baik    = $input->jumlah_kondisi_baik;
                 $bukuAlat->jumlah_kondisi_rusak   = $input->jumlah_kondisi_rusak;
                 $bukuAlat->keterangan_buku_alat   = $input->keterangan_buku_alat;
-                $bukuAlat->created_by             = $input->auth_data->pengguna->id_pengguna;
+                $bukuAlat->created_by             = auth_data()->pengguna->id_pengguna;
                 $bukuAlat->save();
 
                 return [
@@ -182,7 +182,7 @@ class BukuAlatController extends BaseController
                 $bukuAlat->jumlah_kondisi_baik    = $input->jumlah_kondisi_baik;
                 $bukuAlat->jumlah_kondisi_rusak   = $input->jumlah_kondisi_rusak;
                 $bukuAlat->keterangan_buku_alat   = $input->keterangan_buku_alat;
-                $bukuAlat->updated_by             = $input->auth_data->pengguna->id_pengguna;
+                $bukuAlat->updated_by             = auth_data()->pengguna->id_pengguna;
                 $bukuAlat->updated_at             = $now;
                 $bukuAlat->save();
 
@@ -194,7 +194,7 @@ class BukuAlatController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $bukuAlat               = BukuAlat::find($id);
-                $bukuAlat->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $bukuAlat->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $bukuAlat->save();
 
                 $bukuAlat->delete();
@@ -211,7 +211,7 @@ class BukuAlatController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('sarana-prasarana/data-sarpras-buku-alat/buku-alat/import-excel', compact('auth_data'));
     }
@@ -220,7 +220,7 @@ class BukuAlatController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -366,7 +366,7 @@ class BukuAlatController extends BaseController
                             $data->jumlah_kondisi_baik            = $value->kondisi_baik;
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
                             $data->keterangan_buku_alat           = $value->keterangan;
-                            $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                            $data->created_by                     = auth_data()->pengguna->id_pengguna;
                             $data->save();
                         }
 

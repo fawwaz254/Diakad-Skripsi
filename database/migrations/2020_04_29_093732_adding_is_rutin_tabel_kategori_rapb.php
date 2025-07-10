@@ -14,7 +14,7 @@ class AddingIsRutinTabelKategoriRapb extends Migration
     public function up()
     {
         Schema::table('kategori_rapb', function (Blueprint $table) {
-            $table->tinyInteger('is_rutin')->default('1')->after('jenis_kategori_rapb')->comment('1 = Rutin; 2 = Non-Rutin;')->nullable();
+            $table->integer('is_rutin')->default('1')->after('jenis_kategori_rapb')->comment('1 = Rutin; 2 = Non-Rutin;')->nullable();
         });
     }
 

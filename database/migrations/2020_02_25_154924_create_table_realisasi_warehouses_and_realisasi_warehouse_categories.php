@@ -20,8 +20,8 @@ class CreateTableRealisasiWarehousesAndRealisasiWarehouseCategories extends Migr
             $table->string('division_name', 128)->nullable();
             $table->string('subcategory', 128)->nullable();
             $table->integer('transaction_id')->nullable();
-            $table->dateTime('transaction_date')->nullable();
-            $table->float('transaction_nominal')->nullable();
+            $table->timestamp('transaction_date')->nullable();
+            $table->decimal('transaction_nominal')->nullable();
 
             $table->string('id_realisasi', 40)->nullable();
 

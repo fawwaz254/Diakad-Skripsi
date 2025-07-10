@@ -16,13 +16,13 @@ class AddingMenuInputAbsensiEkskul extends Migration
      */
     public function up()
     {
-        $modul = Modul::find(52);
-        $modul->route = 'absensi-ekskul';
-        $modul->save();
+        // $modul = Modul::find(52);
+        // $modul->route = 'absensi-ekskul';
+        // $modul->save();
 
-        $menu = Menu::find(181);
-        $menu->page = 'input-absensi-ekskul';
-        $menu->save();
+        // $menu = Menu::find(181);
+        // $menu->page = 'input-absensi-ekskul';
+        // $menu->save();
     }
 
     /**

@@ -16,15 +16,15 @@ class AddMenuInputSkpiSiswaInWaliKelas extends Migration
      */
     public function up()
     {
-        $id_modul = Modul::where('id_role', 2)->where('nm_modul', 'Wali Kelas')->first()->id_modul;
+        // $id_modul = Modul::where('id_role', 2)->where('nm_modul', 'Wali Kelas')->first()->id_modul;
 
-        $menu = new Menu;
-        $menu->id_modul = $id_modul;
-        $menu->nm_menu = 'Input SKPI Siswa';
-        $menu->page = 'input-skpi-siswa';
-        $menu->urutan = 7;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $id_modul;
+        // $menu->nm_menu = 'Input SKPI Siswa';
+        // $menu->page = 'input-skpi-siswa';
+        // $menu->urutan = 7;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

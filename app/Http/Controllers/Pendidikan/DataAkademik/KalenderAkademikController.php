@@ -33,7 +33,7 @@ class KalenderAkademikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -44,7 +44,7 @@ class KalenderAkademikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required'
@@ -67,7 +67,7 @@ class KalenderAkademikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
 
@@ -78,7 +78,7 @@ class KalenderAkademikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kegiatan = LibDataAkademik::fetchDataKegiatan($auth_data);
 
@@ -87,7 +87,7 @@ class KalenderAkademikController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_jadwal_kegiatan = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_jadwal_kegiatan = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('pendidikan/data-akademik/kalender-akademik/add-kalender-akademik', compact('auth_data', 'data_kegiatan', 'data_semester', 'id_jadwal_kegiatan'));
     }
@@ -96,7 +96,7 @@ class KalenderAkademikController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kegiatan = LibDataAkademik::fetchDataKegiatan($auth_data);
 
@@ -114,7 +114,7 @@ class KalenderAkademikController extends BaseController
     public function datatablesKalenderAkademik(Request $request, $id_semester)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataAkademik::fetchDataKalenderAkademik($auth_data, $id_semester);
 
         return Datatables::of($list_data)
@@ -170,7 +170,7 @@ class KalenderAkademikController extends BaseController
                         'message' => 'Failed To Save Kalender Akademik!'
                     ];
                 } else {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $jadwalKegiatan                             = new JadwalKegiatan;
                     $jadwalKegiatan->id_jadwal_kegiatan         = $id;
@@ -180,7 +180,7 @@ class KalenderAkademikController extends BaseController
                     // convert format date
                     $jadwalKegiatan->tgl_mulai                  = date_format(date_create($input->tgl_mulai), "Y-m-d");
                     $jadwalKegiatan->tgl_selesai                = date_format(date_create($input->tgl_selesai), "Y-m-d");
-                    $jadwalKegiatan->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                    $jadwalKegiatan->created_by                 = auth_data()->pengguna->id_pengguna;
                     $jadwalKegiatan->save();
 
                     return [
@@ -198,7 +198,7 @@ class KalenderAkademikController extends BaseController
                 // convert format date
                 $jadwalKegiatan->tgl_mulai                  = date_format(date_create($input->tgl_mulai), "Y-m-d");
                 $jadwalKegiatan->tgl_selesai                = date_format(date_create($input->tgl_selesai), "Y-m-d");
-                $jadwalKegiatan->updated_by                 = $input->auth_data->pengguna->id_pengguna;
+                $jadwalKegiatan->updated_by                 = auth_data()->pengguna->id_pengguna;
                 $jadwalKegiatan->updated_at                 = $now;
                 $jadwalKegiatan->save();
 
@@ -210,7 +210,7 @@ class KalenderAkademikController extends BaseController
             } elseif ($mode == 'delete') {
                 // make object to find id
                 $jadwalKegiatan               = JadwalKegiatan::find($id);
-                $jadwalKegiatan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $jadwalKegiatan->deleted_by   = auth_data()->pengguna->id_pengguna;
                 $jadwalKegiatan->save();
 
                 $jadwalKegiatan->delete();

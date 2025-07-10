@@ -53,7 +53,7 @@ class CreateTableForKegiatanHarian extends Migration
             $table->engine = 'InnoDB';
             $table->string('id_kegiatan_harian_jawaban', 40)->primary();
             $table->string('id_kegiatan_harian_pertanyaan', 40)->comment('FK: kegiatan_harian_pertanyaan.id_kegiatan_harian_pertanyaan');
-            $table->float('bobot_jawaban', 10)->nullable();
+            $table->decimal('bobot_jawaban', 10)->nullable();
             $table->string('warna_keadaan', 32)->nullable();
             $table->string('isi_jawaban', 1024)->nullable();
             $table->timestamps();
@@ -83,7 +83,7 @@ class CreateTableForKegiatanHarian extends Migration
             $table->string('id_kegiatan_harian_pertanyaan', 40)->comment('FK: kegiatan_harian_pertanyaan.id_kegiatan_harian_pertanyaan');
             $table->string('id_kegiatan_harian_jawaban', 40)->comment('FK: kegiatan_harian_jawaban.id_kegiatan_harian_jawaban');
             $table->string('isi_jawaban_text', 1024)->nullable();
-            $table->float('bobot_jawaban', 10)->nullable();
+            $table->decimal('bobot_jawaban', 10)->nullable();
             $table->string('warna_keadaan', 32)->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

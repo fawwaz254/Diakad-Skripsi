@@ -28,7 +28,7 @@ class CreateMataPelajaranTable extends Migration {
 			$table->boolean('kredit_prak_lapangan')->nullable()->default(0);
 			$table->boolean('kredit_simulasi')->nullable()->default(0);
 			$table->boolean('tingkat_semester')->nullable();
-			$table->float('nilai_kkm', 10, 0)->nullable();
+			$table->decimal('nilai_kkm', 10, 0)->nullable();
 			$table->boolean('ada_sap')->nullable()->default(0);
 			$table->boolean('ada_silabus')->nullable()->default(0);
 			$table->boolean('ada_bahan_ajar')->nullable()->default(0);

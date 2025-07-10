@@ -19,7 +19,7 @@ class CreateRealisasiPembayaranTable extends Migration
             $table->string('id_realisasi', 40)->comment('FK: realisasi.id_realisasi');
             $table->boolean('termin_ke')->nullable();
             $table->date('tgl_pembayaran')->nullable();
-            $table->float('dana_realisasi_pembayaran', 10, 0)->nullable();
+            $table->decimal('dana_realisasi_pembayaran', 10, 0)->nullable();
             $table->string('id_pengguna_kepala_keuangan', 40)->nullable()->comment('FK: pengguna.id_pengguna, kepala keuangan yg melakukan approve Realisasi Pembayaran');
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

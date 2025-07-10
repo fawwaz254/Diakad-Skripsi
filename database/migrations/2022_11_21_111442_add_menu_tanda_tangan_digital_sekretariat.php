@@ -20,15 +20,15 @@ class AddMenuTandaTanganDigitalSekretariat extends Migration
         //
         $now = Carbon::now();
 
-        $id_modul = Modul::where('id_role', 14)->where('nm_modul', 'Manajemen Tanda Tangan')->first()->id_modul;
+        // $id_modul = Modul::where('id_role', 14)->where('nm_modul', 'Manajemen Tanda Tangan')->first()->id_modul;
 
-        $menu = new Menu;
-        $menu->id_modul = $id_modul;
-        $menu->nm_menu = 'Tanda Tangan Digital';
-        $menu->page = 'tanda-tangan-digital';
-        $menu->urutan = 1;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $id_modul;
+        // $menu->nm_menu = 'Tanda Tangan Digital';
+        // $menu->page = 'tanda-tangan-digital';
+        // $menu->urutan = 1;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

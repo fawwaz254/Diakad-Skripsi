@@ -15,7 +15,7 @@ class AddingIsAktifWaliMuridInTableSiswa extends Migration
     {
         //
         Schema::table('siswa', function (Blueprint $table) {
-            $table->tinyInteger('is_aktif_wali_murid')->default('1')->after('id_wali_murid')->comment('Field ini digunakan untuk menandai apabila terdapat wali murid yang memiliki anak murid lebih dari 1');
+            $table->integer('is_aktif_wali_murid')->default('1')->after('id_wali_murid')->comment('Field ini digunakan untuk menandai apabila terdapat wali murid yang memiliki anak murid lebih dari 1');
         });
     }
 

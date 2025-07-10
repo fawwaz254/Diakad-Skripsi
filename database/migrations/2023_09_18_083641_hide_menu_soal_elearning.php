@@ -15,12 +15,12 @@ class HideMenuSoalElearning extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'E-Learning Soal')->first();
-        $menu = Menu::where('nm_menu', 'Soal')->where('akses', 1)->where('id_modul', $modul->id_modul)->first();
-        if ($menu) {
-            $menu->akses = 0;
-            $menu->save();
-        }
+        // $modul = Modul::where('nm_modul', 'E-Learning Soal')->first();
+        // $menu = Menu::where('nm_menu', 'Soal')->where('akses', 1)->where('id_modul', $modul->id_modul)->first();
+        // if ($menu) {
+        //     $menu->akses = 0;
+        //     $menu->save();
+        // }
     }
 
     /**

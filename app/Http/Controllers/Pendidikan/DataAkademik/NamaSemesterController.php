@@ -22,7 +22,7 @@ class NamaSemesterController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $now = Carbon::now();
         $this_month = $now->month;
@@ -39,7 +39,7 @@ class NamaSemesterController extends BaseController
             })
             ->first();
         
-        $timeToChangeTahunAjaran =  ($this_month >= 6 && $this_month <= 8) && ($active_semester->tahun_ajaran == $this_year -1 . '/' . $this_year) && ($active_semester->nm_semester == 'Genap') && ($active_semester->thn_akademik_semester == $this_year);
+        $timeToChangeTahunAjaran =  $this_month == 7 && ($active_semester->tahun_ajaran == ($this_year - 1) . '/' . $this_year);
 
         return view('pendidikan/data-akademik/nama-semester/view-nama-semester', compact('auth_data', 'active_semester', 'availableTahunAjaranBaru', 'timeToChangeTahunAjaran'));
     }
@@ -48,7 +48,7 @@ class NamaSemesterController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -62,7 +62,7 @@ class NamaSemesterController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id);
 
@@ -72,7 +72,7 @@ class NamaSemesterController extends BaseController
     public function datatablesNamaSemester(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = $semester = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('tahun_ajaran', 'desc')->orderBy('nm_semester', 'desc')->get();
 
@@ -117,7 +117,7 @@ class NamaSemesterController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $semester                           = new Semester;
                 $semester->id_semester              = $id;
@@ -126,8 +126,8 @@ class NamaSemesterController extends BaseController
                 $semester->thn_akademik_semester    = $input->thn_akademik_semester;
                 $semester->kode_semester            = $input->kode_semester;
                 $semester->is_aktif_semester        = $input->is_aktif_semester;
-                $semester->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
-                $semester->created_by               = $input->auth_data->pengguna->id_pengguna;
+                $semester->id_sekolah               = auth_data()->pengguna->id_sekolah;
+                $semester->created_by               = auth_data()->pengguna->id_pengguna;
                 $semester->save();
 
                 if ($input->is_aktif_semester == 1) {
@@ -135,7 +135,7 @@ class NamaSemesterController extends BaseController
 
                     foreach ($data_semester as $semester) {
                         $semester->is_aktif_semester    = 0;
-                        $semester->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                        $semester->updated_by           = auth_data()->pengguna->id_pengguna;
                         $semester->updated_at           = $now;
                         $semester->save();
                     }
@@ -154,7 +154,7 @@ class NamaSemesterController extends BaseController
                 $semester->thn_akademik_semester    = $input->thn_akademik_semester;
                 // $semester->kode_semester            = $input->kode_semester;
                 $semester->is_aktif_semester        = $input->is_aktif_semester;
-                $semester->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                $semester->updated_by               = auth_data()->pengguna->id_pengguna;
                 $semester->updated_at               = $now;
                 $semester->save();
 
@@ -163,7 +163,7 @@ class NamaSemesterController extends BaseController
 
                     foreach ($data_semester as $semester) {
                         $semester->is_aktif_semester    = 0;
-                        $semester->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                        $semester->updated_by           = auth_data()->pengguna->id_pengguna;
                         $semester->updated_at           = $now;
                         $semester->save();
                     }
@@ -184,7 +184,7 @@ class NamaSemesterController extends BaseController
                         'message' => 'Failed To Delete Active Semester'
                     ];
                 } else {
-                    $semester->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $semester->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $semester->save();
 
                     $semester->delete();
@@ -206,22 +206,22 @@ class NamaSemesterController extends BaseController
 
         $commonData = [
             'tahun_ajaran' => $now->year . '/' . ($now->year + 1),
-            'id_sekolah' => $input->auth_data->pengguna->id_sekolah,
-            'created_by' => $input->auth_data->pengguna->id_pengguna,
+            'id_sekolah' => auth_data()->pengguna->id_sekolah,
+            'created_by' => auth_data()->pengguna->id_pengguna,
             'is_aktif_semester' => 0
         ];
 
         Semester::create(array_merge($commonData, [
-            'id_semester' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+            'id_semester' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
             'nm_semester' => 'Ganjil',
             'thn_akademik_semester' => $now->year,
             'kode_semester' => $now->year . '1'
         ]));
 
         Semester::create(array_merge($commonData, [
-            'id_semester' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+            'id_semester' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
             'nm_semester' => 'Genap',
-            'thn_akademik_semester' => $now->year + 1,
+            'thn_akademik_semester' => $now->year,
             'kode_semester' => $now->year . '2'
         ]));
 

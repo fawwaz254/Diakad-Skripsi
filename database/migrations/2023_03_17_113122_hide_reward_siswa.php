@@ -15,9 +15,9 @@ class HideRewardSiswa extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_role', '2')->where('nm_modul', 'Reward Siswa')->first();
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::where('id_role', '2')->where('nm_modul', 'Reward Siswa')->first();
+        // $modul->akses = 0;
+        // $modul->save();
     }
 
     /**

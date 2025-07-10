@@ -22,7 +22,7 @@ class CreatePtkNilaiTesTable extends Migration {
 			$table->string('nm_tes', 64)->nullable();
 			$table->string('penyelenggara_tes', 64)->nullable();
 			$table->integer('tahun_tes')->nullable();
-			$table->float('nilai_skor_tes', 10, 0)->nullable();
+			$table->decimal('nilai_skor_tes', 10, 0)->nullable();
 			$table->string('nomor_peserta_tes', 64)->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

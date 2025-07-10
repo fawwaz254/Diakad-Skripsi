@@ -22,13 +22,13 @@ class UpdateAksesMenuKerjaHarianRoleKesiswaan extends Migration
 
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Kesiswaan')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Laporan')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Laporan')->first();
 
-        $modul->menus()->where('nm_menu', 'Kerja Harian')->update([
-            "akses" => 0
-        ]);
+        // $modul->menus()->where('nm_menu', 'Kerja Harian')->update([
+        //     "akses" => 0
+        // ]);
     }
 
     /**

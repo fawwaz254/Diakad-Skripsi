@@ -14,7 +14,7 @@ class AddingJmlPembayaranTahunLaluOnTutupBukuBulananBiaya extends Migration
     public function up()
     {
         Schema::table('tutup_buku_bulanan_biaya', function (Blueprint $table) {
-            $table->float('jml_pembayaran_biaya_tahun_lalu', 10, 0)->after('jml_pembayaran_biaya_bulan_lalu')->nullable()->comment('pembayaran dari tutup buku tahun lalu yg dilakukan di bulan ini');
+            $table->decimal('jml_pembayaran_biaya_tahun_lalu', 10, 0)->after('jml_pembayaran_biaya_bulan_lalu')->nullable()->comment('pembayaran dari tutup buku tahun lalu yg dilakukan di bulan ini');
         });
     }
 

@@ -19,7 +19,7 @@ class CreateDompetTransferTable extends Migration
             $table->string('id_dompet_asal', 40)->comment('FK: dompet.id_dompet');
             $table->string('id_dompet_tujuan', 40)->comment('FK: dompet.id_dompet');
             $table->date('tgl_dompet_transfer')->nullable();
-            $table->float('nominal_dompet_transfer', 10, 0)->nullable();
+            $table->decimal('nominal_dompet_transfer', 10, 0)->nullable();
             $table->string('id_pengguna_kepala_keuangan', 40)->nullable()->comment('FK: pengguna.id_pengguna, kepala keuangan yg melakukan approve Realisasi');
             $table->date('tgl_apv_dompet_transfer')->nullable();
             $table->string('keterangan_dompet_transfer', 1024)->nullable();

@@ -16,10 +16,10 @@ class ChangeRouteModulPresensiRoleAkademik extends Migration
     public function up()
     {
         // update modul
-        $menu               = Modul::find(22);
-        $menu->route        = "presensi";
-        $menu->page         = null;
-        $menu->save();
+        // $menu               = Modul::find(22);
+        // $menu->route        = "presensi";
+        // $menu->page         = null;
+        // $menu->save();
     }
 
     /**

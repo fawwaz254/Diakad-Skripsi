@@ -15,14 +15,14 @@ class AddMenuKomponenMataPelajaran extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '7')->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Komponen Mata Pelajaran';
-        $menu->page = 'komponen-mata-pelajaran';
-        $menu->urutan = 1;
-        $menu->akses = 1;
-        $menu->save();
+        // $modul = Modul::where('nm_modul', 'Rapor Sisipan')->where('id_role', '7')->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Komponen Mata Pelajaran';
+        // $menu->page = 'komponen-mata-pelajaran';
+        // $menu->urutan = 1;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

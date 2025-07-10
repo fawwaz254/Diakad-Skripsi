@@ -15,15 +15,15 @@ class AddMenuRekapNomorHpSiswaInWalikelas extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Wali Kelas')->where('id_role', '2')->first();
+        // $modul = Modul::where('nm_modul', 'Wali Kelas')->where('id_role', '2')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Rekap Nomor Hp Siswa';
-        $menu->page = 'rekap-nomor-hp';
-        $menu->urutan = 12;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Rekap Nomor Hp Siswa';
+        // $menu->page = 'rekap-nomor-hp';
+        // $menu->urutan = 12;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

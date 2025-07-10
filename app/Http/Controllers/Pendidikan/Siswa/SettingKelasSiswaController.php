@@ -31,7 +31,7 @@ class SettingKelasSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         return view('pendidikan/siswa/setting-kelas-siswa/view-kelas-setting-kelas-siswa', compact('auth_data', 'data_kelas'));
@@ -41,7 +41,7 @@ class SettingKelasSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required'
@@ -64,7 +64,7 @@ class SettingKelasSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
             ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
@@ -81,7 +81,7 @@ class SettingKelasSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
             ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
@@ -96,7 +96,7 @@ class SettingKelasSiswaController extends BaseController
     public function datatablesKelasSiswa(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
             ->where('id_kelas', '=', $id_kelas)
@@ -125,7 +125,7 @@ class SettingKelasSiswaController extends BaseController
     public function datatablesSiswa(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
@@ -170,10 +170,10 @@ class SettingKelasSiswaController extends BaseController
                 $siswa->save();
 
                 $logKelasSiswa                          = new LogKelasSiswa;
-                $logKelasSiswa->id_log_kelas_siswa      = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $logKelasSiswa->id_log_kelas_siswa      = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $logKelasSiswa->id_siswa                = $id;
                 $logKelasSiswa->id_kelas                = $input->id_kelas;
-                $logKelasSiswa->created_by              = $input->auth_data->pengguna->id_pengguna;
+                $logKelasSiswa->created_by              = auth_data()->pengguna->id_pengguna;
                 $logKelasSiswa->save();
 
                 return [
@@ -206,16 +206,16 @@ class SettingKelasSiswaController extends BaseController
 
                                 $tagihan                   = TagihanBiaya::find($r->id_tagihan_biaya);
                                 $tagihan->id_kelas         = $input->id_kelas;
-                                $tagihan->updated_by       = $input->auth_data->pengguna->id_pengguna;
+                                $tagihan->updated_by       = auth_data()->pengguna->id_pengguna;
                                 $tagihan->save();
                             }
                         }
 
                         $logKelasSiswa                          = new LogKelasSiswa;
-                        $logKelasSiswa->id_log_kelas_siswa      = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $logKelasSiswa->id_log_kelas_siswa      = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                         $logKelasSiswa->id_siswa                = $id_siswa;
                         $logKelasSiswa->id_kelas                = $input->id_kelas;
-                        $logKelasSiswa->created_by              = $input->auth_data->pengguna->id_pengguna;
+                        $logKelasSiswa->created_by              = auth_data()->pengguna->id_pengguna;
                         $logKelasSiswa->save();
                     }
                     DB::commit();

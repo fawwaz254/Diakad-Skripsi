@@ -14,7 +14,9 @@ class ReplaceTyninttointThnMasukSiswa extends Migration
     public function up()
     {
         Schema::table('siswa', function (Blueprint $table) {
-            $table->integer('thn_masuk_siswa')->nullable()->comment('Tahun Masuk Siswa Di Sekolah')->change();
+            DB::statement('ALTER TABLE siswa ALTER COLUMN thn_masuk_siswa TYPE integer USING thn_masuk_siswa::integer');
+            DB::statement('ALTER TABLE siswa ALTER COLUMN thn_masuk_siswa DROP NOT NULL');
+            DB::statement("COMMENT ON COLUMN siswa.thn_masuk_siswa IS 'Tahun Masuk Siswa Di Sekolah'");
         });
     }
 

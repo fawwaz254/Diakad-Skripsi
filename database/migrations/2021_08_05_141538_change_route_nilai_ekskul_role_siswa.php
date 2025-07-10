@@ -17,13 +17,13 @@ class ChangeRouteNilaiEkskulRoleSiswa extends Migration
      */
     public function up()
     {
-        $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesiswaan')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesiswaan')->first();
 
-        $modul->menus()->where('nm_menu', 'Nilai Ekskul')->update([
-            "page" => "nilai-ekskul"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Nilai Ekskul')->update([
+        //     "page" => "nilai-ekskul"
+        // ]);
     }
 
     /**

@@ -24,7 +24,7 @@ class RiwayatPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::where("id_pengguna", $auth_data->pengguna->id_pengguna)
             ->select("id_siswa")
@@ -44,7 +44,7 @@ class RiwayatPelanggaranController extends BaseController
     public function datatablesPelanggaranNonKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $auth_data->pengguna->id_pengguna);
 
@@ -112,7 +112,7 @@ class RiwayatPelanggaranController extends BaseController
     public function datatablesPelanggaranKBM(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibSiswa::fetchPelanggaranKBM($auth_data, $auth_data->pengguna->id_pengguna);
 

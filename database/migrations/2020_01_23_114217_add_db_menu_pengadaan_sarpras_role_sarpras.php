@@ -22,16 +22,16 @@ class AddDbMenuPengadaanSarprasRoleSarpras extends Migration
         $now = Carbon::now();
 
         // update modul
-        $modul               = Modul::find(68);
-        $modul->nm_modul     = "Pengadaan/Perawatan Sarpras";
-        $modul->updated_at   = $now;
-        $modul->save();
+        // $modul               = Modul::find(68);
+        // $modul->nm_modul     = "Pengadaan/Perawatan Sarpras";
+        // $modul->updated_at   = $now;
+        // $modul->save();
 
         // update menu
-        $menu               = Menu::find(234);
-        $menu->urutan       = 2;
-        $menu->updated_at   = $now;
-        $menu->save();
+        // $menu               = Menu::find(234);
+        // $menu->urutan       = 2;
+        // $menu->updated_at   = $now;
+        // $menu->save();
 
         // add menu
         $menu               = new Menu;

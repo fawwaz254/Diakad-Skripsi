@@ -21,33 +21,33 @@ class AddModulDataGuruRoleHumas extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
 
-        $modul = Modul::create([
-            "id_role"       => $role_id,
-            "nm_modul"      => "Data Guru",
-            "route"         => "data-guru",
-            "urutan"        => 5,
-            "akses"         => 1,
-            "created_at"    => $now
-        ]);
+        // $modul = Modul::create([
+        //     "id_role"       => $role_id,
+        //     "nm_modul"      => "Data Guru",
+        //     "route"         => "data-guru",
+        //     "urutan"        => 5,
+        //     "akses"         => 1,
+        //     "created_at"    => $now
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Data Prestasi Guru",
-                "page"         => "data-prestasi-guru",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-            [
-                "nm_menu"      => "Data Kegiatan Guru",
-                "page"         => "data-kegiatan-guru",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Data Prestasi Guru",
+        //         "page"         => "data-prestasi-guru",
+        //         "urutan"       => 1,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        //     [
+        //         "nm_menu"      => "Data Kegiatan Guru",
+        //         "page"         => "data-kegiatan-guru",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

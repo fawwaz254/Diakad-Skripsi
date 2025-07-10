@@ -16,18 +16,18 @@ class DeleteDuplicateModulElearning extends Migration
      */
     public function up()
     {
-        $jumlah =  Modul::where('id_role', 3)->where('nm_modul', 'E-Learning Soal')->count();
-        if ($jumlah == '2') {
-            $modul_absensi = Modul::where('id_role', 3)->where('nm_modul', 'E-Learning Soal')->get();
-            foreach ($modul_absensi as $modul) {
-                $menu = Menu::where('id_modul', $modul->id_modul)->count();
-                if ($menu == '1') {
-                    $modul->deleted_by = 'migration';
-                    $modul->save();
-                    $modul->delete();
-                }
-            }
-        }
+        // $jumlah =  Modul::where('id_role', 3)->where('nm_modul', 'E-Learning Soal')->count();
+        // if ($jumlah == '2') {
+        //     $modul_absensi = Modul::where('id_role', 3)->where('nm_modul', 'E-Learning Soal')->get();
+        //     foreach ($modul_absensi as $modul) {
+        //         $menu = Menu::where('id_modul', $modul->id_modul)->count();
+        //         if ($menu == '1') {
+        //             $modul->deleted_by = 'migration';
+        //             $modul->save();
+        //             $modul->delete();
+        //         }
+        //     }
+        // }
     }
 
     /**

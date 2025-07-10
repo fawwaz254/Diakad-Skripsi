@@ -15,15 +15,15 @@ class AddMenuTracerAlumniRoleWaliKelas220610 extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Wali Kelas')->where('id_role', '2')->first();
+        // $modul = Modul::where('nm_modul', 'Wali Kelas')->where('id_role', '2')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Tracer Alumni';
-        $menu->page = 'tracer-alumni';
-        $menu->urutan = 11;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Tracer Alumni';
+        // $menu->page = 'tracer-alumni';
+        // $menu->urutan = 11;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

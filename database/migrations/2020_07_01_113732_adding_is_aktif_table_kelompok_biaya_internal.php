@@ -14,7 +14,7 @@ class AddingIsAktifTableKelompokBiayaInternal extends Migration
     public function up()
     {
         Schema::table('kelompok_biaya_internal', function (Blueprint $table) {
-            $table->tinyInteger('is_aktif')->default('1')->after('nm_kelompok_biaya_internal')->comment('1 = Aktif; 0 = Non-Aktif;');
+            $table->integer('is_aktif')->default('1')->after('nm_kelompok_biaya_internal')->comment('1 = Aktif; 0 = Non-Aktif;');
         });
     }
 

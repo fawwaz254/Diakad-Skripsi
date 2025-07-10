@@ -14,7 +14,7 @@ class AddColumnOthersInPertanyaanForm extends Migration
     public function up()
     {
         Schema::table('pertanyaan_form', function (Blueprint $table) {
-            $table->tinyInteger('others')->default(0)->comment('0: Tidak, 1: Ya');
+            $table->integer('others')->default(0)->comment('0: Tidak, 1: Ya');
         });
     }
 

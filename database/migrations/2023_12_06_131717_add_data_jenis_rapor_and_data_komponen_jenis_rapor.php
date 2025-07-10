@@ -18,50 +18,50 @@ class AddDataJenisRaporAndDataKomponenJenisRapor extends Migration
      */
     public function up()
     {
-        $now = Carbon::now();
-        $sekolah = Sekolah::first();
+        // $now = Carbon::now();
+        // $sekolah = Sekolah::first();
 
-        //jenis merdeka
-        $jenis_rapor = new JenisRapor;
-        $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $jenis_rapor->nm_jenis_rapor = 'Merdeka';
-        $jenis_rapor->created_by = 'migration';
-        $jenis_rapor->save();
+        // //jenis merdeka
+        // $jenis_rapor = new JenisRapor;
+        // $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $jenis_rapor->nm_jenis_rapor = 'Merdeka';
+        // $jenis_rapor->created_by = 'migration';
+        // $jenis_rapor->save();
 
-        $komponen_jenis_rapor = new KomponenJenisRapor;
-        $komponen_jenis_rapor->id_komponen_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $komponen_jenis_rapor->id_jenis_rapor =  $jenis_rapor->id_jenis_rapor;
-        $komponen_jenis_rapor->nm_komponen_jenis_rapor = 'Pengetahuan';
-        $komponen_jenis_rapor->created_by = 'migration';
-        $komponen_jenis_rapor->save();
+        // $komponen_jenis_rapor = new KomponenJenisRapor;
+        // $komponen_jenis_rapor->id_komponen_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $komponen_jenis_rapor->id_jenis_rapor =  $jenis_rapor->id_jenis_rapor;
+        // $komponen_jenis_rapor->nm_komponen_jenis_rapor = 'Pengetahuan';
+        // $komponen_jenis_rapor->created_by = 'migration';
+        // $komponen_jenis_rapor->save();
 
-        $komponen_jenis_rapor = new KomponenJenisRapor;
-        $komponen_jenis_rapor->id_komponen_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $komponen_jenis_rapor->id_jenis_rapor =  $jenis_rapor->id_jenis_rapor;
-        $komponen_jenis_rapor->nm_komponen_jenis_rapor = 'Keterampilan';
-        $komponen_jenis_rapor->created_by = 'migration';
-        $komponen_jenis_rapor->save();
-        //jenis k-13
+        // $komponen_jenis_rapor = new KomponenJenisRapor;
+        // $komponen_jenis_rapor->id_komponen_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $komponen_jenis_rapor->id_jenis_rapor =  $jenis_rapor->id_jenis_rapor;
+        // $komponen_jenis_rapor->nm_komponen_jenis_rapor = 'Keterampilan';
+        // $komponen_jenis_rapor->created_by = 'migration';
+        // $komponen_jenis_rapor->save();
+        // //jenis k-13
 
-        $jenis_rapor = new JenisRapor;
-        $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $jenis_rapor->nm_jenis_rapor = 'K13';
-        $jenis_rapor->created_by = 'migration';
-        $jenis_rapor->save();
+        // $jenis_rapor = new JenisRapor;
+        // $jenis_rapor->id_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $jenis_rapor->nm_jenis_rapor = 'K13';
+        // $jenis_rapor->created_by = 'migration';
+        // $jenis_rapor->save();
 
-        $komponen_jenis_rapor = new KomponenJenisRapor;
-        $komponen_jenis_rapor->id_komponen_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
-        $komponen_jenis_rapor->id_jenis_rapor =  $jenis_rapor->id_jenis_rapor;
-        $komponen_jenis_rapor->nm_komponen_jenis_rapor = 'Nilai';
-        $komponen_jenis_rapor->created_by = 'migration';
-        $komponen_jenis_rapor->save();
+        // $komponen_jenis_rapor = new KomponenJenisRapor;
+        // $komponen_jenis_rapor->id_komponen_jenis_rapor = $sekolah->prefix . strtotime($now) . uniqid();
+        // $komponen_jenis_rapor->id_jenis_rapor =  $jenis_rapor->id_jenis_rapor;
+        // $komponen_jenis_rapor->nm_komponen_jenis_rapor = 'Nilai';
+        // $komponen_jenis_rapor->created_by = 'migration';
+        // $komponen_jenis_rapor->save();
 
 
-        $kelas = Kelas::where('is_aktif', 1)->get();
-        foreach ($kelas as $k) {
-            $k->id_jenis_rapor = $jenis_rapor->id_jenis_rapor;
-            $k->save();
-        }
+        // $kelas = Kelas::where('is_aktif', 1)->get();
+        // foreach ($kelas as $k) {
+        //     $k->id_jenis_rapor = $jenis_rapor->id_jenis_rapor;
+        //     $k->save();
+        // }
     }
 
     /**

@@ -14,13 +14,13 @@ class HideHapusPlottingMapelSiswaRoleAkademik extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_role', '7')->where('nm_modul', 'Aktivitas Semester')->first();
+        // $modul = Modul::where('id_role', '7')->where('nm_modul', 'Aktivitas Semester')->first();
 
-        if ($modul) {
-            $modul->menus()->where('nm_menu', 'Hapus Plotting Mapel Siswa')->update([
-                "akses" => 0
-            ]);
-        }
+        // if ($modul) {
+        //     $modul->menus()->where('nm_menu', 'Hapus Plotting Mapel Siswa')->update([
+        //         "akses" => 0
+        //     ]);
+        // }
     }
 
     /**

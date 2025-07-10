@@ -17,10 +17,10 @@ class CreatePilihanSoalsTable extends Migration
             $table->engine = 'InnoDB';
             $table->string('id_pilihan_soal', 40)->primary();
             $table->string('id_soal', 40)->nullable();
-            $table->tinyInteger('number_option')->nullable();
+            $table->integer('number_option')->nullable();
             $table->string('content', 256)->nullable();
             $table->string('text', 256)->nullable();
-            $table->tinyInteger('correct')->nullable();
+            $table->integer('correct')->nullable();
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

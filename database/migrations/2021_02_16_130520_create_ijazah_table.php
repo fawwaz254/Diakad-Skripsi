@@ -18,7 +18,7 @@ class CreateIjazahTable extends Migration
             $table->string('id_ijazah', 40)->primary();
             $table->string('id_siswa', 40)->comment('FK: siswa.id_siswa');
             $table->string('id_sekolah', 40)->comment('FK: sekolah.id_sekolah');
-            $table->dateTime('tgl_pengambilan_ijazah')->nullable();
+            $table->timestamp('tgl_pengambilan_ijazah')->nullable();
             $table->string('penerima_ijazah', 128)->nullable()->comment('Nama penerima ijazah (jika diwakilkan)');
             $table->string('id_pemberi_ijazah', 40)->nullable()->comment('FK: pengguna.id_pengguna');
             $table->text('catatan_ijazah')->nullable();

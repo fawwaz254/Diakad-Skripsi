@@ -15,13 +15,13 @@ class HideRewardSiswaOnGuru extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('nm_menu', 'Approve Reward Siswa')->whereHas('modul', function($q){
-            $q->where('id_role', 2);
-        })->first();
+        // $menu = Menu::where('nm_menu', 'Approve Reward Siswa')->whereHas('modul', function($q){
+        //     $q->where('id_role', 2);
+        // })->first();
 
-        $modul = Modul::find($menu->id_modul);
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::find($menu->id_modul);
+        // $modul->akses = 0;
+        // $modul->save();
     }
 
     /**

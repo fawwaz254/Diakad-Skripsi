@@ -21,29 +21,29 @@ class AddSomeMenuRoleGuru extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Biodata')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Biodata')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Data Prestasi",
-                "page"         => "data-prestasi",
-                "urutan"       => 2,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Data Prestasi",
+        //         "page"         => "data-prestasi",
+        //         "urutan"       => 2,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Data Kegiatan",
-                "page"         => "data-kegiatan",
-                "urutan"       => 3,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Data Kegiatan",
+        //         "page"         => "data-kegiatan",
+        //         "urutan"       => 3,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

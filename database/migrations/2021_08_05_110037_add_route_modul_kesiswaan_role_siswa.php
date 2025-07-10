@@ -17,17 +17,17 @@ class AddRouteModulKesiswaanRoleSiswa extends Migration
      */
     public function up()
     {
-        $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Siswa')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesiswaan')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kesiswaan')->first();
 
-        $modul->menus()->where('nm_menu', 'Absensi Ekskul')->update([
-            "page" => "absensi-ekskul"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Absensi Ekskul')->update([
+        //     "page" => "absensi-ekskul"
+        // ]);
 
-        $modul->menus()->where('nm_menu', 'Nilai Ekskul')->update([
-            "page" => "nilai-eksul"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Nilai Ekskul')->update([
+        //     "page" => "nilai-eksul"
+        // ]);
     }
 
     /**

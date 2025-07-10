@@ -16,15 +16,15 @@ class AddMenuSettingGuruKpiSumberDaya extends Migration
      */
     public function up()
     {
-        $role = Role::where('path','sumber-daya')->first();
-        $modul = Modul::where('id_role',$role->id_role)->where('route','guru')->first();
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Setting Guru KPI';
-        $menu->page = 'setting-guru-kpi';
-        $menu->urutan = 9;
-        $menu->akses = 1;
-        $menu->save();
+        // $role = Role::where('path','sumber-daya')->first();
+        // $modul = Modul::where('id_role',$role->id_role)->where('route','guru')->first();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Setting Guru KPI';
+        // $menu->page = 'setting-guru-kpi';
+        // $menu->urutan = 9;
+        // $menu->akses = 1;
+        // $menu->save();
 
     }
 

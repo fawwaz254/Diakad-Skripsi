@@ -14,13 +14,13 @@ class ChangeNmMenuCetakRapor extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('id_role', '2')->where('nm_modul', 'Wali Kelas')->first();
+        // $modul = Modul::where('id_role', '2')->where('nm_modul', 'Wali Kelas')->first();
 
-        if ($modul) {
-            $modul->menus()->where('nm_menu', 'Cetak Rapor Siswa')->update([
-                "nm_menu" => "Rapor Sisipan"
-            ]);
-        }
+        // if ($modul) {
+        //     $modul->menus()->where('nm_menu', 'Cetak Rapor Siswa')->update([
+        //         "nm_menu" => "Rapor Sisipan"
+        //     ]);
+        // }
     }
 
     /**

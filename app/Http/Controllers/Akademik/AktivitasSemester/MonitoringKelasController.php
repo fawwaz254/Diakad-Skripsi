@@ -31,7 +31,7 @@ class MonitoringKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -42,7 +42,7 @@ class MonitoringKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required'
@@ -65,7 +65,7 @@ class MonitoringKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -76,7 +76,7 @@ class MonitoringKelasController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // $data_semester = PengambilanMp::where('id_kelas_mp', '=', $id)->first();
         $semester = Semester::where('is_aktif_semester', 1)->first();
@@ -87,7 +87,7 @@ class MonitoringKelasController extends BaseController
     public function datatablesMonitoringKelas(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = JadwalKelasMp::with(
             'jadwal_hari',
             'jadwal_jam_mulai',
@@ -134,7 +134,7 @@ class MonitoringKelasController extends BaseController
     public function datatablesDaftarSiswa(Request $request, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = PengambilanMp::with('siswa', 'siswa.pengguna', 'kelas_mp')
             ->where('id_kelas_mp', '=', $id)
             ->where('status_apv_pengambilan_mp', '=', '1');

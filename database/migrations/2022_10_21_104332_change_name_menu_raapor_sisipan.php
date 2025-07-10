@@ -16,22 +16,22 @@ class ChangeNameMenuRaaporSisipan extends Migration
     public function up()
     {
 
-        $modul = Modul::where('id_role', 2)->where('nm_modul', 'Rapor Sisipan')->first();
+        // $modul = Modul::where('id_role', 2)->where('nm_modul', 'Rapor Sisipan')->first();
 
-        $modul->menus()->where('nm_menu', 'Daftar Nilai STS')->update([
-            "nm_menu" => "Daftar Nilai UTS"
-        ]);
-        $modul->menus()->where('nm_menu', 'Daftar Nilai SAS')->update([
-            "nm_menu" => "Daftar Nilai UAS"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Daftar Nilai STS')->update([
+        //     "nm_menu" => "Daftar Nilai UTS"
+        // ]);
+        // $modul->menus()->where('nm_menu', 'Daftar Nilai SAS')->update([
+        //     "nm_menu" => "Daftar Nilai UAS"
+        // ]);
 
-        $modul2 = Modul::where('id_role', 7)->where('nm_modul', 'Rapor Sisipan')->first();
-        $modul2->menus()->where('nm_menu', 'Daftar Nilai STS')->update([
-            "nm_menu" => "Daftar Nilai UTS"
-        ]);
-        $modul2->menus()->where('nm_menu', 'Daftar Nilai SAS')->update([
-            "nm_menu" => "Daftar Nilai UAS"
-        ]);
+        // $modul2 = Modul::where('id_role', 7)->where('nm_modul', 'Rapor Sisipan')->first();
+        // $modul2->menus()->where('nm_menu', 'Daftar Nilai STS')->update([
+        //     "nm_menu" => "Daftar Nilai UTS"
+        // ]);
+        // $modul2->menus()->where('nm_menu', 'Daftar Nilai SAS')->update([
+        //     "nm_menu" => "Daftar Nilai UAS"
+        // ]);
     }
 
     /**

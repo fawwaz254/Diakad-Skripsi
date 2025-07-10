@@ -18,7 +18,7 @@ class CreateLaporanWaliKelasTable extends Migration
             $table->engine = 'InnoDB';
             $table->string('id_laporan_wali_kelas', 40)->primary();
             $table->string('id_semester', 40)->comment('FK: semester.id_semester');
-            $table->tinyInteger('id_bulan')->nullable()->comment('1 = Januari, 2 = Februari, dst');
+            $table->integer('id_bulan')->nullable()->comment('1 = Januari, 2 = Februari, dst');
             $table->timestamps();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();

@@ -28,7 +28,7 @@ class TindakanPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $kelas_list = \App\Libraries\Pendidikan\LibKelas::fetchDataKelas($auth_data, null, false, true);
 
@@ -39,7 +39,7 @@ class TindakanPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -63,7 +63,7 @@ class TindakanPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -85,7 +85,7 @@ class TindakanPelanggaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jenis_tindakan = LibDataPelanggaran::fetchDataJenisTindakan($auth_data);
 
@@ -115,7 +115,7 @@ class TindakanPelanggaranController extends BaseController
         if (!empty($input->filter_tanggal)) {
             $filter_tanggal = $input->filter_tanggal;
         }
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1", $status_siswa, $filter_tanggal, $filter_kelas);
         // dd($list_data);
@@ -206,7 +206,7 @@ class TindakanPelanggaranController extends BaseController
         if (!empty($input->filter_tanggal)) {
             $filter_tanggal = $input->filter_tanggal;
         }
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1", "-", $status_siswa, $filter_tanggal, $filter_kelas);
 
@@ -285,7 +285,7 @@ class TindakanPelanggaranController extends BaseController
         if (!empty($input->filter_tanggal)) {
             $filter_tanggal = $input->filter_tanggal;
         }
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1", $status_siswa, $filter_tanggal, $filter_kelas);
 
@@ -494,7 +494,7 @@ class TindakanPelanggaranController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add-nonkbm') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $tindakanPelanggaran = new TindakanPelanggaran;
                 $tindakanPelanggaran->id_tindakan_pelanggaran = $id;
@@ -505,12 +505,12 @@ class TindakanPelanggaranController extends BaseController
                 // convert format date
                 $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
                 $tindakanPelanggaran->aktor_input_tindakan_pelanggaran = 1;
-                $tindakanPelanggaran->created_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->created_by = auth_data()->pengguna->id_pengguna;
                 $tindakanPelanggaran->save();
 
                 $pelanggaranSiswa = PelanggaranSiswa::find($input->id_pelanggaran_siswa);
                 $pelanggaranSiswa->is_sudah_tindakan = 1;
-                $pelanggaranSiswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $pelanggaranSiswa->updated_by = auth_data()->pengguna->id_pengguna;
                 $pelanggaranSiswa->updated_at = $now;
                 $pelanggaranSiswa->save();
 
@@ -520,7 +520,7 @@ class TindakanPelanggaranController extends BaseController
                     'message' => 'Save Tindakan Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'add-kbm') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $tindakanPelanggaran = new TindakanPelanggaran;
                 $tindakanPelanggaran->id_tindakan_pelanggaran = $id;
@@ -531,12 +531,12 @@ class TindakanPelanggaranController extends BaseController
                 // convert format date
                 $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
                 $tindakanPelanggaran->aktor_input_tindakan_pelanggaran = 1;
-                $tindakanPelanggaran->created_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->created_by = auth_data()->pengguna->id_pengguna;
                 $tindakanPelanggaran->save();
 
                 $presensiMpPelanggaran = PresensiMpPelanggaran::find($input->id_presensi_mp_pelanggaran);
                 $presensiMpPelanggaran->is_sudah_tindakan = 1;
-                $presensiMpPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $presensiMpPelanggaran->updated_by = auth_data()->pengguna->id_pengguna;
                 $presensiMpPelanggaran->updated_at = $now;
                 $presensiMpPelanggaran->save();
 
@@ -555,7 +555,7 @@ class TindakanPelanggaranController extends BaseController
                 }
                 // convert format date
                 $tindakanPelanggaran->tgl_tindakan_pelanggaran = date_format(date_create($input->tgl_tindakan_pelanggaran), "Y-m-d H:i:s");
-                $tindakanPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tindakanPelanggaran->updated_by = auth_data()->pengguna->id_pengguna;
                 $tindakanPelanggaran->updated_at = $now;
                 $tindakanPelanggaran->save();
 
@@ -565,7 +565,7 @@ class TindakanPelanggaranController extends BaseController
                     'message' => 'Update Tindakan Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'delete') {
-                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_tindakan_pelanggaran', $id)->where('created_by', '<>', $input->auth_data->pengguna->id_pengguna)->first()) {
+                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_tindakan_pelanggaran', $id)->where('created_by', '<>', auth_data()->pengguna->id_pengguna)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Tindakan Pelanggaran Siswa, Yg boleh menghapus hanya penindak'
@@ -576,18 +576,18 @@ class TindakanPelanggaranController extends BaseController
                     if ($tindakanPelanggaran->id_pelanggaran_siswa) {
                         $pelanggaranSiswa = PelanggaranSiswa::find($tindakanPelanggaran->id_pelanggaran_siswa);
                         $pelanggaranSiswa->is_sudah_tindakan = 0;
-                        $pelanggaranSiswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                        $pelanggaranSiswa->updated_by = auth_data()->pengguna->id_pengguna;
                         $pelanggaranSiswa->updated_at = $now;
                         $pelanggaranSiswa->save();
                     } elseif ($tindakanPelanggaran->id_presensi_mp_pelanggaran) {
                         $presensiMpPelanggaran = PresensiMpPelanggaran::find($tindakanPelanggaran->id_presensi_mp_pelanggaran);
                         $presensiMpPelanggaran->is_sudah_tindakan = 0;
-                        $presensiMpPelanggaran->updated_by = $input->auth_data->pengguna->id_pengguna;
+                        $presensiMpPelanggaran->updated_by = auth_data()->pengguna->id_pengguna;
                         $presensiMpPelanggaran->updated_at = $now;
                         $presensiMpPelanggaran->save();
                     }
 
-                    $tindakanPelanggaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                    $tindakanPelanggaran->deleted_by = auth_data()->pengguna->id_pengguna;
                     $tindakanPelanggaran->save();
 
                     $tindakanPelanggaran->delete();

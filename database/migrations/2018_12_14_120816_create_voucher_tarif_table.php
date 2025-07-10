@@ -18,7 +18,7 @@ class CreateVoucherTarifTable extends Migration {
 			$table->string('id_voucher_tarif', 40)->primary();
 			$table->string('id_semester', 40)->comment('FK: semester.id_semester');
 			$table->string('id_jurusan', 40)->nullable()->comment('FK: jurusan.id_jurusan (diisi apabila ada tarif khusus untuk jurusan)');
-			$table->float('tarif', 10, 0)->nullable();
+			$table->decimal('tarif', 10, 0)->nullable();
 			$table->string('deskripsi', 128)->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

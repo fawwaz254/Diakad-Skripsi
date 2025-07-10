@@ -24,7 +24,7 @@ class JenisTindakanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('kesiswaan/penanganan-siswa/jenis-tindakan/view-jenis-tindakan', compact('auth_data'));
     }
@@ -33,7 +33,7 @@ class JenisTindakanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -47,7 +47,7 @@ class JenisTindakanController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_jenis_tindakan = LibDataPelanggaran::fetchDataJenisTindakan($auth_data, $id);
 
@@ -57,7 +57,7 @@ class JenisTindakanController extends BaseController
     public function datatablesJenisTindakan(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibDataPelanggaran::fetchDataJenisTindakan($auth_data);
 
         return Datatables::of($list_data)
@@ -91,14 +91,14 @@ class JenisTindakanController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jenisTindakan                              = new JenisTindakan;
                 $jenisTindakan->id_jenis_tindakan           = $id;
                 $jenisTindakan->nm_jenis_tindakan           = $input->nm_jenis_tindakan;
                 $jenisTindakan->keterangan_jenis_tindakan   = $input->keterangan_jenis_tindakan;
-                $jenisTindakan->id_sekolah                  = $input->auth_data->pengguna->id_sekolah;
-                $jenisTindakan->created_by                  = $input->auth_data->pengguna->id_pengguna;
+                $jenisTindakan->id_sekolah                  = auth_data()->pengguna->id_sekolah;
+                $jenisTindakan->created_by                  = auth_data()->pengguna->id_pengguna;
                 $jenisTindakan->save();
 
                 return [
@@ -111,7 +111,7 @@ class JenisTindakanController extends BaseController
                 $jenisTindakan                              = JenisTindakan::find($id);
                 $jenisTindakan->nm_jenis_tindakan           = $input->nm_jenis_tindakan;
                 $jenisTindakan->keterangan_jenis_tindakan   = $input->keterangan_jenis_tindakan;
-                $jenisTindakan->updated_by                  = $input->auth_data->pengguna->id_pengguna;
+                $jenisTindakan->updated_by                  = auth_data()->pengguna->id_pengguna;
                 $jenisTindakan->updated_at                  = $now;
                 $jenisTindakan->save();
 
@@ -129,7 +129,7 @@ class JenisTindakanController extends BaseController
                 } else {
                     // make object to find id
                     $jenisTindakan               = JenisTindakan::find($id);
-                    $jenisTindakan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $jenisTindakan->deleted_by   = auth_data()->pengguna->id_pengguna;
                     $jenisTindakan->save();
 
                     $jenisTindakan->delete();

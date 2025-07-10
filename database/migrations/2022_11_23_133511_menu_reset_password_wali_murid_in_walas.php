@@ -16,15 +16,15 @@ class MenuResetPasswordWaliMuridInWalas extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Wali Kelas')->where('id_role', '2')->first();
+        // $modul = Modul::where('nm_modul', 'Wali Kelas')->where('id_role', '2')->first();
 
-        $menu = new Menu;
-        $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Wali Murid';
-        $menu->page = 'wali-murid';
-        $menu->urutan = 14;
-        $menu->akses = 1;
-        $menu->save();
+        // $menu = new Menu;
+        // $menu->id_modul = $modul->id_modul;
+        // $menu->nm_menu = 'Wali Murid';
+        // $menu->page = 'wali-murid';
+        // $menu->urutan = 14;
+        // $menu->akses = 1;
+        // $menu->save();
     }
 
     /**

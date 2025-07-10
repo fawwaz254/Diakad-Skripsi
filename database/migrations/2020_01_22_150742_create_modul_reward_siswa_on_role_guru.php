@@ -57,35 +57,35 @@ class CreateModulRewardSiswaOnRoleGuru extends Migration
         $menu->updated_by  = 'A8bT515358553655b8b4b05a6d86';
         $menu->save();
 
-        $modul              = Modul::find(61);
-        $modul->urutan      = 7;
-        $modul->updated_at  = $now;
-        $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
-        $modul->save();
+        // $modul              = Modul::find(61);
+        // $modul->urutan      = 7;
+        // $modul->updated_at  = $now;
+        // $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
+        // $modul->save();
 
-        $modul              = Modul::find(55);
-        $modul->urutan      = 8;
-        $modul->updated_at  = $now;
-        $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
-        $modul->save();
+        // $modul              = Modul::find(55);
+        // $modul->urutan      = 8;
+        // $modul->updated_at  = $now;
+        // $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
+        // $modul->save();
 
-        $modul              = Modul::find(55);
-        $modul->urutan      = 9;
-        $modul->updated_at  = $now;
-        $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
-        $modul->save();
+        // $modul              = Modul::find(55);
+        // $modul->urutan      = 9;
+        // $modul->updated_at  = $now;
+        // $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
+        // $modul->save();
 
-        $modul              = Modul::find(36);
-        $modul->urutan      = 10;
-        $modul->updated_at  = $now;
-        $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
-        $modul->save();
+        // $modul              = Modul::find(36);
+        // $modul->urutan      = 10;
+        // $modul->updated_at  = $now;
+        // $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
+        // $modul->save();
 
-        $modul              = Modul::find(37);
-        $modul->urutan      = 11;
-        $modul->updated_at  = $now;
-        $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
-        $modul->save();
+        // $modul              = Modul::find(37);
+        // $modul->urutan      = 11;
+        // $modul->updated_at  = $now;
+        // $modul->updated_by  = 'A8bT515358553655b8b4b05a6d86';
+        // $modul->save();
     }
 
     /**

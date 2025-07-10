@@ -18,13 +18,13 @@ class UpdateRouteMengajarDaringRoleGuru2 extends Migration
     public function up()
     {
         
-         $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
+        //  $role_id = Role::where('nm_role', 'Guru')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kelas Daring')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kelas Daring')->first();
 
-        $modul->menus()->where('nm_menu', 'Mengajar Daring')->update([
-            "nm_menu" => "Jadwal Kelas Daring"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Mengajar Daring')->update([
+        //     "nm_menu" => "Jadwal Kelas Daring"
+        // ]);
 
     }
 

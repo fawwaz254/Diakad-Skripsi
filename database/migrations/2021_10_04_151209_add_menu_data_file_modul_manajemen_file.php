@@ -21,19 +21,19 @@ class AddMenuDataFileModulManajemenFile extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Sekretariat')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Sekretariat')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Manajemen File')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Manajemen File')->first();
 
-        $modul->menus()->createMany([
-            [
-                "nm_menu"      => "Data File",
-                "page"         => "data-file",
-                "urutan"       => 3,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-        ]);
+        // $modul->menus()->createMany([
+        //     [
+        //         "nm_menu"      => "Data File",
+        //         "page"         => "data-file",
+        //         "urutan"       => 3,
+        //         "akses"        => 1,
+        //         "created_at"   => $now
+        //     ],
+        // ]);
     }
 
     /**

@@ -26,7 +26,7 @@ class RekananMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/magang-siswa/rekanan-magang/view-rekanan-magang', compact('auth_data'));
     }
@@ -35,7 +35,7 @@ class RekananMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('humas/magang-siswa/rekanan-magang/import-excel', compact('auth_data'));
     }
@@ -44,7 +44,7 @@ class RekananMagangController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -129,8 +129,8 @@ class RekananMagangController extends BaseController
                             $data->tgl_akhir_kerjasama           = date("Y-m-d", strtotime($value->tanggal_akhir_kerja_sama));
                             $data->kuota_rekanan_magang          = $value->kuota_magang;
                             $data->contact_person_rekanan_magang = $value->contact_person_magang;
-                            $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
-                            $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                            $data->id_sekolah                    = auth_data()->pengguna->id_sekolah;
+                            $data->created_by                    = auth_data()->pengguna->id_pengguna;
                             $data->save();
                         }
 
@@ -170,7 +170,7 @@ class RekananMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data, $id);
 
@@ -182,7 +182,7 @@ class RekananMagangController extends BaseController
     public function datatablesRekananMagang(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = LibMagangSiswa::fetchDataRekananMagang($auth_data);
 
         return Datatables::of($list_data)
@@ -204,7 +204,7 @@ class RekananMagangController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
@@ -240,7 +240,7 @@ class RekananMagangController extends BaseController
             $now = Carbon::now();
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $rekananMagang                                = new RekananMagang;
                 $rekananMagang->id_rekanan_magang             = $id;
@@ -252,8 +252,8 @@ class RekananMagangController extends BaseController
                 $rekananMagang->tgl_akhir_kerjasama           = date_format(date_create($input->tgl_akhir_kerjasama), "Y-m-d");
                 $rekananMagang->contact_person_rekanan_magang = $input->contact_person_rekanan_magang;
                 $rekananMagang->kuota_rekanan_magang          = $input->kuota_rekanan_magang;
-                $rekananMagang->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
-                $rekananMagang->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                $rekananMagang->id_sekolah                    = auth_data()->pengguna->id_sekolah;
+                $rekananMagang->created_by                    = auth_data()->pengguna->id_pengguna;
                 $rekananMagang->save();
 
                 return [
@@ -272,8 +272,8 @@ class RekananMagangController extends BaseController
                 $rekananMagang->tgl_akhir_kerjasama           = date_format(date_create($input->tgl_akhir_kerjasama), "Y-m-d");
                 $rekananMagang->contact_person_rekanan_magang = $input->contact_person_rekanan_magang;
                 $rekananMagang->kuota_rekanan_magang          = $input->kuota_rekanan_magang;
-                $rekananMagang->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
-                $rekananMagang->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                $rekananMagang->id_sekolah                    = auth_data()->pengguna->id_sekolah;
+                $rekananMagang->updated_by              = auth_data()->pengguna->id_pengguna;
                 $rekananMagang->updated_at              = $now;
                 $rekananMagang->save();
                 return [
@@ -290,7 +290,7 @@ class RekananMagangController extends BaseController
                 } else {
                     // make object to find id
                     $rekananMagang                = RekananMagang::find($id);
-                    $rekananMagang->deleted_by    = $input->auth_data->pengguna->id_pengguna;
+                    $rekananMagang->deleted_by    = auth_data()->pengguna->id_pengguna;
                     $rekananMagang->save();
 
                     $rekananMagang->delete();

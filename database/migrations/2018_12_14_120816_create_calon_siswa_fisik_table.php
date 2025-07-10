@@ -16,8 +16,8 @@ class CreateCalonSiswaFisikTable extends Migration {
 		{
 			$table->engine = 'InnoDB';
 			$table->string('id_c_siswa', 40)->primary();
-			$table->float('tinggi_badan', 10, 0)->nullable()->comment('dalam cm');
-			$table->float('berat_badan', 10, 0)->nullable()->comment('dalam kg');
+			$table->decimal('tinggi_badan', 10, 0)->nullable()->comment('dalam cm');
+			$table->decimal('berat_badan', 10, 0)->nullable()->comment('dalam kg');
 			$table->boolean('is_berjilbab')->nullable()->comment('0 = tidak berjilbab; 1 = berjilbab;');
 			$table->boolean('is_buta_warna')->nullable()->comment('0 = tidak buta warna; 1 = buta warna;');
 			$table->string('ukuran_baju', 4)->nullable()->comment('S/M/L/XL dll');

@@ -14,9 +14,9 @@ class AddStatusAyahIbuWaliToCalonSiswaOrtu extends Migration
     public function up()
     {
         Schema::table('calon_siswa_ortu', function (Blueprint $table) {
-            $table->tinyInteger('status_ayah')->after('nm_ayah')->nullable();
-            $table->tinyInteger('status_ibu')->after('nm_ibu')->nullable();
-            $table->tinyInteger('status_wali')->after('nm_wali')->nullable();
+            $table->integer('status_ayah')->after('nm_ayah')->nullable();
+            $table->integer('status_ibu')->after('nm_ibu')->nullable();
+            $table->integer('status_wali')->after('nm_wali')->nullable();
         });
     }
 

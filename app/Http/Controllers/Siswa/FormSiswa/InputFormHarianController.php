@@ -17,7 +17,7 @@ class InputFormHarianController extends Controller
     public function viewInputFormHarian(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('siswa/form-siswa/input-form-harian/view-input-form-harian', compact('auth_data'));
     }
@@ -25,7 +25,7 @@ class InputFormHarianController extends Controller
     public function datatablesInputFormHarian(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $list_form = Form::with(['jawaban_form' => function ($q) use ($id_pengguna) {
             $q->where('created_by', $id_pengguna)->orderBy('created_at', 'desc');
@@ -57,7 +57,7 @@ class InputFormHarianController extends Controller
     public function datatablesJawaban(Request $request, $id_form)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $id_pengguna = $auth_data->pengguna->id_pengguna;
         $list_form = JawabanForm::where('created_by', $id_pengguna)->where('id_form', $id_form);
 
@@ -88,7 +88,7 @@ class InputFormHarianController extends Controller
     public function addInputFormHarian(Request $request, $id_form)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $form = Form::with('pertanyaan_form')->find($id_form);
         return view('siswa/form-siswa/input-form-harian/add-input-form-harian', compact('auth_data', 'form'));
     }
@@ -96,7 +96,7 @@ class InputFormHarianController extends Controller
     public function actionInputFormHarian(Request $request, $mode, $id)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         switch ($mode) {
             case 'add':
                 $syarat = [
@@ -139,14 +139,14 @@ class InputFormHarianController extends Controller
             if ($mode == 'add') {
 
                 $jawaban_form = new JawabanForm;
-                $jawaban_form->id_jawaban_form =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $jawaban_form->id_jawaban_form =  auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                 $jawaban_form->id_form          = $input->id_form;
                 $jawaban_form->created_by = $auth_data->pengguna->id_pengguna;
                 $jawaban_form->save();
 
                 foreach ($input->id_pertanyaan_form as $key => $value) {
                     $detail_jawaban_form = new DetailJawabanForm;
-                    $detail_jawaban_form->id_detail_jawaban_form = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();;
+                    $detail_jawaban_form->id_detail_jawaban_form = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();;
                     $detail_jawaban_form->id_jawaban_form = $jawaban_form->id_jawaban_form;
                     $detail_jawaban_form->id_pertanyaan_form = $input->id_pertanyaan_form[$key];
                     if ($input->jenis_pertanyaan[$key] == '1') {
@@ -287,7 +287,7 @@ class InputFormHarianController extends Controller
     public function viewAllSubmittedForm(Request $req, $id_form)
     {
         $input = (object) $req->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $beforeJawaban = JawabanForm::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_form', $id_form)->get();
         $form = Form::where('id_form', $id_form)->first();
@@ -298,7 +298,7 @@ class InputFormHarianController extends Controller
     public function editSubmittedForm(Request $request, $id_form)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $jawaban = JawabanForm::with('detail_jawaban_form')->where('created_by', $auth_data->pengguna->id_pengguna)->find($id_form);
         $form = Form::with('pertanyaan_form')->find($jawaban->id_form);
 

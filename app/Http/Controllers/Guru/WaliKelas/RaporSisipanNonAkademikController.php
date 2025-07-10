@@ -18,7 +18,7 @@ class RaporSisipanNonAkademikController extends Controller
     public function viewPengembanganDiri(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
@@ -78,7 +78,7 @@ class RaporSisipanNonAkademikController extends Controller
     public function imporExcelPengembanganDiri(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         return view('guru/wali-kelas/rapor-sisipan-input-non-mapel/view-import-excel-pengembangan-diri', compact('auth_data'));
     }
 }

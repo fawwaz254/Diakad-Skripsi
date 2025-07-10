@@ -14,15 +14,15 @@ class EditDataMenuKbmTryout extends Migration
      */
     public function up()
     {
-        $menu = Menu::where('nm_menu','Input Nilai KBM/Try Out')->first();
-        $menu->nm_menu = 'Input Nilai KBM';
-        $menu->save();
-        $menu1 = Menu::where('nm_menu','Lihat Nilai KBM/Try Out')->where('id_modul',13)->first();
-        $menu1->nm_menu = 'Lihat Nilai KBM';
-        $menu1->save();
-        $menu2 = Menu::where('nm_menu','Lihat Nilai KBM/Try Out')->where('id_modul',38)->first();
-        $menu2->nm_menu = 'Lihat Nilai KBM';
-        $menu2->save();
+        // $menu = Menu::where('nm_menu','Input Nilai KBM/Try Out')->first();
+        // $menu->nm_menu = 'Input Nilai KBM';
+        // $menu->save();
+        // $menu1 = Menu::where('nm_menu','Lihat Nilai KBM/Try Out')->where('id_modul',13)->first();
+        // $menu1->nm_menu = 'Lihat Nilai KBM';
+        // $menu1->save();
+        // $menu2 = Menu::where('nm_menu','Lihat Nilai KBM/Try Out')->where('id_modul',38)->first();
+        // $menu2->nm_menu = 'Lihat Nilai KBM';
+        // $menu2->save();
     }
 
     /**

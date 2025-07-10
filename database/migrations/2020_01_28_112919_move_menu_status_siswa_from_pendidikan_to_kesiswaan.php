@@ -15,10 +15,10 @@ class MoveMenuStatusSiswaFromPendidikanToKesiswaan extends Migration
      */
     public function up()
     {
-        $menu = Menu::find(5);
-        $menu->id_modul = 17;
-        $menu->urutan = 0;
-        $menu->save();
+        // $menu = Menu::find(5);
+        // $menu->id_modul = 17;
+        // $menu->urutan = 0;
+        // $menu->save();
     }
 
     /**

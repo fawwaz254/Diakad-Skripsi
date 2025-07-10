@@ -15,17 +15,17 @@ class InactiveGuruPiketPembinaEkskulWaliKelas extends Migration
      */
     public function up()
     {
-        $modul = Modul::find(35);
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::find(35);
+        // $modul->akses = 0;
+        // $modul->save();
 
-        $modul = Modul::find(36);
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::find(36);
+        // $modul->akses = 0;
+        // $modul->save();
 
-        $modul = Modul::find(37);
-        $modul->akses = 0;
-        $modul->save();
+        // $modul = Modul::find(37);
+        // $modul->akses = 0;
+        // $modul->save();
     }
 
     /**

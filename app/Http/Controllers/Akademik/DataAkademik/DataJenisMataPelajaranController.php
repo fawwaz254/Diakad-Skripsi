@@ -26,7 +26,7 @@ class DataJenisMataPelajaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('akademik/data-akademik/data-jenis-mata-pelajaran/view-data-jenis-mata-pelajaran', compact('auth_data'));
     }
@@ -35,12 +35,12 @@ class DataJenisMataPelajaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         // mengambil waktu sekarang
         $now = Carbon::now();
 
-        $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $id_jenis_mata_pelajaran = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
         return view('akademik/data-akademik/data-jenis-mata-pelajaran/add-jenis-mata-pelajaran', compact('auth_data', 'id_jenis_mata_pelajaran'));
     }
@@ -49,7 +49,7 @@ class DataJenisMataPelajaranController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $jenis_mata_pelajaran = JenisMataPelajaran::where('id_jenis_mata_pelajaran', '=', $id)->first();
 
@@ -59,7 +59,7 @@ class DataJenisMataPelajaranController extends BaseController
     public function datatablesJenisMataPelajaran(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $list_data = JenisMataPelajaran::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
@@ -76,7 +76,7 @@ class DataJenisMataPelajaranController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -92,14 +92,14 @@ class DataJenisMataPelajaranController extends BaseController
         } else {
             // ACTION ADD
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $id = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $jenis_mata_pelajaran                                 = new JenisMataPelajaran;
                 $jenis_mata_pelajaran->id_jenis_mata_pelajaran        = $id;
                 $jenis_mata_pelajaran->id_sekolah                    = $auth_data->pengguna->id_sekolah;
                 $jenis_mata_pelajaran->kode_jenis_mata_pelajaran    = $input->kode_jenis_mata_pelajaran;
                 $jenis_mata_pelajaran->nm_jenis_mata_pelajaran        = $input->nm_jenis_mata_pelajaran;
-                $jenis_mata_pelajaran->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                $jenis_mata_pelajaran->created_by                    = auth_data()->pengguna->id_pengguna;
                 $jenis_mata_pelajaran->created_at                    = $now;
                 $jenis_mata_pelajaran->save();
 
@@ -113,7 +113,7 @@ class DataJenisMataPelajaranController extends BaseController
                 $jenis_mata_pelajaran->id_sekolah                    = $auth_data->pengguna->id_sekolah;
                 $jenis_mata_pelajaran->kode_jenis_mata_pelajaran    = $input->kode_jenis_mata_pelajaran;
                 $jenis_mata_pelajaran->nm_jenis_mata_pelajaran        = $input->nm_jenis_mata_pelajaran;
-                $jenis_mata_pelajaran->updated_by                    = $input->auth_data->pengguna->id_pengguna;
+                $jenis_mata_pelajaran->updated_by                    = auth_data()->pengguna->id_pengguna;
                 $jenis_mata_pelajaran->updated_at                    = $now;
                 $jenis_mata_pelajaran->save();
 
@@ -131,7 +131,7 @@ class DataJenisMataPelajaranController extends BaseController
                 } else {
                     // make object to find id
                     $jenis_mata_pelajaran                 = JenisMataPelajaran::find($id);
-                    $jenis_mata_pelajaran->deleted_by     = $input->auth_data->pengguna->id_pengguna;
+                    $jenis_mata_pelajaran->deleted_by     = auth_data()->pengguna->id_pengguna;
                     $jenis_mata_pelajaran->save();
 
                     $jenis_mata_pelajaran->delete();

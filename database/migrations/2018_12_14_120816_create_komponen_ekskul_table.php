@@ -19,7 +19,7 @@ class CreateKomponenEkskulTable extends Migration {
 			$table->string('id_ekskul', 40)->comment('FK: ekskul.id_ekskul');
 			$table->string('id_semester', 40)->comment('FK: semester.id_semester');
 			$table->string('nm_komponen_ekskul', 32)->nullable();
-			$table->float('persentase_komponen_ekskul', 10, 0)->nullable();
+			$table->decimal('persentase_komponen_ekskul', 10, 0)->nullable();
 			$table->boolean('urutan_komponen_ekskul')->nullable();
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

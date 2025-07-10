@@ -21,36 +21,36 @@ class RefactoringRouteForAlumniKerjasama extends Migration
     {
         $now = Carbon::now();
 
-        $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Humas')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Alumni')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Alumni')->first();
 
-        $modul->menus()->where('nm_menu', 'Tracer Alumni')->update([
-            "page"         => "tracer-alumni"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Tracer Alumni')->update([
+        //     "page"         => "tracer-alumni"
+        // ]);
 
-        $modul->menus()->where('nm_menu', 'Tambah Alumni')->update([
-            "page"         => "tambah-alumni"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Tambah Alumni')->update([
+        //     "page"         => "tambah-alumni"
+        // ]);
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kerja Sama')->first();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Kerja Sama')->first();
 
-        $modul->menus()->where('nm_menu', 'Kerja Sama')->update([
-            "nm_menu"   => "Data Kerja Sama",
-            "page"      => "list"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Kerja Sama')->update([
+        //     "nm_menu"   => "Data Kerja Sama",
+        //     "page"      => "list"
+        // ]);
 
-        $modul->menus()->where('nm_menu', 'Jenis Kerja Sama')->update([
-            "page"         => "jenis"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Jenis Kerja Sama')->update([
+        //     "page"         => "jenis"
+        // ]);
 
-        $modul->menus()->where('nm_menu', 'Berkas Kerja Sama')->update([
-            "page"         => "berkas"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Berkas Kerja Sama')->update([
+        //     "page"         => "berkas"
+        // ]);
 
-        $modul->menus()->where('nm_menu', 'Instansi')->update([
-            "page"         => "instansi"
-        ]);
+        // $modul->menus()->where('nm_menu', 'Instansi')->update([
+        //     "page"         => "instansi"
+        // ]);
     }
 
     /**

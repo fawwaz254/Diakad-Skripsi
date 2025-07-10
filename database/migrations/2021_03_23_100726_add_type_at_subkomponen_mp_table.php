@@ -14,7 +14,7 @@ class AddTypeAtSubkomponenMpTable extends Migration
     public function up()
     {
         Schema::table('subkomponen_mp', function (Blueprint $table) {
-            $table->tinyInteger('type_subkomponen_mp')->comment('0: kompetensi dasar, 1: ujian')->after('nm_subkomponen_mp')->nullable();
+            $table->integer('type_subkomponen_mp')->comment('0: kompetensi dasar, 1: ujian')->after('nm_subkomponen_mp')->nullable();
         });
     }
 

@@ -19,13 +19,13 @@ class RemoveModulPesanRoleTendik extends Migration
     public function up()
     {
         $now = Carbon::now();
-        $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
+        // $role_id = Role::where('nm_role', 'Tenaga Pendidik')->first()->id_role;
 
-        $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Pesan')->first();
-        $modul->deleted_at = $now;
-        $modul->deleted_by = 'A8bT515358553655b8b4b05a6d86';
-        $modul->save();
-        $modul->delete();
+        // $modul = Modul::where('id_role', $role_id)->where('nm_modul', 'Pesan')->first();
+        // $modul->deleted_at = $now;
+        // $modul->deleted_by = 'A8bT515358553655b8b4b05a6d86';
+        // $modul->save();
+        // $modul->delete();
     }
 
     /**

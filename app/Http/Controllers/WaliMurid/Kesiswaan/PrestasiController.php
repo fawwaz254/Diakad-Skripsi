@@ -33,7 +33,7 @@ class PrestasiController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('wali-murid/kesiswaan/prestasi/view-prestasi', compact('auth_data'));
     }
@@ -41,7 +41,7 @@ class PrestasiController extends BaseController
     public function datatablesPrestasi(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 

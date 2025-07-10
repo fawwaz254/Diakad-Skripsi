@@ -33,7 +33,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         return view('pendidikan/siswa/admisi-siswa/view-admisi-siswa', compact('auth_data'));
     }
@@ -42,7 +42,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'nis_nama_siswa' => 'required'
@@ -90,7 +90,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'jurusan.nm_jurusan', 'status_pengguna.nm_status_pengguna', 'calon_siswa_baru.asal_sekolah', 'calon_siswa_baru.alamat_jalan', 'calon_siswa_baru.alamat_dusun', 'calon_siswa_baru.alamat_kelurahan', 'calon_siswa_baru.alamat_rt', 'calon_siswa_baru.alamat_rw', 'calon_siswa_baru.alamat_kecamatan', 'calon_siswa_baru.alamat_kodepos', 'calon_siswa_baru.kode_voucher', 'jalur.nm_jalur', 'calon_siswa_baru.nomor_hp', 'calon_siswa_ortu.nomor_hp_ortu', 'provinsi.nm_provinsi', 'kota.nm_kota', 'siswa.id_siswa')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -124,7 +124,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -164,7 +164,7 @@ class AdmisiSiswaController extends BaseController
                             $admisi->tgl_keluar           = date_format(date_create($input->tgl_keluar), "Y-m-d H:i");
                         }
                         $admisi->keterangan_admisi      = $input->keterangan_admisi;
-                        $admisi->updated_by             = $input->auth_data->pengguna->id_pengguna;
+                        $admisi->updated_by             = auth_data()->pengguna->id_pengguna;
                         $admisi->updated_at             = $now;
                         $admisi->save();
 
@@ -172,7 +172,7 @@ class AdmisiSiswaController extends BaseController
 
                         $pengguna                       = Pengguna::find($siswa->id_pengguna);
                         $pengguna->id_status_pengguna   = $input->id_status_pengguna;
-                        $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                        $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
                         $pengguna->updated_at           = $now;
                         $pengguna->save();
 
@@ -200,7 +200,7 @@ class AdmisiSiswaController extends BaseController
                     $semester_sebelumnya = (int) $kode_semester - 1;
                 }
 
-                $semester_terakhir = Semester::where('kode_semester', '=', $semester_sebelumnya)->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->first();
+                $semester_terakhir = Semester::where('kode_semester', '=', $semester_sebelumnya)->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)->first();
 
                 $id_semester_sebelumnya = $semester_terakhir->id_semester;
                 /* proses selesai */
@@ -223,7 +223,7 @@ class AdmisiSiswaController extends BaseController
 
 
                     $admisi                         = new Admisi;
-                    $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $admisi->id_admisi              = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                     $admisi->id_status_pengguna     = $input->id_status_pengguna;
                     if ($is_aktif_status_pengguna == 0) {
                         $admisi->tgl_keluar           = date_format(date_create($input->tgl_keluar), "Y-m-d H:i");
@@ -231,19 +231,19 @@ class AdmisiSiswaController extends BaseController
                     $admisi->keterangan_admisi      = $input->keterangan_admisi;
                     $admisi->id_semester            = $input->id_semester;
                     $admisi->id_siswa               = $input->id_siswa;
-                    $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
+                    $admisi->created_by             = auth_data()->pengguna->id_pengguna;
                     $admisi->save();
 
                     $siswa                          = Siswa::find($input->id_siswa);
 
                     $pengguna                       = Pengguna::find($siswa->id_pengguna);
                     $pengguna->id_status_pengguna   = $input->id_status_pengguna;
-                    $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                    $pengguna->updated_by           = auth_data()->pengguna->id_pengguna;
                     $pengguna->updated_at           = $now;
                     $pengguna->save();
 
                     $siswa->id_kelas             = null;
-                    $siswa->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                    $siswa->updated_by           = auth_data()->pengguna->id_pengguna;
                     $siswa->save();
 
                     return [
@@ -273,7 +273,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -286,7 +286,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
         $now = Carbon::now();
 
         $validator = Validator::make($request->all(), [
@@ -308,13 +308,13 @@ class AdmisiSiswaController extends BaseController
                 // Sementara dibuat AKTIF
                 $status_pengguna_cuti = StatusPengguna::where('kode_status_pengguna', '=', 'AKTIF')
                     ->where('status_join_table', '=', 3)
-                    ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->first();
 
                 $siswa_set = Siswa::select('pengguna.id_pengguna', 'siswa.id_siswa')
                     ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                     ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('pengguna.id_sekolah', '=', auth_data()->pengguna->id_sekolah)
                     ->where('kelas.id_kelas', '=', $input->id_kelas)
                     ->get();
 
@@ -345,18 +345,18 @@ class AdmisiSiswaController extends BaseController
                             if (!empty($admisi_existing->id_admisi)) {
                                 // cek apabila timpa data = Ya
                                 if ($input->is_override == 1) {
-                                    $admisi_existing->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                                    $admisi_existing->updated_by           = auth_data()->pengguna->id_pengguna;
                                     $admisi_existing->updated_at           = $now;
                                     $admisi_existing->save();
                                 }
                             } else {
                                 $admisi                         = new Admisi;
-                                $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $admisi->id_admisi              = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $admisi->id_status_pengguna     = $siswa_aktif_set->id_status_pengguna;
                                 $admisi->id_semester            = $input->id_semester;
                                 $admisi->id_siswa               = $siswa_aktif_set->id_siswa;
                                 $admisi->keterangan_admisi      = "Generate Admisi Kesiswaan";
-                                $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
+                                $admisi->created_by             = auth_data()->pengguna->id_pengguna;
                                 $admisi->save();
                             }
                         }
@@ -371,18 +371,18 @@ class AdmisiSiswaController extends BaseController
                             if (!empty($admisi_existing->id_admisi)) {
                                 // cek apabila timpa data = Ya
                                 if ($input->is_override == 1) {
-                                    $admisi_existing->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                                    $admisi_existing->updated_by           = auth_data()->pengguna->id_pengguna;
                                     $admisi_existing->updated_at           = $now;
                                     $admisi_existing->save();
                                 }
                             } else {
                                 $admisi                         = new Admisi;
-                                $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $admisi->id_admisi              = auth_data()->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $admisi->id_status_pengguna     = $status_pengguna_cuti->id_status_pengguna;
                                 $admisi->id_semester            = $input->id_semester;
                                 $admisi->id_siswa               = $siswa_aktif_set->id_siswa;
                                 $admisi->keterangan_admisi      = "Generate Admisi Kesiswaaan";
-                                $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
+                                $admisi->created_by             = auth_data()->pengguna->id_pengguna;
                                 $admisi->save();
                             }
                         }
@@ -398,7 +398,7 @@ class AdmisiSiswaController extends BaseController
                         if (!empty($admisi_cuti_semester->id_admisi)) {
                             // cek apabila timpa data = Ya
                             if ($input->is_override == 1) {
-                                $admisi_cuti_semester->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                                $admisi_cuti_semester->updated_by           = auth_data()->pengguna->id_pengguna;
                                 $admisi_cuti_semester->updated_at           = $now;
                                 $admisi_cuti_semester->save();
                             }
@@ -410,7 +410,7 @@ class AdmisiSiswaController extends BaseController
                             foreach ($pengambilan_mp_set as $pengambilan_mp) {
                                 $pengambilan_mp_update                              = PengambilanMp::find($pengambilan_mp->id_pengambilan_mp);
                                 $pengambilan_mp_update->status_apv_pengambilan_mp   = 0;
-                                $pengambilan_mp_update->updated_by                  = $input->auth_data->pengguna->id_pengguna;
+                                $pengambilan_mp_update->updated_by                  = auth_data()->pengguna->id_pengguna;
                                 $pengambilan_mp_update->updated_at                  = $now;
                                 $pengambilan_mp_update->save();
                             }
@@ -440,7 +440,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -453,7 +453,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
@@ -477,7 +477,7 @@ class AdmisiSiswaController extends BaseController
     {
         # code..
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
@@ -489,7 +489,7 @@ class AdmisiSiswaController extends BaseController
     public function datatablesAdmisiSiswa(Request $request, $id_semester, $id_kelas)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = auth_data();
 
         $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')

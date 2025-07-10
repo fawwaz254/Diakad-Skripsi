@@ -15,20 +15,20 @@ class HideMenuNotUseInRoleSiswa extends Migration
      */
     public function up()
     {
-        $modul_akademik = Modul::where('id_role', 3)->where('nm_modul', 'Akademik')->first();
-        if ($modul_akademik) {
-            $menu = Menu::where('id_modul', $modul_akademik->id_modul)->where('nm_menu', 'Lihat Nilai KBM')->first();
-            if ($menu) {
-                $menu->akses = '0';
-                $menu->save();
-            }
+        // $modul_akademik = Modul::where('id_role', 3)->where('nm_modul', 'Akademik')->first();
+        // if ($modul_akademik) {
+        //     $menu = Menu::where('id_modul', $modul_akademik->id_modul)->where('nm_menu', 'Lihat Nilai KBM')->first();
+        //     if ($menu) {
+        //         $menu->akses = '0';
+        //         $menu->save();
+        //     }
 
-            $menu = Menu::where('id_modul', $modul_akademik->id_modul)->where('nm_menu', 'Jadwal Kelas Daring')->first();
-            if ($menu) {
-                $menu->akses = '0';
-                $menu->save();
-            }
-        }
+        //     $menu = Menu::where('id_modul', $modul_akademik->id_modul)->where('nm_menu', 'Jadwal Kelas Daring')->first();
+        //     if ($menu) {
+        //         $menu->akses = '0';
+        //         $menu->save();
+        //     }
+        // }
     }
 
     /**

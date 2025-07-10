@@ -14,9 +14,9 @@ class AddTahunPenerimaBeasiswaTableCalonSiswaBaru extends Migration
     public function up()
     {
         Schema::table('calon_siswa_baru', function (Blueprint $table) {
-            $table->tinyInteger('penerima_beasiswa_thn_1')->after('tgl_cetak_kartu_pelajar')->nullable();
-            $table->tinyInteger('penerima_beasiswa_thn_2')->after('penerima_beasiswa_thn_1')->nullable();
-            $table->tinyInteger('penerima_beasiswa_thn_3')->after('penerima_beasiswa_thn_2')->nullable();
+            $table->integer('penerima_beasiswa_thn_1')->after('tgl_cetak_kartu_pelajar')->nullable();
+            $table->integer('penerima_beasiswa_thn_2')->after('penerima_beasiswa_thn_1')->nullable();
+            $table->integer('penerima_beasiswa_thn_3')->after('penerima_beasiswa_thn_2')->nullable();
         });
     }
 

@@ -21,7 +21,7 @@ class CreateTindakanPelanggaranTable extends Migration {
 			$table->string('id_jenis_tindakan', 40)->comment('FK: jenis_tindakan.id_jenis_tindakan');
 			$table->string('catatan_tindakan_pelanggaran', 256)->nullable();
 			$table->string('catatan_tindakan_pelanggaran_khusus', 256)->nullable()->comment('private konseling dari individu BK (tidak dapat diakses oleh aktor yg lain)');
-			$table->dateTime('tgl_tindakan_pelanggaran')->nullable();
+			$table->timestamp('tgl_tindakan_pelanggaran')->nullable();
 			$table->boolean('aktor_input_tindakan_pelanggaran')->nullable()->comment('1 = Role BK; 2 = Role Kesiswaan;');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
