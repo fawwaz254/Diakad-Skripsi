@@ -44,7 +44,7 @@ class NamaSemesterController extends BaseController
             })
             ->first();
         
-        $timeToChangeTahunAjaran =  ($this_month >= 6 && $this_month <= 8) && ($active_semester->tahun_ajaran == $this_year -1 . '/' . $this_year) && ($active_semester->nm_semester == 'Genap') && ($active_semester->thn_akademik_semester == $this_year);
+        $timeToChangeTahunAjaran =  $this_month == 7 && ($active_semester->tahun_ajaran == ($this_year - 1) . '/' . $this_year);
 
         return view('pendidikan/data-akademik/nama-semester/view-nama-semester', compact('auth_data', 'active_semester', 'availableTahunAjaranBaru', 'timeToChangeTahunAjaran'));
     }
@@ -211,22 +211,22 @@ class NamaSemesterController extends BaseController
 
         $commonData = [
             'tahun_ajaran' => $now->year . '/' . ($now->year + 1),
-            'id_sekolah' => $input->auth_data->pengguna->id_sekolah,
-            'created_by' => $input->auth_data->pengguna->id_pengguna,
+            'id_sekolah' => auth_data()->pengguna->id_sekolah,
+            'created_by' => auth_data()->pengguna->id_pengguna,
             'is_aktif_semester' => 0
         ];
 
         Semester::create(array_merge($commonData, [
-            'id_semester' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+            'id_semester' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
             'nm_semester' => 'Ganjil',
             'thn_akademik_semester' => $now->year,
             'kode_semester' => $now->year . '1'
         ]));
 
         Semester::create(array_merge($commonData, [
-            'id_semester' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+            'id_semester' => auth_data()->sekolah_data->prefix . strtotime($now) . uniqid(),
             'nm_semester' => 'Genap',
-            'thn_akademik_semester' => $now->year + 1,
+            'thn_akademik_semester' => $now->year,
             'kode_semester' => $now->year . '2'
         ]));
 
