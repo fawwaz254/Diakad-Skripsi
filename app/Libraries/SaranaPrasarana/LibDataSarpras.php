@@ -163,7 +163,7 @@ class LibDataSarpras
         if ($id == null) {
             // filter by ruangan
             if (! empty($id_ruangan)) {
-                $inventarisRuangan = InventarisRuangan::select('inventaris_ruangan.id_inventaris_ruangan', 'ruangan.id_ruangan', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan',  'inventaris_ruangan.kode_inventaris_ruangan',  'inventaris_ruangan.tgl_pembelian', 'inventaris_ruangan.jumlah_inventaris_ruangan', 'inventaris_ruangan.jumlah_kondisi_baik', 'inventaris_ruangan.jumlah_kondisi_rusak', 'inventaris_ruangan.spesifikasi_inventaris_ruangan', 'inventaris_ruangan.keterangan_inventaris_ruangan','ruangan.is_aktif')
+                $inventarisRuangan = InventarisRuangan::select('inventaris_ruangan.id_inventaris_ruangan', 'ruangan.id_ruangan', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan',  'inventaris_ruangan.kode_inventaris_ruangan',  'inventaris_ruangan.tgl_pembelian', 'durasi_beli', 'sumber_dana', 'nama_vendor',  'inventaris_ruangan.jumlah_inventaris_ruangan', 'inventaris_ruangan.jumlah_kondisi_baik', 'inventaris_ruangan.jumlah_kondisi_rusak', 'inventaris_ruangan.spesifikasi_inventaris_ruangan', 'inventaris_ruangan.keterangan_inventaris_ruangan','ruangan.is_aktif')
                         ->join('ruangan','ruangan.id_ruangan','=','inventaris_ruangan.id_ruangan')
                         ->where('inventaris_ruangan.id_ruangan','=',$id_ruangan)
                         ->orderBy('inventaris_ruangan.nm_inventaris_ruangan', 'asc')
@@ -172,7 +172,7 @@ class LibDataSarpras
             }
             // get all ruangan tanpa filter id_ruangan
             else {
-                $inventarisRuangan = InventarisRuangan::select('inventaris_ruangan.id_inventaris_ruangan', 'ruangan.id_ruangan', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'inventaris_ruangan.nm_inventaris_ruangan', 'inventaris_ruangan.kode_inventaris_ruangan',  'inventaris_ruangan.tgl_pembelian', 'inventaris_ruangan.jumlah_inventaris_ruangan', 'inventaris_ruangan.jumlah_kondisi_baik', 'inventaris_ruangan.jumlah_kondisi_rusak', 'inventaris_ruangan.spesifikasi_inventaris_ruangan', 'inventaris_ruangan.keterangan_inventaris_ruangan', 'ruangan.is_aktif')
+                $inventarisRuangan = InventarisRuangan::select('inventaris_ruangan.id_inventaris_ruangan', 'ruangan.id_ruangan', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'inventaris_ruangan.nm_inventaris_ruangan', 'inventaris_ruangan.kode_inventaris_ruangan',  'inventaris_ruangan.tgl_pembelian', 'durasi_beli', 'sumber_dana', 'nama_vendor',  'inventaris_ruangan.jumlah_inventaris_ruangan', 'inventaris_ruangan.jumlah_kondisi_baik', 'inventaris_ruangan.jumlah_kondisi_rusak', 'inventaris_ruangan.spesifikasi_inventaris_ruangan', 'inventaris_ruangan.keterangan_inventaris_ruangan', 'ruangan.is_aktif')
                         ->join('ruangan','ruangan.id_ruangan','=','inventaris_ruangan.id_ruangan')
                         ->join('gedung','gedung.id_gedung','=','ruangan.id_gedung')
                         ->where('gedung.id_sekolah','=',$auth_data->pengguna->id_sekolah)

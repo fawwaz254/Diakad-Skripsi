@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SaranaPrasarana\DataSarprasRuangan;
 
 use App\Imports\DataImportExcel;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -60,8 +61,14 @@ class InventarisController extends BaseController
 
         // convert format date
         $tgl_pembelian = strftime("%A, %d %B %Y", strtotime($data_inventaris_ruangan->tgl_pembelian));
+        // convert durasi beli if exists
+        if ($data_inventaris_ruangan->durasi_beli) {
+            $durasi_beli = strftime("%A, %d %B %Y", strtotime($data_inventaris_ruangan->durasi_beli));
+        } else {
+            $durasi_beli = null;
+        }
 
-        return view('sarana-prasarana/data-sarpras-ruangan/inventaris/edit-inventaris', compact('auth_data', 'data_ruangan', 'data_inventaris_ruangan', 'tgl_pembelian'));
+        return view('sarana-prasarana/data-sarpras-ruangan/inventaris/edit-inventaris', compact('auth_data', 'data_ruangan', 'data_inventaris_ruangan', 'tgl_pembelian', 'durasi_beli'));
     }
 
     public function datatablesInventaris(Request $request)
@@ -124,6 +131,9 @@ class InventarisController extends BaseController
                 $inventarisRuangan->kode_inventaris_ruangan         = $input->kode_inventaris_ruangan;
                 // convert format date
                 $inventarisRuangan->tgl_pembelian                   = date_format(date_create($input->tgl_pembelian), "Y-m-d H:i:s");
+                $inventarisRuangan->durasi_beli = isset($input->durasi_beli) ? date('Y-m-d', strtotime($input->durasi_beli)) : null;
+                $inventarisRuangan->sumber_dana                     = $input->sumber_dana ?? null;
+                $inventarisRuangan->nama_vendor                     = $input->nama_vendor ?? null;
                 $inventarisRuangan->jumlah_inventaris_ruangan       = $input->jumlah_inventaris_ruangan;
                 $inventarisRuangan->jumlah_kondisi_baik             = $input->jumlah_kondisi_baik;
                 $inventarisRuangan->jumlah_kondisi_rusak            = $input->jumlah_kondisi_rusak;
@@ -145,6 +155,9 @@ class InventarisController extends BaseController
                 $inventarisRuangan->kode_inventaris_ruangan         = $input->kode_inventaris_ruangan;
                 // convert format date
                 $inventarisRuangan->tgl_pembelian                   = date_format(date_create($input->tgl_pembelian), "Y-m-d H:i:s");
+                $inventarisRuangan->durasi_beli = isset($input->durasi_beli) ? date('Y-m-d', strtotime($input->durasi_beli)) : null;
+                $inventarisRuangan->sumber_dana                     = $input->sumber_dana ?? null;
+                $inventarisRuangan->nama_vendor                     = $input->nama_vendor ?? null;
                 $inventarisRuangan->jumlah_inventaris_ruangan       = $input->jumlah_inventaris_ruangan;
                 $inventarisRuangan->jumlah_kondisi_baik             = $input->jumlah_kondisi_baik;
                 $inventarisRuangan->jumlah_kondisi_rusak            = $input->jumlah_kondisi_rusak;
@@ -190,11 +203,10 @@ class InventarisController extends BaseController
         $input = (object) $request->input();
         $auth_data = auth_data();
         $now = Carbon::now();
-
+        
         $validator = Validator::make($request->all(), [
             'file-excel' => 'required',
         ]);
-
         if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
@@ -206,7 +218,6 @@ class InventarisController extends BaseController
 
                 $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
                 $data = $data[0];
-
                 if (count($data)) {
 
                     DB::beginTransaction();
@@ -254,8 +265,16 @@ class InventarisController extends BaseController
                                 //     'status'    => 203, // GAGAL
                                 //     'message'   => 'Upload data inventaris gagal, ada tanggal pembelian yang kosong'
                                 // ];
+                            } else {
+                                 $value->tanggal_pembelian = Date::excelToDateTimeObject($value->tanggal_pembelian)->format('Y-m-d');
                             }
 
+                            if(!empty($value->durasi_beli)) {
+                                $value->durasi_beli = Date::excelToDateTimeObject($value->durasi_beli)->format('Y-m-d');
+                            } else {
+                                $value->durasi_beli = null;
+                            }
+                            
                             if (empty($value->jumlah_inventaris) && ($value->kondisi_baik != 0)) {
                                 return [
                                     'status'    => 203, // GAGAL
@@ -291,18 +310,23 @@ class InventarisController extends BaseController
                                 ];
                             }
 
+
                             $data                                 = new InventarisRuangan;
                             $data->id_inventaris_ruangan          = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $data->id_ruangan                     = $check_ruangan->id_ruangan;
                             $data->nm_inventaris_ruangan          = $value->nama_inventaris;
                             $data->kode_inventaris_ruangan        = $value->kode_inventaris;
-                            $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian));
+                            $data->tgl_pembelian                  = $value->tanggal_pembelian;
+                            $data->durasi_beli                    = $value->durasi_beli;
+                            $data->sumber_dana                    = $value->sumber_dana ?? null;
+                            $data->nama_vendor                    = $value->nama_vendor ?? null;
                             $data->jumlah_inventaris_ruangan      = $value->jumlah_inventaris;
                             $data->jumlah_kondisi_baik            = $value->kondisi_baik;
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
                             $data->spesifikasi_inventaris_ruangan = $value->spesifikasi;
                             $data->keterangan_inventaris_ruangan  = $value->keterangan;
                             $data->created_by                     = auth_data()->pengguna->id_pengguna;
+
                             $data->save();
                         }
 
