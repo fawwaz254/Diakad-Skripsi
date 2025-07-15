@@ -22,6 +22,9 @@
                                         <th>Nama Inventaris</th>
                                         <th>Kode Inventaris</th>
                                         <th>Tgl Pembelian</th>
+                                        <th>Durasi Beli</th>
+                                        <th>Sumber Dana</th>
+                                        <th>Nama Vendor</th>
                                         <th>Jumlah Inventaris</th>
                                         <th>Kondisi Baik</th>
                                         <th>Kondisi Rusak</th>
@@ -61,6 +64,9 @@
             { data: 'nm_inventaris_ruangan', name: 'nm_inventaris_ruangan' },
             { data: 'kode_inventaris_ruangan', name: 'kode_inventaris_ruangan' },
             { data: 'tgl_pembelian', name: 'tgl_pembelian' },
+            { data: 'durasi_beli', name: 'durasi_beli' },
+            { data: 'sumber_dana', name: 'sumber_dana' },
+            { data: 'nama_vendor', name: 'nama_vendor' },
             { data: 'jumlah_inventaris_ruangan', name: 'jumlah_inventaris_ruangan' },
             { data: 'jumlah_kondisi_baik', name: 'jumlah_kondisi_baik' },
             { data: 'jumlah_kondisi_rusak', name: 'jumlah_kondisi_rusak' },

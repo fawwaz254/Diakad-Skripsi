@@ -404,10 +404,10 @@ function changeJenis(el){
                         '</a> '+
                         '<a class="target-link btn btn-danger waves-effect waves-float" href="'+ diskon_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
                         '    <span>Atur Diskon</span>'+
-                        '</a> ';
-                        // '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTagihan(this)" data-id="'+data.id+'">'+
-                        // '    <span>Hapus Tagihan</span>'+
-                        // '</button>';
+                        '</a> '+
+                        '<button class="btn btn-danger waves-effect waves-float" onclick="deleteActionTagihan(\''+ delete_tagihan_siswa +'\', this)" data-id="'+data.id+'">'+
+                        '    <span>Hapus Tagihan</span>'+
+                        '</button>';
                     }else{
                         htmlaction = '';
                     }
@@ -417,8 +417,10 @@ function changeJenis(el){
             }
         ],
         createdRow: function( row, data, dataIndex){
-            if( data.sisa_tagihan == 'Rp0'){
+            if (data.sisa_tagihan == 'Rp0' && data.besar_biaya != 'Rp0') {
                 $(row).css('background-color', 'hsl(171, 100%, 41%)');
+            } else if (data.sisa_tagihan == 'Rp0' && data.besar_biaya == 'Rp0') {
+                $(row).css('background-color', 'hsl(45, 100%, 51%)');
             }
         }
     });
@@ -468,7 +470,6 @@ function changeJenis(el){
 </script>
 
 <script>
-
     function print_pembayaran_riwayat_siswa(id_pengguna,element){
         
         var item = $(element);
@@ -528,7 +529,7 @@ function changeJenis(el){
         });
     }
 
-    function deleteActionTagihan(delete_url, element){
+    function deleteActionTagihan(delete_tagihan_siswa, element){
         var item = $(element);
         $('button').attr('disabled', 'disabled');
 
