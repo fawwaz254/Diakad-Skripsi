@@ -19,7 +19,11 @@ class TrackingUserActivity
     public function handle(Request $request, Closure $next)
     {
         if (auth()->check()) {
-            if (url()->current() !== url('/') && url()->current() !== url('/') . '/' . $request->segment(1)) {
+            // Check if the user is not accessing the home page or the first segment of the URL
+            if (url()->current() !== url('/') 
+                && url()->current() !== url('/') . '/' . $request->segment(1)
+                && !str_contains(url()->current(), 'pulse')
+            ) {
                 DB::table('log_aktivitas_pengguna')->insert([
                     'id_log_aktivitas_pengguna' => Uuid::uuid4()->toString(),
                     'id_pengguna' => auth()->user()->id_pengguna,
