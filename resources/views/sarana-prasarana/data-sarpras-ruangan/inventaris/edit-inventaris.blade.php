@@ -62,6 +62,30 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
+                            Durasi Beli
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="datepicker form-control" name="durasi_beli" aria-required="true" aria-invalid="true" value="{{$durasi_beli}}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Sumber Dana
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="sumber_dana" aria-required="true" aria-invalid="true" value="{{$data_inventaris_ruangan->sumber_dana}}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Nama Vendor
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="nama_vendor" aria-required="true" aria-invalid="true" value="{{$data_inventaris_ruangan->nama_vendor}}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Jumlah Inventaris
                         </h2>
                         <div class="row clearfix">
