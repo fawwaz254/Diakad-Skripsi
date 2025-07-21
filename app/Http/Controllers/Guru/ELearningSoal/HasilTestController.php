@@ -214,8 +214,8 @@ class HasilTestController extends Controller
     public function actionDeleteTest(Request $request, $id)
     {
         if ($test = Test::find($id)) {
-            JawabanTest::where('id_test', $test->id_test)->delete();
-            $test->delete();
+            JawabanTest::where('id_test', $test->id_test)->forceDelete();
+            $test->forceDelete();
 
             return [
                 'status' => 203, // SUCCESS AND LOAD TABLE
