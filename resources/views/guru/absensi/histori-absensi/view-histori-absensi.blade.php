@@ -1,3 +1,20 @@
+ {{-- "tanggal" => "2025-07-01"
+    "hari" => "Selasa"
+    "check_in" => "-"
+    "check_out" => "-"
+    "status" => "Alpha"
+    "shift" => "Guru Staff Senin Selasa"
+    "start" => "06:27:"
+    "end" => "14:30:" --}}
+
+{{-- "hadir" => 6
+    "sakit" => 0
+    "izin" => 0
+    "telat" => 3
+    "pulangcepat" => 0
+    "alpha" => 10
+    "tidak_checkout" => 3 --}}
+
 <div class="container-fluid">
 
     <div class="row clearfix">
@@ -52,19 +69,19 @@
                             <ul class="dashboard-stat-list">
                                 <li>
                                     Hadir
-                                    <span class="pull-right"><b>{{ $jumlah_hadir }}</b></span>
+                                    <span class="pull-right"><b>{{ $counters['hadir'] }}</b></span>
                                 </li>
                                 <li>
                                     Hadir Terlambat
-                                    <span class="pull-right"><b>{{ $jumlah_telat }}</b></span>
+                                    <span class="pull-right"><b>{{ $counters['telat'] }}</b></span>
                                 </li>
                                 <li>
                                     Hadir Pulang Lebih Awal
-                                    <span class="pull-right"><b>{{ $jumlah_pulangcepat }}</b></span>
+                                    <span class="pull-right"><b>{{ $counters['pulangcepat'] }}</b></span>
                                 </li>
                                 <li>
                                     Tidak Checkout
-                                    <span class="pull-right"><b>{{ $tidak_checkout }}</b></span>
+                                    <span class="pull-right"><b>{{ $counters['tidak_checkout'] }}</b></span>
                                 </li>
                             </ul>
                         </div>
@@ -72,15 +89,15 @@
                             <ul class="dashboard-stat-list">
                                 <li>
                                     Izin
-                                    <span class="pull-right"><b>{{ $jumlah_izin }}</b></span>
+                                    <span class="pull-right"><b>{{ $counters['izin'] }}</b></span>
                                 </li>
                                 <li>
                                     Sakit
-                                    <span class="pull-right"><b>{{ $jumlah_sakit }}</b></span>
+                                    <span class="pull-right"><b>{{ $counters['sakit'] }}</b></span>
                                 </li>
                                 <li>
                                     Alpha
-                                    <span class="pull-right"><b>{{ $jumlah_alpha }}</b></span>
+                                    <span class="pull-right"><b>{{ $counters['alpha'] }}</b></span>
                                 </li>
                             </ul>
                         </div>
@@ -122,7 +139,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($hasil as $key => $r)
+                                @foreach ($results as $key => $r)
                                     @if ($r['status'] == 'Libur' || $r['status'] == '')
                                         <tr>
                                         @elseif($r['status'] == 'Masuk')
