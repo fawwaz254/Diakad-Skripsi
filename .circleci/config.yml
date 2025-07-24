@@ -56,7 +56,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_3 "cd /var/www/html/smkypm3/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-sma-maryam:
     machine:
@@ -64,7 +64,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SERVER_SMKYPM3 "cd /var/www/smamaryamsby/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_3 "cd /var/www/html/smamaryam/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
 workflows:
   # to-staging-only-master:
