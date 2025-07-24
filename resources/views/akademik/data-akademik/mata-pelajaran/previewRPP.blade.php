@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Preview Mapel RPP</title>
+    <title>Preview Mapel Desain Pembelajaran</title>
 
     <style>
         #preview_RPP {
@@ -35,7 +35,7 @@
 
 <body>
     <header>
-        <h2>RPP Mata Pelajaran : {{ $mapel_rpp->mata_pelajaran->nm_mata_pelajaran }}</h2>
+        <h2>Desain Pembelajaran Mata Pelajaran : {{ $mapel_rpp->mata_pelajaran->nm_mata_pelajaran }}</h2>
         <p>Kode Mapel: {{ $mapel_rpp->mata_pelajaran->kd_mata_pelajaran }}</p>
     </header>
     <table id="preview_RPP">

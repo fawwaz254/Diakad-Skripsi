@@ -27,7 +27,7 @@
                                     <th>Kode Mapel</th>
                                     <th>Nama Mapel</th>
                                     <th>Jenis Mapel</th>
-                                    <th>RPP</th>
+                                    <th>Desain Pembelajaran</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>

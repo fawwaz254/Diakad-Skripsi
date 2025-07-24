@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH RPP
+                        TAMBAH Desain Pembelajaran
                     </h2>
                 </div>
                 <div class="body">
@@ -37,7 +37,7 @@
 
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label>File RPP *</label>
+                                <label>File Desain Pembelajaran *</label>
                                 <a href="{{ url('excel/ContohUploadRPP.xls') }}">Download template di sini</a>
                                 <input type="file" class="form-control show-tick" name="file" />
                                 <small style="color:red">Perhatian: nilai karakter yang diinput hanya bisa 4C (Komunikasi, Kolaborasi, Berpikir kritis, Kreatif)</small>

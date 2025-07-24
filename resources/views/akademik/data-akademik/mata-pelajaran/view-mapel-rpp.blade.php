@@ -2,14 +2,14 @@
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/mata-pelajaran/rpp/add?id=' . $mata_pelajaran->id_mata_pelajaran) }}"><i
-                    class="material-icons">note_add</i><span>Tambah RPP</span></a></h2>
+                    class="material-icons">note_add</i><span>Tambah Desain Pembelajaran</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>DATA RPP untuk Mata Pelajaran {{ $mata_pelajaran->nm_mata_pelajaran }}
+                    <h2>DATA Desain Pembelajaran untuk Mata Pelajaran {{ $mata_pelajaran->nm_mata_pelajaran }}
                         ({{ $mata_pelajaran->kd_mata_pelajaran }})</h2>
                 </div>
                 <div class="body">
@@ -22,7 +22,7 @@
                                     <th>No</th>
                                     <th>Kode Mapel</th>
                                     <th>Nama Mapel</th>
-                                    <th>RPP Semester</th>
+                                    <th>Desain Pembelajaran Semester</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

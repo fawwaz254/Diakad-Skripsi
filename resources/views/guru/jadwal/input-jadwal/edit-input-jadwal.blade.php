@@ -40,7 +40,7 @@
                                 aria-invalid="true" value="{{$kelas_mp->nm_kelas}}">
                             </div>
 
-                             <div class="col-md-3">
+                            <div class="col-md-3">
                                 <label>Semester</label>
                                 <input type="text" class="form-control" name="semester" readonly="" aria-required="true"
                                 aria-invalid="true" value="{{$kelas_mp->nm_semester}}  {{$kelas_mp->tahun_ajaran}}">
@@ -55,8 +55,8 @@
                             </div>
 
                         </div>
-                         
-                       <!--  <h2 class="card-inside-title">
+                        
+                        <!--  <h2 class="card-inside-title">
                             Kapasitas Kelas
                         </h2>
                         <div class="row clearfix">
