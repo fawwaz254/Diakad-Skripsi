@@ -336,7 +336,11 @@ class CetakRaporController extends Controller
         $auth_data = auth_data();
         $kelas = Kelas::where('id_kelas', $id_kelas)->with('jurusan')->first();
         $semester = Semester::find($id_semester);
-        $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
+        if($wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first()){
+
+        }else{
+            $wali_kelas = WaliKelas::with('guru.pengguna')->where('id_kelas', $id_kelas)->orderBy('updated_at')->first();
+        }
         $guru = Guru::where("id_guru", $wali_kelas->id_guru)->first();
 
         $list_komponen = KomponenJenisRapor::whereHas('jenis_rapor', function ($query) {

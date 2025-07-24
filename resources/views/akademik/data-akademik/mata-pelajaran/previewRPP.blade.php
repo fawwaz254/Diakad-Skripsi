@@ -60,7 +60,7 @@
                         {{ $row_detail->model_pembelajaran }}
                     </td>
                     <td>
-                        {{ $row_detail->nilai_karakter }}
+                        {{ str_replace('#', ', ', $row_detail->nilai_karakter) }}
                     </td>
                 </tr>
             @endforeach

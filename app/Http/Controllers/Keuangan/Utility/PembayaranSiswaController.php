@@ -534,6 +534,7 @@ class PembayaranSiswaController extends BaseController
                     'id_asli' => $nis_nama_siswa,
                     'besar_pembayaran' => $item->besar_pembayaran,
                     'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->total_potongan,
+                    'besar_biaya' => $item->besar_biaya,
                 );
                 return $data;
             })
@@ -1166,11 +1167,12 @@ class PembayaranSiswaController extends BaseController
         $input = (object) $request->input();
         // make object to find id
         if ($tagihanBiaya = TagihanBiaya::find($id)) {
+            $tagihanBiaya->besar_biaya = 0;
             $tagihanBiaya->is_tagih = 0;
+            $tagihanBiaya->tgl_pelunasan = null;
             $tagihanBiaya->deleted_by = auth_data()->pengguna->id_pengguna;
             $tagihanBiaya->save();
-
-            $tagihanBiaya->delete();
+            // $tagihanBiaya->delete();
         }
 
         return [

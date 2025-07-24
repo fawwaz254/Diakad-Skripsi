@@ -104,7 +104,6 @@ class MapelRppController extends BaseController
                         $mapel_rpp->id_semester = $request->id_semester;
                         $mapel_rpp->created_by = $auth_data->pengguna->id_pengguna;
                     }
-        
                     $mapel_rpp->save();
 
                     MapelRPPDetail::where('id_mapel_rpp', $mapel_rpp->id_mapel_rpp)->delete();
@@ -122,16 +121,21 @@ class MapelRppController extends BaseController
                             $nilai_karater = '';
                             foreach(explode(',', $row_excel->karakter_yang_ditanamkan) as $kk){
                                 if (in_array(strtolower(rtrim(ltrim($kk))), [
-                                    'kolaborasi',
+                                    'disiplin',
+                                    'tangguh dan tanggung jawab',
+                                    'peduli',
+                                    'komunikasi',
+                                    'kolaboratif',
                                     'berpikir kritis',
-                                    'kreatif',
-                                    'komunikasi'
+                                    'kejujuran',
+                                    'religius',
+                                    'kreatif'
                                 ])) {
                                     
                                 }else{
                                     return [
                                         'status'    => 203, // GAGAL
-                                        'message'   => 'Terdapat karakter di luar Komunikasi, Kolaborasi, Berpikir kritis, Kreatif : '.strtolower($kk)
+                                        'message'   => 'Terdapat karakter di luar Disiplin, Tangguh dan Tanggung Jawab, Peduli, Komunikasi, Kolaboratif, Berpikir Kritis, Kejujuran, Religius, Kreatif : '.strtolower($kk)
                                     ];
                                 }
                                 $nilai_karater .= rtrim(ltrim($kk)).'#';

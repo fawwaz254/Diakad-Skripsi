@@ -40,7 +40,9 @@
                                 <label>File Desain Pembelajaran *</label>
                                 <a href="{{ url('excel/ContohUploadRPP.xls') }}">Download template di sini</a>
                                 <input type="file" class="form-control show-tick" name="file" />
-                                <small style="color:red">Perhatian: nilai karakter yang diinput hanya bisa 4C (Komunikasi, Kolaborasi, Berpikir kritis, Kreatif)</small>
+                                <small style="color:red">
+                                    Perhatian: nilai karakter yang diinput hanya bisa 9C (Disiplin, Tangguh dan Tanggung Jawab, Peduli, Komunikasi, Kolaboratif, Berpikir Kritis, Kejujuran, Religius, Kreatif
+                                )</small>
                             </div>
                         </div>
                         <div class="row clearfix">
