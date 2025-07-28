@@ -12,55 +12,41 @@
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
 
-    @if (isset($data['allKelas']))
-        <div class="row clearfix">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card is-gap">
-                    <div class="header">
-                        <h2>
-                            Filter Form {{ $form->nm_form }}
-                        </h2>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card id-gap">
+            <div class ="header">
+                <h2>Filter {{ $form->nm_form }}</h2>
+            </div>
+            <div class="body">
+                <div class ="row clearfix">
+                    @if ($form->id_role == 3) {{-- Hanya tampil jika role siswa --}}
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <h2 class="card-inside-title">Kelas</h2>
+                        <select class="form-control show-tick" name="id_kelas">
+                            @foreach ($data['allKelas'] as $k)
+                            <option value="{{ $k->id_kelas }}" {{ $data['id_kelas'] == $k->id_kelas ? 'selected' : ''}}>
+                                {{ $k->nm_kelas}}
+                            </option>
+                            @endforeach
+                        </select>
                     </div>
+                    @endif
 
-                    <div class="body">
-                        <div class="row clearfix">
-                            <div class="col-md-4 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title">
-                                    Kelas
-                                </h2>
-                                <select class="form-control show-tick" name="id_kelas">
-                                    @foreach ($data['allKelas'] as $k)
-                                        <option value="{{ $k->id_kelas }}"
-                                            @if ($data['id_kelas'] == $k->id_kelas) SELECTED @endif>
-                                            {{ $k->nm_kelas }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-
-                            <div class="col-md-4 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title">
-                                    Tanggal
-                                </h2>
-                                <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY"
-                                    value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
-                            </div>
-
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i
-                                        class="material-icons">save</i><span>Filter</span></button>
-                            </div>
-                        </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <h2 class="card-inside-title">Tanggal</h2>
+                        <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY" value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
                     </div>
-
-
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <br>
+                        <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()">
+                            <i class="material-icons">save</i><span>Filter</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    @endif
-</div>
-</div>
+    </div>
 </div>
 <div class="container-fluid">
     <div class="row clearfix">
@@ -181,9 +167,15 @@
     })
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
-            '{{ $form->id_form }}' + '/' + $('input[name=date]').val() + '/' + $('select[name=id_kelas]')
-            .val());
+        let base = '{{ Request::segment(2) }}/{{ Request :: segment(3) }}/{{ Request:: segment(4) }}/{{ $form->id_form }}';
+        let date = $('input[name=date]').val();
+        
+        if ($form-id_role == 3){
+            let id_kelas = $('select[name=id_kelas]').val();
+            loadURl(base + '/' + date + '/' + kelas);
+        }else{
+            loadURl(base +'/' + date + '/0');
+        }
     }
 
     $("input").on("change", function() {
