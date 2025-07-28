@@ -272,7 +272,7 @@ class RekapFormHarianController extends Controller
             }
         }
 
-        return view('humas/form-builder/rekap-form-harian/view-detail-rekap-harian', compact('auth_data', 'form', 'data', 'data_pengguna', 'list_pertanyaan', 'dataJawaban', 'date'));
+        return view('humas/form-builder/rekap-form-harian/view-detail-rekap-harian', compact('auth_data', 'form', 'data', 'data_pengguna', 'list_pertanyaan', 'dataJawaban', 'date', 'roles'));
     }
 
     public function exportRekapBulanan(Request $request, $id_form, $bulan = null, $tahun = null, $id_kelas = null, $id_pertanyaan = '0')
