@@ -16,7 +16,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_1 "cd /var/www/html/smpypm1/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/html/smpypm1/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smk-ypm-2:
     machine:
@@ -24,7 +24,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_1 "cd /var/www/html/smkypm2/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/html/smkypm2/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smp-ypm-2:
     machine:
@@ -32,7 +32,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_1 "cd /var/www/html/smpypm2/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_1 "cd /var/www/html/smpypm2/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-sma-wh-2:
     machine:
@@ -40,7 +40,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_2 "cd /var/www/html/smawh2/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_2 "cd /var/www/html/smawh2/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smk-ypm-1:
     machine:
@@ -48,7 +48,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_2 "cd /var/www/html/smkypm1/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_2 "cd /var/www/html/smkypm1/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-smk-ypm-3:
     machine:
@@ -56,7 +56,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_3 "cd /var/www/html/smkypm3/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_3 "cd /var/www/html/smkypm3/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
   deploy-to-sma-maryam:
     machine:
@@ -64,7 +64,7 @@ jobs:
     steps:
       - run:
           command: |
-            ssh -t $SSH_USER@$SGC_3 "cd /var/www/html/smamaryam/diakademik && git pull origin && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
+            ssh -t $SSH_USER@$SGC_3 "cd /var/www/html/smamaryam/diakademik && git pull origin latest-release && php artisan migrate --force && php artisan optimize:clear && php artisan optimize"
 
 workflows:
   # to-staging-only-master:
