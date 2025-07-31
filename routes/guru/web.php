@@ -1167,7 +1167,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('list-kunjungan-magang/{id}/edit', [MagangController::class, 'edit'])->name('edit.kunjungan-magang');
             Route::post('list-kunjungan-magang/store', [MagangController::class, 'store'])->name('store.kunjungan-magang');
             Route::put('list-kunjungan-magang/{id}/update', [MagangController::class, 'update'])->name('update.kunjungan-magang');
-            Route::delete('list-kunjungan-magang/{id}/destroy', [MagangController::class, 'destroy'])->name('destroy.kunjungan-magang');
+            Route::delete('list-kunjungan-magang/{id}/destroy', [MagangController::class, 'destroy'])->name('guru.destroy.kunjungan-magang');
             // Route::get('edit-kunjungan-magang/{id_kunjungan_magang}', [KunjunganMagangController::class, 'editKunjunganMagang']);
             // Route::post('action-kunjungan-magang/{mode}/{id_kunjungan_magang?}', [KunjunganMagangController::class, 'actionKunjunganMagang']);
         });
