@@ -88,6 +88,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/detail/{id_kelas}', [CetakKPIController::class, 'detailCetakKPI']);
                 Route::get('/detail/datatables/{id_kelas}', [CetakKPIController::class, 'datatablesKelompokKPI']);
                 Route::get('/print/{id_semester}/{id_siswa}', [InputKPIController::class, 'printKPI']);
+                Route::get('/kpi/cetak-kpi/print-all/{id_kelas}', [InputKPIController::class, 'printAllKPI'])->name('kpi.printAll');
             });
         });
 

@@ -83,6 +83,8 @@ class CetakKPIController extends Controller
             return $jumlah_point;
         })->addColumn('jumlah_point_terisi', function ($item) use ($predikat_kpi) {
             return $predikat_kpi->where('id_siswa', $item->id_siswa)->count();
+        })->addColumn('nis_siswa', function ($item) {
+        return $item->nis_siswa ?? '-';
         })->addColumn('action', function ($item) use ($semester_aktif) {
             $data = array(
                 'id' => $item->id_siswa,
@@ -91,4 +93,8 @@ class CetakKPIController extends Controller
             return $data;
         })->make(true);
     }
+
 }
+
+    
+

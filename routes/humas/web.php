@@ -582,6 +582,9 @@ Route::middleware(['token_staff'])->group(function () {
             // Kunjungan magang
             Route::get('kunjungan-magang', [KunjunganMagangController::class, 'index'])->name('humas.kunjungan-magang');
             Route::get('kunjungan-magang/datatables', [KunjunganMagangController::class, 'dataKunjunganMagang'])->name('humas.dataKunjunganMagang');
+            Route::delete('kunjungan-magang/{id}', [KunjunganMagangController::class, 'destroy'])->name('destroy.kunjungan-magang');
+
+
         });
 
         /** === MODUL MAGANG ALUMNI === **/

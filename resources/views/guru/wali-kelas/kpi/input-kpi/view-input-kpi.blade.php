@@ -29,6 +29,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Nis</th>
                                     <th>Nama</th>
                                     <th>Total Point KPI</th>
                                     <th>Point KPI Terisi</th>
@@ -66,6 +67,10 @@
                 data: null,
                 searchable: false,
                 orderable: false
+            },
+            {
+                data: 'nis_siswa',
+                name: 'nis_siswa'
             },
             {
                 data: 'pengguna.nm_pengguna',
