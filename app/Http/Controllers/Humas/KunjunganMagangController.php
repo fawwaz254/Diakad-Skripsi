@@ -52,6 +52,12 @@ class KunjunganMagangController extends Controller
             Lihat Foto
         </button>
 
+        <button type="button" class="btn btn-danger waves-effect"
+            data-toggle="modal"
+            data-target="#deleteModal' . $id . '">
+            Hapus
+        </button>
+
         <!-- Modal -->
         <div class="modal fade" id="myModal' . $id . '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel' . $id . '">
             <div class="modal-dialog" role="document">
@@ -78,4 +84,23 @@ class KunjunganMagangController extends Controller
             ->rawColumns(['action'])
             ->make(true);
     }
+
+    public function destroy($id)
+{
+    $data = KunjunganMagang::findOrFail($id);
+
+    // Sementara: skip pengecekan file
+    try {
+        Storage::disk('spaces')->delete($data->foto_kunjungan);
+    } catch (\Exception $e) {
+        // Log error tapi lanjutkan
+        \Illuminate\Support\Facades\Log::error("Gagal menghapus file: " . $e->getMessage());
+    }
+
+    $data->delete();
+
+    return response()->json(['message' => 'Data berhasil dihapus']);
+}
+
+
 }

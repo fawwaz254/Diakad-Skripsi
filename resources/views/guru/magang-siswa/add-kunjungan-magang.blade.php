@@ -31,7 +31,9 @@
                                     <option value="">-- Pilih Periode Magang --</option>
                                     @foreach ($periode_magang as $periode)
                                         <option value="{{ $periode->id_periode_magang }}">
-                                            {{ $periode->nm_periode_magang . ' ' }}{{ $periode->nomor_sk_periode_magang }}
+                                            {{ $periode->nm_periode_magang }} 
+            {{ $periode->semester->tahun_ajaran ?? '' }} 
+            {{ strtoupper($periode->semester->nm_semester ?? '') }}
                                         </option>
                                     @endforeach
                                 </select>
