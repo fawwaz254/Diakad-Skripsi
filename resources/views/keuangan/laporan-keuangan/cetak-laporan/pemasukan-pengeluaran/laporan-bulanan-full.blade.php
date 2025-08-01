@@ -100,8 +100,14 @@
     $tutup_buku_kas_bulan_lalu = $data_laporan['tutup_buku_kas_bulan_lalu'];
     $subkategori_non_kbm = $data_laporan['subkategori_non_kbm'];
     $subkategori_pengembangan_pendidikan = $data_laporan['subkategori_pengembangan_pendidikan'];
+    $data_pengeluaran_bantuan = $data_laporan['data_pengeluaran_bantuan'];
 
-    $data_realisasi_pemasukan = collect($data_realisasi->where('tipe_kategori_rapb', 1)->all());
+    $data_realisasi_pemasukan_reguler = collect($data_realisasi->where('tipe_kategori_rapb', 1)->filter(function($item){
+            return $item->deskripsi_subkategori_rapb  != 'SUBSIDI_BOS_TAGGED';
+        })->all());
+    $data_realisasi_pemasukan_bantuan = collect($data_realisasi->where('tipe_kategori_rapb', 1)->filter(function($item){
+            return $item->deskripsi_subkategori_rapb  == 'SUBSIDI_BOS_TAGGED';
+        })->all());
     $data_realisasi_pengeluaran = collect($data_realisasi->where('tipe_kategori_rapb', 2)->all());
 @endphp
 
@@ -133,7 +139,7 @@
             <td class="text-center text-bold" colspan=3>Pembayaran uang sekolah dalam bulan ini</td>
             <td class="text-center text-bold" colspan=2>Tunggakan bulan lalu</td>
             <td class="text-center text-bold" rowspan=2>Jumlah belum masuk Keseluruhan</td>
-            <td class="text-center text-bold" rowspan=2>Jumlah uang masuk Keseluruhan</td>
+            <td class="text-center text-bold" rowspan=2 colspan=2>Jumlah uang masuk Keseluruhan</td>
         </tr>
         <tr valign=top>
             <td class="text-center text-bold">Bila Masuk 100 %</td>
@@ -150,7 +156,7 @@
             <td class="text-center text-bold">D</td>
             <td class="text-center text-bold">E</td>
             <td class="text-center text-bold">(B - C ) + E</td>
-            <td class="text-center text-bold">C + D</td>
+            <td class="text-center text-bold" colspan=2>C + D</td>
         </tr>
         @foreach ($data_tutup_buku_bulanan_biaya as $tutup_buku_bulanan_biaya)
             <tr valign=top>
@@ -169,13 +175,13 @@
                 <td class="text-right">
                     {{ number_format($tutup_buku_bulanan_biaya->jml_tagihan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya + $tutup_buku_bulanan_biaya->jml_tunggakan_biaya) }}
                 </td>
-                <td class="text-right">
+                <td class="text-right" colspan=2>
                     {{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya + $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu) }}
                 </td>
             </tr>
         @endforeach
         <tr valign=top>
-            <td colspan="8"></td>
+            <td colspan="9"></td>
         </tr>
         <tr valign=top>
             <td>JUMLAH = {{ number_format($data_tutup_buku_bulanan_biaya->sum('jml_siswa')) }}</td>
@@ -195,7 +201,7 @@
             <td class="text-right">
                 {{ number_format($data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') - $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya')) }}
             </td>
-            <td class="text-right">
+            <td class="text-right" colspan=2>
                 {{ number_format($data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu')) }}
             </td>
         </tr>
@@ -209,8 +215,9 @@
             <td class="text-right">{{ number_format($tutup_buku_kas_bulan_ini->sisa_tunggakan_biaya) }}</td>
 
             <td class="text-right">{{ number_format($tutup_buku_kas_bulan_ini->sisa_tunggakan_biaya) }}</td>
-            <td class="text-right">
-                {{ number_format($data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu')) }}</td>
+            <td class="text-right" colspan=2>
+                {{ number_format($data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu')) }}
+            </td>
         </tr>
         <tr valign=top>
             <td style="border: none;" colspan=3></td>
@@ -227,68 +234,101 @@
             <td class="text-right">
                 {{ number_format($data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') - $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') + $tutup_buku_kas_bulan_ini->sisa_tunggakan_biaya) }}
             </td>
-            <td class="text-right">
+            <td class="text-right" colspan=2>
                 {{ number_format($data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu')) }}
             </td>
         </tr>
+        <tr style="border: none;">
+            <td style="border: none; height: 16px;" colspan=8></td>
+        </tr>
+        <tr valign=top style="background-color: #000000; color:white">
+            <td colspan=5>PEMASUKAN</td>
+            <td class="text-center">SPP</td>
+            <td class="text-center"></td>
+            <td class="text-center" colspan=2>SUBSIDI BANTUAN</td>
+        </tr>
         <tr valign=top>
-            <td style="border: none;" colspan=5></td>
+            <td style="border: none;" colspan=3></td>
             <td class="text-bold" colspan=2>Jumlah Pemasukan</td>
             <td class="text-right">
                 {{ number_format($data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu')) }}
             </td>
+            <td class="text-right"></td>
+            <td class="text-right" colspan=2>
+                {{ number_format($data_realisasi_pemasukan_bantuan->sum('total_realisasi')) }}
+            </td>
         </tr>
-        @foreach ($data_realisasi_pemasukan as $realisasi)
+        @foreach ($data_realisasi_pemasukan_reguler as $realisasi)
             <tr valign=top>
-                <td style="border: none;" colspan=5></td>
-                <td colspan=2>{{ $realisasi->nm_subkategori_rapb }}</td>
+                <td style="border: none;" colspan=3></td>
+                <td colspan=2>{{ $realisasi->nm_subkategori_rapb }} xx {{$realisasi->deskripsi_subkategori_rapb}}</td>
                 <td class="text-right">{{ number_format($realisasi->total_realisasi) }}</td>
+                <td class="text-right"></td>
+                <td class="text-right" colspan=2></td>
             </tr>
         @endforeach
         <tr valign=top>
-            <td style="border: none;" colspan=5></td>
+            <td style="border: none;" colspan=3></td>
             <td class="text-bold" colspan=2>Saldo Kas Bulan Lalu</td>
             <td class="text-right">{{ number_format($tutup_buku_kas_bulan_lalu->kas_akhir_bulan ?? 0) }}</td>
+            <td class="text-right"></td>
+            <td class="text-right" colspan=2>{{ number_format($tutup_buku_kas_bulan_lalu->kas_rapb_bantuan ?? 0) }}</td>
         </tr>
         <tr valign=top>
-            <td style="border: none;" colspan=5></td>
+            <td style="border: none;" colspan=3></td>
             <td class="text-bold" colspan=2>Kas tersedia dalam bulan ini</td>
             @php
                 $kas_tersedia = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') +
                         $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') +
                         $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') +
-                        $data_realisasi_pemasukan->sum('total_realisasi') +
-                        ($tutup_buku_kas_bulan_lalu->kas_akhir_bulan ?? 0)
+                        $data_realisasi_pemasukan_reguler->sum('total_realisasi') +
+                        ($tutup_buku_kas_bulan_lalu->kas_akhir_bulan ?? 0);
+
+                $kas_bantuan_tersedia = ($tutup_buku_kas_bulan_lalu->kas_rapb_bantuan ?? 0) + $data_realisasi_pemasukan_bantuan->sum('total_realisasi');
             @endphp
             <td class="text-right">
                 {{ number_format($kas_tersedia) }}
             </td>
+            <td class="text-right"></td>
+            <td class="text-right" colspan=2>
+                {{ number_format($kas_bantuan_tersedia) }}
+            </td>
         </tr>
-    </table>
-    <br>
-
-    <table class="is-bordered" width="100%" border=1 cellpadding=5 cellspacing=0
-        style="background-color: #ffffff; word-wrap:break-word;">
         <tr valign=top style="background-color: #000000; color:white">
-            <td colspan=3 class="text-center">PENGELUARAN</td>
-            <td class="text-center">TARGET</td>
-            <td class="text-center">REALISASI</td>
-            <td class="text-center">PROSENTASE ( % )</td>
-            <td class="text-center"></td>
+            <td colspan=4>PENGELUARAN</td>
+            <td class="text-center" >TARGET</td>
+            <td class="text-center">SPP</td>
+            <td class="text-center">(%)</td>
+            <td class="text-center">BANTUAN</td>
+            <td class="text-center">(%)</td>
         </tr>
         @php
             $no = 1;
             $total_realisasi = 0;
+            $total_realisasi_bantuan = 0;
+            $temp_tag = '';
         @endphp
         @foreach ($data_realisasi_pengeluaran as $realisasi)
-            @if (
-                $subkategori_non_kbm['status'] &&
+            @if ($subkategori_non_kbm['status'] &&
                     $realisasi->kode_subkategori_rapb == 'K.5.3' &&
                     $realisasi->nm_subkategori_rapb == 'Beban Pembelajaran Non KBM')
-                <tr valign=top>
-                    <td>{{ $no++ }}.</td>
-                    <td>Lainnya :</td>
-                    <td>K.5.3 Beban Pembelajaran Non KBM</td>
+
+                @php
+                    $item_tag = 'Lainnya';
+                    if($item_tag != $temp_tag) {
+                        $temp_tag = $item_tag;
+                    } else {
+                        $item_tag = '';
+                    }
+                @endphp
+                    @if($item_tag == '')
+                    <td style="border-right: none;"></td>
+                    @else
+                    <td style="border-right: none;">{{ $no++ }}.
+                        {{ $item_tag }} :
+                    </td>
+                    @endif
+                    <td style="border-left: none;" colspan=3>K.5.3 Beban Pembelajaran Non KBM</td>
                     <td class="text-right">{{ number_format($realisasi->dana_perkiraan_rapb) }}</td>
                     <td class="text-right">
                         {{ number_format($subkategori_non_kbm['total_bayar'] + $realisasi->total_realisasi) }} </td>
@@ -300,18 +340,31 @@
                         </td>
                     @endif
                     <td></td>
+                    <td></td>
                 </tr>
                 @php
                     $total_realisasi += $subkategori_non_kbm['total_bayar'] + $realisasi->total_realisasi;
                 @endphp
-            @elseif(
-                $subkategori_pengembangan_pendidikan['status'] &&
+            @elseif($subkategori_pengembangan_pendidikan['status'] &&
                     $realisasi->kode_subkategori_rapb == 'K.5.4' &&
                     $realisasi->nm_subkategori_rapb == 'Beban Pengembangan Pendidikan')
                 <tr valign=top>
-                    <td>{{ $no++ }}.</td>
-                    <td>Lainnya :</td>
-                    <td>K.5.4 Beban Pengembangan Pendidikan</td>
+                    @php
+                        $item_tag = 'Lainnya';
+                        if($item_tag != $temp_tag) {
+                            $temp_tag = $item_tag;
+                        } else {
+                            $item_tag = '';
+                        }
+                    @endphp
+                    @if($item_tag == '')
+                    <td style="border-right: none;"></td>
+                    @else
+                    <td style="border-right: none;">{{ $no++ }}.
+                        {{ $item_tag }} :
+                    </td>
+                    @endif
+                    <td style="border-left: none;" colspan=3>K.5.4 Beban Pengembangan Pendidikan</td>
                     <td class="text-right">{{ number_format($realisasi->dana_perkiraan_rapb) }}</td>
                     <td class="text-right">
                         {{ number_format($subkategori_pengembangan_pendidikan['total_bayar'] + $realisasi->total_realisasi) }}
@@ -324,15 +377,28 @@
                         </td>
                     @endif
                     <td></td>
+                    <td></td>
                 </tr>
                 @php
                     $total_realisasi += $subkategori_pengembangan_pendidikan['total_bayar'] + $realisasi->total_realisasi;
                 @endphp
             @else
                 <tr valign=top>
-                    <td>{{ $no++ }}.</td>
-                    <td>{{ $realisasi->nm_kategori_rapb }} :</td>
-                    <td>{{ $realisasi->kode_subkategori_rapb }} {{ $realisasi->nm_subkategori_rapb }}</td>
+                    @php
+                        if($realisasi->nm_kategori_rapb != $temp_tag) {
+                            $temp_tag = $realisasi->nm_kategori_rapb;
+                        } else {
+                            $realisasi->nm_kategori_rapb = '';
+                        }
+                    @endphp
+                    @if($realisasi->nm_kategori_rapb == '')
+                    <td style="border-right: none;"></td>
+                    @else
+                    <td style="border-right: none;">{{ $no++ }}.
+                        {{ $realisasi->nm_kategori_rapb }} :
+                    </td>
+                    @endif
+                    <td style="border-left: none;" colspan=3>{{ $realisasi->kode_subkategori_rapb }} {{ $realisasi->nm_subkategori_rapb }}</td>
                     <td class="text-right">{{ number_format($realisasi->dana_perkiraan_rapb) }}</td>
                     <td class="text-right">{{ number_format($realisasi->total_realisasi) }}</td>
                     @if ($realisasi->dana_perkiraan_rapb == 0)
@@ -341,29 +407,57 @@
                         <td class="text-right">
                             {{ round(($realisasi->total_realisasi / $realisasi->dana_perkiraan_rapb) * 100, 2) }}%</td>
                     @endif
+
+                    @php
+                        $pengeluaran_bantuan = $data_pengeluaran_bantuan->firstWhere('kode_subkategori_rapb', $realisasi->kode_subkategori_rapb);
+                    @endphp
+                    @if($pengeluaran_bantuan)
+                    <td class="text-right">{{ number_format($pengeluaran_bantuan->total_realisasi) }}</td>
+                    @else
                     <td></td>
+                    @endif
+                    <td>
+                        @if ($realisasi->dana_perkiraan_rapb != 0 && $pengeluaran_bantuan)
+                            {{ round(($pengeluaran_bantuan->total_realisasi / $realisasi->dana_perkiraan_rapb) * 100, 2) }}%
+                        @endif
+                    </td>
                 </tr>
             @php
                 $total_realisasi += $realisasi->total_realisasi;
+                $total_realisasi_bantuan += $pengeluaran_bantuan ? $pengeluaran_bantuan->total_realisasi : 0;
             @endphp
             @endif
         @endforeach
         <tr valign=top>
-            <td colspan=3>JUMLAH</td>
+            <td class="text-right" colspan=4>JUMLAH PENGELUARAN</td>
             <td class="text-right">{{ number_format($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb')) }}</td>
             <td class="text-right">{{ number_format($total_realisasi) }}</td>
             @if ($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb') == 0)
-                <td class="text-right">0%</td>
+                <td class="text-right">
+                    {{-- 0% --}}
+                </td>
             @else
                 <td class="text-right">
-                    {{ round(($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran / $data_realisasi_pengeluaran->sum('dana_perkiraan_rapb')) * 100, 2) }}%
+                    {{-- {{ round(($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran / $data_realisasi_pengeluaran->sum('dana_perkiraan_rapb')) * 100, 2) }}% --}}
                 </td>
             @endif
-            <td class="text-right">{{ number_format($total_realisasi) }}</td>
+            <td class="text-right">{{ number_format($total_realisasi_bantuan) }}</td>
+            <td></td>
+        </tr>
+        @php
+            $saldo_kas = $kas_tersedia - $total_realisasi;
+            $saldo_bantuan = $kas_bantuan_tersedia - $total_realisasi_bantuan;
+        @endphp
+        <tr valign=top>
+            <td class="text-right" colspan=4><b>SALDO AKHIR BULAN</b></td>
+            <td class="text-right"><b>Saldo Kas</b></td>
+            <td class="text-right"><b>{{ number_format($saldo_kas) }}</b></td>
+            <td class="text-right"><b>Saldo Bantuan</b></td>
+            <td class="text-right" colspan=2><b>{{ number_format($saldo_bantuan) }}</b></td>
         </tr>
         <tr valign=top>
-            <td colspan=6>SALDO AKHIR BULAN</td>
-            <td class="text-right">{{ number_format($kas_tersedia - $total_realisasi) }}</td>
+            <td class="text-right" colspan=7><b>SALDO KESELURUHAN</b></td>
+            <td class="text-right" colspan=2><b>{{ number_format($saldo_kas + $saldo_bantuan) }}</b></td>
         </tr>
     </table>
     <br>
