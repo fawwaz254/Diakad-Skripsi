@@ -47,6 +47,7 @@
                                     <th>Kode</th>
                                     <th>Nama</th>
                                     <th>Uraian</th>
+                                    <th>Dari Dana</th>
                                     <th>Pengeluaran</th>
                                     <th>Action</th>
                                 </tr>
@@ -94,6 +95,7 @@ var primary_table = $('#primary_table').DataTable({
         { data: 'rapb.subkategori.kode_subkategori_rapb' },
         { data: 'rapb.subkategori.nm_subkategori_rapb' },
         { data: 'nm_realisasi' },
+        { data: 'sumber_dana', searchable: false, orderable: false },
         { data: 'dana_realisasi', searchable: false, orderable: false },
         { data: 'action', name: 'action', searchable: false, orderable: false,
             render: function(data){

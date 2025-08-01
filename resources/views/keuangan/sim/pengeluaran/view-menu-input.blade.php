@@ -72,10 +72,10 @@
                                         <label>Dana berasal dari</label>
                                         <div class="demo-radio-button">
                                             <input name="sumber_dana" type="radio" id="radio_1"
-                                                value="SPP" checked="" class="with-gap" />
+                                                value="SPP" {{ isset($pengeluaran) ? ($pengeluaran->sumber_dana == 'SPP' ? 'checked' : '') : 'checked' }} class="with-gap" />
                                             <label for="radio_1">SPP</label>
                                             <input name="sumber_dana" type="radio" id="radio_2"
-                                                value="BANTUAN" class="with-gap" />
+                                                value="BANTUAN" {{ isset($pengeluaran) && $pengeluaran->sumber_dana == 'BANTUAN' ? 'checked' : '' }} class="with-gap" />
                                             <label for="radio_2">Dana Bantuan</label>
                                         </div>
                                     </div>
