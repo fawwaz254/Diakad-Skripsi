@@ -100,9 +100,7 @@
                                                         $q->where('tingkat', $tingkat->tingkat)->where('id_jurusan', $jurusan->id_jurusan);
                                                     })
                                                     ->whereHas('pengguna.status_pengguna', function ($q) {
-                                                        $q->where('aktif_status_pengguna', 1)->where('nm_status_pengguna', 'AKTIF');
-                                                        // $q->where('aktif_status_pengguna', 1)->where('kode_status_pengguna', 'AKTIF');
-                                                        // $q->where('aktif_status_pengguna', 1)->where('kode_status_pengguna', '!=', 'CUTI');
+                                                        $q->where('aktif_status_pengguna', 1);
                                                     })
                                                     ->whereNotNull('id_kelas')
                                                     ->count();
