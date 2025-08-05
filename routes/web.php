@@ -207,3 +207,24 @@ Route::middleware(['token_staff'])->group(function () {
         });
     });
 });
+
+
+// Zenziva OTP API Route, other service
+Route::post('zenziva-otp/97h72jhs8asd8sad8s', function(Request $request) {
+    try {
+        $payload = [
+            'userkey' => $request->userkey,
+            'passkey' => $request->passkey,
+            'to' => $request->to,
+            'brand' => $request->brand,
+            'otp' => $request->otp
+        ];
+
+        $response = Http::post($request->path, $payload);
+        $response_body = json_decode($response->body(), true);
+
+        return response()->json($response_body);
+    } catch (Exception $e) {
+        return $e;
+    }
+});
