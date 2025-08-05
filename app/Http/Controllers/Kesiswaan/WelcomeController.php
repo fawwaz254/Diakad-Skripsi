@@ -27,7 +27,7 @@ class WelcomeController extends BaseController
         $auth_data = auth_data();
 
         $count_siswa = Siswa::with('pengguna')->whereHas('pengguna.status_pengguna', function ($q) {
-            $q->where('aktif_status_pengguna', 1)->where('nm_status_pengguna', 'AKTIF');
+            $q->where('aktif_status_pengguna', 1);
         })->whereNotNull('id_kelas')->count();
 
         $jenis_kelamin = Siswa::select('jenis_kelamin', DB::raw('count(*) as user_count'))
