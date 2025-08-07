@@ -51,7 +51,10 @@ class TracerAlumniController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = auth_data();
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
+        $sekolah = $auth_data->sekolah_data->nm_singkat_sekolah ?? null;
+
+
+        if (in_array($sekolah, ['smpmuh6krian', 'smpypm1', 'smpypm2'])) {
             return view('humas.alumni.tracer-alumni.view-tracer-alumni-smp');
         } else {
             return view('humas.alumni.tracer-alumni.view-tracer-alumni');
@@ -90,14 +93,14 @@ class TracerAlumniController extends BaseController
         }
     }
 
-    public function downloadFileExcel()
+    public function downloadFileExcelAlumniSMP()
     {
-        $file = public_path() . "/excel/ContohFileExelUploadTracerAlumniSmp.xlsx";
+        $file = public_path() . "/excel/ContohFileExelUploadAlumniSmp_v2.xlsx";
         $headers = [
             'Content-Type' => 'application/xlsx',
         ];
 
-        return response()->download($file, 'ContohFileExelUploadTracerAlumniSmp.xlsx', $headers);
+        return response()->download($file, 'ContohFileExelUploadAlumniSmp_v2.xlsx', $headers);
     }
 
 
@@ -557,6 +560,11 @@ class TracerAlumniController extends BaseController
         return view('humas.alumni.tracer-alumni.import-tracer-alumni');
     }
 
+    public function importTracerAlumnismp()
+    {
+        return view('humas.alumni.tracer-alumni.import-tracer-alumni-smp');
+    }
+
     public function handleImportTracerAlumni(Request $request)
     {
         $input = (object) $request->input();
@@ -726,6 +734,17 @@ class TracerAlumniController extends BaseController
                             $status_data['id_alumni_menunggu'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                             $status_data['status_menunggu'] = $row['status_menunggu'];
                             LibAlumni::storeIdleAlumni($status_data);
+                            break;
+                        case 'smp':
+                            $status_data['id_alumni_smp'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                            $status_data['nama_lengkap'] = $row['nama_lengkap'];
+                            $status_data['nisn'] = $row['nisn'];
+                            $status_data['jenjang'] = $row['jenjang'];
+                            $status_data['nama_sekolah'] = $row['nama_sekolah'];
+                            $status_data['alamat_sekolah'] = $row['alamat_sekolah'];
+                            $status_data['jurusan'] = $row['jurusan'] ?? null;
+                            $status_data['tahun_masuk'] = $row['tahun_masuk'];
+                            LibAlumni::storeSMP($status_data);
                             break;
                     }
 

@@ -23,7 +23,7 @@
                     <div class="table-responsive">
                         <table
                             class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                            id="primary_table" style="wide : 100 %">
+                            id="primary_table" style="wide : 100%">
                             <thead>
                                 <tr>
                                     <th>No</th>

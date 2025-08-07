@@ -607,11 +607,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('get-siswa-by-kelas', [TracerAlumniController::class, 'getSiswaByKelas']);
                 Route::post('get-jurusan-by-kelas', [TracerAlumniController::class, 'getJurusanByKelas']);
                 Route::get('import', [TracerAlumniController::class, 'importTracerAlumni'])->name('import.tracer.alumni');
+                Route::get('import-smp', [TracerAlumniController::class, 'importTracerAlumnismp'])->name('import.tracer.alumnismp');
                 Route::post('handle-import', [TracerAlumniController::class, 'handleImportTracerAlumni'])->name('handle.import.tracer.alumni');
                 Route::get('/download-file-excel1', [TracerAlumniController::class, 'downloadFileExcelAlumniBekerja'])->name('alumnibekerja/download-file-excel');
                 Route::get('/download-file-excel2', [TracerAlumniController::class, 'downloadFileExcelAlumniWirausaha'])->name('alumniwirausaha/download-file-excel');
                 Route::get('/download-file-excel3', [TracerAlumniController::class, 'downloadFileExcelAlumniKuliah'])->name('alumnikuliah/download-file-excel');
                 Route::get('/download-file-excel4', [TracerAlumniController::class, 'downloadFileExcelAlumniMenunggu'])->name('alumnimenunggu/download-file-excel');
+                Route::get('/download-file-excel5', [TracerAlumniController::class, 'downloadFileExcelAlumniSMP'])->name('alumnismp/download-file-excel');
                 Route::get('cetak', [TracerAlumniController::class, 'cetakTracerAlumni']);
                 Route::get('cetak2', [TracerAlumniController::class, 'cetakTracerAlumni2']);
                 Route::post('cetak', [TracerAlumniController::class, 'changeTracerAlumni']);

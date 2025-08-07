@@ -56,7 +56,7 @@
                                     4. Upload file <br></p>
 
                                 <hr>
-                                <a href="{{ route('tracer-alumni-smp/download-file-excel') }}">
+                                <a href="{{ route('alumnismp/download-file-excel') }}?t={{ time() }}">
                                     <button class="btn btn-block bg-green waves-effect" type="submit">
                                         <i class="material-icons">cloud_upload</i>
                                         <span>Download Template</span>

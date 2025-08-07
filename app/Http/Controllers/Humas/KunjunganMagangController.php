@@ -95,6 +95,7 @@ class KunjunganMagangController extends Controller
     } catch (\Exception $e) {
         // Log error tapi lanjutkan
         \Illuminate\Support\Facades\Log::error("Gagal menghapus file: " . $e->getMessage());
+
     }
 
     $data->delete();
