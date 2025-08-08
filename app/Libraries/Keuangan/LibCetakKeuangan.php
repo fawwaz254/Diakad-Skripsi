@@ -292,7 +292,10 @@ class LibCetakKeuangan
                     $q->on('kategori_rapb.id_kategori_rapb', '=', 'subkategori_rapb.id_kategori_rapb')
                         ->whereNull('kategori_rapb.deleted_at');
                 })
-                ->where('realisasi.sumber_dana', '!=', 'BANTUAN')
+                ->where(function($q){
+                    $q->where('realisasi.sumber_dana', '!=', 'BANTUAN')
+                        ->orWhereNull('realisasi.sumber_dana');
+                })
                 ->whereMonth('tgl_realisasi', $id_bulan)
                 ->whereYear('tgl_realisasi', $tahun);
 
