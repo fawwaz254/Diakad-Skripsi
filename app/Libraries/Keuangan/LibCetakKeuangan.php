@@ -472,7 +472,10 @@ class LibCetakKeuangan
                     ->whereNull('realisasi.deleted_at')
                     ->whereMonth('realisasi.tgl_realisasi', $id_bulan)
                     ->whereYear('realisasi.tgl_realisasi', $tahun)
-                    ->where('realisasi.sumber_dana', '!=', 'BANTUAN');
+                    ->where(function($q){
+                        $q->where('realisasi.sumber_dana', '!=', 'BANTUAN')
+                            ->orWhereNull('realisasi.sumber_dana');
+                    });
 
                 if ($print_setting == 'self') {
                     $q->where('realisasi.created_by', $auth_data->pengguna->id_pengguna);
