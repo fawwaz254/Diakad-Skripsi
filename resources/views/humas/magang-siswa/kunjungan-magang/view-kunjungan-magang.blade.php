@@ -49,7 +49,7 @@
                     <div class="modal-footer"
                         style="display: flex; gap: 10px; align-items: center; justify-content: center;">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                        <form id="deleteForm{{ $km->id_kunjungan_magang }}" method="POST" action="{{ route('destroy.kunjungan-magang', $km->id_kunjungan_magang) }}">
+                        <form id="deleteForm{{ $km->id_kunjungan_magang }}" method="POST" action="{{ route('humas.destroy.kunjungan-magang', $km->id_kunjungan_magang) }}">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger waves-effect">Hapus</button>

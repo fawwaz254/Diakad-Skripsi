@@ -187,6 +187,7 @@ class SppController extends BaseController
         $now = Carbon::now();
         if ($request->hasFile('file-excel')) {
 
+            $data_semester = Semester::get();
             $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
             $data = $data[0]; // Sheet 1
             if (count($data)) {
@@ -205,7 +206,7 @@ class SppController extends BaseController
                                         'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
                                     ];
                                 } else {
-                                    $semester = Semester::where('kode_semester', $item->kode_semester)->first();
+                                    $semester = $data_semester->firstWhere('kode_semester', $item->kode_semester);
                                     $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
                                     $keterangan = $item->keterangan;
                                     $tahun_ajaran = $item->tahun_ajaran;
@@ -280,7 +281,6 @@ class SppController extends BaseController
                                     ];
                                 } else {
                                     $semester = $listSemester->where('kode_semester', $item->kode_semester)->first();
-                                    // $semester = Semester::where('tahun_ajaran', $item->tahun_ajaran)->where('nm_semester', strtoupper($item->nm_semester))->first();
 
                                     $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
                                     $id_bulan = $item->id_bulan;
@@ -288,14 +288,6 @@ class SppController extends BaseController
                                     $tagihan_siswa = $listTagihanSiswa->where('id_siswa', $siswa->id_siswa)
                                         ->where('detail_biaya.id_bulan', $id_bulan)
                                         ->where('detail_biaya.biaya_sekolah.id_semester', $semester->id_semester)->first();
-
-                                    // $tagihan_siswa = $listTagihanSiswa->where('id_siswa', $siswa->id_siswa)
-                                    //     ->whereHas('detail_biaya', function ($q) use ($id_bulan) {
-                                    //         $q->where('id_bulan', $id_bulan);
-                                    //     })
-                                    //     ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($semester) {
-                                    //         $q->where('id_semester', $semester->id_semester);
-                                    //     })->first();
 
                                     if (empty($tagihan_siswa)) {
                                         return [

@@ -94,7 +94,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">Sumber Dana</h2>
+                            <h2 class="card-inside-title">Sumber Dana Pemasukan</h2>
                             <input class="with-gap radio-col-light-green form-control validate" type="radio"
                                 name="print_setting2" value="semua" id="semua" onchange="changeSettingSession2()"
                                 {{ !empty(session('setting_print_keuangan2')) && session('setting_print_keuangan2') == 'semua' ? 'checked' : '' }} />

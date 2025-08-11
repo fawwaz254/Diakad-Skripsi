@@ -276,6 +276,7 @@ class LibCetakKeuangan
                                         nm_kategori_rapb,
                                         kode_subkategori_rapb,
                                         nm_subkategori_rapb,
+                                        deskripsi_subkategori_rapb,
                                         tipe_kategori_rapb,
                                         SUM(dana_realisasi) as total_realisasi,
                                         dana_perkiraan_rapb')
@@ -291,6 +292,10 @@ class LibCetakKeuangan
                     $q->on('kategori_rapb.id_kategori_rapb', '=', 'subkategori_rapb.id_kategori_rapb')
                         ->whereNull('kategori_rapb.deleted_at');
                 })
+                ->where(function($q){
+                    $q->where('realisasi.sumber_dana', '!=', 'BANTUAN')
+                        ->orWhereNull('realisasi.sumber_dana');
+                })
                 ->whereMonth('tgl_realisasi', $id_bulan)
                 ->whereYear('tgl_realisasi', $tahun);
 
@@ -298,7 +303,38 @@ class LibCetakKeuangan
                 $data_realisasi = $data_realisasi->isInputByPengguna($auth_data->pengguna->id_pengguna);
             }
 
-            $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
+            $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'deskripsi_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
+
+            $data_pengeluaran_bantuan = Realisasi::selectRaw('
+                                        nm_kategori_rapb,
+                                        kode_subkategori_rapb,
+                                        nm_subkategori_rapb,
+                                        deskripsi_subkategori_rapb,
+                                        tipe_kategori_rapb,
+                                        SUM(dana_realisasi) as total_realisasi,
+                                        dana_perkiraan_rapb')
+                ->join('rapb', function ($q) {
+                    $q->on('rapb.id_rapb', '=', 'realisasi.id_rapb')
+                        ->whereNull('rapb.deleted_at');
+                })
+                ->join('subkategori_rapb', function ($q) {
+                    $q->on('subkategori_rapb.id_subkategori_rapb', '=', 'rapb.id_subkategori_rapb')
+                        ->whereNull('subkategori_rapb.deleted_at');
+                })
+                ->join('kategori_rapb', function ($q) {
+                    $q->on('kategori_rapb.id_kategori_rapb', '=', 'subkategori_rapb.id_kategori_rapb')
+                        ->whereNull('kategori_rapb.deleted_at');
+                })
+                ->where('kategori_rapb.tipe_kategori_rapb', 2)
+                ->where('realisasi.sumber_dana', 'BANTUAN')
+                ->whereMonth('tgl_realisasi', $id_bulan)
+                ->whereYear('tgl_realisasi', $tahun);
+
+            if ($print_setting == 'self') {
+                $data_pengeluaran_bantuan = $data_pengeluaran_bantuan->isInputByPengguna($auth_data->pengguna->id_pengguna);
+            }
+
+            $data_pengeluaran_bantuan = $data_pengeluaran_bantuan->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'deskripsi_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
 
             if ($tutup_buku_bulanan_kas_now) {
                 $tutup_buku_bulanan_kas_now->updated_by = $auth_data->pengguna->id_pengguna;
@@ -312,8 +348,15 @@ class LibCetakKeuangan
                 $tutup_buku_bulanan_kas_now->created_by = $auth_data->pengguna->id_pengguna;
             }
             $tutup_buku_bulanan_kas_now->kas_spp = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
-            $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
+            $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan = $data_realisasi->where('tipe_kategori_rapb', 1)->filter(function($item){
+                                                                        return $item->deskripsi_subkategori_rapb  != 'SUBSIDI_BOS_TAGGED';
+                                                                    })->sum('total_realisasi');
+            $tutup_buku_bulanan_kas_now->kas_rapb_bantuan = $data_realisasi->where('tipe_kategori_rapb', 1)->filter(function($item){
+                                                                        return $item->deskripsi_subkategori_rapb  == 'SUBSIDI_BOS_TAGGED';
+                                                                    })->sum('total_realisasi') - $data_pengeluaran_bantuan->sum('total_realisasi');
+
             $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
+
             $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
             $tutup_buku_bulanan_kas_now->sisa_tunggakan_biaya = ($tutup_buku_bulanan_kas_old->sisa_tunggakan_biaya ?? 0) - $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
             if ($tutup_buku_bulanan_kas_now->is_fix == 0) {
@@ -420,6 +463,7 @@ class LibCetakKeuangan
                                         nm_kategori_rapb,
                                         kode_subkategori_rapb,
                                         nm_subkategori_rapb,
+                                        deskripsi_subkategori_rapb,
                                         tipe_kategori_rapb,
                                         SUM(dana_realisasi) as total_realisasi,
                                         dana_perkiraan_rapb')
@@ -427,7 +471,11 @@ class LibCetakKeuangan
                 $q->on('realisasi.id_rapb', '=', 'rapb.id_rapb')
                     ->whereNull('realisasi.deleted_at')
                     ->whereMonth('realisasi.tgl_realisasi', $id_bulan)
-                    ->whereYear('realisasi.tgl_realisasi', $tahun);
+                    ->whereYear('realisasi.tgl_realisasi', $tahun)
+                    ->where(function($q){
+                        $q->where('realisasi.sumber_dana', '!=', 'BANTUAN')
+                            ->orWhereNull('realisasi.sumber_dana');
+                    });
 
                 if ($print_setting == 'self') {
                     $q->where('realisasi.created_by', $auth_data->pengguna->id_pengguna);
@@ -448,7 +496,7 @@ class LibCetakKeuangan
             $data_realisasi = $data_realisasi->isInputByPengguna($auth_data->pengguna->id_pengguna);
         }
 
-        $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
+        $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'deskripsi_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
         $bulan = Bulan::find($id_bulan);
         $sekolah = $auth_data->sekolah_data;
 
@@ -473,6 +521,7 @@ class LibCetakKeuangan
             'tutup_buku_kas_bulan_lalu' => $tutup_buku_kas_bulan_lalu,
             'subkategori_non_kbm' => $subkategori_non_kbm,
             'subkategori_pengembangan_pendidikan' => $subkategori_pengembangan_pendidikan,
+            'data_pengeluaran_bantuan' => $data_pengeluaran_bantuan
         ];
 
         return $data;
