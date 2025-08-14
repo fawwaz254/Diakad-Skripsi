@@ -6,7 +6,7 @@ jobs:
       enabled: true
     steps:
       - run:
-          name: Deploy To SERVER DEV
+          name: Deploy To SERVER DEV DEMO
           command: |
             ssh -t $SSH_USER@$SERVER_DEV "cd /var/www/diakademik_demo && git pull origin master && php artisan migrate --force"
 
