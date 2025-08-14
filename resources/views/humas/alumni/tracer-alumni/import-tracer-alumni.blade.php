@@ -37,6 +37,10 @@
                                 <input class="with-gap radio-col-light-green form-control validate" type="radio"
                                     name="status_import" value="menunggu" id="status_menunggu">
                                 <label for="status_menunggu">Alumni Menunggu</label>
+
+                                <!-- <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                    name="status_import" value="SMP" id="status_SMP">
+                                <label for="status_SMP">Alumni SMP</label> -->
                             </div>
                         </div>
                     </div>
@@ -288,6 +292,62 @@
         </div>
     </div>
 
+    <!-- FORM IMPORT ALUMNI SMP
+    <div class="form_import_layout" id="import_SMP" style="display: none;">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-4">
+                <div class="card">
+                    <div class="header">
+                        <h2>UPLOAD DATA ALUMNI SMP</h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
+                                <h2 class="card-inside-title">Upload File Excel Alumni SMP</h2>
+                                <form id="form-upload-excel-SMP" method="POST" action="{{ url('humas/alumni/tracer-alumni/handle-import') }}" enctype="multipart/form-data">
+                                    {{ csrf_field() }}
+                                    <p>Pilih File Excel</p>
+                                    <input type="file" name="file-excel" id="file-excel-SMP" accept=".xls,.xlsx" required>
+                                    <input type="hidden" name="status" value="SMP">
+                                    <br>
+                                    <div class="col-xs-6 col-sm-6 col-md-6 mt-3">
+                                        <button id="btn-upload-SMP" class="btn btn-block bg-blue waves-effect" type="button">
+                                            <i class="material-icons">cloud_upload</i>
+                                            <span>Upload File Excel</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
+                                <h2 class="card-inside-title">Petunjuk</h2>
+                                <h5>Format susunan file Excel ALUMNI SMP sebagai berikut:</h5>
+                                <ul>
+                                    <li><strong>NIS</strong>: Nomor Induk Siswa</li>
+                                    <li><strong>Nama Lengkap</strong>: Nama Lengkap Siswa</li>
+                                    <li><strong>Kelas</strong>: Kelas Siswa (Penulisan sesuai Nama Kelas dan Gunakan huruf <strong>KAPITAL</strong>)</li>
+                                    <li><strong>Jurusan</strong>: Jurusan Siswa (Gunakan huruf <strong>KAPITAL</strong>)</li>
+                                    <li><strong>Tahun Lulus</strong>: Tahun Lulus Sekolah</li>
+                                    <li><strong>Nomor Telepon/HP/WA</strong>: Nomor Telepon Siswa</li>
+                                    <li><strong>Email</strong>: Email siswa</li>
+                                    <li><strong>Alamat</strong>: Alamat Siswa</li>
+                                    <li><strong>Alamat URL Instagram / Facebook</strong>: Link Profile Instagram / Facebook Siswa</li>
+                                    <li><strong>Status Menunggu</strong>: Ketik : Mencari Kerja / Mempersiapkan Diri Masuk Perguruan Tinggi</li>
+                                </ul>
+                                <br>
+                                <a href="{{ route('alumnismp/download-file-excel') }}?t={{ time() }}">
+                                    <button class="btn btn-block bg-green waves-effect" type="button">
+                                        <i class="material-icons">file_download</i>
+                                        <span>Download Template Excel</span>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
     <!-- DATA BERHASIL IMPORT -->
     <div id="data-berhasil" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-4" style="margin-top: 20px; display: none;">
         <div class="card">
@@ -384,6 +444,9 @@
             case 'menunggu':
                 $('#import_menunggu').show();
                 break;
+            case 'SMP':
+                $('#import_SMP').show();
+                break;
         }
     }
 
@@ -401,6 +464,10 @@
 
     $('#btn-upload-menunggu').on('click', function() {
         handleUpload('#form-upload-excel-menunggu', '#file-excel-menunggu');
+    });
+
+    $('#btn-upload-SMP').on('click', function() {
+        handleUpload('#form-upload-excel-SMP', '#file-excel-SMP');
     });
 
     function handleUpload(formSelector, fileSelector) {
@@ -635,7 +702,7 @@
         return { valid: true };
     }
 
-    $('#file-excel-bekerja, #file-excel-usaha, #file-excel-kuliah, #file-excel-menunggu').on('change', function() {
+    $('#file-excel-bekerja, #file-excel-usaha, #file-excel-kuliah, #file-excel-menunggu, #file-excel-SMP').on('change', function() {
         const validation = validateFile(this);
         const fileName = this.files[0] ? this.files[0].name : '';
         
@@ -658,7 +725,7 @@
     $("input[name='status_import']").change(function() {
         $('#file-excel-bekerja, #file-excel-usaha, #file-excel-kuliah, #file-excel-menunggu').val('');
         
-        $('#form-upload-excel-bekerja p, #form-upload-excel-usaha p, #form-upload-excel-kuliah p, #form-upload-excel-menunggu p').text('Pilih File Excel');
+        $('#form-upload-excel-bekerja p, #form-upload-excel-usaha p, #form-upload-excel-kuliah p, #form-upload-excel-menunggu p, #form-upload-excel-SMP p').text('Pilih File Excel');
         
         $('#data-berhasil, #data-gagal').hide();
     });

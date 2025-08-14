@@ -34,6 +34,7 @@ use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Http\Controllers\Keuangan\BantuanController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['token_staff'])->group(function () {
@@ -41,7 +42,6 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
         Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
         // Route::get('hapus', [\App\Http\Controllers\Administrator\WelcomeController::class, 'deleteTagihanYangSama']);
-
         Route::prefix('manajemen-file')->group(function () {
 
             Route::prefix('data-kategori')->group(function () {
