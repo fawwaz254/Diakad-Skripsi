@@ -1790,7 +1790,7 @@ class UploadDataSiswaController extends BaseController
 						return [
 							'status'    => 300, // FAILED
 							'message'   => "Upload Data Siswa '.$value->nis. ' Gagal,
-						 kelas ' . $value->kelas . ' tidak ditemukan di dalam sistem"
+						kelas ' . $value->kelas . ' tidak ditemukan di dalam sistem"
 						];
 					}
 
