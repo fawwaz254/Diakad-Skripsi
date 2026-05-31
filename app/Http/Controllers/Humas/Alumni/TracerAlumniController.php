@@ -233,13 +233,6 @@ class TracerAlumniController extends BaseController
     }
 
 
-
-// ============================================================
-// REFACTORED v2: actionTracerAlumni dan method-method pendukungnya
-// switch + if-else status alumni digabung ke buildAndStoreAlumniStatus()
-// Ganti method lama di TracerAlumniController dengan kode ini
-// ============================================================
-
     /**
      * Entry point untuk CRUD tracer alumni.
      * Mendelegasikan ke method yang lebih spesifik berdasarkan $mode.
