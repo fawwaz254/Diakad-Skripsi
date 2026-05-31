@@ -28,6 +28,7 @@
                         <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
                         <input type="hidden" name="id_c_siswa"
                             value="{{ !empty($alumni) ? $alumni->id_c_siswa : '' }}">
+                        <input type="hidden" name="old_status" value="{{ !empty($alumni) ? $alumni->status : '' }}">
                         <input type="hidden" name="jurusan" id="hidden_jurusan" value="{{ !empty($alumni) ? $alumni->calon_siswa->jurusan->id_jurusan : '' }}">
 
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
