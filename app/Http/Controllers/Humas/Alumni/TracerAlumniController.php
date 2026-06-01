@@ -51,7 +51,10 @@ class TracerAlumniController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = auth_data();
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
+        $sekolah = $auth_data->sekolah_data->nm_singkat_sekolah ?? null;
+
+
+        if (in_array($sekolah, ['smpmuh6krian', 'smpypm1', 'smpypm2'])) {
             return view('humas.alumni.tracer-alumni.view-tracer-alumni-smp');
         } else {
             return view('humas.alumni.tracer-alumni.view-tracer-alumni');
@@ -90,14 +93,14 @@ class TracerAlumniController extends BaseController
         }
     }
 
-    public function downloadFileExcel()
+    public function downloadFileExcelAlumniSMP()
     {
-        $file = public_path() . "/excel/ContohFileExelUploadTracerAlumniSmp.xlsx";
+        $file = public_path() . "/excel/ContohFileExelUploadAlumniSmp_v2.xlsx";
         $headers = [
             'Content-Type' => 'application/xlsx',
         ];
 
-        return response()->download($file, 'ContohFileExelUploadTracerAlumniSmp.xlsx', $headers);
+        return response()->download($file, 'ContohFileExelUploadAlumniSmp_v2.xlsx', $headers);
     }
 
 
@@ -229,332 +232,390 @@ class TracerAlumniController extends BaseController
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
 
+
+    /**
+     * Entry point untuk CRUD tracer alumni.
+     * Mendelegasikan ke method yang lebih spesifik berdasarkan $mode.
+     */
     public function actionTracerAlumni(Request $request, $mode, $id = null)
     {
+        return match ($mode) {
+            'add'    => $this->handleAdd($request),
+            'add2'   => $this->handleAdd2($request),
+            'edit'   => $this->handleEdit($request),
+            'delete' => $this->handleDelete($request, $id),
+            default  => abort(404),
+        };
+    }
 
-        $input = (object) $request->input();
-        $auth_data = auth_data();
+    // ----------------------------------------------------------------
+    // MODE: add — tambah alumni baru (siswa baru atau siswa yang sudah ada)
+    // ----------------------------------------------------------------
 
-        if ($mode == 'add') {
-            DB::beginTransaction();
+    private function handleAdd(Request $request)
+    {
+        $authData = auth_data();
 
-            try {
+        DB::beginTransaction();
+        try {
+            $idCalonSiswa = $request->filled('id_c_siswa')
+                ? $this->updateExistingStudent($request, $authData)
+                : $this->createNewStudent($request, $authData);
 
-                if ($request->filled('id_c_siswa')) {
-                    $calon_siswa = CalonSiswaBaru::find($request->id_c_siswa);
+            $alumni = $this->insertAlumni($request, $authData, $idCalonSiswa);
+            $this->buildAndStoreAlumniStatus($request, $authData, $alumni['id_alumni']);
 
-                    if (!$calon_siswa) {
-                        return error_response('Data siswa tidak ditemukan');
-                    }
-                    $calon_siswa->nomor_hp = $request->nomor_hp;
-                    $calon_siswa->alamat_jalan = $request->alamat_siswa;
-                    if ($request->filled('jurusan')) {
-                        $calon_siswa->id_jurusan = $request->jurusan;
-                    }
-                    $calon_siswa->updated_by = $auth_data->pengguna->id_pengguna;
-                    $calon_siswa->save();
-
-                    $id_c_siswa = $calon_siswa->id_c_siswa;
-                } else {
-                    $data['nm_c_siswa'] = $request->nama_siswa;
-                    $data['nomor_hp'] = $request->nomor_hp;
-                    $data['id_jurusan'] = $request->jurusan;
-                    $data['alamat_jalan'] = $request->alamat_siswa;
-                    $data['id_c_siswa'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                    $data['id_penerimaan'] = 0;
-                    $data['status_verifikasi'] = 0;
-                    $data['created_by'] = $auth_data->pengguna->id_pengguna;
-                    $data['created_at'] = Carbon::now();
-
-                    CalonSiswaBaru::insert($data);
-
-                    $data2 = [
-                        'id_c_siswa' => $data['id_c_siswa'],
-                        'created_by' => $auth_data->pengguna->id_pengguna,
-                        'created_at' => Carbon::now()
-                    ];
-
-                    CalonSiswaOrtu::insert($data2);
-                    CalonSiswaFisik::insert($data2);
-                    CalonSiswaSekolah::insert($data2);
-
-                    $data3['nm_pengguna'] = $request->nama_siswa;
-                    $data3['email_pengguna'] = $request->email;
-                    $data3['nomor_hp_pengguna'] = $request->nomor_hp;
-                    $data3['username'] = str_replace(' ', '_', $request->nama_siswa);
-                    $data3['id_status_pengguna'] = StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna;
-                    $data3['id_sekolah'] = $auth_data->pengguna->id_sekolah;
-                    $data3['id_pengguna'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                    $data3['created_by'] = $auth_data->pengguna->id_pengguna;
-                    $data3['created_at'] = Carbon::now();
-
-                    Pengguna::insert($data3);
-
-                    Siswa::insert([
-                        'id_siswa' => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
-                        'id_pengguna' => $data3['id_pengguna'],
-                        'id_c_siswa' => $data['id_c_siswa'],
-                        'created_by' => $auth_data->pengguna->id_pengguna,
-                        'created_at' => Carbon::now()
-                    ]);
-
-                    $id_c_siswa = $data['id_c_siswa'];
-                }
-
-                $data4['id_kelas'] = $request->id_kelas;
-                $data4['email'] = $request->email;
-                $data4['tahun_lulus'] = $request->tahun_lulus;
-                $data4['url_medsos'] = $request->url_medsos;
-                $data4['status'] = $request->status;
-                $data4['id_alumni'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                $data4['id_c_siswa'] = $id_c_siswa;
-                $data4['created_by'] = $auth_data->pengguna->id_pengguna;
-                $data4['created_at'] = Carbon::now();
-
-                Alumni::insert($data4);
-
-                switch ($request->status) {
-                    case 'bekerja':
-                        $data5 = $request->only(self::FETCH_WORK_ATTRIBUTE);
-                        $data5['id_alumni_bekerja'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'usaha':
-                        $data5 = $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE);
-                        $data5['id_alumni_wirausaha'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'kuliah':
-                        $data5 = $request->only(self::FETCH_COLLEGE_ATTRIBUTE);
-                        $data5['id_alumni_kuliah'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'menunggu':
-                        $data5 = $request->only(self::FETCH_IDLE_ATTRIBUTE);
-                        $data5['id_alumni_menunggu'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'smp';
-                        $data5 = $request->only(self::FETCH_SMP);
-                        $data5['id_alumni_smp'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                }
-
-                $data5['id_alumni'] = $data4['id_alumni'];
-                $data5['created_by'] = $auth_data->pengguna->id_pengguna;
-                $data5['created_at'] = Carbon::now();
-
-                if ($request->status == 'bekerja') {
-                    LibAlumni::storeWorkplace($data5);
-                } elseif ($request->status == 'usaha') {
-                    LibAlumni::storeBusiness($data5);
-                } elseif ($request->status == 'kuliah') {
-                    LibAlumni::storeUniversity($data5);
-                } elseif ($request->status == 'menunggu') {
-                    LibAlumni::storeIdleAlumni($data5);
-                } elseif ($request->status == 'smp') {
-                    LibAlumni::storeSMP($data5);
-                }
-
-                DB::commit();
-                return web_response(202, "Update Successfully", self::PATH);
-            } catch (\Exception $e) {
-                DB::rollback();
-                return error_response($e);
-            }
-        } elseif ($mode == 'add2') {
-
-            DB::beginTransaction();
-
-            try {
-
-                $jurusan = CalonSiswaBaru::where('id_c_siswa', $request->id_c_siswa)->first();
-                $jurusan->id_jurusan = $request->jurusan;
-                $jurusan->alamat_jalan = $request->alamat_siswa;
-                $jurusan->nomor_hp = $request->nomor_hp;
-                $jurusan->save();
-
-                $data4['id_kelas'] = $request->id_kelas;
-                $data4['email'] = $request->email;
-                $data4['tahun_lulus'] = $request->tahun_lulus;
-                $data4['status'] = $request->status;
-                $data4['url_medsos'] = $request->url_medsos;
-                $data4['id_alumni'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                $data4['id_c_siswa'] = $request->id_c_siswa;
-                $data4['created_by'] = $auth_data->pengguna->id_pengguna;
-                $data4['created_at'] = Carbon::now();
-
-                Alumni::insert($data4);
-
-                switch ($request->status) {
-                    case 'bekerja':
-                        $data5 = $request->only(self::FETCH_WORK_ATTRIBUTE);
-                        $data5['id_alumni_bekerja'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'usaha':
-                        $data5 = $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE);
-                        $data5['id_alumni_wirausaha'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'kuliah':
-                        $data5 = $request->only(self::FETCH_COLLEGE_ATTRIBUTE);
-                        $data5['id_alumni_kuliah'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'menunggu':
-                        $data5 = $request->only(self::FETCH_IDLE_ATTRIBUTE);
-                        $data5['id_alumni_menunggu'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'smp';
-                        $data5 = $request->only(self::FETCH_SMP);
-                        $data5['id_alumni_smp'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                }
-
-                $data5['id_alumni'] = $data4['id_alumni'];
-                $data5['created_by'] = $auth_data->pengguna->id_pengguna;
-                $data5['created_at'] = Carbon::now();
-
-                if ($request->status == 'bekerja') {
-                    LibAlumni::storeWorkplace($data5);
-                } elseif ($request->status == 'usaha') {
-                    LibAlumni::storeBusiness($data5);
-                } elseif ($request->status == 'kuliah') {
-                    LibAlumni::storeUniversity($data5);
-                } elseif ($request->status == 'menunggu') {
-                    LibAlumni::storeIdleAlumni($data5);
-                } elseif ($request->status == 'smp') {
-                    LibAlumni::storeSMP($data5);
-                }
-
-                DB::commit();
-
-
-                if (Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_kelas', null)->first()) {
-                    return web_response(202, "Update Successfully", self::PATH);
-                } else {
-                    return web_response(202, "Update Successfully", self::PATH2);
-                }
-            } catch (\Exception $e) {
-
-                DB::rollback();
-
-                return error_response($e);
-            }
-        } elseif ($mode == 'edit') {
-            DB::beginTransaction();
-
-            try {
-                $jurusan = CalonSiswaBaru::where('id_c_siswa', $request->id_c_siswa)->first();
-                $jurusan->id_jurusan = $request->jurusan;
-                $jurusan->alamat_jalan = $request->alamat_siswa;
-                $jurusan->nomor_hp = $request->nomor_hp;
-                $jurusan->save();
-
-                $alumni = Alumni::where('id_alumni', $request->id_alumni)->first();
-                $alumni->id_kelas = $request->id_kelas;
-                $alumni->email = $request->email;
-                $alumni->tahun_lulus = $request->tahun_lulus;
-                $alumni->url_medsos = $request->url_medsos;
-                $alumni->status = $request->status;
-                $alumni->updated_by = $auth_data->pengguna->id_pengguna;
-                $alumni->save();
-
-                switch ($request->status) {
-                    case 'bekerja':
-                        $data5 = $request->only(self::FETCH_WORK_ATTRIBUTE);
-                        $data5['id_alumni_bekerja'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'usaha':
-                        $data5 = $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE);
-                        $data5['id_alumni_wirausaha'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'kuliah':
-                        $data5 = $request->only(self::FETCH_COLLEGE_ATTRIBUTE);
-                        $data5['id_alumni_kuliah'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'menunggu':
-                        $data5 = $request->only(self::FETCH_IDLE_ATTRIBUTE);
-                        $data5['id_alumni_menunggu'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                    case 'smp';
-                        $data5 = $request->only(self::FETCH_SMP);
-                        $data5['id_alumni_smp'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                        break;
-                }
-
-                $data5['id_alumni'] = $request->id_alumni;
-                $data5['updated_by'] = $auth_data->pengguna->id_pengguna;
-                $data5['created_by'] = $auth_data->pengguna->id_pengguna;
-                $data5['created_at'] = Carbon::now();
-
-                if ($request->old_status == 'bekerja') {
-                    $hapus_old_status = AlumniBekerja::where('id_alumni', $request->id_alumni)->first();
-                    $hapus_old_status->delete();
-                } elseif ($request->old_status == 'usaha') {
-                    $hapus_old_status = AlumniWirausaha::where('id_alumni', $request->id_alumni)->first();
-                    $hapus_old_status->delete();
-                } elseif ($request->old_status == 'kuliah') {
-                    $hapus_old_status = AlumniKuliah::where('id_alumni', $request->id_alumni)->first();
-                    $hapus_old_status->delete();
-                } elseif ($request->old_status == 'menunggu') {
-                    $hapus_old_status = AlumniMenunggu::where('id_alumni', $request->id_alumni)->first();
-                    $hapus_old_status->delete();
-                }
-                if ($request->status == 'bekerja') {
-                    LibAlumni::storeWorkplace($data5);
-                } elseif ($request->status == 'usaha') {
-                    LibAlumni::storeBusiness($data5);
-                } elseif ($request->status == 'kuliah') {
-                    LibAlumni::storeUniversity($data5);
-                } elseif ($request->status == 'menunggu') {
-                    LibAlumni::storeIdleAlumni($data5);
-                } elseif ($request->status == 'smp') {
-                    $hapus_old_status = AlumniSmp::where('id_alumni', $request->id_alumni)->first();
-                    $hapus_old_status->delete();
-                    LibAlumni::storeSMP($data5);
-                }
-
-                DB::commit();
-                if ($cek = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()) {
-                    if (Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_kelas', null)->first()) {
-                        return web_response(202, "Update Successfully", self::PATH);
-                    } else {
-                        return web_response(202, "Update Successfully", self::PATH2);
-                    }
-                } else {
-                    if ($auth_data->pengguna->role_pengguna->where('is_aktif', 1)->first()->id_role == '2') {
-                        return web_response(202, "Update Successfully", self::PATHGURU);
-                    }
-                    return web_response(202, "Update Successfully", self::PATH);
-                }
-            } catch (\Exception $e) {
-
-                DB::rollback();
-
-                return error_response($e);
-            }
-        } elseif ($mode == 'delete') {
-
-            $alumni = Alumni::find($id);
-            $alumni->deleted_by = auth_data()->pengguna->id_pengguna;
-            $alumni->save();
-
-            $alumni->delete();
-
-            if ($request->segment(1) == 'siswa') {
-                return [
-                    'status' => 202, // SUCCESS AND LOAD TABLE
-                    'path' => 'tracer-alumni',
-                    'message' => 'Delete Alumni Successfully'
-                ];
-            } else {
-                return [
-                    'status' => 202, // SUCCESS AND LOAD TABLE
-                    'path' => $request->segment(1) . '#alumni/tracer-alumni',
-                    'message' => 'Delete Alumni Successfully'
-                ];
-            }
+            DB::commit();
+            return web_response(202, "ADD Successfully", self::PATH);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return error_response($e);
         }
+    }
+
+    // ----------------------------------------------------------------
+    // MODE: add2 — alumni mengisi sendiri datanya (self-service)
+    // ----------------------------------------------------------------
+
+    private function handleAdd2(Request $request)
+    {
+        $authData = auth_data();
+
+        DB::beginTransaction();
+        try {
+            $this->updateStudentProfile($request, $authData);
+
+            $alumni = $this->insertAlumni($request, $authData, $request->id_c_siswa);
+            $this->buildAndStoreAlumniStatus($request, $authData, $alumni['id_alumni']);
+
+            DB::commit();
+
+            $redirectPath = Siswa::where('id_pengguna', $authData->pengguna->id_pengguna)
+                ->whereNull('id_kelas')
+                ->exists()
+                    ? self::PATH
+                    : self::PATH2;
+
+            return web_response(202, "ADD Successfully", $redirectPath);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return error_response($e);
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // MODE: edit — ubah data alumni yang sudah ada
+    // ----------------------------------------------------------------
+
+    private function handleEdit(Request $request)
+    {
+        $authData = auth_data();
+
+        DB::beginTransaction();
+        try {
+            $this->updateStudentProfile($request, $authData);
+            $this->updateAlumniRecord($request, $authData);
+            $this->deleteOldAlumniStatus($request->old_status, $request->id_alumni);
+            $this->buildAndStoreAlumniStatus($request, $authData, $request->id_alumni, isUpdate: true);
+
+            DB::commit();
+            return web_response(202, "Update Successfully", $this->resolveEditRedirectPath($request, $authData));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return error_response($e);
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // MODE: delete — hapus (soft delete) data alumni
+    // ----------------------------------------------------------------
+
+        private function handleDelete(Request $request, $id)
+    {
+        $alumni = Alumni::find($id);
+        $alumni->deleted_by = auth_data()->pengguna->id_pengguna;
+        $alumni->save();
+        $alumni->delete();
+
+        $path = $request->segment(1) === 'siswa'
+            ? 'tracer-alumni'
+            : 'alumni/tracer-alumni';
+
+        return [
+            'status'  => 202,
+            'path'    => $path,
+            'message' => 'Delete Alumni Successfully'
+        ];
+    }
+    // ----------------------------------------------------------------
+    // HELPER: Operasi pada data siswa / calon siswa
+    // ----------------------------------------------------------------
+
+    /**
+     * Update data calon siswa yang sudah ada (saat mode add dengan id_c_siswa terisi).
+     * Mengembalikan id_c_siswa.
+     */
+    private function updateExistingStudent(Request $request, $authData): string
+    {
+        $calonSiswa = CalonSiswaBaru::find($request->id_c_siswa);
+
+        if (!$calonSiswa) {
+            throw new \Exception('Data siswa tidak ditemukan');
+        }
+
+        $calonSiswa->nomor_hp     = $request->nomor_hp;
+        $calonSiswa->alamat_jalan = $request->alamat_siswa;
+        if ($request->filled('jurusan')) {
+            $calonSiswa->id_jurusan = $request->jurusan;
+        }
+        $calonSiswa->updated_by = $authData->pengguna->id_pengguna;
+        $calonSiswa->save();
+
+        return $calonSiswa->id_c_siswa;
+    }
+
+    /**
+     * Buat data siswa baru lengkap dengan akun pengguna.
+     * Mengembalikan id_c_siswa yang baru dibuat.
+     */
+    private function createNewStudent(Request $request, $authData): string
+    {
+        $now            = Carbon::now();
+        $prefix         = $authData->sekolah_data->prefix;
+        $idPengguna     = $authData->pengguna->id_pengguna;
+        $idCalonSiswa   = $prefix . strtotime($now) . uniqid();
+        $idPenggunaBaru = $prefix . strtotime($now) . uniqid();
+
+        // 1. Calon siswa baru
+        CalonSiswaBaru::insert([
+            'id_c_siswa'        => $idCalonSiswa,
+            'nm_c_siswa'        => $request->nama_siswa,
+            'nomor_hp'          => $request->nomor_hp,
+            'id_jurusan'        => $request->jurusan,
+            'alamat_jalan'      => $request->alamat_siswa,
+            'id_penerimaan'     => 0,
+            'status_verifikasi' => 0,
+            'created_by'        => $idPengguna,
+            'created_at'        => $now,
+        ]);
+
+        // 2. Data relasi calon siswa (ortu, fisik, sekolah)
+        $relatedData = ['id_c_siswa' => $idCalonSiswa, 'created_by' => $idPengguna, 'created_at' => $now];
+        CalonSiswaOrtu::insert($relatedData);
+        CalonSiswaFisik::insert($relatedData);
+        CalonSiswaSekolah::insert($relatedData);
+
+        // 3. Akun pengguna
+        Pengguna::insert([
+            'id_pengguna'        => $idPenggunaBaru,
+            'nm_pengguna'        => $request->nama_siswa,
+            'email_pengguna'     => $request->email,
+            'nomor_hp_pengguna'  => $request->nomor_hp,
+            'username'           => str_replace(' ', '_', $request->nama_siswa),
+            'id_status_pengguna' => StatusPengguna::where('nm_status_pengguna', 'Lulus')->value('id_status_pengguna'),
+            'id_sekolah'         => $authData->pengguna->id_sekolah,
+            'created_by'         => $idPengguna,
+            'created_at'         => $now,
+        ]);
+
+        // 4. Record siswa
+        Siswa::insert([
+            'id_siswa'    => $prefix . strtotime($now) . uniqid(),
+            'id_pengguna' => $idPenggunaBaru,
+            'id_c_siswa'  => $idCalonSiswa,
+            'created_by'  => $idPengguna,
+            'created_at'  => $now,
+        ]);
+
+        return $idCalonSiswa;
+    }
+
+    /**
+     * Update profil siswa (jurusan, alamat, nomor HP).
+     * Dipakai di mode add2 dan edit.
+     */
+    private function updateStudentProfile(Request $request, $authData): void
+    {
+        $calonSiswa = CalonSiswaBaru::where('id_c_siswa', $request->id_c_siswa)->firstOrFail();
+        $calonSiswa->id_jurusan   = $request->jurusan;
+        $calonSiswa->alamat_jalan = $request->alamat_siswa;
+        $calonSiswa->nomor_hp     = $request->nomor_hp;
+        $calonSiswa->save();
+    }
+
+    // ----------------------------------------------------------------
+    // HELPER: Operasi pada data alumni
+    // ----------------------------------------------------------------
+
+    /**
+     * Insert record alumni baru dan mengembalikan array datanya.
+     */
+    private function insertAlumni(Request $request, $authData, string $idCalonSiswa): array
+    {
+        $now = Carbon::now();
+
+        $alumniData = [
+            'id_alumni'   => $authData->sekolah_data->prefix . strtotime($now) . uniqid(),
+            'id_c_siswa'  => $idCalonSiswa,
+            'id_kelas'    => $request->id_kelas,
+            'email'       => $request->email,
+            'tahun_lulus' => $request->tahun_lulus,
+            'url_medsos'  => $request->url_medsos,
+            'status'      => $request->status,
+            'created_by'  => $authData->pengguna->id_pengguna,
+            'created_at'  => $now,
+        ];
+
+        Alumni::insert($alumniData);
+        return $alumniData;
+    }
+
+    /**
+     * Update record alumni yang sudah ada.
+     */
+    private function updateAlumniRecord(Request $request, $authData): void
+    {
+        $alumni = Alumni::where('id_alumni', $request->id_alumni)->firstOrFail();
+        $alumni->id_kelas    = $request->id_kelas;
+        $alumni->email       = $request->email;
+        $alumni->tahun_lulus = $request->tahun_lulus;
+        $alumni->url_medsos  = $request->url_medsos;
+        $alumni->status      = $request->status;
+        $alumni->updated_by  = $authData->pengguna->id_pengguna;
+        $alumni->save();
+    }
+
+    // ----------------------------------------------------------------
+    // HELPER: Build sekaligus store data status alumni
+    // (menggabungkan switch + if-else yang sebelumnya terpisah)
+    // ----------------------------------------------------------------
+
+    /**
+     * Membangun data status alumni sekaligus menyimpannya via LibAlumni.
+     * Menggantikan blok switch + if-elseif yang berulang di add, add2, dan edit.
+     */
+    private function buildAndStoreAlumniStatus(Request $request, $authData, string $idAlumni, bool $isUpdate = false): void
+    {
+        $now    = Carbon::now();
+        $prefix = $authData->sekolah_data->prefix;
+
+        $baseData = [
+            'id_alumni'  => $idAlumni,
+            'created_by' => $authData->pengguna->id_pengguna,
+            'created_at' => $now,
+        ];
+
+        if ($isUpdate) {
+            $baseData['updated_by'] = $authData->pengguna->id_pengguna;
+        }
+
+        switch ($request->status) {
+            case 'bekerja':
+                $statusData = array_merge(
+                    $baseData,
+                    $request->only(self::FETCH_WORK_ATTRIBUTE),
+                    ['id_alumni_bekerja' => $prefix . strtotime($now) . uniqid()]
+                );
+                LibAlumni::storeWorkplace($statusData);
+                break;
+
+            case 'usaha':
+                $statusData = array_merge(
+                    $baseData,
+                    $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE),
+                    ['id_alumni_wirausaha' => $prefix . strtotime($now) . uniqid()]
+                );
+                LibAlumni::storeBusiness($statusData);
+                break;
+
+            case 'kuliah':
+                $statusData = array_merge(
+                    $baseData,
+                    $request->only(self::FETCH_COLLEGE_ATTRIBUTE),
+                    ['id_alumni_kuliah' => $prefix . strtotime($now) . uniqid()]
+                );
+                LibAlumni::storeUniversity($statusData);
+                break;
+
+            case 'menunggu':
+                $statusData = array_merge(
+                    $baseData,
+                    $request->only(self::FETCH_IDLE_ATTRIBUTE),
+                    ['id_alumni_menunggu' => $prefix . strtotime($now) . uniqid()]
+                );
+                LibAlumni::storeIdleAlumni($statusData);
+                break;
+
+            case 'smp':
+                $statusData = array_merge(
+                    $baseData,
+                    $request->only(self::FETCH_SMP),
+                    ['id_alumni_smp' => $prefix . strtotime($now) . uniqid()]
+                );
+                LibAlumni::storeSMP($statusData);
+                break;
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // HELPER: Hapus status alumni lama saat edit
+    // ----------------------------------------------------------------
+
+    /**
+     * Hapus record status alumni lama sebelum menyimpan status baru (saat edit).
+     */
+        private function deleteOldAlumniStatus(?string $oldStatus, string $idAlumni): void
+    {
+        if (!$oldStatus) return;
+
+        $modelMap = [
+            'bekerja'  => AlumniBekerja::class,
+            'usaha'    => AlumniWirausaha::class,
+            'kuliah'   => AlumniKuliah::class,
+            'menunggu' => AlumniMenunggu::class,
+            'smp'      => AlumniSmp::class,
+        ];
+
+        if (isset($modelMap[$oldStatus])) {
+            $modelMap[$oldStatus]::where('id_alumni', $idAlumni)->first()?->delete();
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // HELPER: Resolusi path redirect setelah edit
+    // ----------------------------------------------------------------
+
+    /**
+     * Menentukan path redirect setelah proses edit selesai,
+     * berdasarkan role dan kondisi kelas pengguna yang login.
+     */
+    private function resolveEditRedirectPath(Request $request, $authData): string
+    {
+        $pengguna = $authData->pengguna;
+
+        // Jika user adalah siswa
+        $siswa = Siswa::where('id_pengguna', $pengguna->id_pengguna)->first();
+        if ($siswa) {
+            return $siswa->id_kelas === null ? self::PATH : self::PATH2;
+        }
+
+        // Jika user adalah guru (role 2)
+        $activeRole = $pengguna->role_pengguna->where('is_aktif', 1)->first();
+        if ($activeRole && $activeRole->id_role == '2') {
+            return self::PATHGURU;
+        }
+
+        return self::PATH;
     }
 
     public function importTracerAlumni()
     {
         return view('humas.alumni.tracer-alumni.import-tracer-alumni');
+    }
+
+    public function importTracerAlumnismp()
+    {
+        return view('humas.alumni.tracer-alumni.import-tracer-alumni-smp');
     }
 
     public function handleImportTracerAlumni(Request $request)
@@ -726,6 +787,17 @@ class TracerAlumniController extends BaseController
                             $status_data['id_alumni_menunggu'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                             $status_data['status_menunggu'] = $row['status_menunggu'];
                             LibAlumni::storeIdleAlumni($status_data);
+                            break;
+                        case 'smp':
+                            $status_data['id_alumni_smp'] = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                            $status_data['nama_lengkap'] = $row['nama_lengkap'];
+                            $status_data['nisn'] = $row['nisn'];
+                            $status_data['jenjang'] = $row['jenjang'];
+                            $status_data['nama_sekolah'] = $row['nama_sekolah'];
+                            $status_data['alamat_sekolah'] = $row['alamat_sekolah'];
+                            $status_data['jurusan'] = $row['jurusan'] ?? null;
+                            $status_data['tahun_masuk'] = $row['tahun_masuk'];
+                            LibAlumni::storeSMP($status_data);
                             break;
                     }
 

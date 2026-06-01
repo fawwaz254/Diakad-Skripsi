@@ -3,6 +3,9 @@
         <h2>
             <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#kpi/cetak-kpi') }}"><i
                     class="material-icons">backspace</i><span>kembali</span></a>
+            <a target="_blank" class="btn btn-success waves-effect" href="{{ route('kpi.printAll', ['role' => Request::segment(1), 'id_kelas' => $id_kelas]) }}">
+                    <i class="material-icons">print</i><span>Cetak Semua</span></a>
+
         </h2>
     </div>
     <div class="row clearfix">
@@ -20,6 +23,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Kelas</th>
+                                    <th>Nis</th>
                                     <th>Siswa</th>
                                     <th>Jumlah Point</th>
                                     <th>Terisi</th>
@@ -58,6 +62,10 @@
             {
                 data: 'kelas.nm_kelas',
                 name: 'kelas.nm_kelas'
+            },
+            {
+                data: 'nis_siswa', // ← Tambah ini
+                name: 'nis_siswa'
             },
             {
                 data: 'pengguna.nm_pengguna',

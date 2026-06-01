@@ -192,7 +192,7 @@
                     $jumlah_out_per_date = 0;
                 @endphp
                 @foreach ($report['in'] as $report_in)
-                    @if ($report_in['category'] != 'Subsidi BOS')
+                    @if ($report_in['category'] != 'SUBSIDI_BOS_TAGGED')
                         <tr valign=middle>
                             <td class="text-center">{{ $report['day'] }}</td>
                             <td class="text-bold">{{ $report_in['text'] }}</td>

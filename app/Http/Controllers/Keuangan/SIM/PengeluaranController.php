@@ -402,6 +402,7 @@ class PengeluaranController extends BaseController
                 $realisasi->termin_dana_realisasi = 1;
                 $realisasi->is_hutang_realisasi = 0;
                 $realisasi->dana_realisasi = $input->dana_realisasi;
+                $realisasi->sumber_dana = $input->sumber_dana;
                 $realisasi->tgl_realisasi = date_format(date_create($input->tgl_realisasi), "Y-m-d");
                 $realisasi->created_by = auth_data()->pengguna->id_pengguna;
                 if ($input->id_realisasi) {

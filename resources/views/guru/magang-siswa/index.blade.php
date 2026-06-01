@@ -64,7 +64,7 @@
                 $('#deleteForm{{ $km->id_kunjungan_magang }}').submit(function(e) {
                     e.preventDefault();
                     $.ajax({
-                        url: "{{ route('destroy.kunjungan-magang', $km->id_kunjungan_magang) }}",
+                        url: "{{ route('guru.destroy.kunjungan-magang', $km->id_kunjungan_magang) }}",
                         type: 'DELETE',
                         success: function(result) {
                             vex.dialog.alert(result.message);

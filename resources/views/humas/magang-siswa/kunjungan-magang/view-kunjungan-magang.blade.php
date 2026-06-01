@@ -49,7 +49,7 @@
                     <div class="modal-footer"
                         style="display: flex; gap: 10px; align-items: center; justify-content: center;">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                        <form id="deleteForm{{ $km->id_kunjungan_magang }}" method="POST">
+                        <form id="deleteForm{{ $km->id_kunjungan_magang }}" method="POST" action="{{ route('humas.destroy.kunjungan-magang', $km->id_kunjungan_magang) }}">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger waves-effect">Hapus</button>
@@ -58,26 +58,6 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            $(document).ready(function() {
-                $('#deleteForm{{ $km->id_kunjungan_magang }}').submit(function(e) {
-                    e.preventDefault();
-                    $.ajax({
-                        url: "{{ route('destroy.kunjungan-magang', $km->id_kunjungan_magang) }}",
-                        type: 'DELETE',
-                        success: function(result) {
-                            vex.dialog.alert(result.message);
-                            $('#deleteModal{{ $km->id_kunjungan_magang }}').modal('hide');
-                            $('#primary_table').DataTable().ajax.reload();
-                        },
-                        error: function(xhr, status, error) {
-                            console.log(xhr);
-                        }
-                    });
-                })
-            })
-        </script>
     @endforeach
 
     <div class="row clearfix">
@@ -124,54 +104,58 @@
     </div>
 </div>
 
+
+
 <script>
-    $(document).ready(function() {
-
-        $('#periode_magang').on('change', function() {
-            filterData();
-        });
-
-        $('#btn-reset').on('click', function() {
-            $('#periode_magang').val('').trigger('change');
-        });
-
-        function filterData() {
-            var periode_magang = $('#periode_magang').val();
-            console.log(periode_magang);
-            $('#primary_table').DataTable().ajax.url('{{ route('humas.dataKunjunganMagang') }}' +
-                '?id_periode_magang=' +
-                periode_magang).load();
-        }
-
-        $('#periode_magang').select2();
+    $(document).ready(function () {
         let table = $('#primary_table').DataTable({
             processing: true,
             serverSide: true,
             ajax: '{{ route('humas.dataKunjunganMagang') }}',
-            columns: [{
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex',
-                searchable: false,
-                orderable: false
-            }, {
-                data: 'periode_magang',
-                name: 'periode_magang'
-            }, {
-                data: 'rekanan_magang',
-                name: 'rekanan_magang'
-            }, {
-                data: 'keterangan_kunjungan',
-                name: 'keterangan_kunjungan'
-            }, {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false
-            }]
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, orderable: false },
+                { data: 'periode_magang', name: 'periode_magang' },
+                { data: 'rekanan_magang', name: 'rekanan_magang' },
+                { data: 'keterangan_kunjungan', name: 'keterangan_kunjungan' },
+                { data: 'action', name: 'action', searchable: false, orderable: false }
+            ]
         });
 
-        // table.on('xhr.dt', function(e, settings, json, xhr) {
-        //     console.log(json);
-        // })
-    })
+        // Filter by Periode
+        $('#periode_magang').select2();
+        $('#periode_magang').on('change', function () {
+            var id_periode = $(this).val();
+            table.ajax.url('{{ route('humas.dataKunjunganMagang') }}?id_periode_magang=' + id_periode).load();
+        });
+
+        // Reset Filter
+        $('#btn-reset').on('click', function () {
+            $('#periode_magang').val('').trigger('change');
+            table.ajax.url('{{ route('humas.dataKunjunganMagang') }}').load();
+        });
+
+        // Submit Delete Modal
+    $(document).on('submit', 'form[id^="deleteForm"]', function (e) {
+    e.preventDefault();
+    let form = $(this);
+    let url = form.attr('action');
+
+    $.ajax({
+    url: url,
+    type: 'POST',
+    data: form.serialize(), //  otomatis membawa _token dan _method
+    success: function (result) {
+        $('.modal').modal('hide');
+        $('#primary_table').DataTable().ajax.reload();
+        alert(result.message || 'Data berhasil dihapus.');
+    },
+    error: function (xhr) {
+        console.error(xhr.responseText);
+        alert('Gagal menghapus data.');
+    }
+});
+
+});
+
+    });
 </script>

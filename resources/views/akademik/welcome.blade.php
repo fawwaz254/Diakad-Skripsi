@@ -14,7 +14,7 @@
             'smpypm2', //SMP YPM 2 TAMAN
         ]))
         <div class="block-header" style=" display: flex;justify-content: space-between;">
-            <h1 style="font-size: 3rem; margin:0; padding:5px">LOG UPLOAD RPP GURU</h1>
+            <h1 style="font-size: 3rem; margin:0; padding:5px">LOG UPLOAD DESAIN PEMBELAJARAN GURU</h1>
         </div>
 
         <div class="row clearfix" style="margin-bottom:3rem">
@@ -27,7 +27,7 @@
                     <div class="body">
                         <span style="font-size: 5rem;font-weight:bold">
                             {{ $totalUpload1HariTerakhir }}
-                        </span> RPP
+                        </span> Desain Pembelajaran
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                     <div class="body">
                         <span style="font-size: 5rem;font-weight:bold">
                             {{ $totalUpload1MingguTerakhir }}
-                        </span> RPP
+                        </span> Desain Pembelajaaran
                     </div>
                 </div>
             </div>
@@ -53,14 +53,14 @@
                     <div class="body">
                         <span style="font-size: 5rem;font-weight:bold">
                             {{ $totalUpload1BulanTerakhir }}
-                        </span> RPP
+                        </span> Desain Pembelajaran
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="row clearfix">
-            <h1 style="font-size: 2.5rem; margin-top:0; padding:5px; padding-left:14px;">REKAP UPLOAD RPP GURU</h1>
+            <h1 style="font-size: 2.5rem; margin-top:0; padding:5px; padding-left:14px;">REKAP UPLOAD DESAIN PEMBELAJARAN GURU</h1>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="card">
                     {{ csrf_field() }}

@@ -70,6 +70,8 @@ class InputKPIController extends Controller
             return $jumlah_point;
         })->addColumn('jumlah_point_terisi', function ($item) use ($predikat_kpi) {
             return $predikat_kpi->where('id_siswa', $item->id_siswa)->count();
+        })->addColumn('nis_siswa', function ($item) {
+        return $item->nis_siswa;
         })->addColumn('action', function ($item) {
             $data = array(
                 'id' => $item->id_siswa,
@@ -340,63 +342,90 @@ class InputKPIController extends Controller
         );
     }
 
-    public function printAllKPI(Request $request)
-    {
-        $input = (object) $request->input();
-        $auth_data = auth_data();
+    public function printAllKPI($id_kelas)
+{
+    $auth_data = auth_data();
+    $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+    $kelas = Kelas::findOrFail($id_kelas);
 
-        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
-        $semester = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester->id_semester);
-        $kelas = Kelas::find($wali_kelas->id_kelas);
-        $list_siswa = Siswa::with('kelas')->where('id_kelas', $wali_kelas->id_kelas)
-            ->get();
+    // Cek wali kelas berdasarkan semester aktif dan kelas
+    $data_guru = DB::select("select wk.* 
+        from wali_kelas wk
+        where wk.id_kelas = '$id_kelas'
+        and wk.id_semester = '$semester->id_semester'
+        and wk.deleted_at is null
+        limit 1");
 
-        $kelompok_kpi = KelompokKPI::with([
-            'point_kpi' => function ($q) use ($kelas, $semester) {
-                return $q->where('id_semester', $semester->id_semester)->where('tingkat_kelas', $kelas->tingkat);
-            }
-        ])->get();
+    if (isset($data_guru[0])) {
+        $guru = Guru::find($data_guru[0]->id_guru);
+    } else {
+    
+        $data_guru = DB::select("select wk.*
+            from wali_kelas wk
+            join semester sm on sm.id_semester = wk.id_semester
+            where wk.id_kelas = '$id_kelas'
+            and wk.deleted_at is null
+            order by sm.kode_semester desc
+            limit 1");
 
-        $predikat_kpi = PredikatKPI::whereIn('id_siswa', $list_siswa->pluck('id_siswa'))->where('id_kelas', $wali_kelas->id_kelas)->get();
-
-        $point_mengaji = PointKPI::where('id_semester', $semester->id_semester)->whereNull('tingkat_kelas')->where('jenis', '3')->get();
-
-        foreach ($list_siswa as $siswa) {
-            $predikat = $predikat_kpi->where('id_siswa', $siswa->id_siswa);
-            $siswa->kelompok_kpi = $kelompok_kpi;
-            $siswa->predikat = $predikat;
-
-            $dataMengaji = [];
-            foreach ($point_mengaji as $point_kpi) {
-                $unit_predikat_kpi = $predikat->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
-                if ($unit_predikat_kpi) {
-                    $dataMengaji[$point_kpi->nm_point_kpi] = $unit_predikat_kpi->predikat;
-                } else {
-                    $dataMengaji[$point_kpi->nm_point_kpi] = "-";
-                }
-            }
-            $siswa->dataMengaji = $dataMengaji;
-        }
-
-        $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
-        if (isset($tanggal)) {
-            $tanggal_cetak = Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y');
+        if (isset($data_guru[0])) {
+            $guru = Guru::find($data_guru[0]->id_guru);
         } else {
-            $tanggal_cetak = Carbon::now()->locale('id')->translatedFormat('j F Y');
+            return redirect()->back()->with('error', 'Wali kelas tidak ditemukan untuk kelas ini.');
         }
-
-        return view(
-            'guru/wali-kelas/kpi/input-kpi/print-all-kpi-siswa',
-            compact(
-                'auth_data',
-                'list_siswa',
-                'wali_kelas',
-                'semester',
-                'kelompok_kpi',
-                'point_mengaji',
-                'tanggal_cetak'
-            )
-        );
     }
+
+    $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester->id_semester);
+    $list_siswa = Siswa::with('kelas')->where('id_kelas', $id_kelas)->get();
+
+    $kelompok_kpi = KelompokKPI::with([
+        'point_kpi' => function ($q) use ($kelas, $semester) {
+            $q->where('id_semester', $semester->id_semester)->where('tingkat_kelas', $kelas->tingkat);
+        }
+    ])->get();
+
+    $predikat_kpi = PredikatKPI::whereIn('id_siswa', $list_siswa->pluck('id_siswa'))
+        ->where('id_kelas', $id_kelas)
+        ->get();
+
+    $point_mengaji = PointKPI::where('id_semester', $semester->id_semester)
+        ->whereNull('tingkat_kelas')
+        ->where('jenis', '3')
+        ->get();
+
+    foreach ($list_siswa as $siswa) {
+        $predikat = $predikat_kpi->where('id_siswa', $siswa->id_siswa);
+        $siswa->kelompok_kpi = $kelompok_kpi;
+        $siswa->predikat = $predikat;
+
+        $dataMengaji = [];
+        foreach ($point_mengaji as $point_kpi) {
+            $unit_predikat_kpi = $predikat->where('id_point_kpi', $point_kpi->id_point_kpi)->first();
+            $dataMengaji[$point_kpi->nm_point_kpi] = $unit_predikat_kpi ? $unit_predikat_kpi->predikat : '-';
+        }
+        $siswa->dataMengaji = $dataMengaji;
+    }
+
+    $tanggal = Setting::where('key_setting', 'set_tanggal_cetak_rapor_semester')->first();
+    $tanggal_cetak = $tanggal
+        ? Carbon::parse($tanggal->value)->locale('id')->translatedFormat('j F Y')
+        : Carbon::now()->locale('id')->translatedFormat('j F Y');
+
+    return view(
+        'guru/wali-kelas/kpi/input-kpi/print-all-kpi-siswa',
+        compact(
+            'auth_data',
+            'list_siswa',
+            'kelas',
+            'wali_kelas',
+            'semester',
+            'kelompok_kpi',
+            'point_mengaji',
+            'tanggal_cetak'
+        )
+    );
+}
+
+
+
 }

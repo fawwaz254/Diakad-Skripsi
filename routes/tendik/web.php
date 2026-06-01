@@ -18,6 +18,7 @@ use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController;
 use App\Http\Controllers\Tendik\JurnalHarian\JurnalHarianTendikController;
 
+
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('tendik')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
@@ -196,5 +197,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action-list-form/{mode}/{id}', [FormHarianController::class, 'actionInputFormHarian']);
             });
         });
+
+        require base_path('routes/modules/magang-siswa.php');
     });
 });
