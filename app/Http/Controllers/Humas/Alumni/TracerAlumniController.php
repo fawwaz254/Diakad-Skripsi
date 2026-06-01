@@ -337,13 +337,16 @@ class TracerAlumniController extends BaseController
         $alumni->save();
         $alumni->delete();
 
+        $path = $request->segment(1) === 'siswa'
+            ? 'tracer-alumni'
+            : 'alumni/tracer-alumni';
+
         return [
             'status'  => 202,
-            'path'    => 'alumni/tracer-alumni',
+            'path'    => $path,
             'message' => 'Delete Alumni Successfully'
         ];
     }
-
     // ----------------------------------------------------------------
     // HELPER: Operasi pada data siswa / calon siswa
     // ----------------------------------------------------------------
